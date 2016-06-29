@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -19,6 +20,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GourmetListLayout extends PlaceListLayout
@@ -168,6 +170,28 @@ public class GourmetListLayout extends PlaceListLayout
     public boolean hasSalesPlace()
     {
         return hasSalesPlace(mPlaceListAdapter.getAll());
+    }
+
+    private boolean hasSalesPlace(List<PlaceViewItem> list)
+    {
+        if (list == null || list.size() == 0)
+        {
+            return false;
+        }
+
+        boolean hasPlace = false;
+
+        for (PlaceViewItem placeViewItem : list)
+        {
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
+                && placeViewItem.<Gourmet>getItem().isSoldOut == false)
+            {
+                hasPlace = true;
+                break;
+            }
+        }
+
+        return hasPlace;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -517,6 +517,12 @@ public class HotelDetailLayout
             return;
         }
 
+        if (mHotelDetail == null)
+        {
+            Util.restartApp(mActivity);
+            return;
+        }
+
         setBookingStatus(STATUS_NONE);
 
         if (isUsedAnimatorApi() == true)

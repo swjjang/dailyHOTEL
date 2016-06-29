@@ -18,7 +18,7 @@
             android:layout_height="36dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/shape_fillrect_lf0f0f0_bf8f8f9"
+            android:background="@drawable/shape_fillrect_ldedee0_bf8f8f9"
             android:drawableLeft="@drawable/navibar_ic_s_search"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
@@ -38,7 +38,7 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/dateTextLayout"
             android:layout_toRightOf="@+id/searchTextView"
-            android:background="@drawable/shape_fillrect_lf0f0f0_bf8f8f9"
+            android:background="@drawable/shape_fillrect_ldedee0_bf8f8f9"
             android:paddingLeft="9dp"
             android:paddingRight="9dp">
 
@@ -69,7 +69,7 @@
             android:layout_width="134dp"
             android:layout_height="36dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/shape_fillrect_lf0f0f0_bf8f8f9"
+            android:background="@drawable/shape_fillrect_ldedee0_bf8f8f9"
             android:paddingLeft="9dp"
             android:paddingRight="9dp">
 
@@ -97,7 +97,7 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/toolbarUnderLine"
+        android:id="@+id/toolbarUnderline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/toolbarLayout"
@@ -106,30 +106,26 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/categoryTabLayout"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:layout_below="@+id/toolbarUnderLine"
-        android:background="@color/white"
+        android:layout_height="40dp"
+        android:layout_below="@+id/toolbarUnderline"
+        android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
         android:visibility="gone"
-        app:tabIndicatorHeight="0dp"
-        app:tabMinWidth="80dp"
+        app:tabIndicatorHeight="2dp"
         app:tabMode="scrollable"
+        app:tabPadding="0dp"
+        app:tabPaddingStart="12dp"
+        app:tabPaddingEnd="12dp"
         app:tabSelectedTextColor="@color/default_text_c900034"
         app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"/>
-
-    <View
-        android:id="@+id/underLine"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/categoryTabLayout"
-        android:background="@color/default_line_ce7e7e7"
-        android:visibility="gone"/>
+        app:tabTextColor="@color/default_text_c929292"
+        app:tabMinWidth="1dp"
+        android:paddingLeft="8dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/underLine"/>
+        android:layout_below="@+id/categoryTabLayout"/>
 
     <LinearLayout
         android:id="@+id/bottomOptionLayout"
@@ -140,24 +136,18 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <ImageView
             android:id="@+id/viewTypeOptionImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
-            android:background="@drawable/fab_01_map"
-            android:paddingLeft="52dp"
-            android:paddingTop="17dp"
-            android:text="@string/label_map"/>
+            android:background="@drawable/fab_01_map"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <ImageView
             android:id="@+id/filterOptionImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
-            android:background="@drawable/selector_floatingactionview"
-            android:paddingLeft="46dp"
-            android:paddingTop="17dp"
-            android:text="@string/label_filter"/>
+            android:background="@drawable/selector_floatingactionview"/>
     </LinearLayout>
 </RelativeLayout>

@@ -10,7 +10,7 @@ public class CouponHistory extends Coupon
 {
     public boolean isExpired; // 유효기간 만료 여부 ,
     public boolean isRedeemed; // 사용 여부 ,
-    public String disabledAt; // 사용한 날짜 (ISO-8601) ,
+    public String disabledAt; // isExpired가 true이면 만료된 날짜, isRedeemed가 true이면 사용한 날짜. isExpired와 isRedeemed는 같은 값일 수 없음. (ISO-8601)
 
     public CouponHistory(Parcel in)
     {

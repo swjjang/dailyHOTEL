@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private View mFilterOptionImageView;
 
     private TabLayout mCategoryTabLayout;
-    private View mUnderLine;
+    private View mToolbarUnderlineView;
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
@@ -79,7 +80,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     protected void initLayout(View view)
     {
         initToolbar(view);
-        initCategoryTabLayout(view);
         initCategoryTabLayout(view);
         initOptionLayout(view);
     }
@@ -123,12 +123,15 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         mViewTypeOptionImageView.setOnClickListener(this);
         mFilterOptionImageView.setOnClickListener(this);
+
+        // 기본 설정
+        setOptionViewTypeView(Constants.ViewType.LIST);
     }
 
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
-        mUnderLine = view.findViewById(R.id.underLine);
+        mToolbarUnderlineView = view.findViewById(R.id.toolbarUnderline);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
@@ -152,9 +155,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         switch (viewType)
         {
             case LIST:
+                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
                 break;
 
             case MAP:
+                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
                 break;
 
             case GONE:
@@ -162,15 +167,27 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    public void setOptionFilterView()
+    public void setOptionFilterEnabled(boolean enabled)
     {
-        //        mFilterOptionImageView
+        mFilterOptionImageView.setSelected(enabled);
     }
 
     public void setCategoryTabLayoutVisibility(int visibility)
     {
         mCategoryTabLayout.setVisibility(visibility);
-        mUnderLine.setVisibility(visibility);
+
+        ViewGroup.LayoutParams layoutParams = mToolbarUnderlineView.getLayoutParams();
+
+        if (layoutParams != null)
+        {
+            if (visibility == View.VISIBLE)
+            {
+                mToolbarUnderlineView.getLayoutParams().height = 1;
+            } else
+            {
+                mToolbarUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
+            }
+        }
     }
 
     public void setSelectCategory(Category category)
@@ -209,15 +226,9 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             setCategoryTabLayoutVisibility(View.VISIBLE);
 
             TabLayout.Tab selectedTab = null;
-
-            // 화면에 4.5개 나오개 한다.
-            final float TAB_COUNT = 4.5f;
-            final int TAB_WIDTH = (int) (Util.getLCDWidth(mContext) / TAB_COUNT);
-
             Category category;
             TabLayout.Tab tab;
             View tabView;
-            ViewGroup.LayoutParams layoutParams;
 
             mCategoryTabLayout.removeAllTabs();
 
@@ -229,11 +240,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 tab.setText(category.name);
                 tab.setTag(category);
                 mCategoryTabLayout.addTab(tab);
-
-                tabView = ((ViewGroup) mCategoryTabLayout.getChildAt(0)).getChildAt(i);
-                layoutParams = tabView.getLayoutParams();
-                layoutParams.width = TAB_WIDTH;
-                tabView.setLayoutParams(layoutParams);
 
                 if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {

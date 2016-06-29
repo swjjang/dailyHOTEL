@@ -87,6 +87,7 @@
         dailyFont:style="Medium"/>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout01"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/signinView"
@@ -117,66 +118,41 @@
             android:textSize="12dp"/>
     </RelativeLayout>
 
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/textView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message_login_sns"
+        android:textColor="@color/information_title"
+        android:textSize="12dp"
+        android:layout_below="@+id/relativeLayout01"
+        android:layout_marginTop="70dp"
+        android:layout_centerHorizontal="true"/>
+
     <LinearLayout
-        android:id="@+id/facebookLoginView"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_above="@+id/kakaoLoginView"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_button_facebooklogin_background"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_below="@+id/textView01"
+        android:layout_marginTop="20dp">
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.3"
-            android:scaleType="fitEnd"
-            android:src="@drawable/facebook_icon"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="0.7"
-            android:gravity="left|center_vertical"
-            android:text="@string/act_login_facebook"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            dailyFont:style="Medium"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/kakaoLoginView"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="15dp"
-        android:background="@drawable/shape_button_kakaologin_background"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="0dp"
+            android:id="@+id/facebookLoginView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="0.3"
-            android:scaleType="fitEnd"
-            android:src="@drawable/kakao_login_symbol"/>
+            android:src="@drawable/login_ic_sns_facebook"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="0.7"
-            android:gravity="left|center_vertical"
-            android:text="@string/act_login_kakao"
-            android:textColor="@color/com_kakao_brown"
-            android:textSize="17dp"
-            dailyFont:style="Medium"/>
 
+        <ImageView
+            android:id="@+id/kakaoLoginView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/login_ic_sns_kakao"
+            android:layout_marginLeft="15dp"/>
     </LinearLayout>
 
     <com.facebook.login.widget.LoginButton

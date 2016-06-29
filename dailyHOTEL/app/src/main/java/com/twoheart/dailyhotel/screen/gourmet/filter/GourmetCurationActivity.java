@@ -17,7 +17,9 @@ import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -501,6 +503,46 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    checkedChangedDistance();
+                } else
+                {
+                    switch (mGourmetCurationOption.getSortType())
+                    {
+                        case DEFAULT:
+                            mSortRadioGroup.check(R.id.regionCheckView);
+                            break;
+
+                        case LOW_PRICE:
+                            mSortRadioGroup.check(R.id.lowPriceCheckView);
+                            break;
+
+                        case HIGH_PRICE:
+                            mSortRadioGroup.check(R.id.highPriceCheckView);
+                            break;
+
+                        case SATISFACTION:
+                            mSortRadioGroup.check(R.id.satisfactionCheckView);
+                            break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
         RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
@@ -527,9 +569,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 break;
 
             case R.id.distanceCheckView:
-                mGourmetCurationOption.setSortType(SortType.DISTANCE);
-                label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
-                break;
+            {
+                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                return;
+            }
 
             case R.id.lowPriceCheckView:
                 mGourmetCurationOption.setSortType(SortType.LOW_PRICE);
@@ -655,5 +699,30 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
+    }
+
+    private void checkedChangedDistance()
+    {
+        mGourmetCurationOption.setSortType(SortType.DISTANCE);
+        String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
+
+        Map<String, String> eventParmas = new HashMap<>();
+        Province province = GourmetCurationManager.getInstance().getProvince();
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else
+        {
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParmas);
     }
 }

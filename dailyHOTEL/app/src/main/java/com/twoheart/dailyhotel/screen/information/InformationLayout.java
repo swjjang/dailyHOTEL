@@ -30,6 +30,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private static final float DEFAULT_PROFILE_TEXT_SIZE_DP = 18.0f;
     private static final float SMALL_PROFILE_TEXT_SIZE_DP = 12.0f;
 
+    private static final float DEFAULT_MESSAGE_TEXT_SIZE_DP = 12.0f;
+    private static final float EMPTY_MIDDLE_MESSAGE_TEXT_SIZE_DP = 13.0f;
+    private static final float EMPTY_SMALL_MESSAGE_TEXT_SIZE_DP = 11.0f;
+
     private View mProfileLayout;
     private View mAccountInfoLayout;
     private View mNewEventIconView;
@@ -313,10 +317,21 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             {
                 profileTextView.setVisibility(View.GONE);
                 loginMessageTextView.setText(R.string.information_empty_name_n_email_after_login);
-                loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+
+                if (Util.getLCDWidth(mContext) < 720)
+                {
+                    loginMessageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, EMPTY_SMALL_MESSAGE_TEXT_SIZE_DP);
+                    loginMessageTextView.setLineSpacing(6.0f, 1.0f);
+                } else
+                {
+                    loginMessageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, EMPTY_MIDDLE_MESSAGE_TEXT_SIZE_DP);
+                    loginMessageTextView.setLineSpacing(7.0f, 1.0f);
+                }
             } else
             {
                 profileTextView.setVisibility(View.VISIBLE);
+                loginMessageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MESSAGE_TEXT_SIZE_DP);
+                loginMessageTextView.setLineSpacing(0.0f, 1.0f);
 
                 if (isEmptyName == true)
                 {
@@ -333,8 +348,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 {
                     loginMessageTextView.setText(userEmail);
                 }
-
-                loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.curation_title_text));
             }
 
             loginView.setVisibility(View.GONE);
@@ -353,8 +366,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             profileTextView.setText(R.string.frag_need_login);
             loginMessageTextView.setText(R.string.frag_login_message);
-            loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.curation_title_text));
+            loginMessageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MESSAGE_TEXT_SIZE_DP);
+            loginMessageTextView.setLineSpacing(0.0f, 1.0f);
 
+            profileTextView.setVisibility(View.VISIBLE);
             loginView.setVisibility(View.VISIBLE);
             signUpView.setVisibility(View.VISIBLE);
             editProfileView.setVisibility(View.GONE);

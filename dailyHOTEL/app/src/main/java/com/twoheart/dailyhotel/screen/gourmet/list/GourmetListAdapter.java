@@ -102,6 +102,14 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
                 return new EventBannerViewHolder(view);
             }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+
+                return new FooterViewHolder(view);
+            }
+
         }
 
         return null;
@@ -345,6 +353,14 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
 
             dailyLoopViewPager.setSlideTime(4);
+        }
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
         }
     }
 

@@ -76,8 +76,8 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
         TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         titleTextView.setText(title);
 
-        View positiveTextView = findViewById(R.id.positiveTextView);
-        positiveTextView.setOnClickListener(this);
+        View confirmTextView = findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(this);
     }
 
     @Override

@@ -1,14 +1,10 @@
 package com.twoheart.dailyhotel.screen.common;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -210,16 +206,27 @@ public class ZoomMapActivity extends BaseActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+        super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
+
+        switch (requestCode)
         {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
                 searchMyLocation();
-            } else
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                // 퍼미션 허락하지 않음.
+                if (resultCode == RESULT_OK)
+                {
+                    searchMyLocation();
+                }
+                break;
             }
         }
     }
@@ -289,6 +296,8 @@ public class ZoomMapActivity extends BaseActivity
 
     private void searchMyLocation()
     {
+        lockUI();
+
         DailyLocationFactory.getInstance(this).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
@@ -296,20 +305,8 @@ public class ZoomMapActivity extends BaseActivity
             {
                 unLockUI();
 
-                if (Util.isOverAPI23() == true)
-                {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
-                    {
-                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
-
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
-                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    } else
-                    {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    }
-                }
+                Intent intent = PermissionManagerActivity.newInstance(ZoomMapActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
             }
 
             @Override
@@ -335,6 +332,8 @@ public class ZoomMapActivity extends BaseActivity
             @Override
             public void onProviderDisabled(String provider)
             {
+                unLockUI();
+
                 if (isFinishing() == true)
                 {
                     return;
@@ -357,6 +356,8 @@ public class ZoomMapActivity extends BaseActivity
             @Override
             public void onLocationChanged(Location location)
             {
+                unLockUI();
+
                 if (isFinishing() == true || mGoogleMap == null)
                 {
                     return;
@@ -399,7 +400,8 @@ public class ZoomMapActivity extends BaseActivity
                 return;
             }
 
-            searchMyLocation();
+            Intent intent = PermissionManagerActivity.newInstance(ZoomMapActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
     };
 }
