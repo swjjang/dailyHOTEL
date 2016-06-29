@@ -124,6 +124,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             gourmetCurationOption.flagTimeFilter = changedGourmetCurationOption.flagTimeFilter;
             gourmetCurationOption.flagAmenitiesFilters = changedGourmetCurationOption.flagAmenitiesFilters;
 
+            mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
+
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
                 searchMyLocation();
@@ -363,6 +365,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             }
 
             // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
+            mPlaceMainLayout.setOptionViewTypeView(mViewType);
 
             for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
             {
