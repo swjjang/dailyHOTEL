@@ -57,7 +57,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private TicketInformation mSelectedTicketInformation;
     private String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
-    private View mToolbarUnderline;
     private boolean mDontReloadAtOnResume;
 
     protected Province mProvince;
@@ -189,9 +188,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     private void initToolbar(String title)
     {
-        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
-        mToolbarUnderline.setVisibility(View.INVISIBLE);
-
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
@@ -201,10 +197,32 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 finish();
             }
-        }, true);
+        }, false);
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelected);
+
+        View backImage = findViewById(R.id.backView);
+        View shareView = findViewById(R.id.shareView);
+
+        backImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
+
+        shareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mToolbarOptionsItemSelected.onClick(null);
+            }
+        });
     }
 
     @Override
@@ -506,15 +524,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void showActionBar()
         {
-            mDailyToolbarLayout.setToolbarTransparent(false);
-            mToolbarUnderline.setVisibility(View.VISIBLE);
+            mDailyToolbarLayout.setToolbarVisibility(true);
         }
 
         @Override
         public void hideActionBar()
         {
-            mDailyToolbarLayout.setToolbarTransparent(true);
-            mToolbarUnderline.setVisibility(View.INVISIBLE);
+            mDailyToolbarLayout.setToolbarVisibility(false);
         }
 
         @Override

@@ -52,10 +52,4 @@
             android:textColor="@android:color/white"
             android:textSize="17dp"/>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

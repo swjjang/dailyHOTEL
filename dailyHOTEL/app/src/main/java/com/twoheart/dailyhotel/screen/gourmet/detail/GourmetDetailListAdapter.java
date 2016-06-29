@@ -38,6 +38,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     protected View mTitleLayout;
     protected TextView mGradeTextView;
     protected TextView mNameTextView;
+    protected View mMagicToolbar;
 
     private GourmetDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
@@ -87,6 +88,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
     public View getNameTextView()
     {
         return mNameTextView;
+    }
+
+    public View getMagicToolbarView()
+    {
+        return mMagicToolbar;
     }
 
     @Override
@@ -196,6 +202,8 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         mTitleLayout = view.findViewById(R.id.hotelTitleLayout);
         mTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
+        mMagicToolbar = view.findViewById(R.id.magicToolbar);
 
         // 등급
         mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);

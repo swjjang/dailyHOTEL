@@ -21,26 +21,45 @@
             android:layout_alignBaseline="@+id/defaultHotelImageView"
             android:layout_alignBottom="@+id/defaultHotelImageView"
             android:paddingBottom="13dp"/>
-    </RelativeLayout>
 
-    <View
-        android:id="@+id/imageViewBlur"
-        android:layout_width="match_parent"
-        android:layout_height="19dp"
-        android:layout_alignBottom="@id/defaultHotelImageLayout"
-        android:background="@drawable/blur"
-        android:visibility="invisible"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="113dp"
+            android:background="@drawable/img_detail_gradient"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/navibar_ic_back_01_white"/>
+
+            <ImageView
+                android:id="@+id/menu1View"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/navibar_ic_share_02_white"/>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.DailyPlaceDetailListView
         android:id="@+id/hotelListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottomLayout"
         android:layout_alignParentBottom="false"
         android:cacheColorHint="#00000000"
         android:divider="@null"
         android:fadingEdge="none"
-        android:fadingEdgeLength="0dp"
-        android:layout_above="@+id/bottomLayout"/>
+        android:fadingEdgeLength="0dp"/>
 
     <include layout="@layout/toolbar_default_menu"/>
 
@@ -59,13 +78,28 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="7dp"
-            android:src="@drawable/room_select_x"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@color/white">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/act_hotel_search_ticket"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="16dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_marginBottom="7dp"
+                android:layout_marginRight="7dp"
+                android:src="@drawable/navibar_ic_x"/>
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ticketTypeRecyclerView"
@@ -113,10 +147,20 @@
             dailyFont:style="Medium"/>
     </RelativeLayout>
 
-    <View
-        android:id="@+id/toolbarUnderline"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
+        android:layout_height="@dimen/toolbar_height">
+
+        <View
+            android:id="@+id/backView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/shareView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 </RelativeLayout>

@@ -167,10 +167,4 @@
         android:textColor="@drawable/selector_button_default_text_color"
         android:textSize="17dp"
         dailyFont:style="Medium"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

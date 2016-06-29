@@ -21,6 +21,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -65,7 +66,6 @@ public class HotelDetailLayout
     private View mRoomTypeLayout;
     private View mBottomLayout;
     private View mRoomTypeBackgroundView;
-    private View mImageViewBlur;
 
     private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
@@ -111,9 +111,6 @@ public class HotelDetailLayout
             mImageAdapter.setData(arrayList);
             mViewPager.setAdapter(mImageAdapter);
         }
-
-        mImageViewBlur = activity.findViewById(R.id.imageViewBlur);
-        mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
@@ -831,23 +828,6 @@ public class HotelDetailLayout
             float offset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
             float alphaFactor = offset / max;
 
-            if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
-            {
-                if (Float.compare(alphaFactor, 0.0f) <= 0)
-                {
-                    if (mImageViewBlur.getVisibility() != View.VISIBLE)
-                    {
-                        mImageViewBlur.setVisibility(View.VISIBLE);
-                    }
-                } else
-                {
-                    if (mImageViewBlur.getVisibility() != View.INVISIBLE)
-                    {
-                        mImageViewBlur.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-
             if (Util.isOverAPI11() == true)
             {
                 if (Float.compare(alphaFactor, 0.0f) <= 0)
@@ -928,6 +908,17 @@ public class HotelDetailLayout
                     layoutParams.width = newWidth;
                     nameTextView.setLayoutParams(layoutParams);
                 }
+            }
+
+            View magicToolbarView = mListAdapter.getMagicToolbarView();
+
+            if(magicToolbarView != null)
+            {
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)magicToolbarView.getLayoutParams();
+                layoutParams.topMargin = mStatusBarHeight - rect.top;
+
+                magicToolbarView.setLayoutParams(layoutParams);
+                magicToolbarView.invalidate();
             }
         }
     };

@@ -19,10 +19,4 @@
         android:paddingRight="15dp"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

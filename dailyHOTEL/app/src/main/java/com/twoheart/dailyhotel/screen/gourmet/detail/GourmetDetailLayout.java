@@ -20,6 +20,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -33,6 +34,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
@@ -69,7 +71,6 @@ public class GourmetDetailLayout
     private View mTicketTypeLayout;
     private View mBottomLayout;
     private View mTicketTypeBackgroundView;
-    private View mImageViewBlur;
     private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
@@ -108,9 +109,6 @@ public class GourmetDetailLayout
             mImageAdapter.setData(arrayList);
             mViewPager.setAdapter(mImageAdapter);
         }
-
-        mImageViewBlur = activity.findViewById(R.id.imageViewBlur);
-        mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
@@ -800,23 +798,6 @@ public class GourmetDetailLayout
             float offset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
             float alphaFactor = offset / max;
 
-            if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
-            {
-                if (Float.compare(alphaFactor, 0.0f) <= 0)
-                {
-                    if (mImageViewBlur.getVisibility() != View.VISIBLE)
-                    {
-                        mImageViewBlur.setVisibility(View.VISIBLE);
-                    }
-                } else
-                {
-                    if (mImageViewBlur.getVisibility() != View.INVISIBLE)
-                    {
-                        mImageViewBlur.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-
             if (Util.isOverAPI11() == true)
             {
                 if (Float.compare(alphaFactor, 0.0f) <= 0)
@@ -897,6 +878,17 @@ public class GourmetDetailLayout
                     layoutParams.width = newWidth;
                     nameTextView.setLayoutParams(layoutParams);
                 }
+            }
+
+            View magicToolbarView = mListAdapter.getMagicToolbarView();
+
+            if(magicToolbarView != null)
+            {
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)magicToolbarView.getLayoutParams();
+                layoutParams.topMargin = mStatusBarHeight - rect.top;
+
+                magicToolbarView.setLayoutParams(layoutParams);
+                magicToolbarView.invalidate();
             }
         }
     };

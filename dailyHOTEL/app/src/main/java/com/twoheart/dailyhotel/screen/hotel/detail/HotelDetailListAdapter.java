@@ -38,6 +38,7 @@ public class HotelDetailListAdapter extends BaseAdapter
     private View mHotelTitleLayout;
     private TextView mHotelGradeTextView;
     private TextView mHotelNameTextView;
+    protected View mMagicToolbar;
 
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
@@ -194,6 +195,11 @@ public class HotelDetailListAdapter extends BaseAdapter
         return mHotelNameTextView;
     }
 
+    public View getMagicToolbarView()
+    {
+        return mMagicToolbar;
+    }
+
     /**
      * 빈화면
      *
@@ -222,6 +228,8 @@ public class HotelDetailListAdapter extends BaseAdapter
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
         mHotelTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
+        mMagicToolbar = view.findViewById(R.id.magicToolbar);
 
         // 등급
         mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);

@@ -147,12 +147,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
-
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/signUpView"
         android:layout_width="match_parent"
