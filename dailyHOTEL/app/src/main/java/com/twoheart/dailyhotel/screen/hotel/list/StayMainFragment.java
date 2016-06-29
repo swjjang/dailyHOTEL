@@ -88,8 +88,8 @@ public class StayMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
                 }
 
-                setScrollListTop(true);
-                refreshCurrentFragment();
+                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), province.getCategoryList(), //
+                    StayCurationManager.getInstance().getCategory(), mStayListFragmentListener);
             }
         } else if (resultCode == RESULT_CHANGED_DATE && data != null)
         {
@@ -107,6 +107,15 @@ public class StayMainFragment extends PlaceMainFragment
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
 
+                // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+                String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
+
+                if (province.name.equalsIgnoreCase(savedRegion) == false)
+                {
+                    DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                    DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+                }
+
                 SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
 
                 StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
@@ -116,9 +125,8 @@ public class StayMainFragment extends PlaceMainFragment
 
                 startCalendar();
 
-                setScrollListTop(true);
-                refreshCurrentFragment();
-
+                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), province.getCategoryList(), //
+                    StayCurationManager.getInstance().getCategory(), mStayListFragmentListener);
             }
         }
     }

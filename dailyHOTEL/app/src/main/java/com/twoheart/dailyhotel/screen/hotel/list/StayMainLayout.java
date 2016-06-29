@@ -25,8 +25,7 @@ public class StayMainLayout extends PlaceMainLayout
     }
 
     @Override
-    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter( //
-                                                                              FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
+    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         return new StayListFragmentPagerAdapter(fragmentManager, count, listener);
     }
