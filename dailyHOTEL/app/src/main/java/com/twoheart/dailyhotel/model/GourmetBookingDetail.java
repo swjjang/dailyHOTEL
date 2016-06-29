@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 public class GourmetBookingDetail extends PlaceBookingDetail
 {
-    public Place.Grade grade;
+    public Gourmet.Grade grade;
     public int ticketCount;
     public String ticketName;
     public String reservationTime;
@@ -41,7 +41,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
     {
         super.readFromParcel(in);
 
-        grade = Place.Grade.valueOf(in.readString());
+        grade = Gourmet.Grade.valueOf(in.readString());
         ticketCount = in.readInt();
         ticketName = in.readString();
         reservationTime = in.readString();
@@ -55,7 +55,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         longitude = jsonObject.getDouble("longitude");
         placeName = jsonObject.getString("restaurantName");
 
-        grade = Place.Grade.gourmet;
+        grade = Gourmet.Grade.gourmet;
         category = jsonObject.getString("category");
         guestName = jsonObject.getString("customerName");
         guestPhone = jsonObject.getString("customerPhone");

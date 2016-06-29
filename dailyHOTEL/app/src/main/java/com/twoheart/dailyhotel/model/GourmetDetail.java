@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 public class GourmetDetail extends PlaceDetail
 {
+    public Gourmet.Grade grade;
     public String category;
 
     public GourmetDetail(int index)
@@ -21,7 +22,7 @@ public class GourmetDetail extends PlaceDetail
     @Override
     public void setData(JSONObject jsonObject) throws Exception
     {
-        grade = Place.Grade.gourmet;
+        grade = Gourmet.Grade.gourmet;
 
         if (Util.isTextEmpty(category) == true)
         {

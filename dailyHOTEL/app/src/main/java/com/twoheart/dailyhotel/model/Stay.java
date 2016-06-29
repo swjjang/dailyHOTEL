@@ -13,22 +13,11 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class Stay implements Parcelable
+public class Stay extends Place
 {
-    public int index;
     public int averageDiscountPrice;
-    public double latitude;
-    public double longitude;
-    public boolean isDailyChoice;
     public String dBenefitText;
     public int nights;
-    public String imageUrl;
-    public String name;
-    public int price;
-    public String addressSummary;
-    public boolean isSoldOut;
-    public String detailRegion;
-    public int satisfaction;
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
 
@@ -48,37 +37,21 @@ public class Stay implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(imageUrl);
-        dest.writeString(name);
-        dest.writeInt(price);
+        super.writeToParcel(dest, flags);
+
         dest.writeInt(averageDiscountPrice);
-        dest.writeString(addressSummary);
         dest.writeSerializable(mGrade);
-        dest.writeInt(index);
-        dest.writeInt(isSoldOut ? 1 : 0);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
-        dest.writeInt(isDailyChoice ? 1 : 0);
         dest.writeString(dBenefitText);
-        dest.writeInt(satisfaction);
         dest.writeString(categoryCode);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        imageUrl = in.readString();
-        name = in.readString();
-        price = in.readInt();
+        super.readFromParcel(in);
+
         averageDiscountPrice = in.readInt();
-        addressSummary = in.readString();
         mGrade = (HotelGrade) in.readSerializable();
-        index = in.readInt();
-        isSoldOut = in.readInt() == 1 ? true : false;
-        latitude = in.readDouble();
-        longitude = in.readDouble();
-        isDailyChoice = in.readInt() == 1 ? true : false;
         dBenefitText = in.readString();
-        satisfaction = in.readInt();
         categoryCode = in.readString();
     }
 
@@ -108,7 +81,7 @@ public class Stay implements Parcelable
 
             index = jsonObject.getInt("hotelIdx");
             isSoldOut = jsonObject.getBoolean("isSoldOut");
-            detailRegion = jsonObject.getString("districtName");
+            districtName = jsonObject.getString("districtName");
             categoryCode = jsonObject.getString("category");
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");

@@ -30,7 +30,7 @@ public class HotelSearch extends Stay
             }
 
             index = jsonObject.getInt("hotel_idx");
-            detailRegion = jsonObject.getString("district_name");
+            districtName = jsonObject.getString("district_name");
             categoryCode = jsonObject.getString("category");
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");

@@ -501,7 +501,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         for (Stay stay : stayList)
         {
-            String region = stay.detailRegion;
+            String region = stay.districtName;
 
             if (Util.isTextEmpty(region) == true)
             {

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public abstract class PlaceDetail
 {
     public int index;
-    public Place.Grade grade;
     public String name;
     public String address;
     public String benefit;

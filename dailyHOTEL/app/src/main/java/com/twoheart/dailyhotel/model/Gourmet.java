@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -11,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class Gourmet extends Place implements Parcelable
+public class Gourmet extends Place
 {
     public int persons;
     public String category;
@@ -20,6 +22,9 @@ public class Gourmet extends Place implements Parcelable
     public float distance;
 
     private GourmetFilters mGourmetFilters;
+
+    public int discountPrice;
+    public Grade grade;
 
     public Gourmet()
     {
@@ -37,6 +42,8 @@ public class Gourmet extends Place implements Parcelable
         super.writeToParcel(dest, flags);
 
         dest.writeInt(persons);
+        dest.writeInt(discountPrice);
+        dest.writeSerializable(grade);
     }
 
     protected void readFromParcel(Parcel in)
@@ -44,9 +51,10 @@ public class Gourmet extends Place implements Parcelable
         super.readFromParcel(in);
 
         persons = in.readInt();
+        discountPrice = in.readInt();
+        grade = (Grade) in.readSerializable();
     }
 
-    @Override
     public boolean setData(JSONObject jsonObject, String imageUrl)
     {
         try
@@ -181,4 +189,36 @@ public class Gourmet extends Place implements Parcelable
             return new Gourmet[size];
         }
     };
+
+
+    public enum Grade
+    {
+        gourmet(R.string.grade_not_yet, R.color.dh_theme_color, R.drawable.bg_hotel_price_900034);
+
+        private int mNameResId;
+        private int mColorResId;
+        private int mMarkerResId;
+
+        Grade(int nameResId, int colorResId, int markerResId)
+        {
+            mNameResId = nameResId;
+            mColorResId = colorResId;
+            mMarkerResId = markerResId;
+        }
+
+        public String getName(Context context)
+        {
+            return context.getString(mNameResId);
+        }
+
+        public int getColorResId()
+        {
+            return mColorResId;
+        }
+
+        public int getMarkerResId()
+        {
+            return mMarkerResId;
+        }
+    }
 }

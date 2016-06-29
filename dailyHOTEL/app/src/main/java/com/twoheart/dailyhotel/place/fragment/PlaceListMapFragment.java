@@ -86,6 +86,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     protected abstract PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context);
 
+    protected abstract PlaceRenderer newInstancePlaceRenderer(Context context, Place place);
+
+    protected abstract PlaceClusterRenderer getPlaceClusterRenderer(Context context, GoogleMap googleMap, ClusterManager<PlaceClusterItem> clusterManager);
+
     public PlaceListMapFragment()
     {
     }
@@ -130,7 +134,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 relocationZoomControl();
 
                 mClusterManager = new ClusterManager<>(mBaseActivity, mGoogleMap);
-                mPlaceClusterRenderer = new PlaceClusterRenderer(mBaseActivity, mGoogleMap, mClusterManager);
+                mPlaceClusterRenderer = getPlaceClusterRenderer(mBaseActivity, mGoogleMap, mClusterManager);
                 mPlaceClusterRenderer.setOnClusterRenderedListener(mOnClusterRenderedListener);
 
                 mClusterManager.setRenderer(mPlaceClusterRenderer);
@@ -532,7 +536,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
+                PlaceRenderer placeRenderer = newInstancePlaceRenderer(mBaseActivity, place);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -589,7 +593,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
+                PlaceRenderer placeRenderer = newInstancePlaceRenderer(mBaseActivity, place);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -752,60 +756,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         };
 
         Collections.sort(arrangeList, comparator);
-
-        size = arrangeList.size();
-
-        // 중복된 호텔들은 낮은 가격을 노출하도록 한다.
-        if (size > 1)
-        {
-            Place item01;
-            Place item02;
-
-            for (int i = size - 1; i > 0; i--)
-            {
-                item01 = arrangeList.get(i).<Gourmet>getItem();
-                item02 = arrangeList.get(i - 1).<Gourmet>getItem();
-
-                if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
-                {
-                    int item01DisCount = item01.discountPrice;
-                    int item02DisCount = item02.discountPrice;
-
-                    if (item01DisCount >= item02DisCount)
-                    {
-                        arrangeList.remove(i);
-                    } else
-                    {
-                        arrangeList.remove(i - 1);
-                    }
-
-                    String key = Double.toString(item01.latitude) + Double.toString(item01.longitude);
-
-                    if (hashMap.containsKey(key) == true)
-                    {
-                        ArrayList<Place> dulicateArrayList = hashMap.get(key);
-
-                        if (dulicateArrayList.contains(item01) == false)
-                        {
-                            dulicateArrayList.add(item01);
-                        }
-
-                        if (dulicateArrayList.contains(item02) == false)
-                        {
-                            dulicateArrayList.add(item02);
-                        }
-                    } else
-                    {
-                        ArrayList<Place> dulicateArrayList = new ArrayList<>();
-
-                        dulicateArrayList.add(item01);
-                        dulicateArrayList.add(item02);
-
-                        hashMap.put(key, dulicateArrayList);
-                    }
-                }
-            }
-        }
 
         return arrangeList;
     }
