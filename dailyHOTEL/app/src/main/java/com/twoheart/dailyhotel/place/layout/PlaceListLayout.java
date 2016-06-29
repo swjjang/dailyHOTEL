@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class PlaceListLayout extends BaseLayout
 {
     protected PinnedSectionRecyclerView mPlaceRecyclerView;
-    protected PlaceListAdapter mPlacetListAdapter;
+    protected PlaceListAdapter mPlaceListAdapter;
 
     protected View mEmptyView;
     protected ViewGroup mMapLayout;
@@ -69,8 +69,8 @@ public abstract class PlaceListLayout extends BaseLayout
         mPlaceRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mPlacetListAdapter = getPlacetListAdapter(mContext, new ArrayList<PlaceViewItem>());
-        mPlaceRecyclerView.setAdapter(mPlacetListAdapter);
+        mPlaceListAdapter = getPlacetListAdapter(mContext, new ArrayList<PlaceViewItem>());
+        mPlaceRecyclerView.setAdapter(mPlaceListAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);

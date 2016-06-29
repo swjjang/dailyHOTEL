@@ -88,17 +88,17 @@ public class StayMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
                 }
 
+                setScrollListTop(true);
                 refreshCurrentFragment();
             }
         } else if (resultCode == RESULT_CHANGED_DATE && data != null)
         {
             // 날짜 선택 화면으로 이동한다.
-            StayCurationManager.getInstance().getStayCurationOption().clear();
-
-            //            mOnCommunicateListener.setScrollListTop(true);
 
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
             {
+                StayCurationManager.getInstance().getStayCurationOption().clear();
+
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
                 int nights = data.getIntExtra(HotelRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
@@ -115,6 +115,8 @@ public class StayMainFragment extends PlaceMainFragment
                 ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(checkInSaleTime, checkOutSaleTime);
 
                 startCalendar();
+
+                setScrollListTop(true);
                 refreshCurrentFragment();
 
             }
@@ -139,8 +141,8 @@ public class StayMainFragment extends PlaceMainFragment
 
             ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(checkInSaleTime, checkOutSaleTime);
 
-            PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-            placeListFragment.refreshList(true);
+            setScrollListTop(true);
+            refreshCurrentFragment();
         }
     }
 
@@ -165,6 +167,8 @@ public class StayMainFragment extends PlaceMainFragment
             stayCurationOption.person = changeCurationOption.person;
             stayCurationOption.flagBedTypeFilters = changeCurationOption.flagBedTypeFilters;
             stayCurationOption.flagAmenitiesFilters = changeCurationOption.flagAmenitiesFilters;
+
+            setScrollListTop(true);
 
             if (changeCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -242,6 +246,21 @@ public class StayMainFragment extends PlaceMainFragment
 
             case GONE:
                 break;
+        }
+    }
+
+    private void setScrollListTop(boolean scrollListTop)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        if (placeListFragment != null && placeListFragment instanceof StayListFragment)
+        {
+            ((StayListFragment) placeListFragment).setScrollListTop(scrollListTop);
         }
     }
 
@@ -682,7 +701,7 @@ public class StayMainFragment extends PlaceMainFragment
             try
             {
                 SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(datePlus);
-                SaleTime checkOutSaleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(datePlus + night);
+                SaleTime checkOutSaleTime = checkInSaleTime.getClone(datePlus + night);
 
                 StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
                 StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);

@@ -90,17 +90,17 @@ public class GourmetListLayout extends PlaceListLayout
 
     public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
-        if (mPlacetListAdapter == null)
+        if (mPlaceListAdapter == null)
         {
             Util.restartApp(mContext);
             return;
         }
 
-        mPlacetListAdapter.clear();
+        mPlaceListAdapter.clear();
 
         if (list == null || list.size() == 0)
         {
-            mPlacetListAdapter.notifyDataSetChanged();
+            mPlaceListAdapter.notifyDataSetChanged();
 
             setVisibility(fragmentManager, Constants.ViewType.GONE, true);
         } else
@@ -154,8 +154,8 @@ public class GourmetListLayout extends PlaceListLayout
                 }
             }
 
-            ((GourmetListAdapter) mPlacetListAdapter).addAll(list, sortType);
-            mPlacetListAdapter.notifyDataSetChanged();
+            ((GourmetListAdapter) mPlaceListAdapter).addAll(list, sortType);
+            mPlaceListAdapter.notifyDataSetChanged();
 
             if (mScrollListTop == true)
             {
@@ -167,7 +167,7 @@ public class GourmetListLayout extends PlaceListLayout
 
     public boolean hasSalesPlace()
     {
-        return hasSalesPlace(mPlacetListAdapter.getAll());
+        return hasSalesPlace(mPlaceListAdapter.getAll());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ public class GourmetListLayout extends PlaceListLayout
                 return;
             }
 
-            PlaceViewItem gourmetViewItem = mPlacetListAdapter.getItem(position);
+            PlaceViewItem gourmetViewItem = mPlaceListAdapter.getItem(position);
 
             if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {

@@ -1,23 +1,9 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * HotelListFragment (호텔 목록 화면)
- * <p>
- * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
- * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
- * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
- * 한다. 리스트뷰의 맨 첫 아이템은 이벤트 참여하기 버튼이 있으며, 이 버튼은
- * 서버의 이벤트 API에 따라 NEW 아이콘을 붙여주기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +43,6 @@ public class StayListFragment extends PlaceListFragment
     private List<EventBanner> mEventBannerList;
 
     private ViewType mViewType;
-    protected boolean mScrollListTop;
 
     protected List<Stay> mStayList = new ArrayList<>();
 
@@ -235,37 +220,9 @@ public class StayListFragment extends PlaceListFragment
     ////////////////////////           Ovrride method     end    /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    protected void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
-        //        BaseActivity baseActivity = (BaseActivity) getActivity();
-        //
-        //        if (province == null || checkInSaleTime == null || checkOutSaleTime == null)
-        //        {
-        //            Util.restartApp(baseActivity);
-        //            return;
-        //        }
-        //
-        //        lockUI();
-        //
-        //        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-        //
-        //        if (nights <= 0)
-        //        {
-        //            unLockUI();
-        //            return;
-        //        }
-        //
-        //        //        if (DEBUG == true && this instanceof HotelDaysListFragment)
-        //        //        {
-        //        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-        //        //        }
-        //
-        //        DailyNetworkAPI.getInstance(baseActivity).requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
-    }
-
     public void setScrollListTop(boolean scrollListTop)
     {
-        mScrollListTop = scrollListTop;
+        mStayListLayout.setScrollListTop(scrollListTop);
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Stay> stayList, StayCurationOption stayCurationOption)
@@ -427,7 +384,7 @@ public class StayListFragment extends PlaceListFragment
 
     public void curationList(ViewType viewType, Category category, StayCurationOption curationOption)
     {
-        mScrollListTop = true;
+        setScrollListTop(true);
 
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, category, curationOption);
         mStayListLayout.setList(getChildFragmentManager(), viewType, placeViewItemList, curationOption.getSortType());
@@ -483,63 +440,6 @@ public class StayListFragment extends PlaceListFragment
         return list;
     }
 
-    //
-    //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //    //
-    //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
-    //    {
-    //        @Override
-    //        public void onClick(View view)
-    //        {
-    //            BaseActivity baseActivity = (BaseActivity) getActivity();
-    //
-    //            if (baseActivity == null)
-    //            {
-    //                return;
-    //            }
-    //
-    //            int position = mStayRecyclerView.getChildAdapterPosition(view);
-    //
-    //            if (position < 0)
-    //            {
-    //                fetchList();
-    //                return;
-    //            }
-    //
-    //            PlaceViewItem placeViewItem = mStayListAdapter.getItem(position);
-    //
-    //            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
-    //            {
-    //                mOnCommunicateListener.selectHotel(placeViewItem, mCheckInSaleTime);
-    //            }
-    //        }
-    //    };
-    //
-    //    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-    //    {
-    //        @Override
-    //        public void onClick(View view)
-    //        {
-    //            BaseActivity baseActivity = (BaseActivity) getActivity();
-    //
-    //            if (baseActivity == null)
-    //            {
-    //                return;
-    //            }
-    //
-    //            Integer index = (Integer) view.getTag(view.getId());
-    //
-    //            if (index != null)
-    //            {
-    //                EventBanner eventBanner = mEventBannerList.get(index);
-    //
-    //                mOnCommunicateListener.selectEventBanner(eventBanner);
-    //            }
-    //        }
-    //    };
-    //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -689,8 +589,9 @@ public class StayListFragment extends PlaceListFragment
     private StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, SaleTime checkInSaleTime)
+        public void onPlaceClick(PlaceViewItem placeViewItem)
         {
+            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem, checkInSaleTime);
         }
 
@@ -701,9 +602,21 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+
+        }
+
+        @Override
         public void onRefreshAll(boolean isShowProgress)
         {
-            refreshList(true);
+            refreshList(isShowProgress);
         }
 
         @Override
