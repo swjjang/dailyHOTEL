@@ -319,6 +319,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
+            android:name=".screen.hotel.filter.StayCurationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity
             android:name=".screen.gourmet.filter.GourmetCurationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

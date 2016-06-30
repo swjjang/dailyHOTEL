@@ -29,8 +29,8 @@ import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
@@ -898,7 +898,7 @@ public class StayMainFragment extends PlaceMainFragment
                 return;
             }
 
-            Intent intent = HotelCurationActivity.newInstance(mBaseActivity, //
+            Intent intent = StayCurationActivity.newInstance(mBaseActivity, //
                 province.isOverseas, mViewType, //
                 StayCurationManager.getInstance().getStayCurationOption());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
