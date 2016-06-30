@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -9,13 +10,13 @@ import java.util.ArrayList;
 
 public class GourmetListFragmentPagerAdapter extends PlaceListFragmentPagerAdapter
 {
-    public GourmetListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
+    public GourmetListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        super(fragmentManager, count, listener);
+        super(fragmentManager, count, bottomOptionLayout, listener);
     }
 
     @Override
-    protected void makePlaceListFragment(ArrayList<PlaceListFragment> list, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
+    protected void makePlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         if (list == null)
         {
@@ -30,6 +31,7 @@ public class GourmetListFragmentPagerAdapter extends PlaceListFragmentPagerAdapt
         {
             gourmetListFragment = new GourmetListFragment();
             gourmetListFragment.setListFragmentListener(listener);
+            gourmetListFragment.setBottomOptionLayout(bottomOptionLayout);
             list.add(gourmetListFragment);
         }
     }

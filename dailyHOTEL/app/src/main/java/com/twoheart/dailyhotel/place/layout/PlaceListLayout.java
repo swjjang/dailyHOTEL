@@ -31,6 +31,7 @@ public abstract class PlaceListLayout extends BaseLayout
     protected View mEmptyView;
     protected ViewGroup mMapLayout;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
+    protected View mBottomOptionLayout;
 
     protected boolean mScrollListTop;
 
@@ -127,6 +128,11 @@ public abstract class PlaceListLayout extends BaseLayout
         }
 
         return true;
+    }
+
+    public void setBottomOptionLayout(View view)
+    {
+        mBottomOptionLayout = view;
     }
 
     public void setScrollListTop(boolean scrollListTop)

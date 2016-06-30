@@ -44,6 +44,8 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_password);
@@ -205,7 +207,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.place.fragment;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -55,12 +57,16 @@ import java.util.List;
 
 public abstract class PlaceListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
+    private static final int ANIMATION_DEALY = 200;
+    private static final int VIEWPAGER_HEIGHT_DP = 100;
+
     private GoogleMap mGoogleMap;
     protected List<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
     private List<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
     private LoadingDialog mLoadingDialog;
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker;
+    private View mBottomOptionLayout;
 
     protected boolean mIsCreateView = false;
     private boolean mCallMakeMarker = false;
@@ -78,6 +84,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     protected BaseActivity mBaseActivity;
     protected OnPlaceListMapFragmentListener mOnPlaceListMapFragmentListener;
     protected PlaceMapViewPagerAdapter mPlaceMapViewPagerAdapter;
+
+    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    private ValueAnimator mValueAnimator;
 
     public interface OnPlaceListMapFragmentListener
     {
@@ -174,6 +184,11 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         System.gc();
     }
 
+    public void setBottomOptionLayout(View view)
+    {
+        mBottomOptionLayout = view;
+    }
+
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Stay Info ViewPager
@@ -186,7 +201,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, 100));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
         layoutParams.gravity = Gravity.BOTTOM;
 
         mViewPager.setLayoutParams(layoutParams);
@@ -490,7 +505,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mViewPager.setVisibility(View.VISIBLE);
         mViewPager.bringToFront();
 
         Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
@@ -568,7 +582,187 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             // 마커의 order을 상단으로 옮긴다.
             mSelectedMarker.showInfoWindow();
         }
+
+        showPlaceDetailAnimation();
     }
+
+    public void setMenuBarLayoutTranslationY(float dy)
+    {
+        mBottomOptionLayout.setTranslationY(dy - Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP));
+        mViewPager.setTranslationY(dy);
+    }
+
+    public void resetMenuBarLayoutranslation()
+    {
+        mBottomOptionLayout.setTranslationY(0);
+
+        mViewPager.setVisibility(View.INVISIBLE);
+        mViewPager.setTranslationY(0);
+    }
+
+    private void showPlaceDetailAnimation()
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator.removeAllListeners();
+            }
+
+            mValueAnimator = null;
+        }
+
+        if (mViewPager.getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(ANIMATION_DEALY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+                int height = Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP);
+                float translationY = height - height * value / 100;
+
+                setMenuBarLayoutTranslationY(translationY);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                //                setMenuBarLayoutEnabled(false);
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mViewPager.setTranslationY(Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP));
+
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+                }
+
+                //                setMenuBarLayoutEnabled(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                //                setMenuBarLayoutEnabled(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    private void hidePlaceDetailAnimation()
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+        {
+            return;
+        }
+
+        if (mViewPager.getVisibility() != View.VISIBLE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator.removeAllListeners();
+            }
+
+            mValueAnimator = null;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(ANIMATION_DEALY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+                int height = Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP);
+                float translationY = height * value / 100;
+
+                setMenuBarLayoutTranslationY(translationY);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+
+                setMenuBarLayoutTranslationY(0);
+
+//                setMenuBarLayoutEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+                }
+
+                mViewPager.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                mViewPager.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
 
     private void onMarkerTempClick(final LatLng latlng)
     {
@@ -1014,7 +1208,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
             if (mViewPager != null)
             {
-                mViewPager.setVisibility(View.INVISIBLE);
+                hidePlaceDetailAnimation();
             }
         }
     };

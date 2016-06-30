@@ -90,7 +90,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
     }

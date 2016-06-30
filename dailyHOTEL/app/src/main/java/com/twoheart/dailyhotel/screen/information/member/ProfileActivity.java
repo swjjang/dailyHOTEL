@@ -46,8 +46,7 @@ public class ProfileActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
 
@@ -89,7 +88,7 @@ public class ProfileActivity extends BaseActivity
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     private ProfileLayout.OnEventListener mOnEventListener = new ProfileLayout.OnEventListener()

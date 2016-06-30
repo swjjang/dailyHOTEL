@@ -25,9 +25,9 @@ public class StayMainLayout extends PlaceMainLayout
     }
 
     @Override
-    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
+    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new StayListFragmentPagerAdapter(fragmentManager, count, listener);
+        return new StayListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
     }
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
@@ -37,21 +37,9 @@ public class StayMainLayout extends PlaceMainLayout
 
     private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        String dateFormat = "M.d";
-        String tabDateFormat;
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d");
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d");
 
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            tabDateFormat = "%s - %s";
-        } else
-        {
-            tabDateFormat = "%s-%s";
-        }
-
-        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
-        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
-
-        return String.format(tabDateFormat, checkInDay, checkOutDay);
+        return String.format("%s-%s", checkInDay, checkOutDay);
     }
-
 }

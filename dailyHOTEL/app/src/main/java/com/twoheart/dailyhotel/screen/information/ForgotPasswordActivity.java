@@ -33,7 +33,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
 
@@ -120,7 +120,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

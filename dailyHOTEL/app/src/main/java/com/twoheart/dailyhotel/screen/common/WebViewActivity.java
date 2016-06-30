@@ -48,7 +48,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
@@ -87,7 +87,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override

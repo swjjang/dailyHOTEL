@@ -56,6 +56,7 @@ public class GourmetListFragment extends PlaceListFragment
         mBaseActivity = (BaseActivity) getActivity();
 
         mGourmetListLayout = new GourmetListLayout(mBaseActivity, mOnEventListener);
+        mGourmetListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
         mViewType = ViewType.LIST;
 
@@ -84,11 +85,6 @@ public class GourmetListFragment extends PlaceListFragment
     {
         mViewType = viewType;
         mGourmetListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
-    }
-
-    public void fetchList()
-    {
-        fetchList(GourmetCurationManager.getInstance().getProvince(), GourmetCurationManager.getInstance().getSaleTime(), null);
     }
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)

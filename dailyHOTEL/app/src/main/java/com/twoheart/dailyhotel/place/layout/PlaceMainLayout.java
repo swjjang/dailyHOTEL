@@ -33,7 +33,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private TextView mRegionTextView;
     private TextView mDateTextView;
 
-    private View mBottomOptionLayout;
+    protected View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
@@ -68,7 +68,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         void onFilterClick();
     }
 
-    protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener);
+    protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
     public PlaceMainLayout(Context context, OnEventListener mOnEventListener)
     {
@@ -216,7 +216,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             size = 1;
             setCategoryTabLayoutVisibility(View.GONE);
 
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
@@ -253,7 +253,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 selectedTab.select();
             }
 
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
