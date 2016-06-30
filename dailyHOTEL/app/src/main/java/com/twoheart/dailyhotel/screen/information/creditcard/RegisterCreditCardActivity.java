@@ -31,6 +31,8 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_regcreditcard);
@@ -105,7 +107,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     {
         super.finish();
 
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override

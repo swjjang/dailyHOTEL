@@ -81,7 +81,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
 
                 imageView.setController(controller);
                 imageView.setTag(imageView.getId(), position);
-                imageView.getHierarchy().setPlaceholderImage(R.drawable.background_hoteldetail_viewpager);
+                imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, height);
                 container.addView(imageView, 0, layoutParams);
@@ -89,7 +89,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
             {
                 imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
                 imageView.setTag(imageView.getId(), position);
-                imageView.getHierarchy().setPlaceholderImage(R.drawable.background_hoteldetail_viewpager);
+                imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
                 Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).url);
 

@@ -17,6 +17,7 @@ package com.twoheart.dailyhotel.place.fragment;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -26,6 +27,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 {
     protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
     private boolean mIsAttached;
+    protected View mBottomOptionLayout; // 애니매이션 때문에 어쩔수 없음.
 
     // onPlaceClick 부분이 있는데 이부분은 고메와 호텔은 서로 상속받아서 사용한다.
     public interface OnPlaceListFragmentListener
@@ -59,6 +61,11 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public void setListFragmentListener(OnPlaceListFragmentListener listener)
     {
         mOnPlaceListFragmentListener = listener;
+    }
+
+    public void setBottomOptionLayout(View view)
+    {
+        mBottomOptionLayout = view;
     }
 
     public boolean isAttached()

@@ -23,6 +23,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_payment_result);
@@ -79,7 +81,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         super.finish();
 
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     @Override

@@ -48,6 +48,7 @@ public class GourmetListLayout extends PlaceListLayout
 
                 if (mGourmetListMapFragment != null)
                 {
+                    mGourmetListMapFragment.resetMenuBarLayoutranslation();
                     fragmentManager.beginTransaction().remove(mGourmetListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
                     mGourmetListMapFragment = null;
@@ -63,6 +64,7 @@ public class GourmetListLayout extends PlaceListLayout
                 if (isCurrentPage == true && mGourmetListMapFragment == null)
                 {
                     mGourmetListMapFragment = new GourmetListMapFragment();
+                    mGourmetListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
                     fragmentManager.beginTransaction().add(mMapLayout.getId(), mGourmetListMapFragment).commitAllowingStateLoss();
                 }
 

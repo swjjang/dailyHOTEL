@@ -53,6 +53,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_name);
@@ -189,7 +191,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

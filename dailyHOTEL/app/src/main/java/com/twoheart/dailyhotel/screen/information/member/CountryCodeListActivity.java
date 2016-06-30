@@ -41,6 +41,8 @@ public class CountryCodeListActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -88,7 +90,7 @@ public class CountryCodeListActivity extends BaseActivity
     {
         super.finish();
 
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()

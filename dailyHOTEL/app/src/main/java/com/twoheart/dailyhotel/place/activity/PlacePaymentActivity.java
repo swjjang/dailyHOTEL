@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -87,6 +88,14 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected abstract void setCancelCoupon();
 
     @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected void onResume()
     {
         super.onResume();
@@ -124,7 +133,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -363,7 +373,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
         {
             Intent intent = new Intent(this, RegisterCreditCardActivity.class);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         } else
         {
             showAgreeTermDialog(mPaymentInformation.paymentType);
@@ -534,7 +543,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.EDIT_BUTTON_CLICKED, Label.PAYMENT_CARD_EDIT, null);
@@ -553,7 +561,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -56,6 +56,8 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_invite_friends);
@@ -196,7 +198,8 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -278,7 +281,6 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent, REQUEST_ACTIVITY_LOGIN);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
                 break;
@@ -288,7 +290,6 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             {
                 Intent intent = SignupStep1Activity.newInstance(InviteFriendsActivity.this);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SIGNUP);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
                 break;

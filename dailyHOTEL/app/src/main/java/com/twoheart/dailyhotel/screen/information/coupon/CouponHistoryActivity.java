@@ -29,7 +29,10 @@ public class CouponHistoryActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
+
         mCouponHistoryLayout = new CouponHistoryLayout(this, mOnEventListener);
         mCouponHistoryNetworkController = new CouponHistoryNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
@@ -59,7 +62,7 @@ public class CouponHistoryActivity extends BaseActivity
     {
         super.finish();
 
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     // ////////////////////////////////////////////////////////

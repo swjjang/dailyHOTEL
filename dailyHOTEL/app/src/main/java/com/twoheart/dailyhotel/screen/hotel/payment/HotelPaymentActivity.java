@@ -798,7 +798,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     @Override
@@ -812,7 +811,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             , saleRoomInformation.roomName, hotelPaymentInformation.checkInOutDate);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
     }
 
     @Override

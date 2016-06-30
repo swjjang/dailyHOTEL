@@ -38,6 +38,8 @@ public class AddProfileSocialActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         mAddProfileSocialLayout = new AddProfileSocialLayout(this, mOnEventListener);
@@ -104,7 +106,7 @@ public class AddProfileSocialActivity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -137,7 +139,6 @@ public class AddProfileSocialActivity extends BaseActivity
 
             Intent intent = new Intent(AddProfileSocialActivity.this, TermActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -150,7 +151,6 @@ public class AddProfileSocialActivity extends BaseActivity
 
             Intent intent = new Intent(AddProfileSocialActivity.this, PrivacyActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -163,7 +163,6 @@ public class AddProfileSocialActivity extends BaseActivity
 
             Intent intent = CountryCodeListActivity.newInstance(AddProfileSocialActivity.this, mCountryCode);
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

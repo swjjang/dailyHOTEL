@@ -38,7 +38,10 @@ public class CouponListActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
+
         mCouponListLayout = new CouponListLayout(this, mOnEventListener);
         mCouponListNetworkController = new CouponListNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
@@ -79,7 +82,7 @@ public class CouponListActivity extends BaseActivity
     {
         super.finish();
 
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     private void showLoginDialog()
@@ -116,7 +119,6 @@ public class CouponListActivity extends BaseActivity
     {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     @Override
@@ -155,7 +157,6 @@ public class CouponListActivity extends BaseActivity
 
             Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -164,7 +165,6 @@ public class CouponListActivity extends BaseActivity
             // 쿠폰 사용시 유의사항 안내
             Intent intent = CouponTermActivity.newInstance(CouponListActivity.this);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -174,7 +174,6 @@ public class CouponListActivity extends BaseActivity
             // 쿠폰 사용시 유의사항 안내
             Intent intent = CouponTermActivity.newInstance(CouponListActivity.this, coupon.couponCode);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

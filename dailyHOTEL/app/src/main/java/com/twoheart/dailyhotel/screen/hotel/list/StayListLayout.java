@@ -46,6 +46,7 @@ public class StayListLayout extends PlaceListLayout
 
                 if (mStayMapFragment != null)
                 {
+                    mStayMapFragment.resetMenuBarLayoutranslation();
                     fragmentManager.beginTransaction().remove(mStayMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
                     mStayMapFragment = null;
@@ -61,6 +62,7 @@ public class StayListLayout extends PlaceListLayout
                 if (isCurrentPage == true && mStayMapFragment == null)
                 {
                     mStayMapFragment = new StayMapFragment();
+                    mStayMapFragment.setBottomOptionLayout(mBottomOptionLayout);
                     fragmentManager.beginTransaction().add(mMapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
                 }
 

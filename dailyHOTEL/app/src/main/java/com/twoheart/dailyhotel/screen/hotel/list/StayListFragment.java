@@ -57,6 +57,7 @@ public class StayListFragment extends PlaceListFragment
         mBaseActivity = (BaseActivity) getActivity();
 
         mStayListLayout = new StayListLayout(getContext(), mEventListener);
+        mStayListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
         mViewType = ViewType.LIST;
 

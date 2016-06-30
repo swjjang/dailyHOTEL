@@ -116,6 +116,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         }
 
         super.finish();
+
         overridePendingTransition(0, 0);
     }
 

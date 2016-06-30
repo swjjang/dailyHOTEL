@@ -55,6 +55,8 @@ public class SignupStep1Activity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -96,7 +98,8 @@ public class SignupStep1Activity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -227,7 +230,6 @@ public class SignupStep1Activity extends BaseActivity
 
             Intent intent = new Intent(SignupStep1Activity.this, TermActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -240,7 +242,6 @@ public class SignupStep1Activity extends BaseActivity
 
             Intent intent = new Intent(SignupStep1Activity.this, PrivacyActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

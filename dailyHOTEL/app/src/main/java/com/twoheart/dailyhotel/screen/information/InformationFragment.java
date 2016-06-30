@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
@@ -183,7 +184,6 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
-        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     private void checkInformation()
@@ -221,9 +221,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             baseActivity.startActivity(new Intent(baseActivity, LoginActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
@@ -247,7 +245,6 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivity(new Intent(baseActivity, ProfileActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
         }
@@ -265,7 +262,6 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
             startActivity(new Intent(baseActivity, CouponListActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
                 Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
@@ -283,9 +279,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             startActivity(new Intent(baseActivity, BonusActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
@@ -302,9 +296,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             startActivity(new Intent(baseActivity, CreditCardListActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);
@@ -333,8 +325,6 @@ public class InformationFragment extends BaseFragment implements Constants
                 startActivity(InviteFriendsActivity.newInstance(baseActivity, recommeder, name));
             }
 
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.INVITE_FRIENDS, null);
         }
@@ -350,9 +340,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             startActivity(new Intent(baseActivity, EventListActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
@@ -408,7 +396,6 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivity(new Intent(baseActivity, AboutActivity.class));
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
 
@@ -474,18 +461,16 @@ public class InformationFragment extends BaseFragment implements Constants
             try
             {
                 intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                baseActivity.startActivity(intent);
             } catch (Exception e)
             {
                 try
                 {
                     intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
-                    startActivity(intent);
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                    baseActivity.startActivity(intent);
                 } catch (ActivityNotFoundException e1)
                 {
-
+                    ExLog.d(e.toString());
                 }
             }
         }
@@ -506,15 +491,13 @@ public class InformationFragment extends BaseFragment implements Constants
             try
             {
                 intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                baseActivity.startActivity(intent);
             } catch (Exception e)
             {
                 try
                 {
                     intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
-                    startActivity(intent);
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                    baseActivity.startActivity(intent);
                 } catch (ActivityNotFoundException e1)
                 {
                 }
@@ -537,11 +520,10 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                baseActivity.startActivity(intent);
             } catch (ActivityNotFoundException e)
             {
-
+                ExLog.d(e.toString());
             }
         }
 
@@ -561,8 +543,7 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                baseActivity.startActivity(intent);
             } catch (ActivityNotFoundException e)
             {
 
@@ -580,10 +561,8 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             Intent intent = new Intent(baseActivity, TermActivity.class);
             startActivity(intent);
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
         }
 
@@ -600,7 +579,6 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             Intent intent = new Intent(baseActivity, PrivacyActivity.class);
             startActivity(intent);
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -614,11 +592,8 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
             startActivity(intent);
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
         }
 
         @Override
@@ -632,11 +607,8 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-
             Intent intent = new Intent(baseActivity, ProtectYouthTermsActivity.class);
             startActivity(intent);
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
         }
 
         @Override
@@ -659,7 +631,7 @@ public class InformationFragment extends BaseFragment implements Constants
                 {
                     try
                     {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
+                        baseActivity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

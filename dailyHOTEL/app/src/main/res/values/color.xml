@@ -179,7 +179,7 @@
     <color name="countrycode_section_text">#4d272727</color>
 
     <!-- Calendar Code -->
-    <color name="calendar_day_text_default">#1c1c1c</color>
+    <color name="calendar_day_text_default">#323232</color>
     <color name="calendar_day_text_select">#ffffff</color>
     <color name="calendar_day_text_disable">#ebebeb</color>
     <color name="calendar_week_text_default">#999999</color>
@@ -251,6 +251,7 @@
     <color name="default_background_ca6a6a8">#a6a6a8</color>
     <color name="default_background_disable_cccffffff">#ccffffff</color>
     <color name="default_background_disable_ce6e6e6">#e6e6e6</color>
+    <color name="default_placeholder">#dfdfe0</color>
 
     <color name="default_popup_button_background_c900034">#900034</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
