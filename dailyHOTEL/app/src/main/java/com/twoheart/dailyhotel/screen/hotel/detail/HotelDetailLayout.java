@@ -21,7 +21,6 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -912,13 +911,14 @@ public class HotelDetailLayout
 
             View magicToolbarView = mListAdapter.getMagicToolbarView();
 
-            if(magicToolbarView != null)
+            if (magicToolbarView != null)
             {
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)magicToolbarView.getLayoutParams();
-                layoutParams.topMargin = mStatusBarHeight - rect.top;
+                if (magicToolbarView.getVisibility() != View.VISIBLE)
+                {
+                    magicToolbarView.setVisibility(View.VISIBLE);
+                }
 
-                magicToolbarView.setLayoutParams(layoutParams);
-                magicToolbarView.invalidate();
+                magicToolbarView.setY(mStatusBarHeight - rect.top);
             }
         }
     };

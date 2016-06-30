@@ -53,7 +53,7 @@
             android:id="@+id/magicToolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
-            android:layout_marginTop="-100dp">
+            android:visibility="invisible">
 
             <ImageView
                 android:layout_width="wrap_content"

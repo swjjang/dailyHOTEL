@@ -9,13 +9,13 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="#ffffff"
+        android:layout_height="40dp"
+        android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
         app:tabGravity="fill"
-        app:tabIndicatorHeight="3dp"
-        app:tabSelectedTextColor="@color/tab_selected"
+        app:tabIndicatorHeight="2dp"
+        app:tabSelectedTextColor="@color/default_text_c900034"
         app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
-        app:tabTextColor="@color/tab_text"
+        app:tabTextColor="@color/default_text_c929292"
         android:layout_below="@+id/toolbar"/>
 
     <com.twoheart.dailyhotel.widget.DailyViewPager

@@ -42,6 +42,8 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
 
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         initPrepare();
 
         setContentView(R.layout.activity_region_list);
@@ -75,6 +77,14 @@ public abstract class PlaceRegionListActivity extends BaseActivity
         setResult(RESULT_CANCELED);
 
         super.onBackPressed();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     @Override

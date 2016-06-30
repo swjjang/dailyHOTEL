@@ -92,10 +92,12 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initTabLayout(TabLayout tabLayout)
     {
-        tabLayout.setVisibility(ViewPager.GONE);
+        if (tabLayout == null)
+        {
+            return;
+        }
 
-        View toolbarUnderline = findViewById(R.id.toolbarUnderline);
-        toolbarUnderline.setVisibility(View.GONE);
+        tabLayout.setVisibility(ViewPager.GONE);
     }
 
     @Override
@@ -111,6 +113,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
             }
         });
 
+        dailyToolbarLayout.setBackImageView(R.drawable.navibar_ic_x);
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
