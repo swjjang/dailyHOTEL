@@ -3,10 +3,9 @@ package com.twoheart.dailyhotel.network;
 import android.location.Location;
 
 import com.android.volley.Response;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
@@ -161,14 +160,12 @@ interface IDailyNetwork
     void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     * api/sale/hotel_list
-     * 호텔 리스트를 요청한다
+     * /api/v3/hotels/sales
+     * Stay 리스트를 요청한다
      *
      * @return
      */
-    void requestStayList(Object tag, Province province, Location mLocation, //
-                         Category mCategory, SaleTime saleTime, int nights, //
-                         StayCurationOption stayCurationOption, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestStayList(Object tag, StayParams stayParams, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag
@@ -450,7 +447,6 @@ interface IDailyNetwork
      * @param tag
      * @param place
      * @param listener
-     * @param errorListener
      */
     void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener);
 
@@ -592,7 +588,7 @@ interface IDailyNetwork
 
     /**
      * @param tag
-     * @param couponCode
+     * @param userCouponCode
      * @param listener
      */
     void requestDownloadCoupon(Object tag, String userCouponCode, DailyHotelJsonResponseListener listener);
@@ -608,7 +604,7 @@ interface IDailyNetwork
      * api/v1/notice/benefit - PUT
      *
      * @param tag
-     * @param isAgreed required
+     * @param isAgree  required
      * @param listener
      */
     void requestUpdateBenefitAgreement(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);

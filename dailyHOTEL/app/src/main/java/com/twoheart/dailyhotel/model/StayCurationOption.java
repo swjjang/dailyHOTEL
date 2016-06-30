@@ -5,6 +5,10 @@ import android.os.Parcel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class StayCurationOption extends PlaceCurationOption
@@ -41,6 +45,68 @@ public class StayCurationOption extends PlaceCurationOption
         }
     }
 
+    public void setFiltersListByJson(JSONArray jsonArray)
+    {
+        mStayFiltersList.clear();
+
+        if (jsonArray == null)
+        {
+            return;
+        }
+
+        int length = jsonArray.length();
+        if (length == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < length; i++)
+        {
+            try
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                String category = jsonObject.getString("category");
+
+                mStayFiltersList.add(makeHotelFilters(category, jsonObject));
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private HotelFilters makeHotelFilters(String categoryCode, JSONObject jsonObject) throws JSONException
+    {
+        if (jsonObject == null)
+        {
+            return null;
+        }
+
+        JSONArray jsonArray = jsonObject.getJSONArray("hotelRoomElementList");
+
+        if (jsonArray == null || jsonArray.length() == 0)
+        {
+            return null;
+        }
+
+        int length = jsonArray.length();
+        HotelFilters hotelFilters = new HotelFilters(length);
+        hotelFilters.categoryCode = categoryCode;
+
+        for (int i = 0; i < length; i++)
+        {
+            JSONObject jsonFilter = jsonArray.getJSONObject(i);
+            jsonFilter.put("parking", jsonObject.getString("parking"));
+            jsonFilter.put("pool", jsonObject.getString("pool"));
+            jsonFilter.put("fitness", jsonObject.getString("fitness"));
+
+            hotelFilters.setHotelFilter(i, jsonFilter);
+        }
+
+        return hotelFilters;
+    }
+
     public ArrayList<HotelFilters> getFiltersList()
     {
         return mStayFiltersList;
@@ -75,7 +141,7 @@ public class StayCurationOption extends PlaceCurationOption
             return null;
         }
 
-        String prefix = "bedTypes=";
+        String prefix = "bedType=";
         StringBuilder sb = new StringBuilder();
 
         if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
@@ -110,7 +176,7 @@ public class StayCurationOption extends PlaceCurationOption
             return null;
         }
 
-        String prefix = "luxuries=";
+        String prefix = "luxury=";
         StringBuilder sb = new StringBuilder();
 
         if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)

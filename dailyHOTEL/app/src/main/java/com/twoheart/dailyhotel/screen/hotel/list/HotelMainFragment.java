@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -794,7 +793,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         updateFilteredFloatingActionButton();
 
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-        currentFragment.curationList(mViewType, mCurationOption);
+//        currentFragment.curationList(mViewType, mCurationOption);
     }
 
     private void refreshCurrentFragment(List<EventBanner> list)
@@ -1778,7 +1777,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 hotelListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 
-            currentFragment.curationList(mViewType, mCurationOption);
+//            currentFragment.curationList(mViewType, mCurationOption);
 
             unLockUI();
         }

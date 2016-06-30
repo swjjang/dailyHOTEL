@@ -19,10 +19,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -319,26 +318,22 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestStayList(Object tag, Province province, Location mLocation, //
-                                Category mCategory, SaleTime saleTime, int nights, //
-                                StayCurationOption stayCurationOption, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestStayList(Object tag, StayParams stayParams, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "";
 
         String params;
 
-        if (province instanceof Area)
+        if (stayParams != null)
         {
-            Area area = (Area) province;
-
-            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+            params = "?" + stayParams.toParamString();
         } else
         {
-            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+            params = "";
         }
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL + params, null, listener, errorListener);
-
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
         mQueue.add(dailyHotelJsonRequest);
     }
 

@@ -69,7 +69,7 @@ public class Util implements Constants
 {
     public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
 
-    private static final String ISO_8601_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+    public static final String ISO_8601_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     private static String MEMORY_CLEAR;
 

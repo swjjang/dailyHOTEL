@@ -11,14 +11,14 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -89,8 +89,44 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
+        Area area = null;
+
+        if (province instanceof Area)
+        {
+            area = (Area) province;
+        }
+
+        StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
+
+        StayParams params = new StayParams();
+
+
+        params.dateCheckIn = checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+        params.stays = nights;
+        params.provinceIdx = province.getProvinceIndex();
+
+        if (area != null)
+        {
+            params.areaIdx = area.index;
+        }
+
+        params.persons = stayCurationOption.person;
+        params.category = StayCurationManager.getInstance().getCategory();
+        params.bedType = stayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
+        params.luxury = stayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+        //        params.longitude = ;
+        //        params.latitude = ;
+        params.page = 1;
+        params.limit = 20;
+        params.setSortType(stayCurationOption.getSortType());
+        params.details = true;
+
         DailyNetworkAPI.getInstance(mBaseActivity).requestHotelList(mNetworkTag, //
             province, checkInSaleTime, nights, mHotelListJsonResponseListener, mHotelListJsonResponseListener);
+
+        DailyNetworkAPI.getInstance(mBaseActivity).requestStayList(mNetworkTag, params, mStayListJsonResponseListener);
+
+
     }
 
     public boolean hasSalesPlace()
@@ -184,7 +220,7 @@ public class StayListFragment extends PlaceListFragment
         switch (stayCurationOption.getSortType())
         {
             case DEFAULT:
-                return makeSectionHotelList(stayList);
+                return makeSectionStayList(stayList);
 
             case DISTANCE:
             {
@@ -192,7 +228,7 @@ public class StayListFragment extends PlaceListFragment
                 {
                     stayCurationOption.setSortType(SortType.DEFAULT);
                     DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                    return makeSectionHotelList(stayList);
+                    return makeSectionStayList(stayList);
                 }
 
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
@@ -280,7 +316,7 @@ public class StayListFragment extends PlaceListFragment
         return hotelListViewItemList;
     }
 
-    private ArrayList<PlaceViewItem> makeSectionHotelList(List<Stay> stayList)
+    private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)
     {
         ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
@@ -327,64 +363,6 @@ public class StayListFragment extends PlaceListFragment
         return hotelListViewItemList;
     }
 
-    public void curationList(ViewType viewType, Category category, StayCurationOption curationOption)
-    {
-        setScrollListTop(true);
-
-        ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, category, curationOption);
-        mStayListLayout.setList(getChildFragmentManager(), viewType, placeViewItemList, curationOption.getSortType());
-    }
-
-    private ArrayList<PlaceViewItem> curationList(List<Stay> list, Category category, StayCurationOption curationOption)
-    {
-        List<Stay> stayList = curationCategory(list, category);
-
-        stayList = curationFiltering(stayList, curationOption);
-
-        return curationSorting(stayList, curationOption);
-    }
-
-    private List<Stay> curationCategory(List<Stay> list, Category category)
-    {
-        List<Stay> filteredCategoryList = new ArrayList<>(list.size());
-
-        if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
-        {
-            filteredCategoryList.addAll(list);
-
-            return filteredCategoryList;
-        } else
-        {
-            for (Stay stay : list)
-            {
-                if (category.code.equalsIgnoreCase(stay.categoryCode) == true)
-                {
-                    filteredCategoryList.add(stay);
-                }
-            }
-        }
-
-        return filteredCategoryList;
-    }
-
-    private List<Stay> curationFiltering(List<Stay> list, StayCurationOption curationOption)
-    {
-        int size = list.size();
-        Stay stay;
-
-        for (int i = size - 1; i >= 0; i--)
-        {
-            stay = list.get(i);
-
-            if (stay.isFiltered(curationOption) == false)
-            {
-                list.remove(i);
-            }
-        }
-
-        return list;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -418,6 +396,56 @@ public class StayListFragment extends PlaceListFragment
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
                     }
 
+                    mStayList.clear();
+
+                    StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
+
+                    stayCurationOption.setFiltersListByJson(hotelJSONArray);
+
+                } else
+                {
+                    String message = response.getString("msg");
+                    onErrorPopupMessage(msgCode, message);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            StayListFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONArray hotelJSONArray = null;
+
+                    if (dataJSONObject.has("hotelSales") == true)
+                    {
+                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                    }
+
                     int length;
 
                     if (hotelJSONArray == null)
@@ -434,8 +462,6 @@ public class StayListFragment extends PlaceListFragment
 
                     if (length == 0)
                     {
-                        stayCurationOption.setFiltersList(null);
-
                         mStayListLayout.setList(getChildFragmentManager(), mViewType, null, stayCurationOption.getSortType());
 
                         setVisibility(ViewType.GONE, true);
@@ -443,19 +469,18 @@ public class StayListFragment extends PlaceListFragment
                     } else
                     {
                         String imageUrl = dataJSONObject.getString("imgUrl");
-                        int nights = dataJSONObject.getInt("lengthStay");
+                        int nights = dataJSONObject.getInt("stays");
+                        int hotelSalesCount = dataJSONObject.getInt("hotelSalesCount");
 
                         ArrayList<Stay> stayList = makeStayList(hotelJSONArray, imageUrl, nights);
-                        setFilterInformation(stayList, stayCurationOption);
 
                         // 기본적으로 보관한다.
                         mStayList.addAll(stayList);
 
-                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, //
-                            StayCurationManager.getInstance().getCategory(), stayCurationOption);
+                        setScrollListTop(true);
 
                         mStayListLayout.setList(getChildFragmentManager(), mViewType, //
-                            placeViewItemList, stayCurationOption.getSortType());
+                            makeSectionStayList(stayList), stayCurationOption.getSortType());
                     }
                 } else
                 {
@@ -470,31 +495,6 @@ public class StayListFragment extends PlaceListFragment
                 unLockUI();
                 mStayListLayout.setSwipeRefreshing(false);
             }
-        }
-
-        /**
-         * 미리 필터 정보를 저장하여 Curation시에 사용하도록 한다.(개수 정보 노출)
-         * @param stayList
-         * @param curationOption
-         */
-        private void setFilterInformation(ArrayList<Stay> stayList, StayCurationOption curationOption)
-        {
-            // 필터 정보 넣기
-            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(stayList.size());
-
-            HotelFilters hotelFilters;
-
-            for (Stay stay : stayList)
-            {
-                hotelFilters = stay.getFilters();
-
-                if (hotelFilters != null)
-                {
-                    hotelFiltersList.add(hotelFilters);
-                }
-            }
-
-            curationOption.setFiltersList(hotelFiltersList);
         }
 
         private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException

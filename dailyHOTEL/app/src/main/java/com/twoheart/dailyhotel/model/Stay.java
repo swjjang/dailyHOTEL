@@ -20,9 +20,9 @@ public class Stay extends Place
     public int nights;
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
+    public String sday;
 
     protected Grade mGrade;
-    protected HotelFilters mHotelFilters;
 
     public Stay()
     {
@@ -43,6 +43,7 @@ public class Stay extends Place
         dest.writeSerializable(mGrade);
         dest.writeString(dBenefitText);
         dest.writeString(categoryCode);
+        dest.writeString(sday);
     }
 
     protected void readFromParcel(Parcel in)
@@ -53,6 +54,7 @@ public class Stay extends Place
         mGrade = (Grade) in.readSerializable();
         dBenefitText = in.readString();
         categoryCode = in.readString();
+        sday = in.readString();
     }
 
     public Grade getGrade()
@@ -68,7 +70,7 @@ public class Stay extends Place
         {
             name = jsonObject.getString("name");
             price = jsonObject.getInt("price");
-            averageDiscountPrice = jsonObject.getInt("discountAvg");
+            averageDiscountPrice = jsonObject.getInt("discount"); // discountAvg ????
             addressSummary = jsonObject.getString("addrSummary");
 
             try
@@ -80,13 +82,19 @@ public class Stay extends Place
             }
 
             index = jsonObject.getInt("hotelIdx");
-            isSoldOut = jsonObject.getBoolean("isSoldOut");
+
+            if (jsonObject.has("isSoldOut") == true)
+            {
+                isSoldOut = jsonObject.getBoolean("isSoldOut"); //
+            }
+
             districtName = jsonObject.getString("districtName");
             categoryCode = jsonObject.getString("category");
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");
-            isDailyChoice = jsonObject.getBoolean("isDailychoice");
-            satisfaction = jsonObject.getInt("ratingValue");
+            isDailyChoice = jsonObject.getBoolean("isDailyChoice");
+            satisfaction = jsonObject.getInt("rating"); // ratingValue ??
+            sday = jsonObject.getString("sday");
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
@@ -105,15 +113,15 @@ public class Stay extends Place
                 }
             }
 
-            if (jsonObject.has("hotelBenefit") == true)
+            if (jsonObject.has("benefit") == true) // hotelBenefit ?
             {
-                dBenefitText = jsonObject.getString("hotelBenefit");
+                dBenefitText = jsonObject.getString("benefit");
             } else
             {
                 dBenefitText = null;
             }
 
-            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
+//            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -122,62 +130,6 @@ public class Stay extends Place
         }
 
         return true;
-    }
-
-    public boolean isFiltered(StayCurationOption curationOption)
-    {
-        if (mHotelFilters == null)
-        {
-            return false;
-        }
-
-        return mHotelFilters.isFiltered(curationOption);
-    }
-
-    public boolean isFiltered(HotelCurationOption curationOption)
-    {
-        if (mHotelFilters == null)
-        {
-            return false;
-        }
-
-        return mHotelFilters.isFiltered(curationOption);
-    }
-
-    public HotelFilters getFilters()
-    {
-        return mHotelFilters;
-    }
-
-    private HotelFilters makeHotelFilters(String categoryCode, JSONObject jsonObject) throws JSONException
-    {
-        if (jsonObject == null)
-        {
-            return null;
-        }
-
-        JSONArray jsonArray = jsonObject.getJSONArray("hotelRoomElementList");
-
-        if (jsonArray == null || jsonArray.length() == 0)
-        {
-            return null;
-        }
-
-        int length = jsonArray.length();
-        HotelFilters hotelFilters = new HotelFilters(length);
-        hotelFilters.categoryCode = categoryCode;
-
-        for (int i = 0; i < length; i++)
-        {
-            JSONObject jsonFilter = jsonArray.getJSONObject(i);
-            jsonFilter.put("parking", jsonObject.getString("parking"));
-            jsonFilter.put("pool", jsonObject.getString("pool"));
-            jsonFilter.put("fitness", jsonObject.getString("fitness"));
-
-            hotelFilters.setHotelFilter(i, jsonFilter);
-        }
-
-        return hotelFilters;
     }
 
     public enum Grade

@@ -32,10 +32,8 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
-import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -534,63 +532,63 @@ public class HotelListFragment extends BaseFragment implements Constants
         return hotelListViewItemList;
     }
 
-    public void curationList(ViewType viewType, HotelCurationOption curationOption)
-    {
-        mScrollListTop = true;
+//    public void curationList(ViewType viewType, HotelCurationOption curationOption)
+//    {
+//        mScrollListTop = true;
+//
+//        ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, curationOption);
+//        setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
+//    }
 
-        ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, curationOption);
-        setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
-    }
+//    private ArrayList<PlaceViewItem> curationList(List<Stay> list, HotelCurationOption curationOption)
+//    {
+//        List<Stay> stayList = curationCategory(list, curationOption.getCategory());
+//
+//        stayList = curationFiltering(stayList, curationOption);
+//
+//        return curationSorting(stayList, curationOption);
+//    }
 
-    private ArrayList<PlaceViewItem> curationList(List<Stay> list, HotelCurationOption curationOption)
-    {
-        List<Stay> stayList = curationCategory(list, curationOption.getCategory());
+//    private List<Stay> curationCategory(List<Stay> list, Category category)
+//    {
+//        List<Stay> filteredCategoryList = new ArrayList<>(list.size());
+//
+//        if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
+//        {
+//            filteredCategoryList.addAll(list);
+//
+//            return filteredCategoryList;
+//        } else
+//        {
+//            for (Stay stay : list)
+//            {
+//                if (category.code.equalsIgnoreCase(stay.categoryCode) == true)
+//                {
+//                    filteredCategoryList.add(stay);
+//                }
+//            }
+//        }
+//
+//        return filteredCategoryList;
+//    }
 
-        stayList = curationFiltering(stayList, curationOption);
-
-        return curationSorting(stayList, curationOption);
-    }
-
-    private List<Stay> curationCategory(List<Stay> list, Category category)
-    {
-        List<Stay> filteredCategoryList = new ArrayList<>(list.size());
-
-        if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
-        {
-            filteredCategoryList.addAll(list);
-
-            return filteredCategoryList;
-        } else
-        {
-            for (Stay stay : list)
-            {
-                if (category.code.equalsIgnoreCase(stay.categoryCode) == true)
-                {
-                    filteredCategoryList.add(stay);
-                }
-            }
-        }
-
-        return filteredCategoryList;
-    }
-
-    private List<Stay> curationFiltering(List<Stay> list, HotelCurationOption curationOption)
-    {
-        int size = list.size();
-        Stay stay;
-
-        for (int i = size - 1; i >= 0; i--)
-        {
-            stay = list.get(i);
-
-            if (stay.isFiltered(curationOption) == false)
-            {
-                list.remove(i);
-            }
-        }
-
-        return list;
-    }
+//    private List<Stay> curationFiltering(List<Stay> list, HotelCurationOption curationOption)
+//    {
+//        int size = list.size();
+//        Stay stay;
+//
+//        for (int i = size - 1; i >= 0; i--)
+//        {
+//            stay = list.get(i);
+//
+//            if (stay.isFiltered(curationOption) == false)
+//            {
+//                list.remove(i);
+//            }
+//        }
+//
+//        return list;
+//    }
 
     private void setHotelListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
     {
@@ -787,14 +785,12 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                         ArrayList<Stay> stayList = makeHotelList(hotelJSONArray, imageUrl, nights);
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-                        setFilterInformation(stayList, hotelCurationOption);
+//                        setFilterInformation(stayList, hotelCurationOption);
 
                         // 기본적으로 보관한다.
                         mStayList.addAll(stayList);
 
-                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, hotelCurationOption);
-
-                        setHotelListViewItemList(mViewType, placeViewItemList, hotelCurationOption.getSortType());
+                        setHotelListViewItemList(mViewType, makeSectionHotelList(stayList), hotelCurationOption.getSortType());
                     }
 
                     // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
@@ -811,31 +807,6 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 unLockUI();
             }
-        }
-
-        /**
-         * 미리 필터 정보를 저장하여 Curation시에 사용하도록 한다.(개수 정보 노출)
-         * @param stayList
-         * @param curationOption
-         */
-        private void setFilterInformation(ArrayList<Stay> stayList, HotelCurationOption curationOption)
-        {
-            // 필터 정보 넣기
-            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(stayList.size());
-
-            HotelFilters hotelFilters;
-
-            for (Stay stay : stayList)
-            {
-                hotelFilters = stay.getFilters();
-
-                if (hotelFilters != null)
-                {
-                    hotelFiltersList.add(hotelFilters);
-                }
-            }
-
-            curationOption.setFiltersList(hotelFiltersList);
         }
 
         private ArrayList<Stay> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException

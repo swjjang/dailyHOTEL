@@ -149,15 +149,15 @@ public class StayListNetworkController extends BaseNetworkController
 
             HotelFilters hotelFilters;
 
-            for (Stay stay : stayList)
-            {
-                hotelFilters = stay.getFilters();
-
-                if (hotelFilters != null)
-                {
-                    hotelFiltersList.add(hotelFilters);
-                }
-            }
+//            for (Stay stay : stayList)
+//            {
+//                hotelFilters = stay.getFilters();
+//
+//                if (hotelFilters != null)
+//                {
+//                    hotelFiltersList.add(hotelFilters);
+//                }
+//            }
 
             curationOption.setFiltersList(hotelFiltersList);
         }

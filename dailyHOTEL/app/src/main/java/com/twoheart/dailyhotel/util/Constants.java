@@ -22,7 +22,7 @@ public interface Constants
 {
     // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
-    public static final boolean UNENCRYPTED_URL = false;
+    public static final boolean UNENCRYPTED_URL = true;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
     // 스토어 선택.
@@ -100,7 +100,11 @@ public interface Constants
 //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://mobileapi.dailyhotel.kr/goodnight/" : "MTIyJDExOSQ0OCQ4MSQxMTAk$RjI5MTc2RTg1NTRBNkFFODE3QTRCQkVBQjhDM0UyOUM1NDlFJNTcyQTVBOEZDODkyMTZCMDcwNjBGRUFGPRjBDMUIxNDZGRjIzMzA3Rjg1QzZFWRDEwNTYzRUNYGQjCU5NDIx$";
 //    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
 
-    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "NDckNTQkMzYkMjgkMTA0JA==$MzJGNTMxRDA2OEJDQ0NBODg4RjM5SQTNGNjFGLNzVBQzRGNTFEEQUMxQQkFBMjdGMzIxQkQ0RERENkE1MkE0NEMxQzAzM0Y1MzkwRTVCWNjNDQjlCMDAwRDAzOTE4N0Y1QzBF$";
+//    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "NDckNTQkMzYkMjgkMTA0JA==$MzJGNTMxRDA2OEJDQ0NBODg4RjM5SQTNGNjFGLNzVBQzRGNTFEEQUMxQQkFBMjdGMzIxQkQ0RERENkE1MkE0NEMxQzAzM0Y1MzkwRTVCWNjNDQjlCMDAwRDAzOTE4N0Y1QzBF$";
+//    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://52.196.30.125:3000/" : "NTEkMTAkMzAkNiQ1MyQ=$Qzg0M0XYzNTTczRUMzMTU5NUUwQ0I5RZjJGNzk5MjgyNDQ0N0JENTMEIyQzMyRUU1NjQ3QTEyNDM5MEI4QTdCNkIxOQ==$";
+
+    // pagenation
+    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me/goodnight/" : "";
     public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://52.196.30.125:3000/" : "NTEkMTAkMzAkNiQ1MyQ=$Qzg0M0XYzNTTczRUMzMTU5NUUwQ0I5RZjJGNzk5MjgyNDQ0N0JENTMEIyQzMyRUU1NjQ3QTEyNDM5MEI4QTdCNkIxOQ==$";
 
     // 회사 대표번호
