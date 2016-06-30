@@ -106,7 +106,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mPhoneTextView.setText(phone);
 
         // 인증 여부
-        if (isPhoneVerified == true)
+        if (isPhoneVerified == true && Util.isTextEmpty(verifiedDate) == false)
         {
             mPhoneVerifyView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));
             mPhoneVerifyView.setText(mContext.getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));
