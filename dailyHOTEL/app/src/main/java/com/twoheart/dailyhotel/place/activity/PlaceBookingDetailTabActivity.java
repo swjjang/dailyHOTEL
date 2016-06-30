@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
@@ -61,6 +62,11 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         initToolbar(mBooking.placeName);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)tabLayout.getLayoutParams();
+        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+        tabLayout.setLayoutParams(layoutParams);
+
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_info_title));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_map_title));

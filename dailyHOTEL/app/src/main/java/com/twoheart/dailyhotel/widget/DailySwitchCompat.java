@@ -1,19 +1,33 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
+
+import java.lang.reflect.Method;
 
 public class DailySwitchCompat extends SwitchCompat
 {
+    private Method getThumbOffset;
+    private Method getThumbScrollRange;
+    private OnScrollListener mOnScrollListener;
+
+    public interface OnScrollListener
+    {
+        void onScrolled(int offset, int range);
+    }
+
     public DailySwitchCompat(Context context)
     {
         super(context);
 
+        initReflectionClass();
         setFontStyle(context, null);
     }
 
@@ -21,6 +35,7 @@ public class DailySwitchCompat extends SwitchCompat
     {
         super(context, attrs);
 
+        initReflectionClass();
         setFontStyle(context, attrs);
     }
 
@@ -28,7 +43,25 @@ public class DailySwitchCompat extends SwitchCompat
     {
         super(context, attrs, defStyle);
 
+        initReflectionClass();
         setFontStyle(context, attrs);
+    }
+
+    private void initReflectionClass()
+    {
+        Class reflectionClass = SwitchCompat.class;
+
+        try
+        {
+            getThumbOffset = reflectionClass.getDeclaredMethod("getThumbOffset");
+            getThumbOffset.setAccessible(true);
+
+            getThumbScrollRange = reflectionClass.getDeclaredMethod("getThumbScrollRange");
+            getThumbScrollRange.setAccessible(true);
+        } catch (NoSuchMethodException e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void setFontStyle(Context context, AttributeSet attrs)
@@ -109,5 +142,27 @@ public class DailySwitchCompat extends SwitchCompat
     {
         setPaintFlags(getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
         super.setTypeface(typeface);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas)
+    {
+        super.onDraw(canvas);
+
+        try
+        {
+            if (mOnScrollListener != null)
+            {
+                mOnScrollListener.onScrolled((int) getThumbOffset.invoke(this), (int) getThumbScrollRange.invoke(this));
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    public void setOnScrollListener(OnScrollListener listener)
+    {
+        mOnScrollListener = listener;
     }
 }

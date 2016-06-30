@@ -106,4 +106,13 @@
     <style name="CheckBoxTheme">
         <item name="colorControlNormal">#323232</item>
     </style>
+
+    <style name="CustomSwitch" parent="Theme.AppCompat">
+        <item name="colorControlActivated">@android:color/transparent</item>
+        <item name="colorSwitchThumbNormal">@android:color/transparent</item>
+        <item name="android:colorForeground">@android:color/transparent</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorAccent">@android:color/transparent</item>
+        <item name="colorButtonNormal">@android:color/transparent</item>
+    </style>
 </resources>

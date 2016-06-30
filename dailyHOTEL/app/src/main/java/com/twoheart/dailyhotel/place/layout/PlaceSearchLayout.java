@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.place.layout;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spannable;
@@ -17,8 +19,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -27,11 +31,15 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyScrollView;
+import com.twoheart.dailyhotel.widget.DailySwitchCompat;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -49,7 +57,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private View mToolbar;
 
-    private View mSearchLayout;
     private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollLayout, mRecentSearchesScrollLayout;
@@ -117,13 +124,14 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             }
         });
 
-        mSearchEditText = (EditText) mToolbar.findViewById(R.id.searchEditText);
-        mSearchEditText.setHint(getSearchHintText());
+        initPlaceSwitch(mToolbar);
 
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            mSearchEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        }
+        final View searchView = mToolbar.findViewById(R.id.searchView);
+        searchView.setOnClickListener(this);
+        searchView.setEnabled(false);
+
+        mSearchEditText = (EditText) view.findViewById(R.id.searchEditText);
+        mSearchEditText.setHint(getSearchHintText());
 
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
@@ -132,11 +140,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         mSearchEditText.setFilters(allowAlphanumericHangul);
 
-        final View searchView = mToolbar.findViewById(R.id.searchView);
-        searchView.setOnClickListener(this);
-        searchView.setEnabled(false);
-
-        final View deleteView = mToolbar.findViewById(R.id.deleteView);
+        final View deleteView = view.findViewById(R.id.deleteView);
         deleteView.setOnClickListener(this);
         deleteView.setVisibility(View.GONE);
 
@@ -212,6 +216,32 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         });
     }
 
+    private void initPlaceSwitch(View view)
+    {
+        // 가운데 스위치
+        DailySwitchCompat switchCompat = (DailySwitchCompat)view.findViewById(R.id.placeSwitch);
+        final ImageView hotelSwitchView = (ImageView)view.findViewById(R.id.hotelSwitch);
+        final ImageView gourmetSwitchView = (ImageView)view.findViewById(R.id.gourmetSwitch);
+
+        switchCompat.setOnScrollListener(new DailySwitchCompat.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(int offset, int range)
+            {
+                if(range == 0)
+                {
+                    return;
+                }
+
+                float gourmetAlpha = 0.6f * offset / range;
+                float hotelAlpha = 0.6f - gourmetAlpha;
+
+                hotelSwitchView.setAlpha(0.4f + hotelAlpha);
+                gourmetSwitchView.setAlpha(0.4f + gourmetAlpha);
+            }
+        });
+    }
+
     public void resetSearchKeyword()
     {
         mSearchEditText.setText(null);
@@ -239,10 +269,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initCalendarLayout(View view)
     {
-        View calendarLayout = view.findViewById(R.id.calendarLayout);
-        calendarLayout.setOnClickListener(this);
-
-        mDateTextView = (TextView) calendarLayout.findViewById(R.id.dateTextView);
+        mDateTextView = (TextView) view.findViewById(R.id.calendarTextView);
     }
 
     private void initAroundLayout(View view)
@@ -297,14 +324,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initSearchLayout(View view)
     {
-        mSearchLayout = view.findViewById(R.id.searchLayout);
-
         // 내주변 호텔 보기
-        View searchAroundLayout = mSearchLayout.findViewById(R.id.searchAroundLayout);
+        View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(this);
 
-        initRecentSearchesLayout(mSearchLayout);
-        initAutoCompleteLayout(mSearchLayout);
+        initRecentSearchesLayout(view);
+        initAutoCompleteLayout(view);
     }
 
     private void initRecentSearchesLayout(View view)
@@ -665,7 +690,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         switch (v.getId())
         {
-            case R.id.calendarLayout:
+            case R.id.calendarTextView:
             {
                 hideSearchKeyboard();
 
