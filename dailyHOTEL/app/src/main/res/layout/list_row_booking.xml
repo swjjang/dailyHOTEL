@@ -11,8 +11,6 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@drawable/img_placeholder"
-        fresco:placeholderImageScaleType="centerCrop"
         fresco:overlayImage="@drawable/dim_center"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView

@@ -48,8 +48,7 @@
         android:layout_height="202dp"
         android:layout_below="@+id/toolbar"
         android:adjustViewBounds="true"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@drawable/img_placeholder_small"/>
+        fresco:actualImageScaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="match_parent"

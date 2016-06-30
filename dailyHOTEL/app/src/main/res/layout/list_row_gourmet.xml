@@ -10,8 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="202dp"
         android:adjustViewBounds="true"
-        fresco:placeholderImage="@drawable/img_placeholder"
-        fresco:placeholderImageScaleType="centerCrop"
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
