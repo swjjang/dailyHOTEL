@@ -23,6 +23,8 @@ public class FAQActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_board);
@@ -71,7 +73,8 @@ public class FAQActivity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

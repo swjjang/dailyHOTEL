@@ -34,6 +34,8 @@ public class BonusActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         mBonusLayout = new BonusLayout(this, mOnEventListener);
@@ -70,7 +72,8 @@ public class BonusActivity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     @Override
@@ -93,7 +96,6 @@ public class BonusActivity extends BaseActivity
 
             Intent intent = InviteFriendsActivity.newInstance(BonusActivity.this, mRecommendCode, mName);
             startActivityForResult(intent, REQUEST_ACTIVITY_INVITEFRIENDS);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
@@ -109,7 +111,6 @@ public class BonusActivity extends BaseActivity
 
             Intent intent = new Intent(BonusActivity.this, BonusTermActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

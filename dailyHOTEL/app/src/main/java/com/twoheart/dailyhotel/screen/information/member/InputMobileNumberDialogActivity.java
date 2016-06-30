@@ -194,9 +194,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
                 mMobileNumber = mobileEditText.getText().toString();
 
                 Intent intent = CountryCodeListActivity.newInstance(InputMobileNumberDialogActivity.this, countryCode);
-
                 startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
             }
         });
 

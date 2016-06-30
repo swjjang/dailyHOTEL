@@ -44,7 +44,7 @@ public class LauncherActivity extends Activity
         }
 
         startActivity(newIntent);
-        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.hold);
         finish();
     }
 

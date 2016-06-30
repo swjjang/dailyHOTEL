@@ -303,9 +303,10 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    private void setBottomTouchEnabled(boolean enabled)
+    private void setMenuBarLayoutEnabled(boolean enabled)
     {
-        mBottomOptionLayout.setEnabled(enabled);
+        mViewTypeOptionImageView.setEnabled(enabled);
+        mFilterOptionImageView.setEnabled(enabled);
         mMenuBarLayout.setEnabled(enabled);
     }
 
@@ -335,6 +336,15 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         } else if (dy < 0)
         {
             mUpScrolling = false;
+        }
+
+        // 움직이는 동안에는 터치가 불가능 하다.
+        if (translationY == 0 || translationY == height)
+        {
+            setMenuBarLayoutEnabled(true);
+        } else
+        {
+            setMenuBarLayoutEnabled(false);
         }
 
         setMenuBarLayoutTranslationY(translationY);
@@ -413,12 +423,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    //                if (mBottomOptionLayout.getVisibility() != View.VISIBLE)
-                    //                {
-                    //                    mBottomOptionLayout.setVisibility(View.VISIBLE);
-                    //                }
-
-                    setBottomTouchEnabled(false);
+                    setMenuBarLayoutEnabled(false);
 
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
@@ -433,7 +438,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                         mAnimationState = Constants.ANIMATION_STATE.END;
                     }
 
-                    setBottomTouchEnabled(true);
+                    setMenuBarLayoutEnabled(true);
                 }
 
                 @Override
@@ -441,7 +446,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 {
                     mAnimationState = Constants.ANIMATION_STATE.CANCEL;
 
-                    setBottomTouchEnabled(true);
+                    setMenuBarLayoutEnabled(true);
                 }
 
                 @Override
@@ -502,7 +507,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
 
-                    setBottomTouchEnabled(false);
+                    setMenuBarLayoutEnabled(false);
                 }
 
                 @Override
@@ -513,8 +518,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
                         mAnimationState = Constants.ANIMATION_STATE.END;
                     }
-
-                    //                    mBottomOptionLayout.setVisibility(View.INVISIBLE);
                 }
 
                 @Override

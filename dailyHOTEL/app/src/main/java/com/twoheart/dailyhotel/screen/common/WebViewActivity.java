@@ -48,6 +48,8 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
     }
@@ -84,7 +86,8 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     @Override
@@ -114,13 +117,11 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
             if (url.equals("event://"))
             {
                 finish();
-                overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
                 browseToExternalBrowser(URL_STORE_GOOGLE_DAILYHOTEL);
 
             } else if (url.equals("event://tstore"))
             {
                 finish();
-                overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
                 browseToExternalBrowser(URL_STORE_T_DAILYHOTEL);
 
             } else if (url.contains("market://") == true)

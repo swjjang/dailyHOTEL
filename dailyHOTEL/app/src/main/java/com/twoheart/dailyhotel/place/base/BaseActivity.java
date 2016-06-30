@@ -886,7 +886,5 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 }

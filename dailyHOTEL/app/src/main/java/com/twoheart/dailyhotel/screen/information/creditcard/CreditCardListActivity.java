@@ -47,6 +47,8 @@ public class CreditCardListActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_creditcardlist);
@@ -108,7 +110,8 @@ public class CreditCardListActivity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -183,7 +186,6 @@ public class CreditCardListActivity extends BaseActivity
 
             Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             if (mCreditCardLayout != null)
             {

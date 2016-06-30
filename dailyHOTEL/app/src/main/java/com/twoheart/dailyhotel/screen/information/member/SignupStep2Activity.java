@@ -57,6 +57,8 @@ public class SignupStep2Activity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         mSignupStep2Layout = new SignupStep2Layout(this, mOnEventListener);
@@ -95,7 +97,8 @@ public class SignupStep2Activity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     @Override
@@ -142,7 +145,6 @@ public class SignupStep2Activity extends BaseActivity
 
             Intent intent = CountryCodeListActivity.newInstance(SignupStep2Activity.this, mCountryCode);
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

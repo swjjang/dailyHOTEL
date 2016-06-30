@@ -40,9 +40,9 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
+        super.onCreate(savedInstanceState);
 
         initPrepare();
 

@@ -53,6 +53,8 @@ public class EditProfilePhoneActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         mEditProfilePhoneLayout = new EditProfilePhoneLayout(this, mOnEventListener);
@@ -147,7 +149,8 @@ public class EditProfilePhoneActivity extends BaseActivity
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     private EditProfilePhoneLayout.OnEventListener mOnEventListener = new EditProfilePhoneLayout.OnEventListener()
@@ -156,9 +159,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         public void showCountryCodeList()
         {
             Intent intent = CountryCodeListActivity.newInstance(EditProfilePhoneActivity.this, mCountryCode);
-
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

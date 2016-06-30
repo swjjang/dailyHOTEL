@@ -179,7 +179,7 @@
     <color name="countrycode_section_text">#4d272727</color>
 
     <!-- Calendar Code -->
-    <color name="calendar_day_text_default">#1c1c1c</color>
+    <color name="calendar_day_text_default">#323232</color>
     <color name="calendar_day_text_select">#ffffff</color>
     <color name="calendar_day_text_disable">#ebebeb</color>
     <color name="calendar_week_text_default">#999999</color>

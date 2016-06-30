@@ -877,7 +877,7 @@
     <string name="label_allow_permission">요청 권한</string>
     <string name="label_denied">거부됨</string>
     <string name="message_guide_permission_read_phone_state">로그인 기능 사용 또는 고객센터와의 연결을 위해\n앱 권한 설정이 필요합니다.</string>
-    <string name="message_guide_dialog_permission01">데일로호텔앱에서 다음에 대한 사용 및\n액세스 권한을 요청합니다.</string>
+    <string name="message_guide_dialog_permission01">데일리호텔앱에서 다음에 대한 사용 및\n액세스 권한을 요청합니다.</string>
     <string name="message_guide_dialog_permission02">휴대폰 설정 > 어플리케이션 관리 > 데일리호텔 >\n권한 설정 메뉴에서</string>
     <string name="message_guide_dialog_permission03">설정 상태를 \'허용\'으로 변경할 수 있습니다.</string>
     <string name="message_guide_dialog_permission04">휴대폰 설정 > 어플리케이션 관리 > 데일리호텔 > 권한 설정 메뉴에서 언제든\n설정 상태를 변경할 수 있습니다.</string>

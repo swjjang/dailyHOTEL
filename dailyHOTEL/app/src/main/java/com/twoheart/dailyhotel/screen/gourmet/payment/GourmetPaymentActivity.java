@@ -250,7 +250,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     @Override
@@ -274,7 +273,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
     }
 
     @Override
@@ -1000,7 +998,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

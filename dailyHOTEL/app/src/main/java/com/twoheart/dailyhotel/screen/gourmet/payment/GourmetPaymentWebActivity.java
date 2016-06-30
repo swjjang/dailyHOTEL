@@ -65,6 +65,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -458,7 +460,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 
     @Override

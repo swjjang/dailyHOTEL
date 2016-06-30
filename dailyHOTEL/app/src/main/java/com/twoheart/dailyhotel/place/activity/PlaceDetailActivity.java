@@ -108,6 +108,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -267,6 +269,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
     public void onBackPressed()
     {
         if (mPlaceDetailLayout != null)
@@ -354,14 +364,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         Intent intent = AddProfileSocialActivity.newInstance(this, user);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     private void moveToUpdateUserPhoneNumber(Customer user, EditProfilePhoneActivity.Type type)
     {
         Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     protected void recordAnalyticsGourmetDetail(String screen, PlaceDetail placeDetail)

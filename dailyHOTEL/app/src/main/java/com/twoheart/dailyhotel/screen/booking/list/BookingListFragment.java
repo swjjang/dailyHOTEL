@@ -204,7 +204,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             Intent i = new Intent(baseActivity, LoginActivity.class);
             startActivity(i);
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN, 0L);
         }

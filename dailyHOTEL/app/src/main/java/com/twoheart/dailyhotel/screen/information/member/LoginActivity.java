@@ -75,6 +75,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         DailyHotel.setCurrentActivity(this);
@@ -295,7 +297,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 Intent intent = SignupStep1Activity.newInstance(this);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
                 break;
@@ -305,7 +306,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 Intent intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
                 break;
             }
 
@@ -488,7 +488,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     public void finish()
     {
         super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     private void registerNotificationId(final String registrationId, String userIndex)
