@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.util.Base64;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -63,6 +65,12 @@ public class ProfileNetworkController extends BaseNetworkController
                 {
                     verifiedDate = Util.simpleDateFormatISO8601toFormat( //
                         response.getString("phone_verified_at"), "yyyy.MM.dd");
+                } else if (isVerified == false && isPhoneVerified == true)
+                {
+                    verifiedDate = response.has("phone_verified_at") == true ? response.getString("phone_verified_at") : "no date";
+                    Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
+                        + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
+                        + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex//
