@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.place.base;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
      */
     private boolean mIsLockUiComponent = false;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
