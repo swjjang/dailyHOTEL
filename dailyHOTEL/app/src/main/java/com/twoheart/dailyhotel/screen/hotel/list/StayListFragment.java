@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -86,43 +84,7 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        Area area = null;
-
-        if (province instanceof Area)
-        {
-            area = (Area) province;
-        }
-
-        StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
-
-        StayParams params = new StayParams();
-
-        params.dateCheckIn = checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = nights;
-        params.provinceIdx = province.getProvinceIndex();
-
-        if (area != null)
-        {
-            params.areaIdx = area.index;
-        }
-
-        params.persons = stayCurationOption.person;
-        params.category = StayCurationManager.getInstance().getCategory();
-        params.bedType = stayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-        params.luxury = stayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
-        //        params.longitude = ;
-        //        params.latitude = ;
-        params.page = 1;
-        params.limit = 20;
-        params.setSortType(stayCurationOption.getSortType());
-        params.details = true;
-
-        //        DailyNetworkAPI.getInstance(mBaseActivity).requestHotelList(mNetworkTag, //
-        //            province, checkInSaleTime, nights, mHotelListJsonResponseListener, mHotelListJsonResponseListener);
-
-        //        DailyNetworkAPI.getInstance(mBaseActivity).requestStayList(mNetworkTag, params, mStayListJsonResponseListener);
-
-        mNetworkController.requestStayList(params);
+        mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(1, 20, true));
     }
 
     public boolean hasSalesPlace()

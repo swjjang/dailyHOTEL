@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,23 +11,23 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.HotelFilter;
-import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,11 +35,17 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 {
     public static final String INTENT_EXTRA_DATA_CURATION_OPTIONS = "curationOptions";
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
+    public static final String INTENT_EXTRA_DATA_CATEGORY = "category";
+    public static final String INTENT_EXTRA_DATA_PROVINCE = "province";
 
-    private HotelCurationOption mHotelCurationOption;
+    private StayCurationOption mStayCurationOption;
+    private Category mCategory;
+    private Province mProvince;
 
     private boolean mIsGlobal;
     private ViewType mViewType;
+
+    private StayCurationNetworkController mNetworkController;
 
     private RadioGroup mSortRadioGroup;
     private android.support.v7.widget.GridLayout mGridLayout;
@@ -49,22 +55,15 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private TextView mPersonCountView;
     private ViewGroup mBedTypeLayout;
 
-    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, HotelCurationOption hotelCurationOption)
-    {
-        Intent intent = new Intent(context, StayCurationActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
-        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, hotelCurationOption);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, StayCurationOption stayCurationOption)
+    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, //
+                                     StayCurationOption stayCurationOption, Category category, Province province)
     {
         Intent intent = new Intent(context, StayCurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
+        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, province);
 
         return intent;
     }
@@ -84,7 +83,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mHotelCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
+        mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
+        mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
+        mProvince = intent.getParcelableExtra(INTENT_EXTRA_DATA_PROVINCE);
+
+        mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         initLayout();
 
@@ -103,25 +106,25 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void initContentLayout(ViewGroup contentLayout)
     {
         View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
-        initSortLayout(sortLayout, mViewType, mHotelCurationOption);
+        initSortLayout(sortLayout, mViewType, mStayCurationOption);
 
         contentLayout.addView(sortLayout);
 
         if (mIsGlobal == false)
         {
             View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
-            initFilterLayout(filterLayout, mHotelCurationOption);
+            initFilterLayout(filterLayout, mStayCurationOption);
 
             contentLayout.addView(filterLayout);
 
-            initAmenitiesLayout(filterLayout, mHotelCurationOption);
+            initAmenitiesLayout(filterLayout, mStayCurationOption);
         } else
         {
             requestUpdateResult();
         }
     }
 
-    private void initSortLayout(View view, ViewType viewType, HotelCurationOption hotelCurationOption)
+    private void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
@@ -137,7 +140,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             return;
         }
 
-        switch (hotelCurationOption.getSortType())
+        switch (stayCurationOption.getSortType())
         {
             case DEFAULT:
                 mSortRadioGroup.check(R.id.regionCheckView);
@@ -163,7 +166,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mSortRadioGroup.setOnCheckedChangeListener(this);
     }
 
-    private void initFilterLayout(View view, HotelCurationOption hotelCurationOption)
+    private void initFilterLayout(View view, StayCurationOption stayCurationOption)
     {
         // 인원
         mMinusPersonView = view.findViewById(R.id.minusPersonView);
@@ -180,7 +183,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mMinusPersonView.setOnClickListener(this);
         mPlusPersonView.setOnClickListener(this);
 
-        updatePersonFilter(hotelCurationOption.person);
+        updatePersonFilter(stayCurationOption.person);
 
         // 베드타입
         mBedTypeLayout = (ViewGroup) view.findViewById(R.id.bedTypeLayout);
@@ -192,23 +195,23 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         twinCheckView.setOnClickListener(this);
         heatedFloorsCheckView.setOnClickListener(this);
 
-        if ((hotelCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
+        if ((stayCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
         {
             updateBedTypeFilter(doubleCheckView, HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
         }
 
-        if ((hotelCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN) == HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN)
+        if ((stayCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN) == HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN)
         {
             updateBedTypeFilter(twinCheckView, HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN);
         }
 
-        if ((hotelCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
+        if ((stayCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
         {
             updateBedTypeFilter(heatedFloorsCheckView, HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
         }
     }
 
-    private void initAmenitiesLayout(View view, HotelCurationOption hotelCurationOption)
+    private void initAmenitiesLayout(View view, StayCurationOption stayCurationOption)
     {
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
 
@@ -228,14 +231,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 if (v.isSelected() == true)
                 {
                     v.setSelected(false);
-                    mHotelCurationOption.flagAmenitiesFilters ^= flag;
+                    mStayCurationOption.flagAmenitiesFilters ^= flag;
 
                     AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
-                    mHotelCurationOption.flagAmenitiesFilters |= flag;
+                    mStayCurationOption.flagAmenitiesFilters |= flag;
 
                     AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
@@ -286,7 +289,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             amenitiesView.setTag(amenitiesflag[i]);
             amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
 
-            if ((hotelCurationOption.flagAmenitiesFilters & amenitiesflag[i]) == amenitiesflag[i])
+            if ((stayCurationOption.flagAmenitiesFilters & amenitiesflag[i]) == amenitiesflag[i])
             {
                 amenitiesView.setSelected(true);
             }
@@ -307,7 +310,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             person = HotelFilter.MAX_PERSON;
         }
 
-        mHotelCurationOption.person = person;
+        mStayCurationOption.person = person;
 
         mPersonCountView.setText(getString(R.string.label_more_person, person));
 
@@ -342,11 +345,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         if (view.isSelected() == true)
         {
             view.setSelected(false);
-            mHotelCurationOption.flagBedTypeFilters ^= flag;
+            mStayCurationOption.flagBedTypeFilters ^= flag;
         } else
         {
             view.setSelected(true);
-            mHotelCurationOption.flagBedTypeFilters |= flag;
+            mStayCurationOption.flagBedTypeFilters |= flag;
         }
 
         requestUpdateResultDelayed();
@@ -354,7 +357,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     private void resetCuration()
     {
-        mHotelCurationOption.clear();
+        mStayCurationOption.clear();
 
         if (mViewType == ViewType.LIST)
         {
@@ -374,52 +377,95 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         requestUpdateResult();
     }
 
+
+    private StayParams getStayParams()
+    {
+        StayParams params = new StayParams();
+
+        params.dateCheckIn = StayCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
+        params.stays = StayCurationManager.getInstance().getNight();
+        params.provinceIdx = mProvince.getProvinceIndex();
+
+        if (mProvince instanceof Area)
+        {
+            Area area = (Area) mProvince;
+            if (area != null)
+            {
+                params.areaIdx = area.index;
+            }
+        }
+
+        params.persons = mStayCurationOption.person;
+        params.category = mCategory;
+        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
+        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+
+        Constants.SortType sortType = mStayCurationOption.getSortType();
+        if (Constants.SortType.DISTANCE == sortType)
+        {
+            Location location = StayCurationManager.getInstance().getLocation();
+            if (location != null)
+            {
+                params.latitude = location.getLatitude();
+                params.longitude = location.getLongitude();
+            }
+        }
+
+        params.page = 0;
+        params.limit = 0;
+        params.setSortType(sortType);
+        params.details = false;
+
+        return params;
+    }
+
     @Override
     protected void updateResultMessage()
     {
         setConfirmOnClickListener(null);
 
-        new AsyncTask<Void, Void, Integer>()
-        {
-            @Override
-            protected Integer doInBackground(Void... params)
-            {
-                int count = 0;
-                ArrayList<HotelFilters> hotelFiltersList = mHotelCurationOption.getFiltersList();
-
-                if (Category.ALL.code.equalsIgnoreCase(mHotelCurationOption.getCategory().code) == true)
-                {
-                    for (HotelFilters hotelFilters : hotelFiltersList)
-                    {
-                        if (hotelFilters.isFiltered(mHotelCurationOption) == true)
-                        {
-                            count++;
-                        }
-                    }
-                } else
-                {
-                    for (HotelFilters hotelFilters : hotelFiltersList)
-                    {
-                        if (mHotelCurationOption.getCategory().code.equalsIgnoreCase(hotelFilters.categoryCode) == true//
-                            && hotelFilters.isFiltered(mHotelCurationOption) == true)
-                        {
-                            count++;
-                        }
-                    }
-                }
-
-                return count;
-            }
-
-            @Override
-            protected void onPostExecute(Integer count)
-            {
-                setResultMessage(getString(R.string.label_hotel_filter_result_count, count));
-
-                setConfirmOnClickListener(StayCurationActivity.this);
-                setConfirmEnable(count == 0 ? false : true);
-            }
-        }.execute();
+        mNetworkController.requestStayList(getStayParams());
+        //        new AsyncTask<Void, Void, Integer>()
+        //        {
+        //            @Override
+        //            protected Integer doInBackground(Void... params)
+        //            {
+        //                int count = 0;
+        //                ArrayList<HotelFilters> hotelFiltersList = mStayCurationOption.getFiltersList();
+        //
+        //                if (Category.ALL.code.equalsIgnoreCase(mCategory.code) == true)
+        //                {
+        //                    for (HotelFilters hotelFilters : hotelFiltersList)
+        //                    {
+        //                        if (hotelFilters.isFiltered(mStayCurationOption) == true)
+        //                        {
+        //                            count++;
+        //                        }
+        //                    }
+        //                } else
+        //                {
+        //                    for (HotelFilters hotelFilters : hotelFiltersList)
+        //                    {
+        //                        if (mCategory.code.equalsIgnoreCase(hotelFilters.categoryCode) == true//
+        //                            && hotelFilters.isFiltered(mStayCurationOption) == true)
+        //                        {
+        //                            count++;
+        //                        }
+        //                    }
+        //                }
+        //
+        //                return count;
+        //            }
+        //
+        //            @Override
+        //            protected void onPostExecute(Integer count)
+        //            {
+        //                setResultMessage(getString(R.string.label_hotel_filter_result_count, count));
+        //
+        //                setConfirmOnClickListener(StayCurationActivity.this);
+        //                setConfirmEnable(count == 0 ? false : true);
+        //            }
+        //        }.execute();
     }
 
     private void setDisabledSortLayout(View view, RadioGroup sortLayout)
@@ -481,7 +527,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                     checkedChangedDistance();
                 } else
                 {
-                    switch (mHotelCurationOption.getSortType())
+                    switch (mStayCurationOption.getSortType())
                     {
                         case DEFAULT:
                             mSortRadioGroup.check(R.id.regionCheckView);
@@ -505,6 +551,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
     }
 
+    // Sort filter
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
@@ -527,7 +574,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         switch (checkedId)
         {
             case R.id.regionCheckView:
-                mHotelCurationOption.setSortType(SortType.DEFAULT);
+                mStayCurationOption.setSortType(SortType.DEFAULT);
                 label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
@@ -539,17 +586,17 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
 
             case R.id.lowPriceCheckView:
-                mHotelCurationOption.setSortType(SortType.LOW_PRICE);
+                mStayCurationOption.setSortType(SortType.LOW_PRICE);
                 label = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case R.id.highPriceCheckView:
-                mHotelCurationOption.setSortType(SortType.HIGH_PRICE);
+                mStayCurationOption.setSortType(SortType.HIGH_PRICE);
                 label = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case R.id.satisfactionCheckView:
-                mHotelCurationOption.setSortType(SortType.SATISFACTION);
+                mStayCurationOption.setSortType(SortType.SATISFACTION);
                 label = AnalyticsManager.Label.SORTFILTER_RATING;
                 break;
 
@@ -558,18 +605,17 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
 
         Map<String, String> eventParmas = new HashMap<>();
-        Province province = mHotelCurationOption.getProvince();
 
-        if (province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) province;
+            Area area = (Area) mProvince;
             eventParmas.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
@@ -585,17 +631,17 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         switch (v.getId())
         {
             case R.id.minusPersonView:
-                updatePersonFilter(mHotelCurationOption.person - 1);
+                updatePersonFilter(mStayCurationOption.person - 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mStayCurationOption.person), null);
                 break;
 
             case R.id.plusPersonView:
-                updatePersonFilter(mHotelCurationOption.person + 1);
+                updatePersonFilter(mStayCurationOption.person + 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mStayCurationOption.person), null);
                 break;
 
             case R.id.doubleCheckView:
@@ -628,33 +674,34 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void onComplete()
     {
         Map<String, String> eventParmas = new HashMap<>();
-        Province province = mHotelCurationOption.getProvince();
 
-        eventParmas.put(AnalyticsManager.KeyType.SORTING, mHotelCurationOption.getSortType().name());
+        eventParmas.put(AnalyticsManager.KeyType.SORTING, mStayCurationOption.getSortType().name());
 
-        if (province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) province;
+            Area area = (Area) mProvince;
             eventParmas.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mHotelCurationOption.toString(), eventParmas);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mStayCurationOption.toString(), eventParmas);
 
         if (DEBUG == true)
         {
-            ExLog.d(mHotelCurationOption.toString());
+            ExLog.d(mStayCurationOption.toString());
         }
 
         Intent intent = new Intent();
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mHotelCurationOption);
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mStayCurationOption);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mCategory);
+        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, mProvince);
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -680,26 +727,62 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     private void checkedChangedDistance()
     {
-        mHotelCurationOption.setSortType(SortType.DISTANCE);
+        mStayCurationOption.setSortType(SortType.DISTANCE);
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
         Map<String, String> eventParmas = new HashMap<>();
-        Province province = mHotelCurationOption.getProvince();
 
-        if (province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) province;
+            Area area = (Area) mProvince;
             eventParmas.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParmas);
     }
+
+
+    private StayCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCurationNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onStayCount(int hotelSaleCount)
+        {
+            setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+
+            setConfirmOnClickListener(StayCurationActivity.this);
+            setConfirmEnable(hotelSaleCount == 0 ? false : true);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+
+        }
+    };
 }

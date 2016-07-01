@@ -247,7 +247,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 //                }
 //
 //                Intent intent = HotelCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
-//                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
+//                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 //
 //                String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 //
@@ -410,7 +410,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_HOTELCURATION:
+            case CODE_REQUEST_ACTIVITY_STAYCURATION:
             {
                 mDontReloadAtOnResume = true;
 

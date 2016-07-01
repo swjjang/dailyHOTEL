@@ -173,6 +173,14 @@ public class StayParams implements Parcelable
             {
                 sb.append(getCategoryString());
 
+            } else if ("bedtype".equalsIgnoreCase(name))
+            {
+                sb.append(bedType);
+
+            } else if ("luxury".equalsIgnoreCase(name))
+            {
+                sb.append(luxury);
+
             } else
             {
                 try
@@ -208,7 +216,7 @@ public class StayParams implements Parcelable
                         //     // 해당 값이 0일때 파라메터에 더하지 않음
                         //    continue;
                         //    }
-                    } else if ("limit".equalsIgnoreCase(name))
+                    } else if ("page".equalsIgnoreCase(name) || "limit".equalsIgnoreCase(name))
                     {
                         if (page == 0)
                         {

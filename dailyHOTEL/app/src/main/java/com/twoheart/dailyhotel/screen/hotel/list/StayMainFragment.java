@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
@@ -159,7 +158,9 @@ public class StayMainFragment extends PlaceMainFragment
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            PlaceCurationOption placeCurationOption = data.getParcelableExtra(GourmetCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+            PlaceCurationOption placeCurationOption = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+            Category category = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_CATEGORY);
+            Province province = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_PROVINCE);
 
             if ((placeCurationOption instanceof StayCurationOption) == false)
             {
@@ -169,12 +170,10 @@ public class StayMainFragment extends PlaceMainFragment
             StayCurationOption changeCurationOption = (StayCurationOption) placeCurationOption;
             StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
 
-            stayCurationOption.setSortType(changeCurationOption.getSortType());
-            stayCurationOption.setFiltersList(changeCurationOption.getFiltersList());
+            stayCurationOption.setCurationOption(changeCurationOption);
 
-            stayCurationOption.person = changeCurationOption.person;
-            stayCurationOption.flagBedTypeFilters = changeCurationOption.flagBedTypeFilters;
-            stayCurationOption.flagAmenitiesFilters = changeCurationOption.flagAmenitiesFilters;
+            StayCurationManager.getInstance().setCategory(category);
+            StayCurationManager.getInstance().setProvince(province);
 
             setScrollListTop(true);
 
@@ -900,8 +899,10 @@ public class StayMainFragment extends PlaceMainFragment
 
             Intent intent = StayCurationActivity.newInstance(mBaseActivity, //
                 province.isOverseas, mViewType, //
-                StayCurationManager.getInstance().getStayCurationOption());
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
+                StayCurationManager.getInstance().getStayCurationOption(), //
+                StayCurationManager.getInstance().getCategory(), //
+                StayCurationManager.getInstance().getProvince());
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType;
             if (ViewType.MAP.equals(mViewType))

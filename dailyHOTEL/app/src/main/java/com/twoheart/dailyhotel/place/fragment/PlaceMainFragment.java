@@ -123,7 +123,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_HOTELCURATION:
+            case CODE_REQUEST_ACTIVITY_STAYCURATION:
             {
                 mDontReloadAtOnResume = true;
 

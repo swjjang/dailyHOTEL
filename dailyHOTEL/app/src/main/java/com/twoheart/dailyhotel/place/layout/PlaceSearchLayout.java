@@ -219,7 +219,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     public void showSearchKeyboard()
     {
-        mSearchEditText.requestFocus();
+//        mSearchEditText.requestFocus();
         mSearchEditText.postDelayed(new Runnable()
         {
             @Override

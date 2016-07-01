@@ -221,7 +221,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL = 21;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET = 22;
     public static final int CODE_REQUEST_ACTIVITY_CALENDAR = 30;
-    public static final int CODE_REQUEST_ACTIVITY_HOTELCURATION = 31;
+    public static final int CODE_REQUEST_ACTIVITY_STAYCURATION = 31;
     public static final int CODE_REQUEST_ACTIVITY_EVENTWEB = 32;
     public static final int CODE_REQUEST_ACTIVITY_SEARCH = 33;
     public static final int CODE_REQUEST_ACTIVITY_IMAGELIST = 34;
