@@ -33,7 +33,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -764,7 +764,7 @@ public class StayMainFragment extends PlaceMainFragment
             SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
             int night = StayCurationManager.getInstance().getNight();
 
-            Intent intent = HotelSearchActivity.newInstance(mBaseActivity, checkInSaleTime, night);
+            Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)

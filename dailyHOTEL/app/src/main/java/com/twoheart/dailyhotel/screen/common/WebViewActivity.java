@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.net.URISyntaxException;
@@ -186,6 +187,11 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
         private void browseToExternalBrowser(String url)
         {
+            if(Util.isTextEmpty(url) == true)
+            {
+                return;
+            }
+
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);

@@ -32,7 +32,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -1418,8 +1418,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                    Intent intent = HotelSearchActivity.newInstance(baseActivity//
-                        , currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL);
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
                     switch (mViewType)

@@ -61,6 +61,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected abstract void onSearch(Location location);
 
+    public abstract void startSearchResultActivity();
+
     public interface OnSearchFragmentListener
     {
         void finish();
@@ -95,6 +97,46 @@ public abstract class PlaceSearchFragment extends BaseFragment
     public void setOnSearchFragmentListener(OnSearchFragmentListener listener)
     {
         mOnSearchFragmentListener = listener;
+    }
+
+    public void resetSearchKeyword()
+    {
+        if(mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.resetSearchKeyword();
+    }
+
+    public void clearSearchKeywordFocus()
+    {
+        if(mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.clearSearchKeywordFocus();
+    }
+
+    public void showSearchKeyboard()
+    {
+        if(mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.showSearchKeyboard();
+    }
+
+    public void hideSearchKeyboard()
+    {
+        if(mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.hideSearchKeyboard();
     }
 
     @Override

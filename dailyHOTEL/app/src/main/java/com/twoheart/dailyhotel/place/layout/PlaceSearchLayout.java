@@ -74,7 +74,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onSearch(String text, Keyword keyword);
 
-        void onShowCalendar(boolean isAnimation);
+        void onCalendarClick(boolean isAnimation);
 
         void onSearchEnabled(boolean enabled);
     }
@@ -112,6 +112,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mSearchEditText.setFilters(allowAlphanumericHangul);
+        mSearchEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
         final View deleteView = view.findViewById(R.id.deleteView);
         deleteView.setOnClickListener(this);
@@ -192,6 +193,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private void initCalendarLayout(View view)
     {
         mDateTextView = (TextView) view.findViewById(R.id.calendarTextView);
+
+        mDateTextView.setOnClickListener(this);
     }
 
     private void initAroundLayout(View view)
@@ -215,11 +218,37 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     public void resetSearchKeyword()
     {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
         mSearchEditText.setText(null);
+    }
+
+    public void clearSearchKeywordFocus()
+    {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
+        mSearchEditText.clearFocus();
+    }
+
+    public String getSearchKeyWord()
+    {
+        return mSearchEditText.getText().toString();
     }
 
     public void showSearchKeyboard()
     {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
+        mSearchEditText.setEnabled(true);
         mSearchEditText.requestFocus();
         mSearchEditText.postDelayed(new Runnable()
         {
@@ -642,7 +671,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     @Override
                     public void run()
                     {
-                        ((OnEventListener) mOnEventListener).onShowCalendar(true);
+                        ((OnEventListener) mOnEventListener).onCalendarClick(true);
                     }
                 }, 100);
                 break;

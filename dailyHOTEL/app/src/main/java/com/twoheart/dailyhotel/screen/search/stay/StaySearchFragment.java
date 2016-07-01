@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -57,6 +56,8 @@ public class StaySearchFragment extends PlaceSearchFragment
     public void onResume()
     {
         super.onResume();
+
+        setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
     }
 
     @Override
@@ -119,7 +120,23 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-        Intent intent = HotelSearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, location);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, location);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+    }
+
+    @Override
+    public void startSearchResultActivity()
+    {
+        String text = mPlaceSearchLayout.getSearchKeyWord();
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            return;
+        }
+
+        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -216,7 +233,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-            Intent intent = HotelSearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -232,17 +249,17 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (keyword.price < 0)
             {
-                Intent intent = HotelSearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, keyword, HotelSearchResultActivity.SEARCHTYPE_RECENT);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, keyword, StaySearchResultActivity.SEARCHTYPE_RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = HotelSearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text, keyword, HotelSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text, keyword, StaySearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
 
         @Override
-        public void onShowCalendar(boolean isAnimation)
+        public void onCalendarClick(boolean isAnimation)
         {
             if (isAnimation == true)
             {

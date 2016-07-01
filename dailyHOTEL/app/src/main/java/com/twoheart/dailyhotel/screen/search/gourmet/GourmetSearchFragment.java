@@ -58,6 +58,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     public void onResume()
     {
         super.onResume();
+
+        setDateText(GourmetCurationManager.getInstance().getSaleTime());
     }
 
     @Override
@@ -116,6 +118,20 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     protected void onSearch(Location location)
     {
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, location);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+    }
+
+    @Override
+    public void startSearchResultActivity()
+    {
+        String text = mPlaceSearchLayout.getSearchKeyWord();
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            return;
+        }
+
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -227,7 +243,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onShowCalendar(boolean isAnimation)
+        public void onCalendarClick(boolean isAnimation)
         {
             if (isAnimation == true)
             {

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.search;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -25,6 +26,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private DailyViewPager mViewPager;
     private View mSearchView;
     private PlaceType mPlaceType;
+
+    private StaySearchFragment mStaySearchFragment;
+    private GourmetSearchFragment mGourmetSearchFragment;
 
     public static Intent newInstance(Context context, PlaceType placeType)
     {
@@ -60,8 +64,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
 
-        StaySearchFragment staySearchFragment = new StaySearchFragment();
-        staySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
+        mStaySearchFragment = new StaySearchFragment();
+        mStaySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
         {
             @Override
             public void finish()
@@ -81,10 +85,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 mSearchView.setEnabled(enabled);
             }
         });
-        fragmentList.add(staySearchFragment);
+        fragmentList.add(mStaySearchFragment);
 
-        GourmetSearchFragment gourmetSearchFragment = new GourmetSearchFragment();
-        gourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
+        mGourmetSearchFragment = new GourmetSearchFragment();
+        mGourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
         {
             @Override
             public void finish()
@@ -104,7 +108,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 mSearchView.setEnabled(enabled);
             }
         });
-        fragmentList.add(gourmetSearchFragment);
+        fragmentList.add(mGourmetSearchFragment);
 
         mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
 
@@ -112,6 +116,72 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mViewPager.setOffscreenPageLimit(SEARCH_TAB_COUNT);
         mViewPager.setAdapter(mSearchFragmentPagerAdapter);
         mViewPager.setPagingEnabled(false);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+//                if(mStaySearchFragment != null)
+//                {
+//                    mStaySearchFragment.clearSearchKeywordFocus();
+//                    mStaySearchFragment.hideSearchKeyboard();
+//                }
+//
+//                if(mGourmetSearchFragment != null)
+//                {
+//                    mGourmetSearchFragment.clearSearchKeywordFocus();
+//                    mGourmetSearchFragment.hideSearchKeyboard();
+//                }
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+                switch (position)
+                {
+                    // STAY
+                    case 0:
+                    {
+//                        if(mGourmetSearchFragment != null)
+//                        {
+//                            mGourmetSearchFragment.clearSearchKeywordFocus();
+//                            mGourmetSearchFragment.hideSearchKeyboard();
+//                        }
+
+//                        if (staySearchFragment != null)
+//                        {
+//                            staySearchFragment.resetSearchKeyword();
+//                            staySearchFragment.showSearchKeyboard();
+//                        }
+                        break;
+                    }
+
+                    // GOURMET
+                    case 1:
+                    {
+//                        if(mStaySearchFragment != null)
+//                        {
+//                            mStaySearchFragment.clearSearchKeywordFocus();
+//                            mStaySearchFragment.hideSearchKeyboard();
+//                        }
+
+//                        if (gourmetSearchFragment != null)
+//                        {
+//                            gourmetSearchFragment.resetSearchKeyword();
+//                            gourmetSearchFragment.showSearchKeyboard();
+//                        }
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+
+            }
+        });
 
         switch (placeType)
         {
@@ -234,6 +304,17 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId())
         {
             case R.id.searchView:
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        mStaySearchFragment.startSearchResultActivity();
+                        break;
+
+                    case FNB:
+                        mGourmetSearchFragment.startSearchResultActivity();
+                        break;
+
+                }
                 break;
         }
     }
