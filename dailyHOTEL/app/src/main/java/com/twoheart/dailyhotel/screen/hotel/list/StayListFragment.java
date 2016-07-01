@@ -1,13 +1,10 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
-import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -24,15 +21,12 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
@@ -136,59 +130,8 @@ public class StayListFragment extends PlaceListFragment
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        //        if (mViewType == ViewType.MAP)
-        //        {
-        //            if (mHotelMapFragment != null)
-        //            {
-        //                mHotelMapFragment.onActivityResult(requestCode, resultCode, data);
-        //            }
-        //        } else
-        //        {
-        //            if (mStayRecyclerView == null)
-        //            {
-        //                Util.restartApp(getContext());
-        //                return;
-        //            }
-        //
-        //            switch (requestCode)
-        //            {
-        //                case CODE_REQUEST_ACTIVITY_CALENDAR:
-        //                {
-        //                    if (resultCode == Activity.RESULT_OK && data != null)
-        //                    {
-        //                        mCheckInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-        //                        mCheckOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
-        //
-        //                        mOnCommunicateListener.selectDay(mCheckInSaleTime, mCheckOutSaleTime, true);
-        //                    } else
-        //                    {
-        //                        if (mStayRecyclerView.getVisibility() == View.VISIBLE && mStayRecyclerView.getAdapter() != null)
-        //                        {
-        //                            if (mStayRecyclerView.getAdapter().getItemCount() == 0)
-        //                            {
-        //                                fetchList();
-        //                            }
-        //                        }
-        //                    }
-        //                    break;
-        //                }
-        //            }
-        //        }
-    }
-
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        //        if (mViewType == ViewType.MAP)
-        //        {
-        //            if (mHotelMapFragment != null)
-        //            {
-        //                mHotelMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //            }
-        //        }
     }
 
     @Override
@@ -205,116 +148,6 @@ public class StayListFragment extends PlaceListFragment
     public void setScrollListTop(boolean scrollListTop)
     {
         mStayListLayout.setScrollListTop(scrollListTop);
-    }
-
-    private ArrayList<PlaceViewItem> curationSorting(List<Stay> stayList, StayCurationOption stayCurationOption)
-    {
-        ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
-
-        if (stayList == null || stayList.size() == 0)
-        {
-            return hotelListViewItemList;
-        }
-
-        final Location location = StayCurationManager.getInstance().getLocation();
-
-        switch (stayCurationOption.getSortType())
-        {
-            case DEFAULT:
-                return makeSectionStayList(stayList);
-
-            case DISTANCE:
-            {
-                if (location == null)
-                {
-                    stayCurationOption.setSortType(SortType.DEFAULT);
-                    DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                    return makeSectionStayList(stayList);
-                }
-
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Stay> comparator = new Comparator<Stay>()
-                {
-                    public int compare(Stay hotel1, Stay hotel2)
-                    {
-                        float[] results1 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
-                        hotel1.distance = results1[0];
-
-                        float[] results2 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
-                        hotel2.distance = results2[0];
-
-                        return Float.compare(results1[0], results2[0]);
-                    }
-                };
-
-                if (stayList.size() == 1)
-                {
-                    Stay stay = stayList.get(0);
-
-                    float[] results1 = new float[3];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), stay.latitude, stay.longitude, results1);
-                    stay.distance = results1[0];
-                } else
-                {
-                    Collections.sort(stayList, comparator);
-                }
-                break;
-            }
-
-            case LOW_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Stay> comparator = new Comparator<Stay>()
-                {
-                    public int compare(Stay hotel1, Stay hotel2)
-                    {
-                        return hotel1.averageDiscountPrice - hotel2.averageDiscountPrice;
-                    }
-                };
-
-                Collections.sort(stayList, comparator);
-                break;
-            }
-
-            case HIGH_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Stay> comparator = new Comparator<Stay>()
-                {
-                    public int compare(Stay hotel1, Stay hotel2)
-                    {
-                        return hotel2.averageDiscountPrice - hotel1.averageDiscountPrice;
-                    }
-                };
-
-                Collections.sort(stayList, comparator);
-                break;
-            }
-
-            case SATISFACTION:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Stay> comparator = new Comparator<Stay>()
-                {
-                    public int compare(Stay hotel1, Stay hotel2)
-                    {
-                        return hotel2.satisfaction - hotel1.satisfaction;
-                    }
-                };
-
-                Collections.sort(stayList, comparator);
-                break;
-            }
-        }
-
-        for (Stay stay : stayList)
-        {
-            hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-        }
-
-        return hotelListViewItemList;
     }
 
     private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)

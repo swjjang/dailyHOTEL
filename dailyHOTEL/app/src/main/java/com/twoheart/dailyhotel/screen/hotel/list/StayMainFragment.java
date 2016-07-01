@@ -1097,7 +1097,6 @@ public class StayMainFragment extends PlaceMainFragment
             return selectedProvince;
         }
 
-        // onRegionList
         private boolean processDeepLinkByReginList(BaseActivity baseActivity, //
                                                    List<Province> provinceList, //
                                                    List<Area> areaList)

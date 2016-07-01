@@ -187,10 +187,7 @@ public class StayParams implements Parcelable
 
                     if ("longitude".equalsIgnoreCase(name) || "latitude".equalsIgnoreCase(name))
                     {
-                        String subValue = String.valueOf(field.get(object));
-
-                        double doubleValue = Double.parseDouble(subValue);
-                        if (doubleValue == 0.0)
+                        if (longitude == 0d || latitude == 0d)
                         {
                             // 해당 값이 0일때 파라메터에 더하지 않음
                             continue;
@@ -198,12 +195,24 @@ public class StayParams implements Parcelable
 
                     } else if ("areaIdx".equalsIgnoreCase(name))
                     {
-                        String subValue = String.valueOf(field.get(object));
-
-                        int intValue = Integer.parseInt(subValue);
-                        if (intValue == 0)
+                        if (areaIdx == 0)
                         {
                             // 해당 값이 0일때 파라메터에 더하지 않음
+                            continue;
+                        }
+                        //  String subValue = String.valueOf(field.get(object));
+                        //
+                        //  int intValue = Integer.parseInt(subValue);
+                        //   if (intValue == 0)
+                        //    {
+                        //     // 해당 값이 0일때 파라메터에 더하지 않음
+                        //    continue;
+                        //    }
+                    } else if ("limit".equalsIgnoreCase(name))
+                    {
+                        if (page == 0)
+                        {
+                            // 해당 값이 0일때 전체 리스트 요청이므로 limit 값 무시
                             continue;
                         }
                     }
