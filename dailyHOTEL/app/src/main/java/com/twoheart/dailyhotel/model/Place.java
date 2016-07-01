@@ -1,12 +1,7 @@
 package com.twoheart.dailyhotel.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.twoheart.dailyhotel.R;
-
-import org.json.JSONObject;
 
 public abstract class Place implements Parcelable
 {

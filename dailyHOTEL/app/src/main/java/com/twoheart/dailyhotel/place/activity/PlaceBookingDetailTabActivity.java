@@ -63,7 +63,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)tabLayout.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tabLayout.getLayoutParams();
         layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
         tabLayout.setLayoutParams(layoutParams);
 

@@ -1,18 +1,37 @@
 package com.twoheart.dailyhotel.screen.search;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.widget.DailySwitchCompat;
+import com.twoheart.dailyhotel.widget.DailyViewPager;
 
 import java.util.ArrayList;
 
-public class SearchActivity extends BaseActivity
+public class SearchActivity extends BaseActivity implements View.OnClickListener
 {
+    private static final int SEARCH_TAB_COUNT = 2;
+
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
+    private DailyViewPager mViewPager;
+    private View mSearchView;
+    private PlaceType mPlaceType;
+
+    public static Intent newInstance(Context context, PlaceType placeType)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,26 +41,175 @@ public class SearchActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search);
-        initLayout();
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            return;
+        }
+
+        mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+
+        initLayout(mPlaceType);
     }
 
-    protected void initLayout()
+    private void initLayout(PlaceType placeType)
     {
+        initToolbar(placeType);
+
         ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
 
         StaySearchFragment staySearchFragment = new StaySearchFragment();
+        staySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
+        {
+            @Override
+            public void finish()
+            {
+                SearchActivity.this.finish();
+            }
+
+            @Override
+            public void finish(int resultCode)
+            {
+                SearchActivity.this.setResult(resultCode);
+            }
+
+            @Override
+            public void onSearchEnabled(boolean enabled)
+            {
+                mSearchView.setEnabled(enabled);
+            }
+        });
         fragmentList.add(staySearchFragment);
 
         GourmetSearchFragment gourmetSearchFragment = new GourmetSearchFragment();
+        gourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
+        {
+            @Override
+            public void finish()
+            {
+                SearchActivity.this.finish();
+            }
+
+            @Override
+            public void finish(int resultCode)
+            {
+                SearchActivity.this.setResult(resultCode);
+            }
+
+            @Override
+            public void onSearchEnabled(boolean enabled)
+            {
+                mSearchView.setEnabled(enabled);
+            }
+        });
         fragmentList.add(gourmetSearchFragment);
 
         mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
 
-        initToolbar();
+        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+        mViewPager.setOffscreenPageLimit(SEARCH_TAB_COUNT);
+        mViewPager.setAdapter(mSearchFragmentPagerAdapter);
+        mViewPager.setPagingEnabled(false);
+
+        switch (placeType)
+        {
+            case HOTEL:
+                mViewPager.setCurrentItem(0);
+                break;
+
+            case FNB:
+                mViewPager.setCurrentItem(1);
+                break;
+        }
     }
 
-    private void initToolbar()
+    private void initToolbar(PlaceType placeType)
     {
+        View toolbar = findViewById(R.id.toolbar);
+        View backView = toolbar.findViewById(R.id.backImageView);
+        backView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
+        initPlaceSwitch(toolbar, placeType);
+
+        mSearchView = toolbar.findViewById(R.id.searchView);
+        mSearchView.setOnClickListener(this);
+        mSearchView.setEnabled(false);
+    }
+
+    private void initPlaceSwitch(View view, PlaceType placeType)
+    {
+        // 가운데 스위치
+        DailySwitchCompat switchCompat = (DailySwitchCompat) view.findViewById(R.id.placeSwitch);
+        final ImageView hotelSwitchView = (ImageView) view.findViewById(R.id.hotelSwitch);
+        final ImageView gourmetSwitchView = (ImageView) view.findViewById(R.id.gourmetSwitch);
+
+        switch (placeType)
+        {
+            case HOTEL:
+                switchCompat.setChecked(false);
+                break;
+
+            case FNB:
+                switchCompat.setChecked(true);
+                break;
+        }
+
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (isChecked == true)
+                {
+                    mPlaceType = PlaceType.FNB;
+                } else
+                {
+                    mPlaceType = PlaceType.HOTEL;
+                }
+            }
+        });
+
+        final PlaceType startPlactType = placeType;
+
+        switchCompat.setOnScrollListener(new DailySwitchCompat.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(int offset, int range)
+            {
+                if (range == 0)
+                {
+                    return;
+                }
+
+                float gourmetAlpha = 0.6f * offset / range;
+                float hotelAlpha = 0.6f - gourmetAlpha;
+
+                hotelSwitchView.setAlpha(0.4f + hotelAlpha);
+                gourmetSwitchView.setAlpha(0.4f + gourmetAlpha);
+
+                int pageOffset = (int) ((float) offset * mViewPager.getWidth() / range);
+
+                switch (startPlactType)
+                {
+                    case HOTEL:
+                        mViewPager.setScrollX(pageOffset);
+                        break;
+
+                    case FNB:
+                        mViewPager.setScrollX(pageOffset - mViewPager.getWidth());
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -58,5 +226,15 @@ public class SearchActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.searchView:
+                break;
+        }
     }
 }

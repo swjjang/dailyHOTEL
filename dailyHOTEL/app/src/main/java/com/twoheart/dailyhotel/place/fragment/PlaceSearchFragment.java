@@ -47,12 +47,11 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected DailyRecentSearches mDailyRecentSearches;
     protected PlaceSearchLayout mPlaceSearchLayout;
     protected PlaceSearchNetworkController mPlaceSearchNetworkController;
+    protected OnSearchFragmentListener mOnSearchFragmentListener;
 
     protected abstract PlaceSearchLayout getPlaceSearchLayout(Context context);
 
     protected abstract PlaceSearchNetworkController getPlaceSearchNetworkController(Context context);
-
-    protected abstract void initIntent(Intent intent);
 
     protected abstract String getRecentSearches();
 
@@ -62,6 +61,15 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected abstract void onSearch(Location location);
 
+    public interface OnSearchFragmentListener
+    {
+        void finish();
+
+        void finish(int resultCode);
+
+        void onSearchEnabled(boolean enabled);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -70,7 +78,11 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout = getPlaceSearchLayout(mBaseActivity);
         mPlaceSearchNetworkController = getPlaceSearchNetworkController(mBaseActivity);
 
-        return mPlaceSearchLayout.onCreateView(R.layout.fragment_search, container);
+        View view = mPlaceSearchLayout.onCreateView(R.layout.fragment_search, container);
+
+        initContents();
+
+        return view;
     }
 
     protected void initContents()
@@ -78,6 +90,11 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
 
         mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+    }
+
+    public void setOnSearchFragmentListener(OnSearchFragmentListener listener)
+    {
+        mOnSearchFragmentListener = listener;
     }
 
     @Override
@@ -89,6 +106,56 @@ public abstract class PlaceSearchFragment extends BaseFragment
         {
             mShowSearchKeyboard = false;
             mPlaceSearchLayout.showSearchKeyboard();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_SEARCHRESULT:
+            {
+                if (data != null)
+                {
+                    Keyword keyword = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_KEYWORD);
+                    mDailyRecentSearches.addString(keyword);
+
+                    writeRecentSearches(mDailyRecentSearches.toString());
+                    mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                }
+
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    mOnSearchFragmentListener.finish(resultCode);
+                } else if (resultCode == CODE_RESULT_ACTIVITY_HOME)
+                {
+                    mOnSearchFragmentListener.finish();
+                } else
+                {
+                    mShowSearchKeyboard = true;
+                }
+                break;
+            }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                searchMyLocation();
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    searchMyLocation();
+                }
+                break;
+            }
         }
     }
 

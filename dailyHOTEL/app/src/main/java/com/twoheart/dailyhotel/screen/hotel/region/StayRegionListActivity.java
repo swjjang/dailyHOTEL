@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
@@ -117,7 +116,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)mTabLayout.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTabLayout.getLayoutParams();
         layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
 
         mTabLayout.setLayoutParams(layoutParams);

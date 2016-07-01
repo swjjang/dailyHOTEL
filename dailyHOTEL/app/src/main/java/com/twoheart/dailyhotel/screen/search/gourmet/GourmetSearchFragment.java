@@ -15,6 +15,8 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
+import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -28,31 +30,34 @@ import java.util.Locale;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-
-    private GourmetSearchNetworkController mNetworkController;
     private SaleTime mSaleTime;
 
     private Handler mAnalyticsHandler;
 
+    @Override
     protected void initContents()
     {
         super.initContents();
 
-        mNetworkController = new GourmetSearchNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        mAnalyticsHandler = new AnalyticsHandler(this);
 
-        setDateText(mSaleTime);
+        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        {
+            SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
+
+            StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
+            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+            StayCurationManager.getInstance().setCheckOutSaleTime( //
+                checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+        }
+
+        setDateText(GourmetCurationManager.getInstance().getSaleTime());
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-
-        if (mSaleTime == null)
-        {
-            mBaseActivity.finish();
-        }
     }
 
     @Override
@@ -80,19 +85,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     @Override
     protected PlaceSearchLayout getPlaceSearchLayout(Context context)
     {
-        return null;
+        return new GourmetSearchLayout(context, mOnEventListener);
     }
 
     @Override
     protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
     {
-        return null;
-    }
-
-    @Override
-    protected void initIntent(Intent intent)
-    {
-
+        return new GourmetSearchNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -193,7 +192,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
-            mNetworkController.requestAutoComplete(mSaleTime, keyword);
+            ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mSaleTime, keyword);
         }
 
         @Override
@@ -238,6 +237,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+        }
+
+        @Override
+        public void onSearchEnabled(boolean enabled)
+        {
+            mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 
         @Override

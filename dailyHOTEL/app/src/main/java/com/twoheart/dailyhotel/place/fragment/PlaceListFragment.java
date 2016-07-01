@@ -15,7 +15,8 @@
  */
 package com.twoheart.dailyhotel.place.fragment;
 
-import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -46,9 +47,9 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
 
     @Override
-    public void onAttach(Activity activity)
+    public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
-        super.onAttach(activity);
+        super.onActivityCreated(savedInstanceState);
 
         mIsAttached = true;
 

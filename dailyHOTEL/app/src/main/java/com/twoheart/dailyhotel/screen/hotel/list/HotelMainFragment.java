@@ -109,69 +109,69 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         HotelCurationOption getCurationOption();
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-//    {
-//        View view = inflater.inflate(R.layout.fragment_hotel_main, container, false);
-//
-//        initToolbar(view);
-//
-//        mViewType = ViewType.LIST;
-//
-//        mTodaySaleTime = new SaleTime();
-//
-//        mCurationOption = new HotelCurationOption();
-//
-//        initDateTabLayout(view);
-//
-//        initFloatingActionButton(view);
-//
-//        setHasOptionsMenu(true);
-//
-//        return view;
-//    }
+    //    @Override
+    //    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    //    {
+    //        View view = inflater.inflate(R.layout.fragment_hotel_main, container, false);
+    //
+    //        initToolbar(view);
+    //
+    //        mViewType = ViewType.LIST;
+    //
+    //        mTodaySaleTime = new SaleTime();
+    //
+    //        mCurationOption = new HotelCurationOption();
+    //
+    //        initDateTabLayout(view);
+    //
+    //        initFloatingActionButton(view);
+    //
+    //        setHasOptionsMenu(true);
+    //
+    //        return view;
+    //    }
 
     private void initToolbar(View view)
     {
-//        BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//        TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height);
-//
-//        mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-//        final View toolbar = view.findViewById(R.id.toolbar);
-//        toolbar.post(new Runnable()
-//        {
-//            @Override
-//            public void run()
-//            {
-//                TOOLBAR_HEIGHT = toolbar.getHeight();
-//            }
-//        });
-//
-//        mAppBarLayout.addOnOffsetChangedListener(this);
-//
-//        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-//        mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                if (isLockUiComponent() == true)
-//                {
-//                    return;
-//                }
-//
-//                lockUiComponent();
-//
-//                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-//
-//                Intent intent = HotelRegionListActivity.newInstance(getContext(), getProvince(), currentFragment.getCheckInSaleTime(), currentFragment.getNights());
-//                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-//            }
-//        });
-//
-//        mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
-//        onPrepareOptionsMenu(mViewType);
+        //        BaseActivity baseActivity = (BaseActivity) getActivity();
+        //
+        //        TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height);
+        //
+        //        mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+        //        final View toolbar = view.findViewById(R.id.toolbar);
+        //        toolbar.post(new Runnable()
+        //        {
+        //            @Override
+        //            public void run()
+        //            {
+        //                TOOLBAR_HEIGHT = toolbar.getHeight();
+        //            }
+        //        });
+        //
+        //        mAppBarLayout.addOnOffsetChangedListener(this);
+        //
+        //        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        //        mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                if (isLockUiComponent() == true)
+        //                {
+        //                    return;
+        //                }
+        //
+        //                lockUiComponent();
+        //
+        //                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+        //
+        //                Intent intent = HotelRegionListActivity.newInstance(getContext(), getProvince(), currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+        //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+        //            }
+        //        });
+        //
+        //        mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+        //        onPrepareOptionsMenu(mViewType);
     }
 
     private void initDateTabLayout(View view)
@@ -219,53 +219,53 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void initFloatingActionButton(View view)
     {
-//        mFloatingActionView = view.findViewById(R.id.floatingActionView);
-//        mFloatingActionView.setVisibility(View.GONE);
-//        mFloatingActionView.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//                if (baseActivity == null || baseActivity.isFinishing() == true)
-//                {
-//                    return;
-//                }
-//
-//                if (lockUiComponentAndIsLockUiComponent() == true)
-//                {
-//                    return;
-//                }
-//
-//                Province province = getProvince();
-//
-//                if (province == null)
-//                {
-//                    releaseUiComponent();
-//                    return;
-//                }
-//
-//                Intent intent = HotelCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
-//                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
-//
-//                String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-//
-//                switch (mViewType)
-//                {
-//                    case LIST:
-//                        viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-//                        break;
-//
-//                    case MAP:
-//                        viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-//                        break;
-//                }
-//
-//                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-//                    , Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
-//            }
-//        });
+        //        mFloatingActionView = view.findViewById(R.id.floatingActionView);
+        //        mFloatingActionView.setVisibility(View.GONE);
+        //        mFloatingActionView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                BaseActivity baseActivity = (BaseActivity) getActivity();
+        //
+        //                if (baseActivity == null || baseActivity.isFinishing() == true)
+        //                {
+        //                    return;
+        //                }
+        //
+        //                if (lockUiComponentAndIsLockUiComponent() == true)
+        //                {
+        //                    return;
+        //                }
+        //
+        //                Province province = getProvince();
+        //
+        //                if (province == null)
+        //                {
+        //                    releaseUiComponent();
+        //                    return;
+        //                }
+        //
+        //                Intent intent = HotelCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
+        //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
+        //
+        //                String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+        //
+        //                switch (mViewType)
+        //                {
+        //                    case LIST:
+        //                        viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+        //                        break;
+        //
+        //                    case MAP:
+        //                        viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+        //                        break;
+        //                }
+        //
+        //                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        //                    , Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+        //            }
+        //        });
     }
 
     @Override
@@ -277,30 +277,30 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mDailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
         }
 
-//        mDailyFloatingActionButtonBehavior.setScale(mFloatingActionView, ((float) verticalOffset) / TOOLBAR_HEIGHT);
+        //        mDailyFloatingActionButtonBehavior.setScale(mFloatingActionView, ((float) verticalOffset) / TOOLBAR_HEIGHT);
     }
 
     @Override
     public void onResume()
     {
-//        mOnCommunicateListener.expandedAppBar(true, false);
-//        mDailyToolbarLayout.resizeToolbarRegionText();
-//
-//        if (mDontReloadAtOnResume == true)
-//        {
-//            mDontReloadAtOnResume = false;
-//        } else
-//        {
-//            BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//            if (baseActivity == null)
-//            {
-//                return;
-//            }
-//
-//            lockUI();
-//            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
-//        }
+        //        mOnCommunicateListener.expandedAppBar(true, false);
+        //        mDailyToolbarLayout.resizeToolbarRegionText();
+        //
+        //        if (mDontReloadAtOnResume == true)
+        //        {
+        //            mDontReloadAtOnResume = false;
+        //        } else
+        //        {
+        //            BaseActivity baseActivity = (BaseActivity) getActivity();
+        //
+        //            if (baseActivity == null)
+        //            {
+        //                return;
+        //            }
+        //
+        //            lockUI();
+        //            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+        //        }
 
         super.onResume();
     }
@@ -793,7 +793,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         updateFilteredFloatingActionButton();
 
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-//        currentFragment.curationList(mViewType, mCurationOption);
+        //        currentFragment.curationList(mViewType, mCurationOption);
     }
 
     private void refreshCurrentFragment(List<EventBanner> list)
@@ -1777,7 +1777,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 hotelListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 
-//            currentFragment.curationList(mViewType, mCurationOption);
+            //            currentFragment.curationList(mViewType, mCurationOption);
 
             unLockUI();
         }

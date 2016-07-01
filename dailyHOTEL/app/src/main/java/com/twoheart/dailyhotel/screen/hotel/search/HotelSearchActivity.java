@@ -250,6 +250,12 @@ public class HotelSearchActivity extends PlaceSearchActivity
         }
 
         @Override
+        public void onSearchEnabled(boolean enabled)
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             HotelSearchActivity.this.finish();

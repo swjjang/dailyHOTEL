@@ -121,7 +121,7 @@ public class Stay extends Place
                 dBenefitText = null;
             }
 
-//            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
+            //            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());

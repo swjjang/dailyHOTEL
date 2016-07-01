@@ -20,18 +20,18 @@
 
         <RelativeLayout
             android:layout_width="130dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_centerInParent="true">
 
             <com.twoheart.dailyhotel.widget.DailySwitchCompat
                 android:id="@+id/placeSwitch"
                 android:layout_width="130dp"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:thumb="@drawable/toggle_btn_ic_02_knob"
                 app:track="@drawable/toggle_btn_ic_01_template"
                 app:showText="false"
-                android:drawablePadding="6dp"
-                android:theme="@style/CustomSwitch"/>
+                android:theme="@style/CustomSwitch"
+                android:checked="false"/>
 
             <ImageView
                 android:id="@+id/hotelSwitch"
@@ -72,7 +72,7 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
-    <ViewPager
+    <com.twoheart.dailyhotel.widget.DailyViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

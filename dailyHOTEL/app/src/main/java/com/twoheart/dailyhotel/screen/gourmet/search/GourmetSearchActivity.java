@@ -238,6 +238,12 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         }
 
         @Override
+        public void onSearchEnabled(boolean enabled)
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             GourmetSearchActivity.this.finish();

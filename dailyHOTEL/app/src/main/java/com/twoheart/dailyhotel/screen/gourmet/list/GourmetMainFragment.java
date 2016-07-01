@@ -30,8 +30,8 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -261,7 +261,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onSearchClick()
         {
-            Intent intent = GourmetSearchActivity.newInstance(mBaseActivity, GourmetCurationManager.getInstance().getSaleTime());
+            Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.FNB);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -427,6 +427,11 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onDateTime(long currentDateTime, long dailyDateTime)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             GourmetCurationManager.getInstance().setSaleTime(currentDateTime, dailyDateTime);
 
             if (DailyDeepLink.getInstance().isValidateLink() == true //

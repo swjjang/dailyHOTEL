@@ -730,7 +730,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 setMenuBarLayoutTranslationY(0);
 
-//                setMenuBarLayoutEnabled(false);
+                //                setMenuBarLayoutEnabled(false);
             }
 
             @Override

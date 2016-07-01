@@ -28,7 +28,7 @@ public class StayMapFragment extends PlaceListMapFragment
     @Override
     protected PlaceRenderer newInstancePlaceRenderer(Context context, Place place)
     {
-        Stay stay = (Stay)place;
+        Stay stay = (Stay) place;
 
         return new PlaceRenderer(context, stay.averageDiscountPrice, stay.getGrade().getMarkerResId());
     }
