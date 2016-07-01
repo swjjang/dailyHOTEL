@@ -16,11 +16,12 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.HotelCurationOption;
-import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -35,11 +36,7 @@ public class StayListNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onDateTime();
-
-        void onEventBanner();
-
-        void onRegionList();
+        void onStayList(ArrayList<Stay> list, int page, int hotelSaleCount);
     }
 
     public StayListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -47,122 +44,87 @@ public class StayListNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestStayList()
+    public void requestStayList(StayParams params)
     {
-
+        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params, mStayListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            //            try
-            //            {
-            //                int msgCode = response.getInt("msgCode");
-            //
-            //                if (msgCode == 100)
-            //                {
-            //                    JSONObject dataJSONObject = response.getJSONObject("data");
-            //                    JSONArray hotelJSONArray = null;
-            //
-            //                    if (dataJSONObject.has("hotelSaleList") == true)
-            //                    {
-            //                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
-            //                    }
-            //
-            //                    int length;
-            //
-            //                    if (hotelJSONArray == null)
-            //                    {
-            //                        length = 0;
-            //                    } else
-            //                    {
-            //                        length = hotelJSONArray.length();
-            //                    }
-            //
-            //                    mHotelList.clear();
-            //
-            //                    if (length == 0)
-            //                    {
-            //                        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-            //                        hotelCurationOption.setFiltersList(null);
-            //
-            //                        mStayListAdapter.clear();
-            //                        mStayListAdapter.notifyDataSetChanged();
-            //
-            //                        setVisibility(Constants.ViewType.GONE, true);
-            //
-            //                        mOnCommunicateListener.expandedAppBar(true, true);
-            //                    } else
-            //                    {
-            //                        String imageUrl = dataJSONObject.getString("imgUrl");
-            //                        int nights = dataJSONObject.getInt("lengthStay");
-            //
-            //                        ArrayList<Stay> stayList = makeHotelList(hotelJSONArray, imageUrl, nights);
-            //                        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-            //                        setFilterInformation(stayList, hotelCurationOption);
-            //
-            //                        // 기본적으로 보관한다.
-            //                        mHotelList.addAll(stayList);
-            //
-            //                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, hotelCurationOption);
-            //
-            //                        setHotelListViewItemList(mViewType, placeViewItemList, hotelCurationOption.getSortType());
-            //                    }
-            //
-            //                    // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
-            //                    onRefreshComplete();
-            //                } else
-            //                {
-            //                    String message = response.getString("msg");
-            //                    onErrorPopupMessage(msgCode, message);
-            //                }
-            //            } catch (Exception e)
-            //            {
-            //                onError(e);
-            //            } finally
-            //            {
-            //                unLockUI();
-            //            }
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONArray hotelJSONArray = null;
+
+                    if (dataJSONObject.has("hotelSales") == true)
+                    {
+                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                    }
+
+                    int length;
+
+                    if (hotelJSONArray == null)
+                    {
+                        length = 0;
+                    } else
+                    {
+                        length = hotelJSONArray.length();
+                    }
+
+                    int page = 0;
+                    String imageUrl;
+                    int nights = 1;
+                    int hotelSaleCount = 0;
+                    ArrayList<Stay> stayList = new ArrayList<>();
+
+                    if (hotelJSONArray != null)
+                    {
+                        imageUrl = dataJSONObject.getString("imgUrl");
+                        nights = dataJSONObject.getInt("stays");
+                        hotelSaleCount = dataJSONObject.getInt("hotelSalesCount");
+                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                    }
+
+                    try
+                    {
+                        Uri uri = Uri.parse(url);
+                        String pageString = uri.getQueryParameter("page");
+                        page = Integer.parseInt(pageString);
+
+                    } catch (Exception e)
+                    {
+                        page = 0;
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, hotelSaleCount);
+
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
         }
 
-        /**
-         * 미리 필터 정보를 저장하여 Curation시에 사용하도록 한다.(개수 정보 노출)
-         * @param stayList
-         * @param curationOption
-         */
-        private void setFilterInformation(ArrayList<Stay> stayList, HotelCurationOption curationOption)
-        {
-            // 필터 정보 넣기
-            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(stayList.size());
-
-            HotelFilters hotelFilters;
-
-//            for (Stay stay : stayList)
-//            {
-//                hotelFilters = stay.getFilters();
-//
-//                if (hotelFilters != null)
-//                {
-//                    hotelFiltersList.add(hotelFilters);
-//                }
-//            }
-
-            curationOption.setFiltersList(hotelFiltersList);
-        }
-
-        private ArrayList<Stay> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
         {
             if (jsonArray == null)
             {

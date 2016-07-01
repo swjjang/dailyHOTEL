@@ -718,7 +718,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onAttach(PlaceListFragment placeListFragment)
+        public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceMainLayout == null || placeListFragment == null)
             {
