@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.search;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -117,72 +116,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mViewPager.setAdapter(mSearchFragmentPagerAdapter);
         mViewPager.setPagingEnabled(false);
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-//                if(mStaySearchFragment != null)
-//                {
-//                    mStaySearchFragment.clearSearchKeywordFocus();
-//                    mStaySearchFragment.hideSearchKeyboard();
-//                }
-//
-//                if(mGourmetSearchFragment != null)
-//                {
-//                    mGourmetSearchFragment.clearSearchKeywordFocus();
-//                    mGourmetSearchFragment.hideSearchKeyboard();
-//                }
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                switch (position)
-                {
-                    // STAY
-                    case 0:
-                    {
-//                        if(mGourmetSearchFragment != null)
-//                        {
-//                            mGourmetSearchFragment.clearSearchKeywordFocus();
-//                            mGourmetSearchFragment.hideSearchKeyboard();
-//                        }
-
-//                        if (staySearchFragment != null)
-//                        {
-//                            staySearchFragment.resetSearchKeyword();
-//                            staySearchFragment.showSearchKeyboard();
-//                        }
-                        break;
-                    }
-
-                    // GOURMET
-                    case 1:
-                    {
-//                        if(mStaySearchFragment != null)
-//                        {
-//                            mStaySearchFragment.clearSearchKeywordFocus();
-//                            mStaySearchFragment.hideSearchKeyboard();
-//                        }
-
-//                        if (gourmetSearchFragment != null)
-//                        {
-//                            gourmetSearchFragment.resetSearchKeyword();
-//                            gourmetSearchFragment.showSearchKeyboard();
-//                        }
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-
-            }
-        });
-
         switch (placeType)
         {
             case HOTEL:
@@ -241,9 +174,31 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 if (isChecked == true)
                 {
                     mPlaceType = PlaceType.FNB;
+
+                    if (mStaySearchFragment != null)
+                    {
+                        mStaySearchFragment.clearSearchKeywordFocus();
+                    }
+
+                    if (mGourmetSearchFragment != null)
+                    {
+                        mGourmetSearchFragment.resetSearchKeyword();
+                        mGourmetSearchFragment.showSearchKeyboard();
+                    }
                 } else
                 {
                     mPlaceType = PlaceType.HOTEL;
+
+                    if (mGourmetSearchFragment != null)
+                    {
+                        mGourmetSearchFragment.clearSearchKeywordFocus();
+                    }
+
+                    if (mStaySearchFragment != null)
+                    {
+                        mStaySearchFragment.resetSearchKeyword();
+                        mStaySearchFragment.showSearchKeyboard();
+                    }
                 }
             }
         });
@@ -313,7 +268,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     case FNB:
                         mGourmetSearchFragment.startSearchResultActivity();
                         break;
-
                 }
                 break;
         }

@@ -233,6 +233,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
+        mSearchEditText.setFocusable(false);
+        mSearchEditText.setFocusableInTouchMode(false);
         mSearchEditText.clearFocus();
     }
 
@@ -248,8 +250,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        mSearchEditText.setEnabled(true);
+        mSearchEditText.setFocusable(true);
+        mSearchEditText.setFocusableInTouchMode(true);
         mSearchEditText.requestFocus();
+
         mSearchEditText.postDelayed(new Runnable()
         {
             @Override
@@ -264,7 +268,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void hideSearchKeyboard()
     {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        //        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     public void setDataText(String date)

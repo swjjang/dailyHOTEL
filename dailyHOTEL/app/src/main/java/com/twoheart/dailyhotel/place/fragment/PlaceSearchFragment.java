@@ -101,7 +101,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public void resetSearchKeyword()
     {
-        if(mPlaceSearchLayout == null)
+        if (mPlaceSearchLayout == null)
         {
             return;
         }
@@ -111,7 +111,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public void clearSearchKeywordFocus()
     {
-        if(mPlaceSearchLayout == null)
+        if (mPlaceSearchLayout == null)
         {
             return;
         }
@@ -121,7 +121,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public void showSearchKeyboard()
     {
-        if(mPlaceSearchLayout == null)
+        if (mPlaceSearchLayout == null)
         {
             return;
         }
@@ -131,7 +131,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public void hideSearchKeyboard()
     {
-        if(mPlaceSearchLayout == null)
+        if (mPlaceSearchLayout == null)
         {
             return;
         }

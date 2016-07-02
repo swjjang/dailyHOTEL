@@ -11,14 +11,12 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-public abstract class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterItem>
+public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterItem>
 {
     private Context mContext;
     private PlaceClusterItem mSelectedPlaceClusterItem;
     private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
     private OnClusterRenderedListener mOnClusterRenderedListener;
-
-    protected abstract PlaceRenderer newInstancePlaceRenderer(Context context, Place place);
 
     public PlaceClusterRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager)
     {
@@ -37,7 +35,7 @@ public abstract class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceC
 
         Place place = item.getPlace();
 
-        PlaceRenderer placeRenderer = newInstancePlaceRenderer(mContext, place);
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, place.getDiscountPrice(), place.getGradeMarkerResId());
 
         BitmapDescriptor icon = placeRenderer.getBitmap(false);
 

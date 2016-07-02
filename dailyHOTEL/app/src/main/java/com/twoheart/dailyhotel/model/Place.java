@@ -27,6 +27,10 @@ public abstract class Place implements Parcelable
         readFromParcel(in);
     }
 
+    public abstract int getDiscountPrice();
+
+    public abstract int getGradeMarkerResId();
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {

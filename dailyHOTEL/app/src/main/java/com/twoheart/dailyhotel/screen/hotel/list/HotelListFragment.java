@@ -438,7 +438,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Stay hotel1, Stay hotel2)
                     {
-                        return hotel1.averageDiscountPrice - hotel2.averageDiscountPrice;
+                        return hotel1.getDiscountPrice() - hotel2.getDiscountPrice();
                     }
                 };
 
@@ -453,7 +453,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Stay hotel1, Stay hotel2)
                     {
-                        return hotel2.averageDiscountPrice - hotel1.averageDiscountPrice;
+                        return hotel2.getDiscountPrice() - hotel1.getDiscountPrice();
                     }
                 };
 

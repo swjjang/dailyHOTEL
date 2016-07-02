@@ -1593,7 +1593,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mCurationOption.getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.averageDiscountPrice);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.getDiscountPrice());
 
                     String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 

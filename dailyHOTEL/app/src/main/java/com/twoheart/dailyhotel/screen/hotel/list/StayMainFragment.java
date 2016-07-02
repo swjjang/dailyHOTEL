@@ -272,21 +272,6 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    private void refreshCurrentFragment()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (placeListFragment != null)
-        {
-            placeListFragment.refreshList(true);
-        }
-    }
-
     public void startCalendar()
     {
         if (isFinishing() == true || isLockUiComponent() == true)
@@ -344,7 +329,7 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, StayCurationManager.getInstance().getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.averageDiscountPrice);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.getDiscountPrice());
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 

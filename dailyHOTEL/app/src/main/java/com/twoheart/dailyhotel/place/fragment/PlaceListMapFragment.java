@@ -96,10 +96,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     protected abstract PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context);
 
-    protected abstract PlaceRenderer newInstancePlaceRenderer(Context context, Place place);
-
-    protected abstract PlaceClusterRenderer getPlaceClusterRenderer(Context context, GoogleMap googleMap, ClusterManager<PlaceClusterItem> clusterManager);
-
     public PlaceListMapFragment()
     {
     }
@@ -144,7 +140,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 relocationZoomControl();
 
                 mClusterManager = new ClusterManager<>(mBaseActivity, mGoogleMap);
-                mPlaceClusterRenderer = getPlaceClusterRenderer(mBaseActivity, mGoogleMap, mClusterManager);
+                mPlaceClusterRenderer = new PlaceClusterRenderer(mBaseActivity, mGoogleMap, mClusterManager);
                 mPlaceClusterRenderer.setOnClusterRenderedListener(mOnClusterRenderedListener);
 
                 mClusterManager.setRenderer(mPlaceClusterRenderer);
@@ -550,7 +546,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = newInstancePlaceRenderer(mBaseActivity, place);
+                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.getDiscountPrice(), place.getGradeMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -787,7 +783,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = newInstancePlaceRenderer(mBaseActivity, place);
+                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.getDiscountPrice(), place.getGradeMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)

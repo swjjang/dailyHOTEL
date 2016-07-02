@@ -204,21 +204,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
     }
 
-    private void refreshCurrentFragment()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (placeListFragment != null)
-        {
-            placeListFragment.refreshList(true);
-        }
-    }
-
     private void curationCurrentFragment()
     {
         if (isFinishing() == true)
@@ -654,7 +639,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, GourmetCurationManager.getInstance().getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.getDiscountPrice());
 
                     String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
 

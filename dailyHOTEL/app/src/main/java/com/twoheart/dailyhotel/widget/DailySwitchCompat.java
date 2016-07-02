@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
@@ -21,6 +20,7 @@ public class DailySwitchCompat extends SwitchCompat
     private Method getThumbScrollRange;
     private Field mSwitchLeft;
     private Field mSwitchWidth;
+    private int mThumbOffset;
 
     private OnScrollListener mOnScrollListener;
 
@@ -56,6 +56,8 @@ public class DailySwitchCompat extends SwitchCompat
     private void initReflectionClass()
     {
         Class reflectionClass = SwitchCompat.class;
+
+        mThumbOffset = Integer.MIN_VALUE;
 
         try
         {
@@ -176,13 +178,23 @@ public class DailySwitchCompat extends SwitchCompat
     {
         super.onDraw(canvas);
 
-        Drawable thumbDrawable = getThumbDrawable();
-
         try
         {
             if (mOnScrollListener != null)
             {
-                mOnScrollListener.onScrolled((int) getThumbOffset.invoke(this), (int) getThumbScrollRange.invoke(this));
+                int thumbOffset = (int) getThumbOffset.invoke(this);
+
+                if (mThumbOffset == Integer.MIN_VALUE)
+                {
+                    mThumbOffset = thumbOffset;
+                } else if (thumbOffset == mThumbOffset)
+                {
+                    return;
+                }
+
+                mOnScrollListener.onScrolled(thumbOffset, (int) getThumbScrollRange.invoke(this));
+
+                mThumbOffset = thumbOffset;
             }
         } catch (Exception e)
         {

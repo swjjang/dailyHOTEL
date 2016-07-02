@@ -276,7 +276,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchEnabled(boolean enabled)
         {
-
+            mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 
         @Override

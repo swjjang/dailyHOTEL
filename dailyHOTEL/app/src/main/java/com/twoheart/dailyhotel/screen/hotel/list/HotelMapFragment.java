@@ -628,8 +628,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
                 if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
                 {
-                    int item01DisCount = item01.averageDiscountPrice;
-                    int item02DisCount = item02.averageDiscountPrice;
+                    int item01DisCount = item01.getDiscountPrice();
+                    int item02DisCount = item02.getDiscountPrice();
 
                     if (item01DisCount >= item02DisCount)
                     {

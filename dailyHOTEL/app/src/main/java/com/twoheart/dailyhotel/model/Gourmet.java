@@ -23,7 +23,7 @@ public class Gourmet extends Place
 
     private GourmetFilters mGourmetFilters;
 
-    public int discountPrice;
+    protected int discountPrice;
     public Grade grade;
 
     public Gourmet()
@@ -34,6 +34,18 @@ public class Gourmet extends Place
     public Gourmet(Parcel in)
     {
         readFromParcel(in);
+    }
+
+    @Override
+    public int getDiscountPrice()
+    {
+        return discountPrice;
+    }
+
+    @Override
+    public int getGradeMarkerResId()
+    {
+        return grade.getMarkerResId();
     }
 
     @Override
