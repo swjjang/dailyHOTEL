@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.gourmet.search;
+package com.twoheart.dailyhotel.screen.search.gourmet;
 
 import android.content.Context;
 
@@ -7,9 +7,9 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -18,13 +18,8 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GourmetSearchNetworkController extends BaseNetworkController
+public class GourmetSearchNetworkController extends PlaceSearchNetworkController
 {
-    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
-    {
-        void onResponseAutoComplete(String keyword, List<Keyword> list);
-    }
-
     public GourmetSearchNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);

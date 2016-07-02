@@ -185,7 +185,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                     return;
                 }
 
-                if(mCheckInDay == null || mCheckInDay.dayTime == null)
+                if (mCheckInDay == null || mCheckInDay.dayTime == null)
                 {
                     Util.restartApp(this);
                     return;

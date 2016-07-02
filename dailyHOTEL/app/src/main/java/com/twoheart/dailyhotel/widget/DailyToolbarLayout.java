@@ -190,7 +190,7 @@ public class DailyToolbarLayout
 
     public void setBackImageView(int backResId)
     {
-        ImageView backView = (ImageView)mToolbar.findViewById(R.id.backImageView);
+        ImageView backView = (ImageView) mToolbar.findViewById(R.id.backImageView);
         backView.setImageResource(backResId);
     }
 

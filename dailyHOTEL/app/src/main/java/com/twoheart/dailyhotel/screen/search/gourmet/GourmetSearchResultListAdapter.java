@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.gourmet.search;
+package com.twoheart.dailyhotel.screen.search.gourmet;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -98,7 +98,7 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
         DecimalFormat comma = new DecimalFormat("###,##0");
 
         String strPrice = comma.format(gourmet.price);
-        String strDiscount = comma.format(gourmet.discountPrice);
+        String strDiscount = comma.format(gourmet.getDiscountPrice());
 
         String address = gourmet.addressSummary;
 
@@ -125,7 +125,7 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+        if (gourmet.price <= 0 || gourmet.price <= gourmet.getDiscountPrice())
         {
             holder.priceView.setVisibility(View.INVISIBLE);
             holder.priceView.setText(null);

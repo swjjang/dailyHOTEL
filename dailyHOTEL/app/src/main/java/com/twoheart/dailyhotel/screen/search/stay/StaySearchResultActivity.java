@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class HotelSearchResultActivity extends PlaceSearchResultActivity
+public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
@@ -47,11 +47,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     private int mOffset, mTotalCount;
     private int mSearchType;
-    private HotelSearchResultNetworkController mNetworkController;
+    private StaySearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, int searchType)
     {
-        Intent intent = new Intent(context, HotelSearchResultActivity.class);
+        Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
@@ -74,7 +74,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
     {
-        Intent intent = new Intent(context, HotelSearchResultActivity.class);
+        Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
@@ -86,7 +86,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected PlaceSearchResultLayout getLayout()
     {
-        return new HotelSearchResultLayout(this, mOnEventListener);
+        return new StaySearchResultLayout(this, mOnEventListener);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
         }
 
-        mNetworkController = new HotelSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController = new StaySearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -187,15 +187,15 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void finish(int resultCode)
         {
-            HotelSearchResultActivity.this.finish(resultCode);
+            StaySearchResultActivity.this.finish(resultCode);
 
             if (resultCode == Constants.CODE_RESULT_ACTIVITY_HOME)
             {
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_SEARCH_RESULT_CANCELED, AnalyticsManager.Label.SEARCH_RESULT_CANCELED, null);
             } else
             {
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.RESULT_BACK_BUTTON_CLICKED, null);
             }
         }
@@ -203,9 +203,9 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void research(int resultCode)
         {
-            HotelSearchResultActivity.this.finish(resultCode);
+            StaySearchResultActivity.this.finish(resultCode);
 
-            AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                 , AnalyticsManager.Action.HOTEL_SEARCH_AGAIN_CLICKED, AnalyticsManager.Label.HOTEL_SEARCH_AGAIN_CLICKED, null);
         }
 
@@ -219,7 +219,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
-            Intent intent = new Intent(HotelSearchResultActivity.this, HotelDetailActivity.class);
+            Intent intent = new Intent(StaySearchResultActivity.this, HotelDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
@@ -234,7 +234,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         {
             showCallDialog();
 
-            AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                 , AnalyticsManager.Action.CALL_INQUIRY_CLICKED, AnalyticsManager.Label.CALL_KEYWORD_HOTEL, null);
         }
 
@@ -255,7 +255,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private HotelSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HotelSearchResultNetworkController.OnNetworkControllerListener()
+    private StaySearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchResultNetworkController.OnNetworkControllerListener()
     {
         private String mAddress;
         private int mSize = -100;
@@ -320,12 +320,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                 Map<String, String> eventParams = new HashMap<>();
                 eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
                 eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , action, label, eventParams);
 
                 Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY);
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, screenParams);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, screenParams);
             } else
             {
                 String prefix = null;
@@ -375,10 +375,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                 Map<String, String> eventParams = new HashMap<>();
                 eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
                 eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , action, label, eventParams);
 
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT);
             }
         }
 
@@ -392,12 +392,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             if (mSize == 0)
             {
                 String label = String.format("%s-%s", mAddress, getSearchDate());
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_NOT_FOUND, label, null);
 
                 Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY);
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, params);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, params);
             } else
             {
                 String label;
@@ -410,16 +410,16 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                     label = String.format("%s-%d-%s", mAddress, mSize, getSearchDate());
                 }
 
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
 
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT);
             }
         }
 
         private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            ((HotelSearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
+            ((StaySearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
 
             Stay stay;
             float[] results = new float[3];
@@ -464,7 +464,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                 }
 
                 mPlaceSearchResultLayout.showListLayout();
-                ((HotelSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
+                ((StaySearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
             }
 
             mPlaceSearchResultLayout.updateResultCount(totalCount);
@@ -549,28 +549,28 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-            HotelSearchResultActivity.this.onErrorResponse(volleyError);
+            StaySearchResultActivity.this.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
             unLockUI();
-            HotelSearchResultActivity.this.onError(e);
+            StaySearchResultActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            HotelSearchResultActivity.this.onErrorPopupMessage(msgCode, message);
+            StaySearchResultActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            HotelSearchResultActivity.this.onErrorToastMessage(message);
+            StaySearchResultActivity.this.onErrorToastMessage(message);
         }
     };
 }

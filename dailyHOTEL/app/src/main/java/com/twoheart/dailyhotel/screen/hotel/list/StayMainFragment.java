@@ -33,7 +33,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -272,21 +272,6 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    private void refreshCurrentFragment()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (placeListFragment != null)
-        {
-            placeListFragment.refreshList(true);
-        }
-    }
-
     public void startCalendar()
     {
         if (isFinishing() == true || isLockUiComponent() == true)
@@ -344,7 +329,7 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, StayCurationManager.getInstance().getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.averageDiscountPrice);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.getDiscountPrice());
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -764,7 +749,7 @@ public class StayMainFragment extends PlaceMainFragment
             SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
             int night = StayCurationManager.getInstance().getNight();
 
-            Intent intent = HotelSearchActivity.newInstance(mBaseActivity, checkInSaleTime, night);
+            Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -18,13 +18,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class HotelSearchResultListAdapter extends PlaceListAdapter
+public class StaySearchResultListAdapter extends PlaceListAdapter
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
     private Context mContext;
 
-    public HotelSearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
+    public StaySearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
     {
         super(context, arrayList);
 
@@ -98,7 +98,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         DecimalFormat comma = new DecimalFormat("###,##0");
 
         String strPrice = comma.format(stay.price);
-        String strDiscount = comma.format(stay.averageDiscountPrice);
+        String strDiscount = comma.format(stay.getDiscountPrice());
 
         String address = stay.addressSummary;
 
@@ -116,7 +116,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (stay.price <= 0 || stay.price <= stay.averageDiscountPrice)
+        if (stay.price <= 0 || stay.price <= stay.getDiscountPrice())
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);

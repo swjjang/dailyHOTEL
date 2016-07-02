@@ -1,5 +1,6 @@
-package com.twoheart.dailyhotel.screen.hotel.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -9,10 +10,13 @@ import android.os.Message;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,58 +28,40 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class HotelSearchActivity extends PlaceSearchActivity
+public class StaySearchFragment extends PlaceSearchFragment
 {
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-    private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
-
-    private HotelSearchNetworkController mNetworkController;
-    private SaleTime mSaleTime;
-    private int mNights;
+    private SaleTime mCheckInSaleTime;
+    private SaleTime mCheckOutSaleTime;
 
     private Handler mAnalyticsHandler;
-
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights)
-    {
-        Intent intent = new Intent(context, HotelSearchActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
-
-        return intent;
-    }
-
-    @Override
-    protected void initIntent(Intent intent)
-    {
-        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
-        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
-
-        mAnalyticsHandler = new AnalyticsHandler(this);
-    }
 
     @Override
     protected void initContents()
     {
         super.initContents();
 
-        mNetworkController = new HotelSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mAnalyticsHandler = new AnalyticsHandler(this);
 
-        setDateText(mSaleTime, mNights);
+        if (GourmetCurationManager.getInstance().getSaleTime() == null)
+        {
+            SaleTime saleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(0);
+
+            GourmetCurationManager.getInstance().setSaleTime(saleTime);
+        }
+
+        setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
     }
 
     @Override
-    protected void onResume()
+    public void onResume()
     {
         super.onResume();
 
-        if (mSaleTime == null)
-        {
-            finish();
-        }
+        setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -83,12 +69,12 @@ public class HotelSearchActivity extends PlaceSearchActivity
         {
             case REQUEST_ACTIVITY_CALENDAR:
             {
-                if (resultCode == RESULT_OK && data != null)
+                if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
                     SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 
-                    setDateText(checkInSaleTime, checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay());
+                    setDateText(checkInSaleTime, checkOutSaleTime);
 
                     mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
                 }
@@ -100,53 +86,83 @@ public class HotelSearchActivity extends PlaceSearchActivity
     }
 
     @Override
+    protected PlaceSearchLayout getPlaceSearchLayout(Context context)
+    {
+        return new StaySearchLayout(context, mOnEventListener);
+    }
+
+    @Override
+    protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
+    {
+        return new StaySearchNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+    }
+
+    @Override
     protected String getRecentSearches()
     {
-        return DailyPreference.getInstance(this).getHotelRecentSearches();
+        return DailyPreference.getInstance(mBaseActivity).getHotelRecentSearches();
     }
 
     @Override
     protected void writeRecentSearches(String text)
     {
-        DailyPreference.getInstance(this).setHotelRecentSearches(text);
+        DailyPreference.getInstance(mBaseActivity).setHotelRecentSearches(text);
     }
 
     @Override
     protected PlaceSearchLayout getLayout()
     {
-        return new HotelSearchLayout(this, mOnEventListener);
+        return new StaySearchLayout(mBaseActivity, mOnEventListener);
     }
 
     @Override
     protected void onSearch(Location location)
     {
-        Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, location);
+        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, location);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
     @Override
-    protected void onStart()
+    public void startSearchResultActivity()
     {
-        super.onStart();
+        String text = mPlaceSearchLayout.getSearchKeyWord();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH);
-    }
-
-    private void setDateText(SaleTime saleTime, int nights)
-    {
-        if (saleTime == null || nights == 0 || mPlaceSearchLayout == null)
+        if (Util.isTextEmpty(text) == true)
         {
             return;
         }
 
-        mSaleTime = saleTime;
-        mNights = nights;
+        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-        String checkInDate = saleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
-        SaleTime checkOutSaleTime = saleTime.getClone(saleTime.getOffsetDailyDay() + nights);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH);
+    }
+
+    private void setDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        if (checkInSaleTime == null || checkOutSaleTime == null || mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mCheckInSaleTime = checkInSaleTime;
+        mCheckOutSaleTime = checkOutSaleTime;
+
+        String checkInDate = checkInSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
         String checkOutDate = checkOutSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
 
-        mPlaceSearchLayout.setDataText(checkInDate + " - " + checkOutDate);
+        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+        mPlaceSearchLayout.setDataText(String.format("%s - %s, %d박", checkInDate, checkOutDate, nights));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +176,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
         {
             mPlaceSearchLayout.resetSearchKeyword();
 
-            //            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
             //                , AnalyticsManager.Action.HOTEL_KEYWORD_RESET_CLICKED, AnalyticsManager.Label.SEARCH_KEYWORD_RESET, null);
         }
 
@@ -183,7 +199,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance(HotelSearchActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
@@ -191,18 +207,20 @@ public class HotelSearchActivity extends PlaceSearchActivity
         public void onDeleteRecentSearches()
         {
             mDailyRecentSearches.clear();
-            DailyPreference.getInstance(HotelSearchActivity.this).setHotelRecentSearches("");
+            DailyPreference.getInstance(mBaseActivity).setHotelRecentSearches("");
 
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
-            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                 , AnalyticsManager.Action.HOTEL_KEYWORD_HISTORY_DELETED, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
-            mNetworkController.requestAutoComplete(mSaleTime, mNights, keyword);
+            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
+            ((StaySearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mCheckInSaleTime, nights, keyword);
         }
 
         @Override
@@ -213,7 +231,9 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, text);
+            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -225,36 +245,46 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 return;
             }
 
+            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
             if (keyword.price < 0)
             {
-                Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword, HotelSearchResultActivity.SEARCHTYPE_RECENT);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, keyword, StaySearchResultActivity.SEARCHTYPE_RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, text, keyword, HotelSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text, keyword, StaySearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
 
         @Override
-        public void onShowCalendar(boolean isAnimation)
+        public void onCalendarClick(boolean isAnimation)
         {
             if (isAnimation == true)
             {
-                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 
-            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
+            Intent intent = HotelCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+        }
+
+        @Override
+        public void onSearchEnabled(boolean enabled)
+        {
+            mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 
         @Override
         public void finish()
         {
-            HotelSearchActivity.this.finish();
+            mBaseActivity.finish();
 
-            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                 , AnalyticsManager.Action.HOTEL_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.KEYWORD_BACK_BUTTON_CLICKED, null);
         }
     };
@@ -263,7 +293,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     // OnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private HotelSearchNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HotelSearchNetworkController.OnNetworkControllerListener()
+    private StaySearchNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onResponseAutoComplete(String keyword, List<Keyword> list)
@@ -288,45 +318,44 @@ public class HotelSearchActivity extends PlaceSearchActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-            HotelSearchActivity.this.onErrorResponse(volleyError);
+            mBaseActivity.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
             unLockUI();
-            HotelSearchActivity.this.onError(e);
+            mBaseActivity.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            HotelSearchActivity.this.onErrorPopupMessage(msgCode, message);
+            mBaseActivity.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            HotelSearchActivity.this.onErrorToastMessage(message);
+            mBaseActivity.onErrorToastMessage(message);
         }
     };
 
     private static class AnalyticsHandler extends Handler
     {
-        private final WeakReference<HotelSearchActivity> mWeakReference;
+        private final WeakReference<StaySearchFragment> mWeakReference;
 
-        public AnalyticsHandler(HotelSearchActivity activity)
+        public AnalyticsHandler(StaySearchFragment activity)
         {
             mWeakReference = new WeakReference<>(activity);
         }
 
-        private String getSearchDate(HotelSearchActivity hotelSearchActivity)
+        private String getSearchDate(StaySearchFragment staySearchFragment)
         {
-            String checkInDate = hotelSearchActivity.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
-            SaleTime checkOutSaleTime = hotelSearchActivity.mSaleTime.getClone(hotelSearchActivity.mSaleTime.getOffsetDailyDay() + hotelSearchActivity.mNights);
-            String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
+            String checkInDate = staySearchFragment.mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd");
+            String checkOutDate = staySearchFragment.mCheckOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
@@ -337,15 +366,15 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void handleMessage(Message msg)
         {
-            HotelSearchActivity hotelSearchActivity = mWeakReference.get();
+            StaySearchFragment staySearchFragment = mWeakReference.get();
 
-            if (hotelSearchActivity == null)
+            if (staySearchFragment == null)
             {
                 return;
             }
 
-            String label = String.format("%s-%s", msg.obj, getSearchDate(hotelSearchActivity));
-            AnalyticsManager.getInstance(hotelSearchActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            String label = String.format("%s-%s", msg.obj, getSearchDate(staySearchFragment));
+            AnalyticsManager.getInstance(staySearchFragment.getContext()).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                 , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
         }
     }

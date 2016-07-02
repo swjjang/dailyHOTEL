@@ -1,19 +1,39 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class DailySwitchCompat extends SwitchCompat
 {
+    private Method getThumbOffset;
+    private Method getThumbScrollRange;
+    private Field mSwitchLeft;
+    private Field mSwitchWidth;
+    private int mThumbOffset;
+
+    private OnScrollListener mOnScrollListener;
+
+    public interface OnScrollListener
+    {
+        void onScrolled(int offset, int range);
+    }
+
     public DailySwitchCompat(Context context)
     {
         super(context);
 
+        initReflectionClass();
         setFontStyle(context, null);
     }
 
@@ -21,6 +41,7 @@ public class DailySwitchCompat extends SwitchCompat
     {
         super(context, attrs);
 
+        initReflectionClass();
         setFontStyle(context, attrs);
     }
 
@@ -28,7 +49,33 @@ public class DailySwitchCompat extends SwitchCompat
     {
         super(context, attrs, defStyle);
 
+        initReflectionClass();
         setFontStyle(context, attrs);
+    }
+
+    private void initReflectionClass()
+    {
+        Class reflectionClass = SwitchCompat.class;
+
+        mThumbOffset = Integer.MIN_VALUE;
+
+        try
+        {
+            getThumbOffset = reflectionClass.getDeclaredMethod("getThumbOffset");
+            getThumbOffset.setAccessible(true);
+
+            getThumbScrollRange = reflectionClass.getDeclaredMethod("getThumbScrollRange");
+            getThumbScrollRange.setAccessible(true);
+
+            mSwitchLeft = reflectionClass.getDeclaredField("mSwitchLeft");
+            mSwitchLeft.setAccessible(true);
+
+            mSwitchWidth = reflectionClass.getDeclaredField("mSwitchWidth");
+            mSwitchWidth.setAccessible(true);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void setFontStyle(Context context, AttributeSet attrs)
@@ -109,5 +156,54 @@ public class DailySwitchCompat extends SwitchCompat
     {
         setPaintFlags(getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
         super.setTypeface(typeface);
+    }
+
+    @Override
+    public void draw(Canvas c)
+    {
+        try
+        {
+            mSwitchLeft.setInt(this, 0);
+            mSwitchWidth.setInt(this, Util.dpToPx(getContext(), 130));
+        } catch (IllegalAccessException e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        super.draw(c);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas)
+    {
+        super.onDraw(canvas);
+
+        try
+        {
+            if (mOnScrollListener != null)
+            {
+                int thumbOffset = (int) getThumbOffset.invoke(this);
+
+                if (mThumbOffset == Integer.MIN_VALUE)
+                {
+                    mThumbOffset = thumbOffset;
+                } else if (thumbOffset == mThumbOffset)
+                {
+                    return;
+                }
+
+                mOnScrollListener.onScrolled(thumbOffset, (int) getThumbScrollRange.invoke(this));
+
+                mThumbOffset = thumbOffset;
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    public void setOnScrollListener(OnScrollListener listener)
+    {
+        mOnScrollListener = listener;
     }
 }

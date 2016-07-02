@@ -34,6 +34,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         mPlaceSearchResultLayout = getLayout();
@@ -74,6 +76,14 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public void onBackPressed()
     {
         finish(RESULT_CANCELED);
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     protected void finish(int resultCode)

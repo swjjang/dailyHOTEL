@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 import android.view.View;
@@ -11,19 +11,19 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
-public class HotelSearchResultLayout extends PlaceSearchResultLayout
+public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
-    private HotelSearchResultListAdapter mListAdapter;
+    private StaySearchResultListAdapter mListAdapter;
 
     @Override
     protected PlaceListAdapter getListAdapter()
     {
-        mListAdapter = new HotelSearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
+        mListAdapter = new StaySearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
 
         return mListAdapter;
     }
 
-    public HotelSearchResultLayout(Context context, OnBaseEventListener listener)
+    public StaySearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -71,7 +71,7 @@ public class HotelSearchResultLayout extends PlaceSearchResultLayout
                 return;
             }
 
-            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onItemClick(placeViewItem);
+            ((OnEventListener) mOnEventListener).onItemClick(placeViewItem);
         }
     };
 }

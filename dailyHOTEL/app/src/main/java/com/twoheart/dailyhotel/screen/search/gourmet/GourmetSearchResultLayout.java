@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.gourmet.search;
+package com.twoheart.dailyhotel.screen.search.gourmet;
 
 import android.content.Context;
 import android.view.View;

@@ -30,8 +30,8 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -204,21 +204,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
     }
 
-    private void refreshCurrentFragment()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (placeListFragment != null)
-        {
-            placeListFragment.refreshList(true);
-        }
-    }
-
     private void curationCurrentFragment()
     {
         if (isFinishing() == true)
@@ -261,7 +246,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onSearchClick()
         {
-            Intent intent = GourmetSearchActivity.newInstance(mBaseActivity, GourmetCurationManager.getInstance().getSaleTime());
+            Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.FNB);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -427,6 +412,11 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onDateTime(long currentDateTime, long dailyDateTime)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             GourmetCurationManager.getInstance().setSaleTime(currentDateTime, dailyDateTime);
 
             if (DailyDeepLink.getInstance().isValidateLink() == true //
@@ -649,7 +639,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, GourmetCurationManager.getInstance().getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.getDiscountPrice());
 
                     String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
 

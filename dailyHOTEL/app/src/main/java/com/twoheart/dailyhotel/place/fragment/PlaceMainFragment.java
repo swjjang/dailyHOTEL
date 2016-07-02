@@ -218,6 +218,21 @@ public abstract class PlaceMainFragment extends BaseFragment
         }
     }
 
+    protected void refreshCurrentFragment()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        if (placeListFragment != null)
+        {
+            placeListFragment.refreshList(true);
+        }
+    }
+
     /**
      * 호출 시점에는 아직 GUI가 만들어진 상태가 아니다.
      *
