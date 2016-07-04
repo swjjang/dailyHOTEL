@@ -10,6 +10,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -391,8 +393,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         if (mIsOpenMakrer == true && mSelectedPlaceViewItem != null)
         {
-            latitude = mSelectedPlaceViewItem.<Gourmet>getItem().latitude;
-            longitude = mSelectedPlaceViewItem.<Gourmet>getItem().longitude;
+            latitude = mSelectedPlaceViewItem.<Place>getItem().latitude;
+            longitude = mSelectedPlaceViewItem.<Place>getItem().longitude;
         }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -420,7 +422,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         for (PlaceViewItem placeViewItem : mPlaceViewItemViewPagerList)
         {
-            Place place = placeViewItem.<Gourmet>getItem();
+            Place place = placeViewItem.getItem();
 
             count++;
 
@@ -507,8 +509,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         {
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Place item01 = placeViewItem1.<Gourmet>getItem();
-                Place item02 = placeViewItem2.<Gourmet>getItem();
+                Place item01 = placeViewItem1.getItem();
+                Place item02 = placeViewItem2.getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -540,7 +542,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(i);
-            Place place = placeViewItem.<Gourmet>getItem();
+            Place place = placeViewItem.getItem();
 
             if (latlng.latitude == place.latitude && latlng.longitude == place.longitude)
             {
@@ -777,7 +779,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(i);
-            Place place = placeViewItem.<Gourmet>getItem();
+            Place place = placeViewItem.getItem();
 
             if (latlng.latitude == place.latitude && latlng.longitude == place.longitude)
             {
@@ -918,7 +920,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 arrangeList.remove(i);
             } else
             {
-                if (placeViewItem.<Gourmet>getItem().isSoldOut == true)
+                if (placeViewItem.<Place>getItem().isSoldOut == true)
                 {
                     arrangeList.remove(i);
                 }
@@ -932,8 +934,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Place item01 = placeViewItem1.<Gourmet>getItem();
-                Place item02 = placeViewItem2.<Gourmet>getItem();
+                Place item01 = placeViewItem1.getItem();
+                Place item02 = placeViewItem2.getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -1020,7 +1022,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     public void onClick(View v)
                     {
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        mBaseActivity.startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                     }
                 }, null, true);
             }
@@ -1104,7 +1106,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     continue;
                 }
 
-                if (place.equals(placeViewItem.<Gourmet>getItem()) == true)
+                if (place.equals(placeViewItem.getItem()) == true)
                 {
                     mSelectedPlaceViewItem = placeViewItem;
 
@@ -1152,7 +1154,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
             PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(page);
 
-            Place place = placeViewItem.<Gourmet>getItem();
+            Place place = placeViewItem.getItem();
 
             if (place != null)
             {
@@ -1185,7 +1187,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
 
             Intent intent = PermissionManagerActivity.newInstance(getContext(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
     };
 
