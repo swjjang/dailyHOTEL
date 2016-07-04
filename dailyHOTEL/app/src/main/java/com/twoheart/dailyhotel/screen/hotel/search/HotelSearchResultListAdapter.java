@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.hotel.search;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
 
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
+        clear();
         addAll(collection);
 
         setSortType(sortType);
@@ -91,6 +94,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Stay stay = placeViewItem.getItem();

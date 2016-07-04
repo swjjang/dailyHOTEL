@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -29,7 +31,6 @@ import java.util.Collection;
 
 public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
-    private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
@@ -50,14 +51,10 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
+        clear();
         addAll(collection);
 
         setSortType(sortType);
-    }
-
-    public void setSortType(Constants.SortType sortType)
-    {
-        mSortType = sortType;
     }
 
     @Override
@@ -196,6 +193,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         mEventBannerHandler.sendMessageDelayed(message, 5000);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Gourmet gourmet = placeViewItem.getItem();
@@ -284,7 +282,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (mSortType == Constants.SortType.DISTANCE)
+        if (getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
             holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km)");

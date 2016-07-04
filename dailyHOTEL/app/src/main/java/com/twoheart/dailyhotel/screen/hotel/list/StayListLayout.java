@@ -157,6 +157,7 @@ public class StayListLayout extends PlaceListLayout
                 }
             }
 
+            mPlaceListAdapter.clear();
             mPlaceListAdapter.addAll(list);
             mPlaceListAdapter.notifyDataSetChanged();
 

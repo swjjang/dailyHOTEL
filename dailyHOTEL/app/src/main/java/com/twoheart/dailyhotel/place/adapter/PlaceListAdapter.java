@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected LayoutInflater mInflater;
     protected List<PlaceViewItem> mPlaceViewItemList;
     protected PaintDrawable mPaintDrawable;
+    private Constants.SortType mSortType;
 
     public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
@@ -69,7 +71,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
             return;
         }
 
-        mPlaceViewItemList.clear();
         mPlaceViewItemList.addAll(collection);
     }
 
@@ -109,5 +110,15 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return mPlaceViewItemList.size();
+    }
+
+    public Constants.SortType getSortType()
+    {
+        return mSortType;
+    }
+
+    public void setSortType(Constants.SortType sortType)
+    {
+        this.mSortType = sortType;
     }
 }

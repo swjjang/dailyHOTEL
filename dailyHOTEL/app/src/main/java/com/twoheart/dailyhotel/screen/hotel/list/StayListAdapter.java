@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -31,7 +33,6 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
 {
     private static final String BOUTIQUE = "boutique";
 
-    private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
@@ -52,14 +53,10 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
 
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
+        clear();
         addAll(collection);
 
         setSortType(sortType);
-    }
-
-    public void setSortType(Constants.SortType sortType)
-    {
-        mSortType = sortType;
     }
 
     @Override
@@ -190,6 +187,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         mEventBannerHandler.sendMessageDelayed(message, 5000);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Stay stay = placeViewItem.getItem();
@@ -279,7 +277,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
             holder.dBenefitLayout.setVisibility(View.GONE);
         }
 
-        if (mSortType == Constants.SortType.DISTANCE)
+        if (getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
             holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance / 1000) + "km)");

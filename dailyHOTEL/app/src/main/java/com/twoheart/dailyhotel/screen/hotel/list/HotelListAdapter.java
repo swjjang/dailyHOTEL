@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -52,6 +54,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
+        clear();
         addAll(collection);
 
         setSortType(sortType);
@@ -197,6 +200,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         mEventBannerHandler.sendMessageDelayed(message, 5000);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Stay stay = placeViewItem.getItem();
