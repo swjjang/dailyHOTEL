@@ -125,7 +125,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
 
     private void initEmptyLayout(View view)
     {
-        ImageView emptyIconImageView = (ImageView)view.findViewById(R.id.emptyIconImageView);
+        ImageView emptyIconImageView = (ImageView) view.findViewById(R.id.emptyIconImageView);
         View researchView = view.findViewById(R.id.researchView);
         TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
 

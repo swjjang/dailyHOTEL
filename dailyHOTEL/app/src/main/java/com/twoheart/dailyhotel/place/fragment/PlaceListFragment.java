@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.util.Constants;
 public abstract class PlaceListFragment extends BaseFragment implements Constants
 {
     protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
-    private boolean mIsAttached;
     protected View mBottomOptionLayout; // 애니매이션 때문에 어쩔수 없음.
 
     // onPlaceClick 부분이 있는데 이부분은 고메와 호텔은 서로 상속받아서 사용한다.
@@ -35,7 +34,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     {
         void onEventBannerClick(EventBanner eventBanner);
 
-        void onAttach(PlaceListFragment placeListFragment);
+        void onActivityCreated(PlaceListFragment placeListFragment);
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
 
@@ -51,11 +50,9 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     {
         super.onActivityCreated(savedInstanceState);
 
-        mIsAttached = true;
-
         if (mOnPlaceListFragmentListener != null)
         {
-            mOnPlaceListFragmentListener.onAttach(this);
+            mOnPlaceListFragmentListener.onActivityCreated(this);
         }
     }
 
@@ -67,10 +64,5 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public void setBottomOptionLayout(View view)
     {
         mBottomOptionLayout = view;
-    }
-
-    public boolean isAttached()
-    {
-        return mIsAttached;
     }
 }

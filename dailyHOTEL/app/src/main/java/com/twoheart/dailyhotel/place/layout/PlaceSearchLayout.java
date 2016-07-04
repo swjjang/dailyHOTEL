@@ -62,8 +62,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         void onResetKeyword();
 
-        void onShowTermsOfLocationDialog();
-
         void onSearchMyLocation();
 
         void onDeleteRecentSearches();
@@ -268,7 +266,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void hideSearchKeyboard()
     {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        //        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     public void setDataText(String date)
@@ -683,13 +681,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
             case R.id.searchAroundLayout:
             {
-                if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == true)
-                {
-                    ((OnEventListener) mOnEventListener).onSearchMyLocation();
-                } else
-                {
-                    ((OnEventListener) mOnEventListener).onShowTermsOfLocationDialog();
-                }
+                ((OnEventListener) mOnEventListener).onSearchMyLocation();
                 break;
             }
 

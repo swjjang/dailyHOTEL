@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
@@ -140,6 +139,8 @@ public class GourmetMainFragment extends PlaceMainFragment
     protected void onLocationFailed()
     {
         GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
+
         refreshCurrentFragment();
     }
 
@@ -147,6 +148,8 @@ public class GourmetMainFragment extends PlaceMainFragment
     protected void onLocationProviderDisabled()
     {
         GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
+
         refreshCurrentFragment();
     }
 
@@ -165,42 +168,6 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 refreshCurrentFragment();
             }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        switch (mViewType)
-        {
-            case LIST:
-            {
-                if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
-                {
-                    if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    {
-                        searchMyLocation();
-                    } else
-                    {
-                        // 퍼미션 허락하지 않음.
-                    }
-                }
-                break;
-            }
-
-            case MAP:
-            {
-                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                if (placeListFragment != null)
-                {
-                    placeListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                }
-                break;
-            }
-
-            case GONE:
-                break;
         }
     }
 
@@ -708,7 +675,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onAttach(PlaceListFragment placeListFragment)
+        public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceMainLayout == null || placeListFragment == null)
             {

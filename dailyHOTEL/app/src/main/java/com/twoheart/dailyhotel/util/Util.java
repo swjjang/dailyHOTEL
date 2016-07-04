@@ -118,7 +118,7 @@ public class Util implements Constants
 
         if (Util.isTextEmpty(imageUrl) == true)
         {
-            simpleDraweeView.setImageURI((String)null);
+            simpleDraweeView.setImageURI((String) null);
             return;
         }
 

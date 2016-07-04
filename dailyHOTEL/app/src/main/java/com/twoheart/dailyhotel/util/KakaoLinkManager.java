@@ -59,7 +59,7 @@ public class KakaoLinkManager implements Constants
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
             String date = checkInSaleTime.getDailyDateFormat("yyyyMMdd");
-            String schemeParams = String.format("view=hotel&idx=%d&date=%s&nights=%d", hotelIndex, date, nights);
+            String schemeParams = String.format("vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, date, nights);
 
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
@@ -96,7 +96,7 @@ public class KakaoLinkManager implements Constants
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
             String date = saleTime.getDailyDateFormat("yyyyMMdd");
-            String schemeParams = String.format("view=gourmet&idx=%d&date=%s&nights=1", index, date);
+            String schemeParams = String.format("vc=5&v=gd&i=%d&d=%s", index, date);
 
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 

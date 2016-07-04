@@ -171,6 +171,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
+                mStaySearchFragment.onScrollingFragment(false);
+                mGourmetSearchFragment.onScrollingFragment(false);
+
                 if (isChecked == true)
                 {
                     mPlaceType = PlaceType.FNB;
@@ -210,6 +213,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onScrolled(int offset, int range)
             {
+                if (offset == 0 || offset == range)
+                {
+                    mStaySearchFragment.onScrollingFragment(false);
+                    mGourmetSearchFragment.onScrollingFragment(false);
+                } else
+                {
+                    mStaySearchFragment.onScrollingFragment(true);
+                    mGourmetSearchFragment.onScrollingFragment(true);
+                }
+
                 if (range == 0)
                 {
                     return;

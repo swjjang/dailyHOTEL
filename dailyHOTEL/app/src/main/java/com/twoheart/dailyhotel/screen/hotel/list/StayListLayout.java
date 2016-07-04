@@ -90,6 +90,12 @@ public class StayListLayout extends PlaceListLayout
         return false;
     }
 
+    @Override
+    protected PlaceListMapFragment getListMapFragment()
+    {
+        return mStayMapFragment;
+    }
+
     public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
                         ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {

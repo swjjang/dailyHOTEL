@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +33,6 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -192,6 +190,8 @@ public class StayMainFragment extends PlaceMainFragment
     protected void onLocationFailed()
     {
         StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+
         refreshCurrentFragment();
     }
 
@@ -199,6 +199,8 @@ public class StayMainFragment extends PlaceMainFragment
     protected void onLocationProviderDisabled()
     {
         StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+
         refreshCurrentFragment();
     }
 
@@ -218,42 +220,6 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 refreshCurrentFragment();
             }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        switch (mViewType)
-        {
-            case LIST:
-            {
-                if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
-                {
-                    if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    {
-                        searchMyLocation();
-                    } else
-                    {
-                        // 퍼미션 허락하지 않음.
-                    }
-                }
-                break;
-            }
-
-            case MAP:
-            {
-                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                if (placeListFragment != null)
-                {
-                    placeListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                }
-                break;
-            }
-
-            case GONE:
-                break;
         }
     }
 
@@ -1214,7 +1180,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onAttach(PlaceListFragment placeListFragment)
+        public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceMainLayout == null || placeListFragment == null)
             {
