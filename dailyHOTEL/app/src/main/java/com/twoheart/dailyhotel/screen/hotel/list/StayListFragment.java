@@ -295,13 +295,13 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-
+            mOnPlaceListFragmentListener.onScrolled(recyclerView, dx, dy);
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState)
         {
-
+            mOnPlaceListFragmentListener.onScrollStateChanged(recyclerView, newState);
         }
 
         @Override
@@ -313,7 +313,10 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void finish()
         {
-
+            if (mBaseActivity != null)
+            {
+                mBaseActivity.finish();
+            }
         }
     };
 }

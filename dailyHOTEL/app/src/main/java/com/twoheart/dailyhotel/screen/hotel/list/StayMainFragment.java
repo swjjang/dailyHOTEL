@@ -1244,13 +1244,29 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
+            ExLog.d("test onScroll dy : " + dy);
 
+
+            mPlaceMainLayout.calculationMenuBarLayoutTranslationY(dy);
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState)
         {
+            switch (newState)
+            {
+                case RecyclerView.SCROLL_STATE_IDLE:
+                {
+                    mPlaceMainLayout.animationMenuBarLayout();
+                    break;
+                }
 
+                case RecyclerView.SCROLL_STATE_DRAGGING:
+                    break;
+
+                case RecyclerView.SCROLL_STATE_SETTLING:
+                    break;
+            }
         }
 
     };
