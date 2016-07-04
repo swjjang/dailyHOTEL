@@ -31,14 +31,9 @@ public class StayMainLayout extends PlaceMainLayout
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        setToolbarDateText(makeTabDateFormat(checkInSaleTime, checkOutSaleTime));
-    }
-
-    private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
         String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d");
         String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d");
 
-        return String.format("%s-%s", checkInDay, checkOutDay);
+        setToolbarDateText(String.format("%s-%s", checkInDay, checkOutDay));
     }
 }

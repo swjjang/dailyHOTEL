@@ -888,13 +888,17 @@ public class StayMainFragment extends PlaceMainFragment
                 StayCurationManager.getInstance().getStayCurationOption());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
 
-            String viewType;
-            if (ViewType.MAP.equals(mViewType))
+            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+
+            switch (mViewType)
             {
-                viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-            } else
-            {
-                viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                case LIST:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                    break;
+
+                case MAP:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+                    break;
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -908,7 +912,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     };
 
-    PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
+    private PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onDateTime(long currentDateTime, long dailyDateTime)
@@ -1228,13 +1232,26 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-
+            mPlaceMainLayout.calculationMenuBarLayoutTranslationY(dy);
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState)
         {
+            switch (newState)
+            {
+                case RecyclerView.SCROLL_STATE_IDLE:
+                {
+                    mPlaceMainLayout.animationMenuBarLayout();
+                    break;
+                }
 
+                case RecyclerView.SCROLL_STATE_DRAGGING:
+                    break;
+
+                case RecyclerView.SCROLL_STATE_SETTLING:
+                    break;
+            }
         }
 
     };

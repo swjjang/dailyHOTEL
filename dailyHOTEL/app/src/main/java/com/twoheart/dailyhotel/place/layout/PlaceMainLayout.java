@@ -70,9 +70,9 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
-    public PlaceMainLayout(Context context, OnEventListener mOnEventListener)
+    public PlaceMainLayout(Context context, OnEventListener listener)
     {
-        super(context, mOnEventListener);
+        super(context, listener);
     }
 
     @Override

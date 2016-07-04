@@ -64,11 +64,6 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-    }
-
-    @Override
     public void refreshList(boolean isShowProgress)
     {
         lockUI(isShowProgress);
