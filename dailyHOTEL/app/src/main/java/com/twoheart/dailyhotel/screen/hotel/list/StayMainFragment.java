@@ -271,21 +271,6 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    private void refreshCurrentFragment()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (placeListFragment != null)
-        {
-            placeListFragment.refreshList(true);
-        }
-    }
-
     public void startCalendar()
     {
         if (isFinishing() == true || isLockUiComponent() == true)

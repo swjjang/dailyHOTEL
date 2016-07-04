@@ -164,7 +164,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     }
 
                     deleteView.setVisibility(View.VISIBLE);
-                    searchView.setEnabled(true);
+                    ((OnEventListener) mOnEventListener).onSearchEnabled(true);
 
                     Message message = mHandler.obtainMessage(HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE, s.toString());
                     mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
