@@ -259,17 +259,10 @@ public class StayMainFragment extends PlaceMainFragment
 
     public void startStayDetail(PlaceViewItem placeViewItem, SaleTime checkInSaleTime)
     {
-        if (isFinishing())
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
-
-        if (isLockUiComponent() == true || mBaseActivity.isLockUiComponent() == true)
-        {
-            return;
-        }
-
-        lockUI();
 
         if (placeViewItem == null)
         {

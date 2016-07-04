@@ -587,8 +587,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            lockUI();
-
             switch (placeViewItem.mType)
             {
                 case PlaceViewItem.TYPE_ENTRY:
