@@ -13,11 +13,11 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -80,7 +80,15 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
-        refreshList(isShowProgress, 1);
+        ArrayList<PlaceViewItem> list = new ArrayList<>(mStayListLayout.getList());
+        if (list == null || list.size() == 0)
+        {
+            refreshList(isShowProgress, 1);
+            ExLog.d("request");
+        } else
+        {
+            ExLog.d("refresh");
+        }
     }
 
     public void addList(boolean isShowProgress)
@@ -136,53 +144,6 @@ public class StayListFragment extends PlaceListFragment
         mStayListLayout.setScrollListTop(scrollListTop);
     }
 
-    private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)
-    {
-        ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
-
-        if (stayList == null || stayList.size() == 0)
-        {
-            return stayViewItemList;
-        }
-
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
-
-        for (Stay stay : stayList)
-        {
-            String region = stay.districtName;
-
-            if (Util.isTextEmpty(region) == true)
-            {
-                continue;
-            }
-
-            if (stay.isDailyChoice == true)
-            {
-                if (hasDailyChoice == false)
-                {
-                    hasDailyChoice = true;
-
-                    PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getString(R.string.label_dailychoice));
-                    stayViewItemList.add(section);
-                }
-            } else
-            {
-                if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                {
-                    previousRegion = region;
-
-                    PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                    stayViewItemList.add(section);
-                }
-            }
-
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-        }
-
-        return stayViewItemList;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +151,7 @@ public class StayListFragment extends PlaceListFragment
     private StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int hotelSaleCount)
+        public void onStayList(ArrayList<PlaceViewItem> list, int page)
         {
             if (isFinishing() == true)
             {
@@ -207,8 +168,7 @@ public class StayListFragment extends PlaceListFragment
 
             StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
 
-            ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list);
-            mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
+            mStayListLayout.addResultList(getChildFragmentManager(), mViewType, list, stayCurationOption.getSortType());
 
             List<PlaceViewItem> allList = mStayListLayout.getList();
             if (allList == null || allList.size() == 0)
@@ -279,7 +239,7 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onRefreshAll(boolean isShowProgress)
         {
-            refreshList(isShowProgress);
+            refreshList(isShowProgress, 1);
         }
 
         @Override

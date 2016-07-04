@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
