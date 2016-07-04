@@ -17,12 +17,15 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 
 public abstract class PlaceListLayout extends BaseLayout
 {
+    private static final int LOAD_MORE_POSITION_GAP = 5;
+
     protected PinnedSectionRecyclerView mPlaceRecyclerView;
     protected PlaceListAdapter mPlaceListAdapter;
 
@@ -32,6 +35,9 @@ public abstract class PlaceListLayout extends BaseLayout
     protected View mBottomOptionLayout;
 
     protected boolean mScrollListTop;
+    protected boolean mIsLoading;
+
+    protected LinearLayoutManager mLayoutManager;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -44,6 +50,8 @@ public abstract class PlaceListLayout extends BaseLayout
         void onScrollStateChanged(RecyclerView recyclerView, int newState);
 
         void onRefreshAll(boolean isShowProgress);
+
+        void onLoadMoreList();
     }
 
     protected abstract PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
@@ -65,7 +73,9 @@ public abstract class PlaceListLayout extends BaseLayout
     protected void initLayout(View view)
     {
         mPlaceRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
-        mPlaceRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mPlaceRecyclerView.setLayoutManager(mLayoutManager);
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPlaceListAdapter = getPlacetListAdapter(mContext, new ArrayList<PlaceViewItem>());
@@ -100,6 +110,24 @@ public abstract class PlaceListLayout extends BaseLayout
                     } else
                     {
                         mSwipeRefreshLayout.setEnabled(false);
+                    }
+                } else
+                {
+                    if (mIsLoading == false) {
+
+                        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+                        int itemCount = mLayoutManager.getItemCount();
+
+                        ExLog.d("lastVisibleItemPosition : " + lastVisibleItemPosition + " , getItemCount : " + itemCount);
+
+                        if (itemCount > 0)
+                        {
+                            if ((itemCount - 1) <= (lastVisibleItemPosition + LOAD_MORE_POSITION_GAP))
+                            {
+                                mIsLoading = true;
+                                ((OnEventListener) mOnEventListener).onLoadMoreList();
+                            }
+                        }
                     }
                 }
 

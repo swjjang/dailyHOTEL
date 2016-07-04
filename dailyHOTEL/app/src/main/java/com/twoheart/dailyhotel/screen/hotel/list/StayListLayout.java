@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -90,8 +91,7 @@ public class StayListLayout extends PlaceListLayout
         return false;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                        ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    public void clearList()
     {
         if (mPlaceListAdapter == null)
         {
@@ -100,19 +100,43 @@ public class StayListLayout extends PlaceListLayout
         }
 
         mPlaceListAdapter.clear();
+    }
 
-        if (list == null || list.size() == 0)
+    public List<PlaceViewItem> getList()
+    {
+        if (mPlaceListAdapter == null)
         {
-            mPlaceListAdapter.notifyDataSetChanged();
+            return null;
+        }
 
-            setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+        return mPlaceListAdapter.getAll();
+    }
 
-        } else
+    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
+                              ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    {
+        mIsLoading = false;
+
+        if (mPlaceListAdapter == null)
         {
-            setVisibility(fragmentManager, viewType, true);
+            Util.restartApp(mContext);
+            return;
+        }
 
-            if (viewType == Constants.ViewType.MAP)
+        // 지도의 경우 무조건 전체 데이터를 가져옴으로 clear 후 진행되야 함
+        if (viewType == Constants.ViewType.MAP)
+        {
+            clearList();
+
+            if (list == null || list.size() == 0)
             {
+                mPlaceListAdapter.notifyDataSetChanged();
+                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+
+            } else
+            {
+                setVisibility(fragmentManager, viewType, true);
+
                 mStayMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
                 {
                     @Override
@@ -125,8 +149,43 @@ public class StayListLayout extends PlaceListLayout
                 mStayMapFragment.setPlaceViewItemList(list, mScrollListTop);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+            }
+
+        } else
+        {
+            setVisibility(fragmentManager, viewType, true);
+
+            // 리스트의 경우 Pagenation 상황 고려
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(getList());
+
+            if (list != null && list.size() > 0)
+            {
+                mPlaceListAdapter.addAll(list);
+            }
+
+            List<PlaceViewItem> allList = getList();
+            if (allList == null || allList.size() == 0)
+            {
+                mPlaceListAdapter.notifyDataSetChanged();
+                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+
             } else
             {
+
+                // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
+                if (oldList == null || oldList.size() == 0)
+                {
+                    if (sortType == Constants.SortType.DEFAULT)
+                    {
+                        if (StayEventBannerManager.getInstance().getCount() > 0)
+                        {
+                            PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
+                                StayEventBannerManager.getInstance().getList());
+                            mPlaceListAdapter.add(0, placeViewItem);
+                        }
+                    }
+                }
+
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
 
                 Map<String, String> params = new HashMap<>();
@@ -145,27 +204,99 @@ public class StayListLayout extends PlaceListLayout
                 }
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
-            }
 
-            if (sortType == Constants.SortType.DEFAULT)
-            {
-                if (StayEventBannerManager.getInstance().getCount() > 0)
-                {
-                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
-                        StayEventBannerManager.getInstance().getList());
-                    list.add(0, placeViewItem);
-                }
-            }
-
-            mPlaceListAdapter.setAll(list);
-            mPlaceListAdapter.notifyDataSetChanged();
-
-            if (mScrollListTop == true)
-            {
-                mScrollListTop = false;
-                mPlaceRecyclerView.scrollToPosition(0);
+                mPlaceListAdapter.setSortType(sortType);
+                mPlaceListAdapter.notifyDataSetChanged();
             }
         }
+
+        if (mScrollListTop == true)
+        {
+            mScrollListTop = false;
+            mPlaceRecyclerView.scrollToPosition(0);
+        }
+    }
+
+    // stay 에서 사용안함 기존 소스 유지
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
+                        ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    {
+        ExLog.d("call method");
+
+//        if (mPlaceListAdapter == null)
+//        {
+//            Util.restartApp(mContext);
+//            return;
+//        }
+//
+//        mPlaceListAdapter.clear();
+//
+//        if (list == null || list.size() == 0)
+//        {
+//            mPlaceListAdapter.notifyDataSetChanged();
+//
+//            setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+//
+//        } else
+//        {
+//            setVisibility(fragmentManager, viewType, true);
+//
+//            if (viewType == Constants.ViewType.MAP)
+//            {
+//                mStayMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+//                {
+//                    @Override
+//                    public void onInformationClick(PlaceViewItem placeViewItem)
+//                    {
+//                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+//                    }
+//                });
+//
+//                mStayMapFragment.setPlaceViewItemList(list, mScrollListTop);
+//
+//                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+//            } else
+//            {
+//                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+//
+//                Map<String, String> params = new HashMap<>();
+//                Province province = StayCurationManager.getInstance().getProvince();
+//
+//                if (province instanceof Area)
+//                {
+//                    Area area = (Area) province;
+//                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+//                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+//
+//                } else
+//                {
+//                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+//                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+//                }
+//
+//                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
+//            }
+//
+//            if (sortType == Constants.SortType.DEFAULT)
+//            {
+//                if (StayEventBannerManager.getInstance().getCount() > 0)
+//                {
+//                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
+//                        StayEventBannerManager.getInstance().getList());
+//                    list.add(0, placeViewItem);
+//                }
+//            }
+//
+//            mPlaceListAdapter.setAll(list);
+//            mPlaceListAdapter.setSortType(sortType);
+//            mPlaceListAdapter.notifyDataSetChanged();
+//
+//            if (mScrollListTop == true)
+//            {
+//                mScrollListTop = false;
+//                mPlaceRecyclerView.scrollToPosition(0);
+//            }
+//        }
     }
 
     public boolean hasSalesPlace()

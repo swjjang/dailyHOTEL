@@ -64,6 +64,12 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         mPlaceViewItemList.clear();
     }
 
+    public void add(int position, PlaceViewItem placeViewItem) {
+        if (position >= 0 && position < mPlaceViewItemList.size()) {
+            mPlaceViewItemList.add(position, placeViewItem);
+        }
+    }
+
     public void addAll(Collection<? extends PlaceViewItem> collection)
     {
         if (collection == null)

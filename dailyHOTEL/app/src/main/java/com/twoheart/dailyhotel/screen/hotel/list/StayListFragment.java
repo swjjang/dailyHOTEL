@@ -14,24 +14,22 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Util;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
+    private static final int PAGE_SIZE = 20;
+
+    private int mPageIndex;
+
     protected SaleTime mCheckInSaleTime;
 
     private ViewType mViewType;
-
-    protected List<Stay> mStayList = new ArrayList<>();
 
     private StayListLayout mStayListLayout;
     private BaseActivity mBaseActivity;
@@ -54,6 +52,8 @@ public class StayListFragment extends PlaceListFragment
 
         mViewType = ViewType.LIST;
 
+        mPageIndex = 1;
+
         return mStayListLayout.onCreateView(R.layout.fragment_hotel_list, container);
     }
 
@@ -64,7 +64,17 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
-        lockUI();
+        refreshList(isShowProgress, 1);
+    }
+
+    public void addList(boolean isShowProgress)
+    {
+        refreshList(isShowProgress, mPageIndex + 1);
+    }
+
+    private void refreshList(boolean isShowProgress, int page)
+    {
+        lockUI(isShowProgress);
 
         SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
 
@@ -84,7 +94,9 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(1, 20, true));
+        mPageIndex = page;
+
+        mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(page, PAGE_SIZE, true));
     }
 
     public boolean hasSalesPlace()
@@ -115,11 +127,11 @@ public class StayListFragment extends PlaceListFragment
 
     private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)
     {
-        ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
+        ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
 
         if (stayList == null || stayList.size() == 0)
         {
-            return hotelListViewItemList;
+            return stayViewItemList;
         }
 
         String previousRegion = null;
@@ -141,7 +153,7 @@ public class StayListFragment extends PlaceListFragment
                     hasDailyChoice = true;
 
                     PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getString(R.string.label_dailychoice));
-                    hotelListViewItemList.add(section);
+                    stayViewItemList.add(section);
                 }
             } else
             {
@@ -150,71 +162,21 @@ public class StayListFragment extends PlaceListFragment
                     previousRegion = region;
 
                     PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                    hotelListViewItemList.add(section);
+                    stayViewItemList.add(section);
                 }
             }
 
-            hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
         }
 
-        return hotelListViewItemList;
+        return stayViewItemList;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = null;
-
-                    if (dataJSONObject.has("hotelSaleList") == true)
-                    {
-                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
-                    }
-
-                    mStayList.clear();
-
-                    StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
-
-                    stayCurationOption.setFiltersListByJson(hotelJSONArray);
-
-                } else
-                {
-                    String message = response.getString("msg");
-                    onErrorPopupMessage(msgCode, message);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
-    StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+    private StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onStayList(ArrayList<Stay> list, int page, int hotelSaleCount)
@@ -225,24 +187,23 @@ public class StayListFragment extends PlaceListFragment
                 return;
             }
 
-            mStayList.clear();
+            // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
+            if (page <= 1)
+            {
+                setScrollListTop(true);
+                mStayListLayout.clearList();
+            }
 
             StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
 
-            if (list == null || list.size() == 0)
+            ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list);
+            mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
+
+            List<PlaceViewItem> allList = mStayListLayout.getList();
+            if (allList == null || allList.size() == 0)
             {
-                mStayListLayout.setList(getChildFragmentManager(), mViewType, null, stayCurationOption.getSortType());
                 setVisibility(ViewType.GONE, true);
-                return;
             }
-
-            // 기본적으로 보관한다.
-            mStayList.addAll(list);
-
-            setScrollListTop(true);
-
-            mStayListLayout.setList(getChildFragmentManager(), mViewType, //
-                makeSectionStayList(list), stayCurationOption.getSortType());
 
             unLockUI();
             mStayListLayout.setSwipeRefreshing(false);
@@ -308,6 +269,12 @@ public class StayListFragment extends PlaceListFragment
         public void onRefreshAll(boolean isShowProgress)
         {
             refreshList(isShowProgress);
+        }
+
+        @Override
+        public void onLoadMoreList()
+        {
+            addList(false);
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -335,6 +334,12 @@ public class GourmetListFragment extends PlaceListFragment
         public void onRefreshAll(boolean isShowProgress)
         {
             refreshList(isShowProgress);
+        }
+
+        @Override
+        public void onLoadMoreList()
+        {
+            // do nothing.
         }
 
         @Override

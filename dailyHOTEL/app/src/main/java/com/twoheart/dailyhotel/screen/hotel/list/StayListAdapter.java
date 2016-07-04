@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
@@ -49,12 +48,6 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         mEventBannerHandler = new EventBannerHandler(this);
 
         setSortType(Constants.SortType.DEFAULT);
-    }
-
-    public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
-    {
-        setAll(collection);
-        setSortType(sortType);
     }
 
     @Override
