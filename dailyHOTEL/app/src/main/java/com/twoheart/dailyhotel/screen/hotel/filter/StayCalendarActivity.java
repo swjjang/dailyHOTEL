@@ -235,6 +235,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 {
                     if (mCheckInDay.dayTime.getOffsetDailyDay() >= day.dayTime.getOffsetDailyDay())
                     {
+                        reset();
                         releaseUiComponent();
                         return;
                     }
