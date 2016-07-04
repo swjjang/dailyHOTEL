@@ -74,6 +74,12 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         mPlaceViewItemList.addAll(collection);
     }
 
+    public void setAll(Collection<? extends PlaceViewItem> collection)
+    {
+        clear();
+        addAll(collection);
+    }
+
     public List<PlaceViewItem> getAll()
     {
         return mPlaceViewItemList;

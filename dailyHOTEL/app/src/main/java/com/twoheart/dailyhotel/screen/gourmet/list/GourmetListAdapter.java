@@ -51,9 +51,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
-        clear();
-        addAll(collection);
-
+        setAll(collection);
         setSortType(sortType);
     }
 

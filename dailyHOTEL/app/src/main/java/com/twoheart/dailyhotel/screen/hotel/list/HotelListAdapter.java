@@ -54,8 +54,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
-        clear();
-        addAll(collection);
+        setAll(collection);
 
         setSortType(sortType);
     }
