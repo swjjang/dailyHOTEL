@@ -14,10 +14,12 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -35,10 +37,12 @@ import com.twoheart.dailyhotel.util.Util;
 public class LoadingDialog
 {
     private FrameLayout mProgressBarLayout;
+    private ImageView mProgressBarImageView;
     private BaseActivity mActivity;
     private Dialog mDialog;
-    private ObjectAnimator mObjectAnimator;
+    private AnimatorSet mAnimatorSet;
     private int mRepeatCount;
+    private Drawable[] mDrawables;
 
 
     private Handler mHandler = new Handler()
@@ -53,9 +57,8 @@ public class LoadingDialog
 
             if (mDialog != null && mDialog.isShowing())
             {
-                stopAnimation();
-
                 mDialog.dismiss();
+                stopAnimation();
             }
         }
     };
@@ -63,87 +66,69 @@ public class LoadingDialog
     public LoadingDialog(BaseActivity activity)
     {
         mActivity = activity;
-
         mDialog = new Dialog(activity, R.style.TransDialog);
+        //        mDialog = new Dialog(activity);
 
-        final ImageView progressBarImageView = new ImageView(activity);
-        progressBarImageView.setImageResource(R.drawable.loading_01);
+        mProgressBarImageView = new ImageView(activity);
 
-        mObjectAnimator = ObjectAnimator.ofFloat(progressBarImageView, "alpha", 1.0f, 0.0f);
-        mObjectAnimator.setDuration(500);
-        mObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-        mObjectAnimator.setRepeatMode(ObjectAnimator.REVERSE);
-        mObjectAnimator.addListener(new Animator.AnimatorListener()
+        mDrawables = new Drawable[6];
+        mDrawables[0] = activity.getResources().getDrawable(R.drawable.loading_01);
+        mDrawables[1] = activity.getResources().getDrawable(R.drawable.loading_02);
+        mDrawables[2] = activity.getResources().getDrawable(R.drawable.loading_03);
+        mDrawables[3] = activity.getResources().getDrawable(R.drawable.loading_04);
+        mDrawables[4] = activity.getResources().getDrawable(R.drawable.loading_05);
+        mDrawables[5] = activity.getResources().getDrawable(R.drawable.loading_06);
+
+        mAnimatorSet = new AnimatorSet();
+
+        ObjectAnimator objectAnimator01 = ObjectAnimator.ofFloat(mProgressBarImageView, "alpha", 0.0f, 1.0f);
+        objectAnimator01.setDuration(100);
+
+        ObjectAnimator objectAnimator02 = ObjectAnimator.ofFloat(mProgressBarImageView, "alpha", 1.0f, 1.0f);
+        objectAnimator01.setDuration(400);
+
+        ObjectAnimator objectAnimator03 = ObjectAnimator.ofFloat(mProgressBarImageView, "alpha", 1.0f, 0.0f);
+        objectAnimator02.setDuration(100);
+
+        mAnimatorSet.playSequentially(objectAnimator01, objectAnimator02, objectAnimator03);
+        mAnimatorSet.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
             {
-                progressBarImageView.setImageResource(R.drawable.loading_01);
+                mProgressBarImageView.setImageDrawable(mDrawables[mRepeatCount++]);
+
+                if (mRepeatCount > 5)
+                {
+                    mRepeatCount = 0;
+                }
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
-
+                startAnimation();
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-
             }
 
             @Override
             public void onAnimationRepeat(Animator animation)
             {
-                switch (mRepeatCount++)
-                {
-                    case 0:
-                        progressBarImageView.setImageResource(R.drawable.loading_02);
-                    case 1:
-                        break;
 
-                    case 2:
-                        progressBarImageView.setImageResource(R.drawable.loading_03);
-                    case 3:
-                        break;
-
-                    case 4:
-                        progressBarImageView.setImageResource(R.drawable.loading_04);
-                    case 5:
-                        break;
-
-                    case 6:
-                        progressBarImageView.setImageResource(R.drawable.loading_05);
-                    case 7:
-                        break;
-
-                    case 8:
-                        progressBarImageView.setImageResource(R.drawable.loading_06);
-                    case 9:
-                        break;
-
-                    case 10:
-                        progressBarImageView.setImageResource(R.drawable.loading_01);
-                        break;
-
-                    case 11:
-                        mRepeatCount = 0;
-                        break;
-
-                }
             }
         });
 
-
         mProgressBarLayout = new FrameLayout(activity);
-        mProgressBarLayout.setBackgroundResource(R.drawable.shape_fillrect_bffffff);
-        mProgressBarLayout.addView(progressBarImageView);
+        mProgressBarLayout.setBackgroundResource(R.drawable.shape_fillrect_bbf000000);
+        mProgressBarLayout.addView(mProgressBarImageView);
 
         LayoutParams params = new LayoutParams(Util.dpToPx(activity, 90), Util.dpToPx(activity, 90));
         mDialog.addContentView(mProgressBarLayout, params);
         mDialog.setCancelable(false);
-        mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
@@ -197,6 +182,14 @@ public class LoadingDialog
 
             try
             {
+                if (isShowProgress == false)
+                {
+                    mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                } else
+                {
+                    mDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                }
+
                 mDialog.show();
 
                 if (isShowProgress == true)
@@ -231,13 +224,10 @@ public class LoadingDialog
         }
     }
 
-
     public void hide()
     {
-        stopAnimation();
-
         mHandler.removeMessages(0);
-        mHandler.sendEmptyMessageDelayed(0, 500);
+        mHandler.sendEmptyMessage(0);
     }
 
     public void close()
@@ -249,19 +239,21 @@ public class LoadingDialog
             mDialog.dismiss();
         }
 
-        mObjectAnimator = null;
+        mAnimatorSet = null;
         mDialog = null;
     }
 
     private void stopAnimation()
     {
         mRepeatCount = 0;
-        mObjectAnimator.cancel();
+        mAnimatorSet.cancel();
     }
 
     private void startAnimation()
     {
-        mObjectAnimator.setupStartValues();
-        mObjectAnimator.start();
+        if (mAnimatorSet != null)
+        {
+            mAnimatorSet.start();
+        }
     }
 }
