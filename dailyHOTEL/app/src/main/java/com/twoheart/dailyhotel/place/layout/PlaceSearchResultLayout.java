@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -31,6 +32,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     protected abstract PlaceListAdapter getListAdapter();
 
     protected abstract void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
+
+    protected abstract int getEmptyIconResourceId();
 
     public PlaceSearchResultLayout(Context context, OnBaseEventListener listener)
     {
@@ -122,8 +125,11 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
 
     private void initEmptyLayout(View view)
     {
+        ImageView emptyIconImageView = (ImageView)view.findViewById(R.id.emptyIconImageView);
         View researchView = view.findViewById(R.id.researchView);
         TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
+
+        emptyIconImageView.setImageResource(getEmptyIconResourceId());
 
         researchView.setOnClickListener(new View.OnClickListener()
         {

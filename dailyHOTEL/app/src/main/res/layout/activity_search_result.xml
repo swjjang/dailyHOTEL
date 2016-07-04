@@ -73,12 +73,12 @@
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/emptyIconImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/textLayout"
             android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:src="@drawable/no_search_ic"/>
+            android:gravity="center"/>
 
         <LinearLayout
             android:id="@+id/textLayout"
