@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/date_select_btn" android:state_pressed="true"/>
-    <item android:drawable="@drawable/date_select_btn" android:state_selected="true" android:state_enabled="true"/>
+    <item android:drawable="@color/dh_theme_color" android:state_pressed="true"/>
+    <item android:drawable="@color/dh_theme_color" android:state_selected="true" android:state_enabled="true"/>
     <item android:drawable="@color/dh_theme_color_a10" android:state_selected="true" android:state_enabled="false"/>
-    <item android:drawable="@drawable/date_day_bg"/>
+    <item android:drawable="@color/white"/>
 </selector>
