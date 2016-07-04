@@ -161,7 +161,6 @@ public class StayParams implements Parcelable
 
             addAndCoupler(sb);
 
-
             String name = field.getName();
             ExLog.d(name + " , " + sb.toString());
 
@@ -171,15 +170,25 @@ public class StayParams implements Parcelable
 
             } else if ("category".equalsIgnoreCase(name))
             {
-                sb.append(getCategoryString());
+                String categoryString = getCategoryString();
+                if (Util.isTextEmpty(categoryString) == false)
+                {
+                    sb.append(categoryString);
+                }
 
             } else if ("bedtype".equalsIgnoreCase(name))
             {
-                sb.append(bedType);
+                if (Util.isTextEmpty(bedType) == false)
+                {
+                    sb.append(bedType);
+                }
 
             } else if ("luxury".equalsIgnoreCase(name))
             {
-                sb.append(luxury);
+                if (Util.isTextEmpty(luxury) == false)
+                {
+                    sb.append(luxury);
+                }
 
             } else
             {
