@@ -1,22 +1,13 @@
 package com.twoheart.dailyhotel.place.fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -27,19 +18,16 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class PlaceSearchFragment extends BaseFragment
 {
-    private boolean mShowSearchKeyboard;
+    protected boolean mShowSearchKeyboard;
     protected BaseActivity mBaseActivity;
+    protected boolean mIsScrolling;
 
     protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 10000;
     protected static final int REQUEST_ACTIVITY_CALENDAR = 10001;
@@ -139,6 +127,11 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout.hideSearchKeyboard();
     }
 
+    public void onScrollingFragment(boolean scrolling)
+    {
+        mIsScrolling = scrolling;
+    }
+
     @Override
     public void onResume()
     {
@@ -186,128 +179,22 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
+                mPlaceSearchLayout.updateTermsOfLocationLayout();
+
                 searchMyLocation();
                 break;
             }
 
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
+                mPlaceSearchLayout.updateTermsOfLocationLayout();
+
                 if (resultCode == Activity.RESULT_OK)
                 {
                     searchMyLocation();
                 }
                 break;
             }
-        }
-    }
-
-    protected void showTermsOfLocationDialog()
-    {
-        if (isFinishing())
-        {
-            return;
-        }
-
-        LayoutInflater layoutInflater = (LayoutInflater) mBaseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
-
-        final Dialog dialog = new Dialog(mBaseActivity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setVisibility(View.VISIBLE);
-        titleTextView.setText(getString(R.string.label_search_agree_termsoflocation));
-
-        // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
-
-        String message = getString(R.string.message_search_agree_termsoflocation);
-
-        int startIndex = message.lastIndexOf('\n') + 1;
-        int endIndex = message.length();
-
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
-        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        spannableStringBuilder.setSpan(new UnderlineSpan(), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        messageTextView.setText(spannableStringBuilder);
-        messageTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(mBaseActivity, LocationTermsActivity.class);
-                startActivity(intent);
-
-                //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.TERMSOF_LOCATION, null);
-            }
-        });
-
-        // 버튼
-        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
-        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
-
-        twoButtonLayout.setVisibility(View.GONE);
-        oneButtonLayout.setVisibility(View.VISIBLE);
-
-        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
-
-        confirmTextView.setText(R.string.label_search_agree_search_location);
-        oneButtonLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                DailyPreference.getInstance(mBaseActivity).setTermsOfLocation(true);
-
-                mPlaceSearchLayout.updateTermsOfLocationLayout();
-
-                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
-
-                //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE_AND_SEARCH, null);
-            }
-        });
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-        {
-            @Override
-            public void onCancel(DialogInterface dialog)
-            {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockUI();
-            }
-        });
-
-        try
-        {
-            dialog.setContentView(dialogView);
-            dialog.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
         }
     }
 

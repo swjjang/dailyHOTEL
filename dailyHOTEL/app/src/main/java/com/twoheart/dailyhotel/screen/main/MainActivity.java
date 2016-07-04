@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -248,27 +247,13 @@ public class MainActivity extends BaseActivity implements Constants
                 }
                 break;
             }
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode)
-        {
-            case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    Fragment fragment = mMainFragmentManager.getCurrentFragment();
-
-                    if (fragment != null)
-                    {
-                        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                    }
-                }
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                 break;
+            }
         }
     }
 
@@ -763,7 +748,7 @@ public class MainActivity extends BaseActivity implements Constants
                         mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
                     } else
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
                     }
                 }
 

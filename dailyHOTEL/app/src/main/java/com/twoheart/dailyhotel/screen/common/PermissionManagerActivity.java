@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -14,6 +15,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -21,9 +23,12 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class PermissionManagerActivity extends BaseActivity implements Constants
 {
@@ -60,17 +65,17 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             return;
         }
 
-        if (Util.isOverAPI23() == false)
-        {
-            finish(RESULT_OK);
-            return;
-        }
-
         mPermissionType = PermissionType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_PERMISSION));
 
         switch (mPermissionType)
         {
             case READ_PHONE_STATE:
+                if (Util.isOverAPI23() == false)
+                {
+                    finish(RESULT_OK);
+                    return;
+                }
+
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
                 {
                     finish(RESULT_OK);
@@ -79,10 +84,26 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 break;
 
             case ACCESS_FINE_LOCATION:
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                if (DailyPreference.getInstance(this).isAgreeTermsOfLocation() == false)
                 {
-                    finish(RESULT_OK);
-                    return;
+                    showTermsOfLocationDialog();
+                } else
+                {
+                    if (Util.isOverAPI23() == false)
+                    {
+                        finish(RESULT_OK);
+                        return;
+                    } else
+                    {
+                        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                        {
+                            finish(RESULT_OK);
+                            return;
+                        } else
+                        {
+                            processCheckPermission(mPermissionType);
+                        }
+                    }
                 }
                 break;
         }
@@ -108,7 +129,6 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             case ACCESS_FINE_LOCATION:
             {
                 snackDialogLayout.setVisibility(View.GONE);
-                processCheckPermission(permissionType);
                 break;
             }
         }
@@ -445,4 +465,115 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         return spannableStringBuilder;
     }
+
+    protected void showTermsOfLocationDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText(getString(R.string.label_search_agree_termsoflocation));
+
+        // 메시지
+        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+
+        String message = getString(R.string.message_search_agree_termsoflocation);
+
+        int startIndex = message.lastIndexOf('\n') + 1;
+        int endIndex = message.length();
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
+        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new UnderlineSpan(), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        messageTextView.setText(spannableStringBuilder);
+        messageTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(PermissionManagerActivity.this, LocationTermsActivity.class);
+                startActivity(intent);
+
+                //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.TERMSOF_LOCATION, null);
+            }
+        });
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
+
+        twoButtonLayout.setVisibility(View.GONE);
+        oneButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setText(R.string.label_search_agree_search_location);
+        oneButtonLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                DailyPreference.getInstance(PermissionManagerActivity.this).setTermsOfLocation(true);
+
+                Intent intent = PermissionManagerActivity.newInstance(PermissionManagerActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+
+                //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE_AND_SEARCH, null);
+            }
+        });
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                finish(RESULT_CANCELED);
+
+                AnalyticsManager.getInstance(PermissionManagerActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
 }

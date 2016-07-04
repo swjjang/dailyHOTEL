@@ -91,6 +91,12 @@ public class StayListLayout extends PlaceListLayout
         return false;
     }
 
+    @Override
+    protected PlaceListMapFragment getListMapFragment()
+    {
+        return mStayMapFragment;
+    }
+
     public void clearList()
     {
         if (mPlaceListAdapter == null)

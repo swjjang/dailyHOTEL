@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Parcelable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -75,11 +76,10 @@ public class PinnedSectionRecyclerView extends RecyclerView
                 return; // nothing to do
             }
 
-            View firstView = findChildViewUnder(recyclerView.getLeft() + 1, getTop() + 1);
-            View lastView = findChildViewUnder(recyclerView.getLeft() + 1, getBottom() - 1);
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
 
-            int firstVisibleItem = getChildAdapterPosition(firstView);
-            int lastVisibleItem = getChildAdapterPosition(lastView);
+            int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+            int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
             int visibleItemCount = lastVisibleItem - firstVisibleItem + 1;
 
             if (firstVisibleItem < 0 || firstVisibleItem >= adapter.getItemCount())
@@ -311,9 +311,9 @@ public class PinnedSectionRecyclerView extends RecyclerView
     {
         Adapter adapter = getAdapter();
 
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
         int adapterDataCount = adapter.getItemCount();
-        View view = findChildViewUnder(getLeft() + 1, getBottom() - 1);
-        int lastVisibleItem = getChildAdapterPosition(view);
+        int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
 
         if (lastVisibleItem >= adapterDataCount)
         {
@@ -321,7 +321,8 @@ public class PinnedSectionRecyclerView extends RecyclerView
         }
 
         if (firstVisibleItem + visibleItemCount >= adapterDataCount)
-        {//added to prevent index Outofbound (in case)
+        {
+            //added to prevent index Outofbound (in case)
             visibleItemCount = adapterDataCount - firstVisibleItem;
         }
 
@@ -377,11 +378,10 @@ public class PinnedSectionRecyclerView extends RecyclerView
         Adapter adapter = getAdapter();
         if (adapter != null && adapter.getItemCount() > 0)
         {
-            View firstView = findChildViewUnder(getLeft() + 1, getTop() + 1);
-            View lastView = findChildViewUnder(getLeft() + 1, getBottom() - 1);
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
 
-            int firstVisibleItem = getChildAdapterPosition(firstView);
-            int lastVisibleItem = getChildAdapterPosition(lastView);
+            int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+            int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
 
             int sectionPosition = findCurrentSectionPosition(firstVisibleItem);
             if (sectionPosition == -1)

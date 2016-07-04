@@ -92,6 +92,12 @@ public class GourmetListLayout extends PlaceListLayout
         return false;
     }
 
+    @Override
+    protected PlaceListMapFragment getListMapFragment()
+    {
+        return mGourmetListMapFragment;
+    }
+
     public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
         if (mPlaceListAdapter == null)

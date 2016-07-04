@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -64,6 +65,8 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected abstract boolean isShowInformationAtMapView(Constants.ViewType viewType);
 
+    protected abstract PlaceListMapFragment getListMapFragment();
+
     public PlaceListLayout(Context context, OnEventListener mOnEventListener)
     {
         super(context, mOnEventListener);
@@ -101,8 +104,9 @@ public abstract class PlaceListLayout extends BaseLayout
                 // SwipeRefreshLayout
                 if (dy <= 0)
                 {
-                    View firstView = recyclerView.findChildViewUnder(recyclerView.getLeft() + 1, recyclerView.getTop() + 1);
-                    int firstVisibleItem = recyclerView.getChildAdapterPosition(firstView);
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mPlaceRecyclerView.getLayoutManager();
+
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
 
                     if (firstVisibleItem == 0)
                     {

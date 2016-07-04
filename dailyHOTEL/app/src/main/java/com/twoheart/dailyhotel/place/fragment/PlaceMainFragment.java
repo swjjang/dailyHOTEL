@@ -1,9 +1,9 @@
 package com.twoheart.dailyhotel.place.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -154,6 +154,27 @@ public abstract class PlaceMainFragment extends BaseFragment
                 break;
             }
 
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                mDontReloadAtOnResume = true;
+
+                if (mViewType == ViewType.MAP)
+                {
+                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                } else
+                {
+                    if (resultCode == Activity.RESULT_OK)
+                    {
+                        searchMyLocation();
+                    } else
+                    {
+                        onLocationFailed();
+                    }
+                }
+                break;
+            }
+
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
@@ -180,42 +201,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        switch (mViewType)
-        {
-            case LIST:
-            {
-                if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
-                {
-                    if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    {
-                        searchMyLocation();
-                    } else
-                    {
-                        // 퍼미션 허락하지 않음.
-                    }
-                }
-                break;
-            }
-
-            case MAP:
-            {
-                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                if (placeListFragment != null)
-                {
-                    placeListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                }
-                break;
-            }
-
-            case GONE:
-                break;
-        }
     }
 
     protected void refreshCurrentFragment()

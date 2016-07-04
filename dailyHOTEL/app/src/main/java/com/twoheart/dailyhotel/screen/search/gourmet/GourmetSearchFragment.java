@@ -79,6 +79,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
                     mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
                 }
+
+                mShowSearchKeyboard = true;
                 break;
             }
         }
@@ -117,6 +119,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     @Override
     protected void onSearch(Location location)
     {
+        if (mIsScrolling == true)
+        {
+            return;
+        }
+
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, location);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
@@ -124,6 +131,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     @Override
     public void startSearchResultActivity()
     {
+        if (mIsScrolling == true)
+        {
+            return;
+        }
+
         String text = mPlaceSearchLayout.getSearchKeyWord();
 
         if (Util.isTextEmpty(text) == true)
@@ -164,6 +176,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onResetKeyword()
         {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
             mPlaceSearchLayout.resetSearchKeyword();
 
             //            AnalyticsManager.getInstance(GourmetSearchActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
@@ -171,19 +188,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onShowTermsOfLocationDialog()
+        public void onSearchMyLocation()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+            if (mIsScrolling == true)
             {
                 return;
             }
 
-            showTermsOfLocationDialog();
-        }
-
-        @Override
-        public void onSearchMyLocation()
-        {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
@@ -196,6 +207,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onDeleteRecentSearches()
         {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(mBaseActivity).setGourmetRecentSearches("");
 
@@ -208,12 +224,22 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
             ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mSaleTime, keyword);
         }
 
         @Override
         public void onSearch(String text)
         {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
             if (Util.isTextEmpty(text) == true)
             {
                 return;
@@ -226,6 +252,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onSearch(String text, Keyword keyword)
         {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
             if (keyword == null)
             {
                 return;
@@ -245,6 +276,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation)
         {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
             if (isAnimation == true)
             {
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//

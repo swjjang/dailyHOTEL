@@ -15,12 +15,12 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -63,6 +63,20 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (mViewType == ViewType.MAP)
+        {
+            PlaceListMapFragment placeListMapFragment = mGourmetListLayout.getListMapFragment();
+
+            if (placeListMapFragment != null)
+            {
+                placeListMapFragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    @Override
     public void refreshList(boolean isShowProgress)
     {
         lockUI(isShowProgress);
@@ -79,19 +93,6 @@ public class GourmetListFragment extends PlaceListFragment
     {
         mViewType = viewType;
         mGourmetListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
-    }
-
-    public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
-        if (province == null || checkInSaleTime == null)
-        {
-            Util.restartApp(mBaseActivity);
-            return;
-        }
-
-        lockUI();
-
-        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, mBaseActivity);
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)

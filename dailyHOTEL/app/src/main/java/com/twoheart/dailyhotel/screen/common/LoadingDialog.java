@@ -13,27 +13,34 @@
  */
 package com.twoheart.dailyhotel.screen.common;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
-import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 public class LoadingDialog
 {
-    private ProgressBar mProgressBar;
+    private FrameLayout mProgressBarLayout;
     private BaseActivity mActivity;
     private Dialog mDialog;
+    private ObjectAnimator mObjectAnimator;
+    private int mRepeatCount;
+
+
     private Handler mHandler = new Handler()
     {
         @Override
@@ -46,6 +53,8 @@ public class LoadingDialog
 
             if (mDialog != null && mDialog.isShowing())
             {
+                stopAnimation();
+
                 mDialog.dismiss();
             }
         }
@@ -56,10 +65,83 @@ public class LoadingDialog
         mActivity = activity;
 
         mDialog = new Dialog(activity, R.style.TransDialog);
-        mProgressBar = new ProgressBar(activity);
-        mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
-        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        mDialog.addContentView(mProgressBar, params);
+
+        final ImageView progressBarImageView = new ImageView(activity);
+        progressBarImageView.setImageResource(R.drawable.loading_01);
+
+        mObjectAnimator = ObjectAnimator.ofFloat(progressBarImageView, "alpha", 1.0f, 0.0f);
+        mObjectAnimator.setDuration(500);
+        mObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        mObjectAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        mObjectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                progressBarImageView.setImageResource(R.drawable.loading_01);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+                switch (mRepeatCount++)
+                {
+                    case 0:
+                        progressBarImageView.setImageResource(R.drawable.loading_02);
+                    case 1:
+                        break;
+
+                    case 2:
+                        progressBarImageView.setImageResource(R.drawable.loading_03);
+                    case 3:
+                        break;
+
+                    case 4:
+                        progressBarImageView.setImageResource(R.drawable.loading_04);
+                    case 5:
+                        break;
+
+                    case 6:
+                        progressBarImageView.setImageResource(R.drawable.loading_05);
+                    case 7:
+                        break;
+
+                    case 8:
+                        progressBarImageView.setImageResource(R.drawable.loading_06);
+                    case 9:
+                        break;
+
+                    case 10:
+                        progressBarImageView.setImageResource(R.drawable.loading_01);
+                        break;
+
+                    case 11:
+                        mRepeatCount = 0;
+                        break;
+
+                }
+            }
+        });
+
+
+        mProgressBarLayout = new FrameLayout(activity);
+        mProgressBarLayout.setBackgroundResource(R.drawable.shape_fillrect_bffffff);
+        mProgressBarLayout.addView(progressBarImageView);
+
+        LayoutParams params = new LayoutParams(Util.dpToPx(activity, 90), Util.dpToPx(activity, 90));
+        mDialog.addContentView(mProgressBarLayout, params);
         mDialog.setCancelable(false);
         mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
@@ -111,11 +193,16 @@ public class LoadingDialog
 
         if (mDialog != null && mDialog.isShowing() == false)
         {
-            mProgressBar.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
+            mProgressBarLayout.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
 
             try
             {
                 mDialog.show();
+
+                if (isShowProgress == true)
+                {
+                    startAnimation();
+                }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -123,6 +210,9 @@ public class LoadingDialog
         }
     }
 
+    /**
+     * 이미 팝업은 뛰어져있으나 프로그래스바가 보이지 않을때..
+     */
     public void showProgress()
     {
         if (mActivity == null || mActivity.isFinishing() == true)
@@ -132,13 +222,20 @@ public class LoadingDialog
 
         if (mDialog != null && mDialog.isShowing() == true)
         {
-            mProgressBar.setVisibility(View.VISIBLE);
+            if (mProgressBarLayout.getVisibility() != View.VISIBLE)
+            {
+                mProgressBarLayout.setVisibility(View.VISIBLE);
+
+                startAnimation();
+            }
         }
     }
 
 
     public void hide()
     {
+        stopAnimation();
+
         mHandler.removeMessages(0);
         mHandler.sendEmptyMessageDelayed(0, 500);
     }
@@ -147,9 +244,24 @@ public class LoadingDialog
     {
         if (mDialog != null && mDialog.isShowing() == true)
         {
+            stopAnimation();
+
             mDialog.dismiss();
         }
 
+        mObjectAnimator = null;
         mDialog = null;
+    }
+
+    private void stopAnimation()
+    {
+        mRepeatCount = 0;
+        mObjectAnimator.cancel();
+    }
+
+    private void startAnimation()
+    {
+        mObjectAnimator.setupStartValues();
+        mObjectAnimator.start();
     }
 }

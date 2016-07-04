@@ -18,7 +18,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[GoogleAnalyticsManager]";
-    private static final String GA_PROPERTY_ID = "UA-43721645-6";
+    private static final String GA_PROPERTY_ID = DEBUG ? "UA-80273653-1" : "UA-43721645-6";
 
     private Tracker mGoogleAnalyticsTracker;
     private String mClientId;

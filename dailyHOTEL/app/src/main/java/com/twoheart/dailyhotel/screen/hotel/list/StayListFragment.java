@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -55,6 +57,20 @@ public class StayListFragment extends PlaceListFragment
         mPageIndex = 1;
 
         return mStayListLayout.onCreateView(R.layout.fragment_hotel_list, container);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (mViewType == ViewType.MAP)
+        {
+            PlaceListMapFragment placeListMapFragment = mStayListLayout.getListMapFragment();
+
+            if (placeListMapFragment != null)
+            {
+                placeListMapFragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -102,11 +118,6 @@ public class StayListFragment extends PlaceListFragment
     public boolean hasSalesPlace()
     {
         return mStayListLayout.hasSalesPlace();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
     }
 
     @Override
