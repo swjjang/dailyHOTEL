@@ -344,19 +344,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.hotel.search.HotelSearchActivity"
+            android:name=".screen.search.SearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.hotel.search.HotelSearchResultActivity"
+            android:name=".screen.search.stay.StaySearchResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.gourmet.search.GourmetSearchActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".screen.gourmet.search.GourmetSearchResultActivity"
+            android:name=".screen.search.gourmet.GourmetSearchResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

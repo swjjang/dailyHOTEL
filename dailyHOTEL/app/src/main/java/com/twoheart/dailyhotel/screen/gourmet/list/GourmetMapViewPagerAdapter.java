@@ -108,7 +108,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(comma.format(gourmet.discountPrice) + currency);
+        discountTextView.setText(comma.format(gourmet.getDiscountPrice()) + currency);
 
         name.setSelected(true); // Android TextView marquee bug
 

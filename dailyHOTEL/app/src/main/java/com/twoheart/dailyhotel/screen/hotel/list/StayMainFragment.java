@@ -32,7 +32,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -343,7 +343,7 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, StayCurationManager.getInstance().getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.averageDiscountPrice);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.getDiscountPrice());
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -763,7 +763,7 @@ public class StayMainFragment extends PlaceMainFragment
             SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
             int night = StayCurationManager.getInstance().getNight();
 
-            Intent intent = HotelSearchActivity.newInstance(mBaseActivity, checkInSaleTime, night);
+            Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -904,13 +904,17 @@ public class StayMainFragment extends PlaceMainFragment
                 StayCurationManager.getInstance().getProvince());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-            String viewType;
-            if (ViewType.MAP.equals(mViewType))
+            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+
+            switch (mViewType)
             {
-                viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-            } else
-            {
-                viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                case LIST:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                    break;
+
+                case MAP:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+                    break;
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -924,7 +928,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     };
 
-    PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
+    private PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onDateTime(long currentDateTime, long dailyDateTime)
@@ -1244,9 +1248,6 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-            ExLog.d("test onScroll dy : " + dy);
-
-
             mPlaceMainLayout.calculationMenuBarLayoutTranslationY(dy);
         }
 

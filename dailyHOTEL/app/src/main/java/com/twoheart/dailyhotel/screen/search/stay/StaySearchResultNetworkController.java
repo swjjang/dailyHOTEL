@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 import android.location.Location;
@@ -32,7 +32,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class HotelSearchResultNetworkController extends BaseNetworkController
+public class StaySearchResultNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -43,7 +43,7 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
         void onResponseAddress(String address);
     }
 
-    public HotelSearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
+    public StaySearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }

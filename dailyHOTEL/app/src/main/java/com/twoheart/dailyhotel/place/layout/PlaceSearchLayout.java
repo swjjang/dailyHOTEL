@@ -9,7 +9,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,9 +46,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
     private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
 
-    private View mToolbar;
-
-    private View mSearchLayout;
     private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollLayout, mRecentSearchesScrollLayout;
@@ -78,7 +74,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onSearch(String text, Keyword keyword);
 
-        void onShowCalendar(boolean isAnimation);
+        void onCalendarClick(boolean isAnimation);
+
+        void onSearchEnabled(boolean enabled);
     }
 
     protected abstract String getAroundPlaceText();
@@ -97,33 +95,16 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     @Override
     protected void initLayout(View view)
     {
-        initToolbarLayout(view);
+        initSearchLayout(view);
         initCalendarLayout(view);
         initAroundLayout(view);
-        initSearchLayout(view);
+        initSearchKeywordLayout(view);
     }
 
-    private void initToolbarLayout(View view)
+    private void initSearchLayout(View view)
     {
-        mToolbar = view.findViewById(R.id.toolbar);
-
-        View backView = mToolbar.findViewById(R.id.backImageView);
-        backView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mOnEventListener.finish();
-            }
-        });
-
-        mSearchEditText = (EditText) mToolbar.findViewById(R.id.searchEditText);
+        mSearchEditText = (EditText) view.findViewById(R.id.searchEditText);
         mSearchEditText.setHint(getSearchHintText());
-
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            mSearchEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        }
 
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
@@ -131,12 +112,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mSearchEditText.setFilters(allowAlphanumericHangul);
+        mSearchEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
-        final View searchView = mToolbar.findViewById(R.id.searchView);
-        searchView.setOnClickListener(this);
-        searchView.setEnabled(false);
-
-        final View deleteView = mToolbar.findViewById(R.id.deleteView);
+        final View deleteView = view.findViewById(R.id.deleteView);
         deleteView.setOnClickListener(this);
         deleteView.setVisibility(View.GONE);
 
@@ -163,7 +141,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 if (length == 0)
                 {
                     deleteView.setVisibility(View.GONE);
-                    searchView.setEnabled(false);
+                    ((OnEventListener) mOnEventListener).onSearchEnabled(false);
 
                     updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
 
@@ -212,14 +190,70 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         });
     }
 
+    private void initCalendarLayout(View view)
+    {
+        mDateTextView = (TextView) view.findViewById(R.id.calendarTextView);
+
+        mDateTextView.setOnClickListener(this);
+    }
+
+    private void initAroundLayout(View view)
+    {
+        View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
+        searchAroundLayout.setOnClickListener(this);
+
+        TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
+        text01View.setText(getAroundPlaceText());
+
+        mTermsOfLocationView = searchAroundLayout.findViewById(R.id.text02View);
+
+        updateTermsOfLocationLayout(mTermsOfLocationView);
+    }
+
+    private void initSearchKeywordLayout(View view)
+    {
+        initRecentSearchesLayout(view);
+        initAutoCompleteLayout(view);
+    }
+
     public void resetSearchKeyword()
     {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
         mSearchEditText.setText(null);
+    }
+
+    public void clearSearchKeywordFocus()
+    {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
+        mSearchEditText.setFocusable(false);
+        mSearchEditText.setFocusableInTouchMode(false);
+        mSearchEditText.clearFocus();
+    }
+
+    public String getSearchKeyWord()
+    {
+        return mSearchEditText.getText().toString();
     }
 
     public void showSearchKeyboard()
     {
-//        mSearchEditText.requestFocus();
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
+        mSearchEditText.setFocusable(true);
+        mSearchEditText.setFocusableInTouchMode(true);
+        mSearchEditText.requestFocus();
+
         mSearchEditText.postDelayed(new Runnable()
         {
             @Override
@@ -234,28 +268,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void hideSearchKeyboard()
     {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
-
-    private void initCalendarLayout(View view)
-    {
-        View calendarLayout = view.findViewById(R.id.calendarLayout);
-        calendarLayout.setOnClickListener(this);
-
-        mDateTextView = (TextView) calendarLayout.findViewById(R.id.dateTextView);
-    }
-
-    private void initAroundLayout(View view)
-    {
-        View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
-        searchAroundLayout.setOnClickListener(this);
-
-        TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
-        text01View.setText(getAroundPlaceText());
-
-        mTermsOfLocationView = searchAroundLayout.findViewById(R.id.text02View);
-
-        updateTermsOfLocationLayout(mTermsOfLocationView);
+        //        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     public void setDataText(String date)
@@ -293,18 +306,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void updateTermsOfLocationLayout()
     {
         updateTermsOfLocationLayout(mTermsOfLocationView);
-    }
-
-    private void initSearchLayout(View view)
-    {
-        mSearchLayout = view.findViewById(R.id.searchLayout);
-
-        // 내주변 호텔 보기
-        View searchAroundLayout = mSearchLayout.findViewById(R.id.searchAroundLayout);
-        searchAroundLayout.setOnClickListener(this);
-
-        initRecentSearchesLayout(mSearchLayout);
-        initAutoCompleteLayout(mSearchLayout);
     }
 
     private void initRecentSearchesLayout(View view)
@@ -665,7 +666,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         switch (v.getId())
         {
-            case R.id.calendarLayout:
+            case R.id.calendarTextView:
             {
                 hideSearchKeyboard();
 
@@ -674,7 +675,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     @Override
                     public void run()
                     {
-                        ((OnEventListener) mOnEventListener).onShowCalendar(true);
+                        ((OnEventListener) mOnEventListener).onCalendarClick(true);
                     }
                 }, 100);
                 break;

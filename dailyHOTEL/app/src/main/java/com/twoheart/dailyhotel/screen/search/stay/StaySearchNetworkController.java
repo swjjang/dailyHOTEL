@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 
@@ -8,9 +8,9 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -19,23 +19,12 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelSearchNetworkController extends BaseNetworkController
+public class StaySearchNetworkController extends PlaceSearchNetworkController
 {
-    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
-    {
-        void onResponseAutoComplete(String keyword, List<Keyword> list);
-    }
-
-    public HotelSearchNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public StaySearchNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
-
-    //    @Override
-    //    public void onErrorResponse(VolleyError volleyError)
-    //    {
-    //        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    //    }
 
     public void requestAutoComplete(SaleTime saleTime, int lengthStay, String keyword)
     {

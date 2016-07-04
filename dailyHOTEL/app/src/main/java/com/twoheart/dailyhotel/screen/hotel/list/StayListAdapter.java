@@ -195,7 +195,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         DecimalFormat comma = new DecimalFormat("###,##0");
 
         String strPrice = comma.format(stay.price);
-        String strDiscount = comma.format(stay.averageDiscountPrice);
+        String strDiscount = comma.format(stay.getDiscountPrice());
 
         String address = stay.addressSummary;
 
@@ -213,7 +213,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (stay.price <= 0 || stay.price <= stay.averageDiscountPrice)
+        if (stay.price <= 0 || stay.price <= stay.getDiscountPrice())
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);

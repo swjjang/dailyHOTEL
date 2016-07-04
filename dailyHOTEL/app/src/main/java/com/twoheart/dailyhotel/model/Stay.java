@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public class Stay extends Place
 {
-    public int averageDiscountPrice;
+    protected int averageDiscountPrice;
     public String dBenefitText;
     public int nights;
     public float distance; // 정렬시에 보여주는 내용
@@ -32,6 +32,18 @@ public class Stay extends Place
     public Stay(Parcel in)
     {
         readFromParcel(in);
+    }
+
+    @Override
+    public int getDiscountPrice()
+    {
+        return averageDiscountPrice;
+    }
+
+    @Override
+    public int getGradeMarkerResId()
+    {
+        return mGrade.getMarkerResId();
     }
 
     @Override
@@ -121,7 +133,7 @@ public class Stay extends Place
                 dBenefitText = null;
             }
 
-//            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
+            //            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());

@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
-import com.twoheart.dailyhotel.util.Util;
 
 public class StayMainLayout extends PlaceMainLayout
 {
@@ -32,14 +31,9 @@ public class StayMainLayout extends PlaceMainLayout
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        setToolbarDateText(makeTabDateFormat(checkInSaleTime, checkOutSaleTime));
-    }
-
-    private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
         String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d");
         String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d");
 
-        return String.format("%s-%s", checkInDay, checkOutDay);
+        setToolbarDateText(String.format("%s-%s", checkInDay, checkOutDay));
     }
 }

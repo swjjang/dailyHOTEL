@@ -1,5 +1,6 @@
-package com.twoheart.dailyhotel.screen.gourmet.search;
+package com.twoheart.dailyhotel.screen.search.gourmet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -9,10 +10,13 @@ import android.os.Message;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
+import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,54 +28,42 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class GourmetSearchActivity extends PlaceSearchActivity
+public class GourmetSearchFragment extends PlaceSearchFragment
 {
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-
-    private GourmetSearchNetworkController mNetworkController;
     private SaleTime mSaleTime;
 
     private Handler mAnalyticsHandler;
-
-    public static Intent newInstance(Context context, SaleTime saleTime)
-    {
-        Intent intent = new Intent(context, GourmetSearchActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
-
-        return intent;
-    }
-
-    @Override
-    protected void initIntent(Intent intent)
-    {
-        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
-
-        mAnalyticsHandler = new AnalyticsHandler(this);
-    }
 
     @Override
     protected void initContents()
     {
         super.initContents();
 
-        mNetworkController = new GourmetSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mAnalyticsHandler = new AnalyticsHandler(this);
 
-        setDateText(mSaleTime);
+        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        {
+            SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
+
+            StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
+            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+            StayCurationManager.getInstance().setCheckOutSaleTime( //
+                checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+        }
+
+        setDateText(GourmetCurationManager.getInstance().getSaleTime());
     }
 
     @Override
-    protected void onResume()
+    public void onResume()
     {
         super.onResume();
 
-        if (mSaleTime == null)
-        {
-            finish();
-        }
+        setDateText(GourmetCurationManager.getInstance().getSaleTime());
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -79,7 +71,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         {
             case REQUEST_ACTIVITY_CALENDAR:
             {
-                if (resultCode == RESULT_OK && data != null)
+                if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
@@ -93,36 +85,62 @@ public class GourmetSearchActivity extends PlaceSearchActivity
     }
 
     @Override
+    protected PlaceSearchLayout getPlaceSearchLayout(Context context)
+    {
+        return new GourmetSearchLayout(context, mOnEventListener);
+    }
+
+    @Override
+    protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
+    {
+        return new GourmetSearchNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+    }
+
+    @Override
     protected String getRecentSearches()
     {
-        return DailyPreference.getInstance(this).getGourmetRecentSearches();
+        return DailyPreference.getInstance(mBaseActivity).getGourmetRecentSearches();
     }
 
     @Override
     protected void writeRecentSearches(String text)
     {
-        DailyPreference.getInstance(this).setGourmetRecentSearches(text);
+        DailyPreference.getInstance(mBaseActivity).setGourmetRecentSearches(text);
     }
 
     @Override
     protected PlaceSearchLayout getLayout()
     {
-        return new GourmetSearchLayout(this, mOnEventListener);
+        return new GourmetSearchLayout(mBaseActivity, mOnEventListener);
     }
 
     @Override
     protected void onSearch(Location location)
     {
-        Intent intent = GourmetSearchResultActivity.newInstance(GourmetSearchActivity.this, mSaleTime, location);
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, location);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
     @Override
-    protected void onStart()
+    public void startSearchResultActivity()
+    {
+        String text = mPlaceSearchLayout.getSearchKeyWord();
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            return;
+        }
+
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+    }
+
+    @Override
+    public void onStart()
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH);
+        AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH);
     }
 
     private void setDateText(SaleTime saleTime)
@@ -171,7 +189,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance(GourmetSearchActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
@@ -179,18 +197,18 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         public void onDeleteRecentSearches()
         {
             mDailyRecentSearches.clear();
-            DailyPreference.getInstance(GourmetSearchActivity.this).setGourmetRecentSearches("");
+            DailyPreference.getInstance(mBaseActivity).setGourmetRecentSearches("");
 
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
-            AnalyticsManager.getInstance(GourmetSearchActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                 , AnalyticsManager.Action.GOURMET_KEYWORD_HISTORY_DELETED, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
-            mNetworkController.requestAutoComplete(mSaleTime, keyword);
+            ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mSaleTime, keyword);
         }
 
         @Override
@@ -201,7 +219,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            Intent intent = GourmetSearchResultActivity.newInstance(GourmetSearchActivity.this, mSaleTime, text);
+            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -215,34 +233,40 @@ public class GourmetSearchActivity extends PlaceSearchActivity
 
             if (keyword.price < 0)
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(GourmetSearchActivity.this, mSaleTime, keyword, GourmetSearchResultActivity.SEARCHTYPE_RECENT);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, keyword, GourmetSearchResultActivity.SEARCHTYPE_RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(GourmetSearchActivity.this, mSaleTime, text, keyword, GourmetSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text, keyword, GourmetSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
 
         @Override
-        public void onShowCalendar(boolean isAnimation)
+        public void onCalendarClick(boolean isAnimation)
         {
             if (isAnimation == true)
             {
-                AnalyticsManager.getInstance(GourmetSearchActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 
-            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+            Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+        }
+
+        @Override
+        public void onSearchEnabled(boolean enabled)
+        {
+            mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 
         @Override
         public void finish()
         {
-            GourmetSearchActivity.this.finish();
+            mBaseActivity.finish();
 
-            AnalyticsManager.getInstance(GourmetSearchActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                 , AnalyticsManager.Action.GOURMET_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.KEYWORD_BACK_BUTTON_CLICKED, null);
         }
     };
@@ -276,43 +300,43 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-            GourmetSearchActivity.this.onErrorResponse(volleyError);
+            mBaseActivity.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
             unLockUI();
-            GourmetSearchActivity.this.onError(e);
+            mBaseActivity.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            GourmetSearchActivity.this.onErrorPopupMessage(msgCode, message);
+            mBaseActivity.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            GourmetSearchActivity.this.onErrorToastMessage(message);
+            mBaseActivity.onErrorToastMessage(message);
         }
     };
 
     private static class AnalyticsHandler extends Handler
     {
-        private final WeakReference<GourmetSearchActivity> mWeakReference;
+        private final WeakReference<GourmetSearchFragment> mWeakReference;
 
-        public AnalyticsHandler(GourmetSearchActivity activity)
+        public AnalyticsHandler(GourmetSearchFragment activity)
         {
             mWeakReference = new WeakReference<>(activity);
         }
 
-        private String getSearchDate(GourmetSearchActivity gourmetSearchActivity)
+        private String getSearchDate(GourmetSearchFragment gourmetSearchFragment)
         {
-            String saleDate = gourmetSearchActivity.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
+            String saleDate = gourmetSearchFragment.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
@@ -323,15 +347,15 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         @Override
         public void handleMessage(Message msg)
         {
-            GourmetSearchActivity gourmetSearchActivity = mWeakReference.get();
+            GourmetSearchFragment gourmetSearchFragment = mWeakReference.get();
 
-            if (gourmetSearchActivity == null)
+            if (gourmetSearchFragment == null)
             {
                 return;
             }
 
-            String label = String.format("%s-%s", msg.obj, getSearchDate(gourmetSearchActivity));
-            AnalyticsManager.getInstance(gourmetSearchActivity).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
+            String label = String.format("%s-%s", msg.obj, getSearchDate(gourmetSearchFragment));
+            AnalyticsManager.getInstance(gourmetSearchFragment.getContext()).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                 , AnalyticsManager.Action.GOURMET_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
         }
     }

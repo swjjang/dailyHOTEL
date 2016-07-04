@@ -51,7 +51,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     {
         super.onActivityCreated(savedInstanceState);
 
-
         mIsAttached = true;
 
         if (mOnPlaceListFragmentListener != null)

@@ -1,8 +1,9 @@
-package com.twoheart.dailyhotel.screen.gourmet.search;
+package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 import android.view.View;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -11,19 +12,19 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
-public class GourmetSearchResultLayout extends PlaceSearchResultLayout
+public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
-    private GourmetSearchResultListAdapter mListAdapter;
+    private StaySearchResultListAdapter mListAdapter;
 
     @Override
     protected PlaceListAdapter getListAdapter()
     {
-        mListAdapter = new GourmetSearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
+        mListAdapter = new StaySearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
 
         return mListAdapter;
     }
 
-    public GourmetSearchResultLayout(Context context, OnBaseEventListener listener)
+    public StaySearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -51,6 +52,12 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
         mListAdapter.clear();
         mListAdapter.addAll(placeViewItemList);
         mListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected int getEmptyIconResourceId()
+    {
+        return R.drawable.no_hotel_ic;
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()

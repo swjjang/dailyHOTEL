@@ -78,8 +78,11 @@ public class AppboyBroadcastReceiver extends BroadcastReceiver
                         try
                         {
                             stackBuilder.startActivities(extras);
-                        } catch (ActivityNotFoundException e)
+                        } catch (Exception e)
                         {
+                            Intent launcherIntent = new Intent(context, LauncherActivity.class);
+                            intent.setData(Uri.parse(deepLink));
+                            context.startActivity(launcherIntent);
                             ExLog.w(TAG + String.format("Could not find appropriate activity to open for deep link %s.", deepLink));
                         }
                     }

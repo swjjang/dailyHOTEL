@@ -438,7 +438,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Stay hotel1, Stay hotel2)
                     {
-                        return hotel1.averageDiscountPrice - hotel2.averageDiscountPrice;
+                        return hotel1.getDiscountPrice() - hotel2.getDiscountPrice();
                     }
                 };
 
@@ -453,7 +453,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Stay hotel1, Stay hotel2)
                     {
-                        return hotel2.averageDiscountPrice - hotel1.averageDiscountPrice;
+                        return hotel2.getDiscountPrice() - hotel1.getDiscountPrice();
                     }
                 };
 
@@ -532,63 +532,63 @@ public class HotelListFragment extends BaseFragment implements Constants
         return hotelListViewItemList;
     }
 
-//    public void curationList(ViewType viewType, HotelCurationOption curationOption)
-//    {
-//        mScrollListTop = true;
-//
-//        ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, curationOption);
-//        setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
-//    }
+    //    public void curationList(ViewType viewType, HotelCurationOption curationOption)
+    //    {
+    //        mScrollListTop = true;
+    //
+    //        ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, curationOption);
+    //        setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
+    //    }
 
-//    private ArrayList<PlaceViewItem> curationList(List<Stay> list, HotelCurationOption curationOption)
-//    {
-//        List<Stay> stayList = curationCategory(list, curationOption.getCategory());
-//
-//        stayList = curationFiltering(stayList, curationOption);
-//
-//        return curationSorting(stayList, curationOption);
-//    }
+    //    private ArrayList<PlaceViewItem> curationList(List<Stay> list, HotelCurationOption curationOption)
+    //    {
+    //        List<Stay> stayList = curationCategory(list, curationOption.getCategory());
+    //
+    //        stayList = curationFiltering(stayList, curationOption);
+    //
+    //        return curationSorting(stayList, curationOption);
+    //    }
 
-//    private List<Stay> curationCategory(List<Stay> list, Category category)
-//    {
-//        List<Stay> filteredCategoryList = new ArrayList<>(list.size());
-//
-//        if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
-//        {
-//            filteredCategoryList.addAll(list);
-//
-//            return filteredCategoryList;
-//        } else
-//        {
-//            for (Stay stay : list)
-//            {
-//                if (category.code.equalsIgnoreCase(stay.categoryCode) == true)
-//                {
-//                    filteredCategoryList.add(stay);
-//                }
-//            }
-//        }
-//
-//        return filteredCategoryList;
-//    }
+    //    private List<Stay> curationCategory(List<Stay> list, Category category)
+    //    {
+    //        List<Stay> filteredCategoryList = new ArrayList<>(list.size());
+    //
+    //        if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
+    //        {
+    //            filteredCategoryList.addAll(list);
+    //
+    //            return filteredCategoryList;
+    //        } else
+    //        {
+    //            for (Stay stay : list)
+    //            {
+    //                if (category.code.equalsIgnoreCase(stay.categoryCode) == true)
+    //                {
+    //                    filteredCategoryList.add(stay);
+    //                }
+    //            }
+    //        }
+    //
+    //        return filteredCategoryList;
+    //    }
 
-//    private List<Stay> curationFiltering(List<Stay> list, HotelCurationOption curationOption)
-//    {
-//        int size = list.size();
-//        Stay stay;
-//
-//        for (int i = size - 1; i >= 0; i--)
-//        {
-//            stay = list.get(i);
-//
-//            if (stay.isFiltered(curationOption) == false)
-//            {
-//                list.remove(i);
-//            }
-//        }
-//
-//        return list;
-//    }
+    //    private List<Stay> curationFiltering(List<Stay> list, HotelCurationOption curationOption)
+    //    {
+    //        int size = list.size();
+    //        Stay stay;
+    //
+    //        for (int i = size - 1; i >= 0; i--)
+    //        {
+    //            stay = list.get(i);
+    //
+    //            if (stay.isFiltered(curationOption) == false)
+    //            {
+    //                list.remove(i);
+    //            }
+    //        }
+    //
+    //        return list;
+    //    }
 
     private void setHotelListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
     {
@@ -785,7 +785,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                         ArrayList<Stay> stayList = makeHotelList(hotelJSONArray, imageUrl, nights);
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-//                        setFilterInformation(stayList, hotelCurationOption);
+                        //                        setFilterInformation(stayList, hotelCurationOption);
 
                         // 기본적으로 보관한다.
                         mStayList.addAll(stayList);
