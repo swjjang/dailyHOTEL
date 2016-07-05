@@ -153,7 +153,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public void clearList()
     {
-        if (mPlaceListAdapter == null)
+        if (mPlaceListAdapter != null)
         {
             mPlaceListAdapter.clear();
         }
