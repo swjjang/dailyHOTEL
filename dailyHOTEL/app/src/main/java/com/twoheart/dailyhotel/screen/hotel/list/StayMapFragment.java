@@ -14,6 +14,6 @@ public class StayMapFragment extends PlaceListMapFragment
     @Override
     protected PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context)
     {
-        return new HotelMapViewPagerAdapter(context);
+        return new StayMapViewPagerAdapter(context);
     }
 }

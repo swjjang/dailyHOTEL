@@ -280,6 +280,16 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     }
 
+    public int getPlaceViewItemListSize()
+    {
+        if (mPlaceViewItemList == null)
+        {
+            return 0;
+        }
+
+        return mPlaceViewItemList.size();
+    }
+
     public void setPlaceViewItemList(List<PlaceViewItem> arrayList, boolean isChangedRegion)
     {
         mPlaceViewItemList = arrayList;

@@ -79,10 +79,17 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
-        ArrayList<PlaceViewItem> list = new ArrayList<>(mStayListLayout.getList());
-        if (list == null || list.size() == 0)
+        if (ViewType.LIST == mViewType)
         {
-            refreshList(isShowProgress, 1);
+            ArrayList<PlaceViewItem> list = new ArrayList<>(mStayListLayout.getList());
+            if (list == null || list.size() == 0)
+            {
+                refreshList(isShowProgress, 1);
+            }
+
+        } else if (ViewType.MAP == mViewType)
+        {
+            refreshList(isShowProgress, 0);
         }
     }
 
@@ -167,10 +174,20 @@ public class StayListFragment extends PlaceListFragment
 
             mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
 
-            List<PlaceViewItem> allList = mStayListLayout.getList();
-            if (allList == null || allList.size() == 0)
+            if (ViewType.MAP == mViewType)
             {
-                setVisibility(ViewType.GONE, true);
+                int mapSize = mStayListLayout.getMapItemSize();
+                if (mapSize == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+            } else
+            {
+                List<PlaceViewItem> allList = mStayListLayout.getList();
+                if (allList == null || allList.size() == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
             }
 
             unLockUI();

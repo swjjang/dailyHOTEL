@@ -13,8 +13,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
-
 public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 {
     public GourmetMapViewPagerAdapter(Context context)
@@ -56,8 +54,6 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         View closeView = view.findViewById(R.id.closeImageVIew);
         TextView persions = (TextView) view.findViewById(R.id.personsTextView);
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-
         String address = gourmet.addressSummary;
 
         if (address.indexOf('|') >= 0)
@@ -94,7 +90,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(comma.format(price) + currency);
+            priceTextView.setText(Util.getPriceFormat(mContext, price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -108,7 +104,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(comma.format(gourmet.getDiscountPrice()) + currency);
+        discountTextView.setText(Util.getPriceFormat(mContext, gourmet.getDiscountPrice(), false));
 
         name.setSelected(true); // Android TextView marquee bug
 
