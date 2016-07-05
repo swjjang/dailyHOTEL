@@ -63,6 +63,8 @@ public class ZoomMapActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_zoom_map);
@@ -126,6 +128,14 @@ public class ZoomMapActivity extends BaseActivity
         }
 
         super.onStart();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     private void initToolbar(String title)

@@ -427,7 +427,7 @@ public class GourmetDetailLayout
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-            int height = mTicketTypeRecyclerView.getHeight() + Util.dpToPx(mActivity, 34);
+            int height = mTicketTypeRecyclerView.getHeight() + Util.dpToPx(mActivity, 52);
 
             mTicketTypeLayout.setTranslationY(Util.dpToPx(mActivity, height));
 
