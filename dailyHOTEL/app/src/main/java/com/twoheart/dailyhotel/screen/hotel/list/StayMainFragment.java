@@ -687,6 +687,7 @@ public class StayMainFragment extends PlaceMainFragment
                 , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category.name, null);
 
             mPlaceMainLayout.setSelectCategoryTab(tab);
+            mPlaceMainLayout.showBottomLayout(false);
 
             refreshCurrentFragment();
         }
@@ -706,9 +707,6 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onSearchClick()
         {
-            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-            int night = StayCurationManager.getInstance().getNight();
-
             Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
@@ -812,6 +810,8 @@ public class StayMainFragment extends PlaceMainFragment
                     break;
                 }
             }
+
+            mPlaceMainLayout.setOptionViewTypeView(mViewType);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
