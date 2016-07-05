@@ -82,7 +82,10 @@ public class GourmetListFragment extends PlaceListFragment
     {
         lockUI(isShowProgress);
 
-        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, GourmetCurationManager.getInstance().getProvince(), GourmetCurationManager.getInstance().getSaleTime(), mGourmetListJsonResponseListener, mBaseActivity);
+        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, //
+            GourmetCurationManager.getInstance().getProvince(), //
+            GourmetCurationManager.getInstance().getSaleTime(), //
+            mGourmetListJsonResponseListener, mBaseActivity);
     }
 
     public boolean hasSalesPlace()

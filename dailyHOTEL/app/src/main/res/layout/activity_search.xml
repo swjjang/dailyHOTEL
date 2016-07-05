@@ -27,6 +27,7 @@
                 android:id="@+id/placeSwitch"
                 android:layout_width="130dp"
                 android:layout_height="32dp"
+                android:background="@null"
                 android:thumb="@drawable/toggle_btn_ic_02_knob"
                 app:track="@drawable/toggle_btn_ic_01_template"
                 app:showText="false"

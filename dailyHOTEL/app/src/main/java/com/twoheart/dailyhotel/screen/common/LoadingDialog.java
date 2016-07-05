@@ -13,38 +13,27 @@
  */
 package com.twoheart.dailyhotel.screen.common;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
-import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 public class LoadingDialog
 {
-    private FrameLayout mProgressBarLayout;
-    private ImageView mProgressBarImageView;
+    private ProgressBar mProgressBar;
     private BaseActivity mActivity;
     private Dialog mDialog;
-    private AnimatorSet mAnimatorSet;
-    private int mRepeatCount;
-    private Drawable[] mDrawables;
-
-
     private Handler mHandler = new Handler()
     {
         @Override
@@ -58,7 +47,6 @@ public class LoadingDialog
             if (mDialog != null && mDialog.isShowing())
             {
                 mDialog.dismiss();
-                stopAnimation();
             }
         }
     };
@@ -66,69 +54,14 @@ public class LoadingDialog
     public LoadingDialog(BaseActivity activity)
     {
         mActivity = activity;
+
         mDialog = new Dialog(activity, R.style.TransDialog);
-        //        mDialog = new Dialog(activity);
-
-        mProgressBarImageView = new ImageView(activity);
-
-        mDrawables = new Drawable[6];
-        mDrawables[0] = activity.getResources().getDrawable(R.drawable.loading_01);
-        mDrawables[1] = activity.getResources().getDrawable(R.drawable.loading_02);
-        mDrawables[2] = activity.getResources().getDrawable(R.drawable.loading_03);
-        mDrawables[3] = activity.getResources().getDrawable(R.drawable.loading_04);
-        mDrawables[4] = activity.getResources().getDrawable(R.drawable.loading_05);
-        mDrawables[5] = activity.getResources().getDrawable(R.drawable.loading_06);
-
-        mAnimatorSet = new AnimatorSet();
-
-        ObjectAnimator objectAnimator01 = ObjectAnimator.ofFloat(mProgressBarImageView, "alpha", 0.0f, 1.0f);
-        objectAnimator01.setDuration(100);
-
-        ObjectAnimator objectAnimator02 = ObjectAnimator.ofFloat(mProgressBarImageView, "alpha", 1.0f, 1.0f);
-        objectAnimator01.setDuration(400);
-
-        ObjectAnimator objectAnimator03 = ObjectAnimator.ofFloat(mProgressBarImageView, "alpha", 1.0f, 0.0f);
-        objectAnimator02.setDuration(100);
-
-        mAnimatorSet.playSequentially(objectAnimator01, objectAnimator02, objectAnimator03);
-        mAnimatorSet.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                mProgressBarImageView.setImageDrawable(mDrawables[mRepeatCount++]);
-
-                if (mRepeatCount > 5)
-                {
-                    mRepeatCount = 0;
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                startAnimation();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mProgressBarLayout = new FrameLayout(activity);
-        mProgressBarLayout.setBackgroundResource(R.drawable.shape_fillrect_bbf000000);
-        mProgressBarLayout.addView(mProgressBarImageView);
-
-        LayoutParams params = new LayoutParams(Util.dpToPx(activity, 90), Util.dpToPx(activity, 90));
-        mDialog.addContentView(mProgressBarLayout, params);
+        mProgressBar = new ProgressBar(activity);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
+        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mDialog.addContentView(mProgressBar, params);
         mDialog.setCancelable(false);
+        mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
@@ -178,24 +111,11 @@ public class LoadingDialog
 
         if (mDialog != null && mDialog.isShowing() == false)
         {
-            mProgressBarLayout.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
+            mProgressBar.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
 
             try
             {
-                if (isShowProgress == false)
-                {
-                    mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                } else
-                {
-                    mDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                }
-
                 mDialog.show();
-
-                if (isShowProgress == true)
-                {
-                    startAnimation();
-                }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -203,9 +123,6 @@ public class LoadingDialog
         }
     }
 
-    /**
-     * 이미 팝업은 뛰어져있으나 프로그래스바가 보이지 않을때..
-     */
     public void showProgress()
     {
         if (mActivity == null || mActivity.isFinishing() == true)
@@ -215,45 +132,24 @@ public class LoadingDialog
 
         if (mDialog != null && mDialog.isShowing() == true)
         {
-            if (mProgressBarLayout.getVisibility() != View.VISIBLE)
-            {
-                mProgressBarLayout.setVisibility(View.VISIBLE);
-
-                startAnimation();
-            }
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
+
 
     public void hide()
     {
         mHandler.removeMessages(0);
-        mHandler.sendEmptyMessage(0);
+        mHandler.sendEmptyMessageDelayed(0, 500);
     }
 
     public void close()
     {
         if (mDialog != null && mDialog.isShowing() == true)
         {
-            stopAnimation();
-
             mDialog.dismiss();
         }
 
-        mAnimatorSet = null;
         mDialog = null;
-    }
-
-    private void stopAnimation()
-    {
-        mRepeatCount = 0;
-        mAnimatorSet.cancel();
-    }
-
-    private void startAnimation()
-    {
-        if (mAnimatorSet != null)
-        {
-            mAnimatorSet.start();
-        }
     }
 }
