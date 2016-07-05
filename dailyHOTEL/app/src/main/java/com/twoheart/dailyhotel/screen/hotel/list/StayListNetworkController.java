@@ -19,28 +19,24 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StayListNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<PlaceViewItem> list, int page);
+        void onStayList(ArrayList<Stay> list, int page);
     }
 
     public StayListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -104,9 +100,7 @@ public class StayListNetworkController extends BaseNetworkController
                         page = 0;
                     }
 
-                    ArrayList<PlaceViewItem> viewItemList = makeSectionStayList(stayList);
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(viewItemList, page);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page);
 
                 } else
                 {
@@ -144,53 +138,6 @@ public class StayListNetworkController extends BaseNetworkController
             }
 
             return stayList;
-        }
-
-        private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)
-        {
-            ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
-
-            if (stayList == null || stayList.size() == 0)
-            {
-                return stayViewItemList;
-            }
-
-            String previousRegion = null;
-            boolean hasDailyChoice = false;
-
-            for (Stay stay : stayList)
-            {
-                String region = stay.districtName;
-
-                if (Util.isTextEmpty(region) == true)
-                {
-                    continue;
-                }
-
-                if (stay.isDailyChoice == true)
-                {
-                    if (hasDailyChoice == false)
-                    {
-                        hasDailyChoice = true;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mContext.getResources().getString(R.string.label_dailychoice));
-                        stayViewItemList.add(section);
-                    }
-                } else
-                {
-                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                    {
-                        previousRegion = region;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                        stayViewItemList.add(section);
-                    }
-                }
-
-                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-            }
-
-            return stayViewItemList;
         }
     };
 }

@@ -92,6 +92,13 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
 
                 return new EventBannerViewHolder(view);
             }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+
+                return new FooterViewHolder(view);
+            }
         }
 
         return null;
@@ -183,10 +190,8 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
     {
         final Stay stay = placeViewItem.getItem();
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-
-        String strPrice = comma.format(stay.price);
-        String strDiscount = comma.format(stay.getDiscountPrice());
+        String strPrice = Util.getPriceFormat(mContext, stay.price, false);
+        String strDiscount = Util.getPriceFormat(mContext, stay.getDiscountPrice(), false);
 
         String address = stay.addressSummary;
 
@@ -202,8 +207,6 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         holder.hotelAddressView.setText(address);
         holder.hotelNameView.setText(stay.name);
 
-        String currency = mContext.getResources().getString(R.string.currency);
-
         if (stay.price <= 0 || stay.price <= stay.getDiscountPrice())
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
@@ -211,7 +214,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         } else
         {
             holder.hotelPriceView.setVisibility(View.VISIBLE);
-            holder.hotelPriceView.setText(strPrice + currency);
+            holder.hotelPriceView.setText(strPrice);
             holder.hotelPriceView.setPaintFlags(holder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -233,7 +236,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
             holder.averageView.setVisibility(View.GONE);
         }
 
-        holder.hotelDiscountView.setText(strDiscount + currency);
+        holder.hotelDiscountView.setText(strDiscount);
         holder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
         if (Util.isOverAPI16() == true)
@@ -341,6 +344,14 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
             viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
 
             dailyLoopViewPager.setSlideTime(4);
+        }
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
         }
     }
 

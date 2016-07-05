@@ -13,11 +13,12 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -25,8 +26,6 @@ import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
-    private static final int PAGE_SIZE = 20;
-
     private int mPageIndex;
 
     protected SaleTime mCheckInSaleTime;
@@ -84,10 +83,6 @@ public class StayListFragment extends PlaceListFragment
         if (list == null || list.size() == 0)
         {
             refreshList(isShowProgress, 1);
-            ExLog.d("request");
-        } else
-        {
-            ExLog.d("refresh");
         }
     }
 
@@ -120,7 +115,7 @@ public class StayListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(page, PAGE_SIZE, true));
+        mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true));
     }
 
     public boolean hasSalesPlace()
@@ -151,7 +146,7 @@ public class StayListFragment extends PlaceListFragment
     private StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<PlaceViewItem> list, int page)
+        public void onStayList(ArrayList<Stay> list, int page)
         {
             if (isFinishing() == true)
             {
@@ -168,7 +163,9 @@ public class StayListFragment extends PlaceListFragment
 
             StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
 
-            mStayListLayout.addResultList(getChildFragmentManager(), mViewType, list, stayCurationOption.getSortType());
+            ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list);
+
+            mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
 
             List<PlaceViewItem> allList = mStayListLayout.getList();
             if (allList == null || allList.size() == 0)
@@ -202,6 +199,57 @@ public class StayListFragment extends PlaceListFragment
         public void onErrorToastMessage(String message)
         {
 
+        }
+
+        private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)
+        {
+            ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
+
+            if (stayList == null || stayList.size() == 0)
+            {
+                return stayViewItemList;
+            }
+
+            String previousRegion = null;
+            boolean hasDailyChoice = false;
+
+            for (Stay stay : stayList)
+            {
+                String region = stay.districtName;
+
+                if (Util.isTextEmpty(region) == true)
+                {
+                    continue;
+                }
+
+                if (stay.isDailyChoice == true)
+                {
+                    if (hasDailyChoice == false)
+                    {
+                        hasDailyChoice = true;
+
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+                        stayViewItemList.add(section);
+                    }
+                } else
+                {
+                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+                    {
+                        previousRegion = region;
+
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
+                        stayViewItemList.add(section);
+                    }
+                }
+
+                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            }
+
+            if (Constants.PAGENATION_LIST_SIZE > stayList.size()) {
+                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+            }
+
+            return stayViewItemList;
         }
     };
 
