@@ -161,6 +161,16 @@ public abstract class PlaceListLayout extends BaseLayout
         setScrollListTop();
     }
 
+    public int getItemCount()
+    {
+        if (mPlaceListAdapter == null)
+        {
+            return 0;
+        }
+
+        return mPlaceListAdapter.getItemCount();
+    }
+
     public boolean canScrollUp()
     {
         if (mSwipeRefreshLayout != null)

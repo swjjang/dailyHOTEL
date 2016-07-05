@@ -140,8 +140,8 @@ public class StayListLayout extends PlaceListLayout
                 mPlaceListAdapter.addAll(list);
             }
 
-            List<PlaceViewItem> allList = getList();
-            if (allList == null || allList.size() == 0)
+            int size = getItemCount();
+            if (size == 0)
             {
                 mPlaceListAdapter.notifyDataSetChanged();
                 setVisibility(fragmentManager, Constants.ViewType.GONE, true);

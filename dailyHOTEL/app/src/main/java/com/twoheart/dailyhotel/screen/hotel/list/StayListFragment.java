@@ -88,9 +88,8 @@ public class StayListFragment extends PlaceListFragment
         switch (mViewType)
         {
             case LIST:
-                ArrayList<PlaceViewItem> list = new ArrayList<>(mStayListLayout.getList());
-
-                if (list == null || list.size() == 0)
+                int size = mStayListLayout.getItemCount();
+                if (size == 0)
                 {
                     refreshList(isShowProgress, 1);
                 }
@@ -195,8 +194,8 @@ public class StayListFragment extends PlaceListFragment
             {
                 mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
 
-                List<PlaceViewItem> allList = mStayListLayout.getList();
-                if (allList == null || allList.size() == 0)
+                int size = mStayListLayout.getItemCount();
+                if (size == 0)
                 {
                     setVisibility(ViewType.GONE, true);
                 }
