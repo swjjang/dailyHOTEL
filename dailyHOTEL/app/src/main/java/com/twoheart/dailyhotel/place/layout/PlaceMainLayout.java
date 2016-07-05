@@ -189,12 +189,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    public void setSelectCategoryTab(TabLayout.Tab tab)
+    public void setCurrentItem(int item)
     {
         if (mViewPager != null)
         {
-            mViewPager.setCurrentItem(tab.getPosition());
-            tab.select();
+            mViewPager.setCurrentItem(item);
         }
     }
 

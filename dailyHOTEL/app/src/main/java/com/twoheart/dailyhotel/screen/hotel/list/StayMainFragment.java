@@ -690,7 +690,7 @@ public class StayMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category.name, null);
 
-            mPlaceMainLayout.setSelectCategoryTab(tab);
+            mPlaceMainLayout.setCurrentItem(tab.getPosition());
             mPlaceMainLayout.showBottomLayout(false);
 
             refreshCurrentFragment();
