@@ -164,6 +164,16 @@ public class StayListLayout extends PlaceListLayout
             // 리스트의 경우 Pagenation 상황 고려
             ArrayList<PlaceViewItem> oldList = new ArrayList<>(getList());
 
+            if (oldList != null && oldList.size() > 0)
+            {
+                PlaceViewItem placeViewItem = oldList.get(oldList.size() - 1);
+
+                if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                {
+                    getList().remove(placeViewItem);
+                }
+            }
+
             if (list != null && list.size() > 0)
             {
                 mPlaceListAdapter.addAll(list);
@@ -228,81 +238,6 @@ public class StayListLayout extends PlaceListLayout
                         ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
         ExLog.d("call method");
-
-//        if (mPlaceListAdapter == null)
-//        {
-//            Util.restartApp(mContext);
-//            return;
-//        }
-//
-//        mPlaceListAdapter.clear();
-//
-//        if (list == null || list.size() == 0)
-//        {
-//            mPlaceListAdapter.notifyDataSetChanged();
-//
-//            setVisibility(fragmentManager, Constants.ViewType.GONE, true);
-//
-//        } else
-//        {
-//            setVisibility(fragmentManager, viewType, true);
-//
-//            if (viewType == Constants.ViewType.MAP)
-//            {
-//                mStayMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
-//                {
-//                    @Override
-//                    public void onInformationClick(PlaceViewItem placeViewItem)
-//                    {
-//                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
-//                    }
-//                });
-//
-//                mStayMapFragment.setPlaceViewItemList(list, mScrollListTop);
-//
-//                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
-//            } else
-//            {
-//                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
-//
-//                Map<String, String> params = new HashMap<>();
-//                Province province = StayCurationManager.getInstance().getProvince();
-//
-//                if (province instanceof Area)
-//                {
-//                    Area area = (Area) province;
-//                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//
-//                } else
-//                {
-//                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-//                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//                }
-//
-//                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
-//            }
-//
-//            if (sortType == Constants.SortType.DEFAULT)
-//            {
-//                if (StayEventBannerManager.getInstance().getCount() > 0)
-//                {
-//                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
-//                        StayEventBannerManager.getInstance().getList());
-//                    list.add(0, placeViewItem);
-//                }
-//            }
-//
-//            mPlaceListAdapter.setAll(list);
-//            mPlaceListAdapter.setSortType(sortType);
-//            mPlaceListAdapter.notifyDataSetChanged();
-//
-//            if (mScrollListTop == true)
-//            {
-//                mScrollListTop = false;
-//                mPlaceRecyclerView.scrollToPosition(0);
-//            }
-//        }
     }
 
     public boolean hasSalesPlace()
