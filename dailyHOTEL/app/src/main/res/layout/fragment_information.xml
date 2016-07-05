@@ -468,7 +468,7 @@
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/pushTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="23dp"
                     android:layout_alignBottom="@id/pushTitleTextView"
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@id/pushTitleTextView"

@@ -43,6 +43,6 @@
             android:layout_above="@id/textLayout"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:src="@drawable/no_event_ic"/>
+            android:src="@drawable/no_gourmet_ic"/>
     </RelativeLayout>
 </merge>
