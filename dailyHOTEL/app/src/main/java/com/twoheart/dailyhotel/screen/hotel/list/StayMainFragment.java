@@ -173,6 +173,8 @@ public class StayMainFragment extends PlaceMainFragment
             StayCurationManager.getInstance().setCategory(category);
             StayCurationManager.getInstance().setProvince(province);
 
+            mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+
             setScrollListTop(true);
 
             if (changeCurationOption.getSortType() == SortType.DISTANCE)
@@ -779,13 +781,11 @@ public class StayMainFragment extends PlaceMainFragment
                     }
 
                     mViewType = ViewType.MAP;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
                     break;
 
                 case MAP:
                 {
                     mViewType = ViewType.LIST;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
 
                     Map<String, String> params = new HashMap<>();
                     Province province = StayCurationManager.getInstance().getProvince();

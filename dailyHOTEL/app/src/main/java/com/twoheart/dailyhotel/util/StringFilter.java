@@ -22,6 +22,7 @@ public class StringFilter
     private static final int ALLOW_ALPHANUMERIC_HANGUL = 1;
     private static final int ALLOW_ALPHANUMERIC_NAME = 2;
     private static final int ALLOW_NUMERIC = 3;
+    private static final int ALLOW_SEARCH_FILTER = 4;
 
     private Context mContext;
     // Allows only alphanumeric characters. Filters special and hangul
@@ -57,6 +58,14 @@ public class StringFilter
         }
     };
 
+    public InputFilter allowSearchFilter = new InputFilter()
+    {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
+        {
+            return filteredString(source, start, end, ALLOW_SEARCH_FILTER);
+        }
+    };
+
     public StringFilter(Context context)
     {
         mContext = context;
@@ -78,6 +87,10 @@ public class StringFilter
 
             case ALLOW_NUMERIC:
                 pattern = Pattern.compile("^[0-9]+$");
+                break;
+
+            case ALLOW_SEARCH_FILTER:
+                pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55\u002b\u002c\u002d\u002e\u002f\u0040\u0026]+$");
                 break;
 
             case ALLOW_ALPHANUMERIC:

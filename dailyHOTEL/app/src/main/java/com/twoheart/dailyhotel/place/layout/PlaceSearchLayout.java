@@ -105,11 +105,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mSearchEditText.setHint(getSearchHintText());
 
         StringFilter stringFilter = new StringFilter(mContext);
-        InputFilter[] allowAlphanumericHangul = new InputFilter[2];
-        allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-        allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
+        InputFilter[] allowSearchFilter = new InputFilter[2];
+        allowSearchFilter[0] = stringFilter.allowSearchFilter;
+        allowSearchFilter[1] = new InputFilter.LengthFilter(20);
 
-        mSearchEditText.setFilters(allowAlphanumericHangul);
+        mSearchEditText.setFilters(allowSearchFilter);
         mSearchEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
         final View deleteView = view.findViewById(R.id.deleteView);

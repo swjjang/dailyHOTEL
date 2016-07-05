@@ -287,14 +287,12 @@ public class GourmetMainFragment extends PlaceMainFragment
                     }
 
                     mViewType = ViewType.MAP;
-                    AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
                     break;
                 }
 
                 case MAP:
                 {
                     mViewType = ViewType.LIST;
-                    AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST);
 
                     Map<String, String> parmas = new HashMap<>();
                     Province province = GourmetCurationManager.getInstance().getProvince();

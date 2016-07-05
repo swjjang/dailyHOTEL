@@ -121,7 +121,8 @@ public class StayCurationOption extends PlaceCurationOption
         flagAmenitiesFilters = HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
-    public void setCurationOption(StayCurationOption option) {
+    public void setCurationOption(StayCurationOption option)
+    {
         setSortType(option.getSortType());
         setFiltersList(option.getFiltersList());
 

@@ -384,28 +384,44 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 int msgCode = response.getInt("msg_code");
 
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
+                if (msgCode == 0)
                 {
-                    updateLayout(true, null);
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    int length = jsonArray.length();
 
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
+                    if (length == 0)
+                    {
+                        updateLayout(true, null);
+
+                        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
+                    } else
+                    {
+                        ArrayList<Booking> bookingArrayList = makeBookingList(jsonArray);
+
+                        updateLayout(true, bookingArrayList);
+
+                        Map<String, String> params = new HashMap<>();
+                        params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
+
+                        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, params);
+                    }
+
+                    // 사용자 정보 요청.
+                    DailyNetworkAPI.getInstance(baseActivity).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
                 } else
                 {
-                    ArrayList<Booking> bookingArrayList = makeBookingList(jsonArray);
+                    String msg = response.getString("msg");
 
-                    updateLayout(true, bookingArrayList);
+                    if (Util.isTextEmpty(msg) == false)
+                    {
+                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+                    } else
+                    {
+                        DailyToast.showToast(baseActivity, R.string.act_base_network_connect, Toast.LENGTH_SHORT);
+                    }
 
-                    Map<String, String> params = new HashMap<>();
-                    params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
-
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, params);
+                    updateLayout(true, null);
                 }
-
-                // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance(baseActivity).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
             } catch (Exception e)
             {
                 updateLayout(true, null);

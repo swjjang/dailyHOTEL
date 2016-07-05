@@ -245,7 +245,8 @@ public class StayListFragment extends PlaceListFragment
                 stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
             }
 
-            if (Constants.PAGENATION_LIST_SIZE > stayList.size()) {
+            if (Constants.PAGENATION_LIST_SIZE > stayList.size())
+            {
                 stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
             }
 

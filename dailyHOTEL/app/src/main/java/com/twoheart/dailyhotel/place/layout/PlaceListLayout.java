@@ -117,7 +117,8 @@ public abstract class PlaceListLayout extends BaseLayout
                     }
                 } else
                 {
-                    if (mIsLoading == false) {
+                    if (mIsLoading == false)
+                    {
 
                         int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
                         int itemCount = mLayoutManager.getItemCount();
