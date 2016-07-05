@@ -127,6 +127,9 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
             case PlaceViewItem.TYPE_EVENT_BANNER:
                 onBindViewHolder((EventBannerViewHolder) holder, item);
                 break;
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+                onBindViewHolder((FooterViewHolder) holder, item);
+                break;
         }
     }
 
@@ -281,6 +284,21 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         }
     }
 
+    private void onBindViewHolder(FooterViewHolder holder, PlaceViewItem placeViewItem)
+    {
+        if (placeViewItem == null)
+        {
+            holder.loadingView.setVisibility(View.GONE);
+            holder.textView.setVisibility(View.VISIBLE);
+
+            return;
+        }
+
+        boolean isLast = placeViewItem.getItem();
+        holder.loadingView.setVisibility(isLast == false ? View.VISIBLE : View.GONE);
+        holder.textView.setVisibility(isLast == true ? View.VISIBLE : View.GONE);
+    }
+
     private class HoltelViewHolder extends RecyclerView.ViewHolder
     {
         View gradientView;
@@ -349,9 +367,15 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
 
     private class FooterViewHolder extends RecyclerView.ViewHolder
     {
+        View loadingView;
+        View textView;
+
         public FooterViewHolder(View itemView)
         {
             super(itemView);
+
+            loadingView = itemView.findViewById(R.id.footer_progress);
+            textView = itemView.findViewById(R.id.footer_textView);
         }
     }
 
