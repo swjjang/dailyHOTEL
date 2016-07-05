@@ -205,6 +205,11 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected void refreshCurrentFragment()
     {
+        refreshCurrentFragment(false);
+    }
+
+    protected void refreshCurrentFragment(boolean isClearList)
+    {
         if (isFinishing() == true)
         {
             return;
@@ -214,6 +219,11 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         if (placeListFragment != null)
         {
+            if (isClearList == true)
+            {
+                placeListFragment.clearList();
+            }
+
             placeListFragment.refreshList(true);
         }
     }
@@ -340,4 +350,19 @@ public abstract class PlaceMainFragment extends BaseFragment
             }
         });
     }
+
+    protected void setScrollListTop()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+        if (placeListFragment != null)
+        {
+            placeListFragment.setScrollListTop();
+        }
+    }
+
 }

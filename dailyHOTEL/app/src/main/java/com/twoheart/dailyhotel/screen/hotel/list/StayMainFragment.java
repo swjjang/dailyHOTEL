@@ -150,8 +150,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(checkInSaleTime, checkOutSaleTime);
 
-            setScrollListTop(true);
-            refreshCurrentFragment();
+            refreshCurrentFragment(true);
         }
     }
 
@@ -179,14 +178,12 @@ public class StayMainFragment extends PlaceMainFragment
 
             mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
-            setScrollListTop(true);
-
             if (changeCurationOption.getSortType() == SortType.DISTANCE)
             {
                 searchMyLocation();
             } else
             {
-                refreshCurrentFragment();
+                refreshCurrentFragment(true);
             }
         }
     }
@@ -197,7 +194,7 @@ public class StayMainFragment extends PlaceMainFragment
         StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
         mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
-        refreshCurrentFragment();
+        refreshCurrentFragment(true);
     }
 
     @Override
@@ -206,7 +203,7 @@ public class StayMainFragment extends PlaceMainFragment
         StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
         mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
-        refreshCurrentFragment();
+        refreshCurrentFragment(true);
     }
 
     @Override
@@ -215,7 +212,7 @@ public class StayMainFragment extends PlaceMainFragment
         if (location == null)
         {
             StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragment();
+            refreshCurrentFragment(true);
         } else
         {
             StayCurationManager.getInstance().setLocation(location);
@@ -223,23 +220,8 @@ public class StayMainFragment extends PlaceMainFragment
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
             if (StayCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
             {
-                refreshCurrentFragment();
+                refreshCurrentFragment(true);
             }
-        }
-    }
-
-    private void setScrollListTop(boolean scrollListTop)
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (placeListFragment != null && placeListFragment instanceof StayListFragment)
-        {
-            ((StayListFragment) placeListFragment).setScrollListTop(scrollListTop);
         }
     }
 
@@ -705,7 +687,7 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onCategoryTabReselected(TabLayout.Tab tab)
         {
-            // do nothing!
+            setScrollListTop();
         }
 
         @Override

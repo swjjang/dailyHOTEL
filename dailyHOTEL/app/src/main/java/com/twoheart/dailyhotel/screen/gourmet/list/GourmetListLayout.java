@@ -128,7 +128,7 @@ public class GourmetListLayout extends PlaceListLayout
                     }
                 });
 
-                mGourmetListMapFragment.setPlaceViewItemList(list, mScrollListTop);
+                mGourmetListMapFragment.setPlaceViewItemList(list, true);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
             } else
@@ -166,12 +166,6 @@ public class GourmetListLayout extends PlaceListLayout
 
             ((GourmetListAdapter) mPlaceListAdapter).addAll(list, sortType);
             mPlaceListAdapter.notifyDataSetChanged();
-
-            if (mScrollListTop == true)
-            {
-                mScrollListTop = false;
-                mPlaceRecyclerView.scrollToPosition(0);
-            }
         }
     }
 

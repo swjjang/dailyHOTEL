@@ -41,9 +41,13 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onScrollStateChanged(RecyclerView recyclerView, int newState);
     }
 
+    public abstract void clearList();
+
     public abstract void refreshList(boolean isShowProgress);
 
     public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
+
+    public abstract void setScrollListTop();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)

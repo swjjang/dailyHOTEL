@@ -78,6 +78,12 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
+    public void clearList()
+    {
+        mGourmetListLayout.clearList();
+    }
+
+    @Override
     public void refreshList(boolean isShowProgress)
     {
         lockUI(isShowProgress);
@@ -97,6 +103,12 @@ public class GourmetListFragment extends PlaceListFragment
     {
         mViewType = viewType;
         mGourmetListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
+    }
+
+    @Override
+    public void setScrollListTop()
+    {
+        mGourmetListLayout.setScrollListTop();
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)

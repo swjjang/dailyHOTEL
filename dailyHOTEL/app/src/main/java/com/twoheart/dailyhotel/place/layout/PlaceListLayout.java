@@ -151,6 +151,16 @@ public abstract class PlaceListLayout extends BaseLayout
         mPlaceRecyclerView.setShadowVisible(false);
     }
 
+    public void clearList()
+    {
+        if (mPlaceListAdapter == null)
+        {
+            mPlaceListAdapter.clear();
+        }
+
+        setScrollListTop();
+    }
+
     public boolean canScrollUp()
     {
         if (mSwipeRefreshLayout != null)
@@ -166,9 +176,12 @@ public abstract class PlaceListLayout extends BaseLayout
         mBottomOptionLayout = view;
     }
 
-    public void setScrollListTop(boolean scrollListTop)
+    public void setScrollListTop()
     {
-        mScrollListTop = scrollListTop;
+        if (mPlaceRecyclerView != null)
+        {
+            mPlaceRecyclerView.scrollToPosition(0);
+        }
     }
 
     public void setSwipeRefreshing(boolean refreshing)

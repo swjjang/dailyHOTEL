@@ -97,17 +97,6 @@ public class StayListLayout extends PlaceListLayout
         return mStayMapFragment;
     }
 
-    public void clearList()
-    {
-        if (mPlaceListAdapter == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        mPlaceListAdapter.clear();
-    }
-
     public List<PlaceViewItem> getList()
     {
         if (mPlaceListAdapter == null)
@@ -152,7 +141,7 @@ public class StayListLayout extends PlaceListLayout
                     }
                 });
 
-                mStayMapFragment.setPlaceViewItemList(list, mScrollListTop);
+                mStayMapFragment.setPlaceViewItemList(list, true);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
             }
@@ -224,12 +213,6 @@ public class StayListLayout extends PlaceListLayout
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.notifyDataSetChanged();
             }
-        }
-
-        if (mScrollListTop == true)
-        {
-            mScrollListTop = false;
-            mPlaceRecyclerView.scrollToPosition(0);
         }
     }
 

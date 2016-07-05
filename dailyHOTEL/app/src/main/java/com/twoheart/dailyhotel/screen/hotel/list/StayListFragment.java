@@ -77,6 +77,12 @@ public class StayListFragment extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
+    public void clearList()
+    {
+        mStayListLayout.clearList();
+    }
+
+    @Override
     public void refreshList(boolean isShowProgress)
     {
         if (ViewType.LIST == mViewType)
@@ -137,14 +143,15 @@ public class StayListFragment extends PlaceListFragment
         mStayListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
     }
 
+    @Override
+    public void setScrollListTop()
+    {
+        mStayListLayout.setScrollListTop();
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////           Ovrride method     end    /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
-
-    public void setScrollListTop(boolean scrollListTop)
-    {
-        mStayListLayout.setScrollListTop(scrollListTop);
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
@@ -164,7 +171,6 @@ public class StayListFragment extends PlaceListFragment
             // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
             if (page <= 1)
             {
-                setScrollListTop(true);
                 mStayListLayout.clearList();
             }
 
