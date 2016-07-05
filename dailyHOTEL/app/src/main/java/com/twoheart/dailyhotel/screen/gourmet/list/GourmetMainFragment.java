@@ -73,6 +73,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 GourmetCurationManager.getInstance().setProvince(province);
+                GourmetCurationManager.getInstance().getGourmetCurationOption().clear();
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
 

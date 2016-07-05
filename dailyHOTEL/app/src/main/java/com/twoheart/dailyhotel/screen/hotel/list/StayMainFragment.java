@@ -73,6 +73,8 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 StayCurationManager.getInstance().setProvince(province);
+                StayCurationManager.getInstance().getStayCurationOption().clear();
+                StayCurationManager.getInstance().setCategory(Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
 
@@ -101,6 +103,8 @@ public class StayMainFragment extends PlaceMainFragment
                 int nights = data.getIntExtra(HotelRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
 
                 StayCurationManager.getInstance().setProvince(province);
+                StayCurationManager.getInstance().getStayCurationOption().clear();
+                StayCurationManager.getInstance().setCategory(Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
 
@@ -561,7 +565,7 @@ public class StayMainFragment extends PlaceMainFragment
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
 
-        StayCurationManager.getInstance().setSortType(DailyDeepLink.getInstance().getSorting());
+        StayCurationManager.getInstance().getStayCurationOption().setSortType(DailyDeepLink.getInstance().getSorting());
 
         int night;
 

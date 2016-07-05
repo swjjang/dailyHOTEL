@@ -14,9 +14,6 @@ public class StayCurationManager
 {
     private static StayCurationManager mInstance;
 
-
-    private Constants.SortType sortType = Constants.SortType.DEFAULT;
-
     private Province mProvince;
     private Location mLocation; // Not Parcelable
 
@@ -86,21 +83,6 @@ public class StayCurationManager
     public StayCurationOption getStayCurationOption()
     {
         return mStayCurationOption;
-    }
-
-    public void setSortType(Constants.SortType sortType)
-    {
-        if (sortType == null)
-        {
-            sortType = Constants.SortType.DEFAULT;
-        }
-
-        this.sortType = sortType;
-    }
-
-    public Constants.SortType getSortType()
-    {
-        return sortType;
     }
 
     public Province getProvince()
@@ -175,7 +157,6 @@ public class StayCurationManager
 
     public void clear()
     {
-        sortType = Constants.SortType.DEFAULT;
         mCategory = Category.ALL;
 
         mStayCurationOption.clear();
@@ -185,7 +166,5 @@ public class StayCurationManager
 
         mProvince = null;
         mLocation = null;
-
     }
-
 }
