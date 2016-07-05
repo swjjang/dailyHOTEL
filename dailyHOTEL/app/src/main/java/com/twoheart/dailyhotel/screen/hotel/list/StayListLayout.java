@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -119,34 +118,7 @@ public class StayListLayout extends PlaceListLayout
         }
 
         // 지도의 경우 무조건 전체 데이터를 가져옴으로 clear 후 진행되야 함
-        if (viewType == Constants.ViewType.MAP)
-        {
-            clearList();
-
-            if (list == null || list.size() == 0)
-            {
-                mPlaceListAdapter.notifyDataSetChanged();
-                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
-
-            } else
-            {
-                setVisibility(fragmentManager, viewType, true);
-
-                mStayMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
-                {
-                    @Override
-                    public void onInformationClick(PlaceViewItem placeViewItem)
-                    {
-                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
-                    }
-                });
-
-                mStayMapFragment.setPlaceViewItemList(list, true);
-
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
-            }
-
-        } else
+        if (viewType == Constants.ViewType.LIST)
         {
             setVisibility(fragmentManager, viewType, true);
 
@@ -213,14 +185,54 @@ public class StayListLayout extends PlaceListLayout
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.notifyDataSetChanged();
             }
+        } else
+        {
+
         }
     }
 
     // stay 에서 사용안함 기존 소스 유지
     public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                        ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+                        ArrayList<PlaceViewItem> list, Constants.SortType sortType, boolean isRefresh)
     {
-        ExLog.d("call method");
+        mIsLoading = false;
+
+        if (mPlaceListAdapter == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        // 지도의 경우 무조건 전체 데이터를 가져옴으로 clear 후 진행되야 함
+        if (viewType == Constants.ViewType.MAP)
+        {
+            clearList();
+
+            if (list == null || list.size() == 0)
+            {
+                mPlaceListAdapter.notifyDataSetChanged();
+                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+
+            } else
+            {
+                setVisibility(fragmentManager, viewType, true);
+
+                mStayMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+                {
+                    @Override
+                    public void onInformationClick(PlaceViewItem placeViewItem)
+                    {
+                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+                    }
+                });
+
+                mStayMapFragment.setPlaceViewItemList(list, isRefresh);
+
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+            }
+        } else
+        {
+        }
     }
 
     public boolean hasSalesPlace()

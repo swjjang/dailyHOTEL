@@ -383,7 +383,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         StayParams params = new StayParams();
 
         params.dateCheckIn = StayCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = StayCurationManager.getInstance().getNight();
+        params.stays = StayCurationManager.getInstance().getNights();
         params.provinceIdx = mProvince.getProvinceIndex();
 
         if (mProvince instanceof Area)

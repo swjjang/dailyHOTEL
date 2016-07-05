@@ -264,7 +264,7 @@ public class GourmetListFragment extends PlaceListFragment
         mScrollListTop = true;
 
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mGourmetList, curationOption);
-        mGourmetListLayout.setList(getChildFragmentManager(), type, placeViewItemList, curationOption.getSortType());
+        mGourmetListLayout.setList(getChildFragmentManager(), type, placeViewItemList, curationOption.getSortType(), false);
     }
 
     private ArrayList<PlaceViewItem> curationList(List<Gourmet> list, GourmetCurationOption curationOption)
@@ -351,6 +351,8 @@ public class GourmetListFragment extends PlaceListFragment
         public void onRefreshAll(boolean isShowProgress)
         {
             refreshList(isShowProgress);
+
+            mOnPlaceListFragmentListener.onShowMenuBar();
         }
 
         @Override
@@ -414,7 +416,7 @@ public class GourmetListFragment extends PlaceListFragment
                     {
                         gourmetCurationOption.setFiltersList(null);
 
-                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, null, gourmetCurationOption.getSortType());
+                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, null, gourmetCurationOption.getSortType(), true);
 
                         setVisibility(ViewType.GONE, true);
                     } else
@@ -429,7 +431,7 @@ public class GourmetListFragment extends PlaceListFragment
 
                         ArrayList<PlaceViewItem> placeViewItemList = curationList(gourmetList, gourmetCurationOption);
 
-                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
+                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType(), true);
                     }
                 } else
                 {

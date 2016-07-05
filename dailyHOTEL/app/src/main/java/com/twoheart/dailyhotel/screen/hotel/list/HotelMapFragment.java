@@ -760,11 +760,11 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         Collections.sort(mHotelArrangeArrayList, comparator);
 
-//        if (mStayMapViewPagerAdapter == null)
-//        {
-//            mStayMapViewPagerAdapter = new StayMapViewPagerAdapter(baseActivity);
-//            mStayMapViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
-//        }
+        //        if (mStayMapViewPagerAdapter == null)
+        //        {
+        //            mStayMapViewPagerAdapter = new StayMapViewPagerAdapter(baseActivity);
+        //            mStayMapViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
+        //        }
 
         mStayMapViewPagerAdapter.setData(mHotelArrangeArrayList);
         mViewPager.setAdapter(mStayMapViewPagerAdapter);

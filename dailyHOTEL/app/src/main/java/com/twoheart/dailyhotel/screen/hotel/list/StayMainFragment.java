@@ -77,6 +77,7 @@ public class StayMainFragment extends PlaceMainFragment
                 StayCurationManager.getInstance().setCategory(Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
+                mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
                 String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
@@ -107,6 +108,7 @@ public class StayMainFragment extends PlaceMainFragment
                 StayCurationManager.getInstance().setCategory(Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
+                mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
                 String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
@@ -238,7 +240,7 @@ public class StayMainFragment extends PlaceMainFragment
             , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
 
         SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-        int nights = StayCurationManager.getInstance().getNight();
+        int nights = StayCurationManager.getInstance().getNights();
 
         Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
@@ -733,7 +735,7 @@ public class StayMainFragment extends PlaceMainFragment
             lockUiComponent();
 
             SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-            int night = StayCurationManager.getInstance().getNight();
+            int night = StayCurationManager.getInstance().getNights();
 
             Intent intent = StayRegionListActivity.newInstance(getContext(), //
                 StayCurationManager.getInstance().getProvince(), checkInSaleTime, night);
@@ -1089,7 +1091,6 @@ public class StayMainFragment extends PlaceMainFragment
 
     private StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
-
         @Override
         public void onStayClick(PlaceViewItem placeViewItem, SaleTime checkInSaleTime)
         {
@@ -1171,7 +1172,11 @@ public class StayMainFragment extends PlaceMainFragment
 
             if (currentPlaceListFragment == placeListFragment)
             {
+                currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.refreshList(true);
+            } else
+            {
+                placeListFragment.setVisibility(mViewType, false);
             }
         }
 
@@ -1200,6 +1205,10 @@ public class StayMainFragment extends PlaceMainFragment
             }
         }
 
+        @Override
+        public void onShowMenuBar()
+        {
+            mPlaceMainLayout.showBottomLayout(false);
+        }
     };
-
 }

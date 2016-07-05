@@ -98,7 +98,7 @@ public class GourmetListLayout extends PlaceListLayout
         return mGourmetListMapFragment;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType, boolean isRefresh)
     {
         if (mPlaceListAdapter == null)
         {
@@ -128,7 +128,7 @@ public class GourmetListLayout extends PlaceListLayout
                     }
                 });
 
-                mGourmetListMapFragment.setPlaceViewItemList(list, true);
+                mGourmetListMapFragment.setPlaceViewItemList(list, isRefresh);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
             } else

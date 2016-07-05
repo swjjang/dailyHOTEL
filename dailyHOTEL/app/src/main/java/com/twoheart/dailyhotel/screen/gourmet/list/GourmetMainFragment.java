@@ -76,6 +76,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 GourmetCurationManager.getInstance().getGourmetCurationOption().clear();
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
+                mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
 
                 DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                 DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
@@ -705,6 +706,12 @@ public class GourmetMainFragment extends PlaceMainFragment
                 case RecyclerView.SCROLL_STATE_SETTLING:
                     break;
             }
+        }
+
+        @Override
+        public void onShowMenuBar()
+        {
+            mPlaceMainLayout.showBottomLayout(false);
         }
     };
 

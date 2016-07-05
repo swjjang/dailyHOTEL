@@ -85,17 +85,20 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
-        if (ViewType.LIST == mViewType)
+        switch (mViewType)
         {
-            ArrayList<PlaceViewItem> list = new ArrayList<>(mStayListLayout.getList());
-            if (list == null || list.size() == 0)
-            {
-                refreshList(isShowProgress, 1);
-            }
+            case LIST:
+                ArrayList<PlaceViewItem> list = new ArrayList<>(mStayListLayout.getList());
 
-        } else if (ViewType.MAP == mViewType)
-        {
-            refreshList(isShowProgress, 0);
+                if (list == null || list.size() == 0)
+                {
+                    refreshList(isShowProgress, 1);
+                }
+                break;
+
+            case MAP:
+                refreshList(isShowProgress, 0);
+                break;
         }
     }
 
@@ -119,7 +122,7 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        int nights = StayCurationManager.getInstance().getNight();
+        int nights = StayCurationManager.getInstance().getNights();
         if (nights <= 0)
         {
             unLockUI();
@@ -178,10 +181,11 @@ public class StayListFragment extends PlaceListFragment
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list);
 
-            mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
 
             if (ViewType.MAP == mViewType)
             {
+                mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType(), true);
+
                 int mapSize = mStayListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
@@ -189,6 +193,8 @@ public class StayListFragment extends PlaceListFragment
                 }
             } else
             {
+                mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
+
                 List<PlaceViewItem> allList = mStayListLayout.getList();
                 if (allList == null || allList.size() == 0)
                 {
@@ -318,6 +324,8 @@ public class StayListFragment extends PlaceListFragment
         public void onRefreshAll(boolean isShowProgress)
         {
             refreshList(isShowProgress, 1);
+
+            mOnPlaceListFragmentListener.onShowMenuBar();
         }
 
         @Override

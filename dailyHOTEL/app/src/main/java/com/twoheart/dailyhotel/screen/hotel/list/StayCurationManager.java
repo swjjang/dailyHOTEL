@@ -53,7 +53,7 @@ public class StayCurationManager
         return mCheckOutSaleTime;
     }
 
-    public int getNight()
+    public int getNights()
     {
         if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
         {
@@ -120,7 +120,7 @@ public class StayCurationManager
         StayParams params = new StayParams();
 
         params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = getNight();
+        params.stays = getNights();
         params.provinceIdx = mProvince.getProvinceIndex();
 
         if (mProvince instanceof Area)
