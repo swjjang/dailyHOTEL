@@ -267,6 +267,11 @@ public class StayListLayout extends PlaceListLayout
         return hasPlace;
     }
 
+    public int getMapItemSize()
+    {
+        return mStayMapFragment != null ? mStayMapFragment.getPlaceViewItemListSize() : 0;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //                                 Listener
     ////////////////////////////////////////////////////////////////////////////////////////////////

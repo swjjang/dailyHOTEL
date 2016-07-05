@@ -13,13 +13,9 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
-
-public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
+public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 {
-    private HotelMapFragment.OnUserActionListener mOnUserActionListener;
-
-    public HotelMapViewPagerAdapter(Context context)
+    public StayMapViewPagerAdapter(Context context)
     {
         super(context);
     }
@@ -45,11 +41,6 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         return view;
     }
 
-    public void setOnUserActionListener(HotelMapFragment.OnUserActionListener listener)
-    {
-        mOnUserActionListener = listener;
-    }
-
     private void makeLayout(View view, final Stay stay)
     {
         View gradientView = view.findViewById(R.id.gradientView);
@@ -64,8 +55,6 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         View closeView = view.findViewById(R.id.closeImageVIew);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
-
-        DecimalFormat comma = new DecimalFormat("###,##0");
 
         String address = stay.addressSummary;
 
@@ -90,8 +79,6 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             dBenefitLayout.setVisibility(View.GONE);
         }
 
-        String currency = mContext.getResources().getString(R.string.currency);
-
         if (stay.price <= 0)
         {
             priceTextView.setVisibility(View.INVISIBLE);
@@ -101,7 +88,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(comma.format(stay.price) + currency);
+            priceTextView.setText(Util.getPriceFormat(mContext, stay.price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -123,7 +110,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             averageTextView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(comma.format(stay.getDiscountPrice()) + currency);
+        discountTextView.setText(Util.getPriceFormat(mContext, stay.getDiscountPrice(), false));
 
         name.setSelected(true); // Android TextView marquee bug
 
@@ -138,9 +125,9 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
+                if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnUserActionListener.onCloseInfoWindowClickListener();
+                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
                 }
             }
         });
@@ -150,9 +137,9 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
+                if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnUserActionListener.onInfoWindowClickListener(stay);
+                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(stay);
                 }
             }
         });

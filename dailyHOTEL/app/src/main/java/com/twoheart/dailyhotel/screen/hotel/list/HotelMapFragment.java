@@ -79,7 +79,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
     private Marker mSelectedMarker;
     private View mMyLocationView;
     private DailyLoopViewPager mViewPager;
-    private HotelMapViewPagerAdapter mHotelMapViewPagerAdapter;
+    private StayMapViewPagerAdapter mStayMapViewPagerAdapter;
 
     public interface OnUserActionListener
     {
@@ -712,7 +712,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         if (position >= 0)
         {
             mViewPager.setCurrentItem(position);
-            mHotelMapViewPagerAdapter.notifyDataSetChanged();
+            mStayMapViewPagerAdapter.notifyDataSetChanged();
 
             if (Util.isOverAPI21() == true)
             {
@@ -760,15 +760,15 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         Collections.sort(mHotelArrangeArrayList, comparator);
 
-        if (mHotelMapViewPagerAdapter == null)
-        {
-            mHotelMapViewPagerAdapter = new HotelMapViewPagerAdapter(baseActivity);
-            mHotelMapViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
-        }
+//        if (mStayMapViewPagerAdapter == null)
+//        {
+//            mStayMapViewPagerAdapter = new StayMapViewPagerAdapter(baseActivity);
+//            mStayMapViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
+//        }
 
-        mHotelMapViewPagerAdapter.setData(mHotelArrangeArrayList);
-        mViewPager.setAdapter(mHotelMapViewPagerAdapter);
-        mHotelMapViewPagerAdapter.notifyDataSetChanged();
+        mStayMapViewPagerAdapter.setData(mHotelArrangeArrayList);
+        mViewPager.setAdapter(mStayMapViewPagerAdapter);
+        mStayMapViewPagerAdapter.notifyDataSetChanged();
 
         mIsOpenMakrer = true;
 
