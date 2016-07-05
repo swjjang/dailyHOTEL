@@ -24,6 +24,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected LayoutInflater mInflater;
     protected List<PlaceViewItem> mPlaceViewItemList;
     protected PaintDrawable mPaintDrawable;
+
     private Constants.SortType mSortType;
 
     public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
@@ -62,6 +63,11 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     public void clear()
     {
         mPlaceViewItemList.clear();
+    }
+
+    public void add(PlaceViewItem placeViewItem)
+    {
+        mPlaceViewItemList.add(placeViewItem);
     }
 
     public void add(int position, PlaceViewItem placeViewItem)

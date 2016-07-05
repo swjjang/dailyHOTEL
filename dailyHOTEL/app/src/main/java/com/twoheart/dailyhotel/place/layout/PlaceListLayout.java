@@ -35,7 +35,6 @@ public abstract class PlaceListLayout extends BaseLayout
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected View mBottomOptionLayout;
 
-    protected boolean mScrollListTop;
     protected boolean mIsLoading;
 
     protected LinearLayoutManager mLayoutManager;
