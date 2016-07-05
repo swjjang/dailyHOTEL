@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public abstract class PlaceListLayout extends BaseLayout
 {
-    private static final int LOAD_MORE_POSITION_GAP = 5;
+    private static final int LOAD_MORE_POSITION_GAP = Constants.PAGENATION_LIST_SIZE * 2 / 3;
 
     protected PinnedSectionRecyclerView mPlaceRecyclerView;
     protected PlaceListAdapter mPlaceListAdapter;
@@ -35,7 +35,6 @@ public abstract class PlaceListLayout extends BaseLayout
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected View mBottomOptionLayout;
 
-    protected boolean mScrollListTop;
     protected boolean mIsLoading;
 
     protected LinearLayoutManager mLayoutManager;
@@ -153,12 +152,22 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public void clearList()
     {
-        if (mPlaceListAdapter == null)
+        if (mPlaceListAdapter != null)
         {
             mPlaceListAdapter.clear();
         }
 
         setScrollListTop();
+    }
+
+    public int getItemCount()
+    {
+        if (mPlaceListAdapter == null)
+        {
+            return 0;
+        }
+
+        return mPlaceListAdapter.getItemCount();
     }
 
     public boolean canScrollUp()

@@ -125,10 +125,12 @@ public class StayListLayout extends PlaceListLayout
             // 리스트의 경우 Pagenation 상황 고려
             ArrayList<PlaceViewItem> oldList = new ArrayList<>(getList());
 
-            if (oldList != null && oldList.size() > 0)
+            int oldListSize = oldList == null ? 0 : oldList.size();
+            if (oldListSize > 0)
             {
-                PlaceViewItem placeViewItem = oldList.get(oldList.size() - 1);
+                PlaceViewItem placeViewItem = oldList.get(oldListSize - 1);
 
+                // 기존 리스트가 존재 할 때 마지막 아이템이 footer 일 경우 아이템 제거
                 if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                 {
                     getList().remove(placeViewItem);
@@ -138,17 +140,23 @@ public class StayListLayout extends PlaceListLayout
             if (list != null && list.size() > 0)
             {
                 mPlaceListAdapter.addAll(list);
+            } else
+            {
+                // 요청 온 데이터가 empty 일때 기존 리스트가 있으면 라스트 footer 재 생성
+                if (oldListSize > 0)
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
+                }
             }
 
-            List<PlaceViewItem> allList = getList();
-            if (allList == null || allList.size() == 0)
+            int size = getItemCount();
+            if (size == 0)
             {
                 mPlaceListAdapter.notifyDataSetChanged();
                 setVisibility(fragmentManager, Constants.ViewType.GONE, true);
 
             } else
             {
-
                 // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
                 if (oldList == null || oldList.size() == 0)
                 {
