@@ -100,7 +100,7 @@ public class StaySearchResultListAdapter extends PlaceListAdapter
         DecimalFormat comma = new DecimalFormat("###,##0");
 
         String strPrice = comma.format(stay.price);
-        String strDiscount = comma.format(stay.getDiscountPrice());
+        String strDiscount = comma.format(stay.discountPrice);
 
         String address = stay.addressSummary;
 
@@ -118,7 +118,7 @@ public class StaySearchResultListAdapter extends PlaceListAdapter
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (stay.price <= 0 || stay.price <= stay.getDiscountPrice())
+        if (stay.price <= 0 || stay.price <= stay.discountPrice)
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
@@ -626,7 +627,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, GourmetCurationManager.getInstance().getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.getDiscountPrice());
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
 
                     String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
 
@@ -752,6 +753,21 @@ public class GourmetMainFragment extends PlaceMainFragment
                 case RecyclerView.SCROLL_STATE_IDLE:
                 {
                     mPlaceMainLayout.animationMenuBarLayout();
+
+                    if(recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() == recyclerView.computeVerticalScrollRange())
+                    {
+                        GourmetListAdapter gourmetListAdapter = (GourmetListAdapter)recyclerView.getAdapter();
+
+                        if(gourmetListAdapter != null)
+                        {
+                            PlaceViewItem placeViewItem = gourmetListAdapter.getItem(gourmetListAdapter.getItemCount() - 1);
+
+                            if(placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                            {
+                                mPlaceMainLayout.showBottomLayout(false);
+                            }
+                        }
+                    }
                     break;
                 }
 

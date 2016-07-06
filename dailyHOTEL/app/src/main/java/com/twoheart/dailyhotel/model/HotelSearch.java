@@ -18,7 +18,7 @@ public class HotelSearch extends Stay
         {
             name = jsonObject.getString("hotel_name");
             price = jsonObject.getInt("price");
-            averageDiscountPrice = jsonObject.getInt("discount_avg");
+            discountPrice = jsonObject.getInt("discount_avg");
             addressSummary = jsonObject.getString("addr_summary");
 
             try

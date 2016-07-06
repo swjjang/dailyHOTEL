@@ -40,7 +40,6 @@ public class GourmetListFragment extends PlaceListFragment
 {
     protected BaseActivity mBaseActivity;
     private ViewType mViewType;
-    protected boolean mScrollListTop;
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
     private GourmetListLayout mGourmetListLayout;
@@ -174,8 +173,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
-                        int price1 = gourmet1.persons > 1 ? gourmet1.getDiscountPrice() / gourmet1.persons : gourmet1.getDiscountPrice();
-                        int price2 = gourmet2.persons > 1 ? gourmet2.getDiscountPrice() / gourmet2.persons : gourmet2.getDiscountPrice();
+                        int price1 = gourmet1.persons > 1 ? gourmet1.discountPrice / gourmet1.persons : gourmet1.discountPrice;
+                        int price2 = gourmet2.persons > 1 ? gourmet2.discountPrice / gourmet2.persons : gourmet2.discountPrice;
 
                         return price1 - price2;
                     }
@@ -192,8 +191,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
-                        int price1 = gourmet1.persons > 1 ? gourmet1.getDiscountPrice() / gourmet1.persons : gourmet1.getDiscountPrice();
-                        int price2 = gourmet2.persons > 1 ? gourmet2.getDiscountPrice() / gourmet2.persons : gourmet2.getDiscountPrice();
+                        int price1 = gourmet1.persons > 1 ? gourmet1.discountPrice / gourmet1.persons : gourmet1.discountPrice;
+                        int price2 = gourmet2.persons > 1 ? gourmet2.discountPrice / gourmet2.persons : gourmet2.discountPrice;
 
                         return price2 - price1;
                     }
@@ -261,14 +260,12 @@ public class GourmetListFragment extends PlaceListFragment
 
     public void curationList(ViewType type, GourmetCurationOption curationOption)
     {
-        mScrollListTop = true;
-
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mGourmetList, curationOption);
 
         PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
         placeViewItemList.add(placeViewItemList.size(), placeViewFooterItem);
 
-        mGourmetListLayout.setList(getChildFragmentManager(), type, placeViewItemList, curationOption.getSortType(), false);
+        mGourmetListLayout.setList(getChildFragmentManager(), type, placeViewItemList, curationOption.getSortType());
     }
 
     private ArrayList<PlaceViewItem> curationList(List<Gourmet> list, GourmetCurationOption curationOption)
@@ -420,7 +417,7 @@ public class GourmetListFragment extends PlaceListFragment
                     {
                         gourmetCurationOption.setFiltersList(null);
 
-                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, null, gourmetCurationOption.getSortType(), true);
+                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, null, gourmetCurationOption.getSortType());
 
                         setVisibility(ViewType.GONE, true);
                     } else
@@ -438,7 +435,7 @@ public class GourmetListFragment extends PlaceListFragment
                         PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
                         placeViewItemList.add(placeViewItemList.size(), placeViewFooterItem);
 
-                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType(), true);
+                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
                     }
                 } else
                 {
