@@ -113,13 +113,11 @@ public class GourmetListLayout extends PlaceListLayout
         {
             setVisibility(fragmentManager, viewType, true);
 
-            switch(viewType)
+            switch (viewType)
             {
                 case LIST:
                 {
                     mPlaceRecyclerView.scrollToPosition(0);
-
-                    AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST);
                     break;
                 }
 

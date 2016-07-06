@@ -762,11 +762,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
                         }
 
-                        // Analytics
-                        Map<String, String> analyticsParams = new HashMap<>();
-                        analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-
-                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM, analyticsParams);
+                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
                         return;
                     }
                 }

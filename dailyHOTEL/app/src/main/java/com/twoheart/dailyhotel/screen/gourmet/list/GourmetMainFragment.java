@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
@@ -754,15 +753,15 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     mPlaceMainLayout.animationMenuBarLayout();
 
-                    if(recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() == recyclerView.computeVerticalScrollRange())
+                    if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() == recyclerView.computeVerticalScrollRange())
                     {
-                        GourmetListAdapter gourmetListAdapter = (GourmetListAdapter)recyclerView.getAdapter();
+                        GourmetListAdapter gourmetListAdapter = (GourmetListAdapter) recyclerView.getAdapter();
 
-                        if(gourmetListAdapter != null)
+                        if (gourmetListAdapter != null)
                         {
                             PlaceViewItem placeViewItem = gourmetListAdapter.getItem(gourmetListAdapter.getItemCount() - 1);
 
-                            if(placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                            if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                             {
                                 mPlaceMainLayout.showBottomLayout(false);
                             }

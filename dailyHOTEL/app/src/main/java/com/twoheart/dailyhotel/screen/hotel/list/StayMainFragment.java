@@ -1238,6 +1238,21 @@ public class StayMainFragment extends PlaceMainFragment
                 case RecyclerView.SCROLL_STATE_IDLE:
                 {
                     mPlaceMainLayout.animationMenuBarLayout();
+
+                    if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() == recyclerView.computeVerticalScrollRange())
+                    {
+                        StayListAdapter stayListAdapter = (StayListAdapter) recyclerView.getAdapter();
+
+                        if (stayListAdapter != null)
+                        {
+                            PlaceViewItem placeViewItem = stayListAdapter.getItem(stayListAdapter.getItemCount() - 1);
+
+                            if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                            {
+                                mPlaceMainLayout.showBottomLayout(false);
+                            }
+                        }
+                    }
                     break;
                 }
 

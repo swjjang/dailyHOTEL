@@ -163,7 +163,8 @@ public class StayListLayout extends PlaceListLayout
                     if (firstItem.mType == PlaceViewItem.TYPE_SECTION)
                     {
                         String firstDistricName = firstItem.getItem();
-                        if (districtName.equalsIgnoreCase(firstDistricName)) {
+                        if (districtName.equalsIgnoreCase(firstDistricName))
+                        {
                             list.remove(0);
                         }
                     }

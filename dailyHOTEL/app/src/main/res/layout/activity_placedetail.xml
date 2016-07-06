@@ -98,7 +98,8 @@
                 android:layout_gravity="right"
                 android:layout_marginBottom="7dp"
                 android:layout_marginRight="7dp"
-                android:src="@drawable/navibar_ic_x"/>
+                android:src="@drawable/navibar_ic_x"
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
