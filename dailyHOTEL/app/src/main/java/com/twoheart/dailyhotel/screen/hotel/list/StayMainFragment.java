@@ -1193,6 +1193,32 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.refreshList(true);
+
+                // Analytics
+                Map<String, String> params = new HashMap<>();
+                Province province = StayCurationManager.getInstance().getProvince();
+
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                }
+
+                if (Util.isTextEmpty(DailyPreference.getInstance(mBaseActivity).getAuthorization()) == true)
+                {
+                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                }
+
+                AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
             } else
             {
                 placeListFragment.setVisibility(mViewType, false);

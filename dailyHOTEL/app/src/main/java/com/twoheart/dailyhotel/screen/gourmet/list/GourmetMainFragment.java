@@ -317,22 +317,22 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     mViewType = ViewType.LIST;
 
-                    Map<String, String> parmas = new HashMap<>();
+                    Map<String, String> params = new HashMap<>();
                     Province province = GourmetCurationManager.getInstance().getProvince();
 
                     if (province instanceof Area)
                     {
                         Area area = (Area) province;
-                        parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                        parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
 
                     } else
                     {
-                        parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                        parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                        params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                     }
 
-                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, parmas);
+                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, params);
                     AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.GOURMET_LIST, null);
                     break;
                 }
@@ -709,6 +709,32 @@ public class GourmetMainFragment extends PlaceMainFragment
                 // Stay와 다르게 새로 생성되지 않기 때문에 setVisibility 을 호출 하지 않아도 된다.
                 //                currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.refreshList(false);
+
+                Map<String, String> params = new HashMap<>();
+                GourmetCurationOption gourmetCurationOption = GourmetCurationManager.getInstance().getGourmetCurationOption();
+                Province province = GourmetCurationManager.getInstance().getProvince();
+
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                }
+
+                if (Util.isTextEmpty(DailyPreference.getInstance(mBaseActivity).getAuthorization()) == true)
+                {
+                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                }
+
+                AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, params);
             }
         }
 

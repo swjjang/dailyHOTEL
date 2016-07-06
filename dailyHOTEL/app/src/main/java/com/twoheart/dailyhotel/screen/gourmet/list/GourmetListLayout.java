@@ -4,12 +4,9 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
@@ -19,9 +16,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GourmetListLayout extends PlaceListLayout
 {
@@ -134,24 +129,6 @@ public class GourmetListLayout extends PlaceListLayout
             } else
             {
                 AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST);
-
-                Map<String, String> parmas = new HashMap<>();
-                GourmetCurationOption gourmetCurationOption = GourmetCurationManager.getInstance().getGourmetCurationOption();
-                Province province = GourmetCurationManager.getInstance().getProvince();
-
-                if (province instanceof Area)
-                {
-                    Area area = (Area) province;
-                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-
-                } else
-                {
-                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                }
-
-                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST, parmas);
             }
 
             if (sortType == Constants.SortType.DEFAULT)

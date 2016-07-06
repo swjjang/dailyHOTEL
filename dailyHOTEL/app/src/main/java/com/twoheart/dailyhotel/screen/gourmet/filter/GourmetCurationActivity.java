@@ -594,24 +594,24 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 return;
         }
 
-        Map<String, String> eventParmas = new HashMap<>();
+        Map<String, String> eventParams = new HashMap<>();
         Province province = GourmetCurationManager.getInstance().getProvince();
 
         if (province instanceof Area)
         {
             Area area = (Area) province;
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParmas);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
 
     @Override
@@ -650,26 +650,26 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     @Override
     protected void onComplete()
     {
-        Map<String, String> eventParmas = new HashMap<>();
+        Map<String, String> eventParams = new HashMap<>();
         Province province = GourmetCurationManager.getInstance().getProvince();
 
-        eventParmas.put(AnalyticsManager.KeyType.SORTING, mGourmetCurationOption.getSortType().name());
+        eventParams.put(AnalyticsManager.KeyType.SORTING, mGourmetCurationOption.getSortType().name());
 
         if (province instanceof Area)
         {
             Area area = (Area) province;
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), eventParmas);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), eventParams);
 
         if (DEBUG == true)
         {
@@ -706,23 +706,23 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mGourmetCurationOption.setSortType(SortType.DISTANCE);
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
-        Map<String, String> eventParmas = new HashMap<>();
+        Map<String, String> eventParams = new HashMap<>();
         Province province = GourmetCurationManager.getInstance().getProvince();
 
         if (province instanceof Area)
         {
             Area area = (Area) province;
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParmas);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
 }

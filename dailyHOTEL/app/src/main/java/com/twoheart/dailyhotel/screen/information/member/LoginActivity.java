@@ -761,6 +761,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         {
                             DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
                         }
+
+                        // Analytics
+                        Map<String, String> analyticsParams = new HashMap<>();
+                        analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+
+                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM, analyticsParams);
                         return;
                     }
                 }
@@ -821,6 +827,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+
+                        // Analytics
+                        Map<String, String> analyticsParams = new HashMap<>();
+                        analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE, analyticsParams);
                         return;
                     }
                 }
@@ -877,6 +888,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     {
                         mStoreParams.put("user_idx", userIndex);
                         mStoreParams.put("user_type", userType);
+                    } else
+                    {
+                        // Analytics
+                        Map<String, String> analyticsParams = new HashMap<>();
+                        analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE, analyticsParams);
                     }
                 } else
                 {
