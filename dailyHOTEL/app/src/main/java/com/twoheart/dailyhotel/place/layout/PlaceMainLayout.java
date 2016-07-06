@@ -72,6 +72,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     protected abstract void onAnalyticsCategoryFlicking(String category);
 
+    protected abstract void onAnalyticsCategoryClick(String category);
+
     public PlaceMainLayout(Context context, OnEventListener listener)
     {
         super(context, listener);
@@ -259,13 +261,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
             {
                 boolean isScrolling = false;
-                int prevPosition = 0;
+                int prevPosition = -1;
 
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
                 {
-                    prevPosition = position;
-                    isScrolling = true;
                 }
 
                 @Override
@@ -273,15 +273,30 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 {
                     if (prevPosition != position)
                     {
-                        prevPosition = position;
+                        if (isScrolling == true)
+                        {
+                            isScrolling = false;
 
-                        onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
+                            onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
+                        } else
+                        {
+                            onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
+                        }
+                    } else
+                    {
+                        isScrolling = false;
                     }
+
+                    prevPosition = position;
                 }
 
                 @Override
                 public void onPageScrollStateChanged(int state)
                 {
+                    if (state == ViewPager.SCROLL_STATE_DRAGGING)
+                    {
+                        isScrolling = true;
+                    }
                 }
             });
 

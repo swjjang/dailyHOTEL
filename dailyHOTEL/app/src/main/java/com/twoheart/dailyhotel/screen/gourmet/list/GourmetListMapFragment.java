@@ -23,10 +23,4 @@ public class GourmetListMapFragment extends PlaceListMapFragment
     {
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_MAP_ICON_CLICKED, placeName, null);
     }
-
-    @Override
-    protected void onAnalyticsDetailClick(String placeName)
-    {
-        AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeName, null);
-    }
 }

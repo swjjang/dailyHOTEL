@@ -28,10 +28,8 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class StayListAdapter extends PlaceListAdapter
 {
-    private static final String BOUTIQUE = "boutique";
-
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
