@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -129,6 +130,9 @@ public class GourmetListLayout extends PlaceListLayout
                         public void onInformationClick(PlaceViewItem placeViewItem)
                         {
                             ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+
+                            AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
                         }
                     });
 

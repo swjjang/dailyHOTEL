@@ -286,10 +286,12 @@ public class StayMainFragment extends PlaceMainFragment
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
-                String label = String.format("%s-%s", stay.categoryCode, stay.name);
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , AnalyticsManager.Action.HOTEL_ITEM_CLICKED, label, null);
-
+                if(mViewType == ViewType.LIST)
+                {
+                    String label = String.format("%s-%s", stay.categoryCode, stay.name);
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_ITEM_CLICKED, label, null);
+                }
                 break;
             }
 
@@ -671,9 +673,6 @@ public class StayMainFragment extends PlaceMainFragment
         {
             Category category = (Category) tab.getTag();
             StayCurationManager.getInstance().setCategory(category);
-
-            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category.name, null);
 
             mPlaceMainLayout.setCurrentItem(tab.getPosition());
             mPlaceMainLayout.showBottomLayout(false);

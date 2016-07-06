@@ -33,7 +33,15 @@ public class StayMainLayout extends PlaceMainLayout
     @Override
     protected void onAnalyticsCategoryFlicking(String category)
     {
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, null);
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, null);
+    }
+
+    @Override
+    protected void onAnalyticsCategoryClick(String category)
+    {
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, null);
     }
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
