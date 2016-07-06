@@ -19,7 +19,7 @@ public class HotelRenderer
     {
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        mPrice = comma.format(stay.averageDiscountPrice) + context.getString(R.string.currency);
+        mPrice = comma.format(stay.discountPrice) + context.getString(R.string.currency);
 
         mMarkerResId = stay.getGrade().getMarkerResId();
 

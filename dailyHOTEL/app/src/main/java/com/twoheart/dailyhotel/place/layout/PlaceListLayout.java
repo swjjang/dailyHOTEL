@@ -58,7 +58,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
 
-    protected abstract void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType, boolean isRefresh);
+    public abstract void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType);
 
     protected abstract boolean hasSalesPlace();
 

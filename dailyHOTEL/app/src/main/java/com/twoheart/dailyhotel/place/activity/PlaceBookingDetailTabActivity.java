@@ -75,6 +75,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
+        mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 

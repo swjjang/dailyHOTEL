@@ -35,7 +35,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterIte
 
         Place place = item.getPlace();
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, place.getDiscountPrice(), place.getGradeMarkerResId());
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, place.discountPrice, place.getGradeMarkerResId());
 
         BitmapDescriptor icon = placeRenderer.getBitmap(false);
 

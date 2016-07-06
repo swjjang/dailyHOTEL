@@ -222,7 +222,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
             mViewPager.setAdapter(mFragmentPagerAdapter);
-            mViewPager.addOnPageChangeListener(null);
+            mViewPager.clearOnPageChangeListeners();
         } else
         {
             setCategoryTabLayoutVisibility(View.VISIBLE);

@@ -272,6 +272,7 @@
     <color name="default_line_c323232">#323232</color>
     <color name="default_line_cf0f0f0">#f0f0f0</color>
     <color name="default_line_cdedee0">#dedee0</color>
+    <color name="default_line_ceeeef0">#eeeef0</color>
 
     <color name="over_scroll_edge">#dcdcdc</color>
 

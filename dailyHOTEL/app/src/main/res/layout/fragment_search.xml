@@ -175,6 +175,18 @@
                     android:layout_marginRight="15dp"
                     android:orientation="vertical"/>
             </com.twoheart.dailyhotel.widget.DailyScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_cf0f0f0"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/recentSearchesScrollLayout"/>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.widget.DailyScrollView

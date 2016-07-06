@@ -176,9 +176,8 @@ public class StayListLayout extends PlaceListLayout
         }
     }
 
-    // stay 에서 사용안함 기존 소스 유지
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                        ArrayList<PlaceViewItem> list, Constants.SortType sortType, boolean isRefresh)
+    @Override
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
         mIsLoading = false;
 
@@ -211,7 +210,7 @@ public class StayListLayout extends PlaceListLayout
                     }
                 });
 
-                mStayListMapFragment.setPlaceViewItemList(list, isRefresh);
+                mStayListMapFragment.setPlaceViewItemList(list, true);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
             }

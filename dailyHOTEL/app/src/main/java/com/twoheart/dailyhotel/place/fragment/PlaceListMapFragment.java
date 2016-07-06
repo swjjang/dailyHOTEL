@@ -294,14 +294,14 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         return mPlaceViewItemList.size();
     }
 
-    public void setPlaceViewItemList(List<PlaceViewItem> arrayList, boolean isChangedRegion)
+    public void setPlaceViewItemList(List<PlaceViewItem> arrayList, boolean isRefreshAll)
     {
         mPlaceViewItemList = arrayList;
 
         // Marker 만들기.
         if (mIsCreateView == true)
         {
-            makeMarker(isChangedRegion);
+            makeMarker(isRefreshAll);
         }
     }
 
@@ -358,7 +358,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     }
 
-    protected void makeMarker(boolean isChangedRegion)
+    protected void makeMarker(boolean isRefreshAll)
     {
         if (isFinishing() == true)
         {
@@ -383,14 +383,14 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             mLoadingDialog.show(true);
         }
 
-        if (mCallMakeMarker == false && isChangedRegion == false)
+        if (mCallMakeMarker == false && isRefreshAll == false)
         {
-            isChangedRegion = true;
+            isRefreshAll = true;
         }
 
         mCallMakeMarker = true;
 
-        if (isChangedRegion == true)
+        if (isRefreshAll == true)
         {
             mIsOpenMakrer = false;
 
@@ -474,7 +474,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         mIsOpenMakrer = false;
 
-        if (isChangedRegion == true)
+        if (isRefreshAll == true)
         {
             try
             {
@@ -559,7 +559,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.getDiscountPrice(), place.getGradeMarkerResId());
+                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.discountPrice, place.getGradeMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -795,7 +795,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.getDiscountPrice(), place.getGradeMarkerResId());
+                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.discountPrice, place.getGradeMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
