@@ -20,6 +20,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignupStep2Activity extends BaseActivity
 {
     private static final String INTENT_EXTRA_DATA_SIGNUPKEY = "signupKey";
@@ -232,6 +235,11 @@ public class SignupStep2Activity extends BaseActivity
             DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
+
+            // Analytics
+            Map<String, String> analyticsParams = new HashMap<>();
+            analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM, analyticsParams);
 
             showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {

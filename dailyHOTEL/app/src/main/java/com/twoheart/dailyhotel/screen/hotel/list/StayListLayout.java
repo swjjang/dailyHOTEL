@@ -4,10 +4,8 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -17,9 +15,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StayListLayout extends PlaceListLayout
 {
@@ -204,25 +200,6 @@ public class StayListLayout extends PlaceListLayout
                         }
                     }
                 }
-
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
-
-                Map<String, String> params = new HashMap<>();
-                Province province = StayCurationManager.getInstance().getProvince();
-
-                if (province instanceof Area)
-                {
-                    Area area = (Area) province;
-                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                }
-
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
 
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.notifyDataSetChanged();

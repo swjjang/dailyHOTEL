@@ -28,6 +28,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProfileActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_EDIT_PROFILE = 1;
@@ -179,6 +182,14 @@ public class ProfileActivity extends BaseActivity
 
                     unLockUI();
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+
+                    AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(AnalyticsManager.ValueType.EMPTY);
+
+                    // Analytics
+                    Map<String, String> analyticsParams = new HashMap<>();
+                    analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                    AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.MENU_LOGOUT_COMPLETE);
+
                     finish();
                 }
             };

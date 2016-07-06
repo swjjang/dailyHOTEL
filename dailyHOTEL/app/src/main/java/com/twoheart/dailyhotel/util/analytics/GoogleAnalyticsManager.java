@@ -53,8 +53,19 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void recordScreen(String screen)
     {
-        mGoogleAnalyticsTracker.setScreenName(screen);
-        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        if (AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT.equalsIgnoreCase(screen) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+            screenViewBuilder.setCustomDimension(6, AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT.equalsIgnoreCase(screen) == true ? "hotel" : "gourmet");
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        } else
+        {
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        }
 
         if (DEBUG == true)
         {
@@ -70,10 +81,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
-            screenViewBuilder.setCustomDimension(3, "yes".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.DBENEFIT)) == true ? "y" : "n");
+            screenViewBuilder.setCustomDimension(5, params.get(AnalyticsManager.KeyType.IS_SIGNED));
+            screenViewBuilder.setCustomDimension(6, AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true ? "hotel" : "gourmet");
 
             mGoogleAnalyticsTracker.setScreenName(screen);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
@@ -82,6 +94,14 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screen + " | " + screenViewBuilder.toString());
             }
+
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+            screenViewBuilder.setCustomDimension(3, "yes".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.DBENEFIT)) == true ? "y" : "n");
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
 
             checkoutStep(1, screen, null, params);
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
@@ -93,6 +113,15 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(4, screen, null, params);
+        } else if (AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screen) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+            screenViewBuilder.setCustomDimension(5, params.get(AnalyticsManager.KeyType.IS_SIGNED));
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         }
     }
 

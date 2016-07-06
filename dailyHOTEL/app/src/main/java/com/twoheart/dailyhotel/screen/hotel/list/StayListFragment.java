@@ -180,24 +180,30 @@ public class StayListFragment extends PlaceListFragment
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list);
 
-
-            if (ViewType.MAP == mViewType)
+            switch (mViewType)
             {
-                mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType(), true);
-
-                int mapSize = mStayListLayout.getMapItemSize();
-                if (mapSize == 0)
+                case LIST:
                 {
-                    setVisibility(ViewType.GONE, true);
+                    mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
+
+                    int size = mStayListLayout.getItemCount();
+                    if (size == 0)
+                    {
+                        setVisibility(ViewType.GONE, true);
+                    }
+                    break;
                 }
-            } else
-            {
-                mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
 
-                int size = mStayListLayout.getItemCount();
-                if (size == 0)
+                case MAP:
                 {
-                    setVisibility(ViewType.GONE, true);
+                    mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType(), true);
+
+                    int mapSize = mStayListLayout.getMapItemSize();
+                    if (mapSize == 0)
+                    {
+                        setVisibility(ViewType.GONE, true);
+                    }
+                    break;
                 }
             }
 

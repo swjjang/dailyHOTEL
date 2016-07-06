@@ -769,7 +769,7 @@ public class AnalyticsManager
         public static final String DOWNLOAD_DATE = "download_date";
         public static final String DOWNLOAD_FROM = "download_from";
         public static final String COUPON_CODE = "coupon_code";
-
+        public static final String IS_SIGNED = "is_signed";
     }
 
     public static class ValueType
@@ -779,5 +779,7 @@ public class AnalyticsManager
         public static final String SEARCH = "search";
         public static final String CHANGED = "Changed";
         public static final String NONE = "None";
+        public static final String MEMBER = "member";
+        public static final String GUEST = "guest";
     }
 }
