@@ -29,7 +29,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class GourmetListAdapter extends PlaceListAdapter
 {
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;

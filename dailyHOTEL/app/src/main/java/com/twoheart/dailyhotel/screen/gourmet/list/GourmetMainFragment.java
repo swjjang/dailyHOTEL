@@ -634,8 +634,11 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
-                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.GOURMET_ITEM_CLICKED, gourmet.name, null);
+                    if (mViewType == ViewType.LIST)
+                    {
+                        AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.GOURMET_ITEM_CLICKED, gourmet.name, null);
+                    }
                     break;
                 }
 

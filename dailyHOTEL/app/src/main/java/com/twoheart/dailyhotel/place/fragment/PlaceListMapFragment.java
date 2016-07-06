@@ -97,8 +97,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     protected abstract void onAnalyticsMarkerClick(String placeName);
 
-    protected abstract void onAnalyticsDetailClick(String placeName);
-
     public PlaceListMapFragment()
     {
     }
@@ -1175,8 +1173,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 onMarkerTempClick(hotelClusterItem.getPosition());
             }
-
-            onAnalyticsDetailClick(place.name);
         }
 
         @Override

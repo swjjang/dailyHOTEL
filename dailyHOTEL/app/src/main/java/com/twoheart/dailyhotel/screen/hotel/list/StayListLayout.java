@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
@@ -243,6 +244,9 @@ public class StayListLayout extends PlaceListLayout
                     public void onInformationClick(PlaceViewItem placeViewItem)
                     {
                         ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+
+                        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.HOTEL_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
                     }
                 });
 
