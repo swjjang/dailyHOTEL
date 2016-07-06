@@ -52,6 +52,11 @@ import java.util.TimeZone;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
+    public GourmetMainFragment()
+    {
+        GourmetCurationManager.getInstance().clear();
+    }
+
     @Override
     protected PlaceMainLayout getPlaceMainLayout(Context context)
     {

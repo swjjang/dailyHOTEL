@@ -51,6 +51,11 @@ import java.util.TimeZone;
 
 public class StayMainFragment extends PlaceMainFragment
 {
+    public StayMainFragment()
+    {
+        StayCurationManager.getInstance().clear();
+    }
+
     @Override
     protected PlaceMainLayout getPlaceMainLayout(Context context)
     {
