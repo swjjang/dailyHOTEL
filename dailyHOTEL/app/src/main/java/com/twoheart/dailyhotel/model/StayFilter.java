@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HotelFilter implements Parcelable
+public class StayFilter implements Parcelable
 {
     public static final int MIN_PERSON = 2;
     public static final int MAX_PERSON = 10;
@@ -34,14 +34,14 @@ public class HotelFilter implements Parcelable
     public int bedType;
     public int amenitiesFlag;
 
-    public HotelFilter(JSONObject jsonObject) throws JSONException
+    public StayFilter(JSONObject jsonObject) throws JSONException
     {
         setBedType(jsonObject.getString("bedType"));
         setAmenitiesFlag(jsonObject);
         maxPerson = jsonObject.getInt("personsMaxium");
     }
 
-    public HotelFilter(Parcel in)
+    public StayFilter(Parcel in)
     {
         readFromParcel(in);
     }
@@ -198,15 +198,15 @@ public class HotelFilter implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public HotelFilter createFromParcel(Parcel in)
+        public StayFilter createFromParcel(Parcel in)
         {
-            return new HotelFilter(in);
+            return new StayFilter(in);
         }
 
         @Override
-        public HotelFilter[] newArray(int size)
+        public StayFilter[] newArray(int size)
         {
-            return new HotelFilter[size];
+            return new StayFilter[size];
         }
     };
 }

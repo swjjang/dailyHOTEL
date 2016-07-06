@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  * <p>
- * HotelListFragment (호텔 목록 화면)
+ * StayListFragment (호텔 목록 화면)
  * <p>
  * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
  * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용

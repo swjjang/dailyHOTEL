@@ -4,7 +4,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-public class HotelRegionListFragment extends PlaceRegionListFragment
+public class StayRegionListFragment extends PlaceRegionListFragment
 {
     @Override
     protected void recordAnalyticsScreen(PlaceRegionListActivity.Region region)

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -39,12 +38,12 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     public static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     public static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
-    private static final int HOTEL_TAB_COUNT = 2;
+    private static final int STAY_TAB_COUNT = 2;
 
     private DailyViewPager mViewPager;
     private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private HotelRegionListNetworkController mNetworkController;
+    private StayRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private int mNights;
     private Province mSelectedProvince;
@@ -74,7 +73,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initPrepare()
     {
-        mNetworkController = new HotelRegionListNetworkController(this, mOnNetworkControllerListener);
+        mNetworkController = new StayRegionListNetworkController(this, mOnNetworkControllerListener);
     }
 
     @Override
@@ -138,8 +137,8 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     {
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
 
-        ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
-        HotelRegionListFragment regionListFragment01 = new HotelRegionListFragment();
+        ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(STAY_TAB_COUNT);
+        StayRegionListFragment regionListFragment01 = new StayRegionListFragment();
 
         boolean isOverseas = false;
 
@@ -166,14 +165,14 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         regionListFragment01.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment01);
 
-        HotelRegionListFragment regionListFragment02 = new HotelRegionListFragment();
+        StayRegionListFragment regionListFragment02 = new StayRegionListFragment();
         regionListFragment02.setInformation(Region.GLOBAL, isOverseas ? mSelectedProvince : null);
         regionListFragment02.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment02);
 
         mFragmentPagerAdapter = new PlaceRegionFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
 
-        mViewPager.setOffscreenPageLimit(HOTEL_TAB_COUNT);
+        mViewPager.setOffscreenPageLimit(STAY_TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         mViewPager.setCurrentItem(isOverseas ? 1 : 0);

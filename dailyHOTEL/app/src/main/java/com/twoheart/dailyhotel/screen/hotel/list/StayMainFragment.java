@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -106,7 +105,7 @@ public class StayMainFragment extends PlaceMainFragment
 
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-                int nights = data.getIntExtra(HotelRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
+                int nights = data.getIntExtra(StayRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
 
                 StayCurationManager.getInstance().setProvince(province);
                 StayCurationManager.getInstance().getStayCurationOption().clear();
@@ -539,7 +538,7 @@ public class StayMainFragment extends PlaceMainFragment
         SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
         int night = checkInSaleTime.getOffsetDailyDay();
 
-        Intent intent = HotelRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, checkInSaleTime, night);
+        Intent intent = StayRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, checkInSaleTime, night);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();

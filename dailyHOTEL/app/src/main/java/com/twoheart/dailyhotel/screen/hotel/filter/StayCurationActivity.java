@@ -15,7 +15,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.HotelFilter;
+import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayParams;
@@ -195,19 +195,19 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         twinCheckView.setOnClickListener(this);
         heatedFloorsCheckView.setOnClickListener(this);
 
-        if ((stayCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
+        if ((stayCurationOption.flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
         {
-            updateBedTypeFilter(doubleCheckView, HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
+            updateBedTypeFilter(doubleCheckView, StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
         }
 
-        if ((stayCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN) == HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN)
+        if ((stayCurationOption.flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
         {
-            updateBedTypeFilter(twinCheckView, HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN);
+            updateBedTypeFilter(twinCheckView, StayFilter.FLAG_HOTEL_FILTER_BED_TWIN);
         }
 
-        if ((stayCurationOption.flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
+        if ((stayCurationOption.flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
         {
-            updateBedTypeFilter(heatedFloorsCheckView, HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
+            updateBedTypeFilter(heatedFloorsCheckView, StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
         }
     }
 
@@ -272,13 +272,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             , R.drawable.selector_filter_amenities_pool_button//
             , R.drawable.selector_filter_amenities_fitness_button};
 
-        final int[] amenitiesflag = new int[]{HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
-            , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
-            , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
-            , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
-            , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
-            , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
-            , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS};
+        final int[] amenitiesflag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS};
 
         int length = amenities.length;
 
@@ -302,12 +302,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     private void updatePersonFilter(int person)
     {
-        if (person < HotelFilter.MIN_PERSON)
+        if (person < StayFilter.MIN_PERSON)
         {
-            person = HotelFilter.MIN_PERSON;
-        } else if (person > HotelFilter.MAX_PERSON)
+            person = StayFilter.MIN_PERSON;
+        } else if (person > StayFilter.MAX_PERSON)
         {
-            person = HotelFilter.MAX_PERSON;
+            person = StayFilter.MAX_PERSON;
         }
 
         mStayCurationOption.person = person;
@@ -317,13 +317,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         View minusDimview = (View) mMinusPersonView.getTag();
         View plusDimview = (View) mPlusPersonView.getTag();
 
-        if (person == HotelFilter.MIN_PERSON)
+        if (person == StayFilter.MIN_PERSON)
         {
             mMinusPersonView.setEnabled(false);
             mPlusPersonView.setEnabled(true);
             minusDimview.setVisibility(View.VISIBLE);
             plusDimview.setVisibility(View.GONE);
-        } else if (person == HotelFilter.MAX_PERSON)
+        } else if (person == StayFilter.MAX_PERSON)
         {
             mMinusPersonView.setEnabled(true);
             mPlusPersonView.setEnabled(false);
@@ -368,7 +368,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         if (mIsGlobal == false)
         {
-            updatePersonFilter(HotelFilter.MIN_PERSON);
+            updatePersonFilter(StayFilter.MIN_PERSON);
 
             resetLayout(mBedTypeLayout);
             resetLayout(mGridLayout);
@@ -431,11 +431,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         //            protected Integer doInBackground(Void... params)
         //            {
         //                int count = 0;
-        //                ArrayList<HotelFilters> hotelFiltersList = mStayCurationOption.getFiltersList();
+        //                ArrayList<StayFilters> hotelFiltersList = mStayCurationOption.getFiltersList();
         //
         //                if (Category.ALL.code.equalsIgnoreCase(mCategory.code) == true)
         //                {
-        //                    for (HotelFilters hotelFilters : hotelFiltersList)
+        //                    for (StayFilters hotelFilters : hotelFiltersList)
         //                    {
         //                        if (hotelFilters.isFiltered(mStayCurationOption) == true)
         //                        {
@@ -444,7 +444,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         //                    }
         //                } else
         //                {
-        //                    for (HotelFilters hotelFilters : hotelFiltersList)
+        //                    for (StayFilters hotelFilters : hotelFiltersList)
         //                    {
         //                        if (mCategory.code.equalsIgnoreCase(hotelFilters.categoryCode) == true//
         //                            && hotelFilters.isFiltered(mStayCurationOption) == true)
@@ -645,7 +645,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 break;
 
             case R.id.doubleCheckView:
-                updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
+                updateBedTypeFilter(v, StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
@@ -653,7 +653,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 break;
 
             case R.id.twinCheckView:
-                updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN);
+                updateBedTypeFilter(v, StayFilter.FLAG_HOTEL_FILTER_BED_TWIN);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
@@ -661,7 +661,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 break;
 
             case R.id.heatedFloorsCheckView:
-                updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
+                updateBedTypeFilter(v, StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//

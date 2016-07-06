@@ -17,7 +17,7 @@ public class StayCurationOption extends PlaceCurationOption
     public int flagBedTypeFilters;
     public int flagAmenitiesFilters; // luxuries
 
-    private ArrayList<HotelFilters> mStayFiltersList;
+    private ArrayList<StayFilters> mStayFiltersList;
 
     public StayCurationOption()
     {
@@ -35,7 +35,7 @@ public class StayCurationOption extends PlaceCurationOption
         readFromParcel(in);
     }
 
-    public void setFiltersList(ArrayList<HotelFilters> arrayList)
+    public void setFiltersList(ArrayList<StayFilters> arrayList)
     {
         mStayFiltersList.clear();
 
@@ -76,7 +76,7 @@ public class StayCurationOption extends PlaceCurationOption
         }
     }
 
-    private HotelFilters makeHotelFilters(String categoryCode, JSONObject jsonObject) throws JSONException
+    private StayFilters makeHotelFilters(String categoryCode, JSONObject jsonObject) throws JSONException
     {
         if (jsonObject == null)
         {
@@ -91,7 +91,7 @@ public class StayCurationOption extends PlaceCurationOption
         }
 
         int length = jsonArray.length();
-        HotelFilters hotelFilters = new HotelFilters(length);
+        StayFilters hotelFilters = new StayFilters(length);
         hotelFilters.categoryCode = categoryCode;
 
         for (int i = 0; i < length; i++)
@@ -107,7 +107,7 @@ public class StayCurationOption extends PlaceCurationOption
         return hotelFilters;
     }
 
-    public ArrayList<HotelFilters> getFiltersList()
+    public ArrayList<StayFilters> getFiltersList()
     {
         return mStayFiltersList;
     }
@@ -116,9 +116,9 @@ public class StayCurationOption extends PlaceCurationOption
     {
         super.clear();
 
-        person = HotelFilter.MIN_PERSON;
-        flagBedTypeFilters = HotelFilter.FLAG_HOTEL_FILTER_BED_NONE;
-        flagAmenitiesFilters = HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
+        person = StayFilter.MIN_PERSON;
+        flagBedTypeFilters = StayFilter.FLAG_HOTEL_FILTER_BED_NONE;
+        flagAmenitiesFilters = StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
     public void setCurationOption(StayCurationOption option)
@@ -135,9 +135,9 @@ public class StayCurationOption extends PlaceCurationOption
     public boolean isDefaultFilter()
     {
         if (getSortType() != Constants.SortType.DEFAULT//
-            || person != HotelFilter.MIN_PERSON//
-            || flagBedTypeFilters != HotelFilter.FLAG_HOTEL_FILTER_BED_NONE//
-            || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+            || person != StayFilter.MIN_PERSON//
+            || flagBedTypeFilters != StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
+            || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return false;
         }
@@ -147,7 +147,7 @@ public class StayCurationOption extends PlaceCurationOption
 
     public String getParamStringByBedTypes()
     {
-        if (flagBedTypeFilters == HotelFilter.FLAG_HOTEL_FILTER_BED_NONE)
+        if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
             return null;
         }
@@ -155,17 +155,17 @@ public class StayCurationOption extends PlaceCurationOption
         String prefix = "bedType=";
         StringBuilder sb = new StringBuilder();
 
-        if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
+        if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
         {
             sb.append(prefix).append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append("&");
         }
 
-        if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN) == HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN)
+        if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
         {
             sb.append(prefix).append(AnalyticsManager.Label.SORTFILTER_TWIN).append("&");
         }
 
-        if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
+        if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
         {
             sb.append(prefix).append(AnalyticsManager.Label.SORTFILTER_ONDOL).append("&");
         }
@@ -182,7 +182,7 @@ public class StayCurationOption extends PlaceCurationOption
 
     public String getParamStingByAmenities()
     {
-        if (flagAmenitiesFilters == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return null;
         }
@@ -190,37 +190,37 @@ public class StayCurationOption extends PlaceCurationOption
         String prefix = "luxury=";
         StringBuilder sb = new StringBuilder();
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
         {
             sb.append(prefix).append("Wifi").append("&");
         }
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
         {
             sb.append(prefix).append("Breakfast").append("&");
         }
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
         {
             sb.append(prefix).append("Cooking").append("&");
         }
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
         {
             sb.append(prefix).append("Bath").append("&");
         }
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
         {
             sb.append(prefix).append("Parking").append("&");
         }
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
         {
             sb.append(prefix).append("Pool").append("&");
         }
 
-        if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
         {
             sb.append(prefix).append("Fitness").append("&");
         }
@@ -267,20 +267,20 @@ public class StayCurationOption extends PlaceCurationOption
 
         result.append('-');
 
-        if (flagBedTypeFilters == HotelFilter.FLAG_HOTEL_FILTER_BED_NONE)
+        if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
             boolean isFirst = true;
 
-            if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
+            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
             {
                 isFirst = false;
                 result.append(AnalyticsManager.Label.SORTFILTER_DOUBLE);
             }
 
-            if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN) == HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN)
+            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
             {
                 if (isFirst == true)
                 {
@@ -293,7 +293,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_TWIN);
             }
 
-            if ((flagBedTypeFilters & HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
+            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
             {
                 if (isFirst == true)
                 {
@@ -309,20 +309,20 @@ public class StayCurationOption extends PlaceCurationOption
 
         result.append('-');
 
-        if (flagAmenitiesFilters == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
             boolean isFirst = true;
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
             {
                 isFirst = false;
                 result.append(AnalyticsManager.Label.SORTFILTER_WIFI);
             }
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
             {
                 if (isFirst == true)
                 {
@@ -335,7 +335,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST);
             }
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
             {
                 if (isFirst == true)
                 {
@@ -348,7 +348,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_KITCHEN);
             }
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
             {
                 if (isFirst == true)
                 {
@@ -361,7 +361,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_BATHTUB);
             }
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
             {
                 if (isFirst == true)
                 {
@@ -374,7 +374,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
             }
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
             {
                 if (isFirst == true)
                 {
@@ -387,7 +387,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_POOL);
             }
 
-            if ((flagAmenitiesFilters & HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
             {
                 if (isFirst == true)
                 {
@@ -421,7 +421,7 @@ public class StayCurationOption extends PlaceCurationOption
 
         person = in.readInt();
         flagBedTypeFilters = in.readInt();
-        in.readTypedList(mStayFiltersList, HotelFilters.CREATOR);
+        in.readTypedList(mStayFiltersList, StayFilters.CREATOR);
         flagAmenitiesFilters = in.readInt();
     }
 

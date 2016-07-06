@@ -15,13 +15,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelRegionListNetworkController extends PlaceRegionListNetworkController
+public class StayRegionListNetworkController extends PlaceRegionListNetworkController
 {
     private BaseActivity mBaseActivity;
 
     private OnNetworkControllerListener mOnNetworkControllerListener;
 
-    public HotelRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
+    public StayRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
     {
         if (baseActivity == null || listener == null)
         {

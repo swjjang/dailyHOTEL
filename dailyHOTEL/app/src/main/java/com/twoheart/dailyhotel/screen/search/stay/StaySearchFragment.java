@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
-import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -303,7 +303,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-            Intent intent = HotelCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
