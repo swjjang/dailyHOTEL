@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailySwitchCompat;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 
@@ -166,6 +167,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
 
+        final PlaceType startPlactType = placeType;
+
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
@@ -203,10 +206,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mStaySearchFragment.showSearchKeyboard();
                     }
                 }
+
+                analyticsSwitchChanged(startPlactType, mPlaceType);
             }
         });
-
-        final PlaceType startPlactType = placeType;
 
         switchCompat.setOnScrollListener(new DailySwitchCompat.OnScrollListener()
         {
@@ -284,5 +287,35 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
         }
+    }
+
+    private void analyticsSwitchChanged(PlaceType startPlaceType, PlaceType changedPlaceType)
+    {
+        String category = AnalyticsManager.ValueType.EMPTY;
+        String label = AnalyticsManager.ValueType.EMPTY;
+
+        switch (startPlaceType)
+        {
+            case HOTEL:
+                category = AnalyticsManager.Category.HOTEL_SEARCH;
+                break;
+
+            case FNB:
+                category = AnalyticsManager.Category.GOURMET_SEARCH;
+                break;
+        }
+
+        switch (changedPlaceType)
+        {
+            case HOTEL:
+                label = AnalyticsManager.Label.HOTEL;
+                break;
+
+            case FNB:
+                label = AnalyticsManager.Label.GOURMET;
+                break;
+        }
+
+        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SWITCHING, label, null);
     }
 }

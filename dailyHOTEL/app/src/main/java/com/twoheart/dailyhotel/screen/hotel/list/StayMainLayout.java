@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayMainLayout extends PlaceMainLayout
 {
@@ -27,6 +28,12 @@ public class StayMainLayout extends PlaceMainLayout
     protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         return new StayListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+    }
+
+    @Override
+    protected void onAnalyticsCategoryFlicking(String category)
+    {
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, null);
     }
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)

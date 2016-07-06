@@ -22,6 +22,12 @@ public class GourmetMainLayout extends PlaceMainLayout
         return new GourmetListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
     }
 
+    @Override
+    protected void onAnalyticsCategoryFlicking(String category)
+    {
+
+    }
+
     protected void setToolbarDateText(SaleTime saleTime)
     {
         String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");

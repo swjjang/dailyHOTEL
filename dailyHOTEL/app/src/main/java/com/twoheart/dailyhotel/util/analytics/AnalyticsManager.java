@@ -402,6 +402,9 @@ public class AnalyticsManager
         public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
         //
         public static final String SIGNIN = "Menu_Login";
+        public static final String MENU_REGISTRATION_CONFIRM = "Menu_Registration_Confirm";
+        public static final String MENU_LOGIN_COMPLETE = "Menu_Login_Complete";
+        public static final String MENU_LOGOUT_COMPLETE = "Menu_Logout_Complete";
         //
         public static final String TERMSOFUSE = "Menu_TermsofUse";
         public static final String TERMSOFPRIVACY = "Menu_TermsofPrivacy";
@@ -567,6 +570,15 @@ public class AnalyticsManager
         public static final String HOTEL_COUPON_NOT_FOUND = "HotelCouponNotFound";
         //
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
+        //
+        public static final String CHANGE_LOCATION = "ChangeLocation";
+        public static final String CHAGE_VIEW = "ChageView";
+        public static final String DAILY_HOTEL_CATEGORY_FLICKING = "DailyHotelCategoryFlicking";
+        public static final String HOTEL_MAP_ICON_CLICKED = "HotelMapIconClicked";
+        public static final String HOTEL_MAP_DETAIL_VIEW_CLICKED = "HotelMapDetailViewClicked";
+        public static final String GOURMET_MAP_ICON_CLICKED = "GourmetMapIconClicked";
+        public static final String GOURMET_MAP_DETAIL_VIEW_CLICKED = "GourmetMapDetailViewClicked";
+        public static final String SWITCHING = "Switching";
     }
 
     public static class Category
