@@ -20,9 +20,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SignupStep2Activity extends BaseActivity
 {
     private static final String INTENT_EXTRA_DATA_SIGNUPKEY = "signupKey";

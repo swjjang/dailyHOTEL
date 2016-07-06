@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -27,6 +26,9 @@ import java.util.List;
 public class StayListFragment extends PlaceListFragment
 {
     private int mPageIndex;
+
+    protected SaleTime mCheckInSaleTime;
+
     private ViewType mViewType;
 
     private StayListLayout mStayListLayout;
@@ -72,6 +74,11 @@ public class StayListFragment extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////           Ovrride method    start   /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setViewType(ViewType viewType)
+    {
+        this.mViewType = viewType;
+    }
 
     @Override
     public void clearList()
@@ -173,15 +180,15 @@ public class StayListFragment extends PlaceListFragment
                 mStayListLayout.clearList();
             }
 
-            StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
+            SortType sortType = StayCurationManager.getInstance().getStayCurationOption().getSortType();
 
-            ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list);
+            ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
 
             switch (mViewType)
             {
                 case LIST:
                 {
-                    mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
+                    mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
                     int size = mStayListLayout.getItemCount();
                     if (size == 0)
@@ -193,7 +200,7 @@ public class StayListFragment extends PlaceListFragment
 
                 case MAP:
                 {
-                    mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
+                    mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
                     int mapSize = mStayListLayout.getMapItemSize();
                     if (mapSize == 0)
@@ -232,7 +239,7 @@ public class StayListFragment extends PlaceListFragment
 
         }
 
-        private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList)
+        private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
         {
             ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
 
@@ -246,30 +253,34 @@ public class StayListFragment extends PlaceListFragment
 
             for (Stay stay : stayList)
             {
-                String region = stay.districtName;
-
-                if (Util.isTextEmpty(region) == true)
+                // 지역순에만 section 존재함
+                if (SortType.DEFAULT == sortType)
                 {
-                    continue;
-                }
+                    String region = stay.districtName;
 
-                if (stay.isDailyChoice == true)
-                {
-                    if (hasDailyChoice == false)
+                    if (Util.isTextEmpty(region) == true)
                     {
-                        hasDailyChoice = true;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                        stayViewItemList.add(section);
+                        continue;
                     }
-                } else
-                {
-                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                    {
-                        previousRegion = region;
 
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                        stayViewItemList.add(section);
+                    if (stay.isDailyChoice == true)
+                    {
+                        if (hasDailyChoice == false)
+                        {
+                            hasDailyChoice = true;
+
+                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+                            stayViewItemList.add(section);
+                        }
+                    } else
+                    {
+                        if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+                        {
+                            previousRegion = region;
+
+                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
+                            stayViewItemList.add(section);
+                        }
                     }
                 }
 
