@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -98,7 +98,8 @@
                 android:layout_gravity="right"
                 android:layout_marginBottom="7dp"
                 android:layout_marginRight="7dp"
-                android:src="@drawable/navibar_ic_x"/>
+                android:src="@drawable/navibar_ic_x"
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView

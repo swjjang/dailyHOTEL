@@ -122,6 +122,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 
         mViewPager.setOffscreenPageLimit(GOURMET_TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);

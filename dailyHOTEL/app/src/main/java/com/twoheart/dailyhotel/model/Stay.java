@@ -16,7 +16,6 @@ import java.util.Iterator;
 
 public class Stay extends Place
 {
-    protected int averageDiscountPrice;
     public String dBenefitText;
     public int nights;
     public double distance; // 정렬시에 보여주는 내용
@@ -36,12 +35,6 @@ public class Stay extends Place
     }
 
     @Override
-    public int getDiscountPrice()
-    {
-        return averageDiscountPrice;
-    }
-
-    @Override
     public int getGradeMarkerResId()
     {
         return mGrade.getMarkerResId();
@@ -52,7 +45,7 @@ public class Stay extends Place
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeInt(averageDiscountPrice);
+
         dest.writeSerializable(mGrade);
         dest.writeString(dBenefitText);
         dest.writeString(categoryCode);
@@ -63,7 +56,6 @@ public class Stay extends Place
     {
         super.readFromParcel(in);
 
-        averageDiscountPrice = in.readInt();
         mGrade = (Grade) in.readSerializable();
         dBenefitText = in.readString();
         categoryCode = in.readString();
@@ -83,7 +75,7 @@ public class Stay extends Place
         {
             name = jsonObject.getString("name");
             price = jsonObject.getInt("price");
-            averageDiscountPrice = jsonObject.getInt("discount"); // discountAvg ????
+            discountPrice = jsonObject.getInt("discount"); // discountAvg ????
             addressSummary = jsonObject.getString("addrSummary");
 
             try

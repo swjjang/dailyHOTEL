@@ -27,7 +27,6 @@ import java.util.List;
 public class StayListFragment extends PlaceListFragment
 {
     private int mPageIndex;
-
     private ViewType mViewType;
 
     private StayListLayout mStayListLayout;
@@ -73,10 +72,6 @@ public class StayListFragment extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////           Ovrride method    start   /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
-
-    public void setViewType(ViewType viewType) {
-        this.mViewType = viewType;
-    }
 
     @Override
     public void clearList()
@@ -198,7 +193,7 @@ public class StayListFragment extends PlaceListFragment
 
                 case MAP:
                 {
-                    mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType(), true);
+                    mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, stayCurationOption.getSortType());
 
                     int mapSize = mStayListLayout.getMapItemSize();
                     if (mapSize == 0)

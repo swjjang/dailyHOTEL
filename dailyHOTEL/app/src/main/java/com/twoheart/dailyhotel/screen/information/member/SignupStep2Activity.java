@@ -235,11 +235,7 @@ public class SignupStep2Activity extends BaseActivity
             DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
-
-            // Analytics
-            Map<String, String> analyticsParams = new HashMap<>();
-            analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-            AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM, analyticsParams);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
 
             showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {

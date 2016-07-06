@@ -110,7 +110,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             averageTextView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(Util.getPriceFormat(mContext, stay.getDiscountPrice(), false));
+        discountTextView.setText(Util.getPriceFormat(mContext, stay.discountPrice, false));
 
         name.setSelected(true); // Android TextView marquee bug
 

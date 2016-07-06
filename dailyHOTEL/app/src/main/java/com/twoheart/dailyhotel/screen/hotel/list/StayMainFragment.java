@@ -101,7 +101,6 @@ public class StayMainFragment extends PlaceMainFragment
         } else if (resultCode == RESULT_CHANGED_DATE && data != null)
         {
             // 날짜 선택 화면으로 이동한다.
-
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
             {
                 StayCurationManager.getInstance().getStayCurationOption().clear();
@@ -279,7 +278,7 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, StayCurationManager.getInstance().getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.getDiscountPrice());
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.discountPrice);
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -1239,6 +1238,21 @@ public class StayMainFragment extends PlaceMainFragment
                 case RecyclerView.SCROLL_STATE_IDLE:
                 {
                     mPlaceMainLayout.animationMenuBarLayout();
+
+                    if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() == recyclerView.computeVerticalScrollRange())
+                    {
+                        StayListAdapter stayListAdapter = (StayListAdapter) recyclerView.getAdapter();
+
+                        if (stayListAdapter != null)
+                        {
+                            PlaceViewItem placeViewItem = stayListAdapter.getItem(stayListAdapter.getItemCount() - 1);
+
+                            if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                            {
+                                mPlaceMainLayout.showBottomLayout(false);
+                            }
+                        }
+                    }
                     break;
                 }
 

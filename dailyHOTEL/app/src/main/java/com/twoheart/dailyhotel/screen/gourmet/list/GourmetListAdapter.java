@@ -199,7 +199,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         DecimalFormat comma = new DecimalFormat("###,##0");
 
         String strPrice = comma.format(gourmet.price);
-        String strDiscount = comma.format(gourmet.getDiscountPrice());
+        String strDiscount = comma.format(gourmet.discountPrice);
 
         String address = gourmet.addressSummary;
 
@@ -226,7 +226,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.getDiscountPrice())
+        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
         {
             holder.priceView.setVisibility(View.INVISIBLE);
             holder.priceView.setText(null);

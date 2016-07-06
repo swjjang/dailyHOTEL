@@ -12,14 +12,14 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="7dp">
 
         <ImageView
             android:id="@+id/addressIconView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/info_ic_map_small"
-            android:layout_centerVertical="true"/>
+            android:layout_marginTop="3dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_toLeftOf="@+id/copyAddressView"
             android:layout_toRightOf="@+id/addressIconView"
             android:orientation="vertical"
-            android:layout_centerVertical="true">
+            android:layout_marginTop="3dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/hotelAddressTextView01"
@@ -78,7 +78,7 @@
             android:text="@string/label_copy_address"
             android:textColor="@color/menu_text_default"
             android:textSize="12dp"
-            android:layout_centerVertical="true"/>
+            />
 
     </RelativeLayout>
 

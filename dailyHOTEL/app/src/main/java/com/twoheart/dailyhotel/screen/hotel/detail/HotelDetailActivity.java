@@ -230,8 +230,6 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL);
-
         super.onStart();
     }
 

@@ -194,7 +194,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         final Stay stay = placeViewItem.getItem();
 
         String strPrice = Util.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, stay.getDiscountPrice(), false);
+        String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
 
         String address = stay.addressSummary;
 
@@ -210,7 +210,7 @@ public class StayListAdapter extends PlaceListAdapter implements PinnedSectionRe
         holder.hotelAddressView.setText(address);
         holder.hotelNameView.setText(stay.name);
 
-        if (stay.price <= 0 || stay.price <= stay.getDiscountPrice())
+        if (stay.price <= 0 || stay.price <= stay.discountPrice)
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);

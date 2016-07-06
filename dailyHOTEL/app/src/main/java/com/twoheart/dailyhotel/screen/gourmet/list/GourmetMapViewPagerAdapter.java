@@ -104,7 +104,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(Util.getPriceFormat(mContext, gourmet.getDiscountPrice(), false));
+        discountTextView.setText(Util.getPriceFormat(mContext, gourmet.discountPrice, false));
 
         name.setSelected(true); // Android TextView marquee bug
 

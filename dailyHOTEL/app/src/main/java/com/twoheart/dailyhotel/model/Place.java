@@ -9,6 +9,7 @@ public abstract class Place implements Parcelable
     public String imageUrl;
     public String name;
     public int price;
+    public int discountPrice;
     public String addressSummary;
     public double latitude;
     public double longitude;
@@ -27,8 +28,6 @@ public abstract class Place implements Parcelable
         readFromParcel(in);
     }
 
-    public abstract int getDiscountPrice();
-
     public abstract int getGradeMarkerResId();
 
     @Override
@@ -37,6 +36,7 @@ public abstract class Place implements Parcelable
         dest.writeString(imageUrl);
         dest.writeString(name);
         dest.writeInt(price);
+        dest.writeInt(discountPrice);
         dest.writeString(addressSummary);
         dest.writeInt(index);
         dest.writeDouble(latitude);
@@ -51,6 +51,7 @@ public abstract class Place implements Parcelable
         imageUrl = in.readString();
         name = in.readString();
         price = in.readInt();
+        discountPrice = in.readInt();
         addressSummary = in.readString();
         index = in.readInt();
         latitude = in.readDouble();

@@ -93,7 +93,8 @@ public class GourmetListLayout extends PlaceListLayout
         return mGourmetListMapFragment;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType, boolean isRefresh)
+    @Override
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
         if (mPlaceListAdapter == null)
         {
@@ -112,23 +113,30 @@ public class GourmetListLayout extends PlaceListLayout
         {
             setVisibility(fragmentManager, viewType, true);
 
-            if (viewType == Constants.ViewType.MAP)
+            switch (viewType)
             {
-                mGourmetListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+                case LIST:
                 {
-                    @Override
-                    public void onInformationClick(PlaceViewItem placeViewItem)
+                    mPlaceRecyclerView.scrollToPosition(0);
+                    break;
+                }
+
+                case MAP:
+                {
+                    mGourmetListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
                     {
-                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
-                    }
-                });
+                        @Override
+                        public void onInformationClick(PlaceViewItem placeViewItem)
+                        {
+                            ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+                        }
+                    });
 
-                mGourmetListMapFragment.setPlaceViewItemList(list, isRefresh);
+                    mGourmetListMapFragment.setPlaceViewItemList(list, true);
 
-                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
-            } else
-            {
-                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST);
+                    AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
+                    break;
+                }
             }
 
             if (sortType == Constants.SortType.DEFAULT)

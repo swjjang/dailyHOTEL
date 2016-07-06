@@ -174,6 +174,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
         mViewPager.setOffscreenPageLimit(STAY_TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         mViewPager.setCurrentItem(isOverseas ? 1 : 0);
 

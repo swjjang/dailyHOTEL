@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
+        android:layout_height="52dp"
         android:background="@color/white">
 
         <ImageView

@@ -230,8 +230,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL);
-
         try
         {
             super.onStart();

@@ -23,7 +23,6 @@ public class Gourmet extends Place
 
     private GourmetFilters mGourmetFilters;
 
-    protected int discountPrice;
     public Grade grade;
 
     public Gourmet()
@@ -34,12 +33,6 @@ public class Gourmet extends Place
     public Gourmet(Parcel in)
     {
         readFromParcel(in);
-    }
-
-    @Override
-    public int getDiscountPrice()
-    {
-        return discountPrice;
     }
 
     @Override
@@ -54,7 +47,6 @@ public class Gourmet extends Place
         super.writeToParcel(dest, flags);
 
         dest.writeInt(persons);
-        dest.writeInt(discountPrice);
         dest.writeSerializable(grade);
     }
 
@@ -63,7 +55,6 @@ public class Gourmet extends Place
         super.readFromParcel(in);
 
         persons = in.readInt();
-        discountPrice = in.readInt();
         grade = (Grade) in.readSerializable();
     }
 
