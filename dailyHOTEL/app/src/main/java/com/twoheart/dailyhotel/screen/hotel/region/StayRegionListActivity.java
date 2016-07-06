@@ -285,7 +285,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         @Override
         public void onActivityCreated(PlaceRegionListFragment placeRegionListFragment)
         {
-            PlaceRegionListFragment currPlaceRegionListFragment = (PlaceRegionListFragment)mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            PlaceRegionListFragment currPlaceRegionListFragment = (PlaceRegionListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
             if (currPlaceRegionListFragment == placeRegionListFragment)
             {

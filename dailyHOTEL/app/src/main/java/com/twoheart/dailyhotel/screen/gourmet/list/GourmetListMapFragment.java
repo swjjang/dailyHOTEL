@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetListMapFragment extends PlaceListMapFragment
 {
@@ -15,5 +16,17 @@ public class GourmetListMapFragment extends PlaceListMapFragment
     protected PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context)
     {
         return new GourmetMapViewPagerAdapter(context);
+    }
+
+    @Override
+    protected void onAnalyticsMarkerClick(String placeName)
+    {
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_MAP_ICON_CLICKED, placeName, null);
+    }
+
+    @Override
+    protected void onAnalyticsDetailClick(String placeName)
+    {
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeName, null);
     }
 }

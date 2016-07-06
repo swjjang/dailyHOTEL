@@ -236,15 +236,10 @@ public class StayMainFragment extends PlaceMainFragment
 
     public void startCalendar()
     {
-        if (isFinishing() == true || isLockUiComponent() == true)
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
-
-        lockUiComponent();
-
-        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
 
         SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
         int nights = StayCurationManager.getInstance().getNights();
@@ -729,6 +724,9 @@ public class StayMainFragment extends PlaceMainFragment
         public void onDateClick()
         {
             startCalendar();
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
         }
 
         @Override
@@ -747,6 +745,17 @@ public class StayMainFragment extends PlaceMainFragment
             Intent intent = StayRegionListActivity.newInstance(getContext(), //
                 StayCurationManager.getInstance().getProvince(), checkInSaleTime, night);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            switch (mViewType)
+            {
+                case LIST:
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_LIST, null);
+                    break;
+
+                case MAP:
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_MAP, null);
+                    break;
+            }
         }
 
         @Override
@@ -774,6 +783,8 @@ public class StayMainFragment extends PlaceMainFragment
                     }
 
                     mViewType = ViewType.MAP;
+
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
 
                 case MAP:
@@ -801,7 +812,8 @@ public class StayMainFragment extends PlaceMainFragment
                         params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                     }
 
-                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
+                    AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
                 }
             }

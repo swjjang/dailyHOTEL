@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class StayListLayout extends PlaceListLayout
 {
-    private StayMapFragment mStayMapFragment;
+    private StayListMapFragment mStayListMapFragment;
 
     public StayListLayout(Context context, OnEventListener eventListener)
     {
@@ -44,12 +44,12 @@ public class StayListLayout extends PlaceListLayout
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
-                if (mStayMapFragment != null)
+                if (mStayListMapFragment != null)
                 {
-                    mStayMapFragment.resetMenuBarLayoutranslation();
-                    fragmentManager.beginTransaction().remove(mStayMapFragment).commitAllowingStateLoss();
+                    mStayListMapFragment.resetMenuBarLayoutranslation();
+                    fragmentManager.beginTransaction().remove(mStayListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
-                    mStayMapFragment = null;
+                    mStayListMapFragment = null;
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -59,11 +59,11 @@ public class StayListLayout extends PlaceListLayout
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if (isCurrentPage == true && mStayMapFragment == null)
+                if (isCurrentPage == true && mStayListMapFragment == null)
                 {
-                    mStayMapFragment = new StayMapFragment();
-                    mStayMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
+                    mStayListMapFragment = new StayListMapFragment();
+                    mStayListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mStayListMapFragment).commitAllowingStateLoss();
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
@@ -82,9 +82,9 @@ public class StayListLayout extends PlaceListLayout
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)
     {
-        if (viewType == Constants.ViewType.MAP && mStayMapFragment != null)
+        if (viewType == Constants.ViewType.MAP && mStayListMapFragment != null)
         {
-            return mStayMapFragment.isShowInformation();
+            return mStayListMapFragment.isShowInformation();
         }
 
         return false;
@@ -93,7 +93,7 @@ public class StayListLayout extends PlaceListLayout
     @Override
     protected PlaceListMapFragment getListMapFragment()
     {
-        return mStayMapFragment;
+        return mStayListMapFragment;
     }
 
     public List<PlaceViewItem> getList()
@@ -225,7 +225,7 @@ public class StayListLayout extends PlaceListLayout
             {
                 setVisibility(fragmentManager, viewType, true);
 
-                mStayMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+                mStayListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
                 {
                     @Override
                     public void onInformationClick(PlaceViewItem placeViewItem)
@@ -234,7 +234,7 @@ public class StayListLayout extends PlaceListLayout
                     }
                 });
 
-                mStayMapFragment.setPlaceViewItemList(list, isRefresh);
+                mStayListMapFragment.setPlaceViewItemList(list, isRefresh);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
             }
@@ -272,7 +272,7 @@ public class StayListLayout extends PlaceListLayout
 
     public int getMapItemSize()
     {
-        return mStayMapFragment != null ? mStayMapFragment.getPlaceViewItemListSize() : 0;
+        return mStayListMapFragment != null ? mStayListMapFragment.getPlaceViewItemListSize() : 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

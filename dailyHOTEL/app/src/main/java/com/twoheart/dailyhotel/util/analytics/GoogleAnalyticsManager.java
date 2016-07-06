@@ -72,6 +72,17 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+            screenViewBuilder.setCustomDimension(3, "yes".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.DBENEFIT)) == true ? "y" : "n");
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screen + " | " + screenViewBuilder.toString());
+            }
+
             checkoutStep(1, screen, null, params);
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
         {

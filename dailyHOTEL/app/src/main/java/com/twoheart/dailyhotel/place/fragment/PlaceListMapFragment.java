@@ -95,6 +95,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     protected abstract PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context);
 
+    protected abstract void onAnalyticsMarkerClick(String placeName);
+
+    protected abstract void onAnalyticsDetailClick(String placeName);
+
     public PlaceListMapFragment()
     {
     }
@@ -768,7 +772,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mValueAnimator.start();
     }
 
-
     private void onMarkerTempClick(final LatLng latlng)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -1145,6 +1148,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         {
             PlaceListMapFragment.this.onMarkerClick(marker.getPosition());
 
+            onAnalyticsMarkerClick(mPlaceViewItemViewPagerList.get(0).<Place>getItem().name);
+
             return true;
         }
     };
@@ -1170,6 +1175,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 onMarkerTempClick(hotelClusterItem.getPosition());
             }
+
+            onAnalyticsDetailClick(place.name);
         }
 
         @Override

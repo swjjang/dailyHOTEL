@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.gourmet.region;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -15,7 +14,6 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
-import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
@@ -183,7 +181,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         @Override
         public void onActivityCreated(PlaceRegionListFragment placeRegionListFragment)
         {
-            PlaceRegionListFragment currPlaceRegionListFragment = (PlaceRegionListFragment)mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            PlaceRegionListFragment currPlaceRegionListFragment = (PlaceRegionListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
             if (currPlaceRegionListFragment == placeRegionListFragment)
             {

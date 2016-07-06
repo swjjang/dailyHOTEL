@@ -253,6 +253,9 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             Intent intent = GourmetCalendarActivity.newInstance(getContext(), GourmetCurationManager.getInstance().getSaleTime(), AnalyticsManager.ValueType.LIST, true, true);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
         }
 
         @Override
@@ -268,6 +271,17 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             Intent intent = GourmetRegionListActivity.newInstance(getContext(), province, saleTime);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            switch (mViewType)
+            {
+                case LIST:
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.GOURMET_LIST, null);
+                    break;
+
+                case MAP:
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.GOURMET_MAP, null);
+                    break;
+            }
         }
 
         @Override
@@ -294,6 +308,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     }
 
                     mViewType = ViewType.MAP;
+
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
                     break;
                 }
 
@@ -317,6 +333,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     }
 
                     AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, parmas);
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.GOURMET_LIST, null);
                     break;
                 }
             }
@@ -690,7 +707,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             if (currentPlaceListFragment == placeListFragment)
             {
                 // Stay와 다르게 새로 생성되지 않기 때문에 setVisibility 을 호출 하지 않아도 된다.
-//                currentPlaceListFragment.setVisibility(mViewType, true);
+                //                currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.refreshList(false);
             }
         }

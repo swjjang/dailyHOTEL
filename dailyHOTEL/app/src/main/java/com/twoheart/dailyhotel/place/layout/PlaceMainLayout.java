@@ -70,6 +70,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
+    protected abstract void onAnalyticsCategoryFlicking(String category);
+
     public PlaceMainLayout(Context context, OnEventListener listener)
     {
         super(context, listener);
@@ -252,7 +254,36 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
             mViewPager.setAdapter(mFragmentPagerAdapter);
+            mViewPager.clearOnPageChangeListeners();
             mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+            {
+                boolean isScrolling = false;
+                int prevPosition = 0;
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+                {
+                    prevPosition = position;
+                    isScrolling = true;
+                }
+
+                @Override
+                public void onPageSelected(int position)
+                {
+                    if (prevPosition != position)
+                    {
+                        prevPosition = position;
+
+                        onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state)
+                {
+                }
+            });
 
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 

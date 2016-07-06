@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
