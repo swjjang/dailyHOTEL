@@ -25,13 +25,20 @@ import java.util.List;
 
 public abstract class PlaceRegionListFragment extends BaseFragment
 {
-    private PlaceRegionListActivity.OnUserActionListener mOnUserActionListener;
+    private OnPlaceRegionListFragment mOnPlaceRegionListFragment;
 
     private DailyAnimatedExpandableListView mListView;
     private PlaceRegionAnimatedExpandableListAdapter mAdapter;
     private Province mSelectedProvince;
 
     private PlaceRegionListActivity.Region mRegion;
+
+    public interface OnPlaceRegionListFragment
+    {
+        void onActivityCreated(PlaceRegionListFragment placeRegionListFragment);
+
+        void onRegionClick(Province province);
+    }
 
     protected abstract void recordAnalyticsScreen(PlaceRegionListActivity.Region region);
 
@@ -53,6 +60,17 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         }
 
         super.onResume();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+
+        if (mOnPlaceRegionListFragment != null)
+        {
+            mOnPlaceRegionListFragment.onActivityCreated(this);
+        }
     }
 
     public void setRegionViewList(BaseActivity baseActivity, List<RegionViewItem> arrayList)
@@ -81,9 +99,9 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         mSelectedProvince = province;
     }
 
-    public void setOnUserActionListener(PlaceRegionListActivity.OnUserActionListener listener)
+    public void setOnPlaceRegionListFragmentListener(OnPlaceRegionListFragment listener)
     {
-        mOnUserActionListener = listener;
+        mOnPlaceRegionListFragment = listener;
     }
 
     private View getGroupView(int groupPosition)
@@ -347,9 +365,9 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             {
                 mAdapter.notifyDataSetChanged();
 
-                if (mOnUserActionListener != null)
+                if (mOnPlaceRegionListFragment != null)
                 {
-                    mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
+                    mOnPlaceRegionListFragment.onRegionClick(mAdapter.getGroup(groupPosition));
                 }
                 return true;
             }
@@ -409,28 +427,22 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         {
             Area area = (Area) view.getTag();
 
-            if (area == null)
+            if (area == null || mOnPlaceRegionListFragment == null)
             {
                 return;
             }
 
             if (area.index == -1)
             {
-                if (mOnUserActionListener != null)
-                {
-                    Integer groupPosition = (Integer) view.getTag(view.getId());
+                Integer groupPosition = (Integer) view.getTag(view.getId());
 
-                    if (groupPosition != null)
-                    {
-                        mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
-                    }
+                if (groupPosition != null)
+                {
+                    mOnPlaceRegionListFragment.onRegionClick(mAdapter.getGroup(groupPosition));
                 }
             } else
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.onRegionClick(area);
-                }
+                mOnPlaceRegionListFragment.onRegionClick(area);
             }
         }
     };

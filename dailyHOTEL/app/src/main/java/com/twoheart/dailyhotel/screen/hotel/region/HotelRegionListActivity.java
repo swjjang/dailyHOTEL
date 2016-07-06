@@ -49,7 +49,6 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     private Province mSelectedProvince;
     private TabLayout mTabLayout;
     private View mToolbarUnderline;
-    private int mAttachFragmentCount;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime, int nights)
     {
@@ -76,8 +75,6 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     protected void initPrepare()
     {
         mNetworkController = new HotelRegionListNetworkController(this, mOnNetworkControllerListener);
-
-        mAttachFragmentCount = 0;
     }
 
     @Override
@@ -86,20 +83,6 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
-    }
-
-    @Override
-    public void onAttachFragment(Fragment fragment)
-    {
-        super.onAttachFragment(fragment);
-
-        if (++mAttachFragmentCount == HOTEL_TAB_COUNT)
-        {
-            mAttachFragmentCount = 0;
-            lockUI();
-
-            requestRegionList();
-        }
     }
 
     @Override
@@ -177,12 +160,12 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         }
 
         regionListFragment01.setInformation(Region.DOMESTIC, isOverseas ? null : mSelectedProvince);
-        regionListFragment01.setOnUserActionListener(mOnUserActionListener);
+        regionListFragment01.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment01);
 
         HotelRegionListFragment regionListFragment02 = new HotelRegionListFragment();
         regionListFragment02.setInformation(Region.GLOBAL, isOverseas ? mSelectedProvince : null);
-        regionListFragment02.setOnUserActionListener(mOnUserActionListener);
+        regionListFragment02.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment02);
 
         mFragmentPagerAdapter = new PlaceRegionFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -223,7 +206,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         mNetworkController.requestRegionList();
     }
 
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    private PlaceRegionListFragment.OnPlaceRegionListFragment mOnPlaceRegionListFragment = new PlaceRegionListFragment.OnPlaceRegionListFragment()
     {
         private void recordEvent(Province province)
         {
@@ -294,6 +277,18 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
             } catch (Exception e)
             {
                 return null;
+            }
+        }
+
+        @Override
+        public void onActivityCreated(PlaceRegionListFragment placeRegionListFragment)
+        {
+            PlaceRegionListFragment currPlaceRegionListFragment = (PlaceRegionListFragment)mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currPlaceRegionListFragment == placeRegionListFragment)
+            {
+                lockUI();
+                requestRegionList();
             }
         }
 

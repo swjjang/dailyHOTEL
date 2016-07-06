@@ -65,21 +65,29 @@ public abstract class PlaceMainFragment extends BaseFragment
     @Override
     public void onResume()
     {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
         } else
         {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
             lockUI();
             mPlaceMainNetworkController.requestDateTime();
         }
 
         super.onResume();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        mDontReloadAtOnResume = true;
     }
 
     @Override
@@ -186,6 +194,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                     {
                         case CODE_RESULT_ACTIVITY_REFRESH:
                         case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                            mDontReloadAtOnResume = false;
                             break;
 
                         default:

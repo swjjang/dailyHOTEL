@@ -264,6 +264,10 @@ public class GourmetListFragment extends PlaceListFragment
         mScrollListTop = true;
 
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mGourmetList, curationOption);
+
+        PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
+        placeViewItemList.add(placeViewItemList.size(), placeViewFooterItem);
+
         mGourmetListLayout.setList(getChildFragmentManager(), type, placeViewItemList, curationOption.getSortType(), false);
     }
 
@@ -430,6 +434,9 @@ public class GourmetListFragment extends PlaceListFragment
                         mGourmetList.addAll(gourmetList);
 
                         ArrayList<PlaceViewItem> placeViewItemList = curationList(gourmetList, gourmetCurationOption);
+
+                        PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
+                        placeViewItemList.add(placeViewItemList.size(), placeViewFooterItem);
 
                         mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType(), true);
                     }

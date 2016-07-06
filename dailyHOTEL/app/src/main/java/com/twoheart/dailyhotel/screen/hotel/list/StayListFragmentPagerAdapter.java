@@ -30,7 +30,7 @@ public class StayListFragmentPagerAdapter extends PlaceListFragmentPagerAdapter
         for (int i = 0; i < count; i++)
         {
             stayListFragment = new StayListFragment();
-            stayListFragment.setListFragmentListener(listener);
+            stayListFragment.setPlaceOnListFragmentListener(listener);
             stayListFragment.setBottomOptionLayout(bottomOptionLayout);
             list.add(stayListFragment);
         }

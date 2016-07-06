@@ -26,11 +26,6 @@ public abstract class PlaceRegionListActivity extends BaseActivity
 
     protected abstract void requestRegionList();
 
-    public interface OnUserActionListener
-    {
-        void onRegionClick(Province province);
-    }
-
     public enum Region
     {
         DOMESTIC,

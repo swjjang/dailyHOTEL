@@ -680,7 +680,14 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            refreshCurrentFragment();
+            PlaceListFragment currentPlaceListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+            if (currentPlaceListFragment == placeListFragment)
+            {
+                // Stay와 다르게 새로 생성되지 않기 때문에 setVisibility 을 호출 하지 않아도 된다.
+//                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.refreshList(false);
+            }
         }
 
         @Override

@@ -62,7 +62,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         }
     }
 
-    public void setListFragmentListener(OnPlaceListFragmentListener listener)
+    public void setPlaceOnListFragmentListener(OnPlaceListFragmentListener listener)
     {
         mOnPlaceListFragmentListener = listener;
     }

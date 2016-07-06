@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
@@ -35,11 +36,9 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 
     private ViewPager mViewPager;
     private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
-
     private GourmetRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private Province mSelectedProvince;
-    private int mAttachFragmentCount;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime)
     {
@@ -64,8 +63,6 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initPrepare()
     {
         mNetworkController = new GourmetRegionListNetworkController(this, mOnNetworkControllerListener);
-
-        mAttachFragmentCount = 0;
     }
 
     @Override
@@ -73,20 +70,6 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     {
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
-    }
-
-    @Override
-    public void onAttachFragment(Fragment fragment)
-    {
-        super.onAttachFragment(fragment);
-
-        if (++mAttachFragmentCount == GOURMET_TAB_COUNT)
-        {
-            mAttachFragmentCount = 0;
-            lockUI();
-
-            requestRegionList();
-        }
     }
 
     @Override
@@ -134,7 +117,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 
         GourmetRegionListFragment regionListFragment01 = new GourmetRegionListFragment();
         regionListFragment01.setInformation(Region.DOMESTIC, mSelectedProvince);
-        regionListFragment01.setOnUserActionListener(mOnUserActionListener);
+        regionListFragment01.setOnPlaceRegionListFragmentListener(mOnPlaceListFragmentListener);
         fragmentList.add(regionListFragment01);
 
         mFragmentPagerAdapter = new PlaceRegionFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -168,7 +151,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         mNetworkController.requestRegionList();
     }
 
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    private PlaceRegionListFragment.OnPlaceRegionListFragment mOnPlaceListFragmentListener = new PlaceRegionListFragment.OnPlaceRegionListFragment()
     {
         private void recordEvent(Province province)
         {
@@ -195,6 +178,18 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 
             AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, label, null);
+        }
+
+        @Override
+        public void onActivityCreated(PlaceRegionListFragment placeRegionListFragment)
+        {
+            PlaceRegionListFragment currPlaceRegionListFragment = (PlaceRegionListFragment)mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currPlaceRegionListFragment == placeRegionListFragment)
+            {
+                lockUI();
+                requestRegionList();
+            }
         }
 
         @Override

@@ -30,7 +30,7 @@ public class GourmetListFragmentPagerAdapter extends PlaceListFragmentPagerAdapt
         for (int i = 0; i < count; i++)
         {
             gourmetListFragment = new GourmetListFragment();
-            gourmetListFragment.setListFragmentListener(listener);
+            gourmetListFragment.setPlaceOnListFragmentListener(listener);
             gourmetListFragment.setBottomOptionLayout(bottomOptionLayout);
             list.add(gourmetListFragment);
         }
