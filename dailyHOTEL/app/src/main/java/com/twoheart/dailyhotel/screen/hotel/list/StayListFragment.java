@@ -28,8 +28,6 @@ public class StayListFragment extends PlaceListFragment
 {
     private int mPageIndex;
 
-    protected SaleTime mCheckInSaleTime;
-
     private ViewType mViewType;
 
     private StayListLayout mStayListLayout;
@@ -75,6 +73,10 @@ public class StayListFragment extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////           Ovrride method    start   /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setViewType(ViewType viewType) {
+        this.mViewType = viewType;
+    }
 
     @Override
     public void clearList()
