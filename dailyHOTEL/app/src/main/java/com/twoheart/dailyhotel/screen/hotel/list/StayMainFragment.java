@@ -52,6 +52,10 @@ public class StayMainFragment extends PlaceMainFragment
 {
     public StayMainFragment()
     {
+        Category category = StayCurationManager.getInstance().getCategory();
+
+        StayCurationManager.getInstance().clear();
+        StayCurationManager.getInstance().setCategory(category);
     }
 
     @Override
