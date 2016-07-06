@@ -308,11 +308,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         switch (changedPlaceType)
         {
             case HOTEL:
-                label = AnalyticsManager.Label.HOTEL.toUpperCase();
+                label = "Hotel";
                 break;
 
             case FNB:
-                label = AnalyticsManager.Label.GOURMET.toUpperCase();
+                label = "Gourmet";
                 break;
         }
 
