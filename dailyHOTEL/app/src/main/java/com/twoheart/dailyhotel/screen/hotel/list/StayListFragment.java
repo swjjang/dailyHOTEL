@@ -27,8 +27,6 @@ public class StayListFragment extends PlaceListFragment
 {
     private int mPageIndex;
 
-    protected SaleTime mCheckInSaleTime;
-
     private ViewType mViewType;
 
     private StayListLayout mStayListLayout;
@@ -112,7 +110,10 @@ public class StayListFragment extends PlaceListFragment
 
     private void refreshList(boolean isShowProgress, int page)
     {
-        lockUI(isShowProgress);
+        // 더보기 시 uilock 걸지않음
+        if (page < 1) {
+            lockUI(isShowProgress);
+        }
 
         SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
 
