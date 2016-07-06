@@ -288,7 +288,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
             mObjectAnimator.start();
 
-            showAnimationFadeOut();
+//            showAnimationFadeOut();
         } else
         {
             if (mAnimationLayout != null && mAnimationLayout.getVisibility() != View.VISIBLE)
