@@ -155,6 +155,7 @@ public abstract class PlaceListLayout extends BaseLayout
         if (mPlaceListAdapter != null)
         {
             mPlaceListAdapter.clear();
+            mPlaceListAdapter.notifyDataSetChanged();
         }
 
         setScrollListTop();
