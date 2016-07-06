@@ -117,7 +117,6 @@ public class StayListLayout extends PlaceListLayout
             return;
         }
 
-        // 지도의 경우 무조건 전체 데이터를 가져옴으로 clear 후 진행되야 함
         if (viewType == Constants.ViewType.LIST)
         {
             setVisibility(fragmentManager, viewType, true);
@@ -133,12 +132,47 @@ public class StayListLayout extends PlaceListLayout
                 // 기존 리스트가 존재 할 때 마지막 아이템이 footer 일 경우 아이템 제거
                 if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                 {
-                    getList().remove(placeViewItem);
+                    getList().remove(placeViewItem); // 실제 삭제
+                    oldList.remove(placeViewItem); // 비교 리스트 삭제
+                }
+            }
+
+            // 삭제 이벤트가 발생하였을수 있어서 재 검사
+            int start = oldList == null ? 0 : oldList.size() - 1;
+            int end = oldList == null ? 0 : oldListSize - 5;
+            end = end < 0 ? 0 : end;
+
+            String districtName = null;
+            // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
+            for (int i = start; i >= end; i--)
+            {
+                PlaceViewItem item = oldList.get(i);
+                if (item.mType == PlaceViewItem.TYPE_ENTRY)
+                {
+                    Stay stay = item.getItem();
+                    districtName = stay.districtName;
+                    break;
+                } else if (item.mType == PlaceViewItem.TYPE_SECTION)
+                {
+                    districtName = item.getItem();
+                    break;
                 }
             }
 
             if (list != null && list.size() > 0)
             {
+                if (Util.isTextEmpty(districtName) == false)
+                {
+                    PlaceViewItem firstItem = list.get(0);
+                    if (firstItem.mType == PlaceViewItem.TYPE_SECTION)
+                    {
+                        String firstDistricName = firstItem.getItem();
+                        if (districtName.equalsIgnoreCase(firstDistricName)) {
+                            list.remove(0);
+                        }
+                    }
+                }
+
                 mPlaceListAdapter.addAll(list);
             } else
             {
