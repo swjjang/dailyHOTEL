@@ -169,6 +169,7 @@ public class StayListLayout extends PlaceListLayout
                     }
                 }
 
+                mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.addAll(list);
             } else
             {

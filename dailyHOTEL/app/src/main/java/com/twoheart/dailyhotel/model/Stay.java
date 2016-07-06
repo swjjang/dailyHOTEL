@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.model;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,7 +19,7 @@ public class Stay extends Place
     protected int averageDiscountPrice;
     public String dBenefitText;
     public int nights;
-    public float distance; // 정렬시에 보여주는 내용
+    public double distance; // 정렬시에 보여주는 내용
     public String categoryCode;
     public String sday;
 
@@ -107,6 +108,7 @@ public class Stay extends Place
             isDailyChoice = jsonObject.getBoolean("isDailyChoice");
             satisfaction = jsonObject.getInt("rating"); // ratingValue ??
             sday = jsonObject.getString("sday");
+            distance = jsonObject.getDouble("distance");
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
