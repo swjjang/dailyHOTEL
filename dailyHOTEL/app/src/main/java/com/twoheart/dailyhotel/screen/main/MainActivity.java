@@ -186,6 +186,9 @@ public class MainActivity extends BaseActivity implements Constants
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, contentLayout, mMenuBarLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
+
+        StayCurationManager.getInstance().clear();
+        GourmetCurationManager.getInstance().clear();
     }
 
     @Override

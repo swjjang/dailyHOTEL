@@ -247,11 +247,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 }
             }
 
-            if (selectedTab != null)
-            {
-                selectedTab.select();
-            }
-
             mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
 
             mViewPager.removeAllViews();
@@ -262,6 +257,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 
             FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
+
+            if (selectedTab != null)
+            {
+                selectedTab.select();
+            }
         }
     }
 

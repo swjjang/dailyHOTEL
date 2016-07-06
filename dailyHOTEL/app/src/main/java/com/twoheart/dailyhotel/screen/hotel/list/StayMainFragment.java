@@ -52,7 +52,6 @@ public class StayMainFragment extends PlaceMainFragment
 {
     public StayMainFragment()
     {
-        StayCurationManager.getInstance().clear();
     }
 
     @Override

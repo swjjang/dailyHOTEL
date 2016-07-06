@@ -54,7 +54,6 @@ public class GourmetMainFragment extends PlaceMainFragment
 {
     public GourmetMainFragment()
     {
-        GourmetCurationManager.getInstance().clear();
     }
 
     @Override
