@@ -127,10 +127,13 @@ public class StayListLayout extends PlaceListLayout
                 PlaceViewItem placeViewItem = oldList.get(oldListSize - 1);
 
                 // 기존 리스트가 존재 할 때 마지막 아이템이 footer 일 경우 아이템 제거
-                if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                switch (placeViewItem.mType)
                 {
-                    getList().remove(placeViewItem); // 실제 삭제
-                    oldList.remove(placeViewItem); // 비교 리스트 삭제
+                    case PlaceViewItem.TYPE_FOOTER_VIEW:
+                    case PlaceViewItem.TYPE_LOADING_VIEW:
+                        getList().remove(placeViewItem); // 실제 삭제
+                        oldList.remove(placeViewItem); // 비교 리스트 삭제
+                        break;
                 }
             }
 

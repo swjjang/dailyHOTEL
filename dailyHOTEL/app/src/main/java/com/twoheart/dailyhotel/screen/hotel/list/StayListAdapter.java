@@ -22,7 +22,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -92,6 +91,7 @@ public class StayListAdapter extends PlaceListAdapter
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_LOADING_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
 
@@ -126,6 +126,7 @@ public class StayListAdapter extends PlaceListAdapter
                 onBindViewHolder((EventBannerViewHolder) holder, item);
                 break;
             case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_LOADING_VIEW:
                 onBindViewHolder((FooterViewHolder) holder, item);
                 break;
         }
@@ -275,7 +276,7 @@ public class StayListAdapter extends PlaceListAdapter
         if (getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance / 1000) + "km)");
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
         } else
         {
             holder.distanceTextView.setVisibility(View.GONE);
@@ -292,7 +293,7 @@ public class StayListAdapter extends PlaceListAdapter
             return;
         }
 
-        boolean isLast = placeViewItem.getItem();
+        boolean isLast = placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW;
         holder.loadingView.setVisibility(isLast == false ? View.VISIBLE : View.GONE);
         holder.textView.setVisibility(isLast == true ? View.VISIBLE : View.GONE);
     }

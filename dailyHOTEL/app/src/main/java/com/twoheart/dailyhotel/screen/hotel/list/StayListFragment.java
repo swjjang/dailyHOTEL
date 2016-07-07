@@ -288,16 +288,13 @@ public class StayListFragment extends PlaceListFragment
                 stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
             }
 
-            boolean isLast;
             if (Constants.PAGENATION_LIST_SIZE > stayList.size())
             {
-                isLast = true;
+                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
             } else
             {
-                isLast = false;
+                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
             }
-
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, isLast));
 
             return stayViewItemList;
         }
