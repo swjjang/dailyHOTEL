@@ -111,7 +111,7 @@ public class StayListFragment extends PlaceListFragment
     private void refreshList(boolean isShowProgress, int page)
     {
         // 더보기 시 uilock 걸지않음
-        if (page < 1) {
+        if (page <= 1) {
             lockUI(isShowProgress);
         }
 
