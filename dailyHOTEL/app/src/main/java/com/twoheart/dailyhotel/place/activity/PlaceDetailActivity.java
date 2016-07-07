@@ -726,7 +726,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (isDailyUser == true)
                     {
-                        DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                        DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
                     } else
                     {
                         // 입력된 정보가 부족해.
@@ -756,46 +756,59 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                Customer user = new Customer();
-                user.setEmail(response.getString("email"));
-                user.setName(response.getString("name"));
-                user.setPhone(response.getString("phone"));
-                user.setUserIdx(response.getString("idx"));
+                int msgCode = response.getInt("msgCode");
 
-                boolean isVerified = response.getBoolean("is_verified");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-                {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
-                } else
-                {
-                    // 기존에 인증이 되었는데 인증이 해지되었다.
-                    if (isVerified == true && isPhoneVerified == false)
+                    Customer user = new Customer();
+                    user.setEmail(jsonObject.getString("email"));
+                    user.setName(jsonObject.getString("name"));
+                    user.setPhone(jsonObject.getString("phone"));
+                    user.setUserIdx(jsonObject.getString("userIdx"));
+
+                    boolean isVerified = jsonObject.getBoolean("verified");
+                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                    if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                     {
                         moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
                     } else
                     {
-                        processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
+                        // 기존에 인증이 되었는데 인증이 해지되었다.
+                        if (isVerified == true && isPhoneVerified == false)
+                        {
+                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                        } else
+                        {
+                            processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
+                        }
                     }
+                } else
+                {
+                    String msg = response.getString("msg");
+                    DailyToast.showToast(PlaceDetailActivity.this, msg, Toast.LENGTH_SHORT);
+
+                    finish();
                 }
             } catch (Exception e)
             {
                 onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            PlaceDetailActivity.this.onErrorResponse(volleyError);
         }
     };
 

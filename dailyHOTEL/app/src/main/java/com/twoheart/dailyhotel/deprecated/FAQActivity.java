@@ -29,7 +29,7 @@ public class FAQActivity extends BaseActivity
 
         setContentView(R.layout.activity_board);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //        initToolbar(toolbar, getString(R.string.actionbar_title_faq_activity));
 
         mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);

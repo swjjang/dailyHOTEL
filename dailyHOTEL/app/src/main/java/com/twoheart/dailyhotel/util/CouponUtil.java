@@ -100,13 +100,10 @@ public class CouponUtil
                 ExLog.d("response has not data");
             }
 
-        } catch (JSONException e)
+        } catch (Exception e)
         {
-            ExLog.e(e.getMessage());
+            ExLog.e(e.toString());
 
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.getMessage());
         }
 
         return list;
@@ -179,13 +176,10 @@ public class CouponUtil
                 ExLog.d("response has not data");
             }
 
-        } catch (JSONException e)
+        } catch (JSONException | NullPointerException e)
         {
             ExLog.e(e.getMessage());
 
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.getMessage());
         }
 
         return list;

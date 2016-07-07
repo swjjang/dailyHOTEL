@@ -60,7 +60,7 @@ public class ProfileActivity extends BaseActivity
 
         lockUI();
 
-        mNetworkController.requestUserInformation();
+        mNetworkController.requestUserProfile();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ProfileActivity extends BaseActivity
         {
             lockUI();
 
-            mNetworkController.requestUserInformation();
+            mNetworkController.requestUserProfile();
         }
     }
 
@@ -184,10 +184,6 @@ public class ProfileActivity extends BaseActivity
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 
                     AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(AnalyticsManager.ValueType.EMPTY);
-
-                    // Analytics
-                    Map<String, String> analyticsParams = new HashMap<>();
-                    analyticsParams.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
                     AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.MENU_LOGOUT_COMPLETE);
 
                     finish();
@@ -214,15 +210,13 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String userIndex, String email, String name, String phoneNumber//
-            , boolean isVerified, boolean isPhoneVerified, String verifiedDate, boolean isExceedBonus)
+        public void onUserProfile(String userIndex, String email, String name, String phoneNumber//
+            , boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
             mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), isVerified, isPhoneVerified, verifiedDate);
-
-            unLockUI();
 
             if (isVerified == true)
             {
@@ -241,7 +235,15 @@ public class ProfileActivity extends BaseActivity
                 }
             }
 
+            mNetworkController.requestUserProfileBenfit();
+        }
+
+        @Override
+        public void onUserProfileBenefit(boolean isExceedBonus)
+        {
             AnalyticsManager.getInstance(ProfileActivity.this).setExceedBonus(isExceedBonus);
+
+            unLockUI();
         }
 
         @Override

@@ -48,12 +48,11 @@ interface IDailyNetwork
     void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     * user/session/myinfo
      * 나의 정보를 요청한다
      *
      * @return
      */
-    void requestUserInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserProfile(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * user/session/bonus/all
@@ -71,6 +70,7 @@ interface IDailyNetwork
      */
     void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
+    void requestUserProfileBenefit(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * user/check/email_auth

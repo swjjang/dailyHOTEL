@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.reflect.Field;
@@ -235,12 +236,9 @@ public class StayParams implements Parcelable
 
                     sb.append(stringValue);
 
-                } catch (IllegalAccessException e)
+                } catch (Exception e)
                 {
-                    e.printStackTrace();
-                } catch (NumberFormatException e)
-                {
-                    e.printStackTrace();
+                    ExLog.d(e.toString());
                 }
             }
         }

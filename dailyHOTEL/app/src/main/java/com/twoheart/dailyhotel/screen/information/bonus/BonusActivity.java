@@ -172,6 +172,8 @@ public class BonusActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             BonusActivity.this.onErrorToastMessage(message);
+
+            finish();
         }
     };
 }

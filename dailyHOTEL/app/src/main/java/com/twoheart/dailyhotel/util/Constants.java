@@ -22,7 +22,7 @@ public interface Constants
 {
     // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
-    public static final boolean UNENCRYPTED_URL = true;
+    public static final boolean UNENCRYPTED_URL = false;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
     // 스토어 선택.
@@ -104,7 +104,7 @@ public interface Constants
     //    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://52.196.30.125:3000/" : "NTEkMTAkMzAkNiQ1MyQ=$Qzg0M0XYzNTTczRUMzMTU5NUUwQ0I5RZjJGNzk5MjgyNDQ0N0JENTMEIyQzMyRUU1NjQ3QTEyNDM5MEI4QTdCNkIxOQ==$";
 
     public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me/goodnight/" : "MjgkMzQkOCQyMSQ3NSQ=$N0RDNkNDZRTE1ODY3RTAyZRjlFRUY0YQ0NENUDFCQTg3NjQxRkIwRDhCQjU5N0M3Nzc5QkZDNjBLGOENEMTI3NzNFN0IzMjQ1RkVEOEFENEM2MTk0NjNDMTlDN0Q1RUQwRkZG$";
-    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "NTEkMTAkMzAkNiQ1MyQ=$Qzg0M0XYzNTTczRUMzMTU5NUUwQ0I5RZjJGNzk5MjgyNDQ0N0JENTMEIyQzMyRUU1NjQ3QTEyNDM5MEI4QTdCNkIxOQ==$";
+    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";

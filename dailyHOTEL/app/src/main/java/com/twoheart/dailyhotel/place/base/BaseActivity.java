@@ -382,7 +382,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         releaseUiComponent();
 
-        if (DEBUG == false)
+        if (DEBUG == false && e != null)
         {
             Crashlytics.logException(e);
         }

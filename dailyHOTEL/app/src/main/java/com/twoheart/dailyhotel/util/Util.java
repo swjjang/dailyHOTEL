@@ -823,7 +823,7 @@ public class Util implements Constants
 
             TextView textView = new TextView(context);
 
-            if (Util.DEFAULT_COUNTRY_CODE.equals(countryCode[0]) == true)
+            if (countryCode != null && Util.DEFAULT_COUNTRY_CODE.equals(countryCode[0]) == true)
             {
                 textView.addTextChangedListener(new PhoneNumberKoreaFormattingTextWatcher(context));
             } else

@@ -57,7 +57,7 @@ public class MainNetworkController extends BaseNetworkController
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInfomationJsonResponseListener, mUserInfomationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
     }
 
     /**
@@ -399,38 +399,45 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInfomationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
+                int msgCode = response.getInt("msgCode");
 
-                final String userIndex = response.getString("idx");
-                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
-
-                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
-
-                AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
-                AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
-
-                Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
+                if(msgCode == 100)
                 {
-                    @Override
-                    public void onResult(String registrationId)
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    final String userIndex = jsonObject.getString("userIdx");
+                    AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
+
+                    Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
                     {
-                        if (Util.isTextEmpty(registrationId) == true)
+                        @Override
+                        public void onResult(String registrationId)
                         {
-                            return;
+                            if (Util.isTextEmpty(registrationId) == true)
+                            {
+                                return;
+                            }
+
+                            registerNotificationId(registrationId, userIndex);
                         }
+                    });
 
-                        registerNotificationId(registrationId, userIndex);
-                    }
-                });
+                    // 누적 적립금 판단.
+                    DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
 
-                // 호텔 평가요청
-                DailyNetworkAPI.getInstance(mContext).requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
+                    // 호텔 평가요청
+                    DailyNetworkAPI.getInstance(mContext).requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
+                } else
+                {
+                    mOnNetworkControllerListener.onError(null);
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
@@ -447,6 +454,40 @@ public class MainNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
             }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+
+                    DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                    AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
+                } else
+                {
+                    // 에러가 나도 특별히 해야할일은 없다.
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 

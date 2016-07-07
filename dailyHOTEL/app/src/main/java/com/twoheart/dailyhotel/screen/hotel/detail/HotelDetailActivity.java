@@ -898,12 +898,12 @@ public class HotelDetailActivity extends BaseActivity
                     user.setUserIdx(jsonObject.getString("idx"));
 
                     // 추천인
-                    int recommender = jsonObject.getInt("recommender_code");
+//                    int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
                     if (isDailyUser == true)
                     {
-                        DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                        DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
                     } else
                     {
                         // 입력된 정보가 부족해.
@@ -933,46 +933,59 @@ public class HotelDetailActivity extends BaseActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                Customer user = new Customer();
-                user.setEmail(response.getString("email"));
-                user.setName(response.getString("name"));
-                user.setPhone(response.getString("phone"));
-                user.setUserIdx(response.getString("idx"));
+                int msgCode = response.getInt("msgCode");
 
-                boolean isVerified = response.getBoolean("is_verified");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObjectData = response.getJSONObject("data");
 
-                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-                {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
-                } else
-                {
-                    // 기존에 인증이 되었는데 인증이 해지되었다.
-                    if (isVerified == true && isPhoneVerified == false)
+                    Customer user = new Customer();
+                    user.setEmail(jsonObjectData.getString("email"));
+                    user.setName(jsonObjectData.getString("name"));
+                    user.setPhone(jsonObjectData.getString("phone"));
+                    user.setUserIdx(jsonObjectData.getString("userIdx"));
+
+                    boolean isVerified = jsonObjectData.getBoolean("verified");
+                    boolean isPhoneVerified = jsonObjectData.getBoolean("phoneVerified");
+
+                    if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                     {
                         moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
                     } else
                     {
-                        moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
+                        // 기존에 인증이 되었는데 인증이 해지되었다.
+                        if (isVerified == true && isPhoneVerified == false)
+                        {
+                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                        } else
+                        {
+                            moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
+                        }
                     }
+                } else
+                {
+                    String msg = response.getString("msg");
+                    DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
+
+                    finish();
                 }
             } catch (Exception e)
             {
                 onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelDetailActivity.this.onErrorResponse(volleyError);
         }
     };
 

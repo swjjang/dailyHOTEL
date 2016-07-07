@@ -123,7 +123,7 @@ public class InformationFragment extends BaseFragment implements Constants
             // 적립금 및 쿠폰 개수 가져와야 함
             lockUI();
 
-            mNetworkController.requestUserInformation();
+            mNetworkController.requestUserProfile();
 
         } else
         {
@@ -489,13 +489,13 @@ public class InformationFragment extends BaseFragment implements Constants
 
             try
             {
-                intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
+                intent.setData(Uri.parse("instagram://user?username=dailyhotel_korea"));
                 baseActivity.startActivity(intent);
             } catch (Exception e)
             {
                 try
                 {
-                    intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
+                    intent.setData(Uri.parse("http://www.instagram.com/dailyhotel_korea"));
                     baseActivity.startActivity(intent);
                 } catch (ActivityNotFoundException e1)
                 {
@@ -706,8 +706,7 @@ public class InformationFragment extends BaseFragment implements Constants
         = new InformationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String type, String email, String name, String recommender, //
-                                      int bonus, int couponTotalCount, boolean isAgreedBenefit, boolean isExceedBonus)
+        public void onUserProfile(String type, String email, String name, String recommender, boolean isAgreedBenefit)
         {
             DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
 
@@ -720,6 +719,16 @@ public class InformationFragment extends BaseFragment implements Constants
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
             }
+
+            mInformationLayout.updateLoginLayout(isLogin, false);
+
+            mNetworkController.requestUserProfileBenefit();
+        }
+
+        @Override
+        public void onUserProfileBenefit(int bonus, int couponTotalCount, boolean isExceedBonus)
+        {
+            boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
 
             if (bonus < 0)
             {

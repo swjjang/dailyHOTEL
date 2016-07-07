@@ -819,10 +819,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     {
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
 
-                        String userIndex = storeLoginInformation(response);
+                        storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
                         return;
@@ -875,7 +875,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     String userIndex = storeLoginInformation(response);
 
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
 
                     // 소셜 신규 가입인 경우
                     if (mIsSocialSignUp == true)
@@ -907,41 +907,54 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                boolean isAgreedBenefit = response.getBoolean("is_agreed_benefit");
+                int msgCode = response.getInt("msgCode");
 
-                DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
-                AppboyManager.setPushEnabled(LoginActivity.this, isAgreedBenefit);
-
-                String userIndex = response.getString("idx");
-                boolean isVerified = response.getBoolean("is_verified");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
-
-                if (isVerified == true && isPhoneVerified == true)
+                if(msgCode == 100)
                 {
-                    DailyPreference.getInstance(LoginActivity.this).setVerification(true);
-                } else if (isVerified == true && isPhoneVerified == false)
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
+
+                    DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
+                    AppboyManager.setPushEnabled(LoginActivity.this, isAgreedBenefit);
+
+                    String userIndex = jsonObject.getString("userIdx");
+                    boolean isVerified = jsonObject.getBoolean("verified");
+                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                    if (isVerified == true && isPhoneVerified == true)
+                    {
+                        DailyPreference.getInstance(LoginActivity.this).setVerification(true);
+                    } else if (isVerified == true && isPhoneVerified == false)
+                    {
+                        // 로그인시에 인증이 해지된 경우 알림 팝업을 띄운다.
+                        mCertifyingTermination = true;
+                    }
+
+                    requestGoogleCloudMessagingId(userIndex);
+                } else
                 {
-                    // 로그인시에 인증이 해지된 경우 알림 팝업을 띄운다.
-                    mCertifyingTermination = true;
+                    String msg = response.getString("msg");
+                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_SHORT);
+                    finish();
                 }
-
-                requestGoogleCloudMessagingId(userIndex);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            LoginActivity.this.onErrorResponse(volleyError);
         }
     };
 }

@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,7 +84,7 @@ public class BonusNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
@@ -96,22 +97,64 @@ public class BonusNetworkController extends BaseNetworkController
         {
             try
             {
-                String recommendCode = response.getString("rndnum");
-                String name = response.getString("name");
-                //                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
-                //                boolean isVerified = response.getBoolean("is_verified");
-                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+                int msgCode = response.getInt("msgCode");
 
-                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
+                    String recommendCode = jsonObject.getString("referralCode");
+                    String name = jsonObject.getString("name");
+                    boolean isExceedBonus = DailyPreference.getInstance(mContext).isUserExceedBonus();
 
-                // 적립금 목록 요청.
-                DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListResponseListener, mErrorListener);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
+
+                    // 적립금 목록 요청.
+                    DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListResponseListener, mErrorListener);
+                } else
+                {
+
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+
+                    DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+
+                    DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+                } else
+                {
+                    String msg = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 
@@ -142,7 +185,7 @@ public class BonusNetworkController extends BaseNetworkController
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonus(bonus);
 
                 // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
+                DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
@@ -71,7 +72,7 @@ public class StayCurationOption extends PlaceCurationOption
                 mStayFiltersList.add(makeHotelFilters(category, jsonObject));
             } catch (JSONException e)
             {
-                e.printStackTrace();
+                ExLog.d(e.toString());
             }
         }
     }
