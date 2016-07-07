@@ -138,7 +138,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 {
                     case 100:
                     {
-//                        JSONObject dataJONObject = response.getJSONObject("data");
+                        //                        JSONObject dataJONObject = response.getJSONObject("data");
                         String message = response.getString("msg");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
@@ -148,7 +148,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                     // 회원 가입 중 세션이 만료되었습니다
                     case 2000:
                     {
-//                        JSONObject dataJONObject = response.getJSONObject("data");
+                        //                        JSONObject dataJONObject = response.getJSONObject("data");
                         String message = response.getString("msg");
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);

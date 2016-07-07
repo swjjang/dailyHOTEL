@@ -419,7 +419,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String name = userJSONObject.getString("name");
         String recommender = userJSONObject.getString("rndnum");
         String userType = userJSONObject.getString("userType");
-//        String phoneNumber = userJSONObject.getString("phone");
+        //        String phoneNumber = userJSONObject.getString("phone");
 
         DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
         DailyPreference.getInstance(this).setUserInformation(userType, email, name, recommender);
@@ -819,7 +819,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     {
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
 
-//                        String userIndex = storeLoginInformation(response);
+                        String userIndex = storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);

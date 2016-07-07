@@ -120,9 +120,9 @@ public class GcmIntentService extends IntentService implements Constants
                 {
                     case PUSH_TYPE_ACCOUNT_COMPLETE:
                     {
-//                        String tid = jsonMsg.getString("TID");
-//                        String hotelName = jsonMsg.getString("hotelName");
-//                        String paidPrice = jsonMsg.getString("paidPrice");
+                        //                        String tid = jsonMsg.getString("TID");
+                        //                        String hotelName = jsonMsg.getString("hotelName");
+                        //                        String paidPrice = jsonMsg.getString("paidPrice");
 
                         sendPush(messageType, type, title, msg, imageUrl, null);
                         break;

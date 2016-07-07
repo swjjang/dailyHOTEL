@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,8 +98,8 @@ public class BonusNetworkController extends BaseNetworkController
             {
                 String recommendCode = response.getString("rndnum");
                 String name = response.getString("name");
-//                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
-//                boolean isVerified = response.getBoolean("is_verified");
+                //                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                //                boolean isVerified = response.getBoolean("is_verified");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
                 DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);

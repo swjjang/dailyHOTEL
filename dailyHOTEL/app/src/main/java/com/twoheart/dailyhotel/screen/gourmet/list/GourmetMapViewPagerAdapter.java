@@ -43,7 +43,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
     private void makeLayout(View view, final Gourmet gourmet)
     {
-//        View gradientView = view.findViewById(R.id.gradientView);
+        //        View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView placeImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
