@@ -505,6 +505,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         } else
         {
             setMenuBarLayoutTranslationY(0);
+
+            setMenuBarLayoutEnabled(true);
         }
     }
 
@@ -582,6 +584,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         } else
         {
             setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
+
+            setMenuBarLayoutEnabled(false);
         }
     }
 

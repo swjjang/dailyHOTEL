@@ -80,14 +80,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         initLayout();
 
         mAnimationLayout.setVisibility(View.INVISIBLE);
-        mAnimationLayout.post(new Runnable()
+        mAnimationLayout.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
                 showAnimation();
             }
-        });
+        }, 50);
     }
 
     @Override

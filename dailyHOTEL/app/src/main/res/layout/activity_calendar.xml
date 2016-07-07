@@ -8,7 +8,7 @@
     <View
         android:id="@+id/exitView"
         android:layout_width="match_parent"
-        android:layout_height="92dp"/>
+        android:layout_height="133dp"/>
 
     <RelativeLayout
         android:id="@+id/animationLayout"
@@ -19,7 +19,7 @@
         <RelativeLayout
             android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="52dp"
             android:background="@color/white">
 
             <ImageView
@@ -40,20 +40,20 @@
                 android:gravity="center"
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
-
-            <View
-                android:id="@+id/underLine"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignParentBottom="true"
-                android:background="@color/tab_underline"/>
         </RelativeLayout>
+
+        <View
+            android:id="@+id/underLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/toolbarLayout"
+            android:background="@color/tab_underline"/>
 
         <LinearLayout
             android:id="@+id/weekLayout"
             android:layout_width="match_parent"
             android:layout_height="34dp"
-            android:layout_below="@+id/toolbarLayout"
+            android:layout_below="@+id/underLine"
             android:background="@color/white">
 
             <com.twoheart.dailyhotel.widget.DailyTextView

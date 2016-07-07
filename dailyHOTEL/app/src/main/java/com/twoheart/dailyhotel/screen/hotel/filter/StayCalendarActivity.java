@@ -75,14 +75,14 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         if (mIsAnimation == true)
         {
             mAnimationLayout.setVisibility(View.INVISIBLE);
-            mAnimationLayout.post(new Runnable()
+            mAnimationLayout.postDelayed(new Runnable()
             {
                 @Override
                 public void run()
                 {
                     showAnimation();
                 }
-            });
+            }, 50);
         } else
         {
             setTouchEnabled(true);
@@ -101,7 +101,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         if (AnalyticsManager.ValueType.LIST.equalsIgnoreCase(mCallByScreen) == true)
         {
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 83));
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 92));
             mExitView.setLayoutParams(layoutParams);
         } else
         {
