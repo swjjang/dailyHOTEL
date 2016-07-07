@@ -296,31 +296,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "MTQkNDUkODQkMzUkMjIk$NDA3MDMzRUNFQkYQ5NTA3MUjg5MDEzNjU1QkVQ1NTlGNTZEVMDgyREY2NkQ4Njc4Njk4NThBMTQ5RkUzRDFDQTJA4MQ==$";
-
-        String params;
-
-        if (province instanceof Area)
-        {
-            Area area = (Area) province;
-
-            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
-        } else
-        {
-            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
-        }
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL + params, null, listener, errorListener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestStayList(Object tag, StayParams stayParams, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "MjkkODAkNjEkMjgkMzUk$QTE4Nzc0QjUwQTQ4QzBFMjcwOTk1LNZTg2QQTg2QjQ0REJEQ0MwNzA3MTdCRDQzRMzA1NjYxNjA5QzVENTNABRjlENA==$";
 
         String params;
 

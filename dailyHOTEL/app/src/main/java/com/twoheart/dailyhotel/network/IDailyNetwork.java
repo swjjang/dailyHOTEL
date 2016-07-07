@@ -152,14 +152,6 @@ interface IDailyNetwork
     void requestUserDeleteBillingCard(Object tag, String billkey, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     * api/sale/hotel_list
-     * 호텔 리스트를 요청한다
-     *
-     * @return
-     */
-    void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    /**
      * /api/v3/hotels/sales
      * Stay 리스트를 요청한다
      *
