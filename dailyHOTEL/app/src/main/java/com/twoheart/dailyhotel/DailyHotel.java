@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel;
 import android.app.Activity;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -57,7 +58,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 }
             });
 
-            Fabric.with(this, new com.crashlytics.android.Crashlytics());
+            Fabric.with(this, new Crashlytics());
         }
 
         mInstance = this;

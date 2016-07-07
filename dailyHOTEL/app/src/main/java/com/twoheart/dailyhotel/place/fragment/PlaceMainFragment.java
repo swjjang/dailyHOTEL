@@ -236,7 +236,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             }
         }
 
-        StayListFragment currentListFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+        PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
         if (currentListFragment != null)
         {
             currentListFragment.refreshList(true);
