@@ -148,7 +148,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
         mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
 
-        refreshCurrentFragment();
+        refreshCurrentFragment(false);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
         mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
 
-        refreshCurrentFragment();
+        refreshCurrentFragment(false);
     }
 
     @Override
@@ -166,14 +166,14 @@ public class GourmetMainFragment extends PlaceMainFragment
         if (location == null)
         {
             GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragment();
+            refreshCurrentFragment(false);
         } else
         {
             GourmetCurationManager.getInstance().setLocation(location);
 
             if (GourmetCurationManager.getInstance().getGourmetCurationOption().getSortType() == SortType.DISTANCE)
             {
-                refreshCurrentFragment();
+                refreshCurrentFragment(false);
             }
         }
     }
@@ -964,7 +964,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
                     // 특정 날짜 고메 리스트 요청
-                    refreshCurrentFragment();
+                    refreshCurrentFragment(false);
                 } else
                 {
                     return false;
@@ -983,7 +983,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
-                refreshCurrentFragment();
+                refreshCurrentFragment(false);
             } catch (Exception e)
             {
                 return false;

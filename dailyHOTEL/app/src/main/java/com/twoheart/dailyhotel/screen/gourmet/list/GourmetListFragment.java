@@ -101,6 +101,11 @@ public class GourmetListFragment extends PlaceListFragment
     {
         mViewType = viewType;
         mGourmetListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
+
+        if(mViewType == ViewType.GONE)
+        {
+            mOnPlaceListFragmentListener.onShowMenuBar();
+        }
     }
 
     @Override

@@ -677,7 +677,7 @@ public class StayMainFragment extends PlaceMainFragment
             mPlaceMainLayout.setCurrentItem(tab.getPosition());
             mPlaceMainLayout.showBottomLayout(false);
 
-            refreshCurrentFragment();
+            refreshCurrentFragment(false);
         }
 
         @Override
@@ -825,7 +825,7 @@ public class StayMainFragment extends PlaceMainFragment
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 
-            refreshCurrentFragment();
+            refreshCurrentFragment(false);
 
             unLockUI();
         }

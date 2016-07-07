@@ -212,11 +212,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected void refreshCurrentFragment()
-    {
-        refreshCurrentFragment(false);
-    }
-
     protected void refreshCurrentFragment(boolean isClearList)
     {
         if (isFinishing() == true)

@@ -14,7 +14,6 @@ public abstract class PlaceReceiptActivity extends BaseActivity
     protected boolean mIsFullscreen;
     private int mBookingIndex;
     private DailyToolbarLayout mDailyToolbarLayout;
-    private View mToolbarUnderline;
 
     protected abstract void requestReceiptDetail(int index);
 
@@ -48,9 +47,6 @@ public abstract class PlaceReceiptActivity extends BaseActivity
 
     private void initToolbar()
     {
-        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
-        mToolbarUnderline.setVisibility(View.VISIBLE);
-
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(getString(R.string.frag_issuing_receipt), new View.OnClickListener()
@@ -91,14 +87,12 @@ public abstract class PlaceReceiptActivity extends BaseActivity
         if (bUseFullscreen)
         {
             mDailyToolbarLayout.setToolbarVisibility(false);
-            mToolbarUnderline.setVisibility(View.INVISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         } else
         {
             mDailyToolbarLayout.setToolbarVisibility(true);
-            mToolbarUnderline.setVisibility(View.VISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

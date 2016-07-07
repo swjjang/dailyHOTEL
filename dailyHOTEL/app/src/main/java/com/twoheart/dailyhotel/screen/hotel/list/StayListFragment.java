@@ -142,6 +142,11 @@ public class StayListFragment extends PlaceListFragment
     {
         mViewType = viewType;
         mStayListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
+
+        if(mViewType == ViewType.GONE)
+        {
+            mOnPlaceListFragmentListener.onShowMenuBar();
+        }
     }
 
     @Override
