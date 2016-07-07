@@ -91,6 +91,7 @@ public class StayListAdapter extends PlaceListAdapter
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_LOADING_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
 
@@ -125,6 +126,7 @@ public class StayListAdapter extends PlaceListAdapter
                 onBindViewHolder((EventBannerViewHolder) holder, item);
                 break;
             case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_LOADING_VIEW:
                 onBindViewHolder((FooterViewHolder) holder, item);
                 break;
         }
@@ -291,7 +293,7 @@ public class StayListAdapter extends PlaceListAdapter
             return;
         }
 
-        boolean isLast = placeViewItem.getItem();
+        boolean isLast = placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW;
         holder.loadingView.setVisibility(isLast == false ? View.VISIBLE : View.GONE);
         holder.textView.setVisibility(isLast == true ? View.VISIBLE : View.GONE);
     }
