@@ -554,6 +554,8 @@ public class StayMainFragment extends PlaceMainFragment
 
         StayCurationManager.getInstance().getStayCurationOption().setSortType(DailyDeepLink.getInstance().getSorting());
 
+        mPlaceMainLayout.setOptionFilterEnabled(StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+
         int night;
 
         try
@@ -632,6 +634,7 @@ public class StayMainFragment extends PlaceMainFragment
                     StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
                     StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
 
+                    mPlaceMainNetworkController.requestRegionList();
                 } else
                 {
                     return false;
@@ -650,6 +653,7 @@ public class StayMainFragment extends PlaceMainFragment
                 StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
                 StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
 
+                mPlaceMainNetworkController.requestRegionList();
             } catch (Exception e)
             {
                 return false;

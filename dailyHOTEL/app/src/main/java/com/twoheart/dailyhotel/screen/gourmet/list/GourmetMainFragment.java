@@ -914,6 +914,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
         GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(DailyDeepLink.getInstance().getSorting());
 
+        mPlaceMainLayout.setOptionFilterEnabled(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == false);
+
         int provinceIndex;
         int areaIndex;
 
@@ -964,7 +966,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
                     // 특정 날짜 고메 리스트 요청
-                    refreshCurrentFragment(false);
+                    mPlaceMainNetworkController.requestRegionList();
                 } else
                 {
                     return false;
@@ -983,7 +985,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
-                refreshCurrentFragment(false);
+                mPlaceMainNetworkController.requestRegionList();
             } catch (Exception e)
             {
                 return false;
@@ -992,7 +994,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             return false;
         }
-
         return true;
     }
 
