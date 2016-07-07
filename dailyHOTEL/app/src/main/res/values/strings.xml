@@ -461,7 +461,7 @@
     <string name="act_booking_credit_discount">할인 금액</string>
     <string name="act_booking_price_real">총 결제금액(VAT 포함)</string>
     <string name="act_booking_pay_card">결제카드 일반결제</string>
-    <string name="act_booking_pay_mobile">대폰 결제</string>
+    <string name="act_booking_pay_mobile">휴대폰 결제</string>
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
     <string name="act_booking_0won">0원</string>
