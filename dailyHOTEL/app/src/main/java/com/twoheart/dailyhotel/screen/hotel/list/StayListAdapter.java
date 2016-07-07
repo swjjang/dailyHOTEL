@@ -22,7 +22,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -275,7 +274,7 @@ public class StayListAdapter extends PlaceListAdapter
         if (getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance / 1000) + "km)");
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
         } else
         {
             holder.distanceTextView.setVisibility(View.GONE);
