@@ -721,7 +721,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     user.setUserIdx(jsonObject.getString("idx"));
 
                     // 추천인
-//                    int recommender = jsonObject.getInt("recommender_code");
+                    //                    int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
                     if (isDailyUser == true)

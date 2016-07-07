@@ -699,7 +699,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
                 if (result == true)
                 {
-//                    String msg = response.getString("msg");
+                    //                    String msg = response.getString("msg");
 
                     if (RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
                     {

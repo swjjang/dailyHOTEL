@@ -353,7 +353,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
             mObjectAnimator.start();
 
-//            showAnimationFadeOut();
+            //            showAnimationFadeOut();
         } else
         {
             if (mAnimationLayout != null && mAnimationLayout.getVisibility() != View.VISIBLE)

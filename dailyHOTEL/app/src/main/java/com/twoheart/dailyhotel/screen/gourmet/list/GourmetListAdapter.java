@@ -22,7 +22,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;

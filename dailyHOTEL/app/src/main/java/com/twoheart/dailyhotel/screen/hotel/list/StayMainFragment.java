@@ -286,7 +286,7 @@ public class StayMainFragment extends PlaceMainFragment
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
-                if(mViewType == ViewType.LIST)
+                if (mViewType == ViewType.LIST)
                 {
                     String label = String.format("%s-%s", stay.categoryCode, stay.name);
                     AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -1238,7 +1238,7 @@ public class StayMainFragment extends PlaceMainFragment
                 {
                     mPlaceMainLayout.animationMenuBarLayout();
 
-//                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
+                    //                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
 
                     if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
