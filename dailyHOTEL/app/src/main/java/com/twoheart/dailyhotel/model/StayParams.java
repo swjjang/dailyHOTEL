@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.reflect.Field;
@@ -162,7 +161,7 @@ public class StayParams implements Parcelable
             addAndCoupler(sb);
 
             String name = field.getName();
-            ExLog.d(name + " , " + sb.toString());
+            //            ExLog.d(name + " , " + sb.toString());
 
             if ("CREATOR".equalsIgnoreCase(name))
             {
@@ -248,7 +247,7 @@ public class StayParams implements Parcelable
 
         removeLastAndCoupler(sb);
 
-        ExLog.d(" params : " + sb.toString());
+        //        ExLog.d(" params : " + sb.toString());
         return sb.toString();
     }
 

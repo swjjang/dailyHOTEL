@@ -18,7 +18,7 @@ public class StayCurationNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayCount(int hotelSaleCount);
+        void onStayCount(String url, int hotelSaleCount);
     }
 
     public StayCurationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -39,7 +39,7 @@ public class StayCurationNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(0);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(null, -1);
         }
 
         @Override
@@ -64,7 +64,7 @@ public class StayCurationNetworkController extends BaseNetworkController
                 hotelSaleCount = 0;
             }
 
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(hotelSaleCount);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(url, hotelSaleCount);
         }
     };
 }

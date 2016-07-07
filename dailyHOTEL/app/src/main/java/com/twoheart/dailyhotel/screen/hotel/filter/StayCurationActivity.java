@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private Province mProvince;
 
     private boolean mIsGlobal;
+    private StayParams mLastParams;
     private ViewType mViewType;
 
     private StayCurationNetworkController mNetworkController;
@@ -438,7 +440,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setConfirmOnClickListener(null);
 
-        mNetworkController.requestStayList(getStayParams());
+        mLastParams = getStayParams();
+        mNetworkController.requestStayList(mLastParams);
     }
 
     private void setDisabledSortLayout(View view, RadioGroup sortLayout)
@@ -726,8 +729,35 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private StayCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCurationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayCount(int hotelSaleCount)
+        public void onStayCount(String url, int hotelSaleCount)
         {
+            if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
+            {
+                // OnNetworkControllerListener onErrorResponse
+                setResultMessage(getString(R.string.label_hotel_filter_result_count, 0));
+
+                setConfirmOnClickListener(StayCurationActivity.this);
+                setConfirmEnable(false);
+                return;
+            }
+
+            String requestParams = null;
+            try
+            {
+                Uri requestUrl = Uri.parse(url);
+                requestParams = requestUrl.getQuery();
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+
+            String lastParams = mLastParams.toParamString();
+            if (lastParams.equalsIgnoreCase(requestParams) == false)
+            {
+                // already running another request!
+                return;
+            }
+
             setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
 
             setConfirmOnClickListener(StayCurationActivity.this);
