@@ -86,7 +86,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                 DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
 
-                refreshCurrentFragment();
+                refreshCurrentFragment(true);
             }
         }
     }
@@ -106,7 +106,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             GourmetCurationManager.getInstance().setSaleTime(saleTime);
             ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(saleTime);
 
-            refreshCurrentFragment();
+            refreshCurrentFragment(true);
         }
     }
 

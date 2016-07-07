@@ -39,7 +39,6 @@ import java.util.Map;
 public class GourmetListFragment extends PlaceListFragment
 {
     protected BaseActivity mBaseActivity;
-    private ViewType mViewType;
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
     private GourmetListLayout mGourmetListLayout;

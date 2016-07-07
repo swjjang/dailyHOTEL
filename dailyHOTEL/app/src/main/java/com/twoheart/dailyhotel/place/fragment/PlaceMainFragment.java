@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -232,7 +231,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                 // 메인의 클리어 리스트의 경우 타화면에 영향을 줌으로 전체 리스트 데이터를 클리어함
                 placeListFragment.clearList();
                 // 해당 리스트의 viewType이 gone일 수 있음, 해당 경우 메인의 viewType을 따름
-                ((StayListFragment) placeListFragment).setViewType(mViewType);
+                placeListFragment.setViewType(mViewType);
             }
         }
 
