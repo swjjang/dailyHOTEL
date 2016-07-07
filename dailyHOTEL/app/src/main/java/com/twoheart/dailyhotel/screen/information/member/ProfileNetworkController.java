@@ -18,8 +18,10 @@ public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String userIndex, String email, String name, String phoneNumber//
-            , boolean isVerified, boolean isPhoneVerified, String verifiedDate, boolean isExceedBonus);
+        void onUserProfile(String userIndex, String email, String name, String phoneNumber//
+            , boolean isVerified, boolean isPhoneVerified, String verifiedDate);
+
+        void onUserProfileBenefit(boolean isExceedBonus);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -27,58 +29,103 @@ public class ProfileNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestUserInformation()
+    public void requestUserProfile()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserInProfileJsonResponseListener);
+    }
+
+    public void requestUserProfileBenfit()
+    {
+        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserInProfileBenefitJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                String email = response.getString("email");
-                String name = response.getString("name");
-                String phone = response.getString("phone");
-                String userIndex = response.getString("idx");
-                boolean isVerified = response.getBoolean("is_verified");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
-                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+                int msgCode = response.getInt("msgCode");
 
-                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
-
-                String verifiedDate = null;
-
-                if (isVerified == true && isPhoneVerified == true)
+                if(msgCode == 100)
                 {
-                    verifiedDate = Util.simpleDateFormatISO8601toFormat( //
-                        response.getString("phone_verified_at"), "yyyy.MM.dd");
-                } else if (isVerified == false && isPhoneVerified == true)
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    String email = jsonObject.getString("email");
+                    String name = jsonObject.getString("name");
+                    String phone = jsonObject.getString("phone");
+                    String userIndex = jsonObject.getString("userIdx");
+                    boolean isVerified = jsonObject.getBoolean("verified");
+                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                    String verifiedDate = null;
+
+                    if (isVerified == true && isPhoneVerified == true)
+                    {
+                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
+                            jsonObject.getString("phone_verified_at"), "yyyy.MM.dd");
+                    } else if (isVerified == false && isPhoneVerified == true)
+                    {
+                        verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";
+                        Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
+                            + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
+                            + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
+                        , email, name, phone, isVerified, isPhoneVerified, verifiedDate);
+                } else
                 {
-                    verifiedDate = response.has("phone_verified_at") == true ? response.getString("phone_verified_at") : "no date";
-                    Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
-                        + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
-                        + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
+
                 }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex//
-                    , email, name, phone, isVerified, isPhoneVerified, verifiedDate, isExceedBonus);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfileBenefit(isExceedBonus);
+                } else
+                {
+
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

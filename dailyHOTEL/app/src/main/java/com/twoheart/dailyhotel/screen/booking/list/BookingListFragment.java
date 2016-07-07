@@ -407,7 +407,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     }
 
                     // 사용자 정보 요청.
-                    DailyNetworkAPI.getInstance(baseActivity).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance(baseActivity).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
                 } else
                 {
                     String msg = response.getString("msg");
@@ -671,14 +671,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -691,20 +685,36 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     return;
                 }
 
-                boolean isVerified = response.getBoolean("is_verified");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                int msgCode = response.getInt("msgCode");
 
-                // 인증 후 인증이 해지된 경우
-                if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
+                if(msgCode == 100)
                 {
-                    baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-                    DailyPreference.getInstance(baseActivity).setVerification(false);
+                    boolean isVerified = jsonObject.getBoolean("verified");
+                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                    // 인증 후 인증이 해지된 경우
+                    if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
+                    {
+                        baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+
+                        DailyPreference.getInstance(baseActivity).setVerification(false);
+                    }
+                } else
+                {
+                    // 인증 해지를 위한 부분이라서 에러시 아무 조치를 취하지 않아도 됨.
                 }
             } catch (Exception e)
             {
                 onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            BookingListFragment.this.onErrorResponse(volleyError);
         }
     };
 }

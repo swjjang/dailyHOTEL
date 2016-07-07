@@ -20,7 +20,9 @@ public class InformationNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount, boolean isAgreedBenefit, boolean isExceedBonus);
+        void onUserProfile(String type, String email, String name, String recommender,boolean isAgreedBenefit);
+
+        void onUserProfileBenefit(int bonus, int couponTotalCount, boolean isExceedBonus);
 
         void onPushBenefitMessage(String message);
 
@@ -32,10 +34,14 @@ public class InformationNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-
-    public void requestUserInformation()
+    public void requestUserProfile()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+    }
+
+    public void requestUserProfileBenefit()
+    {
+        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
     }
 
     public void requestPushBenefitText()
@@ -51,36 +57,77 @@ public class InformationNetworkController extends BaseNetworkController
     /**
      * 쿠폰 갯수 적립금 등
      */
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                String email = response.getString("email");
-                String name = response.getString("name");
-                String ownRecommender = response.getString("rndnum"); // 자신의 추천 번호
-                String userType = response.getString("user_type");
-                int bonus = response.getInt("bonus");
-                int couponTotalCount = response.getInt("coupon_total_count");
-                boolean isAgreedBenefit = response.getBoolean("is_agreed_benefit");
-                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+                int msgCode = response.getInt("msgCode");
 
-                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener) //
-                    .onUserInformation(userType, email, name, ownRecommender, bonus, //
-                        couponTotalCount, isAgreedBenefit, isExceedBonus);
+                    String email = jsonObject.getString("email");
+                    String name = jsonObject.getString("name");
+                    String referralCode = jsonObject.getString("referralCode"); // 자신의 추천 번호
+                    String userType = jsonObject.getString("userType");
+                    boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userType, email, name, referralCode, isAgreedBenefit);
+                } else
+                {
+                    String msg = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if(msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    int bonus = jsonObject.getInt("bonusAmount");
+                    int couponTotalCount = jsonObject.getInt("couponTotalCount");
+                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfileBenefit(bonus, couponTotalCount, isExceedBonus);
+                } else
+                {
+                    String msg = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 
