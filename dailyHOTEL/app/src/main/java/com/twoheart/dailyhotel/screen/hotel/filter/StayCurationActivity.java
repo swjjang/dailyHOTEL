@@ -425,6 +425,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void requestUpdateResult()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
+        mLastParams = getStayParams();
         super.requestUpdateResult();
     }
 
@@ -432,6 +433,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void requestUpdateResultDelayed()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
+        mLastParams = getStayParams();
         super.requestUpdateResultDelayed();
     }
 
@@ -440,7 +442,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setConfirmOnClickListener(null);
 
-        mLastParams = getStayParams();
+//        mLastParams = getStayParams();
         mNetworkController.requestStayList(mLastParams);
     }
 
