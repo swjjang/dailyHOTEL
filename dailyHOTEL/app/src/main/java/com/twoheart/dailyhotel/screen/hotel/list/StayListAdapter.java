@@ -91,9 +91,15 @@ public class StayListAdapter extends PlaceListAdapter
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
-            case PlaceViewItem.TYPE_LOADING_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+
+                return new FooterViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_LOADING_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
 
                 return new FooterViewHolder(view);
             }
@@ -124,10 +130,6 @@ public class StayListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_EVENT_BANNER:
                 onBindViewHolder((EventBannerViewHolder) holder, item);
-                break;
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-            case PlaceViewItem.TYPE_LOADING_VIEW:
-                onBindViewHolder((FooterViewHolder) holder, item);
                 break;
         }
     }
@@ -281,21 +283,6 @@ public class StayListAdapter extends PlaceListAdapter
         {
             holder.distanceTextView.setVisibility(View.GONE);
         }
-    }
-
-    private void onBindViewHolder(FooterViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        if (placeViewItem == null)
-        {
-            holder.loadingView.setVisibility(View.GONE);
-            holder.textView.setVisibility(View.VISIBLE);
-
-            return;
-        }
-
-        boolean isLast = placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW;
-        holder.loadingView.setVisibility(isLast == false ? View.VISIBLE : View.GONE);
-        holder.textView.setVisibility(isLast == true ? View.VISIBLE : View.GONE);
     }
 
     private class HoltelViewHolder extends RecyclerView.ViewHolder
