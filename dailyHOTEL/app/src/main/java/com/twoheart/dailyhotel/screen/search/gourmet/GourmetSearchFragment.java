@@ -59,7 +59,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     {
         super.onResume();
 
-        setDateText(GourmetCurationManager.getInstance().getSaleTime());
+        if (mSaleTime == null)
+        {
+            setDateText(GourmetCurationManager.getInstance().getSaleTime());
+        } else
+        {
+            setDateText(mSaleTime);
+        }
     }
 
     @Override

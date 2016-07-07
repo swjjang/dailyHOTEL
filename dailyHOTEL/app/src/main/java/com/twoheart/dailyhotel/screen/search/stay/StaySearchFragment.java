@@ -57,7 +57,13 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         super.onResume();
 
-        setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
+        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+        {
+            setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
+        } else
+        {
+            setDateText(mCheckInSaleTime, mCheckOutSaleTime);
+        }
     }
 
     @Override
