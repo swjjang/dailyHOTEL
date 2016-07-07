@@ -796,6 +796,7 @@
     <string name="label_time_1517">15–17시</string>
     <string name="label_time_1721">17–21시</string>
     <string name="label_time_2106">21시 이후</string>
+    <string name="label_searching">검색 중...</string>
 
     <!-- PaymentResult Activity -->
     <string name="label_booking_information">예약정보</string>

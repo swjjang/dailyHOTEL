@@ -420,52 +420,25 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     }
 
     @Override
+    protected void requestUpdateResult()
+    {
+        setResultMessage(getResources().getString(R.string.label_searching));
+        super.requestUpdateResult();
+    }
+
+    @Override
+    protected void requestUpdateResultDelayed()
+    {
+        setResultMessage(getResources().getString(R.string.label_searching));
+        super.requestUpdateResultDelayed();
+    }
+
+    @Override
     protected void updateResultMessage()
     {
         setConfirmOnClickListener(null);
 
         mNetworkController.requestStayList(getStayParams());
-        //        new AsyncTask<Void, Void, Integer>()
-        //        {
-        //            @Override
-        //            protected Integer doInBackground(Void... params)
-        //            {
-        //                int count = 0;
-        //                ArrayList<StayFilters> hotelFiltersList = mStayCurationOption.getFiltersList();
-        //
-        //                if (Category.ALL.code.equalsIgnoreCase(mCategory.code) == true)
-        //                {
-        //                    for (StayFilters hotelFilters : hotelFiltersList)
-        //                    {
-        //                        if (hotelFilters.isFiltered(mStayCurationOption) == true)
-        //                        {
-        //                            count++;
-        //                        }
-        //                    }
-        //                } else
-        //                {
-        //                    for (StayFilters hotelFilters : hotelFiltersList)
-        //                    {
-        //                        if (mCategory.code.equalsIgnoreCase(hotelFilters.categoryCode) == true//
-        //                            && hotelFilters.isFiltered(mStayCurationOption) == true)
-        //                        {
-        //                            count++;
-        //                        }
-        //                    }
-        //                }
-        //
-        //                return count;
-        //            }
-        //
-        //            @Override
-        //            protected void onPostExecute(Integer count)
-        //            {
-        //                setResultMessage(getString(R.string.label_hotel_filter_result_count, count));
-        //
-        //                setConfirmOnClickListener(StayCurationActivity.this);
-        //                setConfirmEnable(count == 0 ? false : true);
-        //            }
-        //        }.execute();
     }
 
     private void setDisabledSortLayout(View view, RadioGroup sortLayout)
