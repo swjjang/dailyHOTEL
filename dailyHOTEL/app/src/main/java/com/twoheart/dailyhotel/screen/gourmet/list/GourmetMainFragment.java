@@ -714,7 +714,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                 currentPlaceListFragment.refreshList(false);
 
                 Map<String, String> params = new HashMap<>();
-                GourmetCurationOption gourmetCurationOption = GourmetCurationManager.getInstance().getGourmetCurationOption();
                 Province province = GourmetCurationManager.getInstance().getProvince();
 
                 if (province instanceof Area)

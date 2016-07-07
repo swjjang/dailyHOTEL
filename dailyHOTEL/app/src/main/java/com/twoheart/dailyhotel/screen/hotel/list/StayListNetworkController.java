@@ -76,16 +76,15 @@ public class StayListNetworkController extends BaseNetworkController
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                     }
 
-                    int page = 0;
+                    int page;
                     String imageUrl;
-                    int nights = 1;
 
                     ArrayList<Stay> stayList = new ArrayList<>();
 
                     if (hotelJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
-                        nights = dataJSONObject.getInt("stays");
+                        int nights = dataJSONObject.getInt("stays");
                         stayList = makeStayList(hotelJSONArray, imageUrl, nights);
                     }
 

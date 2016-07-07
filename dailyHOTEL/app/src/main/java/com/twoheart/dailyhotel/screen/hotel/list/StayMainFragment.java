@@ -1238,7 +1238,9 @@ public class StayMainFragment extends PlaceMainFragment
                 {
                     mPlaceMainLayout.animationMenuBarLayout();
 
-                    if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() == recyclerView.computeVerticalScrollRange())
+//                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
+
+                    if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
                         StayListAdapter stayListAdapter = (StayListAdapter) recyclerView.getAdapter();
 

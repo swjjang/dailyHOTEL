@@ -78,7 +78,7 @@ public class HotelDetailListAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        LinearLayout linearLayout = null;
+        LinearLayout linearLayout;
 
         LayoutInflater layoutInflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

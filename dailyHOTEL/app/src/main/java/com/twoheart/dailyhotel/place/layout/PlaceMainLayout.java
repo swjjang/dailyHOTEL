@@ -232,7 +232,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             TabLayout.Tab selectedTab = null;
             Category category;
             TabLayout.Tab tab;
-            View tabView;
 
             mCategoryTabLayout.removeAllTabs();
 

@@ -113,7 +113,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     public void setData(List<Bonus> list)
     {
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-        BonusListAdapter bonusListAdapter = null;
+        BonusListAdapter bonusListAdapter;
 
         if (list != null && list.size() != 0)
         {

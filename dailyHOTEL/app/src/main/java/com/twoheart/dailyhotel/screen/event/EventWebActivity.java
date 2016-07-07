@@ -223,7 +223,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            int dailyDayOfDays = 0;
+            int dailyDayOfDays;
 
             if (Util.isTextEmpty(date) == true)
             {
@@ -285,7 +285,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            int dailyDayOfDays = 0;
+            int dailyDayOfDays;
 
             if (Util.isTextEmpty(date) == true)
             {

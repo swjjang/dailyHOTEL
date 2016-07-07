@@ -43,7 +43,6 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
     private void makeLayout(View view, final Stay stay)
     {
-        View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);

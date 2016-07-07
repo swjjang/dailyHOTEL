@@ -141,8 +141,6 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View bonusLayout = view.findViewById(R.id.bonusLayout);
         View couponLayout = view.findViewById(R.id.couponLayout);
-        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
-        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
         try

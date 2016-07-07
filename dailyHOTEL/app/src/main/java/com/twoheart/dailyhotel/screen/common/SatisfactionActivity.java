@@ -693,11 +693,13 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 JSONObject jsonObject = response.getJSONObject("data");
 
                 boolean result = jsonObject.getBoolean("is_success");
+
+                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                 int msgCode = response.getInt("msg_code");
 
                 if (result == true)
                 {
-                    String msg = response.getString("msg");
+//                    String msg = response.getString("msg");
 
                     if (RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
                     {

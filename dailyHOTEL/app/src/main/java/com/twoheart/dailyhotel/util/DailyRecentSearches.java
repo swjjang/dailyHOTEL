@@ -137,7 +137,7 @@ public class DailyRecentSearches
         }
 
         String[] keywords = new String[count];
-        int endIndex = 0;
+        int endIndex;
         startIndex = 0;
 
         for (int i = 0; i < count; i++)

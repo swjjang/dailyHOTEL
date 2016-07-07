@@ -99,8 +99,8 @@ public class BonusNetworkController extends BaseNetworkController
             {
                 String recommendCode = response.getString("rndnum");
                 String name = response.getString("name");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
-                boolean isVerified = response.getBoolean("is_verified");
+//                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+//                boolean isVerified = response.getBoolean("is_verified");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
                 DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
@@ -129,8 +129,6 @@ public class BonusNetworkController extends BaseNetworkController
                 {
                     result = response.trim();
                 }
-
-                DecimalFormat comma = new DecimalFormat("###,##0");
 
                 int bonus = 0;
 

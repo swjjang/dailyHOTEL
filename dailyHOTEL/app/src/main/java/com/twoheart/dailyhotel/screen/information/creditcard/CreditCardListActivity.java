@@ -291,7 +291,7 @@ public class CreditCardListActivity extends BaseActivity
         {
             try
             {
-                // 해당 화면은 메시지를 넣지 않는다.
+                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                 int msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
@@ -390,7 +390,7 @@ public class CreditCardListActivity extends BaseActivity
         {
             try
             {
-                // 해당 화면은 메시지를 넣지 않는다.
+                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                 int msgCode = response.getInt("msg_code");
 
                 JSONObject jsonObject = response.getJSONObject("data");

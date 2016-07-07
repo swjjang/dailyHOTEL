@@ -46,7 +46,7 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
         View underLineView = view.findViewById(R.id.underLineView);
 
-        String format = null;
+        String format;
 
         if (bonus.bonus > 0)
         {

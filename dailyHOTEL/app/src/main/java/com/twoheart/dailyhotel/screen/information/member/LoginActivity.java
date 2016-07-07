@@ -419,7 +419,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String name = userJSONObject.getString("name");
         String recommender = userJSONObject.getString("rndnum");
         String userType = userJSONObject.getString("userType");
-        String phoneNumber = userJSONObject.getString("phone");
+//        String phoneNumber = userJSONObject.getString("phone");
 
         DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
         DailyPreference.getInstance(this).setUserInformation(userType, email, name, recommender);
@@ -819,7 +819,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     {
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
 
-                        String userIndex = storeLoginInformation(response);
+//                        String userIndex = storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
@@ -861,6 +861,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
+                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                 int msgCode = response.getInt("msg_code");
                 JSONObject jsonObject = response.getJSONObject("data");
                 boolean isSignin = jsonObject.getBoolean("is_signin");

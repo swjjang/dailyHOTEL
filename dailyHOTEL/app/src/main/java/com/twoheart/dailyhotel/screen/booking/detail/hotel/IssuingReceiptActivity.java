@@ -123,7 +123,7 @@ public class IssuingReceiptActivity extends BaseActivity
             String hotelName = receiptJSONObject.getString("hotel_name");
             String hotelAddress = receiptJSONObject.getString("hotel_address");
             String valueDate = receiptJSONObject.getString("value_date");
-            String currency = receiptJSONObject.getString("currency");
+//            String currency = receiptJSONObject.getString("currency");
             int discount = receiptJSONObject.getInt("discount");
             int vat = receiptJSONObject.getInt("vat");
             int supoplyValue = receiptJSONObject.getInt("supply_value");

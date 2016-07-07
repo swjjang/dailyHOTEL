@@ -30,7 +30,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         String placeAddress = receiptJSONObject.getString("restaurant_address");
         String sday = receiptJSONObject.getString("sday");
         String valueDate = receiptJSONObject.getString("value_date");
-        String currency = receiptJSONObject.getString("currency");
+//        String currency = receiptJSONObject.getString("currency");
         int discount = receiptJSONObject.getInt("discount");
         int vat = receiptJSONObject.getInt("vat");
         int supoplyValue = receiptJSONObject.getInt("supply_value");

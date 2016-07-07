@@ -711,7 +711,7 @@ public class AppboyManager extends BaseAnalyticsManager
         for (Map.Entry<String, String> element : params.entrySet())
         {
             String value = Util.isTextEmpty(element.getValue()) == true ? AnalyticsManager.ValueType.EMPTY : element.getValue();
-            appboyProperties.addProperty(element.getKey(), element.getValue());
+            appboyProperties.addProperty(element.getKey(), value);
         }
 
         return appboyProperties;
