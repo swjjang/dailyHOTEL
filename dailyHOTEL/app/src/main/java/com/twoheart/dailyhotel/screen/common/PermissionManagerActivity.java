@@ -209,8 +209,9 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 break;
             }
 
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             default:
-                finish(RESULT_CANCELED);
+                finish(resultCode);
                 break;
         }
     }

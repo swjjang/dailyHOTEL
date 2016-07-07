@@ -63,6 +63,23 @@
 
     <include layout="@layout/toolbar_default_menu"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height">
+
+        <View
+            android:id="@+id/backView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/shareView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
     <View
         android:id="@+id/roomTypeBackgroundView"
         android:layout_width="match_parent"
@@ -146,22 +163,5 @@
             android:textSize="17dp"
             android:visibility="gone"
             dailyFont:style="Medium"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height">
-
-        <View
-            android:id="@+id/backView"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"/>
-
-        <View
-            android:id="@+id/shareView"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
     </RelativeLayout>
 </RelativeLayout>
