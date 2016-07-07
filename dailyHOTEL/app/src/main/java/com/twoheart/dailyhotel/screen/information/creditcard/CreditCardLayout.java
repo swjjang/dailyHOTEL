@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.screen.information.creditcard;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +61,7 @@ public class CreditCardLayout extends FrameLayout
         initLayout(context);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CreditCardLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);

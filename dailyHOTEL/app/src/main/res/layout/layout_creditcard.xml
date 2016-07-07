@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/label_add_creditcard"
+                    android:text="@string/label_register_creditcard"
                     android:textColor="@color/creditcard_add_card_text"
                     android:textSize="18dp"
                     android:layout_centerVertical="true"
