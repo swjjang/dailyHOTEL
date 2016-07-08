@@ -305,8 +305,8 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                 finish();
             } else
             {
-                if (mSelectedProvince.isOverseas != province.isOverseas//
-                    || mSelectedProvince.getProvinceIndex() != province.getProvinceIndex())
+                if (mSelectedProvince != null && (mSelectedProvince.isOverseas != province.isOverseas//
+                    || mSelectedProvince.getProvinceIndex() != province.getProvinceIndex()))
                 {
                     String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 

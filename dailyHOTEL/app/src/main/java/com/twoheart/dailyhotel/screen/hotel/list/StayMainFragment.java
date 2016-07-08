@@ -1249,11 +1249,18 @@ public class StayMainFragment extends PlaceMainFragment
 
                         if (stayListAdapter != null)
                         {
-                            PlaceViewItem placeViewItem = stayListAdapter.getItem(stayListAdapter.getItemCount() - 1);
+                            int count = stayListAdapter.getItemCount();
 
-                            if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                            if (count == 0)
                             {
-                                mPlaceMainLayout.showBottomLayout(false);
+                            } else
+                            {
+                                PlaceViewItem placeViewItem = stayListAdapter.getItem(stayListAdapter.getItemCount() - 1);
+
+                                if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                                {
+                                    mPlaceMainLayout.showBottomLayout(false);
+                                }
                             }
                         }
                     }

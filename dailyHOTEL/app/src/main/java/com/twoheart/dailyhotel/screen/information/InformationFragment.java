@@ -731,7 +731,7 @@ public class InformationFragment extends BaseFragment implements Constants
                 bonus = 0;
             }
 
-            boolean isLogin =  DailyHotel.isLogin();
+            boolean isLogin = DailyHotel.isLogin();
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
 
