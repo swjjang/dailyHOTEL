@@ -111,6 +111,11 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         return mCurrentActivity;
     }
 
+    public static boolean isLogin()
+    {
+        return Util.isTextEmpty(AUTHORIZATION) ? false : true;
+    }
+
     private static class KakaoSDKAdapter extends KakaoAdapter
     {
         /**

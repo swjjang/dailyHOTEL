@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
@@ -29,7 +30,6 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -577,7 +577,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             mSelectedTicketInformation = ticketInformation;
 
-            if (Util.isTextEmpty(DailyPreference.getInstance(PlaceDetailActivity.this).getAuthorization()) == true)
+            if (DailyHotel.isLogin() == false)
             {
                 startLoginActivity();
             } else

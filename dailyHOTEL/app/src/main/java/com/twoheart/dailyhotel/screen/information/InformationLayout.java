@@ -133,7 +133,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
         versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
 
-        boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(mContext).getAuthorization()) == false;
+        boolean isLogin = DailyHotel.isLogin();
         updateLoginLayout(isLogin, true);
         updateAccountLayout(isLogin, -1, -1);
 

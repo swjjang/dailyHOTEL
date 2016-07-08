@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -161,7 +162,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         super.onStart();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST);
         }
@@ -179,7 +180,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             return;
         }
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             updateLayout(false, null);
         } else

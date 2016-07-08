@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -116,9 +117,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
         registerReceiver();
 
-        boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
-
-        if (isLogin == true)
+        if (DailyHotel.isLogin() == true)
         {
             // 적립금 및 쿠폰 개수 가져와야 함
             lockUI();
@@ -313,7 +312,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == true)
+            if (DailyHotel.isLogin() == false)
             {
                 startActivity(InviteFriendsActivity.newInstance(baseActivity));
             } else
@@ -413,7 +412,7 @@ public class InformationFragment extends BaseFragment implements Constants
             final BaseActivity baseActivity = (BaseActivity) getActivity();
             boolean isBenefitAlarm = DailyPreference.getInstance(baseActivity).isUserBenefitAlarm(); // 클릭이므로 상태값 변경!
             boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
-            final boolean isAuthorization = Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == false;
+            final boolean isAuthorization = DailyHotel.isLogin();
 
             if (onOff == true)
             {
@@ -710,8 +709,7 @@ public class InformationFragment extends BaseFragment implements Constants
         {
             DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
 
-            boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
-
+            boolean isLogin = DailyHotel.isLogin();
             if (isLogin == true)
             {
                 DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
@@ -728,13 +726,12 @@ public class InformationFragment extends BaseFragment implements Constants
         @Override
         public void onUserProfileBenefit(int bonus, int couponTotalCount, boolean isExceedBonus)
         {
-            boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
-
             if (bonus < 0)
             {
                 bonus = 0;
             }
 
+            boolean isLogin =  DailyHotel.isLogin();
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
 
