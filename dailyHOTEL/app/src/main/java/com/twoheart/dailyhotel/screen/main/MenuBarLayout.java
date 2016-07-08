@@ -33,6 +33,7 @@ public class MenuBarLayout implements View.OnClickListener
 
         public void onPageChangeListener(int index)
         {
+            mMenuBarLayout.setTranslationY(0);
             mMenuBarLayout.selectedMenu(index);
         }
     }
