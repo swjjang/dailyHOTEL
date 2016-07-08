@@ -80,7 +80,7 @@ public class ProfileNetworkController extends BaseNetworkController
                         , email, name, phone, isVerified, isPhoneVerified, verifiedDate);
                 } else
                 {
-
+                    mOnNetworkControllerListener.onError(null);
                 }
             } catch (Exception e)
             {
@@ -113,7 +113,7 @@ public class ProfileNetworkController extends BaseNetworkController
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfileBenefit(isExceedBonus);
                 } else
                 {
-
+                    mOnNetworkControllerListener.onError(null);
                 }
             } catch (Exception e)
             {
