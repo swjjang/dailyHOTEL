@@ -101,7 +101,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
 
     public PlaceViewItem getItem(int position)
     {
-        if (mPlaceViewItemList.size() <= position)
+        if (position < 0 || mPlaceViewItemList.size() <= position)
         {
             return null;
         }
