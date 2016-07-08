@@ -965,9 +965,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                     SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
                     GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
                     ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
-
-                    // 특정 날짜 고메 리스트 요청
-                    mPlaceMainNetworkController.requestRegionList();
                 } else
                 {
                     return false;
@@ -985,8 +982,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                 SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
                 GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
-
-                mPlaceMainNetworkController.requestRegionList();
             } catch (Exception e)
             {
                 return false;
@@ -995,6 +990,9 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             return false;
         }
+
+        mPlaceMainNetworkController.requestRegionList();
+
         return true;
     }
 
