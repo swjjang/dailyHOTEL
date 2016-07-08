@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="166dp">
 
-    <ImageView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="166dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/end_list_logo"
-        android:layout_marginTop="18dp"/>
+        android:drawableTop="@drawable/end_list_logo"
+        android:paddingTop="18dp"/>
 </RelativeLayout>
