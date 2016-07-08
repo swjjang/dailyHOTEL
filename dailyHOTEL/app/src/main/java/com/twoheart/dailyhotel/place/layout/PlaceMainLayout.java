@@ -19,9 +19,11 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -229,11 +231,12 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         {
             setCategoryTabLayoutVisibility(View.VISIBLE);
 
-            TabLayout.Tab selectedTab = null;
             Category category;
             TabLayout.Tab tab;
 
             mCategoryTabLayout.removeAllTabs();
+
+            int position = 0;
 
             for (int i = 0; i < size; i++)
             {
@@ -246,7 +249,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
                 if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
-                    selectedTab = tab;
+                    position = i;
                 }
             }
 
@@ -254,6 +257,20 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
+
+            Class reflectionClass = ViewPager.class;
+            Field mCurItem = null;
+
+            try
+            {
+                mCurItem = reflectionClass.getDeclaredField("mCurItem");
+                mCurItem.setAccessible(true);
+                mCurItem.setInt(mViewPager, position);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
             mViewPager.setAdapter(mFragmentPagerAdapter);
             mViewPager.clearOnPageChangeListeners();
             mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
@@ -302,11 +319,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 
             FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
-
-            if (selectedTab != null)
-            {
-                selectedTab.select();
-            }
         }
     }
 
