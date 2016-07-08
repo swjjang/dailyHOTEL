@@ -46,8 +46,12 @@ public class StayMainLayout extends PlaceMainLayout
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d");
-        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d");
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+
+//
+//        SpannableStringBuilder text = new SpannableStringBuilder(String.format("%s-%s", checkInDay, checkOutDay));
+//        text.setSpan(new ScaleXSpan(0.87f), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         setToolbarDateText(String.format("%s-%s", checkInDay, checkOutDay));
     }

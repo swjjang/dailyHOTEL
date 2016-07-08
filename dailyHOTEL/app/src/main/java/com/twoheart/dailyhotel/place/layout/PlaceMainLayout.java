@@ -4,9 +4,13 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ScaleXSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.FontManager;
 
@@ -148,9 +153,54 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         mRegionTextView.setText(region);
     }
 
-    public void setToolbarDateText(String date)
+    public void setToolbarDateText(String text)
     {
-        mDateTextView.setText(date);
+        text = "12.27(목)-2.28(금)";
+
+        final int viewWidth = Util.dpToPx(mContext, 78d);
+        final int realWidth = mDateTextView.getMeasuredWidth();
+
+        final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
+
+        final float width = Util.getTextWidth(mContext, text, 12d, typeface);
+        ExLog.d("view width : " + viewWidth + " , realWidth : " + realWidth + " , textWidth : " + width);
+
+        if (viewWidth > width)
+        {
+            mDateTextView.setText(text);
+        } else
+        {
+
+            mDateTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    String text = "12.27(목)-2.28(금)";
+                    float scaleX = 1f;
+                    float scaleWidth = width;
+                    for (int i = 99; i >= 80; i--)
+                    {
+                        scaleX = (float) i / 100;
+                        scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
+
+                        if (viewWidth > scaleWidth)
+                        {
+                            ExLog.d("scaleWidth : " + scaleWidth + " , scaleX : " + scaleX);
+                            break;
+                        }
+                    }
+
+                    ExLog.d("scaleX : " + scaleX);
+                    SpannableString spannableString = new SpannableString(text);
+                    spannableString.setSpan(new ScaleXSpan(scaleX), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    mDateTextView.setText(text);
+                }
+            });
+
+        }
+
     }
 
     public void setOptionViewTypeView(Constants.ViewType viewType)

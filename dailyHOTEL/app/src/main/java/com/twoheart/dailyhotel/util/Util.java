@@ -17,6 +17,8 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap.Config;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -1332,5 +1334,30 @@ public class Util implements Constants
         }
 
         return false;
+    }
+
+    public static float getTextWidth(Context context, String text, double dp, Typeface typeface)
+    {
+        return getScaleTextWidth(context, text, dp, 1.0f, typeface);
+    }
+
+    public static float getScaleTextWidth(Context context, String text, double dp, float scaleX, Typeface typeface)
+    {
+        if (context == null || isTextEmpty(text))
+        {
+            return 0;
+        }
+
+        Paint p = new Paint();
+
+        float size = dpToPx(context, dp);
+        p.setTextSize(size);
+        p.setTypeface(typeface);
+        p.setTextScaleX(scaleX);
+
+        float width = p.measureText(text);
+
+        p.reset();
+        return width;
     }
 }
