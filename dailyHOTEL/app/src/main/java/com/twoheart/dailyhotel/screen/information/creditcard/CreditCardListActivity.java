@@ -7,14 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -94,7 +93,7 @@ public class CreditCardListActivity extends BaseActivity
     {
         super.onResume();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             mCreditCardLayout.setViewLoginLayout(false);
         } else

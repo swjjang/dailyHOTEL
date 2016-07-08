@@ -186,6 +186,8 @@ public class DailyPreference
         setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax, privacyEmail);
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
+
+        DailyHotel.AUTHORIZATION = null;
     }
 
     private String getValue(SharedPreferences sharedPreferences, String key, String defaultValue)

@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
@@ -100,7 +101,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
         super.onResume();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             requestLogin();
         } else

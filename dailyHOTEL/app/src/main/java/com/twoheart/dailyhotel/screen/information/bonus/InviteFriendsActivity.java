@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
@@ -70,8 +71,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             mName = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
         }
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == false//
-            && Util.isTextEmpty(mRecommendCode) == true)
+        if (DailyHotel.isLogin() == true && Util.isTextEmpty(mRecommendCode) == true)
         {
             Util.restartApp(this);
             return;
@@ -167,7 +167,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     {
         super.onStart();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == false)
+        if (DailyHotel.isLogin() == true)
         {
             AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(AnalyticsManager.Screen.MENU_INVITE_FRIENDS);
         } else
@@ -184,7 +184,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
         unLockUI();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             updateLayout(false);
         } else

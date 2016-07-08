@@ -724,7 +724,7 @@ public class MainActivity extends BaseActivity implements Constants
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
                 {
-                    if (Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == true)
+                    if (DailyHotel.isLogin() == false)
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                     } else
@@ -757,7 +757,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                 }
 
-                if (Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false)
+                if (DailyHotel.isLogin() == true)
                 {
                     // session alive
                     // 호텔 평가를 위한 사용자 정보 조회
@@ -797,7 +797,7 @@ public class MainActivity extends BaseActivity implements Constants
                 return;
             }
 
-            final boolean isLogined = Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false;
+            final boolean isLogined = DailyHotel.isLogin();
 
             if (isLogined == true)
             {
@@ -913,7 +913,7 @@ public class MainActivity extends BaseActivity implements Constants
                 viewedCouponTime = Util.getISO8601String(new Date(0L));
             }
 
-            boolean isAuthorization = Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false;
+            boolean isAuthorization = DailyHotel.isLogin();
 
             mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime, isAuthorization);
         }

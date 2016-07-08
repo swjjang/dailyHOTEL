@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -728,7 +729,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
-                if (Util.isTextEmpty(DailyPreference.getInstance(mBaseActivity).getAuthorization()) == true)
+                if (DailyHotel.isLogin() == false)
                 {
                     params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
                 } else

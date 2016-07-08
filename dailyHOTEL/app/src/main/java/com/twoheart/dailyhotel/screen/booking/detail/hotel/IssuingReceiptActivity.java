@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -78,7 +79,7 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         super.onResume();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             restartExpiredSession();
         } else

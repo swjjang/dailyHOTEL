@@ -101,7 +101,7 @@ public abstract class DailyHotelRequest_v2<T> extends Request<T> implements Cons
             map.put("Content-Type", "application/json; charset=UTF-8");
         }
 
-        if (mIsUsedAuthorization == true && Util.isTextEmpty(DailyHotel.AUTHORIZATION) == false)
+        if (mIsUsedAuthorization == true && DailyHotel.isLogin() == true)
         {
             map.put("Authorization", DailyHotel.AUTHORIZATION);
         }

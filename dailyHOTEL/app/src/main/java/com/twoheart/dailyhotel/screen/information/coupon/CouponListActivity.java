@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -58,7 +59,7 @@ public class CouponListActivity extends BaseActivity
 
         AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_BOX);
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        if (DailyHotel.isLogin() == false)
         {
             lockUI();
             showLoginDialog();
@@ -70,7 +71,7 @@ public class CouponListActivity extends BaseActivity
     {
         super.onResume();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == false)
+        if (DailyHotel.isLogin() == true)
         {
             lockUI();
             mCouponListNetworkController.requestCouponList();

@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
@@ -655,7 +656,7 @@ public class HotelDetailActivity extends BaseActivity
 
             mSelectedSaleRoomInformation = saleRoomInformation;
 
-            if (Util.isTextEmpty(DailyPreference.getInstance(HotelDetailActivity.this).getAuthorization()) == true)
+            if (DailyHotel.isLogin() == false)
             {
                 startLoginActivity();
             } else
