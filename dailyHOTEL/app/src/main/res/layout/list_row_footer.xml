@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="166dp">
+    android:layout_height="206dp">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="wrap_content"
-        android:layout_height="166dp"
+        android:layout_height="206dp"
         android:layout_centerHorizontal="true"
         android:drawableTop="@drawable/end_list_logo"
         android:paddingTop="18dp"/>
