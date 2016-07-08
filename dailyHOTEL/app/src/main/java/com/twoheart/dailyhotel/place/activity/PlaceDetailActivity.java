@@ -765,7 +765,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

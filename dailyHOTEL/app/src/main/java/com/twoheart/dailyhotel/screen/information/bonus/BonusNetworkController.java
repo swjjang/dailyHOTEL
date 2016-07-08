@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -99,7 +98,7 @@ public class BonusNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -131,7 +130,7 @@ public class BonusNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

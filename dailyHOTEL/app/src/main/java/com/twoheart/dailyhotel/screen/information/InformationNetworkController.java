@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -20,7 +19,7 @@ public class InformationNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserProfile(String type, String email, String name, String recommender,boolean isAgreedBenefit);
+        void onUserProfile(String type, String email, String name, String recommender, boolean isAgreedBenefit);
 
         void onUserProfileBenefit(int bonus, int couponTotalCount, boolean isExceedBonus);
 
@@ -66,7 +65,7 @@ public class InformationNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -104,7 +103,7 @@ public class InformationNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

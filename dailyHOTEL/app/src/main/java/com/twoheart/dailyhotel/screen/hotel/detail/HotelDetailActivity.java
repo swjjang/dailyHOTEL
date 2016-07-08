@@ -898,7 +898,7 @@ public class HotelDetailActivity extends BaseActivity
                     user.setUserIdx(jsonObject.getString("idx"));
 
                     // 추천인
-//                    int recommender = jsonObject.getInt("recommender_code");
+                    //                    int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
                     if (isDailyUser == true)
@@ -942,7 +942,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObjectData = response.getJSONObject("data");
 

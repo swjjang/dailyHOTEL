@@ -28,9 +28,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ProfileActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_EDIT_PROFILE = 1;

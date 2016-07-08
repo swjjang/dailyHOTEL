@@ -916,7 +916,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

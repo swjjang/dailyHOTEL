@@ -325,10 +325,10 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
 
         String price = params.get(AnalyticsManager.KeyType.PRICE);
-//        String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
+        //        String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY);
 
-//        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
+        //        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
         String id;
 
