@@ -156,52 +156,33 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void setToolbarDateText(String text)
     {
-        text = "12.27(목)-2.28(금)";
-
-        final int viewWidth = Util.dpToPx(mContext, 78d);
-        final int realWidth = mDateTextView.getMeasuredWidth();
-
+        int viewWidth = Util.dpToPx(mContext, 87d);
         final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-
         final float width = Util.getTextWidth(mContext, text, 12d, typeface);
-        ExLog.d("view width : " + viewWidth + " , realWidth : " + realWidth + " , textWidth : " + width);
 
         if (viewWidth > width)
         {
             mDateTextView.setText(text);
         } else
         {
-
-            mDateTextView.post(new Runnable()
+            float scaleX = 1f;
+            float scaleWidth = width;
+            for (int i = 99; i >= 80; i--)
             {
-                @Override
-                public void run()
+                scaleX = (float) i / 100;
+                scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
+
+                if (viewWidth > scaleWidth)
                 {
-                    String text = "12.27(목)-2.28(금)";
-                    float scaleX = 1f;
-                    float scaleWidth = width;
-                    for (int i = 99; i >= 80; i--)
-                    {
-                        scaleX = (float) i / 100;
-                        scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
-
-                        if (viewWidth > scaleWidth)
-                        {
-                            ExLog.d("scaleWidth : " + scaleWidth + " , scaleX : " + scaleX);
-                            break;
-                        }
-                    }
-
-                    ExLog.d("scaleX : " + scaleX);
-                    SpannableString spannableString = new SpannableString(text);
-                    spannableString.setSpan(new ScaleXSpan(scaleX), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    mDateTextView.setText(text);
+                    break;
                 }
-            });
+            }
 
+            SpannableString spannableString = new SpannableString(text);
+            spannableString.setSpan(new ScaleXSpan(scaleX), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            mDateTextView.setText(spannableString);
         }
-
     }
 
     public void setOptionViewTypeView(Constants.ViewType viewType)
