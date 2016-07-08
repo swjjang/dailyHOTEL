@@ -67,7 +67,7 @@ public class ProfileNetworkController extends BaseNetworkController
                     if (isVerified == true && isPhoneVerified == true)
                     {
                         verifiedDate = Util.simpleDateFormatISO8601toFormat( //
-                            jsonObject.getString("phone_verified_at"), "yyyy.MM.dd");
+                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
                     } else if (isVerified == false && isPhoneVerified == true)
                     {
                         verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";
