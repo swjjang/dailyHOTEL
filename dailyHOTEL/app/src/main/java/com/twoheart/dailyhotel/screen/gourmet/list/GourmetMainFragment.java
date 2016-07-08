@@ -762,11 +762,18 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                         if (gourmetListAdapter != null)
                         {
-                            PlaceViewItem placeViewItem = gourmetListAdapter.getItem(gourmetListAdapter.getItemCount() - 1);
+                            int count = gourmetListAdapter.getItemCount();
 
-                            if (placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                            if (count == 0)
                             {
-                                mPlaceMainLayout.showBottomLayout(false);
+                            } else
+                            {
+                                PlaceViewItem placeViewItem = gourmetListAdapter.getItem(gourmetListAdapter.getItemCount() - 1);
+
+                                if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                                {
+                                    mPlaceMainLayout.showBottomLayout(false);
+                                }
                             }
                         }
                     }
