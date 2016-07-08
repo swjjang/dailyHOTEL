@@ -160,7 +160,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
         final float width = Util.getTextWidth(mContext, text, 12d, typeface);
 
-        if (viewWidth > width)
+        if (viewWidth >= width)
         {
             mDateTextView.setText(text);
         } else
@@ -172,7 +172,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 scaleX = (float) i / 100;
                 scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
 
-                if (viewWidth > scaleWidth)
+                if (viewWidth >= scaleWidth)
                 {
                     break;
                 }
