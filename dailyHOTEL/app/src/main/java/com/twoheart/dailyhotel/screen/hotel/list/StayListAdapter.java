@@ -354,14 +354,12 @@ public class StayListAdapter extends PlaceListAdapter
     private class FooterViewHolder extends RecyclerView.ViewHolder
     {
         View loadingView;
-        View textView;
 
         public FooterViewHolder(View itemView)
         {
             super(itemView);
 
             loadingView = itemView.findViewById(R.id.footer_progress);
-            textView = itemView.findViewById(R.id.footer_textView);
         }
     }
 
