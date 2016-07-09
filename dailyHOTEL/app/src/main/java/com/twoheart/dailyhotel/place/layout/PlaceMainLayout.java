@@ -263,6 +263,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
             Category category;
             TabLayout.Tab tab;
+            TabLayout.Tab selectedTab = null;
 
             mCategoryTabLayout.removeAllTabs();
 
@@ -280,6 +281,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
                     position = i;
+                    selectedTab = tab;
                 }
             }
 
@@ -345,6 +347,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     }
                 }
             });
+
+            if (selectedTab != null)
+            {
+                selectedTab.select();
+            }
 
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 
