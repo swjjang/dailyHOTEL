@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -215,25 +217,33 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            StayListFragment.this.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
+            if (DEBUG == false && e != null)
+            {
+                Crashlytics.logException(e);
+            }
 
+            MainActivity mainActivity = (MainActivity)getActivity();
+            mainActivity.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-
+            MainActivity mainActivity = (MainActivity)getActivity();
+            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-
+            MainActivity mainActivity = (MainActivity)getActivity();
+            mainActivity.onRuntimeError("message : " + message);
         }
 
         private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
