@@ -112,6 +112,7 @@ public class StringFilter
                 switch (mode)
                 {
                     case ALLOW_ALPHANUMERIC_HANGUL:
+                    case ALLOW_SEARCH_FILTER:
                         DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT);
                         break;
 
