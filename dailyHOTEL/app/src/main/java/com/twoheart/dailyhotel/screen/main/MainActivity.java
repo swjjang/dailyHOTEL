@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -317,6 +318,19 @@ public class MainActivity extends BaseActivity implements Constants
             super.onError();
 
             mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT);
+        }
+    }
+
+    public void onRuntimeError(String message)
+    {
+        if (mIsInitialization == false)
+        {
+            if (DEBUG == false && Util.isTextEmpty(message) == false)
+            {
+                Crashlytics.logException(new RuntimeException("message"));
+            }
+
+            onError();
         }
     }
 
