@@ -129,15 +129,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     public void onBackPressed()
     {
         // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
-        if (mIsAnimation == true)
-        {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
-        } else
-        {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP_CLOSED, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
-        }
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
         hideAnimation();
     }
@@ -150,16 +143,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             case R.id.exitView:
             case R.id.closeView:
 
-                // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
-                if (mIsAnimation == true)
-                {
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP_CLOSED, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
-                }
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
                 hideAnimation();
                 break;

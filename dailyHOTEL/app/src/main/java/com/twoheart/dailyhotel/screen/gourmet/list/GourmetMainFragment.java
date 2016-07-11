@@ -229,17 +229,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 case LIST:
                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LIST, null);
-
-                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.GOURMET_LIST, null);
                     break;
 
                 case MAP:
                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_MAP, null);
-
-                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.GOURMET_MAP, null);
                     break;
             }
         }
