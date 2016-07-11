@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -441,11 +442,24 @@ public class GourmetListFragment extends PlaceListFragment
                 } else
                 {
                     String message = response.getString("msg");
-                    onErrorPopupMessage(msgCode, message);
+
+                    MainActivity mainActivity = (MainActivity) getActivity();
+
+                    if (mainActivity != null && mainActivity.isFinishing() == false)
+                    {
+                        mainActivity.onRuntimeError("msgCode : " + msgCode + ", msg : " + message);
+                    }
                 }
             } catch (Exception e)
             {
-                onError(e);
+                MainActivity mainActivity = (MainActivity) getActivity();
+
+                if (mainActivity != null && mainActivity.isFinishing() == false)
+                {
+                    mainActivity.onRuntimeError(e.toString());
+                }
+
+                mainActivity.onError();
             } finally
             {
                 unLockUI();
