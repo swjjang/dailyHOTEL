@@ -27,7 +27,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     private static final int REQUEST_MAX_RETRY = 0;
 
     private Map<String, String> mParameters;
-    private boolean mIsUsedAuthorization;
     private boolean mIsUsedAccept;
 
     public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
@@ -36,7 +35,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
         mParameters = parameters;
 
-        mIsUsedAuthorization = false;
         mIsUsedAccept = false;
     }
 
@@ -294,17 +292,12 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
             map.put("content-type", "application/json");
         }
 
-        if (mIsUsedAuthorization == true && DailyHotel.isLogin() == true)
+        if (DailyHotel.isLogin() == true)
         {
             map.put("Authorization", DailyHotel.AUTHORIZATION);
         }
 
         return map;
-    }
-
-    public void setUsedAuthorization(boolean isUsed)
-    {
-        mIsUsedAuthorization = isUsed;
     }
 
     public void setIsUsedAccept(boolean isUsed)

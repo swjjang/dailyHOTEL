@@ -416,7 +416,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, boolean isAuthorization, DailyHotelJsonResponseListener listener);
+    void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener);
 
     /**
      * api/daily/event/page
@@ -556,19 +556,17 @@ interface IDailyNetwork
      * 혜택 알림을 받아야 하는지 알려준다.
      *
      * @param tag
-     * @param isAuthorization
      * @param listener
      */
-    void requestNoticeAgreement(Object tag, boolean isAuthorization, DailyHotelJsonResponseListener listener);
+    void requestNoticeAgreement(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * 혜택 알림을 받아야 하는지 알려준다.
      *
      * @param tag
-     * @param isAuthorization
      * @param listener
      */
-    void requestNoticeAgreementResult(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
+    void requestNoticeAgreementResult(Object tag, boolean isAgree, DailyHotelJsonResponseListener listener);
 
     /**
      * api/v1/notice/benefit - GET
@@ -599,5 +597,5 @@ interface IDailyNetwork
      * @param isAgree  required
      * @param listener
      */
-    void requestUpdateBenefitAgreement(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
+    void requestUpdateBenefitAgreement(Object tag, boolean isAgree, DailyHotelJsonResponseListener listener);
 }

@@ -92,14 +92,14 @@ public class MainNetworkController extends BaseNetworkController
         }, null);
     }
 
-    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime, boolean isAuthorization)
+    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime)
     {
         if (Util.isTextEmpty(lastEventTime, lastCouponTime) == true)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, isAuthorization, mDailyEventCountJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
     }
 
     protected void requestGourmetIsExistRating()
@@ -152,14 +152,14 @@ public class MainNetworkController extends BaseNetworkController
         }
     }
 
-    public void requestNoticeAgreement(boolean isAuthorization)
+    public void requestNoticeAgreement()
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, isAuthorization, mNoticeAgreementJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementJsonResponseListener);
     }
 
-    public void requestNoticeAgreementResult(boolean isAuthorization, boolean isAgree)
+    public void requestNoticeAgreementResult(boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAuthorization, isAgree, mNoticeAgreementResultJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAgree, mNoticeAgreementResultJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -352,7 +352,7 @@ public class MainNetworkController extends BaseNetworkController
                 } else
                 {
                     // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
-                    requestNoticeAgreement(true);
+                    requestNoticeAgreement();
                 }
             } catch (Exception e)
             {
