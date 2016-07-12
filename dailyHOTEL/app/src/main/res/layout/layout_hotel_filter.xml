@@ -13,14 +13,15 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
+            android:gravity="center"
             android:text="@string/label_personnel"
             android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"
-            android:gravity="center"/>
+            android:textSize="13dp"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
+            android:layout_alignParentTop="true"
             android:background="@color/default_line_ce7e7e7"/>
 
         <View
@@ -52,8 +53,8 @@
                 android:id="@+id/minusPersonView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/selector_curation_minus_button"
-                android:scaleType="center"/>
+                android:scaleType="center"
+                android:src="@drawable/selector_curation_minus_button"/>
 
             <View
                 android:id="@+id/minusDimView"
@@ -81,8 +82,8 @@
                 android:id="@+id/plusPersonView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/selector_curation_plus_button"
-                android:scaleType="center"/>
+                android:scaleType="center"
+                android:src="@drawable/selector_curation_plus_button"/>
 
             <View
                 android:id="@+id/plusDimView"
@@ -106,10 +107,10 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
+            android:gravity="center"
             android:text="@string/label_bedtype"
             android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"
-            android:gravity="center"/>
+            android:textSize="13dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -129,40 +130,42 @@
         android:layout_height="70dp"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingRight="10dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/doubleCheckView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/selector_filter_bedtype_double_button"
             android:gravity="center_horizontal"
+            android:paddingTop="10dp"
             android:text="@string/label_double"
-            android:textColor="@drawable/selector_curation_textcolor"
+            android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/twinCheckView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/selector_filter_bedtype_twin_button"
             android:gravity="center_horizontal"
+            android:paddingTop="10dp"
             android:text="@string/label_twin"
-            android:textColor="@drawable/selector_curation_textcolor"
+            android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/heatedFloorsCheckView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/selector_filter_bedtype_heatedfloors_button"
             android:gravity="center_horizontal"
+            android:paddingTop="10dp"
             android:text="@string/label_heatedfloors"
-            android:textColor="@drawable/selector_curation_textcolor"
+            android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"/>
 
         <View
@@ -184,14 +187,15 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
+            android:gravity="center"
             android:text="@string/label_amenities"
             android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"
-            android:gravity="center"/>
+            android:textSize="13dp"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
+            android:layout_alignParentTop="true"
             android:background="@color/default_line_ce7e7e7"/>
 
         <View
