@@ -797,7 +797,7 @@ public class MainActivity extends BaseActivity implements Constants
                     if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
-                        mNetworkController.requestNoticeAgreement(false);
+                        mNetworkController.requestNoticeAgreement();
                     }
                 }
             }
@@ -841,7 +841,7 @@ public class MainActivity extends BaseActivity implements Constants
                     public void onClick(View v)
                     {
                         mIsBenefitAlarm = true;
-                        mNetworkController.requestNoticeAgreementResult(isLogined, true);
+                        mNetworkController.requestNoticeAgreementResult(true);
                     }
                 }, new View.OnClickListener()
                 {
@@ -849,7 +849,7 @@ public class MainActivity extends BaseActivity implements Constants
                     public void onClick(View v)
                     {
                         mIsBenefitAlarm = false;
-                        mNetworkController.requestNoticeAgreementResult(isLogined, false);
+                        mNetworkController.requestNoticeAgreementResult(false);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
@@ -857,7 +857,7 @@ public class MainActivity extends BaseActivity implements Constants
                     public void onCancel(DialogInterface dialog)
                     {
                         mIsBenefitAlarm = false;
-                        mNetworkController.requestNoticeAgreementResult(isLogined, false);
+                        mNetworkController.requestNoticeAgreementResult(false);
                     }
                 }, null, true);
         }
@@ -927,9 +927,7 @@ public class MainActivity extends BaseActivity implements Constants
                 viewedCouponTime = Util.getISO8601String(new Date(0L));
             }
 
-            boolean isAuthorization = DailyHotel.isLogin();
-
-            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime, isAuthorization);
+            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime);
         }
     };
 }

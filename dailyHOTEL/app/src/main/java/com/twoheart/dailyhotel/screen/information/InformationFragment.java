@@ -412,11 +412,10 @@ public class InformationFragment extends BaseFragment implements Constants
             final BaseActivity baseActivity = (BaseActivity) getActivity();
             boolean isBenefitAlarm = DailyPreference.getInstance(baseActivity).isUserBenefitAlarm(); // 클릭이므로 상태값 변경!
             boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
-            final boolean isAuthorization = DailyHotel.isLogin();
 
             if (onOff == true)
             {
-                mNetworkController.requestPushBenefit(isAuthorization, true);
+                mNetworkController.requestPushBenefit(true);
             } else
             {
                 String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
@@ -429,7 +428,7 @@ public class InformationFragment extends BaseFragment implements Constants
                     @Override
                     public void onClick(View v)
                     {
-                        mNetworkController.requestPushBenefit(isAuthorization, false);
+                        mNetworkController.requestPushBenefit(false);
                     }
                 }, null, null, new DialogInterface.OnDismissListener()
                 {
