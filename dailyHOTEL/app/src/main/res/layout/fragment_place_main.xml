@@ -119,11 +119,13 @@
         app:tabIndicatorHeight="2dp"
         app:tabMode="scrollable"
         app:tabPadding="0dp"
+        app:tabMinWidth="0dp"
         app:tabPaddingStart="12dp"
         app:tabPaddingEnd="12dp"
         app:tabSelectedTextColor="@color/default_text_c900034"
         app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"/>
+        app:tabTextColor="@color/default_text_c929292"
+        android:paddingLeft="8dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
