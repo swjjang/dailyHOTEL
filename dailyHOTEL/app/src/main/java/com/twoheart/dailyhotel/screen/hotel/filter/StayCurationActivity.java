@@ -736,7 +736,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
-                setResultMessage(getString(R.string.label_hotel_filter_result_count, 0));
+                setResultMessage(getString(R.string.label_hotel_filter_result_empty));
 
                 setConfirmOnClickListener(StayCurationActivity.this);
                 setConfirmEnable(false);

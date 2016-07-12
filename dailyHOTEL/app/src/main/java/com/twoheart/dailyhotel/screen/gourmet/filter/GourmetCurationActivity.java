@@ -424,7 +424,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             @Override
             protected void onPostExecute(Integer count)
             {
-                setResultMessage(getString(R.string.label_gourmet_filter_result_count, count));
+                String resultMessage = count == 0 //
+                    ? getString(R.string.label_gourmet_filter_result_empty) //
+                    : getString(R.string.label_gourmet_filter_result_count, count);
+                setResultMessage(resultMessage);
 
                 setConfirmOnClickListener(GourmetCurationActivity.this);
                 setConfirmEnable(count == 0 ? false : true);
