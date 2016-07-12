@@ -29,8 +29,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     private static final int ANIMATION_DEALY = 200;
 
-    private TextView mResultCountView;
-    private View mConfirmView;
+    private TextView mConfirmView;
 
     private Handler mHandler;
 
@@ -59,8 +58,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         mHandler = new UpdateHandler(this);
 
-        mResultCountView = (TextView) findViewById(R.id.resultCountView);
-        mConfirmView = findViewById(R.id.confirmView);
+        mConfirmView = (TextView) findViewById(R.id.confirmView);
         setConfirmOnClickListener(this);
 
         ScrollView contentScrollView = (ScrollView) findViewById(R.id.contentScrollView);
@@ -86,12 +84,12 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     protected void setResultMessage(String text)
     {
-        if (mResultCountView == null)
+        if (mConfirmView == null)
         {
             return;
         }
 
-        mResultCountView.setText(text);
+        mConfirmView.setText(text);
     }
 
     protected void setConfirmEnable(boolean enabled)
@@ -170,7 +168,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-        dailyTextView.setTextColor(getResources().getColorStateList(R.drawable.selector_curation_textcolor));
+        dailyTextView.setTextColor(getResources().getColorStateList(R.color.selector_curation_textcolor));
         dailyTextView.setText(text);
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, resId, 0, 0);
 

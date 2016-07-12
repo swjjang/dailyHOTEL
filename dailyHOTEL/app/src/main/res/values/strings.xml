@@ -767,8 +767,8 @@
     <string name="label_twin">트윈</string>
     <string name="label_heatedfloors">온돌</string>
     <string name="label_more_person">%1$d명 이상</string>
-    <string name="label_hotel_filter_result_count">%1$d개의 숙소</string>
-    <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑</string>
+    <string name="label_hotel_filter_result_count">%1$d개의 숙소 보기</string>
+    <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑 보기</string>
     <string name="label_reset">초기화</string>
     <string name="label_sort_by">정렬</string>
     <string name="label_sort_by_distance">거리순</string>
@@ -776,7 +776,6 @@
     <string name="label_sort_by_high_price">높은 가격순</string>
     <string name="label_sort_by_area">지역별</string>
     <string name="label_sort_by_satisfaction">만족도</string>
-    <string name="label_apply_completed">적용완료</string>
     <string name="label_personnel">인원</string>
     <string name="label_bedtype">베드타입</string>
     <string name="label_foodtype">음식종류</string>
@@ -796,6 +795,7 @@
     <string name="label_time_1721">17–21시</string>
     <string name="label_time_2106">21시 이후</string>
     <string name="label_searching">검색 중...</string>
+    <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
 
     <!-- PaymentResult Activity -->
     <string name="label_booking_information">예약정보</string>
