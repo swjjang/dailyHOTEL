@@ -1,26 +1,34 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -31,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -94,6 +103,22 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        lockUI();
+
+        if (mSearchType == SEARCHTYPE_LOCATION)
+        {
+            mNetworkController.requestCategoryList(mSaleTime, mNights, mLocation);
+        } else
+        {
+            mNetworkController.requestCategoryList(mSaleTime, mNights, mKeyword.name);
+        }
+    }
+
+    @Override
     protected PlaceSearchResultLayout getPlaceSearchResultLayout(Context context)
     {
         return new StaySearchResultLayout(context, mOnEventListener);
@@ -102,31 +127,94 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+            SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 
+            if (checkInSaleTime == null || checkOutSaleTime == null)
+            {
+                return;
+            }
+
+            StaySearchResultCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
+            StaySearchResultCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
+
+            setToolbarDateText(checkInSaleTime, checkOutSaleTime);
+
+            refreshCurrentFragment(true);
+        }
     }
 
     @Override
     protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            PlaceCurationOption placeCurationOption = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+            Category category = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_CATEGORY);
+            Province province = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_PROVINCE);
 
+            if ((placeCurationOption instanceof StayCurationOption) == false)
+            {
+                return;
+            }
+
+            StayCurationOption changeCurationOption = (StayCurationOption) placeCurationOption;
+            StayCurationOption stayCurationOption = StaySearchResultCurationManager.getInstance().getStayCurationOption();
+
+            stayCurationOption.setCurationOption(changeCurationOption);
+
+            StaySearchResultCurationManager.getInstance().setCategory(category);
+            StaySearchResultCurationManager.getInstance().setProvince(province);
+
+            mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+
+            if (changeCurationOption.getSortType() == SortType.DISTANCE)
+            {
+                searchMyLocation();
+            } else
+            {
+                refreshCurrentFragment(true);
+            }
+        }
     }
 
     @Override
     protected void onLocationFailed()
     {
+        StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
+        refreshCurrentFragment(true);
     }
 
     @Override
     protected void onLocationProviderDisabled()
     {
+        StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
 
+        refreshCurrentFragment(true);
     }
 
     @Override
     protected void onLocationChanged(Location location)
     {
+        if (location == null)
+        {
+            StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+            refreshCurrentFragment(true);
+        } else
+        {
+            StaySearchResultCurationManager.getInstance().setLocation(location);
 
+            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
+            if (StaySearchResultCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
+            {
+                refreshCurrentFragment(true);
+            }
+        }
     }
 
     @Override
@@ -163,36 +251,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
             mPlaceSearchResultLayout.setToolbarTitle("");
-            mPlaceSearchResultLayout.setDateText(String.format("%s - %s", checkInDate, checkOutDate));
+            mPlaceSearchResultLayout.setCalendarText(String.format("%s - %s", checkInDate, checkOutDate));
         } else
         {
             mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
-            mPlaceSearchResultLayout.setDateText(String.format("%s - %s", checkInDate, checkOutDate));
+            mPlaceSearchResultLayout.setCalendarText(String.format("%s - %s", checkInDate, checkOutDate));
         }
 
         mNetworkController = new StaySearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
-    }
-
-    @Override
-    protected void requestSearchResultList()
-    {
-        if ((mOffset > 0 && mOffset >= mTotalCount) || mOffset == -1)
-        {
-            return;
-        }
-
-        if (mOffset == 0)
-        {
-            lockUI();
-        }
-
-        if (mSearchType == SEARCHTYPE_LOCATION)
-        {
-            mNetworkController.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
-        } else
-        {
-            mNetworkController.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
-        }
     }
 
     @Override
@@ -217,7 +283,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
         String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
 
-        mPlaceSearchResultLayout.setDateText(String.format("%s-%s", checkInDay, checkOutDay));
+        mPlaceSearchResultLayout.setCalendarText(String.format("%s-%s", checkInDay, checkOutDay));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -281,7 +347,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             lockUI();
 
-            StayListFragment currentFragment = (StayListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+            StaySearchResultListFragment currentFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
 
             switch (mViewType)
             {
@@ -744,6 +810,118 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarTitle(address);
 
             analyticsOnResponseSearchResultListForLocation();
+        }
+
+        @Override
+        public void onResponseCategoryList(List<Category> list)
+        {
+            mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), list, null, new PlaceListFragment.OnPlaceListFragmentListener()
+            {
+                @Override
+                public void onEventBannerClick(EventBanner eventBanner)
+                {
+
+                }
+
+                @Override
+                public void onActivityCreated(PlaceListFragment placeListFragment)
+                {
+                    if (mPlaceSearchResultLayout == null || placeListFragment == null)
+                    {
+                        return;
+                    }
+
+                    PlaceListFragment currentPlaceListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+                    if (currentPlaceListFragment == placeListFragment)
+                    {
+                        currentPlaceListFragment.setVisibility(mViewType, true);
+                        currentPlaceListFragment.refreshList(true);
+
+                        // Analytics
+                        Map<String, String> params = new HashMap<>();
+                        Province province = StaySearchResultCurationManager.getInstance().getProvince();
+
+                        if (province instanceof Area)
+                        {
+                            Area area = (Area) province;
+                            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                        } else
+                        {
+                            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                        }
+
+                        if (DailyHotel.isLogin() == false)
+                        {
+                            params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                        } else
+                        {
+                            params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                        }
+                    } else
+                    {
+                        placeListFragment.setVisibility(mViewType, false);
+                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+                {
+                    mPlaceSearchResultLayout.calculationMenuBarLayoutTranslationY(dy);
+                }
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+                {
+                    switch (newState)
+                    {
+                        case RecyclerView.SCROLL_STATE_IDLE:
+                        {
+                            mPlaceSearchResultLayout.animationMenuBarLayout();
+
+                            //                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
+
+                            if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
+                            {
+                                StayListAdapter stayListAdapter = (StayListAdapter) recyclerView.getAdapter();
+
+                                if (stayListAdapter != null)
+                                {
+                                    int count = stayListAdapter.getItemCount();
+
+                                    if (count == 0)
+                                    {
+                                    } else
+                                    {
+                                        PlaceViewItem placeViewItem = stayListAdapter.getItem(stayListAdapter.getItemCount() - 1);
+
+                                        if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+                                        {
+                                            mPlaceSearchResultLayout.showBottomLayout(false);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        }
+
+                        case RecyclerView.SCROLL_STATE_DRAGGING:
+                            break;
+
+                        case RecyclerView.SCROLL_STATE_SETTLING:
+                            break;
+                    }
+                }
+
+                @Override
+                public void onShowMenuBar()
+                {
+
+                }
+            });
         }
 
         @Override

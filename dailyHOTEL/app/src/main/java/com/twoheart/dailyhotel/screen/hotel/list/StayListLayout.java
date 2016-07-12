@@ -88,7 +88,7 @@ public class StayListLayout extends PlaceListLayout
     }
 
     @Override
-    protected PlaceListMapFragment getListMapFragment()
+    public PlaceListMapFragment getListMapFragment()
     {
         return mStayListMapFragment;
     }

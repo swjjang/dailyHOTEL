@@ -30,8 +30,9 @@ public class StayListFragment extends PlaceListFragment
     private int mPageIndex;
 
     private StayListLayout mStayListLayout;
-    private BaseActivity mBaseActivity;
     private StayListNetworkController mNetworkController;
+
+    protected BaseActivity mBaseActivity;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -154,6 +155,65 @@ public class StayListFragment extends PlaceListFragment
         mStayListLayout.setScrollListTop();
     }
 
+    protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
+    {
+        ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
+
+        if (stayList == null || stayList.size() == 0)
+        {
+            return stayViewItemList;
+        }
+
+        String previousRegion = null;
+        boolean hasDailyChoice = false;
+
+        for (Stay stay : stayList)
+        {
+            // 지역순에만 section 존재함
+            if (SortType.DEFAULT == sortType)
+            {
+                String region = stay.districtName;
+
+                if (Util.isTextEmpty(region) == true)
+                {
+                    continue;
+                }
+
+                if (stay.isDailyChoice == true)
+                {
+                    if (hasDailyChoice == false)
+                    {
+                        hasDailyChoice = true;
+
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+                        stayViewItemList.add(section);
+                    }
+                } else
+                {
+                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+                    {
+                        previousRegion = region;
+
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
+                        stayViewItemList.add(section);
+                    }
+                }
+            }
+
+            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+        }
+
+        if (Constants.PAGENATION_LIST_SIZE > stayList.size())
+        {
+            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+        } else
+        {
+            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
+        }
+
+        return stayViewItemList;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////           Ovrride method     end    /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -244,65 +304,6 @@ public class StayListFragment extends PlaceListFragment
         {
             MainActivity mainActivity = (MainActivity)getActivity();
             mainActivity.onRuntimeError("message : " + message);
-        }
-
-        private ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
-        {
-            ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
-
-            if (stayList == null || stayList.size() == 0)
-            {
-                return stayViewItemList;
-            }
-
-            String previousRegion = null;
-            boolean hasDailyChoice = false;
-
-            for (Stay stay : stayList)
-            {
-                // 지역순에만 section 존재함
-                if (SortType.DEFAULT == sortType)
-                {
-                    String region = stay.districtName;
-
-                    if (Util.isTextEmpty(region) == true)
-                    {
-                        continue;
-                    }
-
-                    if (stay.isDailyChoice == true)
-                    {
-                        if (hasDailyChoice == false)
-                        {
-                            hasDailyChoice = true;
-
-                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                            stayViewItemList.add(section);
-                        }
-                    } else
-                    {
-                        if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                        {
-                            previousRegion = region;
-
-                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                            stayViewItemList.add(section);
-                        }
-                    }
-                }
-
-                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-            }
-
-            if (Constants.PAGENATION_LIST_SIZE > stayList.size())
-            {
-                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-            } else
-            {
-                stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
-            }
-
-            return stayViewItemList;
         }
     };
 

@@ -63,7 +63,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected abstract boolean isShowInformationAtMapView(Constants.ViewType viewType);
 
-    protected abstract PlaceListMapFragment getListMapFragment();
+    public abstract PlaceListMapFragment getListMapFragment();
 
     public PlaceListLayout(Context context, OnEventListener mOnEventListener)
     {

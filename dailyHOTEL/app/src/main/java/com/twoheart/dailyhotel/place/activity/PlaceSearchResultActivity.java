@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -48,8 +47,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected abstract void initIntent(Intent intent);
 
     protected abstract void initLayout();
-
-    protected abstract void requestSearchResultList();
 
     protected abstract Keyword getKeyword();
 

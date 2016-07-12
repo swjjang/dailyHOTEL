@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.screen.hotel.list.StayListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -89,7 +90,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
         String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
 
-        setDateText(String.format("%s-%s", checkInDay, checkOutDay));
+        setCalendarText(String.format("%s-%s", checkInDay, checkOutDay));
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()

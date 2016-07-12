@@ -41,6 +41,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     private View mToolbar;
     protected TextView mResultTextView;
+    private TextView mCalendarTextView;
     private View mEmptyLayout;
     private View mResultLayout;
     protected boolean mIsLoading;
@@ -123,16 +124,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     {
         mToolbar = view.findViewById(R.id.toolbar);
 
-        View titleLayout = mToolbar.findViewById(R.id.titleLayout);
-        titleLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED);
-            }
-        });
-
         View backView = mToolbar.findViewById(R.id.backImageView);
         backView.setOnClickListener(new View.OnClickListener()
         {
@@ -152,6 +143,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME);
             }
         });
+
+        mCalendarTextView = (TextView)view.findViewById(R.id.calendarTextView);
+        mCalendarTextView.setOnClickListener(this);
     }
 
     private void initCategoryTabLayout(View view)
@@ -161,10 +155,14 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
-    public void setDateText(String date)
+    public void setCalendarText(String date)
     {
-        TextView dateView = (TextView) mToolbar.findViewById(R.id.dateView);
-        dateView.setText(date);
+        if (Util.isTextEmpty(date) == true)
+        {
+            return;
+        }
+
+        mCalendarTextView.setText(date);
     }
 
     public void setToolbarTitle(String title)

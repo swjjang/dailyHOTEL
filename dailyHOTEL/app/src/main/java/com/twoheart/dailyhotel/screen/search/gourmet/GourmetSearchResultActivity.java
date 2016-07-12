@@ -153,17 +153,16 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
             mPlaceSearchResultLayout.setToolbarTitle("");
-            mPlaceSearchResultLayout.setDateText(checkInDate);
+            mPlaceSearchResultLayout.setCalendarText(checkInDate);
         } else
         {
             mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
-            mPlaceSearchResultLayout.setDateText(checkInDate);
+            mPlaceSearchResultLayout.setCalendarText(checkInDate);
         }
 
         mNetworkController = new GourmetSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
     }
 
-    @Override
     protected void requestSearchResultList()
     {
         if ((mOffset > 0 && mOffset >= mTotalCount) || mOffset == -1)

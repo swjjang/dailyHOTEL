@@ -2,14 +2,18 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.HotelSearch;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -26,6 +30,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -41,6 +46,8 @@ public class StaySearchResultNetworkController extends BaseNetworkController
         void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
         void onResponseAddress(String address);
+
+        void onResponseCategoryList(List<Category> list);
     }
 
     public StaySearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -68,6 +75,26 @@ public class StaySearchResultNetworkController extends BaseNetworkController
         requestAddress(location, mLocationToAddressListener);
 
         DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelLocationSearchListJsonResponseListener, mHotelLocationSearchListJsonResponseListener);
+    }
+
+    public void requestCategoryList(SaleTime saleTime, int nights, String keyword)
+    {
+        String encodeKeyword;
+
+        try
+        {
+            encodeKeyword = URLEncoder.encode(keyword, "UTF-8");
+        } catch (UnsupportedEncodingException e)
+        {
+            encodeKeyword = keyword;
+        }
+
+        mStayCategoryListJsonResponseListener.onResponse(null, null);
+    }
+
+    public void requestCategoryList(SaleTime saleTime, int nights, Location location)
+    {
+        requestAddress(location, mLocationToAddressListener);
     }
 
     private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
@@ -270,6 +297,28 @@ public class StaySearchResultNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mStayCategoryListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            List<Category> list = new ArrayList<Category>();
+            list.add(new Category("전체", "all"));
+            list.add(new Category("호텔", "hotel"));
+            list.add(new Category("부띠크", "boutique"));
+            list.add(new Category("펜션", "pension"));
+            list.add(new Category("게스트하우스", "guesthouse"));
+
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseCategoryList(list);
         }
     };
 

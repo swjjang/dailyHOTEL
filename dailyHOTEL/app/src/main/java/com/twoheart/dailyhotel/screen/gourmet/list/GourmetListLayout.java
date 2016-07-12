@@ -89,7 +89,7 @@ public class GourmetListLayout extends PlaceListLayout
     }
 
     @Override
-    protected PlaceListMapFragment getListMapFragment()
+    public PlaceListMapFragment getListMapFragment()
     {
         return mGourmetListMapFragment;
     }

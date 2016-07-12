@@ -18,32 +18,19 @@
             android:paddingRight="15dp"
             android:src="@drawable/navibar_ic_back_01_black"/>
 
-        <LinearLayout
-            android:id="@+id/titleLayout"
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/titleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/searchCancelView"
             android:layout_toRightOf="@+id/backImageView"
-            android:orientation="vertical">
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/titleView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/search_text"
-                android:textSize="15dp"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/dateView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/search_autocomplete_pricetext"
-                android:textSize="11dp"/>
-        </LinearLayout>
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="검색 결과 타이틀"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="18dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/searchCancelView"
@@ -65,11 +52,11 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/dateLayout"
+        android:id="@+id/calendarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_below="@+id/toolbar"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -98,7 +85,7 @@
         android:id="@+id/categoryTabLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/dateLayout"
+        android:layout_below="@+id/calendarLayout"
         android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
         android:visibility="visible"
         app:tabIndicatorHeight="2dp"
@@ -108,8 +95,7 @@
         app:tabPaddingStart="12dp"
         app:tabSelectedTextColor="@color/default_text_c900034"
         app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"
-        />
+        app:tabTextColor="@color/default_text_c929292"/>
 
     <RelativeLayout
         android:id="@+id/emptyLayout"
@@ -226,7 +212,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="59dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
