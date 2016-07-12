@@ -49,7 +49,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
             return;
         }
 
-        mListAdapter.setAll(placeViewItemList);
+        mListAdapter.addAll(placeViewItemList);
         mListAdapter.notifyDataSetChanged();
     }
 

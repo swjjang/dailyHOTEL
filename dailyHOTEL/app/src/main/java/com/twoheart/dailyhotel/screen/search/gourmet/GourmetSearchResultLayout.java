@@ -49,7 +49,7 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
             return;
         }
 
-        mListAdapter.setAll(placeViewItemList);
+        mListAdapter.addAll(placeViewItemList);
         mListAdapter.notifyDataSetChanged();
     }
 
