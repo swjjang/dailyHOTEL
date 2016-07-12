@@ -1,20 +1,30 @@
-package com.twoheart.dailyhotel.screen.search.stay;
+package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.support.design.widget.TabLayout;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +39,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searcyType";
+    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
     private static final int COUNT_PER_TIMES = 30;
@@ -84,9 +94,39 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected PlaceSearchResultLayout getLayout()
+    protected PlaceSearchResultLayout getPlaceSearchResultLayout(Context context)
     {
-        return new StaySearchResultLayout(this, mOnEventListener);
+        return new StaySearchResultLayout(context, mOnEventListener);
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onLocationFailed()
+    {
+
+    }
+
+    @Override
+    protected void onLocationProviderDisabled()
+    {
+
+    }
+
+    @Override
+    protected void onLocationChanged(Location location)
+    {
+
     }
 
     @Override
@@ -114,20 +154,20 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void initContents()
+    protected void initLayout()
     {
-        super.initContents();
-
         String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
         SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
         String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
 
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
-            mPlaceSearchResultLayout.setToolbarText("", String.format("%s - %s", checkInDate, checkOutDate));
+            mPlaceSearchResultLayout.setToolbarTitle("");
+            mPlaceSearchResultLayout.setDateText(String.format("%s - %s", checkInDate, checkOutDate));
         } else
         {
-            mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
+            mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
+            mPlaceSearchResultLayout.setDateText(String.format("%s - %s", checkInDate, checkOutDate));
         }
 
         mNetworkController = new StaySearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
@@ -172,6 +212,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
+    protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+
+        mPlaceSearchResultLayout.setDateText(String.format("%s-%s", checkInDay, checkOutDay));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +229,160 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void finish()
         {
-            // 사용하지 않음
+            StaySearchResultActivity.this.finish();
+        }
+
+        @Override
+        public void onCategoryTabSelected(TabLayout.Tab tab)
+        {
+            Category category = (Category) tab.getTag();
+            StaySearchResultCurationManager.getInstance().setCategory(category);
+
+            mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
+            mPlaceSearchResultLayout.showBottomLayout(false);
+
+            refreshCurrentFragment(false);
+        }
+
+        @Override
+        public void onCategoryTabUnselected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onCategoryTabReselected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onDateClick()
+        {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            SaleTime checkInSaleTime = StaySearchResultCurationManager.getInstance().getCheckInSaleTime();
+            int nights = StaySearchResultCurationManager.getInstance().getNights();
+
+            Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        }
+
+        @Override
+        public void onViewTypeClick()
+        {
+            if (isFinishing() == true || isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            StayListFragment currentFragment = (StayListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+            switch (mViewType)
+            {
+                case LIST:
+                    // 고메 쪽에서 보여지는 메세지로 Stay의 경우도 동일한 처리가 필요해보여서 추가함
+                    if (currentFragment.hasSalesPlace() == false)
+                    {
+                        unLockUI();
+
+                        DailyToast.showToast(StaySearchResultActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    mViewType = ViewType.MAP;
+
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                    break;
+
+                case MAP:
+                {
+                    mViewType = ViewType.LIST;
+
+                    Map<String, String> params = new HashMap<>();
+                    Province province = StaySearchResultCurationManager.getInstance().getProvince();
+
+                    if (province == null)
+                    {
+                        Util.restartApp(StaySearchResultActivity.this);
+                        return;
+                    }
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                    } else
+                    {
+                        params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    }
+
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
+                    break;
+                }
+            }
+
+            mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+
+            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+            for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
+            {
+                boolean isCurrentFragment = (placeListFragment == currentFragment) ? true : false;
+                placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            }
+
+            refreshCurrentFragment(false);
+
+            unLockUI();
+        }
+
+        @Override
+        public void onFilterClick()
+        {
+
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Province province = StaySearchResultCurationManager.getInstance().getProvince();
+            if (province == null)
+            {
+                releaseUiComponent();
+                return;
+            }
+
+            Intent intent = StayCurationActivity.newInstance(StaySearchResultActivity.this, //
+                province.isOverseas, mViewType, //
+                StaySearchResultCurationManager.getInstance().getStayCurationOption(), //
+                StaySearchResultCurationManager.getInstance().getCategory(), //
+                StaySearchResultCurationManager.getInstance().getProvince());
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+
+            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+
+            switch (mViewType)
+            {
+                case LIST:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                    break;
+
+                case MAP:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+                    break;
+            }
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
         @Override
@@ -241,13 +442,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onLoadMoreList()
         {
-            requestSearchResultList();
+
         }
 
         @Override
         public void onShowProgressBar()
         {
-            lockUI();
+
         }
     };
 

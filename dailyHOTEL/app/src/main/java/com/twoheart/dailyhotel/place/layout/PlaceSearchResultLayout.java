@@ -1,47 +1,80 @@
 package com.twoheart.dailyhotel.place.layout;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
+import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class PlaceSearchResultLayout extends BaseLayout
+public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
 {
+    private static final int ANIMATION_DEALY = 200;
+
     private View mToolbar;
-    protected RecyclerView mRecyclerView;
     protected TextView mResultTextView;
     private View mEmptyLayout;
-    private View mResultListLayout;
+    private View mResultLayout;
     protected boolean mIsLoading;
 
-    protected abstract PlaceListAdapter getListAdapter();
+    protected View mBottomOptionLayout;
+    private View mViewTypeOptionImageView;
+    private View mFilterOptionImageView;
 
-    protected abstract void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
+    private TabLayout mCategoryTabLayout;
+    private View mDateUnderlineView;
+    private ViewPager mViewPager;
+    private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
-    protected abstract int getEmptyIconResourceId();
+    private MenuBarLayout mMenuBarLayout;
 
-    public PlaceSearchResultLayout(Context context, OnBaseEventListener listener)
-    {
-        super(context, listener);
-    }
+    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    private boolean mUpScrolling;
+    private ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onCategoryTabSelected(TabLayout.Tab tab);
+
+        void onCategoryTabUnselected(TabLayout.Tab tab);
+
+        void onCategoryTabReselected(TabLayout.Tab tab);
+
+        void onDateClick();
+
+        void onViewTypeClick();// 리스트, 맵 타입
+
+        void onFilterClick();
+
         void finish(int resultCode);
 
         void research(int resultCode);
@@ -50,9 +83,27 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
 
         void onShowCallDialog();
 
+        // 기존의 고메형식 때문에 필요하다.
         void onLoadMoreList();
 
         void onShowProgressBar();
+    }
+
+    protected abstract PlaceListAdapter getListAdapter();
+
+    protected abstract void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
+
+    protected abstract int getEmptyIconResourceId();
+
+    protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
+
+    protected abstract void onAnalyticsCategoryFlicking(String category);
+
+    protected abstract void onAnalyticsCategoryClick(String category);
+
+    public PlaceSearchResultLayout(Context context, OnBaseEventListener listener)
+    {
+        super(context, listener);
     }
 
     @Override
@@ -61,10 +112,11 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         initToolbarLayout(view);
 
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
-        mResultListLayout = view.findViewById(R.id.resultListLayout);
+        mResultLayout = view.findViewById(R.id.resultLayout);
 
         initEmptyLayout(mEmptyLayout);
-        initListLayout(mResultListLayout);
+        initCategoryTabLayout(view);
+        initOptionLayout(view);
     }
 
     private void initToolbarLayout(View view)
@@ -102,10 +154,15 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         });
     }
 
-    public void setToolbarText(String title, String date)
+    private void initCategoryTabLayout(View view)
     {
-        setToolbarTitle(title);
+        mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
+        mDateUnderlineView = view.findViewById(R.id.dateUnderLine);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+    }
 
+    public void setDateText(String date)
+    {
         TextView dateView = (TextView) mToolbar.findViewById(R.id.dateView);
         dateView.setText(date);
     }
@@ -151,45 +208,213 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         });
     }
 
-    private void initListLayout(View view)
+    private void initOptionLayout(View view)
     {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycleView);
-        mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
-
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(getListAdapter());
-        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
+        mBottomOptionLayout.post(new Runnable()
         {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            public void run()
             {
-                if (dy > 0)
+                Rect rect = new Rect();
+                mBottomOptionLayout.getGlobalVisibleRect(rect);
+                mBottomOptionLayout.setTag(Util.getLCDHeight(mContext) - rect.top);
+            }
+        });
+
+        // 하단 지도 필터
+        mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
+        mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
+
+        mViewTypeOptionImageView.setOnClickListener(this);
+        mFilterOptionImageView.setOnClickListener(this);
+
+        // 기본 설정
+        setOptionViewTypeView(Constants.ViewType.LIST);
+    }
+
+    public void setOptionViewTypeView(Constants.ViewType viewType)
+    {
+        switch (viewType)
+        {
+            case LIST:
+                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
+                break;
+
+            case MAP:
+                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
+                break;
+
+            case GONE:
+                break;
+        }
+    }
+
+    public void setOptionFilterEnabled(boolean enabled)
+    {
+        mFilterOptionImageView.setSelected(enabled);
+    }
+
+    public void setCategoryTabLayoutVisibility(int visibility)
+    {
+        mCategoryTabLayout.setVisibility(visibility);
+
+        ViewGroup.LayoutParams layoutParams = mDateUnderlineView.getLayoutParams();
+
+        if (layoutParams != null)
+        {
+            if (visibility == View.VISIBLE)
+            {
+                mDateUnderlineView.getLayoutParams().height = 1;
+            } else
+            {
+                mDateUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
+            }
+        }
+    }
+
+    public void setCurrentItem(int item)
+    {
+        if (mViewPager != null)
+        {
+            mViewPager.setCurrentItem(item);
+        }
+    }
+
+    public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
+        , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        if (categoryList == null)
+        {
+            mCategoryTabLayout.setOnTabSelectedListener(null);
+            mViewPager.removeAllViews();
+            setCategoryTabLayoutVisibility(View.GONE);
+            return;
+        }
+
+        int size = categoryList.size();
+
+        if (size <= 2)
+        {
+            size = 1;
+            setCategoryTabLayoutVisibility(View.GONE);
+
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
+
+            mViewPager.removeAllViews();
+            mViewPager.setOffscreenPageLimit(size);
+            mViewPager.setAdapter(mFragmentPagerAdapter);
+            mViewPager.clearOnPageChangeListeners();
+        } else
+        {
+            setCategoryTabLayoutVisibility(View.VISIBLE);
+
+            Category category;
+            TabLayout.Tab tab;
+            TabLayout.Tab selectedTab = null;
+
+            mCategoryTabLayout.removeAllTabs();
+
+            int position = 0;
+
+            for (int i = 0; i < size; i++)
+            {
+                category = categoryList.get(i);
+
+                tab = mCategoryTabLayout.newTab();
+                tab.setText(category.name);
+                tab.setTag(category);
+                mCategoryTabLayout.addTab(tab);
+
+                if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
-                    if (mIsLoading == false)
+                    position = i;
+                    selectedTab = tab;
+                }
+            }
+
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
+
+            mViewPager.removeAllViews();
+            mViewPager.setOffscreenPageLimit(size);
+
+            Class reflectionClass = ViewPager.class;
+            Field mCurItem = null;
+
+            try
+            {
+                mCurItem = reflectionClass.getDeclaredField("mCurItem");
+                mCurItem.setAccessible(true);
+                mCurItem.setInt(mViewPager, position);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            mViewPager.setAdapter(mFragmentPagerAdapter);
+            mViewPager.clearOnPageChangeListeners();
+            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+            {
+                boolean isScrolling = false;
+                int prevPosition = -1;
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+                {
+                }
+
+                @Override
+                public void onPageSelected(int position)
+                {
+                    if (prevPosition != position)
                     {
-                        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-
-                        // 2/3위치에 오면 로딩한다.
-                        if (firstVisibleItemPosition > linearLayoutManager.getItemCount() * 2 / 3)
+                        if (isScrolling == true)
                         {
-                            mIsLoading = true;
+                            isScrolling = false;
 
-                            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onLoadMoreList();
+                            onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
+                        } else
+                        {
+                            onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
                         }
                     } else
                     {
-                        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                        isScrolling = false;
+                    }
 
-                        if (lastVisibleItemPosition == linearLayoutManager.getItemCount())
-                        {
-                            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onShowProgressBar();
-                        }
+                    prevPosition = position;
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state)
+                {
+                    if (state == ViewPager.SCROLL_STATE_DRAGGING)
+                    {
+                        isScrolling = true;
                     }
                 }
+            });
+
+            if (selectedTab != null)
+            {
+                selectedTab.select();
             }
-        });
+
+            mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
+
+            FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
+        }
+    }
+
+    public PlaceListFragment getCurrentPlaceListFragment()
+    {
+        return (PlaceListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+    }
+
+    public ArrayList<PlaceListFragment> getPlaceListFragment()
+    {
+        return mFragmentPagerAdapter.getFragmentList();
     }
 
     public void updateResultCount(int count)
@@ -212,17 +437,303 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     public void showEmptyLayout()
     {
         mEmptyLayout.setVisibility(View.VISIBLE);
-        mResultListLayout.setVisibility(View.GONE);
+        mResultLayout.setVisibility(View.GONE);
     }
 
     public void showListLayout()
     {
         mEmptyLayout.setVisibility(View.GONE);
-        mResultListLayout.setVisibility(View.VISIBLE);
+        mResultLayout.setVisibility(View.VISIBLE);
     }
 
     public boolean isEmtpyLayout()
     {
-        return mResultListLayout.getVisibility() != View.VISIBLE;
+        return mResultLayout.getVisibility() != View.VISIBLE;
     }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.dateTextLayout:
+                ((PlaceMainLayout.OnEventListener) mOnEventListener).onDateClick();
+                break;
+
+            case R.id.viewTypeOptionImageView:
+                ((PlaceMainLayout.OnEventListener) mOnEventListener).onViewTypeClick();
+                break;
+
+            case R.id.filterOptionImageView:
+                ((PlaceMainLayout.OnEventListener) mOnEventListener).onFilterClick();
+                break;
+        }
+    }
+
+    private void setMenuBarLayoutEnabled(boolean enabled)
+    {
+        mViewTypeOptionImageView.setEnabled(enabled);
+        mFilterOptionImageView.setEnabled(enabled);
+        mMenuBarLayout.setEnabled(enabled);
+    }
+
+    private void setMenuBarLayoutTranslationY(float dy)
+    {
+        mBottomOptionLayout.setTranslationY(dy);
+        mMenuBarLayout.setTranslationY(dy);
+    }
+
+    public void calculationMenuBarLayoutTranslationY(int dy)
+    {
+        int height = (Integer) mBottomOptionLayout.getTag();
+
+        float translationY = dy + mBottomOptionLayout.getTranslationY();
+
+        if (translationY >= height)
+        {
+            translationY = height;
+        } else if (translationY <= 0)
+        {
+            translationY = 0;
+        }
+
+        if (dy > 0)
+        {
+            mUpScrolling = true;
+        } else if (dy < 0)
+        {
+            mUpScrolling = false;
+        }
+
+        // 움직이는 동안에는 터치가 불가능 하다.
+        if (translationY == 0 || translationY == height)
+        {
+            setMenuBarLayoutEnabled(true);
+        } else
+        {
+            setMenuBarLayoutEnabled(false);
+        }
+
+        setMenuBarLayoutTranslationY(translationY);
+    }
+
+    public void animationMenuBarLayout()
+    {
+        int height = (Integer) mBottomOptionLayout.getTag();
+        float translationY = mBottomOptionLayout.getTranslationY();
+
+        if (translationY == 0 || translationY == height)
+        {
+            return;
+        }
+
+        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
+
+        if (mUpScrolling == true)
+        {
+            if (translationY >= mMenuBarLayout.getHeight() / 2)
+            {
+                hideBottomLayout(true);
+            } else
+            {
+                showBottomLayout(true);
+            }
+        } else
+        {
+            if (translationY <= mMenuBarLayout.getHeight() / 2)
+            {
+                showBottomLayout(true);
+            } else
+            {
+                hideBottomLayout(true);
+            }
+        }
+    }
+
+    public synchronized void showBottomLayout(boolean isAnimation)
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator.removeAllListeners();
+            }
+
+            mValueAnimator = null;
+        }
+
+        if (isAnimation == true)
+        {
+            mValueAnimator = ValueAnimator.ofInt(0, 100);
+            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+            {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation)
+                {
+                    int value = (Integer) animation.getAnimatedValue();
+                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+                    float translationY = prevTranslationY * value / 100;
+
+                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
+                }
+            });
+
+            mValueAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    setMenuBarLayoutEnabled(false);
+
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
+                    }
+
+                    setMenuBarLayoutEnabled(true);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                    setMenuBarLayoutEnabled(true);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mValueAnimator.start();
+        } else
+        {
+            setMenuBarLayoutTranslationY(0);
+
+            setMenuBarLayoutEnabled(true);
+        }
+    }
+
+    public void hideBottomLayout(boolean isAnimation)
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator.removeAllListeners();
+            }
+
+            mValueAnimator = null;
+        }
+
+        if (isAnimation == true)
+        {
+            mValueAnimator = ValueAnimator.ofInt(0, 100);
+            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+            {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation)
+                {
+                    int value = (Integer) animation.getAnimatedValue();
+                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
+                    float translationY = height * value / 100;
+
+                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
+                }
+            });
+
+            mValueAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+
+                    setMenuBarLayoutEnabled(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mValueAnimator.start();
+        } else
+        {
+            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
+
+            setMenuBarLayoutEnabled(false);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private TabLayout.OnTabSelectedListener mOnCategoryTabSelectedListener = new TabLayout.OnTabSelectedListener()
+    {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab)
+        {
+            ((PlaceMainLayout.OnEventListener) mOnEventListener).onCategoryTabSelected(tab);
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab)
+        {
+            ((PlaceMainLayout.OnEventListener) mOnEventListener).onCategoryTabUnselected(tab);
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab)
+        {
+            ((PlaceMainLayout.OnEventListener) mOnEventListener).onCategoryTabReselected(tab);
+        }
+    };
 }

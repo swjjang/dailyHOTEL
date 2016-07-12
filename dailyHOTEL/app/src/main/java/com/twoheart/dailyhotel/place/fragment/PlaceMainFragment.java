@@ -375,5 +375,4 @@ public abstract class PlaceMainFragment extends BaseFragment
             placeListFragment.setScrollListTop();
         }
     }
-
 }

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.search.gourmet;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.support.design.widget.TabLayout;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -80,9 +81,39 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected PlaceSearchResultLayout getLayout()
+    protected PlaceSearchResultLayout getPlaceSearchResultLayout(Context context)
     {
         return new GourmetSearchResultLayout(this, mOnEventListener);
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onLocationFailed()
+    {
+
+    }
+
+    @Override
+    protected void onLocationProviderDisabled()
+    {
+
+    }
+
+    @Override
+    protected void onLocationChanged(Location location)
+    {
+
     }
 
     @Override
@@ -109,10 +140,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void initContents()
+    protected void initLayout()
     {
-        super.initContents();
-
         if (mSaleTime == null)
         {
             finish();
@@ -123,10 +152,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
-            mPlaceSearchResultLayout.setToolbarText("", checkInDate);
+            mPlaceSearchResultLayout.setToolbarTitle("");
+            mPlaceSearchResultLayout.setDateText(checkInDate);
         } else
         {
-            mPlaceSearchResultLayout.setToolbarText(mKeyword.name, checkInDate);
+            mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
+            mPlaceSearchResultLayout.setDateText(checkInDate);
         }
 
         mNetworkController = new GourmetSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
@@ -181,6 +212,42 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         public void finish()
         {
             // 사용하지 않음
+        }
+
+        @Override
+        public void onCategoryTabSelected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onCategoryTabUnselected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onCategoryTabReselected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onDateClick()
+        {
+
+        }
+
+        @Override
+        public void onViewTypeClick()
+        {
+
+        }
+
+        @Override
+        public void onFilterClick()
+        {
+
         }
 
         @Override

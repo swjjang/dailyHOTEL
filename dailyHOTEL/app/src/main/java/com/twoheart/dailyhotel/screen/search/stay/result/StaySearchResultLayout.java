@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.gourmet;
+package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
@@ -6,28 +6,30 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
-public class GourmetSearchResultLayout extends PlaceSearchResultLayout
+public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
-    private GourmetSearchResultListAdapter mListAdapter;
+    private StaySearchResultListAdapter mListAdapter;
 
     @Override
     protected PlaceListAdapter getListAdapter()
     {
-        mListAdapter = new GourmetSearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
+        mListAdapter = new StaySearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
 
         return mListAdapter;
     }
 
-    public GourmetSearchResultLayout(Context context, OnBaseEventListener listener)
+    public StaySearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -59,25 +61,35 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     @Override
     protected int getEmptyIconResourceId()
     {
-        return R.drawable.no_gourmet_ic;
+        return R.drawable.no_hotel_ic;
     }
 
     @Override
     protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return null;
+        return new StayListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
     }
 
     @Override
     protected void onAnalyticsCategoryFlicking(String category)
     {
-
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, null);
     }
 
     @Override
     protected void onAnalyticsCategoryClick(String category)
     {
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, null);
+    }
 
+    protected void setDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+
+        setDateText(String.format("%s-%s", checkInDay, checkOutDay));
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()

@@ -582,26 +582,26 @@ public class MainActivity extends BaseActivity implements Constants
                 unLockUI();
 
                 // Android
-                if (Util.isOverAPI15() == false)
-                {
-                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            finish();
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
-
-                    return;
-                }
+//                if (Util.isOverAPI15() == false)
+//                {
+//                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+//                    {
+//                        @Override
+//                        public void onClick(View v)
+//                        {
+//                            finish();
+//                        }
+//                    }, new DialogInterface.OnCancelListener()
+//                    {
+//                        @Override
+//                        public void onCancel(DialogInterface dialog)
+//                        {
+//                            finish();
+//                        }
+//                    });
+//
+//                    return;
+//                }
 
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
@@ -639,26 +639,26 @@ public class MainActivity extends BaseActivity implements Constants
                 unLockUI();
 
                 // Android
-                if (Util.isOverAPI15() == false)
-                {
-                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            finish();
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
-
-                    return;
-                }
+//                if (Util.isOverAPI15() == false)
+//                {
+//                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+//                    {
+//                        @Override
+//                        public void onClick(View v)
+//                        {
+//                            finish();
+//                        }
+//                    }, new DialogInterface.OnCancelListener()
+//                    {
+//                        @Override
+//                        public void onCancel(DialogInterface dialog)
+//                        {
+//                            finish();
+//                        }
+//                    });
+//
+//                    return;
+//                }
 
                 View.OnClickListener posListener = new View.OnClickListener()
                 {

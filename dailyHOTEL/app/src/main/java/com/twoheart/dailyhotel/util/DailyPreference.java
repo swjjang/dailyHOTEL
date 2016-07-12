@@ -15,7 +15,6 @@ public class DailyPreference
 {
     public static final String DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT"; // 기존에 존재하던
     public static final String DAILYHOTEL_SHARED_PREFERENCE_V1 = "dailyHOTEL_v1"; // 새로 만든
-    public static final String DAILYHOTEL_VBANK_PREFERENCE_V1 = "DAIYHOTEL_VBANK_v1"; // 새로 만든
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "dailyHOTEL_v1" Preference

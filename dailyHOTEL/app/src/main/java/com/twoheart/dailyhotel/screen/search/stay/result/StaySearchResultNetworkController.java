@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.stay;
+package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 import android.location.Location;

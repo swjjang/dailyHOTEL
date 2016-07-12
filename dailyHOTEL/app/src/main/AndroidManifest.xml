@@ -334,7 +334,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.search.stay.StaySearchResultActivity"
+            android:name=".screen.search.stay.result.StaySearchResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
