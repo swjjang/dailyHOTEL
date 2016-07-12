@@ -47,11 +47,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical">
+                android:minHeight="35dp"
+                android:paddingBottom="9dp"
+                android:paddingTop="9dp">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="0dp"
@@ -66,7 +68,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:gravity="right|center_vertical"
+                    android:gravity="right"
                     android:lineSpacingExtra="-2dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
@@ -75,10 +77,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:gravity="center_vertical">
+                android:layout_marginTop="10dp"
+                android:minHeight="35dp"
+                android:paddingBottom="9dp"
+                android:paddingTop="9dp">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="0dp"
@@ -93,7 +97,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:gravity="right|center_vertical"
+                    android:gravity="right"
                     android:lineSpacingExtra="-2dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
@@ -102,10 +106,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:gravity="center_vertical">
+                android:layout_marginTop="10dp"
+                android:minHeight="35dp"
+                android:paddingBottom="9dp"
+                android:paddingTop="9dp">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="0dp"
@@ -120,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:gravity="right|center_vertical"
+                    android:gravity="right"
                     android:lineSpacingExtra="-2dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
