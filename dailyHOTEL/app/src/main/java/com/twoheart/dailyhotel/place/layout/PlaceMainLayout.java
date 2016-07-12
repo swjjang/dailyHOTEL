@@ -278,7 +278,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 tab.setTag(category);
                 mCategoryTabLayout.addTab(tab);
 
-                if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
+                if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
                     position = i;
                     selectedTab = tab;
