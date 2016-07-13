@@ -27,9 +27,11 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -86,6 +88,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
         void finish();
 
         void clipAddress(String address);
+
+        void onCalendarClick(SaleTime checkInSaleTime);
     }
 
     public interface OnImageActionListener
@@ -104,6 +108,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
     protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
+
+    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -338,6 +344,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_ZOOMMAP:
                 case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
                     mDontReloadAtOnResume = true;
+                    break;
+
+                case CODE_REQUEST_ACTIVITY_CALENDAR:
+                    mDontReloadAtOnResume = true;
+                    onCalendarActivityResult(requestCode, resultCode, data);
                     break;
             }
 
@@ -688,6 +699,21 @@ public abstract class PlaceDetailActivity extends BaseActivity
             DailyToast.showToast(PlaceDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_ADDRESS_COPY_CLICKED, mPlaceDetail.name, null);
+        }
+
+        @Override
+        public void onCalendarClick(SaleTime checkInSaleTime)
+        {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = GourmetCalendarActivity.newInstance(PlaceDetailActivity.this, checkInSaleTime, AnalyticsManager.ValueType.LIST, true, true);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
         }
     };
 

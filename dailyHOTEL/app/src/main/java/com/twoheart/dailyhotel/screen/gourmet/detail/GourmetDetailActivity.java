@@ -113,6 +113,30 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
 
+    @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode == RESULT_OK)
+        {
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+            if (checkInSaleTime == null)
+            {
+                return;
+            }
+
+            mCheckInSaleTime = checkInSaleTime;
+
+            int placeIndex = mPlaceDetail.index;
+
+            mPlaceDetail = new GourmetDetail(placeIndex);
+
+            mPlaceDetailLayout.setDefaultSelectedTicketInformation();
+
+            requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

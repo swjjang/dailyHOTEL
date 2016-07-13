@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
@@ -336,6 +336,8 @@ public class HotelDetailActivity extends BaseActivity
                 break;
 
             case CODE_REQUEST_ACTIVITY_CALENDAR:
+                mDontReloadAtOnResume = true;
+
                 if (resultCode == RESULT_OK)
                 {
                     SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
@@ -354,7 +356,6 @@ public class HotelDetailActivity extends BaseActivity
 
                     mHotelDetail = new HotelDetail(hotelIndex, nights);
 
-                    mDontReloadAtOnResume = true;
 
                     mHotelDetailLayout.setDefaultSelectedSaleRoomInformation();
 
