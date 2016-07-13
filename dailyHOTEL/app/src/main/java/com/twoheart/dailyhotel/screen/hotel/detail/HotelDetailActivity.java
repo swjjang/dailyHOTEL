@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
@@ -106,6 +107,8 @@ public class HotelDetailActivity extends BaseActivity
         void showMap();
 
         void clipAddress(String address);
+
+        void onCalendarClick(SaleTime checkInSaleTime, int nights);
     }
 
     @Override
@@ -330,6 +333,34 @@ public class HotelDetailActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_ZOOMMAP:
             case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
                 mDontReloadAtOnResume = true;
+                break;
+
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
+                if (resultCode == RESULT_OK)
+                {
+                    SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                    SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+
+                    if (checkInSaleTime == null || checkOutSaleTime == null)
+                    {
+                        return;
+                    }
+
+                    int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+
+                    int hotelIndex = mHotelDetail.hotelIndex;
+
+                    mCheckInSaleTime = checkInSaleTime;
+
+                    mHotelDetail = new HotelDetail(hotelIndex, nights);
+
+                    mDontReloadAtOnResume = true;
+
+                    mHotelDetailLayout.setDefaultSelectedSaleRoomInformation();
+
+                    DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                }
+
                 break;
         }
 
@@ -761,6 +792,18 @@ public class HotelDetailActivity extends BaseActivity
             DailyToast.showToast(HotelDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, mHotelDetail.hotelName, null);
+        }
+
+        @Override
+        public void onCalendarClick(SaleTime checkInSaleTime, int nights)
+        {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = StayCalendarActivity.newInstance(HotelDetailActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.NONE, true, true);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
     };
 

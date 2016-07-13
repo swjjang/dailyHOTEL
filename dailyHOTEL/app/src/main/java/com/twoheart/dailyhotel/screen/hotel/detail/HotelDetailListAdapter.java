@@ -55,6 +55,11 @@ public class HotelDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
+    public void setData(HotelDetail hotelDetail, SaleTime checkInSaleTime) {
+        mHotelDetail = hotelDetail;
+        mCheckInSaleTime = checkInSaleTime;
+    }
+
     @Override
     public Object getItem(int position)
     {
@@ -97,27 +102,27 @@ public class HotelDetailListAdapter extends BaseAdapter
         if (mDeatilViews[0] == null)
         {
             mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
-            getDetail00View(mDeatilViews[0]);
         }
 
+        getDetail00View(mDeatilViews[0]);
         linearLayout.addView(mDeatilViews[0]);
 
         // 호텔 등급과 이름.
         if (mDeatilViews[1] == null)
         {
             mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
-            getDetail01View(mDeatilViews[1], mHotelDetail);
         }
 
+        getDetail01View(mDeatilViews[1], mHotelDetail);
         linearLayout.addView(mDeatilViews[1]);
 
         // 주소 및 맵
         if (mDeatilViews[2] == null)
         {
             mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
-            getDetail02View(mDeatilViews[2], mHotelDetail);
         }
 
+        getDetail02View(mDeatilViews[2], mHotelDetail);
         linearLayout.addView(mDeatilViews[2]);
 
         // D Benefit
@@ -126,9 +131,9 @@ public class HotelDetailListAdapter extends BaseAdapter
             if (mDeatilViews[3] == null)
             {
                 mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
-                getDetailBenefitView(mDeatilViews[3], mHotelDetail);
             }
 
+            getDetailBenefitView(mDeatilViews[3], mHotelDetail);
             linearLayout.addView(mDeatilViews[3]);
         }
 
@@ -136,45 +141,45 @@ public class HotelDetailListAdapter extends BaseAdapter
         if (mDeatilViews[4] == null)
         {
             mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
-            getDetail04View(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
         }
 
+        getDetail04View(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
         linearLayout.addView(mDeatilViews[4]);
 
         // 호텔 정보
         if (mDeatilViews[5] == null)
         {
             mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
-            getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mHotelDetail);
         }
 
+        getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mHotelDetail);
         linearLayout.addView(mDeatilViews[5]);
 
         // 호텔 더보기 정보
         if (mDeatilViews[6] == null)
         {
             mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
-            getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mHotelDetail);
         }
 
+        getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mHotelDetail);
         linearLayout.addView(mDeatilViews[6]);
 
         // 확인 사항
         if (mDeatilViews[7] == null)
         {
             mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
-            getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mHotelDetail);
         }
 
+        getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mHotelDetail);
         linearLayout.addView(mDeatilViews[7]);
 
         // 카카오톡 문의
         if (mDeatilViews[8] == null)
         {
             mDeatilViews[8] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
-            getDeatil08View(mDeatilViews[8]);
         }
 
+        getDeatil08View(mDeatilViews[8]);
         linearLayout.addView(mDeatilViews[8]);
 
         return linearLayout;
@@ -275,11 +280,20 @@ public class HotelDetailListAdapter extends BaseAdapter
         TextView dateView = (TextView) view.findViewById(R.id.dateView);
 
         // 체크인체크아웃 날짜
-        String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
+        final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
         SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
         String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
 
         dateView.setText(checkInDate + " - " + checkOutDate);
+
+        dateView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mHotelDetail.nights);
+            }
+        });
 
         return view;
     }
