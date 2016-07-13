@@ -27,11 +27,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -89,7 +87,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         void clipAddress(String address);
 
-        void onCalendarClick(SaleTime checkInSaleTime);
+        void onCalendarClick(SaleTime saleTime);
     }
 
     public interface OnImageActionListener
@@ -110,6 +108,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
 
     protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void startCalendar(SaleTime saleTime);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -132,6 +132,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0);
             int dayOfDays = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, -1);
+            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
             mCheckInSaleTime = new SaleTime();
             mCheckInSaleTime.setDailyTime(dailyTime);
@@ -146,6 +147,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             initLayout(null, null);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime);
+            }
         } else
         {
             mIsStartByShare = false;
@@ -173,8 +179,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
+            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
             initLayout(placeName, imageUrl);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime);
+            }
         }
     }
 
@@ -702,18 +714,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
 
         @Override
-        public void onCalendarClick(SaleTime checkInSaleTime)
+        public void onCalendarClick(SaleTime saleTime)
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = GourmetCalendarActivity.newInstance(PlaceDetailActivity.this, checkInSaleTime, AnalyticsManager.ValueType.LIST, true, true);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
-
-            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
+            startCalendar(saleTime);
         }
     };
 

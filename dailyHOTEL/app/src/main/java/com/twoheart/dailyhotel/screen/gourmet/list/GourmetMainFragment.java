@@ -675,6 +675,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                     } else
@@ -808,6 +809,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
     }

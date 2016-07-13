@@ -220,6 +220,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -259,6 +260,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         } catch (Exception e)
@@ -282,6 +284,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
             int nights = 1;
+            int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -316,6 +319,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         } catch (Exception e)
@@ -522,6 +526,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=su&rc=209329";
 
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hebw&url=http%3A%2F%2Fm.dailyhotel.co.kr%2Fbanner%2F160701coupon%2F";
+                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=5&cal=1";
 
                     DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
                     dailyDeepLink.setDeepLink(Uri.parse(uri));

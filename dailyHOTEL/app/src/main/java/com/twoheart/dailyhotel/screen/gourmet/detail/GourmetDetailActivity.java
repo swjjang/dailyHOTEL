@@ -20,7 +20,9 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -135,6 +137,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
         }
+    }
+
+    @Override
+    protected void startCalendar(SaleTime saleTime)
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Intent intent = GourmetCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, AnalyticsManager.ValueType.LIST, true, true);
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+
+        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

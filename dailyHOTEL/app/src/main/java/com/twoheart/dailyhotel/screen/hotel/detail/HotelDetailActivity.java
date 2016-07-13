@@ -141,10 +141,16 @@ public class HotelDetailActivity extends BaseActivity
 
             int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
             int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
+            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
             mHotelDetail = new HotelDetail(hotelIndex, nights);
 
             initLayout(null, null);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, nights);
+            }
         } else
         {
             mIsStartByShare = false;
@@ -153,6 +159,7 @@ public class HotelDetailActivity extends BaseActivity
 
             int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
             int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
+            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
             mHotelDetail = new HotelDetail(hotelIndex, nights);
 
@@ -173,6 +180,11 @@ public class HotelDetailActivity extends BaseActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(hotelName, hotelImageUrl);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, nights);
+            }
         }
     }
 
@@ -411,6 +423,17 @@ public class HotelDetailActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
+    private void startCalendar(SaleTime checkInSaleTime, int nights)
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Intent intent = StayCalendarActivity.newInstance(HotelDetailActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.NONE, true, true);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+    }
+
     private void recordAnalyticsHotelDetail(String screen, HotelDetail hotelDetail)
     {
         if (hotelDetail == null)
@@ -565,6 +588,7 @@ public class HotelDetailActivity extends BaseActivity
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.SOCIAL_SHARE_CLICKED, mHotelDetail.hotelName, params);
     }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
@@ -798,13 +822,7 @@ public class HotelDetailActivity extends BaseActivity
         @Override
         public void onCalendarClick(SaleTime checkInSaleTime, int nights)
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = StayCalendarActivity.newInstance(HotelDetailActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.NONE, true, true);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            startCalendar(checkInSaleTime, nights);
         }
     };
 
