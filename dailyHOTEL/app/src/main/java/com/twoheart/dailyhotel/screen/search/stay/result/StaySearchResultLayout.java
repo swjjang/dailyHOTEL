@@ -20,43 +20,48 @@ import java.util.ArrayList;
 
 public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
-    private StaySearchResultListAdapter mListAdapter;
-
-    @Override
-    protected PlaceListAdapter getListAdapter()
-    {
-        mListAdapter = new StaySearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
-
-        return mListAdapter;
-    }
-
     public StaySearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
 
-    public void setSortType(Constants.SortType sortType)
+    protected void setCalendarText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (mListAdapter == null)
-        {
-            return;
-        }
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
 
-        mListAdapter.setSortType(sortType);
+        setCalendarText(String.format("%s - %s, %d박", checkInDay, checkOutDay, nights));
     }
 
+//    public void setSortType(Constants.SortType sortType)
+//    {
+//        if (mListAdapter == null)
+//        {
+//            return;
+//        }
+//
+//        mListAdapter.setSortType(sortType);
+//    }
+//
+//    @Override
+//    public void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
+//    {
+//        mIsLoading = false;
+//
+//        if (placeViewItemList == null)
+//        {
+//            return;
+//        }
+//
+//        mListAdapter.setAll(placeViewItemList);
+//        mListAdapter.notifyDataSetChanged();
+//    }
+
     @Override
-    public void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
+    protected void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
     {
-        mIsLoading = false;
 
-        if (placeViewItemList == null)
-        {
-            return;
-        }
-
-        mListAdapter.setAll(placeViewItemList);
-        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -68,7 +73,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     @Override
     protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new StayListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        return new StaySearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
     }
 
     @Override
@@ -83,14 +88,6 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     {
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, null);
-    }
-
-    protected void setDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
-        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
-        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
-
-        setCalendarText(String.format("%s-%s", checkInDay, checkOutDay));
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()

@@ -29,8 +29,8 @@ public class StayListFragment extends PlaceListFragment
 {
     private int mPageIndex;
 
-    private StayListLayout mStayListLayout;
-    private StayListNetworkController mNetworkController;
+    protected StayListLayout mStayListLayout;
+    protected StayListNetworkController mNetworkController;
 
     protected BaseActivity mBaseActivity;
 
@@ -311,7 +311,7 @@ public class StayListFragment extends PlaceListFragment
     /////////////////////////////   Listener   //////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
 
-    private StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
+    protected StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
     {
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)

@@ -14,7 +14,6 @@ public class StaySearchResultCurationManager
 {
     private static StaySearchResultCurationManager mInstance;
 
-    private Province mProvince;
     private Location mLocation; // Not Parcelable
 
     private SaleTime mCheckInSaleTime;
@@ -91,16 +90,6 @@ public class StaySearchResultCurationManager
         return mStayCurationOption;
     }
 
-    public Province getProvince()
-    {
-        return mProvince;
-    }
-
-    public void setProvince(Province province)
-    {
-        mProvince = province;
-    }
-
     public Location getLocation()
     {
         return mLocation;
@@ -127,17 +116,7 @@ public class StaySearchResultCurationManager
 
         params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
         params.stays = getNights();
-        params.provinceIdx = mProvince.getProvinceIndex();
-
-        if (mProvince instanceof Area)
-        {
-            Area area = (Area) mProvince;
-            if (area != null)
-            {
-                params.areaIdx = area.index;
-            }
-        }
-
+        params.provinceIdx = 5;//mProvince.getProvinceIndex();
         params.persons = mStayCurationOption.person;
         params.category = mCategory;
         params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
@@ -170,7 +149,6 @@ public class StaySearchResultCurationManager
         mCheckInSaleTime = null;
         mCheckOutSaleTime = null;
 
-        mProvince = null;
         mLocation = null;
     }
 }

@@ -9,8 +9,6 @@ import android.graphics.Rect;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,14 +17,11 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -44,18 +39,15 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     private TextView mCalendarTextView;
     private View mEmptyLayout;
     private View mResultLayout;
-    protected boolean mIsLoading;
 
     protected View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
     private TabLayout mCategoryTabLayout;
-    private View mDateUnderlineView;
+    private View mCalendarUnderlineView;
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
-
-    private MenuBarLayout mMenuBarLayout;
 
     private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
@@ -80,17 +72,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
         void research(int resultCode);
 
-        void onItemClick(PlaceViewItem placeViewItem);
-
         void onShowCallDialog();
-
-        // 기존의 고메형식 때문에 필요하다.
-        void onLoadMoreList();
-
-        void onShowProgressBar();
     }
-
-    protected abstract PlaceListAdapter getListAdapter();
 
     protected abstract void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
 
@@ -144,14 +127,17 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             }
         });
 
-        mCalendarTextView = (TextView)view.findViewById(R.id.calendarTextView);
-        mCalendarTextView.setOnClickListener(this);
+        View calendarLayout = view.findViewById(R.id.calendarLayout);
+        calendarLayout.setOnClickListener(this);
+
+        mCalendarTextView = (TextView) view.findViewById(R.id.calendarTextView);
     }
 
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
-        mDateUnderlineView = view.findViewById(R.id.dateUnderLine);
+        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
+        mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
@@ -257,16 +243,16 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     {
         mCategoryTabLayout.setVisibility(visibility);
 
-        ViewGroup.LayoutParams layoutParams = mDateUnderlineView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mCalendarUnderlineView.getLayoutParams();
 
         if (layoutParams != null)
         {
             if (visibility == View.VISIBLE)
             {
-                mDateUnderlineView.getLayoutParams().height = 1;
+                mCalendarUnderlineView.getLayoutParams().height = 1;
             } else
             {
-                mDateUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
+                mCalendarUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
             }
         }
     }
@@ -324,7 +310,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 tab.setTag(category);
                 mCategoryTabLayout.addTab(tab);
 
-                if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
+                if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
                     position = i;
                     selectedTab = tab;
@@ -454,16 +440,16 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     {
         switch (v.getId())
         {
-            case R.id.dateTextLayout:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onDateClick();
+            case R.id.calendarLayout:
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onDateClick();
                 break;
 
             case R.id.viewTypeOptionImageView:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onViewTypeClick();
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onViewTypeClick();
                 break;
 
             case R.id.filterOptionImageView:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onFilterClick();
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onFilterClick();
                 break;
         }
     }
@@ -472,13 +458,16 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     {
         mViewTypeOptionImageView.setEnabled(enabled);
         mFilterOptionImageView.setEnabled(enabled);
-        mMenuBarLayout.setEnabled(enabled);
     }
 
     private void setMenuBarLayoutTranslationY(float dy)
     {
         mBottomOptionLayout.setTranslationY(dy);
-        mMenuBarLayout.setTranslationY(dy);
+    }
+
+    public void setMenuBarLayoutVisible(boolean visible)
+    {
+        mBottomOptionLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void calculationMenuBarLayoutTranslationY(int dy)
@@ -529,7 +518,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
         if (mUpScrolling == true)
         {
-            if (translationY >= mMenuBarLayout.getHeight() / 2)
+            if (translationY >= mBottomOptionLayout.getHeight() / 2)
             {
                 hideBottomLayout(true);
             } else
@@ -538,7 +527,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             }
         } else
         {
-            if (translationY <= mMenuBarLayout.getHeight() / 2)
+            if (translationY <= mBottomOptionLayout.getHeight() / 2)
             {
                 showBottomLayout(true);
             } else
@@ -719,19 +708,19 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
-            ((PlaceMainLayout.OnEventListener) mOnEventListener).onCategoryTabSelected(tab);
+            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onCategoryTabSelected(tab);
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab)
         {
-            ((PlaceMainLayout.OnEventListener) mOnEventListener).onCategoryTabUnselected(tab);
+            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onCategoryTabUnselected(tab);
         }
 
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
-            ((PlaceMainLayout.OnEventListener) mOnEventListener).onCategoryTabReselected(tab);
+            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onCategoryTabReselected(tab);
         }
     };
 }

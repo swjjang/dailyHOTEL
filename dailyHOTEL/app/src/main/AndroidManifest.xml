@@ -315,6 +315,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
+            android:name=".screen.search.stay.result.StaySearchResultCurationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity
             android:name=".screen.gourmet.filter.GourmetCurationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -338,7 +343,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.search.gourmet.GourmetSearchResultActivity"
+            android:name=".screen.search.gourmet.result.GourmetSearchResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

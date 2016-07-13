@@ -74,7 +74,7 @@
             android:textSize="13dp"/>
 
         <View
-            android:id="@+id/dateUnderLine"
+            android:id="@+id/calendarUnderLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
@@ -94,16 +94,16 @@
         app:tabPaddingEnd="12dp"
         app:tabPaddingStart="12dp"
         app:tabSelectedTextColor="@color/default_text_c900034"
+        app:tabMinWidth="0dp"
         app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"/>
+        app:tabTextColor="@color/default_text_c929292"
+        android:paddingLeft="8dp"/>
 
     <RelativeLayout
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_below="@+id/calendarLayout"
         android:visibility="gone">
 
         <ImageView
@@ -188,7 +188,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/categoryTabLayout"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/resultCountView"
@@ -197,7 +197,6 @@
             android:background="@color/default_background_section_c323232"
             android:gravity="center_vertical"
             android:paddingLeft="11dp"
-            android:text="결과N건"
             android:textColor="@android:color/white"
             android:textSize="12dp"/>
 

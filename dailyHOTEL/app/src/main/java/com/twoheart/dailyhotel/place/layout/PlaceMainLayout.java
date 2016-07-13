@@ -269,22 +269,19 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
             int position = 0;
 
-            if(selectedCategory != null)
+            for (int i = 0; i < size; i++)
             {
-                for (int i = 0; i < size; i++)
+                category = categoryList.get(i);
+
+                tab = mCategoryTabLayout.newTab();
+                tab.setText(category.name);
+                tab.setTag(category);
+                mCategoryTabLayout.addTab(tab);
+
+                if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
-                    category = categoryList.get(i);
-
-                    tab = mCategoryTabLayout.newTab();
-                    tab.setText(category.name);
-                    tab.setTag(category);
-                    mCategoryTabLayout.addTab(tab);
-
-                    if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
-                    {
-                        position = i;
-                        selectedTab = tab;
-                    }
+                    position = i;
+                    selectedTab = tab;
                 }
             }
 

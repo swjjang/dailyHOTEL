@@ -72,8 +72,6 @@ public class StaySearchResultNetworkController extends BaseNetworkController
 
     public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int offset, int count)
     {
-        requestAddress(location, mLocationToAddressListener);
-
         DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelLocationSearchListJsonResponseListener, mHotelLocationSearchListJsonResponseListener);
     }
 
@@ -94,7 +92,6 @@ public class StaySearchResultNetworkController extends BaseNetworkController
 
     public void requestCategoryList(SaleTime saleTime, int nights, Location location)
     {
-        requestAddress(location, mLocationToAddressListener);
     }
 
     private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
@@ -124,14 +121,14 @@ public class StaySearchResultNetworkController extends BaseNetworkController
         return placeViewItemList;
     }
 
-    private void requestAddress(Location location, DailyHotelJsonResponseListener listener)
+    public void requestAddress(Location location)
     {
         final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
             , Double.toString(location.getLatitude())//
             , Double.toString(location.getLongitude())//
             , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-        new SearchAddressAsyncTask(url, listener).execute();
+        new SearchAddressAsyncTask(url, mLocationToAddressListener).execute();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,7 +313,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
             list.add(new Category("호텔", "hotel"));
             list.add(new Category("부띠크", "boutique"));
             list.add(new Category("펜션", "pension"));
-            list.add(new Category("게스트하우스", "guesthouse"));
+            list.add(new Category("게스트하우스", "guest_house"));
 
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseCategoryList(list);
         }
