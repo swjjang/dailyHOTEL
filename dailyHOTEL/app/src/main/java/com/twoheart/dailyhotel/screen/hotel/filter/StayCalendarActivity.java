@@ -99,9 +99,9 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         mConfirmTextView.setEnabled(false);
         mConfirmTextView.setText(R.string.label_calendar_search_selected_date);
 
-        if (AnalyticsManager.ValueType.LIST.equalsIgnoreCase(mCallByScreen) == true)
+        if (AnalyticsManager.ValueType.SEARCH.equalsIgnoreCase(mCallByScreen) == true)
         {
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 92));
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 133));
             mExitView.setLayoutParams(layoutParams);
         }
     }
