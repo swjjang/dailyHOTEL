@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListNetworkController;
-import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +33,8 @@ public class StaySearchResultListFragment extends PlaceListFragment
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
         void onStayClick(PlaceViewItem placeViewItem, SaleTime checkInSaleTime);
+
+        void onResultListCount(int count);
     }
 
     @Override
@@ -80,6 +81,11 @@ public class StaySearchResultListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
+        if (mViewType == null)
+        {
+            return;
+        }
+
         switch (mViewType)
         {
             case LIST:
@@ -202,6 +208,10 @@ public class StaySearchResultListFragment extends PlaceListFragment
                     if (size == 0)
                     {
                         setVisibility(ViewType.GONE, true);
+                    } else
+                    {
+                        // -1은 하단에 foot가 항상 있어서..
+                        ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(size - 1);
                     }
                     break;
                 }

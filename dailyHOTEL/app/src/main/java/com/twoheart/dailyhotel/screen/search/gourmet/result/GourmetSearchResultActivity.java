@@ -324,7 +324,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onDateClick()
         {
-            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
+            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 

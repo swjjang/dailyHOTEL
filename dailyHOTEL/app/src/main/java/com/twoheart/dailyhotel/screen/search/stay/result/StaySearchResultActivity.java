@@ -11,13 +11,11 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -49,8 +47,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    private static final int COUNT_PER_TIMES = 30;
-
     public static final int SEARCHTYPE_SEARCHES = 0;
     public static final int SEARCHTYPE_AUTOCOMPLETE = 1;
     public static final int SEARCHTYPE_RECENT = 2;
@@ -60,7 +56,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private String mInputText;
     private Location mLocation;
 
-    private int mOffset, mTotalCount;
     private int mSearchType;
     private StaySearchResultNetworkController mNetworkController;
 
@@ -229,7 +224,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
-        mOffset = 0;
 
         if (saleTime == null)
         {
@@ -318,7 +312,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             SaleTime checkInSaleTime = StaySearchResultCurationManager.getInstance().getCheckInSaleTime();
             int nights = StaySearchResultCurationManager.getInstance().getNights();
 
-            Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
+            Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
@@ -355,29 +349,29 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 {
                     mViewType = ViewType.LIST;
 
-//                    Map<String, String> params = new HashMap<>();
-//                    Province province = StaySearchResultCurationManager.getInstance().getProvince();
-//
-//                    if (province == null)
-//                    {
-//                        Util.restartApp(StaySearchResultActivity.this);
-//                        return;
-//                    }
-//
-//                    if (province instanceof Area)
-//                    {
-//                        Area area = (Area) province;
-//                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//
-//                    } else
-//                    {
-//                        params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-//                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//                    }
-//
-//                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
-//                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
+                    //                    Map<String, String> params = new HashMap<>();
+                    //                    Province province = StaySearchResultCurationManager.getInstance().getProvince();
+                    //
+                    //                    if (province == null)
+                    //                    {
+                    //                        Util.restartApp(StaySearchResultActivity.this);
+                    //                        return;
+                    //                    }
+                    //
+                    //                    if (province instanceof Area)
+                    //                    {
+                    //                        Area area = (Area) province;
+                    //                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    //                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                    //
+                    //                    } else
+                    //                    {
+                    //                        params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    //                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    //                    }
+                    //
+                    //                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
+                    //                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
                 }
             }
@@ -470,65 +464,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         private String mAddress;
         private int mSize = -100;
-
-        @Override
-        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mOffset == 0)
-            {
-                // 연박인 경우 사이즈가 0이면 검색개수가 없음
-                if (totalCount == -1)
-                {
-                    if (placeViewItemList == null || placeViewItemList.size() == 0)
-                    {
-                        analyticsOnResponseSearchResultListForSearches(mKeyword, 0);
-                    } else
-                    {
-                        analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
-                    }
-                } else
-                {
-                    analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
-                }
-            }
-
-            responseSearchResultList(totalCount, placeViewItemList);
-        }
-
-        @Override
-        public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mOffset == 0)
-            {
-                if (totalCount == -1)
-                {
-                    if (placeViewItemList == null || placeViewItemList.size() == 0)
-                    {
-                        mSize = 0;
-                    } else
-                    {
-                        mSize = totalCount;
-                    }
-                } else
-                {
-                    mSize = totalCount;
-                }
-
-                analyticsOnResponseSearchResultListForLocation();
-            }
-
-            responseSearchResultList(totalCount, placeViewItemList);
-        }
 
         @Override
         public void onResponseAddress(String address)
@@ -757,44 +692,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 stay.distance = results[0];
             }
         }
-
-        private void responseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            mTotalCount = totalCount;
-
-            if (totalCount == 0 || (mOffset == 0 && (placeViewItemList == null || placeViewItemList.size() == 0)))
-            {
-                mPlaceSearchResultLayout.showEmptyLayout();
-            } else
-            {
-                if (placeViewItemList != null)
-                {
-                    int size = placeViewItemList.size();
-                    if (size < COUNT_PER_TIMES)
-                    {
-                        mOffset = -1;
-                    } else
-                    {
-                        mOffset += placeViewItemList.size();
-                    }
-
-                    // 위치 요청 타입인 경우에는 위치를 계산해 주어야 한다.
-                    if (mLocation != null)
-                    {
-                        distanceBetween(mLocation, placeViewItemList);
-                    }
-                } else
-                {
-                    mOffset = -1;
-                }
-
-                mPlaceSearchResultLayout.showListLayout();
-                ((StaySearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
-            }
-
-            mPlaceSearchResultLayout.updateResultCount(totalCount);
-            unLockUI();
-        }
     };
 
     private StaySearchResultListFragment.OnStayListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStayListFragmentListener()
@@ -817,6 +714,24 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+        }
+
+        @Override
+        public void onResultListCount(int count)
+        {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            if (count == 0)
+            {
+//                mPlaceSearchResultLayout.showEmptyLayout();
+            } else
+            {
+//                mPlaceSearchResultLayout.showListLayout();
+                mPlaceSearchResultLayout.updateResultCount(count);
+            }
         }
 
         @Override
