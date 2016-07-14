@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -113,7 +114,14 @@ public class CouponListActivity extends BaseActivity
         String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
         String negative = this.getResources().getString(R.string.dialog_btn_text_no);
 
-        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener);
+        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                CouponListActivity.this.finish();
+            }
+        }, null, true);
     }
 
     private void startLogin()
