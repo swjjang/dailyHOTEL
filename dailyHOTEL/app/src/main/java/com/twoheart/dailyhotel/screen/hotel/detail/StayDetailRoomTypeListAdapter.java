@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class HotelDetailRoomTypeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private LayoutInflater mInflater;
@@ -26,7 +26,7 @@ public class HotelDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycle
     private int mSelectedPosition;
 
 
-    public HotelDetailRoomTypeListAdapter(Context context, ArrayList<SaleRoomInformation> arrayList, View.OnClickListener listener)
+    public StayDetailRoomTypeListAdapter(Context context, ArrayList<SaleRoomInformation> arrayList, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;

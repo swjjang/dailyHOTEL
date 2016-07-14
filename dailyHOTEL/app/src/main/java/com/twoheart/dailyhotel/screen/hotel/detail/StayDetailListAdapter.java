@@ -291,7 +291,7 @@ public class StayDetailListAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights);
+                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights, mStayDetail.hotelIndex);
             }
         });
 

@@ -25,17 +25,17 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
@@ -110,7 +110,7 @@ public class StayDetailActivity extends BaseActivity
 
         void showNavigatorDialog();
 
-        void onCalendarClick(SaleTime checkInSaleTime, int nights);
+        void onCalendarClick(SaleTime checkInSaleTime, int nights, int placeIndex);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class StayDetailActivity extends BaseActivity
 
             if (calendarFlag == 1)
             {
-                startCalendar(mCheckInSaleTime, nights, false);
+                startCalendar(mCheckInSaleTime, nights, hotelIndex, false);
             }
         } else
         {
@@ -178,7 +178,7 @@ public class StayDetailActivity extends BaseActivity
 
             if (calendarFlag == 1)
             {
-                startCalendar(mCheckInSaleTime, nights, true);
+                startCalendar(mCheckInSaleTime, nights, hotelIndex, true);
             }
         }
     }
@@ -418,14 +418,14 @@ public class StayDetailActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
-    private void startCalendar(SaleTime checkInSaleTime, int nights, boolean isAnimation)
+    private void startCalendar(SaleTime checkInSaleTime, int nights, int hotelIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(StayDetailActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.NONE, true, isAnimation);
+        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, checkInSaleTime, nights, hotelIndex, AnalyticsManager.ValueType.NONE, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -830,9 +830,9 @@ public class StayDetailActivity extends BaseActivity
         }
 
         @Override
-        public void onCalendarClick(SaleTime checkInSaleTime, int nights)
+        public void onCalendarClick(SaleTime checkInSaleTime, int nights, int placeIndex)
         {
-            startCalendar(checkInSaleTime, nights, true);
+            startCalendar(checkInSaleTime, nights, placeIndex, true);
         }
     };
 

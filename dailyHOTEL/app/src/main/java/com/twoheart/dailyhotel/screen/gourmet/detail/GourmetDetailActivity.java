@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -140,29 +140,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void showNavigatorDialog()
-    {
-        if (lockUiComponentAndIsLockUiComponent() == true)
-        {
-            return;
-        }
-
-        Util.showShareMapDialog(GourmetDetailActivity.this, mPlaceDetail.name//
-            , mPlaceDetail.latitude, mPlaceDetail.longitude, false//
-            , AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-            , null);
-    }
-
-    @Override
-    protected void startCalendar(SaleTime saleTime, boolean isAnimation)
+    protected void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, AnalyticsManager.ValueType.LIST, true, isAnimation);
+        Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, placeIndex, AnalyticsManager.ValueType.LIST, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
