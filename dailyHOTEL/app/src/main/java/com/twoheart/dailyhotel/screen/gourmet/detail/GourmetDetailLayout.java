@@ -166,6 +166,9 @@ public class GourmetDetailLayout
         {
             mListAdapter = new GourmetDetailListAdapter(mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData((GourmetDetail) mPlaceDetail, saleTime);
         }
 
         setCurrentImage(imagePosition);
@@ -254,6 +257,13 @@ public class GourmetDetailLayout
                         , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
                 }
             });
+        } else
+        {
+            if (mSelectedTicketInformation == null)
+            {
+                mSelectedTicketInformation = ticketInformationList.get(0);
+                mTicketTypeListAdapter.setSelected(0);
+            }
         }
 
         int size = ticketInformationList.size();
@@ -271,6 +281,11 @@ public class GourmetDetailLayout
 
         mTicketTypeRecyclerView.setLayoutParams(layoutParams);
         mTicketTypeRecyclerView.setAdapter(mTicketTypeListAdapter);
+    }
+
+    public void setDefaultSelectedTicketInformation()
+    {
+        mSelectedTicketInformation = null;
     }
 
     public int getBookingStatus()

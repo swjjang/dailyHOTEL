@@ -169,6 +169,9 @@ public class HotelDetailLayout
         {
             mListAdapter = new HotelDetailListAdapter(mActivity, hotelDetail, checkInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData(hotelDetail, checkInSaleTime);
         }
 
         setCurrentImage(imagePosition);
@@ -257,6 +260,13 @@ public class HotelDetailLayout
                         , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, null);
                 }
             });
+        } else
+        {
+            if (mSelectedSaleRoomInformation == null)
+            {
+                mSelectedSaleRoomInformation = saleRoomList.get(0);
+                mRoomTypeListAdapter.setSelected(0);
+            }
         }
 
         int size = saleRoomList.size();
@@ -274,6 +284,11 @@ public class HotelDetailLayout
 
         mRoomTypeRecyclerView.setLayoutParams(layoutParams);
         mRoomTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
+    }
+
+    public void setDefaultSelectedSaleRoomInformation()
+    {
+        mSelectedSaleRoomInformation = null;
     }
 
     public int getBookingStatus()

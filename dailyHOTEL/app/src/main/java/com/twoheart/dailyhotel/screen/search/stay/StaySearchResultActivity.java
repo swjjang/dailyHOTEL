@@ -225,6 +225,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }

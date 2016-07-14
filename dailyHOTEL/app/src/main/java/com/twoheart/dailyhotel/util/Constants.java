@@ -95,7 +95,6 @@ public interface Constants
     public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me/goodnight/" : "NTAkNSQ3JDk4JDY0JA==$RjczQD0LQxMTFBOTNDRDQ2Q0QwREM0OTQzOTM4MzBCQjEzRTM2QUAQwNkY4Qjg4QD0NFMUYyMkIxOEVENkFBMkMzNEM1NzBCQzNJFMjMwNEJCNTZFMDAzNURBM0QwRkUyOUFF$";
     public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
 
-
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 
@@ -186,6 +185,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_DBENEFIT = "dBenefit";
     public static final String NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION = "paymentInformation";
     public static final String NAME_INTENT_EXTRA_DATA_PRICE = "price";
+    public static final String NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG = "calendarFlag";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
