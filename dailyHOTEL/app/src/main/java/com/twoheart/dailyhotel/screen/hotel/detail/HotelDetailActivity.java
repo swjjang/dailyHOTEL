@@ -108,6 +108,8 @@ public class HotelDetailActivity extends BaseActivity
 
         void clipAddress(String address);
 
+        void showNavigatorDialog();
+
         void onCalendarClick(SaleTime checkInSaleTime, int nights);
     }
 
@@ -789,7 +791,7 @@ public class HotelDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = ZoomMapActivity.newInstance(HotelDetailActivity.this//
-                , ZoomMapActivity.SourceType.HOTEL, mHotelDetail.hotelName//
+                , ZoomMapActivity.SourceType.HOTEL, mHotelDetail.hotelName, mHotelDetail.address//
                 , mHotelDetail.latitude, mHotelDetail.longitude, mHotelDetail.isOverseas);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
@@ -805,6 +807,21 @@ public class HotelDetailActivity extends BaseActivity
             DailyToast.showToast(HotelDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, mHotelDetail.hotelName, null);
+        }
+
+        @Override
+        public void showNavigatorDialog()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Util.showShareMapDialog(HotelDetailActivity.this, mHotelDetail.hotelName//
+                , mHotelDetail.latitude, mHotelDetail.longitude, mHotelDetail.isOverseas//
+                , AnalyticsManager.Category.HOTEL_BOOKINGS//
+                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
+                , null);
         }
 
         @Override

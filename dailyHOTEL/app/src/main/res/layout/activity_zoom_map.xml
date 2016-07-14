@@ -12,8 +12,46 @@
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottomLayout"/>
+        android:layout_above="@+id/addressLayout"
+        android:layout_below="@+id/toolbar"/>
+
+    <RelativeLayout
+        android:id="@+id/addressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:layout_above="@+id/bottomLayout"
+        android:background="@color/white">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/copyAddressView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/more_btn_padding"
+            android:freezesText="true"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/label_copy_address"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="11dp"
+            />
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/addressTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/copyAddressView"
+            android:freezesText="true"
+            android:gravity="center"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="13dp"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"

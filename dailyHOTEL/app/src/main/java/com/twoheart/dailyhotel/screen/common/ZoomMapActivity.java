@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,10 +26,12 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ZoomMapActivity extends BaseActivity
@@ -47,12 +51,13 @@ public class ZoomMapActivity extends BaseActivity
         GOURMET_BOOKING
     }
 
-    public static Intent newInstance(Context context, SourceType sourceType, String name, double latitude, double longitude, boolean isOverseas)
+    public static Intent newInstance(Context context, SourceType sourceType, String name, String address, double latitude, double longitude, boolean isOverseas)
     {
         Intent intent = new Intent(context, ZoomMapActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ADDRESS, address);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, latitude);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, longitude);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverseas);
@@ -72,6 +77,7 @@ public class ZoomMapActivity extends BaseActivity
         Intent intent = getIntent();
 
         String placeName;
+        String address;
         double latitude;
         double longitude;
         boolean isOverseas = false;
@@ -86,6 +92,8 @@ public class ZoomMapActivity extends BaseActivity
                 placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
             }
 
+            address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
+
             latitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, 0);
             longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
 
@@ -96,16 +104,17 @@ public class ZoomMapActivity extends BaseActivity
             latitude = 0;
             longitude = 0;
             placeName = null;
+            address = null;
         }
 
-        if (placeName == null || latitude == 0 || longitude == 0 || mSourceType == null)
+        if (placeName == null || address == null || latitude == 0 || longitude == 0 || mSourceType == null)
         {
             finish();
             return;
         }
 
         initToolbar(getString(R.string.frag_tab_map_title));
-        initLayout(placeName, latitude, longitude, isOverseas);
+        initLayout(placeName, address, latitude, longitude, isOverseas);
     }
 
     @Override
@@ -152,8 +161,25 @@ public class ZoomMapActivity extends BaseActivity
         });
     }
 
-    private void initLayout(final String placeName, final double latitude, final double longitude, final boolean isOverseas)
+    private void initLayout(final String placeName, final String address, final double latitude, final double longitude, final boolean isOverseas)
     {
+        // 주소지
+        final TextView hotelAddressTextView = (TextView) findViewById(R.id.addressTextView);
+
+        hotelAddressTextView.setText(address);
+
+        View clipAddress = findViewById(R.id.copyAddressView);
+        clipAddress.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Util.clipText(ZoomMapActivity.this, address);
+
+                DailyToast.showToast(ZoomMapActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+            }
+        });
+
         View searchMapView = findViewById(R.id.searchMapView);
         searchMapView.setOnClickListener(new View.OnClickListener()
         {

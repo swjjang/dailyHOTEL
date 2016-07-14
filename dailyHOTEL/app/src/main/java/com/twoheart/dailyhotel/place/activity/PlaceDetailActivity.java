@@ -87,6 +87,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         void clipAddress(String address);
 
+        void showNavigatorDialog();
+
         void onCalendarClick(SaleTime saleTime);
     }
 
@@ -108,6 +110,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
 
     protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void showNavigatorDialog();
 
     protected abstract void startCalendar(SaleTime saleTime);
 
@@ -680,7 +684,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = ZoomMapActivity.newInstance(PlaceDetailActivity.this//
-                , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
+                , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name, mPlaceDetail.address//
                 , mPlaceDetail.latitude, mPlaceDetail.longitude, false);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
@@ -702,6 +706,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
             DailyToast.showToast(PlaceDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_ADDRESS_COPY_CLICKED, mPlaceDetail.name, null);
+        }
+
+        @Override
+        public void showNavigatorDialog()
+        {
+
         }
 
         @Override

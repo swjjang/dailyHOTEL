@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -287,81 +285,10 @@ public class GourmetDetailListAdapter extends BaseAdapter
         view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 주소지
-        final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
-        final TextView hotelAddressTextView02 = (TextView) view.findViewById(R.id.hotelAddressTextView02);
-        final TextView hotelAddressTextView03 = (TextView) view.findViewById(R.id.hotelAddressTextView03);
-
-        hotelAddressTextView02.setText(null);
-        hotelAddressTextView02.setVisibility(View.GONE);
-
-        hotelAddressTextView03.setText(null);
-        hotelAddressTextView03.setVisibility(View.GONE);
+        final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
 
         final String address = placeDetail.address;
-
-        hotelAddressTextView01.setText(address);
-        hotelAddressTextView01.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Layout layout = hotelAddressTextView01.getLayout();
-
-                if (layout == null || Util.isTextEmpty(address) == true)
-                {
-                    return;
-                }
-
-                String[] lineString = new String[2];
-                int lineCount = layout.getLineCount();
-
-                // 한줄이상인 경우.
-                if (lineCount == 2)
-                {
-                    int firstLineEnd = layout.getLineEnd(0);
-
-                    try
-                    {
-                        if (firstLineEnd < address.length())
-                        {
-                            lineString[0] = address.substring(firstLineEnd, address.length());
-
-                            hotelAddressTextView02.setVisibility(View.VISIBLE);
-                            hotelAddressTextView02.setText(lineString[0]);
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                } else if (lineCount > 2)
-                {
-                    int firstLineEnd = layout.getLineEnd(0);
-                    int secondLineEnd = layout.getLineEnd(1);
-
-                    try
-                    {
-                        if (firstLineEnd < address.length())
-                        {
-                            lineString[0] = address.substring(firstLineEnd, secondLineEnd);
-
-                            hotelAddressTextView02.setVisibility(View.VISIBLE);
-                            hotelAddressTextView02.setText(lineString[0]);
-                        }
-
-                        if (secondLineEnd < address.length())
-                        {
-                            lineString[1] = address.substring(secondLineEnd, address.length());
-
-                            hotelAddressTextView03.setVisibility(View.VISIBLE);
-                            hotelAddressTextView03.setText(lineString[1]);
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            }
-        });
+        hotelAddressTextView.setText(address);
 
         View clipAddress = view.findViewById(R.id.copyAddressView);
         clipAddress.setOnClickListener(new View.OnClickListener()
@@ -375,6 +302,22 @@ public class GourmetDetailListAdapter extends BaseAdapter
                 }
 
                 mOnUserActionListener.clipAddress(address);
+            }
+        });
+
+        //길찾기
+        View navigatorView = view.findViewById(R.id.navigatorView);
+        navigatorView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener == null)
+                {
+                    return;
+                }
+
+                mOnUserActionListener.showNavigatorDialog();
             }
         });
 
@@ -439,51 +382,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
             return view;
         }
 
-        final TextView textView1Line = (TextView) view.findViewById(R.id.benefit1LineTextView);
-        final TextView textView2Line = (TextView) view.findViewById(R.id.benefit2LineTextView);
-
-        textView2Line.setText(null);
-        textView2Line.setVisibility(View.GONE);
+        final TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
 
         final String benefit = placeDetail.benefit;
 
-        textView1Line.setText(benefit);
-        textView1Line.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Layout layout = textView1Line.getLayout();
-
-                if (layout == null || Util.isTextEmpty(benefit) == true)
-                {
-                    return;
-                }
-
-                String[] lineString = new String[1];
-                int lineCount = layout.getLineCount();
-
-                // 한줄이상인 경우.
-                if (lineCount > 1)
-                {
-                    int firstLineEnd = layout.getLineEnd(0);
-
-                    try
-                    {
-                        if (firstLineEnd < benefit.length())
-                        {
-                            lineString[0] = benefit.substring(firstLineEnd, benefit.length());
-
-                            textView2Line.setVisibility(View.VISIBLE);
-                            textView2Line.setText(lineString[0]);
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            }
-        });
+        benefitTextView.setText(benefit);
 
         return view;
     }

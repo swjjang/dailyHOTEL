@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +19,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -55,7 +53,8 @@ public class HotelDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(HotelDetail hotelDetail, SaleTime checkInSaleTime) {
+    public void setData(HotelDetail hotelDetail, SaleTime checkInSaleTime)
+    {
         mHotelDetail = hotelDetail;
         mCheckInSaleTime = checkInSaleTime;
     }
@@ -113,7 +112,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
         }
 
-        getDetail01View(mDeatilViews[1], mHotelDetail);
+        getTitleView(mDeatilViews[1], mHotelDetail);
         linearLayout.addView(mDeatilViews[1]);
 
         // 주소 및 맵
@@ -122,7 +121,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
         }
 
-        getDetail02View(mDeatilViews[2], mHotelDetail);
+        getAddressView(mDeatilViews[2], mHotelDetail);
         linearLayout.addView(mDeatilViews[2]);
 
         // D Benefit
@@ -143,7 +142,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getDetail04View(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
+        getDailysCommentView(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
         linearLayout.addView(mDeatilViews[4]);
 
         // 호텔 정보
@@ -229,7 +228,7 @@ public class HotelDetailListAdapter extends BaseAdapter
      * @param hotelDetail
      * @return
      */
-    private View getDetail01View(View view, HotelDetail hotelDetail)
+    private View getTitleView(View view, HotelDetail hotelDetail)
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
         mHotelTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
@@ -305,89 +304,18 @@ public class HotelDetailListAdapter extends BaseAdapter
      * @param hotelDetail
      * @return
      */
-    private View getDetail02View(final View view, HotelDetail hotelDetail)
+    private View getAddressView(final View view, HotelDetail hotelDetail)
     {
         view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 주소지
-        final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
-        final TextView hotelAddressTextView02 = (TextView) view.findViewById(R.id.hotelAddressTextView02);
-        final TextView hotelAddressTextView03 = (TextView) view.findViewById(R.id.hotelAddressTextView03);
-
-        hotelAddressTextView02.setText(null);
-        hotelAddressTextView02.setVisibility(View.GONE);
-
-        hotelAddressTextView03.setText(null);
-        hotelAddressTextView03.setVisibility(View.GONE);
+        final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
 
         final String address = hotelDetail.address;
-
-        hotelAddressTextView01.setText(address);
-        hotelAddressTextView01.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Layout layout = hotelAddressTextView01.getLayout();
-
-                if (layout == null || Util.isTextEmpty(address) == true)
-                {
-                    return;
-                }
-
-                String[] lineString = new String[2];
-                int lineCount = layout.getLineCount();
-
-                // 한줄이상인 경우.
-                if (lineCount == 2)
-                {
-                    int firstLineEnd = layout.getLineEnd(0);
-
-                    try
-                    {
-                        if (firstLineEnd < address.length())
-                        {
-                            lineString[0] = address.substring(firstLineEnd, address.length());
-
-                            hotelAddressTextView02.setVisibility(View.VISIBLE);
-                            hotelAddressTextView02.setText(lineString[0]);
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                } else if (lineCount > 2)
-                {
-                    int firstLineEnd = layout.getLineEnd(0);
-                    int secondLineEnd = layout.getLineEnd(1);
-
-                    try
-                    {
-                        if (firstLineEnd < address.length())
-                        {
-                            lineString[0] = address.substring(firstLineEnd, secondLineEnd);
-
-                            hotelAddressTextView02.setVisibility(View.VISIBLE);
-                            hotelAddressTextView02.setText(lineString[0]);
-                        }
-
-                        if (secondLineEnd < address.length())
-                        {
-                            lineString[1] = address.substring(secondLineEnd, address.length());
-
-                            hotelAddressTextView03.setVisibility(View.VISIBLE);
-                            hotelAddressTextView03.setText(lineString[1]);
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            }
-        });
+        hotelAddressTextView.setText(address);
 
         View clipAddress = view.findViewById(R.id.copyAddressView);
-        clipAddress.setOnClickListener(new OnClickListener()
+        clipAddress.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -398,6 +326,22 @@ public class HotelDetailListAdapter extends BaseAdapter
                 }
 
                 mOnUserActionListener.clipAddress(address);
+            }
+        });
+
+        //길찾기
+        View navigatorView = view.findViewById(R.id.navigatorView);
+        navigatorView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener == null)
+                {
+                    return;
+                }
+
+                mOnUserActionListener.showNavigatorDialog();
             }
         });
 
@@ -462,52 +406,11 @@ public class HotelDetailListAdapter extends BaseAdapter
             return view;
         }
 
-        final TextView textView1Line = (TextView) view.findViewById(R.id.benefit1LineTextView);
-        final TextView textView2Line = (TextView) view.findViewById(R.id.benefit2LineTextView);
-
-        textView2Line.setText(null);
-        textView2Line.setVisibility(View.GONE);
+        final TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
 
         final String benefit = hotelDetail.hotelBenefit;
 
-        textView1Line.setText(benefit);
-        textView1Line.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Layout layout = textView1Line.getLayout();
-
-                if (layout == null || Util.isTextEmpty(benefit) == true)
-                {
-                    return;
-                }
-
-                String[] lineString = new String[1];
-                int lineCount = layout.getLineCount();
-
-                // 한줄이상인 경우.
-                if (lineCount > 1)
-                {
-                    int firstLineEnd = layout.getLineEnd(0);
-
-                    try
-                    {
-                        if (firstLineEnd < benefit.length())
-                        {
-                            lineString[0] = benefit.substring(firstLineEnd, benefit.length());
-
-                            textView2Line.setVisibility(View.VISIBLE);
-                            textView2Line.setText(lineString[0]);
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            }
-        });
-
+        benefitTextView.setText(benefit);
         return view;
     }
 
@@ -519,14 +422,22 @@ public class HotelDetailListAdapter extends BaseAdapter
      * @param hotelDetail
      * @return
      */
-    private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
+    private View getDailysCommentView(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
     {
         if (layoutInflater == null || viewGroup == null || hotelDetail == null)
         {
             return viewGroup;
         }
 
-        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+        View topDividerViw = viewGroup.findViewById(R.id.topDividerViw);
+
+        if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
+        {
+            topDividerViw.setVisibility(View.GONE);
+        } else
+        {
+            topDividerViw.setVisibility(View.VISIBLE);
+        }
 
         ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 

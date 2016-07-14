@@ -170,7 +170,7 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
         }
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
-            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mPlaceBookingDetail.placeName//
+            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mPlaceBookingDetail.placeName, mPlaceBookingDetail.address//
             , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false);
 
         startActivity(intent);

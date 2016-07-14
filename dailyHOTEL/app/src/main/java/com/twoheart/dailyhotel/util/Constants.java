@@ -187,6 +187,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION = "paymentInformation";
     public static final String NAME_INTENT_EXTRA_DATA_PRICE = "price";
     public static final String NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG = "calendarFlag";
+    public static final String NAME_INTENT_EXTRA_DATA_ADDRESS = "address";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
