@@ -24,7 +24,7 @@
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/copyAddressView"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
