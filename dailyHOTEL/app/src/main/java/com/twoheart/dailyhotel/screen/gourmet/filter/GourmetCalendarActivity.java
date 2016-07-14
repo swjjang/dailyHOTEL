@@ -25,10 +25,10 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     private View mDayView;
     private TextView mConfirmTextView;
-    private String mCallByScreen;
+    protected String mCallByScreen;
 
     private boolean mIsAnimation;
-    private boolean mIsChanged;
+    protected boolean mIsChanged;
 
     public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
     {

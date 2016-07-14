@@ -89,7 +89,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         void showNavigatorDialog();
 
-        void onCalendarClick(SaleTime saleTime);
+        void onCalendarClick(SaleTime saleTime, int placeIndex);
     }
 
     public interface OnImageActionListener
@@ -111,9 +111,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
 
-    protected abstract void showNavigatorDialog();
-
-    protected abstract void startCalendar(SaleTime saleTime, boolean isAnimation);
+    protected abstract void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -155,7 +153,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             if (calendarFlag == 1)
             {
-                startCalendar(mCheckInSaleTime, false);
+                startCalendar(mCheckInSaleTime, mPlaceDetail.index, false);
             }
         } else
         {
@@ -185,7 +183,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             if (calendarFlag == 1)
             {
-                startCalendar(mCheckInSaleTime, true);
+                startCalendar(mCheckInSaleTime, mPlaceDetail.index, true);
             }
         }
     }
@@ -716,13 +714,22 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void showNavigatorDialog()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            Util.showShareMapDialog(PlaceDetailActivity.this, mPlaceDetail.name//
+                , mPlaceDetail.latitude, mPlaceDetail.longitude, false//
+                , AnalyticsManager.Category.GOURMET_BOOKINGS//
+                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
+                , null);
         }
 
         @Override
-        public void onCalendarClick(SaleTime saleTime)
+        public void onCalendarClick(SaleTime saleTime, int placeIndex)
         {
-            startCalendar(saleTime, false);
+            startCalendar(saleTime, placeIndex, false);
         }
     };
 

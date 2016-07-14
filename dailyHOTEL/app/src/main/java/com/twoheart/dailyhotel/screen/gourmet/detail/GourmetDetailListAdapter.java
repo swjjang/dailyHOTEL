@@ -200,7 +200,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getTitleView(View view, PlaceDetail placeDetail)
+    private View getTitleView(View view, final PlaceDetail placeDetail)
     {
         GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
 
@@ -267,7 +267,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                mOnUserActionListener.onCalendarClick(mSaleTime);
+                mOnUserActionListener.onCalendarClick(mSaleTime, placeDetail.index);
             }
         });
 

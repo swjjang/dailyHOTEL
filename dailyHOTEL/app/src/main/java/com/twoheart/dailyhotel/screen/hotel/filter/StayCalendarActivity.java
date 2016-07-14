@@ -27,10 +27,10 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     private View mCheckInDayView;
     private View mCheckOutDayView;
     private TextView mConfirmTextView;
-    private String mCallByScreen;
+    protected String mCallByScreen;
 
     private boolean mIsAnimation;
-    private boolean mIsChanged;
+    protected boolean mIsChanged;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
