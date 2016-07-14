@@ -12,7 +12,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +23,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     private static final int DAYCOUNT_OF_MAX = 30;
     private static final int ENABLE_DAYCOUNT_OF_MAX = 14;
 
-    private Day mDay;
+    private View mDayView;
     private TextView mConfirmTextView;
     private String mCallByScreen;
 
@@ -63,6 +62,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
 
+        reset();
+
         if (isSelected == true)
         {
             setSelectedDay(saleTime);
@@ -94,18 +95,12 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         mConfirmTextView.setVisibility(View.VISIBLE);
         mConfirmTextView.setOnClickListener(this);
         mConfirmTextView.setEnabled(false);
+        mConfirmTextView.setText(R.string.label_calendar_gourmet_search_selected_date);
 
         if (AnalyticsManager.ValueType.LIST.equalsIgnoreCase(mCallByScreen) == true)
         {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 92));
             mExitView.setLayoutParams(layoutParams);
-        } else
-        {
-            // 문구 내용을 변경한다.
-            TextView toastTextView = (TextView) mToastView.findViewById(R.id.toastTextView);
-
-            mConfirmTextView.setText(R.string.label_calendar_search_selected_date);
-            toastTextView.setText(R.string.message_calendar_search_reset);
         }
     }
 
@@ -149,36 +144,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 hideAnimation();
                 break;
 
-            case R.id.cancelView:
-            {
-                reset();
-                break;
-            }
-
             case R.id.confirmView:
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
+                Day day = (Day) mDayView.getTag();
 
-                String date = mDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mDay.dayTime.getDayOfDaysDate().getTime()));
-                params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
-                String phoneDate = simpleDateFormat.format(new Date());
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
-                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date + "-" + phoneDate, params);
-
-                Intent intent = new Intent();
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDay.dayTime);
-
-                setResult(RESULT_OK, intent);
-                hideAnimation();
+                onConfirm(day.dayTime);
                 break;
             }
 
@@ -196,20 +166,82 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                     return;
                 }
 
-                mDay = day;
+                if (mDayView != null)
+                {
+                    reset();
+                }
+
+                mDayView = view;
+                setSelectedDay(mDayView);
 
                 view.setSelected(true);
                 setToolbarText(day.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
 
-                setDaysEnable(view, false);
-                setCancelViewVisibility(View.VISIBLE);
                 mConfirmTextView.setEnabled(true);
-                setToastVisibility(View.VISIBLE);
 
                 releaseUiComponent();
                 break;
             }
         }
+    }
+
+    protected void onConfirm(SaleTime saleTime)
+    {
+        if (saleTime == null)
+        {
+            return;
+        }
+
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        String date = saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+
+        Map<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
+        params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
+        String phoneDate = simpleDateFormat.format(new Date());
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
+            , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date + "-" + phoneDate, params);
+
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+
+        setResult(RESULT_OK, intent);
+        hideAnimation();
+    }
+
+    private void setSelectedDay(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView textView = (TextView) view.findViewById(R.id.textView);
+        textView.setText(R.string.label_visit_day);
+        textView.setVisibility(View.VISIBLE);
+
+        view.setBackgroundResource(R.drawable.select_date_gourmet);
+    }
+
+    private void resetSelectedDay(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView textView = (TextView) view.findViewById(R.id.textView);
+        textView.setText(null);
+        textView.setVisibility(View.INVISIBLE);
+
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
 
     private void setSelectedDay(SaleTime saleTime)
@@ -231,20 +263,15 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    private void setDaysEnable(View view, boolean enable)
-    {
-        for (View dayView : mDailyViews)
-        {
-            if (view != dayView)
-            {
-                dayView.setEnabled(enable);
-            }
-        }
-    }
-
     private void reset()
     {
         mIsChanged = true;
+
+        if (mDayView != null)
+        {
+            resetSelectedDay(mDayView);
+            mDayView = null;
+        }
 
         int length = mDailyViews.length;
 
@@ -263,10 +290,5 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));
         mConfirmTextView.setEnabled(false);
-
-        setCancelViewVisibility(View.GONE);
-        mDailyViews[mDailyViews.length - 1].setEnabled(false);
-
-        setToastVisibility(View.GONE);
     }
 }

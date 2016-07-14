@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.place.activity;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private static final int ANIMATION_DEALY = 200;
 
-    protected View mCancelView, mToastView;
     protected View[] mDailyViews;
 
     protected View mAnimationLayout; // 애니메이션 되는 뷰
@@ -65,13 +62,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         mExitView = findViewById(R.id.exitView);
         mExitView.setOnClickListener(this);
-
-        mCancelView = findViewById(R.id.cancelView);
-        mCancelView.setVisibility(View.GONE);
-        mCancelView.setOnClickListener(this);
-
-        mToastView = findViewById(R.id.toastLayout);
-        mToastView.setVisibility(View.GONE);
 
         mAnimationLayout = findViewById(R.id.animationLayout);
         mDisableLayout = findViewById(R.id.disableLayout);
@@ -103,8 +93,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             calendar.add(Calendar.MONTH, 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
         }
-
-        mDailyViews[dayCountOfMax - 1].setEnabled(false);
     }
 
     protected void initToolbar(String title)
@@ -116,26 +104,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected void setToolbarText(String title)
     {
         mTitleTextView.setText(title);
-    }
-
-    protected void setCancelViewVisibility(int visibility)
-    {
-        if (mCancelView == null)
-        {
-            return;
-        }
-
-        mCancelView.setVisibility(visibility);
-    }
-
-    protected void setToastVisibility(int visibility)
-    {
-        if (mToastView == null)
-        {
-            return;
-        }
-
-        mToastView.setVisibility(visibility);
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -187,6 +155,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             {
                 mDailyViews[dayClass.dayTime.getOffsetDailyDay()] = dayView;
 
+                // 날짜 앞단에 없는 날짜의 공백을 넣는다.
                 if (enableDayCount-- <= 0)
                 {
                     dayView.setEnabled(false);
@@ -483,47 +452,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DEALY);
-        mAlphaAnimation.setFillBefore(true);
-        mAlphaAnimation.setFillAfter(true);
-
-        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-        });
-
-        mBackgroundView.startAnimation(mAlphaAnimation);
-    }
-
-    /**
-     * 점점 어두워짐.
-     */
-    private void showAnimationFadeOut()
-    {
-        if (mAlphaAnimation != null)
-        {
-            if (mAlphaAnimation.hasEnded() == false)
-            {
-                mAlphaAnimation.cancel();
-            }
-
-            mAlphaAnimation = null;
-        }
-
-        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         mAlphaAnimation.setDuration(ANIMATION_DEALY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);

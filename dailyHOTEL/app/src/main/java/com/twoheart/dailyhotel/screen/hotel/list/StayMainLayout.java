@@ -47,6 +47,11 @@ public class StayMainLayout extends PlaceMainLayout
 
     protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
+        if (checkInSaleTime == null || checkOutSaleTime == null)
+        {
+            return;
+        }
+
         String format = Util.getLCDWidth(mContext) > 480 ? "M.d(EEE)" : "M.d";
 
         String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(format);

@@ -922,6 +922,13 @@ public class StayMainFragment extends PlaceMainFragment
                 return;
             }
 
+            if (StayCurationManager.getInstance().getCheckInSaleTime() == null//
+                || StayCurationManager.getInstance().getCheckOutSaleTime() == null)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
+
             Province selectedProvince = StayCurationManager.getInstance().getProvince();
             if (selectedProvince == null)
             {
@@ -961,7 +968,6 @@ public class StayMainFragment extends PlaceMainFragment
 
             } else
             {
-
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
 
                 ((StayMainLayout) mPlaceMainLayout).setToolbarDateText( //
