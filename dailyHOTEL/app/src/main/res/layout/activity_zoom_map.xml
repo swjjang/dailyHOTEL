@@ -47,7 +47,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/copyAddressView"
             android:freezesText="true"
-            android:gravity="center"
+            android:gravity="left|center_vertical"
             android:textColor="@color/hoteldetail_title_text"
             android:textSize="13dp"/>
 
