@@ -266,6 +266,7 @@ public class StayDetailLayout
             {
                 mSelectedSaleRoomInformation = saleRoomList.get(0);
                 mRoomTypeListAdapter.setSelected(0);
+                mRoomTypeListAdapter.addAll(saleRoomList);
             }
         }
 

@@ -263,6 +263,7 @@ public class GourmetDetailLayout
             {
                 mSelectedTicketInformation = ticketInformationList.get(0);
                 mTicketTypeListAdapter.setSelected(0);
+                mTicketTypeListAdapter.addAll(ticketInformationList);
             }
         }
 
