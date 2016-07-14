@@ -36,6 +36,7 @@ public class DailyDeepLink
     private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
 
     private static final String PARAM_V5_EVENT_NAME = "en"; // 이벤트 이름
+    private static final String PARAM_V5_CALENDAR_FLAG = "cal"; // 0: 달력을 띄우지 않는다.(디폴트), 1 : 달력 띄운다.
 
     private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
     private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
@@ -727,6 +728,32 @@ public class DailyDeepLink
         return Constants.SortType.DEFAULT;
     }
 
+    public int getCalendarFlag()
+    {
+        switch (mVersionCode)
+        {
+            case 5:
+                String value = mParams.get(PARAM_V5_CALENDAR_FLAG);
+
+                if (Util.isTextEmpty(value) == false)
+                {
+                    try
+                    {
+                        return Integer.parseInt(value);
+                    } catch (NumberFormatException e)
+                    {
+                        return 0;
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return 0;
+    }
+
     private boolean decodingLinkV5(Uri uri)
     {
         if (decodingLinkV4(uri) == false)
@@ -735,6 +762,7 @@ public class DailyDeepLink
         }
 
         putParams(uri, PARAM_V5_EVENT_NAME);
+        putParams(uri, PARAM_V5_CALENDAR_FLAG);
 
         return true;
     }

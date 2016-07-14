@@ -20,7 +20,9 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -111,6 +113,45 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , checkInSaleTime, imageUrl, ((GourmetDetail) mPlaceDetail).category, mPlaceDetail.index, isBenefit, mProvince, mArea);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode == RESULT_OK)
+        {
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+            if (checkInSaleTime == null)
+            {
+                return;
+            }
+
+            mCheckInSaleTime = checkInSaleTime;
+
+            int placeIndex = mPlaceDetail.index;
+
+            mPlaceDetail = new GourmetDetail(placeIndex);
+
+            mPlaceDetailLayout.setDefaultSelectedTicketInformation();
+
+            requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
+        }
+    }
+
+    @Override
+    protected void startCalendar(SaleTime saleTime)
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Intent intent = GourmetCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, AnalyticsManager.ValueType.LIST, true, true);
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+
+        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

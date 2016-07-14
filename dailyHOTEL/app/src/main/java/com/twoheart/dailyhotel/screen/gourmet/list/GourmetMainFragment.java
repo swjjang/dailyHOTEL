@@ -649,14 +649,12 @@ public class GourmetMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
 
-            SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime();
+            SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
 
             if (eventBanner.isDeepLink() == true)
             {
                 try
                 {
-                    long dailyTime = saleTime.getDailyTime();
-
                     Calendar calendar = DailyCalendar.getInstance();
                     calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
                     calendar.setTimeInMillis(eventBanner.checkInTime);
@@ -667,19 +665,21 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                     int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
+                    saleTime.setOffsetDailyDay(dailyDayOfDays);
+
                     if (eventBanner.isHotel() == true)
                     {
                         Intent intent = new Intent(mBaseActivity, HotelDetailActivity.class);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, eventBanner.index);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                     } else
                     {
-                        startGourmetDetailByDeepLink(eventBanner.index, dailyTime, dailyDayOfDays);
+                        startGourmetDetailByDeepLink(eventBanner.index, saleTime);
                     }
                 } catch (Exception e)
                 {
@@ -793,7 +793,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void startGourmetDetailByDeepLink(int gourmetIndex, long dailyTime, int dailyDayOfDays)
+    private void startGourmetDetailByDeepLink(int gourmetIndex, SaleTime saleTime)
     {
         if (isFinishing() || gourmetIndex < 0 || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -805,9 +805,9 @@ public class GourmetMainFragment extends PlaceMainFragment
         Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
     }
@@ -817,9 +817,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         try
         {
             // 신규 타입의 화면이동
-            SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime();
+            SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
             int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            long dailyTime = saleTime.getDailyTime();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -829,7 +828,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 if (datePlus >= 0)
                 {
-                    startGourmetDetailByDeepLink(gourmetIndex, dailyTime, datePlus);
+                    saleTime.setOffsetDailyDay(datePlus);
+                    startGourmetDetailByDeepLink(gourmetIndex, saleTime);
                 } else
                 {
                     return false;
@@ -847,7 +847,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     return false;
                 }
 
-                startGourmetDetailByDeepLink(gourmetIndex, dailyTime, dailyDayOfDays);
+                saleTime.setOffsetDailyDay(dailyDayOfDays);
+                startGourmetDetailByDeepLink(gourmetIndex, saleTime);
             }
 
             mIsDeepLink = true;

@@ -280,6 +280,7 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, StayCurationManager.getInstance().getProvince());
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.discountPrice);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -302,7 +303,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    public void startStayDetailByDeeplink(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights)
+    public void startStayDetailByDeeplink(int hotelIndex, SaleTime saleTime, int nights)
     {
         if (isFinishing() == true || hotelIndex < 0)
         {
@@ -319,9 +320,9 @@ public class StayMainFragment extends PlaceMainFragment
         Intent intent = new Intent(mBaseActivity, HotelDetailActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
     }
@@ -351,7 +352,8 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 if (datePlus >= 0)
                 {
-                    startStayDetailByDeeplink(hotelIndex, dailyTime, datePlus, nights);
+                    checkInSaleTime.setOffsetDailyDay(datePlus);
+                    startStayDetailByDeeplink(hotelIndex,checkInSaleTime, nights);
                 } else
                 {
                     return false;
@@ -369,7 +371,8 @@ public class StayMainFragment extends PlaceMainFragment
                     return false;
                 }
 
-                startStayDetailByDeeplink(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+                startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights);
             }
 
             mIsDeepLink = true;
@@ -1135,8 +1138,6 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 try
                 {
-                    long dailyTime = checkInSaleTime.getDailyTime();
-
                     Calendar calendar = DailyCalendar.getInstance();
                     calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
                     calendar.setTimeInMillis(eventBanner.checkInTime);
@@ -1147,18 +1148,20 @@ public class StayMainFragment extends PlaceMainFragment
 
                     int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
+                    checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+
                     if (eventBanner.isHotel() == true)
                     {
-                        startStayDetailByDeeplink(eventBanner.index, dailyTime, dailyDayOfDays, eventBanner.nights);
+                        startStayDetailByDeeplink(eventBanner.index, checkInSaleTime, eventBanner.nights);
                     } else
                     {
                         Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
 
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, eventBanner.index);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
                     }

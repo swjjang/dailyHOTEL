@@ -86,6 +86,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
         void finish();
 
         void clipAddress(String address);
+
+        void onCalendarClick(SaleTime saleTime);
     }
 
     public interface OnImageActionListener
@@ -105,6 +107,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
 
+    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void startCalendar(SaleTime saleTime);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -120,18 +126,20 @@ public abstract class PlaceDetailActivity extends BaseActivity
             return;
         }
 
+        mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+
+        mPlaceDetail = createPlaceDetail(intent);
+
+        if (mCheckInSaleTime == null || mPlaceDetail == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsStartByShare = true;
-
-            long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0);
-            int dayOfDays = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, -1);
-
-            mCheckInSaleTime = new SaleTime();
-            mCheckInSaleTime.setDailyTime(dailyTime);
-            mCheckInSaleTime.setOffsetDailyDay(dayOfDays);
-
-            mPlaceDetail = createPlaceDetail(intent);
 
             if (mPlaceDetail == null)
             {
@@ -144,10 +152,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             mIsStartByShare = false;
 
-            mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
-            mPlaceDetail = createPlaceDetail(intent);
-
             String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
             String imageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
             String category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
@@ -158,7 +162,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 ((GourmetDetail) mPlaceDetail).category = category;
             }
 
-            if (mCheckInSaleTime == null || mPlaceDetail == null || placeName == null)
+            if (placeName == null)
             {
                 Util.restartApp(this);
                 return;
@@ -169,6 +173,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(placeName, imageUrl);
+        }
+
+        if (calendarFlag == 1)
+        {
+            startCalendar(mCheckInSaleTime);
         }
     }
 
@@ -338,6 +347,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_ZOOMMAP:
                 case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
                     mDontReloadAtOnResume = true;
+                    break;
+
+                case CODE_REQUEST_ACTIVITY_CALENDAR:
+                    mDontReloadAtOnResume = true;
+                    onCalendarActivityResult(requestCode, resultCode, data);
                     break;
             }
 
@@ -688,6 +702,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
             DailyToast.showToast(PlaceDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_ADDRESS_COPY_CLICKED, mPlaceDetail.name, null);
+        }
+
+        @Override
+        public void onCalendarClick(SaleTime saleTime)
+        {
+            startCalendar(saleTime);
         }
     };
 
