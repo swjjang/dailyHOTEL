@@ -126,19 +126,20 @@ public abstract class PlaceDetailActivity extends BaseActivity
             return;
         }
 
+        mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+
+        mPlaceDetail = createPlaceDetail(intent);
+
+        if (mCheckInSaleTime == null || mPlaceDetail == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsStartByShare = true;
-
-            long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0);
-            int dayOfDays = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, -1);
-            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-
-            mCheckInSaleTime = new SaleTime();
-            mCheckInSaleTime.setDailyTime(dailyTime);
-            mCheckInSaleTime.setOffsetDailyDay(dayOfDays);
-
-            mPlaceDetail = createPlaceDetail(intent);
 
             if (mPlaceDetail == null)
             {
@@ -147,18 +148,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             initLayout(null, null);
-
-            if (calendarFlag == 1)
-            {
-                startCalendar(mCheckInSaleTime);
-            }
         } else
         {
             mIsStartByShare = false;
-
-            mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
-            mPlaceDetail = createPlaceDetail(intent);
 
             String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
             String imageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
@@ -170,7 +162,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 ((GourmetDetail) mPlaceDetail).category = category;
             }
 
-            if (mCheckInSaleTime == null || mPlaceDetail == null || placeName == null)
+            if (placeName == null)
             {
                 Util.restartApp(this);
                 return;
@@ -179,14 +171,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
-            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
             initLayout(placeName, imageUrl);
+        }
 
-            if (calendarFlag == 1)
-            {
-                startCalendar(mCheckInSaleTime);
-            }
+        if (calendarFlag == 1)
+        {
+            startCalendar(mCheckInSaleTime);
         }
     }
 

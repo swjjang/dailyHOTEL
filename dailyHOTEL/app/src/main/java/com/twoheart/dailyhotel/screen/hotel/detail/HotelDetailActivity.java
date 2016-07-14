@@ -128,40 +128,28 @@ public class HotelDetailActivity extends BaseActivity
 
         mImageHandler = new ImageHandler(this);
 
+        mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+        int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
+        int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+
+        mHotelDetail = new HotelDetail(hotelIndex, nights);
+
+        if (mCheckInSaleTime == null || hotelIndex == -1 || nights <= 0)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsStartByShare = true;
 
-            long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0);
-            int dayOfDays = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, -1);
-
-            mCheckInSaleTime = new SaleTime();
-            mCheckInSaleTime.setDailyTime(dailyTime);
-            mCheckInSaleTime.setOffsetDailyDay(dayOfDays);
-
-            int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-            int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
-            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-
-            mHotelDetail = new HotelDetail(hotelIndex, nights);
-
             initLayout(null, null);
-
-            if (calendarFlag == 1)
-            {
-                startCalendar(mCheckInSaleTime, nights);
-            }
         } else
         {
             mIsStartByShare = false;
-
-            mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
-            int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-            int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
-            int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-
-            mHotelDetail = new HotelDetail(hotelIndex, nights);
 
             String hotelName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
             String hotelImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
@@ -169,7 +157,7 @@ public class HotelDetailActivity extends BaseActivity
 
             mHotelDetail.categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
 
-            if (mCheckInSaleTime == null || hotelIndex == -1 || hotelName == null || nights <= 0)
+            if (hotelName == null)
             {
                 Util.restartApp(this);
                 return;
@@ -180,11 +168,11 @@ public class HotelDetailActivity extends BaseActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(hotelName, hotelImageUrl);
+        }
 
-            if (calendarFlag == 1)
-            {
-                startCalendar(mCheckInSaleTime, nights);
-            }
+        if (calendarFlag == 1)
+        {
+            startCalendar(mCheckInSaleTime, nights);
         }
     }
 

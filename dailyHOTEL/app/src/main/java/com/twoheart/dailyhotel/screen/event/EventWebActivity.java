@@ -108,7 +108,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        mEventName = intent.getParcelableExtra(INTENT_EXTRA_DATA_EVENTNAME);
+        mEventName = intent.getStringExtra(INTENT_EXTRA_DATA_EVENTNAME);
 
         setContentView(R.layout.activity_event_web);
 
@@ -217,8 +217,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
+            SaleTime checkInSaleTime = saleTime.getClone(0);
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            long dailyTime = saleTime.getDailyTime();
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
             int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
 
@@ -244,7 +244,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+                Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                 dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
@@ -254,11 +254,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             }
 
+            checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+
             Intent intent = new Intent(EventWebActivity.this, HotelDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
 
@@ -281,8 +282,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
+            SaleTime gourmetSaleTime = saleTime.getClone(0);
             int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            long dailyTime = saleTime.getDailyTime();
             int nights = 1;
             int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
 
@@ -303,9 +304,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+                Date dailyDate = format.parse(gourmetSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                 dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                ExLog.d(schemeDate + " / " + dailyDate + " / " + dailyDayOfDays );
 
                 if (dailyDayOfDays < 0)
                 {
@@ -313,11 +316,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             }
 
+            gourmetSaleTime.setOffsetDailyDay(dailyDayOfDays);
+
             Intent intent = new Intent(EventWebActivity.this, GourmetDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnbIndex);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, gourmetSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
 
@@ -526,7 +530,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=su&rc=209329";
 
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hebw&url=http%3A%2F%2Fm.dailyhotel.co.kr%2Fbanner%2F160701coupon%2F";
-                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=5&cal=1";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=5&cal=1";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=3";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160731&cal=1";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160721";
 
                     DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
                     dailyDeepLink.setDeepLink(Uri.parse(uri));
