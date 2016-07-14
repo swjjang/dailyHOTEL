@@ -284,7 +284,7 @@ public class HotelDetailListAdapter extends BaseAdapter
         SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
         String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
 
-        dateView.setText(String.format("%s - %s", checkInDate,checkOutDate));
+        dateView.setText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mHotelDetail.nights));
 
         changeDateView.setOnClickListener(new OnClickListener()
         {
