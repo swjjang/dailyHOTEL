@@ -327,7 +327,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             if (DEBUG == false && Util.isTextEmpty(message) == false)
             {
-                Crashlytics.logException(new RuntimeException("message"));
+                Crashlytics.logException(new RuntimeException(message));
             }
 
             onError();
