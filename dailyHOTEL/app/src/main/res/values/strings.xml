@@ -47,6 +47,7 @@
     <string name="label_filter">필터</string>
     <string name="label_phone">전화</string>
     <string name="label_location">위치</string>
+    <string name="label_visit_day">방문일</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -869,7 +870,9 @@
     <!-- Search Calendar -->
     <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
     <string name="message_calendar_placelist_reset">방문하실 날짜를 확인해주세요.\n재설정하시려면 다른 날짜를 선택해주세요.</string>
-    <string name="label_calendar_search_selected_date">선택 날짜로 검색하기</string>
+    <string name="label_calendar_search_selected_date">선택 완료</string>
+    <string name="label_calendar_gourmet_search_selected_date">방문일 선택 완료</string>
+    <string name="label_calendar_stay_search_selected_date">%1$d박 선택 완료</string>
     <string name="message_calendar_search_reset">검색하실 날짜를 확인해주세요.\n재설정하시려면 다른 날짜를 선택해주세요.</string>
 
     <string name="information_empty_name_n_email_after_login">신속한 예약 확인 및 안내를 위해\n고객님의 이름과 이메일을 등록해주세요.</string>

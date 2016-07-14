@@ -43,12 +43,19 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
         {
-            SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
+            try
+            {
+                SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
 
-            StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
-            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-            StayCurationManager.getInstance().setCheckOutSaleTime( //
-                checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+                StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
+                SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+                StayCurationManager.getInstance().setCheckOutSaleTime( //
+                    checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+            } catch (Exception e)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
         }
 
         setDateText(GourmetCurationManager.getInstance().getSaleTime());
@@ -300,6 +307,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchEnabled(boolean enabled)
         {
+            if (mOnSearchFragmentListener == null)
+            {
+                return;
+            }
+
             mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 

@@ -228,21 +228,21 @@ public class StayListFragment extends PlaceListFragment
                 Crashlytics.logException(e);
             }
 
-            MainActivity mainActivity = (MainActivity)getActivity();
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            MainActivity mainActivity = (MainActivity)getActivity();
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            MainActivity mainActivity = (MainActivity)getActivity();
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("message : " + message);
         }
 

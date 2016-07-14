@@ -8,7 +8,7 @@
     <View
         android:id="@+id/exitView"
         android:layout_width="match_parent"
-        android:layout_height="133dp"/>
+        android:layout_height="92dp"/>
 
     <RelativeLayout
         android:id="@+id/animationLayout"
@@ -47,12 +47,12 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_below="@+id/toolbarLayout"
-            android:background="@color/tab_underline"/>
+            android:background="@color/default_line_ce7e7e7"/>
 
         <LinearLayout
             android:id="@+id/weekLayout"
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="25dp"
             android:layout_below="@+id/underLine"
             android:background="@color/white">
 
@@ -73,7 +73,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_monday"
-                android:textColor="@color/calendar_week_text_default"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -83,7 +83,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_tuesday"
-                android:textColor="@color/calendar_week_text_default"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -93,7 +93,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_wednesday"
-                android:textColor="@color/calendar_week_text_default"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -103,7 +103,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_thursday"
-                android:textColor="@color/calendar_week_text_default"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -113,7 +113,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_friday"
-                android:textColor="@color/calendar_week_text_default"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -123,7 +123,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_saturday"
-                android:textColor="@color/calendar_week_text_default"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
         </LinearLayout>
 
@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_below="@+id/weekLayout"
-            android:background="@color/calendar_month_line"/>
+            android:background="@color/default_line_ce7e7e7"/>
 
         <ScrollView
             android:id="@+id/calendarScrollLayout"

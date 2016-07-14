@@ -2,6 +2,7 @@
 <resources>
     <color name="dh_theme_color">#900034</color>
     <color name="dh_theme_color_a10">#1A900034</color>
+    <color name="dh_theme_color_a8">#14900034</color>
 
     <color name="actionbar_border">#7f7f7f</color>
 
