@@ -277,15 +277,16 @@ public class HotelDetailListAdapter extends BaseAdapter
         }
 
         TextView dateView = (TextView) view.findViewById(R.id.dateView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
 
         // 체크인체크아웃 날짜
         final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
         SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
         String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
 
-        dateView.setText(checkInDate + " - " + checkOutDate);
+        dateView.setText(String.format("%s - %s", checkInDate,checkOutDate));
 
-        dateView.setOnClickListener(new OnClickListener()
+        changeDateView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
