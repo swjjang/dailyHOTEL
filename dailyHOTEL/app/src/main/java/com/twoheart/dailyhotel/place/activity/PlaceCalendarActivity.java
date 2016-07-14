@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -36,7 +38,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private static final int ANIMATION_DEALY = 200;
 
     protected View mCancelView, mToastView;
-    protected TextView[] mDailyTextViews;
+    protected View[] mDailyViews;
 
     protected View mAnimationLayout; // 애니메이션 되는 뷰
     private View mDisableLayout; // 전체 화면을 덮는 뷰
@@ -75,7 +77,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDisableLayout = findViewById(R.id.disableLayout);
         mBackgroundView = (View) mExitView.getParent();
 
-        mDailyTextViews = new DailyTextView[dayCountOfMax];
+        mDailyViews = new View[dayCountOfMax];
 
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -102,7 +104,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             calendar.set(Calendar.DAY_OF_MONTH, 1);
         }
 
-        mDailyTextViews[dayCountOfMax - 1].setEnabled(false);
+        mDailyViews[dayCountOfMax - 1].setEnabled(false);
     }
 
     protected void initToolbar(String title)
@@ -143,10 +145,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
         android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
 
-        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("M", Locale.KOREA);
+        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("yyyy.MM", Locale.KOREA);
         simpleDayFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        monthTextView.setText(simpleDayFormat.format(calendar.getTime()) + "월");
+        monthTextView.setText(simpleDayFormat.format(calendar.getTime()));
 
         // day
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -175,48 +177,69 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         int enableDayCount = enableDayCountMax < 0 ? 0 : enableDayCountMax;
-        TextView textView;
+        View dayView;
 
         for (Day dayClass : days)
         {
-            textView = getDayView(context, dayClass);
+            dayView = getDayView(context, dayClass);
 
             if (dayClass != null)
             {
-                mDailyTextViews[dayClass.dayTime.getOffsetDailyDay()] = textView;
+                mDailyViews[dayClass.dayTime.getOffsetDailyDay()] = dayView;
 
                 if (enableDayCount-- <= 0)
                 {
-                    textView.setEnabled(false);
+                    dayView.setEnabled(false);
                 }
             }
 
-            calendarGridLayout.addView(textView);
+            calendarGridLayout.addView(dayView);
         }
 
         return calendarLayout;
     }
 
-    public TextView getDayView(Context context, Day day)
+    public View getDayView(Context context, Day day)
     {
+        RelativeLayout relativeLayout = new RelativeLayout(context);
+
+        DailyTextView visitTextView = new DailyTextView(context);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        visitTextView.setTextColor(getResources().getColor(R.color.white));
+        visitTextView.setDuplicateParentStateEnabled(true);
+        visitTextView.setId(R.id.textView);
+        visitTextView.setVisibility(View.INVISIBLE);
+
+        RelativeLayout.LayoutParams visitLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        visitLayoutParams.topMargin = Util.dpToPx(context, 5);
+
+        relativeLayout.addView(visitTextView, visitLayoutParams);
+
         DailyTextView dayTextView = new DailyTextView(context);
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        dayTextView.setGravity(Gravity.CENTER);
-        dayTextView.setTypeface(dayTextView.getTypeface(), Typeface.NORMAL);
+        dayTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dayTextView.setDuplicateParentStateEnabled(true);
+
+        RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dayLayoutParams.bottomMargin = Util.dpToPx(context, 6);
+        dayLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        relativeLayout.addView(dayTextView, dayLayoutParams);
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = Util.dpToPx(context, 38);
+        layoutParams.height = Util.dpToPx(context, 45);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        dayTextView.setLayoutParams(layoutParams);
-        dayTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
+        relativeLayout.setLayoutParams(layoutParams);
+        relativeLayout.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
 
         if (day == null)
         {
             dayTextView.setText(null);
-            dayTextView.setTag(null);
-            dayTextView.setEnabled(false);
+            relativeLayout.setTag(null);
+            relativeLayout.setEnabled(false);
         } else
         {
             switch (day.dayOfWeek)
@@ -232,12 +255,12 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             }
 
             dayTextView.setText(day.day);
-            dayTextView.setTag(day);
+            relativeLayout.setTag(day);
         }
 
-        dayTextView.setOnClickListener(this);
+        relativeLayout.setOnClickListener(this);
 
-        return dayTextView;
+        return relativeLayout;
     }
 
     private int getMonthInterval(final Calendar calendar, int interval)
@@ -261,7 +284,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     {
         if (enabled == true)
         {
-
             mDisableLayout.setVisibility(View.GONE);
             mDisableLayout.setOnClickListener(null);
         } else

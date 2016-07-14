@@ -185,7 +185,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             default:
             {
                 Day day = (Day) view.getTag();
-                DailyTextView dailyTextView = (DailyTextView) view;
 
                 if (day == null)
                 {
@@ -199,7 +198,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 mDay = day;
 
-                dailyTextView.setSelected(true);
+                view.setSelected(true);
                 setToolbarText(day.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
 
                 setDaysEnable(view, false);
@@ -220,13 +219,13 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        for (TextView dayTextView : mDailyTextViews)
+        for (View dayView : mDailyViews)
         {
-            Day day = (Day) dayTextView.getTag();
+            Day day = (Day) dayView.getTag();
 
             if (saleTime.isDayOfDaysDateEquals(day.dayTime) == true)
             {
-                dayTextView.performClick();
+                dayView.performClick();
                 break;
             }
         }
@@ -234,11 +233,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     private void setDaysEnable(View view, boolean enable)
     {
-        for (TextView textview : mDailyTextViews)
+        for (View dayView : mDailyViews)
         {
-            if (view != textview)
+            if (view != dayView)
             {
-                textview.setEnabled(enable);
+                dayView.setEnabled(enable);
             }
         }
     }
@@ -247,26 +246,26 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     {
         mIsChanged = true;
 
-        int length = mDailyTextViews.length;
+        int length = mDailyViews.length;
 
         for (int i = 0; i < length; i++)
         {
             if (i < ENABLE_DAYCOUNT_OF_MAX)
             {
-                mDailyTextViews[i].setEnabled(true);
+                mDailyViews[i].setEnabled(true);
             } else
             {
-                mDailyTextViews[i].setEnabled(false);
+                mDailyViews[i].setEnabled(false);
             }
 
-            mDailyTextViews[i].setSelected(false);
+            mDailyViews[i].setSelected(false);
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));
         mConfirmTextView.setEnabled(false);
 
         setCancelViewVisibility(View.GONE);
-        mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
+        mDailyViews[mDailyViews.length - 1].setEnabled(false);
 
         setToastVisibility(View.GONE);
     }

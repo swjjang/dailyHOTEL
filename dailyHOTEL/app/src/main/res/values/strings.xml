@@ -46,6 +46,7 @@
     <string name="label_filter">필터</string>
     <string name="label_phone">전화</string>
     <string name="label_location">위치</string>
+    <string name="label_visit_day">방문일</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
