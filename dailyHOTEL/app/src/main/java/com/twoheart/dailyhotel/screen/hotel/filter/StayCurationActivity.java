@@ -425,6 +425,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void requestUpdateResult()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        {
+            Util.restartApp(StayCurationActivity.this);
+            return;
+        }
+
         mLastParams = getStayParams();
         super.requestUpdateResult();
     }
@@ -433,6 +440,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void requestUpdateResultDelayed()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        {
+            Util.restartApp(StayCurationActivity.this);
+            return;
+        }
         mLastParams = getStayParams();
         super.requestUpdateResultDelayed();
     }
