@@ -61,7 +61,7 @@ public class StayDetailLayout
     private SaleRoomInformation mSelectedSaleRoomInformation;
 
     private RecyclerView mRoomTypeRecyclerView;
-    private HotelDetailRoomTypeListAdapter mRoomTypeListAdapter;
+    private StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
     private View mRoomTypeLayout;
     private View mBottomLayout;
     private View mRoomTypeBackgroundView;
@@ -240,7 +240,7 @@ public class StayDetailLayout
         {
             mSelectedSaleRoomInformation = saleRoomList.get(0);
 
-            mRoomTypeListAdapter = new HotelDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
+            mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
