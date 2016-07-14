@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -219,7 +219,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
-            Intent intent = new Intent(StaySearchResultActivity.this, HotelDetailActivity.class);
+            Intent intent = new Intent(StaySearchResultActivity.this, StayDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);

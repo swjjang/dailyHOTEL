@@ -27,7 +27,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -294,8 +294,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             switch (mPlaceDetailLayout.getBookingStatus())
             {
-                case HotelDetailLayout.STATUS_BOOKING:
-                case HotelDetailLayout.STATUS_NONE:
+                case StayDetailLayout.STATUS_BOOKING:
+                case StayDetailLayout.STATUS_NONE:
                     mOnUserActionListener.hideTicketInformationLayout();
                     return;
             }

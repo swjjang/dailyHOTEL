@@ -27,7 +27,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
@@ -271,7 +271,7 @@ public class StayMainFragment extends PlaceMainFragment
                 DailyPreference.getInstance(mBaseActivity).setGASelectedRegion(region);
                 DailyPreference.getInstance(mBaseActivity).setGAHotelName(stay.name);
 
-                Intent intent = new Intent(mBaseActivity, HotelDetailActivity.class);
+                Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
@@ -317,7 +317,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         lockUI();
 
-        Intent intent = new Intent(mBaseActivity, HotelDetailActivity.class);
+        Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);

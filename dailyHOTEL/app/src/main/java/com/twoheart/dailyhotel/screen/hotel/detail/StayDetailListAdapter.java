@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -24,11 +24,11 @@ import com.twoheart.dailyhotel.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelDetailListAdapter extends BaseAdapter
+public class StayDetailListAdapter extends BaseAdapter
 {
     private static final int NUMBER_OF_ROWSLIST = 9;
 
-    private HotelDetail mHotelDetail;
+    private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
     private FragmentActivity mFragmentActivity;
     private View[] mDeatilViews;
@@ -38,13 +38,13 @@ public class HotelDetailListAdapter extends BaseAdapter
     private TextView mHotelNameTextView;
     protected View mMagicToolbar;
 
-    private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
+    private StayDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public HotelDetailListAdapter(FragmentActivity activity, HotelDetail hotelDetail, SaleTime checkInSaleTime, HotelDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
+    public StayDetailListAdapter(FragmentActivity activity, StayDetail stayDetail, SaleTime checkInSaleTime, StayDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
     {
         mFragmentActivity = activity;
-        mHotelDetail = hotelDetail;
+        mStayDetail = stayDetail;
         mCheckInSaleTime = checkInSaleTime;
         mDeatilViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(activity);
@@ -53,9 +53,9 @@ public class HotelDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(HotelDetail hotelDetail, SaleTime checkInSaleTime)
+    public void setData(StayDetail stayDetail, SaleTime checkInSaleTime)
     {
-        mHotelDetail = hotelDetail;
+        mStayDetail = stayDetail;
         mCheckInSaleTime = checkInSaleTime;
     }
 
@@ -112,7 +112,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
         }
 
-        getTitleView(mDeatilViews[1], mHotelDetail);
+        getTitleView(mDeatilViews[1], mStayDetail);
         linearLayout.addView(mDeatilViews[1]);
 
         // 주소 및 맵
@@ -121,18 +121,18 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
         }
 
-        getAddressView(mDeatilViews[2], mHotelDetail);
+        getAddressView(mDeatilViews[2], mStayDetail);
         linearLayout.addView(mDeatilViews[2]);
 
         // D Benefit
-        if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
+        if (Util.isTextEmpty(mStayDetail.hotelBenefit) == false)
         {
             if (mDeatilViews[3] == null)
             {
                 mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getDetailBenefitView(mDeatilViews[3], mHotelDetail);
+            getDetailBenefitView(mDeatilViews[3], mStayDetail);
             linearLayout.addView(mDeatilViews[3]);
         }
 
@@ -142,7 +142,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getDailysCommentView(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
+        getDailysCommentView(layoutInflater, (ViewGroup) mDeatilViews[4], mStayDetail);
         linearLayout.addView(mDeatilViews[4]);
 
         // 호텔 정보
@@ -151,7 +151,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
         }
 
-        getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mHotelDetail);
+        getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
         linearLayout.addView(mDeatilViews[5]);
 
         // 호텔 더보기 정보
@@ -160,7 +160,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
         }
 
-        getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mHotelDetail);
+        getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mStayDetail);
         linearLayout.addView(mDeatilViews[6]);
 
         // 확인 사항
@@ -169,7 +169,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
         }
 
-        getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mHotelDetail);
+        getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mStayDetail);
         linearLayout.addView(mDeatilViews[7]);
 
         // 카카오톡 문의
@@ -225,10 +225,10 @@ public class HotelDetailListAdapter extends BaseAdapter
      * 호텔 등급 및 이름
      *
      * @param view
-     * @param hotelDetail
+     * @param stayDetail
      * @return
      */
-    private View getTitleView(View view, HotelDetail hotelDetail)
+    private View getTitleView(View view, StayDetail stayDetail)
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
         mHotelTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
@@ -239,12 +239,12 @@ public class HotelDetailListAdapter extends BaseAdapter
         mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
         mHotelGradeTextView.setVisibility(View.VISIBLE);
 
-        mHotelGradeTextView.setText(hotelDetail.grade.getName(mFragmentActivity));
-        mHotelGradeTextView.setBackgroundResource(hotelDetail.grade.getColorResId());
+        mHotelGradeTextView.setText(stayDetail.grade.getName(mFragmentActivity));
+        mHotelGradeTextView.setBackgroundResource(stayDetail.grade.getColorResId());
 
         // 호텔명
         mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        mHotelNameTextView.setText(hotelDetail.hotelName);
+        mHotelNameTextView.setText(stayDetail.hotelName);
 
         int width = Util.getLCDWidth(mFragmentActivity) - Util.dpToPx(mFragmentActivity, 60) - Util.dpToPx(mFragmentActivity, 48);
         mHotelNameTextView.setTag(mHotelNameTextView.getId(), width);
@@ -267,13 +267,13 @@ public class HotelDetailListAdapter extends BaseAdapter
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
         // 만족도
-        if (Util.isTextEmpty(hotelDetail.satisfaction) == true)
+        if (Util.isTextEmpty(stayDetail.satisfaction) == true)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(hotelDetail.satisfaction);
+            satisfactionView.setText(stayDetail.satisfaction);
         }
 
         TextView dateView = (TextView) view.findViewById(R.id.dateView);
@@ -281,17 +281,17 @@ public class HotelDetailListAdapter extends BaseAdapter
 
         // 체크인체크아웃 날짜
         final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
-        SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+        SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mStayDetail.nights);
         String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
 
-        dateView.setText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mHotelDetail.nights));
+        dateView.setText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStayDetail.nights));
 
         changeDateView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mHotelDetail.nights);
+                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights);
             }
         });
 
@@ -302,17 +302,17 @@ public class HotelDetailListAdapter extends BaseAdapter
      * 호텔 주소 및 맵
      *
      * @param view
-     * @param hotelDetail
+     * @param stayDetail
      * @return
      */
-    private View getAddressView(final View view, HotelDetail hotelDetail)
+    private View getAddressView(final View view, StayDetail stayDetail)
     {
         view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 주소지
         final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
 
-        final String address = hotelDetail.address;
+        final String address = stayDetail.address;
         hotelAddressTextView.setText(address);
 
         View clipAddress = view.findViewById(R.id.copyAddressView);
@@ -362,7 +362,7 @@ public class HotelDetailListAdapter extends BaseAdapter
         String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
         String iconUrl = "http://s3.dailyhotel.kr/resources/images/_banner/googlemap_marker-1.png";
         String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-            , size, iconUrl, mHotelDetail.latitude, mHotelDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+            , size, iconUrl, mStayDetail.latitude, mStayDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         mapImageView.setImageURI(Uri.parse(url));
 
@@ -400,16 +400,16 @@ public class HotelDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getDetailBenefitView(View view, HotelDetail hotelDetail)
+    private View getDetailBenefitView(View view, StayDetail stayDetail)
     {
-        if (view == null || hotelDetail == null)
+        if (view == null || stayDetail == null)
         {
             return view;
         }
 
         final TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
 
-        final String benefit = hotelDetail.hotelBenefit;
+        final String benefit = stayDetail.hotelBenefit;
 
         benefitTextView.setText(benefit);
         return view;
@@ -420,19 +420,19 @@ public class HotelDetailListAdapter extends BaseAdapter
      *
      * @param layoutInflater
      * @param viewGroup
-     * @param hotelDetail
+     * @param stayDetail
      * @return
      */
-    private View getDailysCommentView(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
+    private View getDailysCommentView(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
     {
-        if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+        if (layoutInflater == null || viewGroup == null || stayDetail == null)
         {
             return viewGroup;
         }
 
         View topDividerViw = viewGroup.findViewById(R.id.topDividerViw);
 
-        if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
+        if (Util.isTextEmpty(mStayDetail.hotelBenefit) == false)
         {
             topDividerViw.setVisibility(View.GONE);
         } else
@@ -440,7 +440,7 @@ public class HotelDetailListAdapter extends BaseAdapter
             topDividerViw.setVisibility(View.VISIBLE);
         }
 
-        ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
+        ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
 
         if (arrayList != null)
         {
@@ -457,19 +457,19 @@ public class HotelDetailListAdapter extends BaseAdapter
      *
      * @param layoutInflater
      * @param viewGroup
-     * @param hotelDetail
+     * @param stayDetail
      * @return
      */
-    private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
+    private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
     {
-        if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+        if (layoutInflater == null || viewGroup == null || stayDetail == null)
         {
             return viewGroup;
         }
 
         viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
-        ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
+        ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
 
         if (arrayList != null)
         {
@@ -486,16 +486,16 @@ public class HotelDetailListAdapter extends BaseAdapter
      *
      * @return
      */
-    private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
+    private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
     {
-        if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+        if (layoutInflater == null || viewGroup == null || stayDetail == null)
         {
             return viewGroup;
         }
 
         viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
-        ArrayList<DetailInformation> arrayList = hotelDetail.getMoreInformation();
+        ArrayList<DetailInformation> arrayList = stayDetail.getMoreInformation();
 
         if (arrayList != null)
         {
@@ -519,16 +519,16 @@ public class HotelDetailListAdapter extends BaseAdapter
      *
      * @return
      */
-    private View getDeatil07View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
+    private View getDeatil07View(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
     {
-        if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+        if (layoutInflater == null || viewGroup == null || stayDetail == null)
         {
             return viewGroup;
         }
 
         viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
-        ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
+        ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
 
         if (arrayList != null && arrayList.size() >= 3)
         {

@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -256,7 +256,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
 
-            Intent intent = new Intent(EventWebActivity.this, HotelDetailActivity.class);
+            Intent intent = new Intent(EventWebActivity.this, StayDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);

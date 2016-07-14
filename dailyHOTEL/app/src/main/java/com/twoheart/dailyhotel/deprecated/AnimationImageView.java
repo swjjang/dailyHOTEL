@@ -13,7 +13,7 @@ import android.os.Message;
 import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -35,7 +35,7 @@ public class AnimationImageView extends ImageView
 
     private Matrix mMatrix;
 
-    private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
+    private StayDetailActivity.OnUserActionListener mOnUserActionListener;
     private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
     private Handler mAnimationHandler;
@@ -252,7 +252,7 @@ public class AnimationImageView extends ImageView
         setImageMatrix(mMatrix);
     }
 
-    public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
+    public void setOnAnimationListener(StayDetailActivity.OnUserActionListener listener)
     {
         mOnUserActionListener = listener;
     }

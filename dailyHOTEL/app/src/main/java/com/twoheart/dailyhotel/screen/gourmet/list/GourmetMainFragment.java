@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -669,7 +669,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                     if (eventBanner.isHotel() == true)
                     {
-                        Intent intent = new Intent(mBaseActivity, HotelDetailActivity.class);
+                        Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, eventBanner.index);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
