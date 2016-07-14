@@ -149,6 +149,11 @@ public class StayDetailActivity extends BaseActivity
             mIsStartByShare = true;
 
             initLayout(null, null);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, nights, false);
+            }
         } else
         {
             mIsStartByShare = false;
@@ -170,11 +175,11 @@ public class StayDetailActivity extends BaseActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(hotelName, hotelImageUrl);
-        }
 
-        if (calendarFlag == 1)
-        {
-            startCalendar(mCheckInSaleTime, nights);
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, nights, true);
+            }
         }
     }
 
@@ -413,14 +418,14 @@ public class StayDetailActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
-    private void startCalendar(SaleTime checkInSaleTime, int nights)
+    private void startCalendar(SaleTime checkInSaleTime, int nights, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(StayDetailActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.NONE, true, true);
+        Intent intent = StayCalendarActivity.newInstance(StayDetailActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.NONE, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -827,7 +832,7 @@ public class StayDetailActivity extends BaseActivity
         @Override
         public void onCalendarClick(SaleTime checkInSaleTime, int nights)
         {
-            startCalendar(checkInSaleTime, nights);
+            startCalendar(checkInSaleTime, nights, true);
         }
     };
 

@@ -113,7 +113,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void showNavigatorDialog();
 
-    protected abstract void startCalendar(SaleTime saleTime);
+    protected abstract void startCalendar(SaleTime saleTime, boolean isAnimation);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -152,6 +152,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             initLayout(null, null);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, false);
+            }
         } else
         {
             mIsStartByShare = false;
@@ -177,11 +182,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(placeName, imageUrl);
-        }
 
-        if (calendarFlag == 1)
-        {
-            startCalendar(mCheckInSaleTime);
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, true);
+            }
         }
     }
 
@@ -717,7 +722,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void onCalendarClick(SaleTime saleTime)
         {
-            startCalendar(saleTime);
+            startCalendar(saleTime, false);
         }
     };
 

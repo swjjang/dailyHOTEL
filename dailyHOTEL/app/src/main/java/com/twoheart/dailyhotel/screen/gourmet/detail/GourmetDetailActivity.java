@@ -155,14 +155,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void startCalendar(SaleTime saleTime)
+    protected void startCalendar(SaleTime saleTime, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, AnalyticsManager.ValueType.LIST, true, true);
+        Intent intent = GourmetCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, AnalyticsManager.ValueType.LIST, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
