@@ -405,6 +405,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     private void setMenuBarLayoutTranslationY(float dy)
     {
+        if (mBottomOptionLayout == null || mMenuBarLayout == null)
+        {
+            return;
+        }
+
         mBottomOptionLayout.setTranslationY(dy);
         mMenuBarLayout.setTranslationY(dy);
     }
