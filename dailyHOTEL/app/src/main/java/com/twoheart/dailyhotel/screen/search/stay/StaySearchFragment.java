@@ -44,9 +44,16 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         if (GourmetCurationManager.getInstance().getSaleTime() == null)
         {
-            SaleTime saleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(0);
+            try
+            {
+                SaleTime saleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(0);
 
-            GourmetCurationManager.getInstance().setSaleTime(saleTime);
+                GourmetCurationManager.getInstance().setSaleTime(saleTime);
+            } catch (Exception e)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
         }
 
         setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
@@ -316,6 +323,11 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchEnabled(boolean enabled)
         {
+            if (mOnSearchFragmentListener == null)
+            {
+                return;
+            }
+
             mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 

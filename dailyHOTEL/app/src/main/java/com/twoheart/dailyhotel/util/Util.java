@@ -1261,8 +1261,11 @@ public class Util implements Constants
                 String timeZone = iso8601.substring(index + 1);
                 if (timeZone.contains(":"))
                 {
-                    // 정상
-                    ExLog.d("iso8601 is good format");
+                    if(DEBUG == true)
+                    {
+                        // 정상
+                        ExLog.d("iso8601 is good format");
+                    }
                 } else if (timeZone.length() == 4)
                 {
                     iso8601 = iso8601.substring(0, index + 1) + //
@@ -1270,22 +1273,31 @@ public class Util implements Constants
                         timeZone.substring(2);
                 } else
                 {
-                    // 비정상 텍스트
-                    ExLog.d("iso8601 is wrong format");
+                    if(DEBUG == true)
+                    {
+                        // 비정상 텍스트
+                        ExLog.d("iso8601 is wrong format");
+                    }
                 }
             } else
             {
-                // 비정상 텍스트
-                ExLog.d("iso8601 is wrong format, timezone size zero,  set text '+09:00'");
-                iso8601 = iso8601.substring(0, index) + "+09:00";
+                if(DEBUG == true)
+                {
+                    // 비정상 텍스트
+                    ExLog.d("iso8601 is wrong format, timezone size zero,  set text '+09:00'");
+                }
 
+                iso8601 = iso8601.substring(0, index) + "+09:00";
             }
         } else
         {
-            // 비정상 텍스트
-            ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");
-            iso8601 = iso8601.replaceAll("Z", "") + "+09:00";
+            if(DEBUG == true)
+            {
+                // 비정상 텍스트
+                ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");
+            }
 
+            iso8601 = iso8601.replaceAll("Z", "") + "+09:00";
         }
 
         return iso8601;
