@@ -26,13 +26,11 @@ import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -41,13 +39,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 public class StayMainFragment extends PlaceMainFragment
 {
@@ -1142,39 +1137,39 @@ public class StayMainFragment extends PlaceMainFragment
 
             if (eventBanner.isDeepLink() == true)
             {
-                try
-                {
-                    Calendar calendar = DailyCalendar.getInstance();
-                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-                    calendar.setTimeInMillis(eventBanner.checkInTime);
-
-                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    Date schemeDate = format.parse(format.format(calendar.getTime()));
-                    Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                    checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
-
-                    if (eventBanner.isHotel() == true)
-                    {
-                        startStayDetailByDeeplink(eventBanner.index, checkInSaleTime, eventBanner.nights);
-                    } else
-                    {
-                        Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
-
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, eventBanner.index);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
+                //                try
+                //                {
+                //                    Calendar calendar = DailyCalendar.getInstance();
+                //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
+                //                    calendar.setTimeInMillis(eventBanner.checkInTime);
+                //
+                //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                //                    Date schemeDate = format.parse(format.format(calendar.getTime()));
+                //                    Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+                //
+                //                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+                //
+                //                    checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+                //
+                //                    if (eventBanner.isHotel() == true)
+                //                    {
+                //                        startStayDetailByDeeplink(eventBanner.index, checkInSaleTime, eventBanner.nights);
+                //                    } else
+                //                    {
+                //                        Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
+                //
+                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, eventBanner.index);
+                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+                //
+                //                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                //                    }
+                //                } catch (Exception e)
+                //                {
+                //                    ExLog.e(e.toString());
+                //                }
             } else
             {
                 Intent intent = EventWebActivity.newInstance(mBaseActivity, //

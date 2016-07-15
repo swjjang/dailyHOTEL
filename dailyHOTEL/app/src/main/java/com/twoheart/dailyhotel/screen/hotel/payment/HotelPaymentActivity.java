@@ -72,11 +72,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -1792,7 +1790,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     params.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
                     params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
 
-                    String expireDate = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm");
+                    //                    String expireDate = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm");
+                    String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
                     params.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
                     break;
                 }
@@ -1845,9 +1844,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         try
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
+            //            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
+            //            Date date = new Date();
+            //            String strDate = dateFormat.format(date);
+            String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
+
             String userIndex = paymentInformation.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
 
@@ -2257,39 +2258,53 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         Calendar calendarCheckin = DailyCalendar.getInstance();
                         calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckin.setTimeInMillis(checkInDate);
-
-                        SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.M.d (EEE) HH시", Locale.KOREA);
-                        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                        mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
+                        //
+                        //                        SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.M.d (EEE) HH시", Locale.KOREA);
+                        //                        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        //
+                        //                        mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
+                        mCheckinDayTextView.setText(DailyCalendar.format(checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
 
                         // CheckOut
                         Calendar calendarCheckout = DailyCalendar.getInstance();
                         calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckout.setTimeInMillis(checkOutDate);
+                        //
+                        //                        mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
+                        mCheckoutDayTextView.setText(DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
 
-                        mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
-
-                        SimpleDateFormat checkInOutFormat = new SimpleDateFormat("yyyy.M.d(EEE) HH시", Locale.KOREA);
-                        checkInOutFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        //                        SimpleDateFormat checkInOutFormat = new SimpleDateFormat("yyyy.M.d(EEE) HH시", Locale.KOREA);
+                        //                        checkInOutFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                         if (Util.getLCDWidth(HotelPaymentActivity.this) >= 720)
                         {
+                            //                            hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
+                            //                                , checkInOutFormat.format(calendarCheckin.getTime())//
+                            //                                , checkInOutFormat.format(calendarCheckout.getTime()));
+
                             hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
-                                , checkInOutFormat.format(calendarCheckin.getTime())//
-                                , checkInOutFormat.format(calendarCheckout.getTime()));
+                                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
+                                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
+
                         } else
                         {
+                            //                            hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
+                            //                                , checkInOutFormat.format(calendarCheckin.getTime())//
+                            //                                , checkInOutFormat.format(calendarCheckout.getTime()));
+
                             hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
-                                , checkInOutFormat.format(calendarCheckin.getTime())//
-                                , checkInOutFormat.format(calendarCheckout.getTime()));
+                                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
+                                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
                         }
 
                         calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
                         calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
 
-                        hotelPaymentInformation.checkInDateFormat = Util.getISO8601String(calendarCheckin.getTime());
-                        hotelPaymentInformation.checkOutDateFormat = Util.getISO8601String(calendarCheckout.getTime());
+                        //                        hotelPaymentInformation.checkInDateFormat = Util.getISO8601String(calendarCheckin.getTime());
+                        //                        hotelPaymentInformation.checkOutDateFormat = Util.getISO8601String(calendarCheckout.getTime());
+
+                        hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
+                        hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
                         recordAnalyticsPayment(hotelPaymentInformation);
 
@@ -2595,12 +2610,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
             try
             {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                //                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //
+                //                int openHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime"))));
+                //                int closeHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime"))));
+                //                int currentHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("currentDateTime"))));
 
-                int openHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime"))));
-                int closeHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime"))));
-                int currentHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("currentDateTime"))));
+                int openHour = Integer.parseInt(DailyCalendar.format(response.getLong("openDateTime"), "HH", TimeZone.getTimeZone("GMT")));
+                int closeHour = Integer.parseInt(DailyCalendar.format(response.getLong("closeDateTime"), "HH", TimeZone.getTimeZone("GMT")));
+                int currentHour = Integer.parseInt(DailyCalendar.format(response.getLong("currentDateTime"), "HH", TimeZone.getTimeZone("GMT")));
 
                 // 당일인지 아닌지
                 if (mCheckInSaleTime.getOffsetDailyDay() == 0)

@@ -13,14 +13,12 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
@@ -184,25 +182,32 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         name.setText(booking.placeName);
 
-        Date checkinDate = new Date(booking.checkinTime);
-        Date checkOutDate = new Date(booking.checkoutTime);
+        //        Date checkinDate = new Date(booking.checkinTime);
+        //        Date checkOutDate = new Date(booking.checkoutTime);
 
         switch (booking.placeType)
         {
             case HOTEL:
             {
-                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-                sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                String period = String.format("%s - %s", sFormat.format(checkinDate), sFormat.format(checkOutDate));
+                //                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
+                //                sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //                String period = String.format("%s - %s", sFormat.format(checkinDate), sFormat.format(checkOutDate));
+
+                String period = String.format("%s - %s"//
+                    , DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT"))//
+                    , DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")));
+
                 day.setText(period);
                 break;
             }
 
             case FNB:
             {
-                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-                sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                String period = sFormat.format(checkinDate);
+                //                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
+                //                sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //                String period = sFormat.format(checkinDate);
+                String period = DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT"));
+
                 day.setText(period);
                 break;
             }

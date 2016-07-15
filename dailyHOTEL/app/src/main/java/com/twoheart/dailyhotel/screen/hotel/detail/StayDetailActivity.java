@@ -35,11 +35,11 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -53,11 +53,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -574,8 +572,9 @@ public class StayDetailActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+        //        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        //        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+        params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.SOCIAL_SHARE_CLICKED, mStayDetail.hotelName, params);
@@ -1079,16 +1078,19 @@ public class StayDetailActivity extends BaseActivity
             {
                 if (mIsStartByShare == true)
                 {
-                    mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
                     long todayDailyTime = response.getLong("dailyDateTime");
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
 
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+                    //                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                    //                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    //
+                    //                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
+                    //                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+
+                    int shareDailyDay = Integer.parseInt(DailyCalendar.format(shareDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
+                    int todayDailyDay = Integer.parseInt(DailyCalendar.format(todayDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
 
                     // 지난 날의 호텔인 경우.
                     if (shareDailyDay < todayDailyDay)
@@ -1097,13 +1099,9 @@ public class StayDetailActivity extends BaseActivity
                         finish();
                         return;
                     }
-
-                    // 호텔 정보를 가져온다.
-                    DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mStayDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
-                } else
-                {
-                    DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mStayDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
                 }
+
+                DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mStayDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
             } catch (Exception e)
             {
                 onError(e);

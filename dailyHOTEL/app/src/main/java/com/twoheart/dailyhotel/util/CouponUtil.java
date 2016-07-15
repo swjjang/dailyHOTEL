@@ -219,8 +219,11 @@ public class CouponUtil
 
         try
         {
-            String strStart = Util.simpleDateFormatISO8601toFormat(startTime, "yyyy.MM.dd");
-            String strEnd = Util.simpleDateFormatISO8601toFormat(endTime, "yyyy.MM.dd");
+            //            String strStart = Util.simpleDateFormatISO8601toFormat(startTime, "yyyy.MM.dd");
+            //            String strEnd = Util.simpleDateFormatISO8601toFormat(endTime, "yyyy.MM.dd");
+
+            String strStart = DailyCalendar.convertDateFormatString(startTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            String strEnd = DailyCalendar.convertDateFormatString(endTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
             availableDatesString = String.format("%s ~ %s", strStart, strEnd);
 
@@ -247,7 +250,8 @@ public class CouponUtil
 
         try
         {
-            currentDate = Util.getISO8601Date(serverDate);
+            //            currentDate = Util.getISO8601Date(serverDate);
+            currentDate = DailyCalendar.convertDate(serverDate, DailyCalendar.ISO_8601_FORMAT);
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());
@@ -257,7 +261,8 @@ public class CouponUtil
 
         try
         {
-            endDate = Util.getISO8601Date(validTo);
+            //            endDate = Util.getISO8601Date(validTo);
+            endDate = DailyCalendar.convertDate(validTo, DailyCalendar.ISO_8601_FORMAT);
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());

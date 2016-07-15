@@ -37,10 +37,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class MainActivity extends BaseActivity implements Constants
@@ -890,12 +888,16 @@ public class MainActivity extends BaseActivity implements Constants
             try
             {
                 // 요청하면서 CS운영시간도 같이 받아온다.
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                //                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //
+                //                String text = getString(R.string.dialog_message_cs_operating_time //
+                //                    , Integer.parseInt(simpleDateFormat.format(new Date(openDateTime))) //
+                //                    , Integer.parseInt(simpleDateFormat.format(new Date(closeDateTime))));
 
                 String text = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(openDateTime))) //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(closeDateTime))));
+                    , Integer.parseInt(DailyCalendar.format(openDateTime, "HH", TimeZone.getTimeZone("GMT"))) //
+                    , Integer.parseInt(DailyCalendar.format(closeDateTime, "HH", TimeZone.getTimeZone("GMT"))));
 
                 DailyPreference.getInstance(MainActivity.this).setOperationTimeMessage(text);
             } catch (Exception e)
@@ -912,19 +914,22 @@ public class MainActivity extends BaseActivity implements Constants
             calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
             calendar.setTimeInMillis(currentDateTime);
 
-            String lastestTime = Util.getISO8601String(calendar.getTime());
+            //            String lastestTime = Util.getISO8601String(calendar.getTime());
+            String lastestTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             DailyPreference.getInstance(MainActivity.this).setLastestEventTime(lastestTime);
             DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(lastestTime);
 
             if (Util.isTextEmpty(viewedEventTime) == true)
             {
-                viewedEventTime = Util.getISO8601String(new Date(0L));
+                //                viewedEventTime = Util.getISO8601String(new Date(0L));
+                viewedEventTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
             if (Util.isTextEmpty(viewedCouponTime) == true)
             {
-                viewedCouponTime = Util.getISO8601String(new Date(0L));
+                //                viewedCouponTime = Util.getISO8601String(new Date(0L));
+                viewedCouponTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
             mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime);

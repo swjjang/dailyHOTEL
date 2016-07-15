@@ -57,11 +57,7 @@ import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -1165,143 +1161,65 @@ public class Util implements Constants
         }
     }
 
-    public static Date getISO8601Date(String time) throws ParseException, NullPointerException
-    {
-        if (isTextEmpty(time) == true)
-        {
-            throw new NullPointerException("time is empty");
-        }
+    //    public static Date getISO8601Date(String time) throws ParseException, NullPointerException
+    //    {
+    //        if (isTextEmpty(time) == true)
+    //        {
+    //            throw new NullPointerException("time is empty");
+    //        }
+    //
+    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
+    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+    //        return simpleDateFormat.parse(time);
+    //    }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-        return simpleDateFormat.parse(time);
-    }
+    //    public static String getISO8601String(long time)
+    //    {
+    //        Date date = new Date(time);
+    //
+    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
+    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+    //
+    //        String formatString = simpleDateFormat.format(date);
+    //
+    //        return formatString;
+    //    }
 
-    public static String getISO8601String(long time)
-    {
-        Date date = new Date(time);
+    //    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
+    //    {
+    //        if (Util.isTextEmpty(iso8601, format) == true)
+    //        {
+    //            throw new NullPointerException("iso8601, format is empty");
+    //        }
+    //
+    ////        Date date = getISO8601Date(iso8601);
+    //        Date date = DailyCalendar.convertDate(iso8601, DailyCalendar.ISO_8601_FORMAT);
+    //
+    //        return simpleDateFormat(date, format);
+    //    }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+    //    public static String simpleDateFormat(Date date, String format)
+    //    {
+    //        if (date == null || Util.isTextEmpty(format) == true)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.KOREA);
+    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+    //
+    //        return simpleDateFormat.format(date);
+    //    }
 
-        String formatString = simpleDateFormat.format(date);
-
-        return checkISO8601TimeZone(formatString);
-    }
-
-    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
-    {
-        if (Util.isTextEmpty(iso8601, format) == true)
-        {
-            throw new NullPointerException("iso8601, format is empty");
-        }
-
-        iso8601 = checkISO8601TimeZone(iso8601);
-
-        Date date = getISO8601Date(iso8601);
-
-        return simpleDateFormat(date, format);
-    }
-
-    public static String simpleDateFormat(Date date, String format)
-    {
-        if (date == null || Util.isTextEmpty(format) == true)
-        {
-            return null;
-        }
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-        return simpleDateFormat.format(date);
-    }
-
-    public static String getISO8601String(Date date)
-    {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-        String formatString = simpleDateFormat.format(date);
-
-        return checkISO8601TimeZone(formatString);
-    }
-
-    private static String checkISO8601TimeZone(String iso8601) throws NullPointerException
-    {
-        if (Util.isTextEmpty(iso8601) == true)
-        {
-            throw new NullPointerException("iso8601, format is empty");
-        }
-
-        if (iso8601.contains("GMT"))
-        {
-            iso8601 = iso8601.replaceAll("GMT", "");
-        }
-
-        int length = iso8601.length();
-
-        // 우선 GMT 기준으로 + 인 시간 찾고 없으면 - 인 시간 확인!
-        int index = iso8601.lastIndexOf("+");
-        if (index == -1)
-        {
-            int timeIndex = iso8601.lastIndexOf("T");
-            index = iso8601.lastIndexOf("-");
-
-            if (timeIndex >= index)
-            {
-                // 타임 값보다 적은 경우 인덱스 초기화
-                index = -1;
-            }
-        }
-
-        if (index != -1)
-        {
-            if (index < length - 1)
-            {
-                String timeZone = iso8601.substring(index + 1);
-                if (timeZone.contains(":"))
-                {
-                    if (DEBUG == true)
-                    {
-                        // 정상
-                        ExLog.d("iso8601 is good format");
-                    }
-                } else if (timeZone.length() == 4)
-                {
-                    iso8601 = iso8601.substring(0, index + 1) + //
-                        timeZone.substring(0, 2) + ":" + //
-                        timeZone.substring(2);
-                } else
-                {
-                    if (DEBUG == true)
-                    {
-                        // 비정상 텍스트
-                        ExLog.d("iso8601 is wrong format");
-                    }
-                }
-            } else
-            {
-                if (DEBUG == true)
-                {
-                    // 비정상 텍스트
-                    ExLog.d("iso8601 is wrong format, timezone size zero,  set text '+09:00'");
-                }
-
-                iso8601 = iso8601.substring(0, index) + "+09:00";
-            }
-        } else
-        {
-            if (DEBUG == true)
-            {
-                // 비정상 텍스트
-                ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");
-            }
-
-            iso8601 = iso8601.replaceAll("Z", "") + "+09:00";
-        }
-
-        return iso8601;
-    }
+    //    public static String getISO8601String(Date date)
+    //    {
+    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
+    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+    //
+    //        String formatString = simpleDateFormat.format(date);
+    //
+    //        return formatString;
+    //    }
 
     /**
      * String value 값 중 "true", "1", "Y", "y" 값을 true로 바꿔 주는 메소드

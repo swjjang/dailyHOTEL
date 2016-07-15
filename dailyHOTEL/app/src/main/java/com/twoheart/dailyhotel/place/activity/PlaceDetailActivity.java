@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -40,10 +41,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -879,16 +877,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 if (mIsStartByShare == true)
                 {
+                    long todayDailyTime = response.getLong("dailyDateTime");
+
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-
                     long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
-                    long todayDailyTime = response.getLong("dailyDateTime");
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+                    int shareDailyDay = Integer.parseInt(DailyCalendar.format(shareDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
+                    int todayDailyDay = Integer.parseInt(DailyCalendar.format(todayDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
 
                     // 지난 날의 호텔인 경우.
                     if (shareDailyDay < todayDailyDay)
@@ -898,37 +893,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         finish();
                         return;
                     }
-
-                    requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
-                } else
-                {
-                    SaleTime saleTime = new SaleTime();
-
-                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
-
-                    long todayDailyTime = response.getLong("dailyDateTime");
-                    saleTime.setDailyTime(todayDailyTime);
-
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
-
-                    // 지난 날의 호텔인 경우.
-                    if (shareDailyDay < todayDailyDay)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(PlaceDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                        finish();
-                        return;
-                    }
-
-                    requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
                 }
+
+                requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
             } catch (Exception e)
             {
                 onError(e);
