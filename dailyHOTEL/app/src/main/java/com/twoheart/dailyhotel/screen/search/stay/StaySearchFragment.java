@@ -180,8 +180,8 @@ public class StaySearchFragment extends PlaceSearchFragment
         mCheckInSaleTime = checkInSaleTime;
         mCheckOutSaleTime = checkOutSaleTime;
 
-        String checkInDate = checkInSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = checkOutSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
+        String checkInDate = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
         mPlaceSearchLayout.setDataText(String.format("%s - %s, %d박", checkInDate, checkOutDate, nights));

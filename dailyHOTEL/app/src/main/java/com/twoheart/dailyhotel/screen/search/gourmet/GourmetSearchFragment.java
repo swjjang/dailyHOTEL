@@ -176,7 +176,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         mSaleTime = saleTime;
 
-        mPlaceSearchLayout.setDataText(saleTime.getDailyDateFormat("yyyy.MM.dd(EEE)"));
+        mPlaceSearchLayout.setDataText(saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
