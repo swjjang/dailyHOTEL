@@ -34,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
+                android:gravity="center_horizontal"
                 android:text="@string/act_credit_line2"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="14dp"/>
@@ -53,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
+                android:gravity="center_horizontal"
                 android:text="@string/act_credit_line4"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="14dp"/>
