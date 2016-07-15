@@ -301,7 +301,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
                 unLockUI();
-
             }
 
             @Override

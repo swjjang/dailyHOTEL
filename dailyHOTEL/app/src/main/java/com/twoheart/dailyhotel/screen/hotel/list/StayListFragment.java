@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -130,6 +131,14 @@ public class StayListFragment extends PlaceListFragment
         }
 
         mPageIndex = page;
+
+        StayParams params = StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true);
+        if (SortType.DISTANCE == params.getSortType() && params.hasLocation() == false)
+        {
+            unLockUI();
+            Util.restartApp(mBaseActivity);
+            return;
+        }
 
         mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true));
     }

@@ -132,6 +132,36 @@ public class StayParams implements Parcelable
         }
     }
 
+    public Constants.SortType getSortType()
+    {
+        if (Util.isTextEmpty(sortProperty) == true)
+        {
+            return Constants.SortType.DEFAULT;
+        }
+
+        switch (sortProperty)
+        {
+            case "Distance":
+                return Constants.SortType.DISTANCE;
+            case "Price":
+                if ("Desc".equalsIgnoreCase(sortDirection))
+                {
+                    return Constants.SortType.LOW_PRICE;
+                }
+
+                return Constants.SortType.HIGH_PRICE;
+            case "Rating":
+                return Constants.SortType.SATISFACTION;
+        }
+
+        return Constants.SortType.DEFAULT;
+    }
+
+    public boolean hasLocation()
+    {
+        return (latitude == 0d || longitude == 0d) ? false : true;
+    }
+
     /**
      * http://dev.dailyhotel.me/goodnight/api/v3/hotels/sales?
      * dateCheckIn=2016-06-18
@@ -204,7 +234,7 @@ public class StayParams implements Parcelable
 
                     if ("longitude".equalsIgnoreCase(name) || "latitude".equalsIgnoreCase(name))
                     {
-                        if (longitude == 0d || latitude == 0d)
+                        if (hasLocation() == false)
                         {
                             // 해당 값이 0일때 파라메터에 더하지 않음
                             continue;

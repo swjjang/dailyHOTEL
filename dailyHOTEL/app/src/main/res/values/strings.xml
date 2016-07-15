@@ -142,7 +142,6 @@
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
     <string name="toast_msg_please_chk_network_status">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
-    <string name="toast_msg_please_input_booking_user_infos">예약자와 연락처, 이메일을 모두 입력해주십시요.</string>
     <string name="toast_msg_please_input_guest">투숙자를 입력해주세요.</string>
     <string name="toast_msg_please_input_guest_typeoverseas">해외 호텔 예약시에는 투숙자를 영문 성함으로 입력해주세요.</string>
     <string name="toast_msg_please_input_contact">연락처를 입력해주세요.</string>

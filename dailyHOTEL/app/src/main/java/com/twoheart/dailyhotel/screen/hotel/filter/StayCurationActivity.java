@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -21,13 +22,13 @@ import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -443,6 +444,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
         {
+            unLockUI();
             Util.restartApp(StayCurationActivity.this);
             return;
         }
@@ -515,7 +517,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             {
                 if (resultCode == RESULT_OK)
                 {
-                    checkedChangedDistance();
+                    //                    checkedChangedDistance();
+                    searchMyLocation();
                 } else
                 {
                     switch (mStayCurationOption.getSortType())
@@ -571,8 +574,9 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             case R.id.distanceCheckView:
             {
-                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                searchMyLocation();
+                //                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                //                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
                 return;
             }
 
@@ -684,7 +688,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mStayCurationOption.toString(), eventParams);
 
-        if (DEBUG == true)
+        if (Constants.DEBUG == true)
         {
             ExLog.d(mStayCurationOption.toString());
         }
@@ -714,6 +718,19 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
+    }
+
+    @Override
+    protected void onSearchLoacationResult(Location location)
+    {
+        if (location == null)
+        {
+            DailyToast.showToast(StayCurationActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+            mSortRadioGroup.check(R.id.regionCheckView);
+        } else
+        {
+            checkedChangedDistance();
+        }
     }
 
     private void checkedChangedDistance()

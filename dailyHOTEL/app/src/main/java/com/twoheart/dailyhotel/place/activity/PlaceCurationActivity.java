@@ -2,7 +2,11 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.TypedValue;
@@ -16,6 +20,9 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -51,6 +58,8 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     protected abstract void onReset();
 
     protected abstract void updateResultMessage();
+
+    protected abstract void onSearchLoacationResult(Location location);
 
     protected void initLayout()
     {
@@ -488,4 +497,121 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         }
     }
+
+    protected void searchMyLocation()
+    {
+        lockUI();
+
+        DailyLocationFactory.getInstance(PlaceCurationActivity.this).startLocationMeasure(PlaceCurationActivity.this, null, new DailyLocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                unLockUI();
+
+                Intent intent = PermissionManagerActivity.newInstance(PlaceCurationActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+                onSearchLoacationResult(null);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                DailyLocationFactory.getInstance(PlaceCurationActivity.this).stopLocationMeasure();
+
+                PlaceCurationActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, false);
+
+
+                View.OnClickListener positiveListener = new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                };
+
+                View.OnClickListener negativeListener = new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onSearchLoacationResult(null);
+                    }
+                };
+
+                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        onSearchLoacationResult(null);
+                    }
+                };
+
+                PlaceCurationActivity.this.showSimpleDialog(//
+                    getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                    getString(R.string.dialog_btn_text_dosetting), //
+                    getString(R.string.dialog_btn_text_cancel), //
+                    positiveListener, negativeListener, cancelListener, null, true);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                DailyLocationFactory.getInstance(PlaceCurationActivity.this).stopLocationMeasure();
+
+                onSearchLoacationResult(location);
+            }
+        });
+    }
+
 }

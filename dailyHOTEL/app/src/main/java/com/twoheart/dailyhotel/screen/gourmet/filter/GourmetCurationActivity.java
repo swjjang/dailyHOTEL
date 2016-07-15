@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmet.filter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -17,13 +19,13 @@ import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -518,7 +520,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             {
                 if (resultCode == RESULT_OK)
                 {
-                    checkedChangedDistance();
+                    //                    checkedChangedDistance();
+                    searchMyLocation();
                 } else
                 {
                     switch (mGourmetCurationOption.getSortType())
@@ -573,8 +576,9 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
             case R.id.distanceCheckView:
             {
-                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                searchMyLocation();
+//                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+//                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
                 return;
             }
 
@@ -674,7 +678,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), eventParams);
 
-        if (DEBUG == true)
+        if (Constants.DEBUG == true)
         {
             ExLog.d(mGourmetCurationOption.toString());
         }
@@ -703,6 +707,20 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
     }
+
+    @Override
+    protected void onSearchLoacationResult(Location location)
+    {
+        if (location == null)
+        {
+            DailyToast.showToast(GourmetCurationActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+            mSortRadioGroup.check(R.id.regionCheckView);
+        } else
+        {
+            checkedChangedDistance();
+        }
+    }
+
 
     private void checkedChangedDistance()
     {
