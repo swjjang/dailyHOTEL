@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -133,10 +134,12 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         try
         {
             // Check In
-            String checkInDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkInDate, "yyyy.MM.dd(EEE) HH:mm");
+            //            String checkInDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkInDate, "yyyy.MM.dd(EEE) HH:mm");
+            String checkInDay = DailyCalendar.convertDateFormatString(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH:mm");
 
             // Check Out
-            String checkOutDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkOutDate, "yyyy.MM.dd(EEE) HH:mm");
+            //            String checkOutDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkOutDate, "yyyy.MM.dd(EEE) HH:mm");
+            String checkOutDay = DailyCalendar.convertDateFormatString(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH:mm");
 
             tvCheckIn.setText(checkInDay);
             tvCheckOut.setText(checkOutDay);
@@ -169,7 +172,8 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         try
         {
-            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+            //            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+            paymentDateTextView.setText(DailyCalendar.convertDateFormatString(bookingDetail.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());

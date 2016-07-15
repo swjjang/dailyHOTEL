@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -41,12 +42,9 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -204,10 +202,13 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 // 제목
                 titleTextView.setText(R.string.frag_rating_hotel_title);
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                String periodDate = String.format("%s - %s", simpleDateFormat.format(new Date(mCheckInDate)), simpleDateFormat.format(new Date(mCheckOutDate)));
+                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
+                //                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //
+                //                String periodDate = String.format("%s - %s", simpleDateFormat.format(new Date(mCheckInDate)), simpleDateFormat.format(new Date(mCheckOutDate)));
+                String periodDate = String.format("%s - %s"//
+                    , DailyCalendar.format(mCheckInDate, "MM/dd", TimeZone.getTimeZone("GMT"))//
+                    , DailyCalendar.format(mCheckOutDate, "MM/dd", TimeZone.getTimeZone("GMT")));
                 ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
                 break;
             }
@@ -217,10 +218,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 // 제목
                 titleTextView.setText(R.string.frag_rating_gourmet_title);
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
+                //                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //
+                //                String periodDate = simpleDateFormat.format(new Date(mCheckInDate));
+                String periodDate = DailyCalendar.format(mCheckInDate, "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT"));
 
-                String periodDate = simpleDateFormat.format(new Date(mCheckInDate));
                 ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
                 break;
             }

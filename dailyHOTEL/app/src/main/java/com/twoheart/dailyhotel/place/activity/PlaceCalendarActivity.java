@@ -22,9 +22,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
@@ -113,10 +111,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
         android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
 
-        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("yyyy.MM", Locale.KOREA);
-        simpleDayFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        monthTextView.setText(simpleDayFormat.format(calendar.getTime()));
+        //        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("yyyy.MM", Locale.KOREA);
+        //        simpleDayFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        monthTextView.setText(simpleDayFormat.format(calendar.getTime()));
+        monthTextView.setText(DailyCalendar.format(calendar.getTimeInMillis(), "yyyy.MM", TimeZone.getTimeZone("GMT")));
 
         // day
         final int day = calendar.get(Calendar.DAY_OF_MONTH);

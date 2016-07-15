@@ -577,8 +577,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             case R.id.distanceCheckView:
             {
                 searchMyLocation();
-//                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-//                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                //                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                //                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
                 return;
             }
 

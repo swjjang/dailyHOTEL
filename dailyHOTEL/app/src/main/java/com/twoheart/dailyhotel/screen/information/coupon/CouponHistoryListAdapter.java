@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.util.CouponUtil;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -105,7 +106,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
                 builder.append("만료일: ");
             }
 
-            builder.append(Util.simpleDateFormatISO8601toFormat(coupon.disabledAt, "yyyy.MM.dd"));
+            //            builder.append(Util.simpleDateFormatISO8601toFormat(coupon.disabledAt, "yyyy.MM.dd"));
+            builder.append(DailyCalendar.convertDateFormatString(coupon.disabledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
 
         } catch (Exception e)
         {

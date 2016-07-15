@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -115,7 +116,8 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
                 try
                 {
-                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
+                    //                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
+                    String reservationTime = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
                     String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
 
                     Util.showShareMapDialog(baseActivity, mPlaceBookingDetail.placeName//
@@ -143,7 +145,8 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
                 try
                 {
-                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
+                    //                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
+                    String reservationTime = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
                     String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
 
                     AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//

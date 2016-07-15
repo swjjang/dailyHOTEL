@@ -55,11 +55,8 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -260,14 +257,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         String placyType = String.format("%s X %d", ticketInformation.name, gourmetPaymentInformation.ticketCount);
 
-        Calendar calendarTime = DailyCalendar.getInstance();
-        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        SimpleDateFormat formatDay = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
-        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
-        String time = formatDay.format(calendarTime.getTime());
+        //        Calendar calendarTime = DailyCalendar.getInstance();
+        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
+        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
+        //        String time = formatDay.format(calendarTime.getTime());
+        String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 
         Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
@@ -724,9 +722,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         try
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
+            //            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+            //            Date date = new Date();
+            //            String strDate = dateFormat.format(date);
+            String strDate = DailyCalendar.format(new Date(), "yyMMddHHmmss");
             String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
 
@@ -810,13 +809,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
 
-            Calendar calendarTime = DailyCalendar.getInstance();
-            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+            //            Calendar calendarTime = DailyCalendar.getInstance();
+            //            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+            //
+            //            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            //            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+            //
+            //            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(gourmetPaymentInformation.ticketTime));
+            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
 
-            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(gourmetPaymentInformation.ticketTime));
             params.put(AnalyticsManager.KeyType.VISIT_HOUR, Long.toString(gourmetPaymentInformation.ticketTime));
 
             if (mProvince == null)
@@ -1288,14 +1289,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     gourmetPaymentInformation.getTicketInformation().discountPrice = discountPrice;
                     gourmetPaymentInformation.ticketMaxCount = maxCount;
 
-                    Calendar calendarCheckin = DailyCalendar.getInstance();
-                    calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    calendarCheckin.setTimeInMillis(sday);
-
-                    SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
-                    formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    gourmetPaymentInformation.checkInTime = formatDay.format(calendarCheckin.getTime());
+                    //                    Calendar calendarCheckin = DailyCalendar.getInstance();
+                    //                    calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    //                    calendarCheckin.setTimeInMillis(sday);
+                    //
+                    //                    SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
+                    //                    formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    //
+                    //                    gourmetPaymentInformation.checkInTime = formatDay.format(calendarCheckin.getTime());
+                    gourmetPaymentInformation.checkInTime = DailyCalendar.format(sday, "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"));
 
                     if (gourmetPaymentInformation.ticketTime == 0)
                     {

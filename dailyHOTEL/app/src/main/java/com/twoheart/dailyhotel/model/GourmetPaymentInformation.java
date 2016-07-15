@@ -4,9 +4,6 @@ import android.os.Parcel;
 
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class GourmetPaymentInformation extends PlacePaymentInformation
@@ -84,16 +81,17 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         int length = ticketTimes.length;
         String[] times = new String[length];
 
-        Calendar calendarTime = DailyCalendar.getInstance();
-        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //        Calendar calendarTime = DailyCalendar.getInstance();
+        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         for (int i = 0; i < length; i++)
         {
-            calendarTime.setTimeInMillis(ticketTimes[i]);
-            times[i] = formatDay.format(calendarTime.getTime());
+            //            calendarTime.setTimeInMillis(ticketTimes[i]);
+            //            times[i] = formatDay.format(calendarTime.getTime());
+            times[i] = DailyCalendar.format(ticketTimes[i], "HH:mm", TimeZone.getTimeZone("GMT"));
         }
 
         return times;

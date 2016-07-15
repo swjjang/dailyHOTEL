@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -369,8 +370,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, AnalyticsManager.ValueType.EMPTY);
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, AnalyticsManager.ValueType.EMPTY);
                     paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, "0");
-                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
-                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(validTo, "yyyyMMddHHmm"));
+                    //                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, DailyCalendar.format(new Date(), "yyyyMMddHHmm"));
+                    //                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(validTo, "yyyyMMddHHmm"));
+                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
                     paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "event");
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
 
@@ -401,9 +404,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         String validFrom = dataJSONObject.getString("validFrom");
                         String validTo = dataJSONObject.getString("validTo");
 
+                        //                        String message = getString(R.string.message_eventweb_download_coupon//
+                        //                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
+                        //                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
+
                         String message = getString(R.string.message_eventweb_download_coupon//
-                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
-                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
+                            , DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
+                            , DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
 
                         recordAnalytics(couponCode, validTo);
 
