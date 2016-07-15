@@ -3,9 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.SimpleDateFormat;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class SaleTime implements Parcelable
@@ -40,15 +40,10 @@ public class SaleTime implements Parcelable
     //        return stringBuilder.toString();
     //    }
 
-    public String getDailyDay()
-    {
-        return getTimezonedDateFormat("d").format(getDayOfDaysDate());
-    }
-
-    public String getDailyDateFormat(String format)
-    {
-        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
-    }
+    //    public String getDailyDateFormat(String format)
+    //    {
+    //        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
+    //    }
 
     public Date getDayOfDaysDate()
     {
@@ -57,7 +52,8 @@ public class SaleTime implements Parcelable
 
     public String getDayOfDaysDateFormat(String format)
     {
-        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
+        //        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
+        return DailyCalendar.format(getDayOfDaysDate().getTime(), format, TimeZone.getTimeZone("GMT"));
     }
 
     public SaleTime getClone(int nextDay)
@@ -71,12 +67,12 @@ public class SaleTime implements Parcelable
         return nextSaleTime;
     }
 
-    public SimpleDateFormat getTimezonedDateFormat(String datePattern)
-    {
-        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
-        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sFormat;
-    }
+    //    public SimpleDateFormat getTimezonedDateFormat(String datePattern)
+    //    {
+    //        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
+    //        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+    //        return sFormat;
+    //    }
 
     public boolean isDayOfDaysDateEquals(SaleTime saleTime)
     {

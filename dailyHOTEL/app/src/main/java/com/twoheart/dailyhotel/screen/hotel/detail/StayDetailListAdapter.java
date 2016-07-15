@@ -280,9 +280,9 @@ public class StayDetailListAdapter extends BaseAdapter
         View changeDateView = view.findViewById(R.id.changeDateView);
 
         // 체크인체크아웃 날짜
-        final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
+        final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
         SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mStayDetail.nights);
-        String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
+        String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         dateView.setText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStayDetail.nights));
 
