@@ -24,10 +24,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -222,20 +222,20 @@ public class StayDetailLayout
 
             setBookingStatus(STATUS_SEARCH_ROOM);
 
-            initRoomTypeLayout(stayDetail.nights, saleRoomList);
+            updateRoomTypeLayout(saleRoomList);
         }
 
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void initRoomTypeLayout(int nights, ArrayList<SaleRoomInformation> saleRoomList)
+    private void updateRoomTypeLayout(ArrayList<SaleRoomInformation> saleRoomList)
     {
-        if (saleRoomList == null || saleRoomList.size() == 0 || nights < 0)
+        if (saleRoomList == null || saleRoomList.size() == 0)
         {
             return;
         }
 
-        // 객실 타입 세팅
+        // 처음 세팅하는 경우 객실 타입 세팅
         if (mRoomTypeListAdapter == null)
         {
             mSelectedSaleRoomInformation = saleRoomList.get(0);
@@ -262,15 +262,15 @@ public class StayDetailLayout
             });
         } else
         {
-            if (mSelectedSaleRoomInformation == null)
-            {
-                mSelectedSaleRoomInformation = saleRoomList.get(0);
-                mRoomTypeListAdapter.setSelected(0);
-                mRoomTypeListAdapter.addAll(saleRoomList);
-                mRoomTypeListAdapter.notifyDataSetChanged();
-            }
+            // 재세팅 하는 경우
+            mSelectedSaleRoomInformation = saleRoomList.get(0);
+
+            mRoomTypeListAdapter.addAll(saleRoomList);
+            mRoomTypeListAdapter.setSelected(0);
+            mRoomTypeListAdapter.notifyDataSetChanged();
         }
 
+        // 객실 개수로 높이를 재지정해준다.
         int size = saleRoomList.size();
         int height = Util.dpToPx(mActivity, 100) * size;
         final int maxHeight = Util.dpToPx(mActivity, 350);
@@ -286,11 +286,6 @@ public class StayDetailLayout
 
         mRoomTypeRecyclerView.setLayoutParams(layoutParams);
         mRoomTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
-    }
-
-    public void setDefaultSelectedSaleRoomInformation()
-    {
-        mSelectedSaleRoomInformation = null;
     }
 
     public int getBookingStatus()

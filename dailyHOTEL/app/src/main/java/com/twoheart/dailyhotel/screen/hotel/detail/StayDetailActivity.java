@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
@@ -355,20 +355,13 @@ public class StayDetailActivity extends BaseActivity
                         return;
                     }
 
-                    int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-
-                    int hotelIndex = mStayDetail.hotelIndex;
-
                     mCheckInSaleTime = checkInSaleTime;
 
-                    mStayDetail = new StayDetail(hotelIndex, nights);
-
-
-                    mStayDetailLayout.setDefaultSelectedSaleRoomInformation();
+                    int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+                    mStayDetail = new StayDetail(mStayDetail.hotelIndex, nights);
 
                     DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mStayDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
                 }
-
                 break;
         }
 

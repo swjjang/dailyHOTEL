@@ -308,7 +308,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
-                ExLog.d(schemeDate + " / " + dailyDate + " / " + dailyDayOfDays );
+                ExLog.d(schemeDate + " / " + dailyDate + " / " + dailyDayOfDays);
 
                 if (dailyDayOfDays < 0)
                 {

@@ -1261,7 +1261,7 @@ public class Util implements Constants
                 String timeZone = iso8601.substring(index + 1);
                 if (timeZone.contains(":"))
                 {
-                    if(DEBUG == true)
+                    if (DEBUG == true)
                     {
                         // 정상
                         ExLog.d("iso8601 is good format");
@@ -1273,7 +1273,7 @@ public class Util implements Constants
                         timeZone.substring(2);
                 } else
                 {
-                    if(DEBUG == true)
+                    if (DEBUG == true)
                     {
                         // 비정상 텍스트
                         ExLog.d("iso8601 is wrong format");
@@ -1281,7 +1281,7 @@ public class Util implements Constants
                 }
             } else
             {
-                if(DEBUG == true)
+                if (DEBUG == true)
                 {
                     // 비정상 텍스트
                     ExLog.d("iso8601 is wrong format, timezone size zero,  set text '+09:00'");
@@ -1291,7 +1291,7 @@ public class Util implements Constants
             }
         } else
         {
-            if(DEBUG == true)
+            if (DEBUG == true)
             {
                 // 비정상 텍스트
                 ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");

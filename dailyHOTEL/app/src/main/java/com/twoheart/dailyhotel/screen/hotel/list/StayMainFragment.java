@@ -353,7 +353,7 @@ public class StayMainFragment extends PlaceMainFragment
                 if (datePlus >= 0)
                 {
                     checkInSaleTime.setOffsetDailyDay(datePlus);
-                    startStayDetailByDeeplink(hotelIndex,checkInSaleTime, nights);
+                    startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights);
                 } else
                 {
                     return false;

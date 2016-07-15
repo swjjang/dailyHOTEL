@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
