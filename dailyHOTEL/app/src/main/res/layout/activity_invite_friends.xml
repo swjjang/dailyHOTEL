@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:text="@string/act_credit_line4"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c929292"
                 android:textSize="14dp"/>
         </LinearLayout>
 
