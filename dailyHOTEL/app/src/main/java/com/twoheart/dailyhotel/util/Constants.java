@@ -260,5 +260,5 @@ public interface Constants
     public static final int REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE = 11;
 
     // 리스트 페이지 사이즈
-    public static final int PAGENATION_LIST_SIZE = 20;
+    public static final int PAGENATION_LIST_SIZE = 200;
 }
