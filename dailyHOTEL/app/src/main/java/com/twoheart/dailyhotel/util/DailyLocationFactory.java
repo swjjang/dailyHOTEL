@@ -111,9 +111,23 @@ public class DailyLocationFactory
             String key = LocationManager.KEY_LOCATION_CHANGED;
             Location location = (Location) intent.getExtras().get(key);
 
-            if (mLocationListener != null && location != null)
+            if (mLocationListener != null)
             {
-                mLocationListener.onLocationChanged(location);
+                if (location != null)
+                {
+                    mLocationListener.onLocationChanged(location);
+                } else
+                {
+                    mLocationListener.onFailed();
+
+                    if (mBaseActivity != null)
+                    {
+                        DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    }
+                }
+            } else
+            {
+                // ???
             }
 
             stopLocationMeasure();
