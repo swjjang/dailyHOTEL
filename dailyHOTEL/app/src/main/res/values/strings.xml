@@ -264,7 +264,6 @@
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 결제카드를 삭제하시겠습니까?</string>
-    <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
     <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
     <string name="dialog_msg_delete_failed_creditcard">결제카드 삭제를 실패하였습니다.</string>

@@ -142,11 +142,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, placeIndex, AnalyticsManager.ValueType.LIST, true, isAnimation);
+        Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
+            , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

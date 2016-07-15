@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
@@ -418,8 +419,11 @@ public class StayDetailActivity extends BaseActivity
             return;
         }
 
-        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, checkInSaleTime, nights, hotelIndex, AnalyticsManager.ValueType.NONE, true, isAnimation);
+        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, checkInSaleTime, nights, hotelIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+
+        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
     private void recordAnalyticsHotelDetail(String screen, StayDetail stayDetail)

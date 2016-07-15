@@ -777,5 +777,6 @@ public class AnalyticsManager
         public static final String NONE = "None";
         public static final String MEMBER = "member";
         public static final String GUEST = "guest";
+        public static final String DETAIL = "detailview";
     }
 }
