@@ -50,7 +50,7 @@
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/navigatorView"
-            android:layout_width="56dp"
+            android:layout_width="58dp"
             android:layout_height="wrap_content"
             android:background="@drawable/more_btn_padding"
             android:freezesText="true"
@@ -63,7 +63,7 @@
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/copyAddressView"
-            android:layout_width="56dp"
+            android:layout_width="58dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:background="@drawable/more_btn_padding"
