@@ -711,6 +711,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     @Override
     protected void onSearchLoacationResult(Location location)
     {
+        GourmetCurationManager.getInstance().setLocation(location);
+
         if (location == null)
         {
             DailyToast.showToast(GourmetCurationActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);

@@ -723,6 +723,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     @Override
     protected void onSearchLoacationResult(Location location)
     {
+        StayCurationManager.getInstance().setLocation(location);
+
         if (location == null)
         {
             DailyToast.showToast(StayCurationActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
