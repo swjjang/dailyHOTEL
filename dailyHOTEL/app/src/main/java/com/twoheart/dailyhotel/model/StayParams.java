@@ -4,10 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by android_sam on 2016. 6. 30..
@@ -184,94 +181,56 @@ public class StayParams implements Parcelable
     {
         StringBuilder sb = new StringBuilder();
 
-        Field[] fields = StayParams.class.getDeclaredFields();
-        for (Field field : fields)
+        sb.append(getParamString("dateCheckIn", dateCheckIn)).append("&");
+        sb.append(getParamString("stays", stays)).append("&");
+        sb.append(getParamString("provinceIdx", provinceIdx)).append("&");
+
+        if (areaIdx != 0)
         {
-            field.setAccessible(true);
+            sb.append(getParamString("areaIdx", areaIdx)).append("&");
+        }
 
-            addAndCoupler(sb);
+        if (persons != 0)
+        {
+            sb.append(getParamString("persons", persons)).append("&");
+        }
 
-            String name = field.getName();
-            //            ExLog.d(name + " , " + sb.toString());
+        String categoryString = getCategoryString();
+        if (Util.isTextEmpty(categoryString) == false)
+        {
+            sb.append(categoryString).append("&");
+        }
 
-            if ("CREATOR".equalsIgnoreCase(name))
+        if (Util.isTextEmpty(bedType) == false)
+        {
+            sb.append(bedType).append("&");
+        }
+
+        if (Util.isTextEmpty(luxury) == false)
+        {
+            sb.append(luxury).append("&");
+        }
+
+        if (page > 0)
+        {
+            sb.append(getParamString("page", page)).append("&");
+            sb.append(getParamString("limit", limit)).append("&");
+        }
+
+        Constants.SortType sortType = getSortType();
+        if (Constants.SortType.DEFAULT != sortType)
+        {
+            sb.append(getParamString("sortProperty", sortProperty)).append("&");
+            sb.append(getParamString("sortDirection", sortDirection)).append("&");
+
+            if (Constants.SortType.DISTANCE == sortType && hasLocation() == true)
             {
-                continue;
-
-            } else if ("category".equalsIgnoreCase(name))
-            {
-                String categoryString = getCategoryString();
-                if (Util.isTextEmpty(categoryString) == false)
-                {
-                    sb.append(categoryString);
-                }
-
-            } else if ("bedtype".equalsIgnoreCase(name))
-            {
-                if (Util.isTextEmpty(bedType) == false)
-                {
-                    sb.append(bedType);
-                }
-
-            } else if ("luxury".equalsIgnoreCase(name))
-            {
-                if (Util.isTextEmpty(luxury) == false)
-                {
-                    sb.append(luxury);
-                }
-
-            } else
-            {
-                try
-                {
-                    StayParams object = this;
-                    String stringValue = getParamString(name, field.get(object));
-
-                    if (Util.isTextEmpty(stringValue) == true)
-                    {
-                        continue;
-                    }
-
-                    if ("longitude".equalsIgnoreCase(name) || "latitude".equalsIgnoreCase(name))
-                    {
-                        if (hasLocation() == false)
-                        {
-                            // 해당 값이 0일때 파라메터에 더하지 않음
-                            continue;
-                        }
-
-                    } else if ("areaIdx".equalsIgnoreCase(name))
-                    {
-                        if (areaIdx == 0)
-                        {
-                            // 해당 값이 0일때 파라메터에 더하지 않음
-                            continue;
-                        }
-                        //  String subValue = String.valueOf(field.get(object));
-                        //
-                        //  int intValue = Integer.parseInt(subValue);
-                        //   if (intValue == 0)
-                        //    {
-                        //     // 해당 값이 0일때 파라메터에 더하지 않음
-                        //    continue;
-                        //    }
-                    } else if ("page".equalsIgnoreCase(name) || "limit".equalsIgnoreCase(name))
-                    {
-                        if (page == 0)
-                        {
-                            // 해당 값이 0일때 전체 리스트 요청이므로 limit 값 무시
-                            continue;
-                        }
-                    }
-
-                    sb.append(stringValue);
-
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
+                sb.append(getParamString("latitude", latitude)).append("&");
+                sb.append(getParamString("longitude", longitude)).append("&");
             }
         }
+
+        sb.append(getParamString("details", details)).append("&");
 
         removeLastAndCoupler(sb);
 
@@ -293,22 +252,6 @@ public class StayParams implements Parcelable
         }
 
         return getParamString("category", category.code);
-    }
-
-    private StringBuilder addAndCoupler(StringBuilder sb)
-    {
-        if (Util.isTextEmpty(sb.toString()) == false)
-        {
-            int length = sb.length();
-            String dest = sb.substring(length > 0 ? length - 1 : 0);
-
-            if ("&".equalsIgnoreCase(dest) == false)
-            {
-                sb.append("&");
-            }
-        }
-
-        return sb;
     }
 
     private StringBuilder removeLastAndCoupler(StringBuilder sb)
