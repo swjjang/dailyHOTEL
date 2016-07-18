@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Layout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -310,7 +311,30 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         {
             mCardManagerTextView.setText(R.string.label_manager);
             mSimpleCardImageView.setImageResource(R.drawable.selector_simplecard_button);
-            mSimpleCardTextView.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
+
+            final String cardName = selectedCreditCard.name.replace("카드", "");
+            final String cardNumber = selectedCreditCard.number;
+
+            mSimpleCardTextView.setText(String.format("%s %s", cardName, cardNumber));
+            mSimpleCardTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Layout layout = mSimpleCardTextView.getLayout();
+
+                    if (layout == null || Util.isTextEmpty(cardName) == true)
+                    {
+                        return;
+                    }
+
+                    int lineCount = mSimpleCardTextView.getLineCount();
+                    if (lineCount > 1)
+                    {
+                        mSimpleCardTextView.setText(String.format("%s\n%s", cardName, cardNumber));
+                    }
+                }
+            });
         }
     }
 
