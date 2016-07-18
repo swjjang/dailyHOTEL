@@ -85,6 +85,12 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
+        if (GourmetCurationManager.getInstance().getSaleTime() == null || GourmetCurationManager.getInstance().getProvince() == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         lockUI(isShowProgress);
 
         DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, //
