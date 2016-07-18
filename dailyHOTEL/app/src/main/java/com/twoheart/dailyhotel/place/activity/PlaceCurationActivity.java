@@ -500,14 +500,14 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     protected void searchMyLocation()
     {
-//        lockUI();
+        lockUI();
 
         DailyLocationFactory.getInstance(PlaceCurationActivity.this).startLocationMeasure(PlaceCurationActivity.this, null, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
             {
-//                unLockUI();
+                unLockUI();
 
                 Intent intent = PermissionManagerActivity.newInstance(PlaceCurationActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
@@ -516,7 +516,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             @Override
             public void onFailed()
             {
-//                unLockUI();
+                unLockUI();
                 onSearchLoacationResult(null);
             }
 
@@ -537,7 +537,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             @Override
             public void onProviderDisabled(String provider)
             {
-//                unLockUI();
+                unLockUI();
 
                 if (isFinishing() == true)
                 {
@@ -600,7 +600,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             @Override
             public void onLocationChanged(Location location)
             {
-//                unLockUI();
+                unLockUI();
 
                 if (isFinishing() == true)
                 {
