@@ -9,12 +9,12 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,11 +97,12 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
             params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mSaleTime.getDayOfDaysDate().getTime()));
             params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
-            String phoneDate = simpleDateFormat.format(new Date());
+            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
+            //            String phoneDate = simpleDateFormat.format(new Date());
 
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
-                , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date + "-" + phoneDate, params);
+                , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
+                    AnalyticsManager.ValueType.NONE) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
