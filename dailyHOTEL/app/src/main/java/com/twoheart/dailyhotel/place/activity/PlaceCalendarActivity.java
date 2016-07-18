@@ -81,8 +81,16 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            calendarsLayout.addView(getMonthCalendarView(this, dailyTime.getClone(dayCount)//
-                , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1, enableDayCount));
+            View calendarLayout = getMonthCalendarView(this, dailyTime.getClone(dayCount)//
+                , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1, enableDayCount);
+
+            if (i >= 0 && i < maxMonth)
+            {
+                calendarLayout.setPadding(calendarLayout.getPaddingLeft(), calendarLayout.getPaddingTop()//
+                    , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + Util.dpToPx(this, 30));
+            }
+
+            calendarsLayout.addView(calendarLayout);
 
             dayCount += maxDayOfMonth - day + 1;
             maxDay = dayCountOfMax - dayCount;

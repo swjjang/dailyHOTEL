@@ -473,7 +473,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 // 리스트 요청하면 됨.
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), new ArrayList<Category>(), null, mOnPlaceListFragmentListener);
+                mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), new ArrayList<Category>(), null, mOnPlaceListFragmentListener);
             }
         }
 

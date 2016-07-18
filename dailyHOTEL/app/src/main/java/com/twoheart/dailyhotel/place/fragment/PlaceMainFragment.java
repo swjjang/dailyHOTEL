@@ -65,6 +65,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     @Override
     public void onResume()
     {
+        super.onResume();
+
         if (isFinishing() == true)
         {
             return;
@@ -78,8 +80,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             lockUI();
             mPlaceMainNetworkController.requestDateTime();
         }
-
-        super.onResume();
     }
 
     @Override

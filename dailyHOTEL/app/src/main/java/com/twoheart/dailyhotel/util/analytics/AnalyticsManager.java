@@ -66,7 +66,6 @@ public class AnalyticsManager
             mFacebookManager = new FacebookManager(context);
             mAppboyManager = new AppboyManager(context);
 
-
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
             mAnalyticsManagerList.add(mTuneManager);
             mAnalyticsManagerList.add(mFacebookManager);

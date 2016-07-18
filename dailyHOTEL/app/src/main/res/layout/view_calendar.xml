@@ -14,7 +14,8 @@
         android:textColor="@color/default_text_c323232"
         android:textSize="16dp"
         dailyFont:style="Medium"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"/>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/calendarGridLayout"

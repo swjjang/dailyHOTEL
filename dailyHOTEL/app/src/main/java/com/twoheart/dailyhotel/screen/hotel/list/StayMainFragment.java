@@ -91,7 +91,7 @@ public class StayMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
                 }
 
-                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), province.getCategoryList(), //
+                mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), province.getCategoryList(), //
                     StayCurationManager.getInstance().getCategory(), mStayListFragmentListener);
             }
         } else if (resultCode == RESULT_CHANGED_DATE && data != null)
@@ -130,7 +130,7 @@ public class StayMainFragment extends PlaceMainFragment
 
                 startCalendar();
 
-                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), province.getCategoryList(), //
+                mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), province.getCategoryList(), //
                     StayCurationManager.getInstance().getCategory(), mStayListFragmentListener);
             }
         }
@@ -978,7 +978,7 @@ public class StayMainFragment extends PlaceMainFragment
                     StayCurationManager.getInstance().getCheckInSaleTime(), //
                     StayCurationManager.getInstance().getCheckOutSaleTime());
 
-                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), selectedProvince.getCategoryList(), //
+                mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), selectedProvince.getCategoryList(), //
                     StayCurationManager.getInstance().getCategory(), mStayListFragmentListener);
             }
         }

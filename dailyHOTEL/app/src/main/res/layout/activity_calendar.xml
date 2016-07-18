@@ -148,34 +148,11 @@
                 android:id="@+id/calendarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
                 android:orientation="vertical"
                 android:paddingBottom="38dp"/>
         </ScrollView>
-
-        <FrameLayout
-            android:id="@+id/toastLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="false"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_calendar_toast_background"
-            android:padding="15dp"
-            android:layout_above="@+id/bottomLayout"
-            android:visibility="gone">
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/toastTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:text="@string/message_calendar_placelist_reset"
-                android:textColor="@color/white"
-                android:textSize="15dp"/>
-
-        </FrameLayout>
 
         <View
             android:id="@+id/cancelView"
