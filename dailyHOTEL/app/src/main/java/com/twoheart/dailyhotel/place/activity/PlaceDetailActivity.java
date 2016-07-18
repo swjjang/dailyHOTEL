@@ -868,6 +868,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 return;
             }
 
+            if (mCheckInSaleTime == null)
+            {
+                Util.restartApp(PlaceDetailActivity.this);
+                return;
+            }
+
             try
             {
                 if (response == null)
