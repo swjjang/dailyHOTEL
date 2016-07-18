@@ -282,6 +282,12 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
+            if (mPlaceMainLayout.getPlaceListFragment() == null)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
+
             GourmetListFragment gourmetListFragment = (GourmetListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
 
             switch (mViewType)

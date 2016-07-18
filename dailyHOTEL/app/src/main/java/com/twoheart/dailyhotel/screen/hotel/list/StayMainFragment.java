@@ -754,8 +754,14 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onViewTypeClick()
         {
-            if (isFinishing() == true || isLockUiComponent() == true)
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
             {
+                return;
+            }
+
+            if (mPlaceMainLayout.getPlaceListFragment() == null)
+            {
+                Util.restartApp(mBaseActivity);
                 return;
             }
 

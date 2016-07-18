@@ -109,6 +109,11 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void setScrollListTop()
     {
+        if (mGourmetListLayout == null)
+        {
+            return;
+        }
+
         mGourmetListLayout.setScrollListTop();
     }
 

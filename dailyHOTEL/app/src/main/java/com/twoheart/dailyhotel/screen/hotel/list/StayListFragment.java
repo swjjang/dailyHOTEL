@@ -160,6 +160,11 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void setScrollListTop()
     {
+        if (mStayListLayout == null)
+        {
+            return;
+        }
+
         mStayListLayout.setScrollListTop();
     }
 

@@ -366,6 +366,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public ArrayList<PlaceListFragment> getPlaceListFragment()
     {
+        if (mFragmentPagerAdapter == null)
+        {
+            return null;
+        }
+
         return mFragmentPagerAdapter.getFragmentList();
     }
 

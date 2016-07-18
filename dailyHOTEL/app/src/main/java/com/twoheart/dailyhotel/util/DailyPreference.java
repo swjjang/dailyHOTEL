@@ -240,6 +240,12 @@ public class DailyPreference
 
             Crashlytics.log(msg);
             Crashlytics.logException(e);
+
+            if (sharedPreferences != null)
+            {
+                sharedPreferences.edit().remove(key);
+                sharedPreferences.edit().putBoolean(key, defaultValue);
+            }
         }
 
         return result;

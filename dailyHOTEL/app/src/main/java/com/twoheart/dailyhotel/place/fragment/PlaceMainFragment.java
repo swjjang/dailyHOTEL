@@ -221,6 +221,12 @@ public abstract class PlaceMainFragment extends BaseFragment
             return;
         }
 
+        if (mPlaceMainLayout.getPlaceListFragment() == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         if (isClearList == true)
         {
             for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
