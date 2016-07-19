@@ -752,6 +752,7 @@
     <string name="label_calendar_gourmet_select">날짜 선택</string>
     <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
     <string name="label_selected_date">날짜 선택 완료</string>
+    <string name="label_message_dont_check_date">체크인할 수 없는 날짜입니다.</string>
 
     <string name="label_monday">월</string>
     <string name="label_tuesday">화</string>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -13,6 +14,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -171,7 +173,16 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 // 이미 체크인 체크아웃이 선택되어있으면 초기화
                 if (mCheckInDayView != null && mCheckOutDayView != null)
                 {
-                    reset();
+                    // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
+                    if (mDailyViews[mDailyViews.length - 1] == view)
+                    {
+                        DailyToast.showToast(this, getString(R.string.label_message_dont_check_date), Toast.LENGTH_SHORT);
+                        releaseUiComponent();
+                        return;
+                    } else
+                    {
+                        reset();
+                    }
                 }
 
                 // 기존의 날짜 보다 전날짜를 선택하면 초기화.
