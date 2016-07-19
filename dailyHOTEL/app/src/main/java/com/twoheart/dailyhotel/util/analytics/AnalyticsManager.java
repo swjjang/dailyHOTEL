@@ -567,7 +567,7 @@ public class AnalyticsManager
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
         //
         public static final String CHANGE_LOCATION = "ChangeLocation";
-        public static final String CHAGE_VIEW = "ChageView";
+        public static final String CHANGE_VIEW = "ChangeView";
         public static final String DAILY_HOTEL_CATEGORY_FLICKING = "DailyHotelCategoryFlicking";
         public static final String HOTEL_MAP_ICON_CLICKED = "HotelMapIconClicked";
         public static final String HOTEL_MAP_DETAIL_VIEW_CLICKED = "HotelMapDetailViewClicked";
