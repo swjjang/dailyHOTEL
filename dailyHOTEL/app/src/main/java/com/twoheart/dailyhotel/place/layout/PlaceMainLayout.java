@@ -209,7 +209,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void setCategoryTabLayoutVisibility(int visibility)
     {
-        mCategoryTabLayout.setVisibility(visibility);
+        ((View) mCategoryTabLayout.getParent()).setVisibility(visibility);
 
         ViewGroup.LayoutParams layoutParams = mToolbarUnderlineView.getLayoutParams();
 
@@ -217,11 +217,13 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         {
             if (visibility == View.VISIBLE)
             {
-                mToolbarUnderlineView.getLayoutParams().height = 1;
+                layoutParams.height = 1;
             } else
             {
-                mToolbarUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
+                layoutParams.height = Util.dpToPx(mContext, 1);
             }
+
+            mToolbarUnderlineView.setLayoutParams(layoutParams);
         }
     }
 

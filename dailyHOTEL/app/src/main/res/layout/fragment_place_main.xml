@@ -109,29 +109,33 @@
         android:layout_below="@+id/toolbarLayout"
         android:background="@color/default_line_ce7e7e7"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/categoryTabLayout"
+    <FrameLayout
+        android:id="@+id/categoryLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/toolbarUnderline"
         android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
-        android:visibility="gone"
-        app:tabIndicatorHeight="2dp"
-        app:tabMode="scrollable"
-        app:tabPadding="0dp"
-        app:tabMinWidth="0dp"
-        app:tabPaddingStart="12dp"
-        app:tabPaddingEnd="12dp"
-        app:tabSelectedTextColor="@color/default_text_c900034"
-        app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"
-        android:paddingLeft="8dp"/>
+        android:visibility="gone">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/categoryTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            app:tabIndicatorHeight="2dp"
+            app:tabMinWidth="0dp"
+            app:tabMode="scrollable"
+            app:tabPadding="0dp"
+            app:tabSelectedTextColor="@color/default_text_c900034"
+            app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
+            app:tabTextColor="@color/default_text_c929292"/>
+    </FrameLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/categoryTabLayout"/>
+        android:layout_below="@+id/categoryLayout"/>
 
     <LinearLayout
         android:id="@+id/bottomOptionLayout"
