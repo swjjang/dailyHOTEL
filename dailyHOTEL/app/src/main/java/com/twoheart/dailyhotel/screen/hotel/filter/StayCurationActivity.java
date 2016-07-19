@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -709,7 +708,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mCategory);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, mProvince);
 
-        if(mStayCurationOption.getSortType() == SortType.DISTANCE && mLocation != null)
+        if (mStayCurationOption.getSortType() == SortType.DISTANCE && mLocation != null)
         {
             intent.putExtra(INTENT_EXTRA_DATA_LOCATION, mLocation);
         }
