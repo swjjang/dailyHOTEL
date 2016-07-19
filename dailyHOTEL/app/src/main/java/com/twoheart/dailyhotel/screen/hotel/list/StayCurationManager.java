@@ -22,6 +22,16 @@ public class StayCurationManager
     private Category mCategory;
     private StayCurationOption mStayCurationOption;
 
+    public static synchronized StayCurationManager getInstance()
+    {
+        if (mInstance == null)
+        {
+            mInstance = new StayCurationManager();
+        }
+
+        return mInstance;
+    }
+
     public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
     {
         if (mCheckInSaleTime == null)
@@ -61,16 +71,6 @@ public class StayCurationManager
         }
 
         return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-    }
-
-    public static synchronized StayCurationManager getInstance()
-    {
-        if (mInstance == null)
-        {
-            mInstance = new StayCurationManager();
-        }
-
-        return mInstance;
     }
 
     private StayCurationManager()

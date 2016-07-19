@@ -18,11 +18,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -39,10 +39,16 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
     public static final String INTENT_EXTRA_DATA_CATEGORY = "category";
     public static final String INTENT_EXTRA_DATA_PROVINCE = "province";
+    public static final String INTENT_EXTRA_DATA_CHECKIN_SALETIME = "checkInSaleTime";
+    public static final String INTENT_EXTRA_DATA_CHECKOUT_SALETIME = "checkOutSaleTime";
+    public static final String INTENT_EXTRA_DATA_LOCATION = "location";
 
     private StayCurationOption mStayCurationOption;
     private Category mCategory;
     private Province mProvince;
+    private Location mLocation;
+    private SaleTime mCheckInSaleTime;
+    private SaleTime mCheckOutSaleTime;
 
     private boolean mIsGlobal;
     private StayParams mLastParams;
@@ -59,11 +65,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private ViewGroup mBedTypeLayout;
 
     public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, //
+                                     SaleTime checkInSaleTime, SaleTime checkOutSaleTime,//
                                      StayCurationOption stayCurationOption, Category category, Province province)
     {
         Intent intent = new Intent(context, StayCurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_SALETIME, checkInSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_SALETIME, checkOutSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, province);
@@ -86,6 +95,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_CHECKIN_SALETIME);
+        mCheckOutSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_CHECKOUT_SALETIME);
         mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
         mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
         mProvince = intent.getParcelableExtra(INTENT_EXTRA_DATA_PROVINCE);
@@ -385,8 +396,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         StayParams params = new StayParams();
 
-        params.dateCheckIn = StayCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = StayCurationManager.getInstance().getNights();
+        params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+        params.stays = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
         params.provinceIdx = mProvince.getProvinceIndex();
 
         if (mProvince instanceof Area)
@@ -406,11 +417,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         Constants.SortType sortType = mStayCurationOption.getSortType();
         if (Constants.SortType.DISTANCE == sortType)
         {
-            Location location = StayCurationManager.getInstance().getLocation();
-            if (location != null)
+            if (mLocation != null)
             {
-                params.latitude = location.getLatitude();
-                params.longitude = location.getLongitude();
+                params.latitude = mLocation.getLatitude();
+                params.longitude = mLocation.getLongitude();
             }
         }
 
@@ -427,7 +437,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        if (mCheckInSaleTime == null)
         {
             Util.restartApp(StayCurationActivity.this);
             return;
@@ -442,7 +452,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        if (mCheckInSaleTime == null)
         {
             unLockUI();
             Util.restartApp(StayCurationActivity.this);
@@ -698,6 +708,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mCategory);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, mProvince);
 
+        if (mStayCurationOption.getSortType() == SortType.DISTANCE && mLocation != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_LOCATION, mLocation);
+        }
+
         setResult(RESULT_OK, intent);
         hideAnimation();
     }
@@ -723,7 +738,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     @Override
     protected void onSearchLoacationResult(Location location)
     {
-        StayCurationManager.getInstance().setLocation(location);
+        mLocation = location;
 
         if (location == null)
         {

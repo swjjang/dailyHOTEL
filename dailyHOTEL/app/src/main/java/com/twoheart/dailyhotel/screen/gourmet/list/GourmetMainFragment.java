@@ -130,6 +130,10 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
+                Location location = data.getParcelableExtra(GourmetCurationActivity.INTENT_EXTRA_DATA_LOCATION);
+
+                GourmetCurationManager.getInstance().setLocation(location);
+
                 searchMyLocation();
             } else
             {
@@ -159,16 +163,21 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     protected void onLocationChanged(Location location)
     {
-        if (location == null)
+        if (GourmetCurationManager.getInstance().getGourmetCurationOption().getSortType() == SortType.DISTANCE)
         {
-            GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragment(false);
-        } else
-        {
-            GourmetCurationManager.getInstance().setLocation(location);
-
-            if (GourmetCurationManager.getInstance().getGourmetCurationOption().getSortType() == SortType.DISTANCE)
+            if (location == null)
             {
+                if (GourmetCurationManager.getInstance().getLocation() != null)
+                {
+                    refreshCurrentFragment(false);
+                } else
+                {
+                    GourmetCurationManager.getInstance().getGourmetCurationOption().setSortType(SortType.DEFAULT);
+                    refreshCurrentFragment(false);
+                }
+            } else
+            {
+                GourmetCurationManager.getInstance().setLocation(location);
                 refreshCurrentFragment(false);
             }
         }
@@ -365,7 +374,10 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, province.isOverseas, mViewType, GourmetCurationManager.getInstance().getGourmetCurationOption());
+            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, province.isOverseas,//
+                mViewType, GourmetCurationManager.getInstance().getGourmetCurationOption(), //
+                GourmetCurationManager.getInstance().getProvince());
+
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
