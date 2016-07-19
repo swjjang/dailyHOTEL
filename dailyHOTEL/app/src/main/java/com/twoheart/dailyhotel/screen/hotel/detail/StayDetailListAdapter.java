@@ -277,7 +277,6 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         TextView dateView = (TextView) view.findViewById(R.id.dateView);
-        View changeDateView = view.findViewById(R.id.changeDateView);
 
         // 체크인체크아웃 날짜
         final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
@@ -286,11 +285,17 @@ public class StayDetailListAdapter extends BaseAdapter
 
         dateView.setText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStayDetail.nights));
 
-        changeDateView.setOnClickListener(new OnClickListener()
+        View changeDateLayout = view.findViewById(R.id.changeDateLayout);
+        changeDateLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                if (mOnUserActionListener == null)
+                {
+                    return;
+                }
+
                 mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights, mStayDetail.hotelIndex);
             }
         });

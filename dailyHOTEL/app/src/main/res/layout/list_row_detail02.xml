@@ -99,41 +99,50 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/dateImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/detail_ic_date"
             />
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/changeDateView"
+        <LinearLayout
+            android:id="@+id/changeDateLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/more_btn_padding"
-            android:freezesText="true"
-            android:gravity="center"
-            android:text="@string/label_detail_change_date"
-            android:textColor="@color/hoteldetail_title_text"
-            android:textSize="11dp"
-            />
+            android:orientation="vertical"
+            android:layout_alignParentRight="true">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/changeDateView"
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/more_btn_padding"
+                android:freezesText="true"
+                android:gravity="center"
+                android:text="@string/label_detail_change_date"
+                android:textColor="@color/hoteldetail_title_text"
+                android:textSize="11dp"
+                />
+            <View
+                android:layout_width="58dp"
+                android:layout_height="7dp"/>
+        </LinearLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/dateView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/changeDateView"
             android:layout_marginLeft="11dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="2.5dp"
-            android:layout_toLeftOf="@id/changeDateView"
+            android:layout_marginTop="9.5dp"
+            android:layout_toLeftOf="@id/changeDateLayout"
             android:layout_toRightOf="@id/dateImageView"
             android:freezesText="true"
             android:gravity="center_vertical"
@@ -146,6 +155,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="11dp"
         android:background="@color/default_line_cf0f0f0"/>
 </LinearLayout>

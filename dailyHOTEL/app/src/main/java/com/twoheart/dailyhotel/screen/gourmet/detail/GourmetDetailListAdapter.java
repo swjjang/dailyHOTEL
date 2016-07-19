@@ -258,15 +258,20 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         TextView dateView = (TextView) view.findViewById(R.id.dateView);
-        View changeDateView = view.findViewById(R.id.changeDateView);
         // 날짜
         dateView.setText(mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
 
-        changeDateView.setOnClickListener(new View.OnClickListener()
+        View changeDateLayout = view.findViewById(R.id.changeDateLayout);
+        changeDateLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                if (mOnUserActionListener == null)
+                {
+                    return;
+                }
+
                 mOnUserActionListener.onCalendarClick(mSaleTime, placeDetail.index);
             }
         });
