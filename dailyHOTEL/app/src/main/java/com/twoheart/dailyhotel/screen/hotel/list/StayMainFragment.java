@@ -184,6 +184,10 @@ public class StayMainFragment extends PlaceMainFragment
 
             if (changeCurationOption.getSortType() == SortType.DISTANCE)
             {
+                Location location = data.getParcelableExtra(StayCurationActivity.INTENT_EXTRA_DATA_LOCATION);
+
+                StayCurationManager.getInstance().setLocation(location);
+
                 searchMyLocation();
             } else
             {
@@ -213,17 +217,22 @@ public class StayMainFragment extends PlaceMainFragment
     @Override
     protected void onLocationChanged(Location location)
     {
-        if (location == null)
+        if (StayCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
         {
-            StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragment(true);
-        } else
-        {
-            StayCurationManager.getInstance().setLocation(location);
-
-            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (StayCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
+            if (location == null)
             {
+                // 이전에 가지고 있던 데이터를 사용한다.
+                if (StayCurationManager.getInstance().getLocation() != null)
+                {
+                    refreshCurrentFragment(true);
+                } else
+                {
+                    StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+                    refreshCurrentFragment(true);
+                }
+            } else
+            {
+                StayCurationManager.getInstance().setLocation(location);
                 refreshCurrentFragment(true);
             }
         }
@@ -849,6 +858,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             Intent intent = StayCurationActivity.newInstance(mBaseActivity, //
                 province.isOverseas, mViewType, //
+                StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime(), //
                 StayCurationManager.getInstance().getStayCurationOption(), //
                 StayCurationManager.getInstance().getCategory(), //
                 StayCurationManager.getInstance().getProvince());
