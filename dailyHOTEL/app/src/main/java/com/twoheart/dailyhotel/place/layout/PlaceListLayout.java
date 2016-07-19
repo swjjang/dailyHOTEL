@@ -30,6 +30,7 @@ public abstract class PlaceListLayout extends BaseLayout
     protected PlaceListAdapter mPlaceListAdapter;
 
     protected View mEmptyView;
+    protected View mFilterEmptyView;
     protected ViewGroup mMapLayout;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected View mBottomOptionLayout;
@@ -51,6 +52,8 @@ public abstract class PlaceListLayout extends BaseLayout
         void onRefreshAll(boolean isShowProgress);
 
         void onLoadMoreList();
+
+        void onFilterClick();
     }
 
     protected abstract PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
@@ -142,6 +145,18 @@ public abstract class PlaceListLayout extends BaseLayout
         });
 
         mEmptyView = view.findViewById(R.id.emptyLayout);
+        mFilterEmptyView = view.findViewById(R.id.filterEmptyLayout);
+
+        View buttonView = mFilterEmptyView.findViewById(R.id.buttonView);
+        buttonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onFilterClick();
+            }
+        });
+
         mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
         mPlaceRecyclerView.setShadowVisible(false);
     }

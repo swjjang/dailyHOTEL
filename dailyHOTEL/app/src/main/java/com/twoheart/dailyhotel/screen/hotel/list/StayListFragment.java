@@ -366,6 +366,12 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onFilterClick()
+        {
+            mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
         public void finish()
         {
             if (mBaseActivity != null)

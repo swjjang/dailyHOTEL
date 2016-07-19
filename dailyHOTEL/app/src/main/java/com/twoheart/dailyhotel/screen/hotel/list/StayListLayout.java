@@ -67,7 +67,16 @@ public class StayListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                mEmptyView.setVisibility(View.VISIBLE);
+                if (StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == true)
+                {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                } else
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                }
+
                 mMapLayout.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);

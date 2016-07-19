@@ -1294,5 +1294,11 @@ public class StayMainFragment extends PlaceMainFragment
         {
             mPlaceMainLayout.showBottomLayout(false);
         }
+
+        @Override
+        public void onFilterClick()
+        {
+            mOnEventListener.onFilterClick();
+        }
     };
 }

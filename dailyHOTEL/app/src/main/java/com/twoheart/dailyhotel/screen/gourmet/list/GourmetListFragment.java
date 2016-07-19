@@ -376,6 +376,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onFilterClick()
+        {
+            mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
         public void finish()
         {
             mBaseActivity.finish();

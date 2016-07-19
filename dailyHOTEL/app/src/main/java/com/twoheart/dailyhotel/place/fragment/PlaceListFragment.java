@@ -42,6 +42,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onScrollStateChanged(RecyclerView recyclerView, int newState);
 
         void onShowMenuBar();
+
+        void onFilterClick();
     }
 
     public abstract void clearList();
