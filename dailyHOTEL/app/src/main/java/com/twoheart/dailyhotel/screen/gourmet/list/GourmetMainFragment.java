@@ -78,10 +78,10 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 mPlaceCuration.setProvince(province);
-                ((GourmetCuration) mPlaceCuration).getGourmetCurationOption().clear();
+                mPlaceCuration.getGourmetCurationOption().clear();
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
-                mPlaceMainLayout.setOptionFilterEnabled(((GourmetCuration) mPlaceCuration).getGourmetCurationOption().isDefaultFilter() == false);
+                mPlaceMainLayout.setOptionFilterEnabled(mPlaceCuration.getGourmetCurationOption().isDefaultFilter() == false);
 
                 DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                 DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
@@ -103,7 +103,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            ((GourmetCuration) mPlaceCuration).setSaleTime(saleTime);
+            mPlaceCuration.setSaleTime(saleTime);
             ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(saleTime);
 
             refreshCurrentFragment(true);
@@ -123,14 +123,14 @@ public class GourmetMainFragment extends PlaceMainFragment
             }
 
             GourmetCurationOption changedGourmetCurationOption = (GourmetCurationOption) placeCurationOption;
-            GourmetCurationOption gourmetCurationOption = ((GourmetCuration) mPlaceCuration).getGourmetCurationOption();
+            GourmetCurationOption gourmetCurationOption = mPlaceCuration.getGourmetCurationOption();
 
             gourmetCurationOption.setSortType(changedGourmetCurationOption.getSortType());
             gourmetCurationOption.setFilterMap(changedGourmetCurationOption.getFilterMap());
             gourmetCurationOption.flagTimeFilter = changedGourmetCurationOption.flagTimeFilter;
             gourmetCurationOption.flagAmenitiesFilters = changedGourmetCurationOption.flagAmenitiesFilters;
 
-            mPlaceMainLayout.setOptionFilterEnabled(((GourmetCuration) mPlaceCuration).getGourmetCurationOption().isDefaultFilter() == false);
+            mPlaceMainLayout.setOptionFilterEnabled(mPlaceCuration.getGourmetCurationOption().isDefaultFilter() == false);
 
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -149,8 +149,8 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     protected void onLocationFailed()
     {
-        ((GourmetCuration) mPlaceCuration).getGourmetCurationOption().setSortType(SortType.DEFAULT);
-        mPlaceMainLayout.setOptionFilterEnabled(((GourmetCuration) mPlaceCuration).getGourmetCurationOption().isDefaultFilter() == false);
+        mPlaceCuration.getGourmetCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceMainLayout.setOptionFilterEnabled(mPlaceCuration.getGourmetCurationOption().isDefaultFilter() == false);
 
         refreshCurrentFragment(false);
     }
@@ -158,8 +158,8 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     protected void onLocationProviderDisabled()
     {
-        ((GourmetCuration) mPlaceCuration).getGourmetCurationOption().setSortType(SortType.DEFAULT);
-        mPlaceMainLayout.setOptionFilterEnabled(((GourmetCuration) mPlaceCuration).getGourmetCurationOption().isDefaultFilter() == false);
+        mPlaceCuration.getGourmetCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceMainLayout.setOptionFilterEnabled(mPlaceCuration.getGourmetCurationOption().isDefaultFilter() == false);
 
         refreshCurrentFragment(false);
     }
@@ -167,7 +167,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     protected void onLocationChanged(Location location)
     {
-        if (((GourmetCuration) mPlaceCuration).getGourmetCurationOption().getSortType() == SortType.DISTANCE)
+        if (mPlaceCuration.getGourmetCurationOption().getSortType() == SortType.DISTANCE)
         {
             if (location == null)
             {
@@ -176,7 +176,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     refreshCurrentFragment(false);
                 } else
                 {
-                    ((GourmetCuration) mPlaceCuration).getGourmetCurationOption().setSortType(SortType.DEFAULT);
+                    mPlaceCuration.getGourmetCurationOption().setSortType(SortType.DEFAULT);
                     refreshCurrentFragment(false);
                 }
             } else
@@ -198,7 +198,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         if (gourmetListFragment != null)
         {
-            gourmetListFragment.curationList(mViewType, ((GourmetCuration) mPlaceCuration).getGourmetCurationOption());
+            gourmetListFragment.curationList(mViewType, mPlaceCuration.getGourmetCurationOption());
         }
     }
 
@@ -254,7 +254,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            Intent intent = GourmetCalendarActivity.newInstance(getContext(), ((GourmetCuration) mPlaceCuration).getSaleTime(), AnalyticsManager.ValueType.LIST, true, true);
+            Intent intent = GourmetCalendarActivity.newInstance(getContext(), mPlaceCuration.getSaleTime(), AnalyticsManager.ValueType.LIST, true, true);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -269,7 +269,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            SaleTime saleTime = ((GourmetCuration) mPlaceCuration).getSaleTime();
+            SaleTime saleTime = mPlaceCuration.getSaleTime();
             Province province = mPlaceCuration.getProvince();
 
             Intent intent = GourmetRegionListActivity.newInstance(getContext(), province, saleTime);
@@ -378,10 +378,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, province.isOverseas,//
-                mViewType, ((GourmetCuration) mPlaceCuration).getGourmetCurationOption(), //
-                mPlaceCuration.getProvince());
-
+            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, mViewType, mPlaceCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -418,7 +415,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            ((GourmetCuration) mPlaceCuration).setSaleTime(currentDateTime, dailyDateTime);
+            mPlaceCuration.setSaleTime(currentDateTime, dailyDateTime);
 
             if (DailyDeepLink.getInstance().isValidateLink() == true //
                 && processDeepLinkByDateTime(mBaseActivity) == true)
@@ -426,7 +423,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 // 딥링크 이동
             } else
             {
-                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(((GourmetCuration) mPlaceCuration).getSaleTime());
+                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mPlaceCuration.getSaleTime());
 
                 mPlaceMainNetworkController.requestEventBanner();
             }
@@ -666,7 +663,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
 
-            SaleTime saleTime = ((GourmetCuration) mPlaceCuration).getSaleTime().getClone(0);
+            SaleTime saleTime = mPlaceCuration.getSaleTime().getClone(0);
 
             if (eventBanner.isDeepLink() == true)
             {
@@ -843,7 +840,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         try
         {
             // 신규 타입의 화면이동
-            SaleTime saleTime = ((GourmetCuration) mPlaceCuration).getSaleTime().getClone(0);
+            SaleTime saleTime = mPlaceCuration.getSaleTime().getClone(0);
             int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
 
             String date = DailyDeepLink.getInstance().getDate();
@@ -897,7 +894,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null, ((GourmetCuration) mPlaceCuration).getSaleTime());
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null, mPlaceCuration.getSaleTime());
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
 
@@ -929,7 +926,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             ExLog.d(e.toString());
         }
 
-        Intent intent = GourmetRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, ((GourmetCuration) mPlaceCuration).getSaleTime());
+        Intent intent = GourmetRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, mPlaceCuration.getSaleTime());
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
@@ -941,9 +938,9 @@ public class GourmetMainFragment extends PlaceMainFragment
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
-        ((GourmetCuration) mPlaceCuration).getGourmetCurationOption().setSortType(DailyDeepLink.getInstance().getSorting());
+        mPlaceCuration.getGourmetCurationOption().setSortType(DailyDeepLink.getInstance().getSorting());
 
-        mPlaceMainLayout.setOptionFilterEnabled(((GourmetCuration) mPlaceCuration).getGourmetCurationOption().isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterEnabled(mPlaceCuration.getGourmetCurationOption().isDefaultFilter() == false);
 
         int provinceIndex;
         int areaIndex;
@@ -982,7 +979,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             try
             {
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-                SaleTime saleTime = ((GourmetCuration) mPlaceCuration).getSaleTime();
+                SaleTime saleTime = mPlaceCuration.getSaleTime();
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
@@ -991,7 +988,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 if (dailyDayOfDays >= 0)
                 {
                     SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
-                    ((GourmetCuration) mPlaceCuration).setSaleTime(deepLinkSaleTime);
+                    mPlaceCuration.setSaleTime(deepLinkSaleTime);
                     ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
                 } else
                 {
@@ -1003,12 +1000,12 @@ public class GourmetMainFragment extends PlaceMainFragment
             }
         } else if (datePlus >= 0)
         {
-            SaleTime saleTime = ((GourmetCuration) mPlaceCuration).getSaleTime();
+            SaleTime saleTime = mPlaceCuration.getSaleTime();
 
             try
             {
                 SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
-                ((GourmetCuration) mPlaceCuration).setSaleTime(deepLinkSaleTime);
+                mPlaceCuration.setSaleTime(deepLinkSaleTime);
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
             } catch (Exception e)
             {
@@ -1018,8 +1015,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             try
             {
-                SaleTime deepLinkSaleTime = ((GourmetCuration) mPlaceCuration).getSaleTime();
-                ((GourmetCuration) mPlaceCuration).setSaleTime(deepLinkSaleTime);
+                SaleTime deepLinkSaleTime = mPlaceCuration.getSaleTime();
+                mPlaceCuration.setSaleTime(deepLinkSaleTime);
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
             } catch (Exception e)
             {

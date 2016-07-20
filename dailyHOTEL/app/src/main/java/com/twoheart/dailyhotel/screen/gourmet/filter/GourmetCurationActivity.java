@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
@@ -55,15 +56,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     private ViewGroup mAmenitiesLayout;
     private ViewGroup mTimeRangeLayout;
 
-    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType,//
-                                     GourmetCurationOption gourmetCurationOption,//
-                                     Province province)
+    public static Intent newInstance(Context context, ViewType viewType, GourmetCuration gourmetCuration)
     {
         Intent intent = new Intent(context, GourmetCurationActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, gourmetCurationOption);
-        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
 
         return intent;
     }
@@ -81,10 +78,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
+        GourmetCuration gourmetCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mGourmetCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
-        mProvince = intent.getParcelableExtra(INTENT_EXTRA_DATA_PROVINCE);
+        mProvince = gourmetCuration.getProvince();
+        mIsGlobal = mProvince.isOverseas;
 
         initLayout();
 

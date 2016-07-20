@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
@@ -64,19 +65,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private TextView mPersonCountView;
     private ViewGroup mBedTypeLayout;
 
-    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, //
-                                     SaleTime checkInSaleTime, SaleTime checkOutSaleTime,//
-                                     StayCurationOption stayCurationOption, Category category, Province province)
+    public static Intent newInstance(Context context, ViewType viewType, StayCuration stayCuration)
     {
         Intent intent = new Intent(context, StayCurationActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_SALETIME, checkInSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_SALETIME, checkOutSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
-        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
-        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, province);
-
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCuration);
         return intent;
     }
 
@@ -93,13 +86,16 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             return;
         }
 
-        mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_CHECKIN_SALETIME);
-        mCheckOutSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_CHECKOUT_SALETIME);
-        mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
-        mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
-        mProvince = intent.getParcelableExtra(INTENT_EXTRA_DATA_PROVINCE);
+
+        StayCuration stayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+
+        mCheckInSaleTime = stayCuration.getCheckInSaleTime();
+        mCheckOutSaleTime = stayCuration.getCheckOutSaleTime();
+        mStayCurationOption = stayCuration.getStayCurationOption();
+        mCategory = stayCuration.getCategory();
+        mProvince = stayCuration.getProvince();
+        mIsGlobal = mProvince.isOverseas;
 
         mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
