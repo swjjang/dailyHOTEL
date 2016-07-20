@@ -381,6 +381,7 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_PAYMENT = "DailyHotel_BookingInitialise";
         public static final String DAILYHOTEL_PAYMENT_AGREEMENT_POPUP = "DailyHotel_PaymentAgreementPopupScreen";
         public static final String DAILYHOTEL_PAYMENT_PROCESS = "DailyHotel_PaymentGateway";
+        public static final String DAILYHOTEL_PAYMENT_COMPLETE = "DailyHotel_PaymentComplete";
         public static final String DAILYHOTEL_PAYMENT_THANKYOU = "DailyHotel_Thankyou";
         //
         //
@@ -402,6 +403,7 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_PAYMENT = "DailyGourmet_BookingInitialise";
         public static final String DAILYGOURMET_PAYMENT_AGREEMENT_POPUP = "DailyGourmet_PaymentAgreementPopupScreen";
         public static final String DAILYGOURMET_PAYMENT_PROCESS = "DailyGourmet_PaymentGateway";
+        public static final String DAILYGOURMET_PAYMENT_COMPLETE = "DailyGourmet_PaymentComplete";
         public static final String DAILYGOURMET_PAYMENT_THANKYOU = "DailyGourmet_Thankyou";
         //
         //

@@ -135,6 +135,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
+    }
+
+    @Override
     protected void onPause()
     {
         super.onPause();
@@ -731,6 +739,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
+            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
         } catch (Exception e)
         {

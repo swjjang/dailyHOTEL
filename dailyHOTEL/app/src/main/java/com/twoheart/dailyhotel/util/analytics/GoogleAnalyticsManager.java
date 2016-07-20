@@ -122,6 +122,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(4, screen, null, params);
+        } else if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screen) == true)
+        {
+            recordScreen(screen);
         }
     }
 
