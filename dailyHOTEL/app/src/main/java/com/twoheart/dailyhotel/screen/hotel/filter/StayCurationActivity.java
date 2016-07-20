@@ -113,7 +113,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             {
                 showAnimation();
             }
-        }, 50);
+        }, 20);
     }
 
     @Override

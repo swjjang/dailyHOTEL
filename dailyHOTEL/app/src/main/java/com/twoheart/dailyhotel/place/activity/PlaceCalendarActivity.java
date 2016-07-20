@@ -39,6 +39,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private View mDisableLayout; // 전체 화면을 덮는 뷰
     protected View mExitView;
     private View mBackgroundView; // 뒷배경
+    private ViewGroup mCalendarsLayout;
 
     private TextView mTitleTextView;
 
@@ -47,11 +48,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 
-    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, final SaleTime dailyTime, final int enableDayCountOfMax, final int dayCountOfMax)
     {
         setContentView(layoutResID);
 
-        ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
+        mCalendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
@@ -66,7 +67,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mBackgroundView = (View) mExitView.getParent();
 
         mDailyViews = new View[dayCountOfMax];
+    }
 
+    protected void makeCalendar(SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    {
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         calendar.setTimeInMillis(dailyTime.getDailyTime());
@@ -90,7 +94,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                     , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + Util.dpToPx(this, 30));
             }
 
-            calendarsLayout.addView(calendarLayout);
+            mCalendarsLayout.addView(calendarLayout);
 
             dayCount += maxDayOfMonth - day + 1;
             maxDay = dayCountOfMax - dayCount;

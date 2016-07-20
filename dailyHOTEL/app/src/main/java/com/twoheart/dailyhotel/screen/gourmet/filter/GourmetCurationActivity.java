@@ -96,7 +96,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             {
                 showAnimation();
             }
-        }, 50);
+        }, 20);
     }
 
     @Override

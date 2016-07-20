@@ -52,10 +52,10 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = getIntent();
 
-        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        final SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
-        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
-        boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
+        final int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
         if (saleTime == null)
@@ -67,14 +67,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 
-        reset();
-
-        if (isSelected == true)
-        {
-            setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
-            checkLastDay();
-        }
-
         if (mIsAnimation == true)
         {
             mAnimationLayout.setVisibility(View.INVISIBLE);
@@ -83,9 +75,19 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
+                    makeCalendar(saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+
+                    reset();
+
+                    if (isSelected == true)
+                    {
+                        setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+                        checkLastDay();
+                    }
+
                     showAnimation();
                 }
-            }, 50);
+            }, 20);
         }
     }
 
@@ -319,6 +321,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         for (View dayView : mDailyViews)
         {
+            if (dayView == null)
+            {
+                continue;
+            }
+
             Day day = (Day) dayView.getTag();
 
             if (checkInTime.isDayOfDaysDateEquals(day.dayTime) == true)
@@ -393,6 +400,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         for (View dayView : mDailyViews)
         {
+            if (dayView == null)
+            {
+                continue;
+            }
+
             dayView.setActivated(false);
             dayView.setSelected(false);
             dayView.setEnabled(true);

@@ -48,9 +48,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = getIntent();
 
-        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        final SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
-        boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
+        final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
         if (saleTime == null)
@@ -62,13 +62,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
 
-        reset();
-
-        if (isSelected == true)
-        {
-            setSelectedDay(saleTime);
-        }
-
         if (mIsAnimation == true)
         {
             mAnimationLayout.setVisibility(View.INVISIBLE);
@@ -77,9 +70,18 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
+                    makeCalendar(saleTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+
+                    reset();
+
+                    if (isSelected == true)
+                    {
+                        setSelectedDay(saleTime);
+                    }
+
                     showAnimation();
                 }
-            }, 50);
+            }, 20);
         } else
         {
             setTouchEnabled(true);
@@ -254,6 +256,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         for (View dayView : mDailyViews)
         {
+            if (dayView == null)
+            {
+                continue;
+            }
+
             Day day = (Day) dayView.getTag();
 
             if (saleTime.isDayOfDaysDateEquals(day.dayTime) == true)
@@ -278,6 +285,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         for (int i = 0; i < length; i++)
         {
+            if (mDailyViews[i] == null)
+            {
+                continue;
+            }
+
             if (i < ENABLE_DAYCOUNT_OF_MAX)
             {
                 mDailyViews[i].setEnabled(true);
