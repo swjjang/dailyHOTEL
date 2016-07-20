@@ -122,6 +122,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(4, screen, null, params);
+        } else if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screen) == true)
+        {
+            recordScreen(screen);
         }
     }
 
@@ -155,7 +158,13 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void recordEvent(Map<String, String> params)
     {
+    }
 
+    @Override
+    void recordDeepLink(String deepLink)
+    {
+        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder()//
+            .setCampaignParamsFromUrl(deepLink).build());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,6 +244,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
+        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_COMPLETE);
+
         Product product = getProcuct(params);
         product.setBrand("hotel");
 
@@ -275,6 +286,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+
+        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
 
         Product product = getProcuct(params);
         product.setBrand("gourmet");
@@ -485,7 +498,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "checkoutStep : " + step + " | " + transId + " | " + productAction.toString());
+            ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + transId + " | " + productAction.toString());
         }
     }
 }

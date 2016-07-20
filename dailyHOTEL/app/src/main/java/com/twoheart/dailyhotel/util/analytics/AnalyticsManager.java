@@ -222,6 +222,20 @@ public class AnalyticsManager
         }
     }
 
+    public void recordDeepLink(String deepLink)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.recordDeepLink(deepLink);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -445,6 +459,10 @@ public class AnalyticsManager
         public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
         public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
         public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
+        //
+        public static final String DAILYHOTEL_DEPOSITWAITING = "DailyHotel_DepositWaiting";
+        public static final String DAILYGOURMET_DEPOSITWAITING = "DailyGourmet_DepositWaiting";
+
 
     }
 
