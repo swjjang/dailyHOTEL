@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.gourmet;
+package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -68,6 +68,20 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
                 View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
 
                 return new GourmetViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+
+                return new FooterViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_LOADING_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
+
+                return new FooterViewHolder(view);
             }
         }
 
@@ -222,6 +236,14 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
             distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
+        }
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
         }
     }
 }

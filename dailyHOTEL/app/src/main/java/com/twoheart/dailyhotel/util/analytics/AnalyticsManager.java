@@ -772,6 +772,7 @@ public class AnalyticsManager
         public static final String EMPTY = "null";
         public static final String LIST = "list";
         public static final String SEARCH = "search";
+        public static final String SEARCH_RESULT = "searchResult";
         public static final String CHANGED = "Changed";
         public static final String NONE = "None";
         public static final String MEMBER = "member";
