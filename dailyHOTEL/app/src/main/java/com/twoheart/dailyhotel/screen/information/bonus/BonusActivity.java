@@ -1,13 +1,18 @@
 package com.twoheart.dailyhotel.screen.information.bonus;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -50,6 +55,12 @@ public class BonusActivity extends BaseActivity
         super.onStart();
 
         AnalyticsManager.getInstance(BonusActivity.this).recordScreen(AnalyticsManager.Screen.BONUS);
+
+        if (DailyHotel.isLogin() == false)
+        {
+            lockUI();
+            showLoginDialog();
+        }
     }
 
     @Override
@@ -63,8 +74,11 @@ public class BonusActivity extends BaseActivity
             mDontReloadAtOnResume = false;
         } else
         {
-            lockUI();
-            mNetworkController.requestBonus();
+            if (DailyHotel.isLogin() == true)
+            {
+                lockUI();
+                mNetworkController.requestBonus();
+            }
         }
     }
 
@@ -81,7 +95,67 @@ public class BonusActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        mDontReloadAtOnResume = true;
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode != Activity.RESULT_OK)
+                {
+                    finish();
+                } else
+                {
+                    mDontReloadAtOnResume = false;
+                }
+                break;
+            }
+
+            default:
+                mDontReloadAtOnResume = true;
+                break;
+        }
+    }
+
+    private void startLogin()
+    {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+    }
+
+    private void showLoginDialog()
+    {
+        // 로그인 필요
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                lockUI();
+                startLogin();
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        };
+
+        String title = this.getResources().getString(R.string.dialog_notice2);
+        String message = this.getResources().getString(R.string.message_you_can_check_the_bonus_after_login);
+        String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
+        String negative = this.getResources().getString(R.string.dialog_btn_text_no);
+
+        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                finish();
+            }
+        }, null, true);
     }
 
     private BonusLayout.OnEventListener mOnEventListener = new BonusLayout.OnEventListener()
