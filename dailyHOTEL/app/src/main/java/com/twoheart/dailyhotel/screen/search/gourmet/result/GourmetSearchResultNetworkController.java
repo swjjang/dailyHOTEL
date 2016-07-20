@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.stay;
+package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 import android.location.Location;
@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelSearch;
+import com.twoheart.dailyhotel.model.GourmetSearch;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -32,7 +32,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class StaySearchResultNetworkController extends BaseNetworkController
+public class GourmetSearchResultNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -43,12 +43,12 @@ public class StaySearchResultNetworkController extends BaseNetworkController
         void onResponseAddress(String address);
     }
 
-    public StaySearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
+    public GourmetSearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
-    public void requestSearchResultList(SaleTime saleTime, int nights, String keyword, int offset, int count)
+    public void requestSearchResultList(SaleTime saleTime, String keyword, int offset, int count)
     {
         String encodeKeyword;
 
@@ -60,17 +60,17 @@ public class StaySearchResultNetworkController extends BaseNetworkController
             encodeKeyword = keyword;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, encodeKeyword, offset, count, mHotelSearchListJsonResponseListener, mHotelSearchListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, encodeKeyword, offset, count, mGourmetSearchListJsonResponseListener, mGourmetSearchListJsonResponseListener);
     }
 
-    public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int offset, int count)
+    public void requestSearchResultList(SaleTime saleTime, Location location, int offset, int count)
     {
         requestAddress(location, mLocationToAddressListener);
 
-        DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelLocationSearchListJsonResponseListener, mHotelLocationSearchListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, mGourmetLocationSearchListJsonResponseListener);
     }
 
-    private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+    private ArrayList<PlaceViewItem> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
     {
         if (jsonArray == null || jsonArray.length() == 0)
         {
@@ -85,11 +85,11 @@ public class StaySearchResultNetworkController extends BaseNetworkController
         {
             jsonObject = jsonArray.getJSONObject(i);
 
-            HotelSearch hotel = new HotelSearch();
+            GourmetSearch gourmet = new GourmetSearch();
 
-            if (hotel.setStay(jsonObject, imageUrl, nights) == true)
+            if (gourmet.setGourmet(jsonObject, imageUrl) == true)
             {
-                PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel);
+                PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet);
                 placeViewItemList.add(placeViewItem);
             }
         }
@@ -111,14 +111,8 @@ public class StaySearchResultNetworkController extends BaseNetworkController
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mHotelSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mGourmetSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -131,8 +125,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
                     String imageUrl = dataJSONObject.getString("imgUrl");
-                    int nights = dataJSONObject.getInt("lengthStay");
-                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
                     int totalCount = dataJSONObject.getInt("totalCount");
 
                     // totalCount == -1 인경우에는 연박으로 호텔의 개수를 알수가 없다.
@@ -140,12 +133,12 @@ public class StaySearchResultNetworkController extends BaseNetworkController
 
                     int length;
 
-                    if (hotelJSONArray == null)
+                    if (gourmetJSONArray == null)
                     {
                         length = 0;
                     } else
                     {
-                        length = hotelJSONArray.length();
+                        length = gourmetJSONArray.length();
                     }
 
                     if (length == 0 && totalCount != -1)
@@ -153,7 +146,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseSearchResultList(0, null);
                     } else
                     {
-                        ArrayList<PlaceViewItem> placeViewItemList = makeHotelList(hotelJSONArray, imageUrl, nights);
+                        ArrayList<PlaceViewItem> placeViewItemList = makeGourmetList(gourmetJSONArray, imageUrl);
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseSearchResultList(totalCount, placeViewItemList);
                     }
                 } else
@@ -181,7 +174,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                 if (Constants.DEBUG == false)
                 {
                     String message = url + " : " + response.toString();
-                    Crashlytics.logException(new JSONException(message));
+                    Crashlytics.log(10, "GourmetSearchResultNetworkController", message);
                 }
 
                 mOnNetworkControllerListener.onError(e);
@@ -190,16 +183,16 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
-    };
 
-    private DailyHotelJsonResponseListener mHotelLocationSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
+    };
 
+    private DailyHotelJsonResponseListener mGourmetLocationSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -212,8 +205,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
                     String imageUrl = dataJSONObject.getString("imgUrl");
-                    int nights = dataJSONObject.getInt("lengthStay");
-                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
                     int totalCount = dataJSONObject.getInt("totalCount");
 
                     // totalCount == -1 인경우에는 연박으로 호텔의 개수를 알수가 없다.
@@ -221,12 +213,12 @@ public class StaySearchResultNetworkController extends BaseNetworkController
 
                     int length;
 
-                    if (hotelJSONArray == null)
+                    if (gourmetJSONArray == null)
                     {
                         length = 0;
                     } else
                     {
-                        length = hotelJSONArray.length();
+                        length = gourmetJSONArray.length();
                     }
 
                     if (length == 0 && totalCount != -1)
@@ -234,7 +226,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseLocationSearchResultList(0, null);
                     } else
                     {
-                        ArrayList<PlaceViewItem> placeViewItemList = makeHotelList(hotelJSONArray, imageUrl, nights);
+                        ArrayList<PlaceViewItem> placeViewItemList = makeGourmetList(gourmetJSONArray, imageUrl);
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseLocationSearchResultList(totalCount, placeViewItemList);
                     }
                 } else
@@ -262,7 +254,7 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                 if (Constants.DEBUG == false)
                 {
                     String message = url + " : " + response.toString();
-                    Crashlytics.log(10, "HotelLocationSearchResultNetworkController", message);
+                    Crashlytics.log(10, "GourmetLocationSearchResultNetworkController", message);
                 }
 
                 mOnNetworkControllerListener.onError(e);
@@ -271,16 +263,16 @@ public class StaySearchResultNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -435,6 +427,12 @@ public class StaySearchResultNetworkController extends BaseNetworkController
             }
 
             return false;
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 

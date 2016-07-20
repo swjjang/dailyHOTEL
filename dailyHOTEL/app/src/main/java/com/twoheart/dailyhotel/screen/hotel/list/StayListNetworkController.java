@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 public class StayListNetworkController extends BaseNetworkController
 {
-    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onStayList(ArrayList<Stay> list, int page);
     }

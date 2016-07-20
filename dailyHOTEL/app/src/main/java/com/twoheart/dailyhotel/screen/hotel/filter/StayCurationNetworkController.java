@@ -16,7 +16,7 @@ import org.json.JSONObject;
  */
 public class StayCurationNetworkController extends BaseNetworkController
 {
-    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onStayCount(String url, int hotelSaleCount);
     }
