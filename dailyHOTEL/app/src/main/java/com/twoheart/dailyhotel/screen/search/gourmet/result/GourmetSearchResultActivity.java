@@ -12,7 +12,9 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
@@ -52,6 +54,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private int mSearchType;
     private GourmetSearchResultNetworkController mNetworkController;
 
+    private GourmetCuration mPlaceCuration;
+
     public static Intent newInstance(Context context, SaleTime saleTime, String inputText, Keyword keyword, int searchType)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
@@ -59,6 +63,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType);
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new GourmetCuration());
 
         return intent;
     }
@@ -79,6 +84,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_LOCATION);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new GourmetCuration());
 
         return intent;
     }
@@ -156,6 +162,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
+        mPlaceCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+
         mOffset = 0;
 
         if (mSaleTime == null)
@@ -283,6 +291,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     protected Keyword getKeyword()
     {
         return mKeyword;
+    }
+
+    @Override
+    protected PlaceCuration getPlaceCuration()
+    {
+        return mPlaceCuration;
     }
 
     @Override

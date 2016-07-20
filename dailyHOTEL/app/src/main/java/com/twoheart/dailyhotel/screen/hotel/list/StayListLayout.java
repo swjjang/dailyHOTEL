@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
@@ -21,6 +22,8 @@ import java.util.List;
 public class StayListLayout extends PlaceListLayout
 {
     private StayListMapFragment mStayListMapFragment;
+
+    private StayCuration mStayCuration;
 
     public StayListLayout(Context context, OnEventListener eventListener)
     {
@@ -67,7 +70,7 @@ public class StayListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                if (StayCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == true)
+                if (mStayCuration.getStayCurationOption().isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
@@ -301,6 +304,11 @@ public class StayListLayout extends PlaceListLayout
     public int getMapItemSize()
     {
         return mStayListMapFragment != null ? mStayListMapFragment.getPlaceViewItemListSize() : 0;
+    }
+
+    public void setStayCuration(StayCuration curation)
+    {
+        mStayCuration = curation;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

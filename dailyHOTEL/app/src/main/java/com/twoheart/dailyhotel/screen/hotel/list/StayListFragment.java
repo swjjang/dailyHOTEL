@@ -11,10 +11,12 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -29,6 +31,8 @@ import java.util.List;
 public class StayListFragment extends PlaceListFragment
 {
     private int mPageIndex;
+
+    private StayCuration mStayCuration;
 
     protected StayListLayout mStayListLayout;
     protected StayListNetworkController mNetworkController;
@@ -71,9 +75,12 @@ public class StayListFragment extends PlaceListFragment
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////           Ovrride method    start   /////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void setPlaceCuration(PlaceCuration curation)
+    {
+        mStayCuration = (StayCuration) curation;
+        mStayListLayout.setStayCuration(mStayCuration);
+    }
 
     @Override
     public void clearList()
@@ -113,9 +120,9 @@ public class StayListFragment extends PlaceListFragment
             lockUI(isShowProgress);
         }
 
-        SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+        SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
 
-        Province province = StayCurationManager.getInstance().getProvince();
+        Province province = mStayCuration.getProvince();
 
         if (province == null || checkInSaleTime == null)
         {
@@ -124,7 +131,7 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        int nights = StayCurationManager.getInstance().getNights();
+        int nights = mStayCuration.getNights();
         if (nights <= 0)
         {
             unLockUI();
@@ -133,7 +140,7 @@ public class StayListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        StayParams params = StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true);
+        StayParams params = mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true);
         if (SortType.DISTANCE == params.getSortType() && params.hasLocation() == false)
         {
             unLockUI();
@@ -141,7 +148,7 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true));
+        mNetworkController.requestStayList(mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true));
     }
 
     public boolean hasSalesPlace()
@@ -228,10 +235,6 @@ public class StayListFragment extends PlaceListFragment
         return stayViewItemList;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////           Ovrride method     end    /////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +256,7 @@ public class StayListFragment extends PlaceListFragment
                 mStayListLayout.clearList();
             }
 
-            SortType sortType = StayCurationManager.getInstance().getStayCurationOption().getSortType();
+            SortType sortType = mStayCuration.getStayCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
 
@@ -330,7 +333,7 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem, checkInSaleTime);
         }
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
@@ -48,6 +49,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected abstract void onLocationProviderDisabled();
 
     protected abstract void onLocationChanged(Location location);
+
+    protected abstract PlaceCuration getPlaceCuration();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -241,6 +244,7 @@ public abstract class PlaceMainFragment extends BaseFragment
         PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
         if (currentListFragment != null)
         {
+            currentListFragment.setPlaceCuration(getPlaceCuration());
             currentListFragment.refreshList(true);
         }
     }

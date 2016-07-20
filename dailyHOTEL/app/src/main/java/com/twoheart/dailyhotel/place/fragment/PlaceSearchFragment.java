@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -50,6 +51,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected abstract void onSearch(Location location);
 
     public abstract void startSearchResultActivity();
+
+    public abstract void setSaleTime(SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
     public interface OnSearchFragmentListener
     {

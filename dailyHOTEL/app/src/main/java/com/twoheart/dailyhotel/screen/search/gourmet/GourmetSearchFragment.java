@@ -15,8 +15,6 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -41,24 +39,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         mAnalyticsHandler = new AnalyticsHandler(this);
 
-        if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
+        if (mSaleTime == null)
         {
-            try
-            {
-                SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
-
-                StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
-                SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-                StayCurationManager.getInstance().setCheckOutSaleTime( //
-                    checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
-            } catch (Exception e)
-            {
-                Util.restartApp(mBaseActivity);
-                return;
-            }
+            Util.restartApp(mBaseActivity);
+        } else
+        {
+            setDateText(mSaleTime);
         }
-
-        setDateText(GourmetCurationManager.getInstance().getSaleTime());
     }
 
     @Override
@@ -68,7 +55,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         if (mSaleTime == null)
         {
-            setDateText(GourmetCurationManager.getInstance().getSaleTime());
+            Util.restartApp(mBaseActivity);
         } else
         {
             setDateText(mSaleTime);
@@ -158,6 +145,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+    }
+
+    @Override
+    public void setSaleTime(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        mSaleTime = checkInSaleTime;
     }
 
     @Override

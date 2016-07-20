@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -29,6 +31,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
     protected StayListNetworkController mNetworkController;
 
     protected BaseActivity mBaseActivity;
+    private StayCuration mPlaceCuration;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -71,6 +74,12 @@ public class StaySearchResultListFragment extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////           Ovrride method    start   /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void setPlaceCuration(PlaceCuration curation)
+    {
+        mPlaceCuration = (StayCuration) curation;
+    }
 
     @Override
     public void clearList()

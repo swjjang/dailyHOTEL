@@ -190,7 +190,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL);
+        Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mSaleTime, mNights);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//

@@ -14,10 +14,12 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -57,6 +59,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private int mSearchType;
     private StaySearchResultNetworkController mNetworkController;
+
+    private StayCuration mPlaceCuration;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, int searchType)
     {
@@ -224,6 +228,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
+        mPlaceCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+
         if (saleTime == null)
         {
             finish();
@@ -256,6 +262,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     protected Keyword getKeyword()
     {
         return mKeyword;
+    }
+
+    @Override
+    protected PlaceCuration getPlaceCuration()
+    {
+        return mPlaceCuration;
     }
 
     @Override
@@ -752,6 +764,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setPlaceCuration(mPlaceCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {

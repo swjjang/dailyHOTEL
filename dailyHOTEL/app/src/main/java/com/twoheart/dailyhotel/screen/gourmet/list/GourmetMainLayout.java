@@ -36,7 +36,7 @@ public class GourmetMainLayout extends PlaceMainLayout
 
     protected void setToolbarDateText(SaleTime saleTime)
     {
-        String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
+        String dateText = saleTime.getDayOfDaysDateFormat("M.d(EEE)");
         setToolbarDateText(dateText);
     }
 }

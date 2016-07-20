@@ -13,8 +13,10 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilters;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -43,6 +45,8 @@ public class GourmetListFragment extends PlaceListFragment
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
     private GourmetListLayout mGourmetListLayout;
+
+    private GourmetCuration mGourmetCuration;
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -77,6 +81,13 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
+    public void setPlaceCuration(PlaceCuration curation)
+    {
+        mGourmetCuration = (GourmetCuration) curation;
+        mGourmetListLayout.setGourmetCuration(mGourmetCuration);
+    }
+
+    @Override
     public void clearList()
     {
         mGourmetListLayout.clearList();
@@ -85,7 +96,7 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
-        if (GourmetCurationManager.getInstance().getSaleTime() == null || GourmetCurationManager.getInstance().getProvince() == null)
+        if (mGourmetCuration.getSaleTime() == null || mGourmetCuration.getProvince() == null)
         {
             Util.restartApp(mBaseActivity);
             return;
@@ -94,8 +105,8 @@ public class GourmetListFragment extends PlaceListFragment
         lockUI(isShowProgress);
 
         DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, //
-            GourmetCurationManager.getInstance().getProvince(), //
-            GourmetCurationManager.getInstance().getSaleTime(), //
+            mGourmetCuration.getProvince(), //
+            mGourmetCuration.getSaleTime(), //
             mGourmetListJsonResponseListener, mBaseActivity);
     }
 
@@ -132,7 +143,7 @@ public class GourmetListFragment extends PlaceListFragment
             return gourmetViewItemList;
         }
 
-        final Location location = GourmetCurationManager.getInstance().getLocation();
+        final Location location = mGourmetCuration.getLocation();
 
         switch (gourmetCurationOption.getSortType())
         {
@@ -340,7 +351,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, GourmetCurationManager.getInstance().getSaleTime());
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, mGourmetCuration.getSaleTime());
         }
 
         @Override
@@ -364,6 +375,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onRefreshAll(boolean isShowProgress)
         {
+            setPlaceCuration(mGourmetCuration);
             refreshList(isShowProgress);
 
             mOnPlaceListFragmentListener.onShowMenuBar();
@@ -430,7 +442,7 @@ public class GourmetListFragment extends PlaceListFragment
 
                     mGourmetList.clear();
 
-                    GourmetCurationOption gourmetCurationOption = GourmetCurationManager.getInstance().getGourmetCurationOption();
+                    GourmetCurationOption gourmetCurationOption = mGourmetCuration.getGourmetCurationOption();
 
                     if (length == 0)
                     {

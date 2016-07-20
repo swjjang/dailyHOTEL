@@ -131,7 +131,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        Intent intent = SearchActivity.newInstance(this, PlaceType.FNB);
+        Intent intent = SearchActivity.newInstance(this, PlaceType.FNB, mSaleTime, 1);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//

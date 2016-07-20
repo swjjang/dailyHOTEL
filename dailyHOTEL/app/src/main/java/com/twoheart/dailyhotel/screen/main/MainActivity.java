@@ -26,8 +26,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -185,9 +183,6 @@ public class MainActivity extends BaseActivity implements Constants
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, contentLayout, mMenuBarLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
-
-        StayCurationManager.getInstance().clear();
-        GourmetCurationManager.getInstance().clear();
     }
 
     @Override
@@ -580,26 +575,26 @@ public class MainActivity extends BaseActivity implements Constants
                 unLockUI();
 
                 // Android
-//                if (Util.isOverAPI15() == false)
-//                {
-//                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-//                    {
-//                        @Override
-//                        public void onClick(View v)
-//                        {
-//                            finish();
-//                        }
-//                    }, new DialogInterface.OnCancelListener()
-//                    {
-//                        @Override
-//                        public void onCancel(DialogInterface dialog)
-//                        {
-//                            finish();
-//                        }
-//                    });
-//
-//                    return;
-//                }
+                //                if (Util.isOverAPI15() == false)
+                //                {
+                //                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                //                    {
+                //                        @Override
+                //                        public void onClick(View v)
+                //                        {
+                //                            finish();
+                //                        }
+                //                    }, new DialogInterface.OnCancelListener()
+                //                    {
+                //                        @Override
+                //                        public void onCancel(DialogInterface dialog)
+                //                        {
+                //                            finish();
+                //                        }
+                //                    });
+                //
+                //                    return;
+                //                }
 
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
@@ -637,26 +632,26 @@ public class MainActivity extends BaseActivity implements Constants
                 unLockUI();
 
                 // Android
-//                if (Util.isOverAPI15() == false)
-//                {
-//                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-//                    {
-//                        @Override
-//                        public void onClick(View v)
-//                        {
-//                            finish();
-//                        }
-//                    }, new DialogInterface.OnCancelListener()
-//                    {
-//                        @Override
-//                        public void onCancel(DialogInterface dialog)
-//                        {
-//                            finish();
-//                        }
-//                    });
-//
-//                    return;
-//                }
+                //                if (Util.isOverAPI15() == false)
+                //                {
+                //                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_do_not_support_dailyhotel), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                //                    {
+                //                        @Override
+                //                        public void onClick(View v)
+                //                        {
+                //                            finish();
+                //                        }
+                //                    }, new DialogInterface.OnCancelListener()
+                //                    {
+                //                        @Override
+                //                        public void onCancel(DialogInterface dialog)
+                //                        {
+                //                            finish();
+                //                        }
+                //                    });
+                //
+                //                    return;
+                //                }
 
                 View.OnClickListener posListener = new View.OnClickListener()
                 {

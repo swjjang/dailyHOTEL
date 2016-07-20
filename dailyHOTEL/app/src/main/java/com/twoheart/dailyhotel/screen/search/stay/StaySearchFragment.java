@@ -14,9 +14,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -42,21 +40,13 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         mAnalyticsHandler = new AnalyticsHandler(this);
 
-        if (GourmetCurationManager.getInstance().getSaleTime() == null)
+        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
         {
-            try
-            {
-                SaleTime saleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(0);
-
-                GourmetCurationManager.getInstance().setSaleTime(saleTime);
-            } catch (Exception e)
-            {
-                Util.restartApp(mBaseActivity);
-                return;
-            }
+            Util.restartApp(mBaseActivity);
+        } else
+        {
+            setDateText(mCheckInSaleTime, mCheckOutSaleTime);
         }
-
-        setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
     }
 
     @Override
@@ -66,7 +56,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
         {
-            setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
+            Util.restartApp(mBaseActivity);
         } else
         {
             setDateText(mCheckInSaleTime, mCheckOutSaleTime);
@@ -161,6 +151,13 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+    }
+
+    @Override
+    public void setSaleTime(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        mCheckInSaleTime = checkInSaleTime;
+        mCheckOutSaleTime = checkOutSaleTime;
     }
 
     @Override

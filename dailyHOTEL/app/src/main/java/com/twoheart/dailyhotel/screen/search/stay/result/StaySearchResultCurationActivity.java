@@ -14,17 +14,14 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationNetworkController;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -56,12 +53,15 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     private TextView mPersonCountView;
     private ViewGroup mBedTypeLayout;
 
+    private StayCuration mPlaceCuration;
+
     public static Intent newInstance(Context context, ViewType viewType, StayCurationOption stayCurationOption, Category category)
     {
         Intent intent = new Intent(context, StaySearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new StayCuration());
 
         return intent;
     }
@@ -82,6 +82,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
         mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
+        mPlaceCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
         mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 

@@ -1,36 +1,17 @@
-package com.twoheart.dailyhotel.screen.hotel.list;
+package com.twoheart.dailyhotel.model;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.StayCurationOption;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.util.Constants;
 
-public class StayCurationManager
+public class StayCuration extends PlaceCuration
 {
-    private static StayCurationManager mInstance;
-
-    private Province mProvince;
-    private Location mLocation; // Not Parcelable
-
     private SaleTime mCheckInSaleTime;
     private SaleTime mCheckOutSaleTime;
     private Category mCategory;
     private StayCurationOption mStayCurationOption;
-
-    public static synchronized StayCurationManager getInstance()
-    {
-        if (mInstance == null)
-        {
-            mInstance = new StayCurationManager();
-        }
-
-        return mInstance;
-    }
 
     public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
     {
@@ -73,7 +54,7 @@ public class StayCurationManager
         return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
     }
 
-    private StayCurationManager()
+    public StayCuration()
     {
         mStayCurationOption = new StayCurationOption();
 
@@ -83,26 +64,6 @@ public class StayCurationManager
     public StayCurationOption getStayCurationOption()
     {
         return mStayCurationOption;
-    }
-
-    public Province getProvince()
-    {
-        return mProvince;
-    }
-
-    public void setProvince(Province province)
-    {
-        mProvince = province;
-    }
-
-    public Location getLocation()
-    {
-        return mLocation;
-    }
-
-    public void setLocation(Location location)
-    {
-        mLocation = location;
     }
 
     public Category getCategory()
@@ -155,6 +116,7 @@ public class StayCurationManager
         return params;
     }
 
+    @Override
     public void clear()
     {
         mCategory = Category.ALL;
@@ -167,4 +129,50 @@ public class StayCurationManager
         mProvince = null;
         mLocation = null;
     }
+
+    public StayCuration(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeParcelable(mProvince, flags);
+        dest.writeParcelable(mLocation, flags);
+        dest.writeParcelable(mCheckInSaleTime, flags);
+        dest.writeParcelable(mCheckOutSaleTime, flags);
+        dest.writeParcelable(mCategory, flags);
+        dest.writeParcelable(mStayCurationOption, flags);
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        mProvince = in.readParcelable(Province.class.getClassLoader());
+        mLocation = in.readParcelable(Location.class.getClassLoader());
+        mCheckInSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
+        mCheckOutSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
+        mCategory = in.readParcelable(Category.class.getClassLoader());
+        mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public StayCuration createFromParcel(Parcel in)
+        {
+            return new StayCuration(in);
+        }
+
+        @Override
+        public StayCuration[] newArray(int size)
+        {
+            return new StayCuration[size];
+        }
+    };
 }

@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayMainLayout extends PlaceMainLayout
 {
-
     public StayMainLayout(Context context, OnEventListener mOnEventListener)
     {
         super(context, mOnEventListener);

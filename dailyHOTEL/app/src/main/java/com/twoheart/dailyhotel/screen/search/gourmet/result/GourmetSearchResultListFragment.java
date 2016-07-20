@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.GourmetCuration;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -30,6 +32,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     private boolean mIsLoading;
 
     private GourmetSearchResultListAdapter mListAdapter;
+
+    private GourmetCuration mPlaceCuration;
 
     public interface OnGourmetSearchResultListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -134,6 +138,12 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         }
 
         mListAdapter.setSortType(sortType);
+    }
+
+    @Override
+    public void setPlaceCuration(PlaceCuration curation)
+    {
+        mPlaceCuration = (GourmetCuration) curation;
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
@@ -30,10 +31,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private StaySearchFragment mStaySearchFragment;
     private GourmetSearchFragment mGourmetSearchFragment;
 
-    public static Intent newInstance(Context context, PlaceType placeType)
+    private SaleTime mSaleTime;
+    private int mNights;
+
+    public static Intent newInstance(Context context, PlaceType placeType, SaleTime saleTime, int nights)
     {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         return intent;
     }
 
@@ -53,9 +59,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
+        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mNights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
 
         initLayout(mPlaceType);
+
     }
 
     private void initLayout(PlaceType placeType)
@@ -64,7 +74,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
 
+        SaleTime checkInSaleTime = mSaleTime;
+        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + mNights);
+
         mStaySearchFragment = new StaySearchFragment();
+        mStaySearchFragment.setSaleTime(checkInSaleTime, checkOutSaleTime);
+
         mStaySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
         {
             @Override
@@ -89,6 +104,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         fragmentList.add(mStaySearchFragment);
 
         mGourmetSearchFragment = new GourmetSearchFragment();
+        mGourmetSearchFragment.setSaleTime(checkInSaleTime, checkOutSaleTime);
         mGourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
         {
             @Override

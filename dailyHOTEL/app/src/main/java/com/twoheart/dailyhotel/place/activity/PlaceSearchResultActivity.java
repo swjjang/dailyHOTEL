@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
@@ -49,6 +52,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected abstract void initLayout();
 
     protected abstract Keyword getKeyword();
+
+    protected abstract PlaceCuration getPlaceCuration();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -187,6 +192,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         PlaceListFragment currentListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
         if (currentListFragment != null)
         {
+            currentListFragment.setPlaceCuration(getPlaceCuration());
             currentListFragment.refreshList(true);
         }
     }
@@ -202,6 +208,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
         DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
         {
+            @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onRequirePermission()
             {

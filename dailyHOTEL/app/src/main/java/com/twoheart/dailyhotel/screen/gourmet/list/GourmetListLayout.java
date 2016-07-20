@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
@@ -23,6 +23,9 @@ import java.util.List;
 public class GourmetListLayout extends PlaceListLayout
 {
     private GourmetListMapFragment mGourmetListMapFragment;
+
+    private GourmetCuration mGourmetCuration;
+
 
     public GourmetListLayout(Context context, OnEventListener mOnEventListener)
     {
@@ -69,7 +72,7 @@ public class GourmetListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                if(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == true)
+                if (mGourmetCuration.getGourmetCurationOption().isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
@@ -193,6 +196,11 @@ public class GourmetListLayout extends PlaceListLayout
         }
 
         return hasPlace;
+    }
+
+    public void setGourmetCuration(GourmetCuration curation)
+    {
+        mGourmetCuration = curation;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
