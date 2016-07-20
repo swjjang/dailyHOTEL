@@ -664,7 +664,18 @@ public class StayMainFragment extends PlaceMainFragment
             }
         } else
         {
-            return false;
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+                SaleTime checkOutSaleTime = checkInSaleTime.getClone(night);
+
+                StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
+                StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
+            } catch (Exception e)
+            {
+                return false;
+            }
         }
 
         mPlaceMainNetworkController.requestRegionList();

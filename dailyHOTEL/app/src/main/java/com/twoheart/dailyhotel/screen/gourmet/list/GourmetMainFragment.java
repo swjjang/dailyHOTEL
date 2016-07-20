@@ -1010,7 +1010,15 @@ public class GourmetMainFragment extends PlaceMainFragment
             }
         } else
         {
-            return false;
+            try
+            {
+                SaleTime deepLinkSaleTime = GourmetCurationManager.getInstance().getSaleTime();
+                GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
+                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
+            } catch (Exception e)
+            {
+                return false;
+            }
         }
 
         mPlaceMainNetworkController.requestRegionList();
