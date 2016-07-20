@@ -986,6 +986,9 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     // 위치를 살짝 수정한다.
                     item01.latitude += duplicateCount;
                     duplicateCount += 0.000001d;
+                } else
+                {
+                    duplicateCount = 0.000001d;
                 }
             }
         }
