@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
@@ -68,12 +69,21 @@ public class GourmetListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
+                if(GourmetCurationManager.getInstance().getGourmetCurationOption().isDefaultFilter() == true)
+                {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                } else
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                }
 
-                mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
                 break;
         }
     }

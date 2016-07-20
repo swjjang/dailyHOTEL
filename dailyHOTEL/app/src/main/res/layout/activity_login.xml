@@ -32,7 +32,7 @@
         android:inputType="textEmailAddress"
         android:maxLength="50"
         android:singleLine="true"
-        android:textColor="@color/curation_information_text"
+        android:textColor="@color/default_text_c323232"
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"
         android:theme="@style/EditTextTheme"/>
@@ -66,7 +66,7 @@
         android:maxLines="1"
         android:nextFocusDown="@+id/confirmPasswordEditText"
         android:singleLine="true"
-        android:textColor="@color/curation_information_text"
+        android:textColor="@color/default_text_c323232"
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"
         android:theme="@style/EditTextTheme"/>

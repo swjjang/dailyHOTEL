@@ -22,21 +22,20 @@ import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class StaySearchResultActivity extends PlaceSearchResultActivity
@@ -342,7 +341,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     mViewType = ViewType.MAP;
 
-                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
 
                 case MAP:
@@ -474,7 +473,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             mAddress = address;
-
             mPlaceSearchResultLayout.setToolbarTitle(address);
 
             analyticsOnResponseSearchResultListForLocation();
@@ -526,10 +524,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             String checkInDate = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
             String checkOutDate = StaySearchResultCurationManager.getInstance().getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
 
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+            //            Calendar calendar = Calendar.getInstance();
+            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
+            //
+            //            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
 
         private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
@@ -706,7 +705,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
-            Intent intent = new Intent(StaySearchResultActivity.this, HotelDetailActivity.class);
+            Intent intent = new Intent(StaySearchResultActivity.this, StayDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, StaySearchResultCurationManager.getInstance().getCheckInSaleTime());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
@@ -811,6 +810,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         @Override
         public void onShowMenuBar()
+        {
+
+        }
+
+        @Override
+        public void onFilterClick()
         {
 
         }

@@ -66,7 +66,6 @@ public class AnalyticsManager
             mFacebookManager = new FacebookManager(context);
             mAppboyManager = new AppboyManager(context);
 
-
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
             mAnalyticsManagerList.add(mTuneManager);
             mAnalyticsManagerList.add(mFacebookManager);
@@ -568,7 +567,7 @@ public class AnalyticsManager
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
         //
         public static final String CHANGE_LOCATION = "ChangeLocation";
-        public static final String CHAGE_VIEW = "ChageView";
+        public static final String CHANGE_VIEW = "ChangeView";
         public static final String DAILY_HOTEL_CATEGORY_FLICKING = "DailyHotelCategoryFlicking";
         public static final String HOTEL_MAP_ICON_CLICKED = "HotelMapIconClicked";
         public static final String HOTEL_MAP_DETAIL_VIEW_CLICKED = "HotelMapDetailViewClicked";
@@ -778,5 +777,6 @@ public class AnalyticsManager
         public static final String NONE = "None";
         public static final String MEMBER = "member";
         public static final String GUEST = "guest";
+        public static final String DETAIL = "detailview";
     }
 }

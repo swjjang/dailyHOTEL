@@ -303,6 +303,12 @@ public class StaySearchResultListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onFilterClick()
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             if (mBaseActivity != null)

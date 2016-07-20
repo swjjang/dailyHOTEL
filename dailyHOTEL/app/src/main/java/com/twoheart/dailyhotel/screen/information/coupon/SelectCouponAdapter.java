@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -103,7 +104,8 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
         try
         {
-            String expireText = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyy.MM.dd");
+            //            String expireText = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyy.MM.dd");
+            String expireText = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             expireText = String.format("(~%s)", expireText);
             holder.expireTextView.setText(expireText);
             holder.expireTextView.setVisibility(View.VISIBLE);

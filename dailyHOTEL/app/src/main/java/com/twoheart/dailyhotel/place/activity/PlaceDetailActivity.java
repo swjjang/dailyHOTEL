@@ -27,9 +27,10 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -40,10 +41,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -86,6 +84,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
         void finish();
 
         void clipAddress(String address);
+
+        void showNavigatorDialog();
+
+        void onCalendarClick(SaleTime saleTime, int placeIndex);
     }
 
     public interface OnImageActionListener
@@ -105,6 +107,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
 
+    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -120,18 +126,20 @@ public abstract class PlaceDetailActivity extends BaseActivity
             return;
         }
 
+        mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        int calendarFlag = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+
+        mPlaceDetail = createPlaceDetail(intent);
+
+        if (mCheckInSaleTime == null || mPlaceDetail == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsStartByShare = true;
-
-            long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0);
-            int dayOfDays = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, -1);
-
-            mCheckInSaleTime = new SaleTime();
-            mCheckInSaleTime.setDailyTime(dailyTime);
-            mCheckInSaleTime.setOffsetDailyDay(dayOfDays);
-
-            mPlaceDetail = createPlaceDetail(intent);
 
             if (mPlaceDetail == null)
             {
@@ -140,13 +148,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             initLayout(null, null);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, mPlaceDetail.index, false);
+            }
         } else
         {
             mIsStartByShare = false;
-
-            mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
-            mPlaceDetail = createPlaceDetail(intent);
 
             String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
             String imageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
@@ -158,7 +167,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 ((GourmetDetail) mPlaceDetail).category = category;
             }
 
-            if (mCheckInSaleTime == null || mPlaceDetail == null || placeName == null)
+            if (placeName == null)
             {
                 Util.restartApp(this);
                 return;
@@ -169,6 +178,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(placeName, imageUrl);
+
+            if (calendarFlag == 1)
+            {
+                startCalendar(mCheckInSaleTime, mPlaceDetail.index, true);
+            }
         }
     }
 
@@ -281,8 +295,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             switch (mPlaceDetailLayout.getBookingStatus())
             {
-                case HotelDetailLayout.STATUS_BOOKING:
-                case HotelDetailLayout.STATUS_NONE:
+                case StayDetailLayout.STATUS_BOOKING:
+                case StayDetailLayout.STATUS_NONE:
                     mOnUserActionListener.hideTicketInformationLayout();
                     return;
             }
@@ -338,6 +352,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_ZOOMMAP:
                 case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
                     mDontReloadAtOnResume = true;
+                    break;
+
+                case CODE_REQUEST_ACTIVITY_CALENDAR:
+                    mDontReloadAtOnResume = true;
+                    onCalendarActivityResult(requestCode, resultCode, data);
                     break;
             }
 
@@ -666,7 +685,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = ZoomMapActivity.newInstance(PlaceDetailActivity.this//
-                , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
+                , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name, mPlaceDetail.address//
                 , mPlaceDetail.latitude, mPlaceDetail.longitude, false);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
@@ -688,6 +707,27 @@ public abstract class PlaceDetailActivity extends BaseActivity
             DailyToast.showToast(PlaceDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_ADDRESS_COPY_CLICKED, mPlaceDetail.name, null);
+        }
+
+        @Override
+        public void showNavigatorDialog()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Util.showShareMapDialog(PlaceDetailActivity.this, mPlaceDetail.name//
+                , mPlaceDetail.latitude, mPlaceDetail.longitude, false//
+                , AnalyticsManager.Category.GOURMET_BOOKINGS//
+                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
+                , null);
+        }
+
+        @Override
+        public void onCalendarClick(SaleTime saleTime, int placeIndex)
+        {
+            startCalendar(saleTime, placeIndex, false);
         }
     };
 
@@ -828,6 +868,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 return;
             }
 
+            if (mCheckInSaleTime == null)
+            {
+                Util.restartApp(PlaceDetailActivity.this);
+                return;
+            }
+
             try
             {
                 if (response == null)
@@ -837,16 +883,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 if (mIsStartByShare == true)
                 {
+                    long todayDailyTime = response.getLong("dailyDateTime");
+
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-
                     long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
-                    long todayDailyTime = response.getLong("dailyDateTime");
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+                    int shareDailyDay = Integer.parseInt(DailyCalendar.format(shareDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
+                    int todayDailyDay = Integer.parseInt(DailyCalendar.format(todayDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
 
                     // 지난 날의 호텔인 경우.
                     if (shareDailyDay < todayDailyDay)
@@ -856,37 +899,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         finish();
                         return;
                     }
-
-                    requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
-                } else
-                {
-                    SaleTime saleTime = new SaleTime();
-
-                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
-
-                    long todayDailyTime = response.getLong("dailyDateTime");
-                    saleTime.setDailyTime(todayDailyTime);
-
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
-
-                    // 지난 날의 호텔인 경우.
-                    if (shareDailyDay < todayDailyDay)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(PlaceDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                        finish();
-                        return;
-                    }
-
-                    requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
                 }
+
+                requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
             } catch (Exception e)
             {
                 onError(e);

@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -110,8 +111,11 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
                 try
                 {
-                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
-                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
+                    //                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
+                    //                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
+
+                    String checkInDay = DailyCalendar.convertDateFormatString(mBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
+                    String checkOutDay = DailyCalendar.convertDateFormatString(mBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
 
                     String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
 
@@ -141,8 +145,11 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
                     DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
-                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
-                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
+                    //                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
+                    //                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
+
+                    String checkInDay = DailyCalendar.convertDateFormatString(mBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
+                    String checkOutDay = DailyCalendar.convertDateFormatString(mBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
 
                     String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
 
@@ -171,7 +178,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         }
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
-            , ZoomMapActivity.SourceType.HOTEL_BOOKING, mBookingDetail.placeName//
+            , ZoomMapActivity.SourceType.HOTEL_BOOKING, mBookingDetail.placeName, mBookingDetail.address//
             , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
 
         startActivity(intent);

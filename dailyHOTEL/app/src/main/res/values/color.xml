@@ -2,6 +2,7 @@
 <resources>
     <color name="dh_theme_color">#900034</color>
     <color name="dh_theme_color_a10">#1A900034</color>
+    <color name="dh_theme_color_a8">#14900034</color>
 
     <color name="actionbar_border">#7f7f7f</color>
 
@@ -218,9 +219,7 @@
     <color name="probressbar_default">#d3d3d3</color>
 
     <!-- curation -->
-    <color name="curation_information_text">#323232</color>
     <color name="curation_information_line">#e7e7e7</color>
-    <color name="curation_title_text">#929292</color>
 
     <!-- Search -->
     <color name="search_hint_text">#c5c5c5</color>

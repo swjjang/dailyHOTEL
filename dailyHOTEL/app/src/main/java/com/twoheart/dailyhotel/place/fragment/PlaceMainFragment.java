@@ -65,6 +65,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     @Override
     public void onResume()
     {
+        super.onResume();
+
         if (isFinishing() == true)
         {
             return;
@@ -78,8 +80,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             lockUI();
             mPlaceMainNetworkController.requestDateTime();
         }
-
-        super.onResume();
     }
 
     @Override
@@ -221,6 +221,12 @@ public abstract class PlaceMainFragment extends BaseFragment
             return;
         }
 
+        if (mPlaceMainLayout.getPlaceListFragment() == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         if (isClearList == true)
         {
             for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
@@ -301,7 +307,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
                 unLockUI();
-
             }
 
             @Override

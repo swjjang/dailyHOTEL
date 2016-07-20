@@ -19,15 +19,14 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
@@ -44,12 +43,19 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         if (StayCurationManager.getInstance().getCheckInSaleTime() == null)
         {
-            SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
+            try
+            {
+                SaleTime checkSaleTime = GourmetCurationManager.getInstance().getSaleTime().getClone(0);
 
-            StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
-            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-            StayCurationManager.getInstance().setCheckOutSaleTime( //
-                checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+                StayCurationManager.getInstance().setCheckInSaleTime(checkSaleTime);
+                SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+                StayCurationManager.getInstance().setCheckOutSaleTime( //
+                    checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+            } catch (Exception e)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
         }
 
         setDateText(GourmetCurationManager.getInstance().getSaleTime());
@@ -171,7 +177,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         mSaleTime = saleTime;
 
-        mPlaceSearchLayout.setDataText(saleTime.getDailyDateFormat("yyyy.MM.dd(EEE)"));
+        mPlaceSearchLayout.setDataText(saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,6 +307,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchEnabled(boolean enabled)
         {
+            if (mOnSearchFragmentListener == null)
+            {
+                return;
+            }
+
             mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 
@@ -381,10 +392,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         {
             String saleDate = gourmetSearchFragment.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-
-            return String.format("%s-%s", saleDate, simpleDateFormat.format(calendar.getTime()));
+            //            Calendar calendar = Calendar.getInstance();
+            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
+            //
+            //            return String.format("%s-%s", saleDate, simpleDateFormat.format(calendar.getTime()));
+            return String.format("%s-%s", saleDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
 
         @Override

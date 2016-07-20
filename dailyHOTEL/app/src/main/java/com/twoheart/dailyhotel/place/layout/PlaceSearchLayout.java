@@ -131,6 +131,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void afterTextChanged(Editable s)
             {
+                if (mAutoCompleteLayout == null)
+                {
+                    return;
+                }
+
                 mHandler.removeMessages(HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE);
                 mHandler.removeMessages(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE);
 

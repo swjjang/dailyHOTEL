@@ -413,6 +413,12 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         mNetworkController.requestStayList(mLastParams);
     }
 
+    @Override
+    protected void onSearchLoacationResult(Location location)
+    {
+
+    }
+
     private void setDisabledSortLayout(View view, RadioGroup sortLayout)
     {
         if (sortLayout == null)

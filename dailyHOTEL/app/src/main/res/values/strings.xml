@@ -37,6 +37,7 @@
     <string name="label_share_naver_map">네이버맵</string>
     <string name="label_share_google_map">구글맵</string>
     <string name="label_completed">완료</string>
+    <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>
     <string name="label_restaurant_information">레스토랑 정보</string>
@@ -46,6 +47,7 @@
     <string name="label_filter">필터</string>
     <string name="label_phone">전화</string>
     <string name="label_location">위치</string>
+    <string name="label_visit_day">방문일</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -140,7 +142,6 @@
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
     <string name="toast_msg_please_chk_network_status">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
-    <string name="toast_msg_please_input_booking_user_infos">예약자와 연락처, 이메일을 모두 입력해주십시요.</string>
     <string name="toast_msg_please_input_guest">투숙자를 입력해주세요.</string>
     <string name="toast_msg_please_input_guest_typeoverseas">해외 호텔 예약시에는 투숙자를 영문 성함으로 입력해주세요.</string>
     <string name="toast_msg_please_input_contact">연락처를 입력해주세요.</string>
@@ -263,7 +264,6 @@
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 결제카드를 삭제하시겠습니까?</string>
-    <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
     <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
     <string name="dialog_msg_delete_failed_creditcard">결제카드 삭제를 실패하였습니다.</string>
@@ -374,7 +374,7 @@
     <string name="act_credit_line1">친구에게 데일리호텔을 추천하고\n5,000원을 선물하세요!</string>
     <string name="act_credit_line2">(친구가 회원가입시 내 추천인 코드를 입력하면 됩니다.)</string>
     <string name="act_credit_line3">친구가 데일리호텔에서 첫 예약을 하면\n5,000원을 받을 수 있어요!</string>
-    <string name="act_credit_line4">(최대 10만원까지 적립할 수 있습니다.)</string>
+    <string name="act_credit_line4">(친구의 체크아웃 기준으로\n최대 10만원까지 적립할 수 있습니다.)</string>
     <string name="act_credit_line4_is_exceed_bonus">(최대 10만원을 이미 적립하였습니다.)</string>
     <string name="act_credit_btn_login">기존 회원 로그인</string>
     <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
@@ -631,6 +631,9 @@
     <string name="frag_hotel_list_checkout">K - OUT</string>
     <string name="frag_hotel_days_tab_to">TO</string>
     <string name="label_hotel_list_extendedstay_average">평균/1박</string>
+    <string name="label_hotel_list_changing_filter">필터 다시 적용하기</string>
+    <string name="message_not_exist_filters">해당 조건에 일치하는 업체가 없습니다.</string>
+    <string name="message_changing_filter_option">필터링 설정 조건을 변경하여 검색해보세요!</string>
 
     <!-- PopUp Event Fragment -->
     <string name="frag_popup_event_title">이벤트 안내</string>
@@ -752,6 +755,7 @@
     <string name="label_calendar_gourmet_select">날짜 선택</string>
     <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
     <string name="label_selected_date">날짜 선택 완료</string>
+    <string name="label_message_dont_check_date">체크인할 수 없는 날짜입니다.</string>
 
     <string name="label_monday">월</string>
     <string name="label_tuesday">화</string>
@@ -767,8 +771,10 @@
     <string name="label_twin">트윈</string>
     <string name="label_heatedfloors">온돌</string>
     <string name="label_more_person">%1$d명 이상</string>
-    <string name="label_hotel_filter_result_count">%1$d개의 숙소</string>
-    <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑</string>
+    <string name="label_hotel_filter_result_count">%1$d개의 숙소 보기</string>
+    <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑 보기</string>
+    <string name="label_hotel_filter_result_empty">0개의 숙소</string>
+    <string name="label_gourmet_filter_result_empty">0개의 레스토랑</string>
     <string name="label_reset">초기화</string>
     <string name="label_sort_by">정렬</string>
     <string name="label_sort_by_distance">거리순</string>
@@ -776,7 +782,6 @@
     <string name="label_sort_by_high_price">높은 가격순</string>
     <string name="label_sort_by_area">지역별</string>
     <string name="label_sort_by_satisfaction">만족도</string>
-    <string name="label_apply_completed">적용완료</string>
     <string name="label_personnel">인원</string>
     <string name="label_bedtype">베드타입</string>
     <string name="label_foodtype">음식종류</string>
@@ -796,6 +801,7 @@
     <string name="label_time_1721">17–21시</string>
     <string name="label_time_2106">21시 이후</string>
     <string name="label_searching">검색 중...</string>
+    <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
 
     <!-- PaymentResult Activity -->
     <string name="label_booking_information">예약정보</string>
@@ -866,7 +872,9 @@
     <!-- Search Calendar -->
     <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
     <string name="message_calendar_placelist_reset">방문하실 날짜를 확인해주세요.\n재설정하시려면 다른 날짜를 선택해주세요.</string>
-    <string name="label_calendar_search_selected_date">선택 날짜로 검색하기</string>
+    <string name="label_calendar_search_selected_date">선택 완료</string>
+    <string name="label_calendar_gourmet_search_selected_date">방문일 선택 완료</string>
+    <string name="label_calendar_stay_search_selected_date">%1$d박 선택 완료</string>
     <string name="message_calendar_search_reset">검색하실 날짜를 확인해주세요.\n재설정하시려면 다른 날짜를 선택해주세요.</string>
 
     <string name="information_empty_name_n_email_after_login">신속한 예약 확인 및 안내를 위해\n고객님의 이름과 이메일을 등록해주세요.</string>
@@ -887,4 +895,9 @@
     <string name="message_guide_dialog_denied_permission02">위치 정보에 대한 앱 권한 설정을 거부하였습니다.</string>
     <string name="message_guide_dialog_denied_permission_read_phone_state">로그인 기능 사용 또는 고객센터와의 연결을 위해 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
     <string name="message_guide_dialog_denied_permission_access_fine_location">고객님의 현재 위치 기반 정보 제공을 위해 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
+
+    <!-- Detail -->
+    <string name="label_detail_change_date">날짜변경</string>
+    <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
+    <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이  없습니다.\n다른 날짜를 선택해주세요.</string>
 </resources>

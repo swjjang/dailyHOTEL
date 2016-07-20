@@ -166,6 +166,9 @@ public class GourmetDetailLayout
         {
             mListAdapter = new GourmetDetailListAdapter(mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData((GourmetDetail) mPlaceDetail, saleTime);
         }
 
         setCurrentImage(imagePosition);
@@ -216,20 +219,20 @@ public class GourmetDetailLayout
 
             setBookingStatus(STATUS_SEARCH_TICKET);
 
-            initTicketInformationLayout(0, ticketInformationList);
+            updateTicketInformationLayout(0, ticketInformationList);
         }
 
         mListAdapter.notifyDataSetChanged();
     }
 
-    protected void initTicketInformationLayout(int nights, ArrayList<TicketInformation> ticketInformationList)
+    protected void updateTicketInformationLayout(int nights, ArrayList<TicketInformation> ticketInformationList)
     {
         if (ticketInformationList == null || ticketInformationList.size() == 0)
         {
             return;
         }
 
-        // 객실 타입 세팅
+        // 처음 세팅하는 경우 객실 타입 세팅
         if (mTicketTypeListAdapter == null)
         {
             mSelectedTicketInformation = ticketInformationList.get(0);
@@ -254,8 +257,17 @@ public class GourmetDetailLayout
                         , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
                 }
             });
+        } else
+        {
+            // 재세팅 하는 경우
+            mSelectedTicketInformation = ticketInformationList.get(0);
+
+            mTicketTypeListAdapter.addAll(ticketInformationList);
+            mTicketTypeListAdapter.setSelected(0);
+            mTicketTypeListAdapter.notifyDataSetChanged();
         }
 
+        // 객실 개수로 높이를 재지정해준다.
         int size = ticketInformationList.size();
         int height = Util.dpToPx(mActivity, 100) * size;
         final int maxHeight = Util.dpToPx(mActivity, 350);

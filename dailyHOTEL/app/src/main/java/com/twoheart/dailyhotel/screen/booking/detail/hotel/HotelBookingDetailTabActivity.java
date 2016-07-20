@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -136,10 +137,12 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 try
                 {
                     // Check In
-                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkInDate, "yyMMdd");
+                    //                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkInDate, "yyMMdd");
+                    String checkInDay = DailyCalendar.convertDateFormatString(mHotelBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
 
                     // Check Out
-                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkOutDate, "yyMMdd");
+                    //                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkOutDate, "yyMMdd");
+                    String checkOutDay = DailyCalendar.convertDateFormatString(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
 
                     String label = String.format("Hotel-%s-%s-%s", mHotelBookingDetail.placeName, checkInDay, checkOutDay);
 

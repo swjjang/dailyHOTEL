@@ -20,7 +20,10 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -29,11 +32,9 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
@@ -78,8 +79,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
         params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+        //        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        //        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+        params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, params);
@@ -111,6 +113,40 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , checkInSaleTime, imageUrl, ((GourmetDetail) mPlaceDetail).category, mPlaceDetail.index, isBenefit, mProvince, mArea);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode == RESULT_OK)
+        {
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+            if (checkInSaleTime == null)
+            {
+                return;
+            }
+
+            mCheckInSaleTime = checkInSaleTime;
+            mPlaceDetail = new GourmetDetail(mPlaceDetail.index);
+
+            requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
+        }
+    }
+
+    @Override
+    protected void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, saleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+
+        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

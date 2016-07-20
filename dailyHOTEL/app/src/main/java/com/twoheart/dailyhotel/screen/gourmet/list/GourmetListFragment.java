@@ -85,6 +85,12 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void refreshList(boolean isShowProgress)
     {
+        if (GourmetCurationManager.getInstance().getSaleTime() == null || GourmetCurationManager.getInstance().getProvince() == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         lockUI(isShowProgress);
 
         DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, //
@@ -109,6 +115,11 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void setScrollListTop()
     {
+        if (mGourmetListLayout == null)
+        {
+            return;
+        }
+
         mGourmetListLayout.setScrollListTop();
     }
 
@@ -362,6 +373,12 @@ public class GourmetListFragment extends PlaceListFragment
         public void onLoadMoreList()
         {
             // do nothing.
+        }
+
+        @Override
+        public void onFilterClick()
+        {
+            mOnPlaceListFragmentListener.onFilterClick();
         }
 
         @Override

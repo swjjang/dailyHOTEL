@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -118,7 +119,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         try
         {
-            dateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.reservationTime, "yyyy.MM.dd(EEE) HH:mm"));
+            //            dateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.reservationTime, "yyyy.MM.dd(EEE) HH:mm"));
+            dateTextView.setText(DailyCalendar.convertDateFormatString(bookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH:mm"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -145,7 +147,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         try
         {
-            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+            //            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+            paymentDateTextView.setText(DailyCalendar.convertDateFormatString(bookingDetail.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());

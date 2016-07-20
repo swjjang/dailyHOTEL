@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Layout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -30,9 +31,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener
@@ -244,15 +242,16 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         if (gourmetPaymentInformation.ticketTime != 0)
         {
-            Calendar calendarTime = DailyCalendar.getInstance();
-            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-            calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
-
-            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            // 방문시간
-            mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
+            //            Calendar calendarTime = DailyCalendar.getInstance();
+            //            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+            //            calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
+            //
+            //            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            //            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+            //
+            //            // 방문시간
+            //            mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
+            mTicketTimeTextView.setText(DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
         }
 
         // 수량
@@ -312,7 +311,30 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         {
             mCardManagerTextView.setText(R.string.label_manager);
             mSimpleCardImageView.setImageResource(R.drawable.selector_simplecard_button);
-            mSimpleCardTextView.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
+
+            final String cardName = selectedCreditCard.name.replace("카드", "");
+            final String cardNumber = selectedCreditCard.number;
+
+            mSimpleCardTextView.setText(String.format("%s %s", cardName, cardNumber));
+            mSimpleCardTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Layout layout = mSimpleCardTextView.getLayout();
+
+                    if (layout == null || Util.isTextEmpty(cardName) == true)
+                    {
+                        return;
+                    }
+
+                    int lineCount = mSimpleCardTextView.getLineCount();
+                    if (lineCount > 1)
+                    {
+                        mSimpleCardTextView.setText(String.format("%s\n%s", cardName, cardNumber));
+                    }
+                }
+            });
         }
     }
 
@@ -377,14 +399,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        Calendar calendarTime = DailyCalendar.getInstance();
-        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendarTime.setTimeInMillis(time);
-
-        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
+        //        Calendar calendarTime = DailyCalendar.getInstance();
+        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //        calendarTime.setTimeInMillis(time);
+        //
+        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
+        mTicketTimeTextView.setText(DailyCalendar.format(time, "HH:mm", TimeZone.getTimeZone("GMT")));
     }
 
     public Guest getGuest()

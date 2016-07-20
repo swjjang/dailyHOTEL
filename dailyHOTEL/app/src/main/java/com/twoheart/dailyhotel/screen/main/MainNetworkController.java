@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -92,14 +93,14 @@ public class MainNetworkController extends BaseNetworkController
         }, null);
     }
 
-    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime, boolean isAuthorization)
+    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime)
     {
         if (Util.isTextEmpty(lastEventTime, lastCouponTime) == true)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, isAuthorization, mDailyEventCountJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
     }
 
     protected void requestGourmetIsExistRating()
@@ -152,14 +153,14 @@ public class MainNetworkController extends BaseNetworkController
         }
     }
 
-    public void requestNoticeAgreement(boolean isAuthorization)
+    public void requestNoticeAgreement()
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, isAuthorization, mNoticeAgreementJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementJsonResponseListener);
     }
 
-    public void requestNoticeAgreementResult(boolean isAuthorization, boolean isAgree)
+    public void requestNoticeAgreementResult(boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAuthorization, isAgree, mNoticeAgreementResultJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAgree, mNoticeAgreementResultJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -352,7 +353,7 @@ public class MainNetworkController extends BaseNetworkController
                 } else
                 {
                     // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
-                    requestNoticeAgreement(true);
+                    requestNoticeAgreement();
                 }
             } catch (Exception e)
             {
@@ -543,7 +544,8 @@ public class MainNetworkController extends BaseNetworkController
                     String description1InReject = dataJSONObject.getString("description1InReject");
                     String description2InReject = dataJSONObject.getString("description2InReject");
 
-                    agreeAt = Util.simpleDateFormatISO8601toFormat(agreeAt, "yyyy년 MM월 dd일");
+                    //                    agreeAt = Util.simpleDateFormatISO8601toFormat(agreeAt, "yyyy년 MM월 dd일");
+                    agreeAt = DailyCalendar.convertDateFormatString(agreeAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
 
                     String agreeMessage = description1InAgree.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InAgree;
                     String cancelMessage = description1InReject.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InReject;

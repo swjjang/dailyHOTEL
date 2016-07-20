@@ -1,51 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:minHeight="65dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:minHeight="82dp"
+              android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/default_background"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/default_line_cf0f0f0"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/shape_detail_benefit_background"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:text="@string/label_hoteldetail_dbenefit"
             android:textColor="@color/dh_theme_color"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/benefit1LineTextView"
+            android:id="@+id/benefitTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
+            android:ellipsize="end"
             android:freezesText="true"
             android:gravity="center_horizontal"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="@color/dh_theme_color"
             android:textSize="12dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/benefit2LineTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-2dp"
-            android:freezesText="true"
-            android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/dh_theme_color"
-            android:textSize="12dp"
-            android:visibility="gone"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="19dp"/>
     </LinearLayout>
-</FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+</LinearLayout>

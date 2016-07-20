@@ -24,10 +24,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -44,24 +44,24 @@ import java.util.ArrayList;
  *
  * @author sheldon
  */
-public class HotelDetailLayout
+public class StayDetailLayout
 {
     public static final int STATUS_NONE = 0;
     public static final int STATUS_SEARCH_ROOM = 1;
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    private HotelDetail mHotelDetail;
+    private StayDetail mStayDetail;
     private BaseActivity mActivity;
     private DailyLoopViewPager mViewPager;
     private DailyViewPagerIndicator mDailyViewPagerIndicator;
     private DailyPlaceDetailListView mListView;
     private PlaceDetailImageViewPagerAdapter mImageAdapter;
-    private HotelDetailListAdapter mListAdapter;
+    private StayDetailListAdapter mListAdapter;
     private SaleRoomInformation mSelectedSaleRoomInformation;
 
     private RecyclerView mRoomTypeRecyclerView;
-    private HotelDetailRoomTypeListAdapter mRoomTypeListAdapter;
+    private StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
     private View mRoomTypeLayout;
     private View mBottomLayout;
     private View mRoomTypeBackgroundView;
@@ -77,9 +77,9 @@ public class HotelDetailLayout
 
     private int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
-    private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
+    private StayDetailActivity.OnUserActionListener mOnUserActionListener;
 
-    public HotelDetailLayout(BaseActivity activity, String defaultImageUrl)
+    public StayDetailLayout(BaseActivity activity, String defaultImageUrl)
     {
         mActivity = activity;
 
@@ -138,21 +138,21 @@ public class HotelDetailLayout
         hideRoomType();
     }
 
-    public void setHotelDetail(HotelDetail hotelDetail, SaleTime checkInSaleTime, int imagePosition)
+    public void setHotelDetail(StayDetail stayDetail, SaleTime checkInSaleTime, int imagePosition)
     {
-        if (hotelDetail == null)
+        if (stayDetail == null)
         {
             return;
         }
 
-        mHotelDetail = hotelDetail;
+        mStayDetail = stayDetail;
 
         if (mImageAdapter == null)
         {
             mImageAdapter = new PlaceDetailImageViewPagerAdapter(mActivity);
         }
 
-        ArrayList<ImageInformation> imageInformationList = hotelDetail.getImageInformationList();
+        ArrayList<ImageInformation> imageInformationList = stayDetail.getImageInformationList();
         mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
         mDailyViewPagerIndicator.setTotalCount(imageInformationList.size());
@@ -167,8 +167,11 @@ public class HotelDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new HotelDetailListAdapter(mActivity, hotelDetail, checkInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new StayDetailListAdapter(mActivity, stayDetail, checkInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData(stayDetail, checkInSaleTime);
         }
 
         setCurrentImage(imagePosition);
@@ -180,7 +183,7 @@ public class HotelDetailLayout
         View soldoutView = mActivity.findViewById(R.id.soldoutTextView);
 
         // SOLD OUT 판단 조건.
-        ArrayList<SaleRoomInformation> saleRoomList = hotelDetail.getSaleRoomList();
+        ArrayList<SaleRoomInformation> saleRoomList = stayDetail.getSaleRoomList();
 
         if (saleRoomList == null || saleRoomList.size() == 0)
         {
@@ -219,25 +222,25 @@ public class HotelDetailLayout
 
             setBookingStatus(STATUS_SEARCH_ROOM);
 
-            initRoomTypeLayout(hotelDetail.nights, saleRoomList);
+            updateRoomTypeLayout(saleRoomList);
         }
 
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void initRoomTypeLayout(int nights, ArrayList<SaleRoomInformation> saleRoomList)
+    private void updateRoomTypeLayout(ArrayList<SaleRoomInformation> saleRoomList)
     {
-        if (saleRoomList == null || saleRoomList.size() == 0 || nights < 0)
+        if (saleRoomList == null || saleRoomList.size() == 0)
         {
             return;
         }
 
-        // 객실 타입 세팅
+        // 처음 세팅하는 경우 객실 타입 세팅
         if (mRoomTypeListAdapter == null)
         {
             mSelectedSaleRoomInformation = saleRoomList.get(0);
 
-            mRoomTypeListAdapter = new HotelDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
+            mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -257,8 +260,17 @@ public class HotelDetailLayout
                         , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, null);
                 }
             });
+        } else
+        {
+            // 재세팅 하는 경우
+            mSelectedSaleRoomInformation = saleRoomList.get(0);
+
+            mRoomTypeListAdapter.addAll(saleRoomList);
+            mRoomTypeListAdapter.setSelected(0);
+            mRoomTypeListAdapter.notifyDataSetChanged();
         }
 
+        // 객실 개수로 높이를 재지정해준다.
         int size = saleRoomList.size();
         int height = Util.dpToPx(mActivity, 100) * size;
         final int maxHeight = Util.dpToPx(mActivity, 350);
@@ -367,7 +379,7 @@ public class HotelDetailLayout
         return 0;
     }
 
-    public void setUserActionListener(HotelDetailActivity.OnUserActionListener listener)
+    public void setUserActionListener(StayDetailActivity.OnUserActionListener listener)
     {
         mOnUserActionListener = listener;
     }
@@ -513,7 +525,7 @@ public class HotelDetailLayout
             return;
         }
 
-        if (mHotelDetail == null)
+        if (mStayDetail == null)
         {
             Util.restartApp(mActivity);
             return;
@@ -592,7 +604,7 @@ public class HotelDetailLayout
         }
 
         AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mHotelDetail.hotelName, null);
+            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mStayDetail.hotelName, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -724,7 +736,7 @@ public class HotelDetailLayout
                 mOnUserActionListener.onSelectedImagePosition(position);
             }
 
-            mDailyViewPagerIndicator.setImageInformation(mHotelDetail.getImageInformationList().get(position).description, position);
+            mDailyViewPagerIndicator.setImageInformation(mStayDetail.getImageInformationList().get(position).description, position);
         }
 
         @Override
@@ -962,7 +974,7 @@ public class HotelDetailLayout
                     {
                         if (mOnUserActionListener != null)
                         {
-                            mOnUserActionListener.onClickImage(mHotelDetail);
+                            mOnUserActionListener.onClickImage(mStayDetail);
 
                             mMoveState = 0;
 

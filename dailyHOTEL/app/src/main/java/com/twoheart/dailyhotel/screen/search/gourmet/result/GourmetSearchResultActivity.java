@@ -21,15 +21,14 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
@@ -247,6 +246,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             @Override
             public void onShowMenuBar()
+            {
+
+            }
+
+            @Override
+            public void onFilterClick()
             {
 
             }
@@ -489,10 +494,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         private String getSearchDate()
         {
             String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyMMdd");
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-
-            return String.format("%s-%s", checkInDate, simpleDateFormat.format(calendar.getTime()));
+            //            Calendar calendar = Calendar.getInstance();
+            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
+            //
+            //            return String.format("%s-%s", checkInDate, simpleDateFormat.format(calendar.getTime()));
+            return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
 
         private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)

@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmet.filter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -17,13 +19,12 @@ import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,10 +37,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 {
     public static final String INTENT_EXTRA_DATA_CURATION_OPTIONS = "curationOptions";
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
+    public static final String INTENT_EXTRA_DATA_PROVINCE = "province";
+    public static final String INTENT_EXTRA_DATA_LOCATION = "location";
 
     private static final int GOURMET_CATEGORY_COLUMN = 5;
 
     private GourmetCurationOption mGourmetCurationOption;
+    private Province mProvince;
+    private Location mLocation;
 
     private boolean mIsGlobal;
     private ViewType mViewType;
@@ -50,12 +55,15 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     private ViewGroup mAmenitiesLayout;
     private ViewGroup mTimeRangeLayout;
 
-    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, GourmetCurationOption gourmetCurationOption)
+    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType,//
+                                     GourmetCurationOption gourmetCurationOption,//
+                                     Province province)
     {
         Intent intent = new Intent(context, GourmetCurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, gourmetCurationOption);
+        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, province);
 
         return intent;
     }
@@ -76,6 +84,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mGourmetCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
+        mProvince = intent.getParcelableExtra(INTENT_EXTRA_DATA_PROVINCE);
 
         initLayout();
 
@@ -87,7 +96,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             {
                 showAnimation();
             }
-        }, 50);
+        }, 20);
     }
 
     @Override
@@ -424,7 +433,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             @Override
             protected void onPostExecute(Integer count)
             {
-                setResultMessage(getString(R.string.label_gourmet_filter_result_count, count));
+                String resultMessage = count == 0 //
+                    ? getString(R.string.label_gourmet_filter_result_empty) //
+                    : getString(R.string.label_gourmet_filter_result_count, count);
+                setResultMessage(resultMessage);
 
                 setConfirmOnClickListener(GourmetCurationActivity.this);
                 setConfirmEnable(count == 0 ? false : true);
@@ -515,7 +527,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             {
                 if (resultCode == RESULT_OK)
                 {
-                    checkedChangedDistance();
+                    //                    checkedChangedDistance();
+                    searchMyLocation();
                 } else
                 {
                     switch (mGourmetCurationOption.getSortType())
@@ -570,8 +583,9 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
             case R.id.distanceCheckView:
             {
-                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                searchMyLocation();
+                //                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                //                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
                 return;
             }
 
@@ -595,18 +609,17 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         Map<String, String> eventParams = new HashMap<>();
-        Province province = GourmetCurationManager.getInstance().getProvince();
 
-        if (province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) province;
+            Area area = (Area) mProvince;
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
@@ -651,33 +664,36 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected void onComplete()
     {
         Map<String, String> eventParams = new HashMap<>();
-        Province province = GourmetCurationManager.getInstance().getProvince();
-
         eventParams.put(AnalyticsManager.KeyType.SORTING, mGourmetCurationOption.getSortType().name());
 
-        if (province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) province;
+            Area area = (Area) mProvince;
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), eventParams);
 
-        if (DEBUG == true)
+        if (Constants.DEBUG == true)
         {
             ExLog.d(mGourmetCurationOption.toString());
         }
 
         Intent intent = new Intent();
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mGourmetCurationOption);
+
+        if (mGourmetCurationOption.getSortType() == SortType.DISTANCE && mLocation != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_LOCATION, mLocation);
+        }
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -701,24 +717,39 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
     }
 
+    @Override
+    protected void onSearchLoacationResult(Location location)
+    {
+        mLocation = location;
+
+        if (location == null)
+        {
+            DailyToast.showToast(GourmetCurationActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+            mSortRadioGroup.check(R.id.regionCheckView);
+        } else
+        {
+            checkedChangedDistance();
+        }
+    }
+
+
     private void checkedChangedDistance()
     {
         mGourmetCurationOption.setSortType(SortType.DISTANCE);
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
         Map<String, String> eventParams = new HashMap<>();
-        Province province = GourmetCurationManager.getInstance().getProvince();
 
-        if (province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) province;
+            Area area = (Area) mProvince;
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 

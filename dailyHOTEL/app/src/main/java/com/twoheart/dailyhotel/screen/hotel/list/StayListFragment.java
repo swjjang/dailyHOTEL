@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -132,6 +133,14 @@ public class StayListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
+        StayParams params = StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true);
+        if (SortType.DISTANCE == params.getSortType() && params.hasLocation() == false)
+        {
+            unLockUI();
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         mNetworkController.requestStayList(StayCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true));
     }
 
@@ -152,6 +161,11 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void setScrollListTop()
     {
+        if (mStayListLayout == null)
+        {
+            return;
+        }
+
         mStayListLayout.setScrollListTop();
     }
 
@@ -288,21 +302,21 @@ public class StayListFragment extends PlaceListFragment
                 Crashlytics.logException(e);
             }
 
-            MainActivity mainActivity = (MainActivity)getActivity();
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            MainActivity mainActivity = (MainActivity)getActivity();
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            MainActivity mainActivity = (MainActivity)getActivity();
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("message : " + message);
         }
     };
@@ -350,6 +364,12 @@ public class StayListFragment extends PlaceListFragment
         public void onLoadMoreList()
         {
             addList(false);
+        }
+
+        @Override
+        public void onFilterClick()
+        {
+            mOnPlaceListFragmentListener.onFilterClick();
         }
 
         @Override

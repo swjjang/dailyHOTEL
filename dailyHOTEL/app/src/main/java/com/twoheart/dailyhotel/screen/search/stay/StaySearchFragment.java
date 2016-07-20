@@ -19,15 +19,14 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class StaySearchFragment extends PlaceSearchFragment
 {
@@ -45,9 +44,16 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         if (GourmetCurationManager.getInstance().getSaleTime() == null)
         {
-            SaleTime saleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(0);
+            try
+            {
+                SaleTime saleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(0);
 
-            GourmetCurationManager.getInstance().setSaleTime(saleTime);
+                GourmetCurationManager.getInstance().setSaleTime(saleTime);
+            } catch (Exception e)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
         }
 
         setDateText(StayCurationManager.getInstance().getCheckInSaleTime(), StayCurationManager.getInstance().getCheckOutSaleTime());
@@ -175,8 +181,8 @@ public class StaySearchFragment extends PlaceSearchFragment
         mCheckInSaleTime = checkInSaleTime;
         mCheckOutSaleTime = checkOutSaleTime;
 
-        String checkInDate = checkInSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = checkOutSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
+        String checkInDate = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
         mPlaceSearchLayout.setDataText(String.format("%s - %s, %d박", checkInDate, checkOutDate, nights));
@@ -317,6 +323,11 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchEnabled(boolean enabled)
         {
+            if (mOnSearchFragmentListener == null)
+            {
+                return;
+            }
+
             mOnSearchFragmentListener.onSearchEnabled(enabled);
         }
 
@@ -398,10 +409,11 @@ public class StaySearchFragment extends PlaceSearchFragment
             String checkInDate = staySearchFragment.mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd");
             String checkOutDate = staySearchFragment.mCheckOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+            //            Calendar calendar = Calendar.getInstance();
+            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
+            //
+            //            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
 
         @Override

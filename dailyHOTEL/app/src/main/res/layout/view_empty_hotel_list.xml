@@ -45,4 +45,64 @@
             android:gravity="center"
             android:src="@drawable/no_hotel_ic"/>
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/filterEmptyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/filterTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/filterMessageTextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_not_exist_filters"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"
+                dailyFont:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/filterMessageTextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:gravity="center"
+                android:text="@string/message_changing_filter_option"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="14dp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/filterTextLayout"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:src="@drawable/no_hotel_ic"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/buttonView"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_below="@+id/filterTextLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:text="@string/label_hotel_list_changing_filter"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            dailyFont:style="Medium"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"/>
+    </RelativeLayout>
 </merge>

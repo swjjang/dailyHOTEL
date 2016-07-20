@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class HotelDetail
+public class StayDetail
 {
     public int hotelIndex;
     public int nights;
@@ -26,7 +26,7 @@ public class HotelDetail
     //
     public String categoryCode;
 
-    public HotelDetail(int hotelIndex, int nights)
+    public StayDetail(int hotelIndex, int nights)
     {
         this.hotelIndex = hotelIndex;
         this.nights = nights;

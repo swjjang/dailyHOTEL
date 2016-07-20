@@ -8,9 +8,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class GourmetFilter implements Parcelable
@@ -155,14 +152,15 @@ public class GourmetFilter implements Parcelable
 
     private int getHHmmByMillis(long timeInMillis)
     {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HHmm", Locale.KOREA);
-        simpleTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        return Integer.parseInt(simpleTimeFormat.format(calendar.getTime()));
+        //        Calendar calendar = DailyCalendar.getInstance();
+        //        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //        calendar.setTimeInMillis(timeInMillis);
+        //
+        //        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HHmm", Locale.KOREA);
+        //        simpleTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        return Integer.parseInt(simpleTimeFormat.format(calendar.getTime()));
+        return Integer.parseInt(DailyCalendar.format(timeInMillis, "HHmm", TimeZone.getTimeZone("GMT")));
     }
 
     @Override

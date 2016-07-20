@@ -76,7 +76,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void finish(int resultCode)
             {
-                SearchActivity.this.setResult(resultCode);
+                setResult(resultCode);
+                finish();
             }
 
             @Override
@@ -99,7 +100,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void finish(int resultCode)
             {
-                SearchActivity.this.setResult(resultCode);
+                setResult(resultCode);
+                finish();
             }
 
             @Override

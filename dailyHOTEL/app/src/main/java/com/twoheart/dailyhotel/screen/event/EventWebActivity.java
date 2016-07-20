@@ -21,9 +21,10 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -108,7 +109,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        mEventName = intent.getParcelableExtra(INTENT_EXTRA_DATA_EVENTNAME);
+        mEventName = intent.getStringExtra(INTENT_EXTRA_DATA_EVENTNAME);
 
         setContentView(R.layout.activity_event_web);
 
@@ -217,9 +218,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
+            SaleTime checkInSaleTime = saleTime.getClone(0);
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            long dailyTime = saleTime.getDailyTime();
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -243,7 +245,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+                Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                 dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
@@ -253,12 +255,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             }
 
-            Intent intent = new Intent(EventWebActivity.this, HotelDetailActivity.class);
+            checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+
+            Intent intent = new Intent(EventWebActivity.this, StayDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         } catch (Exception e)
@@ -279,9 +283,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
+            SaleTime gourmetSaleTime = saleTime.getClone(0);
             int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            long dailyTime = saleTime.getDailyTime();
             int nights = 1;
+            int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -300,9 +305,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+                Date dailyDate = format.parse(gourmetSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                 dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                ExLog.d(schemeDate + " / " + dailyDate + " / " + dailyDayOfDays);
 
                 if (dailyDayOfDays < 0)
                 {
@@ -310,12 +317,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             }
 
+            gourmetSaleTime.setOffsetDailyDay(dailyDayOfDays);
+
             Intent intent = new Intent(EventWebActivity.this, GourmetDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnbIndex);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, gourmetSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         } catch (Exception e)
@@ -361,8 +370,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, AnalyticsManager.ValueType.EMPTY);
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, AnalyticsManager.ValueType.EMPTY);
                     paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, "0");
-                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
-                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(validTo, "yyyyMMddHHmm"));
+                    //                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, DailyCalendar.format(new Date(), "yyyyMMddHHmm"));
+                    //                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(validTo, "yyyyMMddHHmm"));
+                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
                     paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "event");
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
 
@@ -393,9 +404,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         String validFrom = dataJSONObject.getString("validFrom");
                         String validTo = dataJSONObject.getString("validTo");
 
+                        //                        String message = getString(R.string.message_eventweb_download_coupon//
+                        //                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
+                        //                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
+
                         String message = getString(R.string.message_eventweb_download_coupon//
-                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
-                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
+                            , DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
+                            , DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
 
                         recordAnalytics(couponCode, validTo);
 
@@ -522,6 +537,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=su&rc=209329";
 
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hebw&url=http%3A%2F%2Fm.dailyhotel.co.kr%2Fbanner%2F160701coupon%2F";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=5&cal=1";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=3";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160731&cal=1";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160721";
 
                     DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
                     dailyDeepLink.setDeepLink(Uri.parse(uri));

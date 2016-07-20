@@ -69,7 +69,7 @@
                             android:background="@drawable/more_btn_padding"
                             android:gravity="center"
                             android:text="@string/frag_login"
-                            android:textColor="@color/curation_title_text"
+                            android:textColor="@color/default_text_c929292"
                             android:textSize="11dp"
                             android:visibility="visible"/>
 
@@ -80,7 +80,7 @@
                             android:background="@drawable/more_btn_padding"
                             android:gravity="center"
                             android:text="@string/frag_signup"
-                            android:textColor="@color/curation_title_text"
+                            android:textColor="@color/default_text_c929292"
                             android:textSize="11dp"
                             android:visibility="visible"/>
 
@@ -91,7 +91,7 @@
                             android:background="@drawable/more_btn_padding"
                             android:gravity="center"
                             android:text="@string/frag_edit_profile"
-                            android:textColor="@color/curation_title_text"
+                            android:textColor="@color/default_text_c929292"
                             android:textSize="11dp"
                             android:visibility="gone"/>
                     </LinearLayout>
@@ -113,11 +113,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/profileTextView"
-                        android:layout_marginTop="3dp"
                         android:layout_marginRight="7dp"
+                        android:layout_marginTop="3dp"
                         android:gravity="left|center_vertical"
                         android:text="@string/frag_login_message"
-                        android:textColor="@color/curation_title_text"
+                        android:textColor="@color/default_text_c929292"
                         android:textSize="12dp"/>
 
                 </RelativeLayout>
@@ -575,15 +575,16 @@
 
                 <LinearLayout
                     android:id="@+id/termsLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/termsView"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="15dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
                         android:paddingLeft="5dp"
@@ -592,11 +593,14 @@
                         android:textColor="@color/setting_business_license"
                         android:textSize="8dp"/>
 
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"/>
+
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/personalView"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="6dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
                         android:paddingLeft="5dp"
@@ -606,11 +610,14 @@
                         android:textSize="8dp"
                         dailyFont:style="Bold"/>
 
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"/>
+
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/locationTermsView"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="6dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
                         android:paddingLeft="5dp"
@@ -619,11 +626,14 @@
                         android:textColor="@color/setting_business_license"
                         android:textSize="8dp"/>
 
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"/>
+
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/protectChildTermsView"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="6dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
                         android:paddingLeft="5dp"

@@ -11,23 +11,24 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayCurationManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +39,16 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
     public static final String INTENT_EXTRA_DATA_CATEGORY = "category";
     public static final String INTENT_EXTRA_DATA_PROVINCE = "province";
+    public static final String INTENT_EXTRA_DATA_CHECKIN_SALETIME = "checkInSaleTime";
+    public static final String INTENT_EXTRA_DATA_CHECKOUT_SALETIME = "checkOutSaleTime";
+    public static final String INTENT_EXTRA_DATA_LOCATION = "location";
 
     private StayCurationOption mStayCurationOption;
     private Category mCategory;
     private Province mProvince;
+    private Location mLocation;
+    private SaleTime mCheckInSaleTime;
+    private SaleTime mCheckOutSaleTime;
 
     private boolean mIsGlobal;
     private StayParams mLastParams;
@@ -58,11 +65,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private ViewGroup mBedTypeLayout;
 
     public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, //
+                                     SaleTime checkInSaleTime, SaleTime checkOutSaleTime,//
                                      StayCurationOption stayCurationOption, Category category, Province province)
     {
         Intent intent = new Intent(context, StayCurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_SALETIME, checkInSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_SALETIME, checkOutSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, province);
@@ -85,6 +95,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_CHECKIN_SALETIME);
+        mCheckOutSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_CHECKOUT_SALETIME);
         mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
         mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
         mProvince = intent.getParcelableExtra(INTENT_EXTRA_DATA_PROVINCE);
@@ -101,7 +113,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             {
                 showAnimation();
             }
-        }, 50);
+        }, 20);
     }
 
     @Override
@@ -384,8 +396,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         StayParams params = new StayParams();
 
-        params.dateCheckIn = StayCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = StayCurationManager.getInstance().getNights();
+        params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+        params.stays = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
         params.provinceIdx = mProvince.getProvinceIndex();
 
         if (mProvince instanceof Area)
@@ -405,11 +417,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         Constants.SortType sortType = mStayCurationOption.getSortType();
         if (Constants.SortType.DISTANCE == sortType)
         {
-            Location location = StayCurationManager.getInstance().getLocation();
-            if (location != null)
+            if (mLocation != null)
             {
-                params.latitude = location.getLatitude();
-                params.longitude = location.getLongitude();
+                params.latitude = mLocation.getLatitude();
+                params.longitude = mLocation.getLongitude();
             }
         }
 
@@ -425,6 +436,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void requestUpdateResult()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (mCheckInSaleTime == null)
+        {
+            Util.restartApp(StayCurationActivity.this);
+            return;
+        }
+
         mLastParams = getStayParams();
         super.requestUpdateResult();
     }
@@ -433,6 +451,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void requestUpdateResultDelayed()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (mCheckInSaleTime == null)
+        {
+            unLockUI();
+            Util.restartApp(StayCurationActivity.this);
+            return;
+        }
         mLastParams = getStayParams();
         super.requestUpdateResultDelayed();
     }
@@ -502,7 +527,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             {
                 if (resultCode == RESULT_OK)
                 {
-                    checkedChangedDistance();
+                    //                    checkedChangedDistance();
+                    searchMyLocation();
                 } else
                 {
                     switch (mStayCurationOption.getSortType())
@@ -558,8 +584,9 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             case R.id.distanceCheckView:
             {
-                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                searchMyLocation();
+                //                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                //                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
                 return;
             }
 
@@ -671,7 +698,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mStayCurationOption.toString(), eventParams);
 
-        if (DEBUG == true)
+        if (Constants.DEBUG == true)
         {
             ExLog.d(mStayCurationOption.toString());
         }
@@ -680,6 +707,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mStayCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mCategory);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, mProvince);
+
+        if (mStayCurationOption.getSortType() == SortType.DISTANCE && mLocation != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_LOCATION, mLocation);
+        }
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -701,6 +733,21 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
+    }
+
+    @Override
+    protected void onSearchLoacationResult(Location location)
+    {
+        mLocation = location;
+
+        if (location == null)
+        {
+            DailyToast.showToast(StayCurationActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+            mSortRadioGroup.check(R.id.regionCheckView);
+        } else
+        {
+            checkedChangedDistance();
+        }
     }
 
     private void checkedChangedDistance()
@@ -736,7 +783,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
-                setResultMessage(getString(R.string.label_hotel_filter_result_count, 0));
+                setResultMessage(getString(R.string.label_hotel_filter_result_empty));
 
                 setConfirmOnClickListener(StayCurationActivity.this);
                 setConfirmEnable(false);

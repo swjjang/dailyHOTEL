@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
 
@@ -66,8 +66,10 @@ public class ProfileNetworkController extends BaseNetworkController
 
                     if (isVerified == true && isPhoneVerified == true)
                     {
-                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
-                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
+                        //                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
+                        //                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
+
+                        verifiedDate = DailyCalendar.convertDateFormatString(jsonObject.getString("phoneVerifiedAt"), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
                     } else if (isVerified == false && isPhoneVerified == true)
                     {
                         verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";

@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -243,7 +244,8 @@ public class PaymentWaitActivity extends BaseActivity
         mDailyTextView.setText(reservationJSONObject.getString("vactName"));
 
         // 입금기한
-        String validToDate = Util.simpleDateFormatISO8601toFormat(reservationJSONObject.getString("validTo"), "yyyy년 MM월 dd일 HH시 mm분 까지");
+        //        String validToDate = Util.simpleDateFormatISO8601toFormat(reservationJSONObject.getString("validTo"), "yyyy년 MM월 dd일 HH시 mm분 까지");
+        String validToDate = DailyCalendar.convertDateFormatString(reservationJSONObject.getString("validTo"), DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일 HH시 mm분 까지");
         mDeadlineTextView.setText(validToDate);
 
         // 결재 금액 정보

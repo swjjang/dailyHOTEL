@@ -1,17 +1,3 @@
-/**
- * \ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * Constants (어플리케이션 전역 상수)
- * <p>
- * 어플리케이션에서 사용되는 전역 상수들을 정리해놓은 인터페이스이다. 어플리
- * 케이션에서 사용되는 전역 상수들은 거의 고정된 값들이며 여러 부분에서 일
- * 률적으로 사용되므로 상수로서 선언됐다. 이 인터페이스는 각 클래스에서 상속
- * 받아서 바로 사용될 수 있다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.util;
 
 import android.app.Activity;
@@ -103,12 +89,11 @@ public interface Constants
     //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "NDckNTQkMzYkMjgkMTA0JA==$MzJGNTMxRDA2OEJDQ0NBODg4RjM5SQTNGNjFGLNzVBQzRGNTFEEQUMxQQkFBMjdGMzIxQkQ0RERENkE1MkE0NEMxQzAzM0Y1MzkwRTVCWNjNDQjlCMDAwRDAzOTE4N0Y1QzBF$";
     //    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://52.196.30.125:3000/" : "NTEkMTAkMzAkNiQ1MyQ=$Qzg0M0XYzNTTczRUMzMTU5NUUwQ0I5RZjJGNzk5MjgyNDQ0N0JENTMEIyQzMyRUU1NjQ3QTEyNDM5MEI4QTdCNkIxOQ==$";
 
-//    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:8080/goodnight/" : "MjgkMzQkOCQyMSQ3NSQ=$N0RDNkNDZRTE1ODY3RTAyZRjlFRUY0YQ0NENUDFCQTg3NjQxRkIwRDhCQjU5N0M3Nzc5QkZDNjBLGOENEMTI3NzNFN0IzMjQ1RkVEOEFENEM2MTk0NjNDMTlDN0Q1RUQwRkZG$";
-//    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
+    //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:8080/goodnight/" : "MjgkMzQkOCQyMSQ3NSQ=$N0RDNkNDZRTE1ODY3RTAyZRjlFRUY0YQ0NENUDFCQTg3NjQxRkIwRDhCQjU5N0M3Nzc5QkZDNjBLGOENEMTI3NzNFN0IzMjQ1RkVEOEFENEM2MTk0NjNDMTlDN0Q1RUQwRkZG$";
+    //    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
 
     public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me/goodnight/" : "NTAkNSQ3JDk4JDY0JA==$RjczQD0LQxMTFBOTNDRDQ2Q0QwREM0OTQzOTM4MzBCQjEzRTM2QUAQwNkY4Qjg4QD0NFMUYyMkIxOEVENkFBMkMzNEM1NzBCQzNJFMjMwNEJCNTZFMDAzNURBM0QwRkUyOUFF$";
     public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
-
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -200,6 +185,8 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_DBENEFIT = "dBenefit";
     public static final String NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION = "paymentInformation";
     public static final String NAME_INTENT_EXTRA_DATA_PRICE = "price";
+    public static final String NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG = "calendarFlag";
+    public static final String NAME_INTENT_EXTRA_DATA_ADDRESS = "address";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
@@ -273,5 +260,5 @@ public interface Constants
     public static final int REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE = 11;
 
     // 리스트 페이지 사이즈
-    public static final int PAGENATION_LIST_SIZE = 20;
+    public static final int PAGENATION_LIST_SIZE = 200;
 }
