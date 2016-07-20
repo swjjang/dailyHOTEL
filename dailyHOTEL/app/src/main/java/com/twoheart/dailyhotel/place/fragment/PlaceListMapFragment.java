@@ -967,6 +967,29 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         Collections.sort(arrangeList, comparator);
 
+        size = arrangeList.size();
+
+        // 중복된 호텔들은 위치를 수정하도록 한다.
+        if (size > 1)
+        {
+            Place item01;
+            Place item02;
+            double duplicateCount = 0.000001d;
+
+            for (int i = size - 1; i > 0; i--)
+            {
+                item01 = arrangeList.get(i).getItem();
+                item02 = arrangeList.get(i - 1).getItem();
+
+                if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
+                {
+                    // 위치를 살짝 수정한다.
+                    item01.latitude += duplicateCount;
+                    duplicateCount += 0.000001d;
+                }
+            }
+        }
+
         return arrangeList;
     }
 
