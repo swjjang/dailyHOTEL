@@ -242,6 +242,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
+            if (mSaleTime == null)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
+
             ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mSaleTime, keyword);
         }
 
