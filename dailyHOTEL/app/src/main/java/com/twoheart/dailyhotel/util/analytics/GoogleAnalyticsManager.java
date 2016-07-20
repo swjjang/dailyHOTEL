@@ -155,7 +155,13 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void recordEvent(Map<String, String> params)
     {
+    }
 
+    @Override
+    void recordDeepLink(String deepLink)
+    {
+        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder()//
+            .setCampaignParamsFromUrl(deepLink).build());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -485,7 +491,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "checkoutStep : " + step + " | " + transId + " | " + productAction.toString());
+            ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + transId + " | " + productAction.toString());
         }
     }
 }

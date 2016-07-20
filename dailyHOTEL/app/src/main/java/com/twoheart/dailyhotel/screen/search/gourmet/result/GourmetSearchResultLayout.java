@@ -7,12 +7,10 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -36,9 +34,9 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     {
         PlaceListFragment placeListFragment = getCurrentPlaceListFragment();
 
-        if(placeListFragment != null)
+        if (placeListFragment != null)
         {
-            ((GourmetSearchResultListFragment)placeListFragment).setSortType(sortType);
+            ((GourmetSearchResultListFragment) placeListFragment).setSortType(sortType);
         }
     }
 
@@ -52,9 +50,9 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 
         PlaceListFragment placeListFragment = getCurrentPlaceListFragment();
 
-        if(placeListFragment != null)
+        if (placeListFragment != null)
         {
-            ((GourmetSearchResultListFragment)placeListFragment).addSearchResultList(placeViewItemList);
+            ((GourmetSearchResultListFragment) placeListFragment).addSearchResultList(placeViewItemList);
         }
 
     }

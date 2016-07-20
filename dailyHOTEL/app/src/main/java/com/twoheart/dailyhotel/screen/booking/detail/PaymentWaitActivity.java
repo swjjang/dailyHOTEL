@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -49,6 +50,8 @@ public class PaymentWaitActivity extends BaseActivity
     private ViewGroup mGuide1Layout;
     private View mBonusLayout, mCouponLayout;
 
+    private Booking mBooking;
+
     public static Intent newInstance(Context context, Booking booking)
     {
         Intent intent = new Intent(context, PaymentWaitActivity.class);
@@ -64,9 +67,9 @@ public class PaymentWaitActivity extends BaseActivity
 
         Intent intent = getIntent();
 
-        Booking booking = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_BOOKING);
+        mBooking = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_BOOKING);
 
-        if (booking == null)
+        if (mBooking == null)
         {
             Util.restartApp(this);
             return;
@@ -75,7 +78,27 @@ public class PaymentWaitActivity extends BaseActivity
         setContentView(R.layout.activity_payment_wait);
 
         initToolbar();
-        initLayout(booking);
+        initLayout(mBooking);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (mBooking != null)
+        {
+            switch (mBooking.placeType)
+            {
+                case HOTEL:
+                    AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DEPOSITWAITING);
+                    break;
+
+                case FNB:
+                    AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DEPOSITWAITING);
+                    break;
+            }
+        }
     }
 
     private void initToolbar()

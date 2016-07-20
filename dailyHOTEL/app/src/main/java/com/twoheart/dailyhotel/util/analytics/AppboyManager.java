@@ -357,6 +357,12 @@ public class AppboyManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void recordDeepLink(String deepLink)
+    {
+
+    }
+
     private void searchCustomEvent(String eventName, String category, Map<String, String> params)
     {
         AppboyProperties appboyProperties = new AppboyProperties();

@@ -732,7 +732,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
-            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -545,17 +545,22 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
                     dailyDeepLink.setDeepLink(Uri.parse(uri));
 
-                    if (dailyDeepLink.isHotelDetailView() == true)
+                    if(dailyDeepLink.isValidateLink() == true)
                     {
-                        if (deepLinkHotelDetail(mSaleTime) == true)
+                        AnalyticsManager.getInstance(EventWebActivity.this).recordDeepLink(uri);
+
+                        if (dailyDeepLink.isHotelDetailView() == true)
                         {
-                            return;
-                        }
-                    } else if (dailyDeepLink.isGourmetDetailView() == true)
-                    {
-                        if (deepLinkGourmetDetail(mSaleTime) == true)
+                            if (deepLinkHotelDetail(mSaleTime) == true)
+                            {
+                                return;
+                            }
+                        } else if (dailyDeepLink.isGourmetDetailView() == true)
                         {
-                            return;
+                            if (deepLinkGourmetDetail(mSaleTime) == true)
+                            {
+                                return;
+                            }
                         }
                     }
                     break;

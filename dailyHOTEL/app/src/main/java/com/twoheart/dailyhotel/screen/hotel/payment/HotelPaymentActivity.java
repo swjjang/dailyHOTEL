@@ -1741,8 +1741,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT);
-
         super.onStart();
     }
 
@@ -1879,7 +1877,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
-            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(Screen.DAILYHOTEL_PAYMENT_COMPLETE);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
