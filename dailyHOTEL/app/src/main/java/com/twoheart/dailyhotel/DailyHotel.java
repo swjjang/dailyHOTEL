@@ -28,6 +28,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     private static volatile Activity mCurrentActivity = null;
     public static String VERSION;
     public static String AUTHORIZATION;
+    public static String GOOGLE_ANALYTICS_CLIENT_ID;
 
     @Override
     public void onCreate()
@@ -84,6 +85,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         FacebookSdk.sdkInitialize(getApplicationContext());
         KakaoSDK.init(new KakaoSDKAdapter());
         FontManager.getInstance(getApplicationContext());
+
+        GOOGLE_ANALYTICS_CLIENT_ID = AnalyticsManager.getInstance(getApplicationContext()).getGoogleAnalyticsManager().getClientId();
     }
 
     private void initializeAnalytics(Context context)

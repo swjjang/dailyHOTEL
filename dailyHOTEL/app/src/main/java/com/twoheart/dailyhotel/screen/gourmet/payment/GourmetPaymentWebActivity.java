@@ -852,6 +852,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     .addHeader("Os-Type", "android")//
                     .addHeader("App-Version", DailyHotel.VERSION)//
                     .addHeader("Authorization", DailyHotel.AUTHORIZATION)//
+                    .addHeader("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID)//
                     .post(mBuilder.build()).build();
 
                 Response response = okHttpClient.newCall(request).execute();

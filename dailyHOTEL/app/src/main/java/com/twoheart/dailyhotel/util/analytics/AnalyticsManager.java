@@ -76,6 +76,11 @@ public class AnalyticsManager
         }
     }
 
+    public GoogleAnalyticsManager getGoogleAnalyticsManager()
+    {
+        return mGoogleAnalyticsManager;
+    }
+
     public void setUserIndex(String index)
     {
         try

@@ -76,6 +76,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         headerMap.put("Os-Type", "android");
         headerMap.put("App-Version", DailyHotel.VERSION);
         headerMap.put("Authorization", DailyHotel.AUTHORIZATION);
+        headerMap.put("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
 
         webView.loadUrl(url, headerMap);
     }
