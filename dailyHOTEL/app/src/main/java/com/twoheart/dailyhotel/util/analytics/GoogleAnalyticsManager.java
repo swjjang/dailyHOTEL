@@ -244,6 +244,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
+        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_COMPLETE);
+
         Product product = getProcuct(params);
         product.setBrand("hotel");
 
@@ -284,6 +286,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+
+        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
 
         Product product = getProcuct(params);
         product.setBrand("gourmet");
