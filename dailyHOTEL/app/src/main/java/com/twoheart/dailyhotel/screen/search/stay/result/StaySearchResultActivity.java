@@ -750,14 +750,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            if (count == 0)
-            {
-                //                mPlaceSearchResultLayout.showEmptyLayout();
-            } else
-            {
-                //                mPlaceSearchResultLayout.showListLayout();
-                mPlaceSearchResultLayout.updateResultCount(count);
-            }
+            mPlaceSearchResultLayout.updateResultCount(count);
         }
 
         @Override

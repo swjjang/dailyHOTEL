@@ -116,6 +116,11 @@ public class StaySearchResultListFragment extends PlaceListFragment
 
             case MAP:
                 refreshList(isShowProgress, 0);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
+                break;
+
+            default:
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
         }
     }
@@ -245,10 +250,9 @@ public class StaySearchResultListFragment extends PlaceListFragment
                     if (size == 0)
                     {
                         setVisibility(ViewType.GONE, true);
-                    } else
-                    {
-                        ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                     }
+
+                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                     break;
                 }
 
@@ -261,8 +265,13 @@ public class StaySearchResultListFragment extends PlaceListFragment
                     {
                         setVisibility(ViewType.GONE, true);
                     }
+                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                     break;
                 }
+
+                default:
+                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
+                    break;
             }
 
             unLockUI();
