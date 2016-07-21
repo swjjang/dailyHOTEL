@@ -137,7 +137,7 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public int getEntryCount()
     {
-        return mGourmetListLayout.getEntryCount();
+        return mGourmetList == null ? 0 : mGourmetList.size();
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)

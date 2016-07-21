@@ -28,6 +28,7 @@ import java.util.List;
 public class StaySearchResultListFragment extends PlaceListFragment
 {
     private int mPageIndex;
+    private int mStayCount;
 
     protected StaySearchResultListLayout mStaySearchResultListLayout;
     protected StayListNetworkController mNetworkController;
@@ -87,6 +88,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
     @Override
     public void clearList()
     {
+        mStayCount = 0;
         mStaySearchResultListLayout.clearList();
     }
 
@@ -183,7 +185,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
     @Override
     public int getEntryCount()
     {
-        return mStaySearchResultListLayout.getEntryCount();
+        return mStayCount;
     }
 
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
@@ -225,8 +227,11 @@ public class StaySearchResultListFragment extends PlaceListFragment
             // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
             if (page <= 1)
             {
+                mStayCount = 0;
                 mStaySearchResultListLayout.clearList();
             }
+
+            mStayCount += list == null ? 0 : list.size();
 
             SortType sortType = mStayCuration.getCurationOption().getSortType();
 

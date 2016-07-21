@@ -27,13 +27,9 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Constants.SortType mSortType;
 
-    private int mEntryCount;
-
     public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
         mContext = context;
-
-        mEntryCount = 0;
 
         mPlaceViewItemList = new ArrayList<>();
         addAll(arrayList);
@@ -66,13 +62,11 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
 
     public void clear()
     {
-        mEntryCount = 0;
         mPlaceViewItemList.clear();
     }
 
     public void add(PlaceViewItem placeViewItem)
     {
-        addEntryCount(placeViewItem);
         mPlaceViewItemList.add(placeViewItem);
     }
 
@@ -80,7 +74,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     {
         if (position >= 0 && position < mPlaceViewItemList.size())
         {
-            addEntryCount(placeViewItem);
             mPlaceViewItemList.add(position, placeViewItem);
         }
     }
@@ -90,11 +83,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         if (collection == null)
         {
             return;
-        }
-
-        for (PlaceViewItem item : collection)
-        {
-            addEntryCount(item);
         }
 
         mPlaceViewItemList.addAll(collection);
@@ -142,21 +130,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return mPlaceViewItemList.size();
-    }
-
-    private boolean addEntryCount(PlaceViewItem placeViewItem)
-    {
-        if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
-        {
-            mEntryCount++;
-            return true;
-        }
-
-        return false;
-    }
-
-    public int getEntryCount() {
-        return mEntryCount;
     }
 
     public Constants.SortType getSortType()
