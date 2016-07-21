@@ -141,7 +141,7 @@ public class StayListFragment extends PlaceListFragment
 
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
-            || mStayCuration.getLocation() == null)
+            || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null))
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
