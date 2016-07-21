@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
@@ -36,9 +35,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     public static final String INTENT_EXTRA_DATA_CURATION_OPTIONS = "curationOptions";
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
     public static final String INTENT_EXTRA_DATA_CATEGORY = "category";
-
-    protected StayCurationOption mStayCurationOption;
-    protected Category mCategory;
+    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
 
     private StayParams mLastParams;
     protected ViewType mViewType;
@@ -54,14 +51,14 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     private ViewGroup mBedTypeLayout;
 
     private StayCuration mStayCuration;
+    private SearchType mSearchType;
 
-    public static Intent newInstance(Context context, ViewType viewType, StayCurationOption stayCurationOption, Category category)
+    public static Intent newInstance(Context context, ViewType viewType, StayCuration stayCuration, SearchType searchType)
     {
         Intent intent = new Intent(context, StaySearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
-        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new StayCuration());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCuration);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
 
         return intent;
     }
@@ -80,9 +77,8 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         }
 
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
-        mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
         mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
 
         mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
@@ -102,17 +98,19 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     @Override
     protected void initContentLayout(ViewGroup contentLayout)
     {
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
         View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
-        initSortLayout(sortLayout, mViewType, mStayCurationOption);
+        initSortLayout(sortLayout, mViewType, stayCurationOption);
 
         contentLayout.addView(sortLayout);
 
         View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
-        initFilterLayout(filterLayout, mStayCurationOption);
+        initFilterLayout(filterLayout, stayCurationOption);
 
         contentLayout.addView(filterLayout);
 
-        initAmenitiesLayout(filterLayout, mStayCurationOption);
+        initAmenitiesLayout(filterLayout, stayCurationOption);
     }
 
     private void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
@@ -213,17 +211,19 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
                     return;
                 }
 
+                StayCurationOption curationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
                 if (v.isSelected() == true)
                 {
                     v.setSelected(false);
-                    mStayCurationOption.flagAmenitiesFilters ^= flag;
+                    curationOption.flagAmenitiesFilters ^= flag;
 
                     AnalyticsManager.getInstance(StaySearchResultCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
-                    mStayCurationOption.flagAmenitiesFilters |= flag;
+                    curationOption.flagAmenitiesFilters |= flag;
 
                     AnalyticsManager.getInstance(StaySearchResultCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
@@ -295,7 +295,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
             person = StayFilter.MAX_PERSON;
         }
 
-        mStayCurationOption.person = person;
+        ((StayCurationOption) mStayCuration.getCurationOption()).person = person;
 
         mPersonCountView.setText(getString(R.string.label_more_person, person));
 
@@ -327,14 +327,16 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
     private void updateBedTypeFilter(View view, int flag)
     {
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
         if (view.isSelected() == true)
         {
             view.setSelected(false);
-            mStayCurationOption.flagBedTypeFilters ^= flag;
+            stayCurationOption.flagBedTypeFilters ^= flag;
         } else
         {
             view.setSelected(true);
-            mStayCurationOption.flagBedTypeFilters |= flag;
+            stayCurationOption.flagBedTypeFilters |= flag;
         }
 
         requestUpdateResultDelayed();
@@ -342,7 +344,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
     private void resetCuration()
     {
-        mStayCurationOption.clear();
+        mStayCuration.getCurationOption().clear();
 
         if (mViewType == ViewType.LIST)
         {
@@ -361,30 +363,30 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
     protected StayParams getStayParams()
     {
-//        StayParams params = new StayParams();
-//
-//        params.dateCheckIn = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-//        params.stays = mStayCuration.getNights();
-//        params.persons = mStayCurationOption.person;
-//        params.category = mCategory;
-//        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-//        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
-//
-//        SortType sortType = mStayCurationOption.getSortType();
-//        if (SortType.DISTANCE == sortType)
-//        {
-//            Location location = mStayCuration.getLocation();
-//            if (location != null)
-//            {
-//                params.latitude = location.getLatitude();
-//                params.longitude = location.getLongitude();
-//            }
-//        }
-//
-//        params.page = 0;
-//        params.limit = 0;
-//        params.setSortType(sortType);
-//        params.details = false;
+        //        StayParams params = new StayParams();
+        //
+        //        params.dateCheckIn = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
+        //        params.stays = mStayCuration.getNights();
+        //        params.persons = mStayCurationOption.person;
+        //        params.category = mCategory;
+        //        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
+        //        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+        //
+        //        SortType sortType = mStayCurationOption.getSortType();
+        //        if (SortType.DISTANCE == sortType)
+        //        {
+        //            Location location = mStayCuration.getLocation();
+        //            if (location != null)
+        //            {
+        //                params.latitude = location.getLatitude();
+        //                params.longitude = location.getLongitude();
+        //            }
+        //        }
+        //
+        //        params.page = 0;
+        //        params.limit = 0;
+        //        params.setSortType(sortType);
+        //        params.details = false;
 
         return null;
     }
@@ -479,7 +481,9 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
                     checkedChangedDistance();
                 } else
                 {
-                    switch (mStayCurationOption.getSortType())
+                    SortType sortType = mStayCuration.getCurationOption().getSortType();
+
+                    switch (sortType)
                     {
                         case DEFAULT:
                             mSortRadioGroup.check(R.id.regionCheckView);
@@ -526,7 +530,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         switch (checkedId)
         {
             case R.id.regionCheckView:
-                mStayCurationOption.setSortType(SortType.DEFAULT);
+                mStayCuration.getCurationOption().setSortType(SortType.DEFAULT);
                 label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
@@ -538,17 +542,17 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
             }
 
             case R.id.lowPriceCheckView:
-                mStayCurationOption.setSortType(SortType.LOW_PRICE);
+                mStayCuration.getCurationOption().setSortType(SortType.LOW_PRICE);
                 label = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case R.id.highPriceCheckView:
-                mStayCurationOption.setSortType(SortType.HIGH_PRICE);
+                mStayCuration.getCurationOption().setSortType(SortType.HIGH_PRICE);
                 label = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case R.id.satisfactionCheckView:
-                mStayCurationOption.setSortType(SortType.SATISFACTION);
+                mStayCuration.getCurationOption().setSortType(SortType.SATISFACTION);
                 label = AnalyticsManager.Label.SORTFILTER_RATING;
                 break;
 
@@ -580,20 +584,22 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     {
         super.onClick(v);
 
+        int person = ((StayCurationOption) mStayCuration.getCurationOption()).person;
+
         switch (v.getId())
         {
             case R.id.minusPersonView:
-                updatePersonFilter(mStayCurationOption.person - 1);
+                updatePersonFilter(person - 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mStayCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(person), null);
                 break;
 
             case R.id.plusPersonView:
-                updatePersonFilter(mStayCurationOption.person + 1);
+                updatePersonFilter(person + 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mStayCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(person), null);
                 break;
 
             case R.id.doubleCheckView:
@@ -625,9 +631,11 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     @Override
     protected void onComplete()
     {
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
         Map<String, String> eventParams = new HashMap<>();
 
-        eventParams.put(AnalyticsManager.KeyType.SORTING, mStayCurationOption.getSortType().name());
+        eventParams.put(AnalyticsManager.KeyType.SORTING,stayCurationOption.getSortType().name());
 
         //        if (mProvince instanceof Area)
         //        {
@@ -643,16 +651,16 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         //        }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mStayCurationOption.toString(), eventParams);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
 
         if (DEBUG == true)
         {
-            ExLog.d(mStayCurationOption.toString());
+            ExLog.d(stayCurationOption.toString());
         }
 
         Intent intent = new Intent();
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mStayCurationOption);
-        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mCategory);
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mStayCuration.getCategory());
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -678,7 +686,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
     private void checkedChangedDistance()
     {
-        mStayCurationOption.setSortType(SortType.DISTANCE);
+        mStayCuration.getCurationOption().setSortType(SortType.DISTANCE);
 
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 

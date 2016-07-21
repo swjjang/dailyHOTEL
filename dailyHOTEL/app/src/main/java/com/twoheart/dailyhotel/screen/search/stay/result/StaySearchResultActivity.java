@@ -48,39 +48,34 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    public static final int SEARCHTYPE_SEARCHES = 0;
-    public static final int SEARCHTYPE_AUTOCOMPLETE = 1;
-    public static final int SEARCHTYPE_RECENT = 2;
-    public static final int SEARCHTYPE_LOCATION = 3;
-
     private Keyword mKeyword;
     private String mInputText;
 
-    private int mSearchType;
+    private SearchType mSearchType;
     private StaySearchResultNetworkController mNetworkController;
 
     private StayCuration mStayCuration;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, int searchType)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, SearchType searchType)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword, int searchType)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword, SearchType searchType)
     {
         return newInstance(context, saleTime, nights, null, keyword, searchType);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String text)
     {
-        return newInstance(context, saleTime, nights, null, new Keyword(0, text), SEARCHTYPE_SEARCHES);
+        return newInstance(context, saleTime, nights, null, new Keyword(0, text), SearchType.SEARCHES);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
@@ -89,7 +84,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_LOCATION);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
 
         return intent;
     }
@@ -101,7 +96,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         lockUI();
 
-        if (mSearchType == SEARCHTYPE_LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             mNetworkController.requestAddress(mStayCuration.getLocation());
             mNetworkController.requestCategoryList(mStayCuration.getCheckInSaleTime()//
@@ -228,7 +223,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
         }
 
-        mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
+        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
         if (saleTime == null)
@@ -264,7 +259,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
         String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
-        if (mSearchType == SEARCHTYPE_LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             mPlaceSearchResultLayout.setToolbarTitle("");
         } else
@@ -430,8 +425,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, //
-                (StayCurationOption) mStayCuration.getCurationOption(), //
-                mStayCuration.getCategory());
+                mStayCuration, mSearchType);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -572,11 +566,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 switch (mSearchType)
                 {
-                    case SEARCHTYPE_SEARCHES:
+                    case SEARCHES:
                         action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND;
                         break;
 
-                    case SEARCHTYPE_AUTOCOMPLETE:
+                    case AUTOCOMPLETE:
                         action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
 
                         if (keyword.price == 0)
@@ -588,7 +582,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                         }
                         break;
 
-                    case SEARCHTYPE_RECENT:
+                    case RECENT:
                         action = AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_NOT_FOUND;
                         break;
 
@@ -622,11 +616,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 switch (mSearchType)
                 {
-                    case SEARCHTYPE_SEARCHES:
+                    case SEARCHES:
                         action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
                         break;
 
-                    case SEARCHTYPE_AUTOCOMPLETE:
+                    case AUTOCOMPLETE:
                         action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED;
 
                         if (keyword.price == 0)
@@ -638,7 +632,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                         }
                         break;
 
-                    case SEARCHTYPE_RECENT:
+                    case RECENT:
                         action = AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED;
                         break;
 
