@@ -42,11 +42,9 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mContext = context;
     }
 
-
     @Override
     protected void initLayout(View view)
     {
-
         initListView(view);
 
         mDialogLayout = view.findViewById(R.id.dialogLayout);

@@ -101,7 +101,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         {
             releaseUiComponent();
 
-            DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+            DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
             return;
         } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
         {
@@ -201,7 +201,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                 {
                     if (Util.isTextEmpty(mEmail) == true)
                     {
-                        DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+                        DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     } else
                     {
                         DailyNetworkAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);

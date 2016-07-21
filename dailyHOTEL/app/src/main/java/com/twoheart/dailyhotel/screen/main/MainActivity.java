@@ -602,7 +602,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                 };
 
-                showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+                showSimpleDialog(getString(R.string.label_alarm_update), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
 
             } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
             {
@@ -648,7 +648,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                 };
 
-                showSimpleDialog(getString(R.string.dialog_title_notice)//
+                showSimpleDialog(getString(R.string.label_alarm_update)//
                     , getString(R.string.dialog_msg_update_now)//
                     , getString(R.string.dialog_btn_text_update)//
                     , getString(R.string.dialog_btn_text_cancel)//
