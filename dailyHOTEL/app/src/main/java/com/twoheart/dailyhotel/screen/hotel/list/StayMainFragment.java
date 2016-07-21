@@ -346,7 +346,6 @@ public class StayMainFragment extends PlaceMainFragment
 
             SaleTime checkInSaleTime = mPlaceCuration.getCheckInSaleTime();
 
-            long dailyTime = checkInSaleTime.getDailyTime();
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
 
             String date = DailyDeepLink.getInstance().getDate();
@@ -567,6 +566,8 @@ public class StayMainFragment extends PlaceMainFragment
         mPlaceMainLayout.setOptionFilterEnabled(mPlaceCuration.getStayCurationOption().isDefaultFilter() == false);
 
         int night;
+        int provinceIndex;
+        int areaIndex;
 
         try
         {
@@ -575,9 +576,6 @@ public class StayMainFragment extends PlaceMainFragment
         {
             night = 1;
         }
-
-        int provinceIndex;
-        int areaIndex;
 
         try
         {
