@@ -50,7 +50,7 @@ public class GourmetListFragment extends PlaceListFragment
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime);
+        void onGourmetClick(PlaceViewItem placeViewItem);
     }
 
     @Override
@@ -351,7 +351,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, mGourmetCuration.getSaleTime());
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem);
         }
 
         @Override

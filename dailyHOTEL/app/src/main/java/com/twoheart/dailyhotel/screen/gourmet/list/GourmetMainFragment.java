@@ -614,9 +614,9 @@ public class GourmetMainFragment extends PlaceMainFragment
     private GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+        public void onGourmetClick(PlaceViewItem placeViewItem)
         {
-            if (placeViewItem == null || saleTime == null || lockUiComponentAndIsLockUiComponent() == true)
+            if (placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -632,7 +632,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceName(gourmet.name);
 
                     Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mGourmetCuration.getSaleTime());
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -104,6 +105,7 @@ public class StayListNetworkController extends BaseNetworkController
                 } else
                 {
                     String message = response.getString("msg");
+                    Crashlytics.log(url);
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)

@@ -252,7 +252,7 @@ public class StayMainFragment extends PlaceMainFragment
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
-    public void startStayDetail(PlaceViewItem placeViewItem, SaleTime checkInSaleTime)
+    public void startStayDetail(PlaceViewItem placeViewItem)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -276,7 +276,7 @@ public class StayMainFragment extends PlaceMainFragment
                 DailyPreference.getInstance(mBaseActivity).setGAHotelName(stay.name);
 
                 Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mStayCuration.getCheckInSaleTime());
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
@@ -1138,9 +1138,9 @@ public class StayMainFragment extends PlaceMainFragment
     private StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, SaleTime checkInSaleTime)
+        public void onStayClick(PlaceViewItem placeViewItem)
         {
-            startStayDetail(placeViewItem, checkInSaleTime);
+            startStayDetail(placeViewItem);
         }
 
         @Override

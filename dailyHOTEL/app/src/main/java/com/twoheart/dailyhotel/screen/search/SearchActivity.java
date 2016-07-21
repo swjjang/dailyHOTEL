@@ -79,7 +79,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         mStaySearchFragment = new StaySearchFragment();
         mStaySearchFragment.setSaleTime(checkInSaleTime, checkOutSaleTime);
-
         mStaySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
         {
             @Override
@@ -101,10 +100,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 mSearchView.setEnabled(enabled);
             }
         });
+
         fragmentList.add(mStaySearchFragment);
 
         mGourmetSearchFragment = new GourmetSearchFragment();
-        mGourmetSearchFragment.setSaleTime(checkInSaleTime, checkOutSaleTime);
+        mGourmetSearchFragment.setSaleTime(mSaleTime);
         mGourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
         {
             @Override
@@ -126,6 +126,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 mSearchView.setEnabled(enabled);
             }
         });
+
         fragmentList.add(mGourmetSearchFragment);
 
         mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);

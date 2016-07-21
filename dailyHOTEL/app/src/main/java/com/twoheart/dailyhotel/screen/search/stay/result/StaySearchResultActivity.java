@@ -229,6 +229,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (saleTime == null)
         {
             finish();
+            return;
         }
 
         if (mStayCuration == null)
@@ -721,7 +722,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private StaySearchResultListFragment.OnStayListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStayListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, SaleTime checkInSaleTime)
+        public void onStayClick(PlaceViewItem placeViewItem)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
