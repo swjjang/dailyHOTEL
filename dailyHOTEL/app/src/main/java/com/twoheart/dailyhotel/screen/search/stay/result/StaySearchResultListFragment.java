@@ -147,15 +147,17 @@ public class StaySearchResultListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        StayParams params = mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true);
-        if (SortType.DISTANCE == params.getSortType() && params.hasLocation() == false)
+        if (mStayCuration == null || mStayCuration.getCurationOption() == null//
+            || mStayCuration.getCurationOption().getSortType() == null//
+            || mStayCuration.getLocation() == null)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        mNetworkController.requestStayList(mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true));
+        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
+        mNetworkController.requestStayList(params);
     }
 
     public boolean hasSalesPlace()
@@ -220,7 +222,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
                 mStaySearchResultListLayout.clearList();
             }
 
-            SortType sortType = mStayCuration.getStayCurationOption().getSortType();
+            SortType sortType = mStayCuration.getCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
 

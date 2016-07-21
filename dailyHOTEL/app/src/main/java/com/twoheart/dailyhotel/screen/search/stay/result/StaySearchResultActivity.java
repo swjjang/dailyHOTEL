@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
-import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
@@ -154,29 +153,31 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            //            StayCuration changedStayCuration = (StayCuration) placeCuration;
-            //            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
-            //
-            //            mStayCuration.setCurationOption(changedStayCurationOption);
-            //            mPlaceMainLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
-            //
-            //            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
-            //            {
-            //                mStayCuration.setLocation(changedStayCuration.getLocation());
-            //
-            //                searchMyLocation();
-            //            } else
-            //            {
-            //                refreshCurrentFragment(true);
-            //            }
+//            StayCuration changedStayCuration = (StayCuration) placeCuration;
+//            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+//
+//            mStayCuration.setCurationOption(changedStayCurationOption);
+//            mPlaceSearchResultLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
+//
+//            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
+//            {
+//                mStayCuration.setLocation(changedStayCuration.getLocation());
+//
+//                searchMyLocation();
+//            } else
+//            {
+//                refreshCurrentFragment(true);
+//            }
         }
     }
 
     @Override
     protected void onLocationFailed()
     {
-        mStayCuration.getStayCurationOption().setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(mStayCuration.getStayCurationOption().isDefaultFilter() == false);
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+        stayCurationOption.setSortType(SortType.DEFAULT);
+        mPlaceSearchResultLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -184,8 +185,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationProviderDisabled()
     {
-        mStayCuration.getStayCurationOption().setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(mStayCuration.getStayCurationOption().isDefaultFilter() == false);
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+        stayCurationOption.setSortType(SortType.DEFAULT);
+        mPlaceSearchResultLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -195,14 +198,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (location == null)
         {
-            mStayCuration.getStayCurationOption().setSortType(SortType.DEFAULT);
+            mStayCuration.getCurationOption().setSortType(SortType.DEFAULT);
             refreshCurrentFragment(true);
         } else
         {
             mStayCuration.setLocation(location);
 
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (mStayCuration.getStayCurationOption().getSortType() == SortType.DISTANCE)
+            if (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE)
             {
                 refreshCurrentFragment(true);
             }
