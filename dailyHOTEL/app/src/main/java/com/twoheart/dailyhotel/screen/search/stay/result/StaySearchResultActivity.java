@@ -426,8 +426,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, //
-                StaySearchResultCurationManager.getInstance().getStayCurationOption(), //
-                StaySearchResultCurationManager.getInstance().getCategory());
+                (StayCurationOption) mStayCuration.getCurationOption(), //
+                mStayCuration.getCategory());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -548,8 +548,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         private String getSearchDate()
         {
-            String checkInDate = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = StaySearchResultCurationManager.getInstance().getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
 
             //            Calendar calendar = Calendar.getInstance();
             //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
@@ -705,7 +705,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DISTANCE);
+            mStayCuration.getCurationOption().setSortType(SortType.DISTANCE);
 
             Stay stay;
             float[] results = new float[3];

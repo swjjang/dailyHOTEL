@@ -363,8 +363,8 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     {
 //        StayParams params = new StayParams();
 //
-//        params.dateCheckIn = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-//        params.stays = StaySearchResultCurationManager.getInstance().getNights();
+//        params.dateCheckIn = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
+//        params.stays = mStayCuration.getNights();
 //        params.persons = mStayCurationOption.person;
 //        params.category = mCategory;
 //        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
@@ -373,7 +373,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 //        SortType sortType = mStayCurationOption.getSortType();
 //        if (SortType.DISTANCE == sortType)
 //        {
-//            Location location = StaySearchResultCurationManager.getInstance().getLocation();
+//            Location location = mStayCuration.getLocation();
 //            if (location != null)
 //            {
 //                params.latitude = location.getLatitude();
