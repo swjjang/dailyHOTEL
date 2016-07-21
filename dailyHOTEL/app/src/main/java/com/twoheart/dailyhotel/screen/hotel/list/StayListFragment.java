@@ -177,6 +177,12 @@ public class StayListFragment extends PlaceListFragment
         mStayListLayout.setScrollListTop();
     }
 
+    @Override
+    public int getEntryCount()
+    {
+        return mStayListLayout.getEntryCount();
+    }
+
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
     {
         ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();

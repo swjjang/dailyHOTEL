@@ -180,6 +180,12 @@ public class StaySearchResultListFragment extends PlaceListFragment
         mStaySearchResultListLayout.setScrollListTop();
     }
 
+    @Override
+    public int getEntryCount()
+    {
+        return mStaySearchResultListLayout.getEntryCount();
+    }
+
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
     {
         ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();

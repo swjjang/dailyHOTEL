@@ -134,6 +134,12 @@ public class GourmetListFragment extends PlaceListFragment
         mGourmetListLayout.setScrollListTop();
     }
 
+    @Override
+    public int getEntryCount()
+    {
+        return mGourmetListLayout.getEntryCount();
+    }
+
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)
     {
         ArrayList<PlaceViewItem> gourmetViewItemList = new ArrayList<>();

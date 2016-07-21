@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
@@ -238,6 +239,16 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             mStayCuration = new StayCuration();
         }
+
+        Province province = mStayCuration.getProvince();
+        if (province == null)
+        {
+            province = new Province();
+            province.index = 5;
+            province.name = "서울";
+            province.isOverseas = false;
+        }
+        mStayCuration.setProvince(province);
 
         mStayCuration.setCheckInSaleTime(saleTime);
         mStayCuration.setCheckOutSaleTime(saleTime.getClone(saleTime.getOffsetDailyDay() + nights));

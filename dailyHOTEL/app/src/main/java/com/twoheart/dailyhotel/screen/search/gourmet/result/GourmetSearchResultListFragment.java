@@ -224,6 +224,11 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     {
     }
 
+    @Override
+    public int getEntryCount()
+    {
+        return 0;
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
