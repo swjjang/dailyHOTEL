@@ -147,18 +147,16 @@ public class StaySearchResultListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        //        if (mStayCuration == null || mStayCuration.getCurationOption() == null//
-        //            || mStayCuration.getCurationOption().getSortType() == null//
-        //            || mStayCuration.getLocation() == null)
-        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
-        if (SortType.DISTANCE == mStayCuration.getCurationOption().getSortType() && params.hasLocation() == false)
+        if (mStayCuration == null || mStayCuration.getCurationOption() == null//
+            || mStayCuration.getCurationOption().getSortType() == null//
+            || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null))
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        //        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
+        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
         mNetworkController.requestStayList(params);
     }
 
