@@ -25,7 +25,7 @@ public class AboutActivity extends WebViewActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_about_activity), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.frag_about), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

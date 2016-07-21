@@ -203,7 +203,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
         {
             super.onReceivedError(view, errorCode, description, failingUrl);
-            DailyToast.showToast(WebViewActivity.this, R.string.toast_msg_network_status_bad, Toast.LENGTH_LONG);
+            DailyToast.showToast(WebViewActivity.this, R.string.dialog_msg_network_unstable_retry_or_set_wifi, Toast.LENGTH_LONG);
             finish();
         }
 

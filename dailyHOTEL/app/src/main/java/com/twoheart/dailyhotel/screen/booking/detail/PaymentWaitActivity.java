@@ -225,7 +225,8 @@ public class PaymentWaitActivity extends BaseActivity
 
         String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
 
-        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
