@@ -107,7 +107,11 @@ public class StaySearchResultListFragment extends PlaceListFragment
                 if (size == 0)
                 {
                     refreshList(isShowProgress, 1);
+                } else
+                {
+                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                 }
+
                 break;
 
             case MAP:
@@ -182,12 +186,6 @@ public class StaySearchResultListFragment extends PlaceListFragment
         mStaySearchResultListLayout.setScrollListTop();
     }
 
-    @Override
-    public int getEntryCount()
-    {
-        return mStayCount;
-    }
-
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
     {
         ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
@@ -249,8 +247,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
                         setVisibility(ViewType.GONE, true);
                     } else
                     {
-                        // -1은 하단에 foot가 항상 있어서..
-                        ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(size - 1);
+                        ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                     }
                     break;
                 }

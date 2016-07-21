@@ -57,8 +57,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     public abstract void setScrollListTop();
 
-    public abstract int getEntryCount();
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {

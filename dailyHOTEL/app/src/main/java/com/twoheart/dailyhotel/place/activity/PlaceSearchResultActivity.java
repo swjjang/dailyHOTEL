@@ -194,8 +194,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             currentListFragment.setPlaceCuration(getPlaceCuration());
             currentListFragment.refreshList(true);
-
-            mPlaceSearchResultLayout.updateResultCount(currentListFragment.getEntryCount());
         }
     }
 
