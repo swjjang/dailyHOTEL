@@ -40,14 +40,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private static final int GOURMET_CATEGORY_COLUMN = 5;
 
-    private GourmetCuration mGourmetCuration;
-    private ViewType mViewType;
+    protected GourmetCuration mGourmetCuration;
+    protected ViewType mViewType;
 
-    private RadioGroup mSortRadioGroup;
-    private android.support.v7.widget.GridLayout mGridLayout;
+    protected RadioGroup mSortRadioGroup;
+    protected android.support.v7.widget.GridLayout mGridLayout;
 
-    private ViewGroup mAmenitiesLayout;
-    private ViewGroup mTimeRangeLayout;
+    protected ViewGroup mAmenitiesLayout;
+    protected ViewGroup mTimeRangeLayout;
 
     public static Intent newInstance(Context context, ViewType viewType, GourmetCuration gourmetCuration)
     {
@@ -71,9 +71,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mGourmetCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
-
+        initIntent(intent);
         initLayout();
 
         mAnimationLayout.setVisibility(View.INVISIBLE);
@@ -85,6 +83,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 showAnimation();
             }
         }, 20);
+    }
+
+    protected void initIntent(Intent intent)
+    {
+        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mGourmetCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
     }
 
     @Override
@@ -105,7 +109,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         requestUpdateResultDelayed();
     }
 
-    private void initSortLayout(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
+    protected void initSortLayout(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
@@ -367,7 +371,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         requestUpdateResultDelayed();
     }
 
-    private void resetCuration()
+    protected void resetCuration()
     {
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
@@ -470,7 +474,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         return resourceIndex[index];
     }
 
-    private void setDisabledSortLayout(View view, RadioGroup sortLayout)
+    protected void setDisabledSortLayout(View view, RadioGroup sortLayout)
     {
         if (sortLayout == null)
         {
@@ -490,7 +494,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         dimView.setVisibility(View.VISIBLE);
     }
 
-    private void resetLayout(ViewGroup viewGroup)
+    protected void resetLayout(ViewGroup viewGroup)
     {
         if (viewGroup == null)
         {

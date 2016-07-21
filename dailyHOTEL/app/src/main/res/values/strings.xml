@@ -727,6 +727,7 @@
     <string name="label_sort_by_low_price">낮은 가격순</string>
     <string name="label_sort_by_high_price">높은 가격순</string>
     <string name="label_sort_by_area">지역별</string>
+    <string name="label_sort_by_rank">인기순</string>
     <string name="label_sort_by_satisfaction">만족도</string>
     <string name="label_personnel">인원</string>
     <string name="label_bedtype">베드타입</string>
