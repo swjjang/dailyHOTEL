@@ -55,7 +55,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private Keyword mKeyword;
     private String mInputText;
-    private Location mLocation;
 
     private int mSearchType;
     private StaySearchResultNetworkController mNetworkController;
@@ -104,9 +103,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
-            mNetworkController.requestAddress(mLocation);
+            mNetworkController.requestAddress(mStayCuration.getLocation());
             mNetworkController.requestCategoryList(mStayCuration.getCheckInSaleTime()//
-                , mStayCuration.getNights(), mLocation);
+                , mStayCuration.getNights(), mStayCuration.getLocation());
         } else
         {
             mNetworkController.requestCategoryList(mStayCuration.getCheckInSaleTime()//
@@ -219,12 +218,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         SaleTime saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         int nights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
 
+        Location location = null;
+
         if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
         {
             mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
-            mLocation = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+            location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
         }
 
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
@@ -240,6 +241,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mStayCuration = new StayCuration();
         }
 
+        // Test Source - start
         Province province = mStayCuration.getProvince();
         if (province == null)
         {
@@ -249,7 +251,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             province.isOverseas = false;
         }
         mStayCuration.setProvince(province);
+        // Test Source - end
 
+        mStayCuration.setLocation(location);
         mStayCuration.setCheckInSaleTime(saleTime);
         mStayCuration.setCheckOutSaleTime(saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
     }
