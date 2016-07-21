@@ -244,8 +244,6 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
-        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_COMPLETE);
-
         Product product = getProcuct(params);
         product.setBrand("hotel");
 
@@ -257,18 +255,19 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_COMPLETE);
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         //
-        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
-            .setCheckoutStep(5)//
-            .setTransactionId(transId)//
-            .setTransactionRevenue(paymentPrice)//
-            .setTransactionCouponCode(String.format("credit_%s", credit));
-
-        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = getScreenViewBuilder(params, product, productCheckoutAction);
-
-        mGoogleAnalyticsTracker.set("&cu", "KRW");
-        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+        //        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
+        //            .setCheckoutStep(5)//
+        //            .setTransactionId(transId)//
+        //            .setTransactionRevenue(paymentPrice)//
+        //            .setTransactionCouponCode(String.format("credit_%s", credit));
+        //
+        //        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = getScreenViewBuilder(params, product, productCheckoutAction);
+        //
+        //        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        //        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
 
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
@@ -287,8 +286,6 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 
-        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
-
         Product product = getProcuct(params);
         product.setBrand("gourmet");
 
@@ -300,18 +297,19 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.setScreenName(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
 
-        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
-            .setCheckoutStep(5)//
-            .setTransactionId(transId)//
-            .setTransactionRevenue(paymentPrice)//
-            .setTransactionCouponCode(String.format("credit_%s", credit));
-
-        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = getScreenViewBuilder(params, product, productCheckoutAction);
-
-        mGoogleAnalyticsTracker.set("&cu", "KRW");
-        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+        //        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
+        //            .setCheckoutStep(5)//
+        //            .setTransactionId(transId)//
+        //            .setTransactionRevenue(paymentPrice)//
+        //            .setTransactionCouponCode(String.format("credit_%s", credit));
+        //
+        //        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = getScreenViewBuilder(params, product, productCheckoutAction);
+        //
+        //        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        //        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
 
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);

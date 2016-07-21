@@ -1,17 +1,42 @@
-package com.twoheart.dailyhotel.model;
+package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.location.Location;
-import android.os.Parcel;
-import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.util.Constants;
 
-public class StayCuration extends PlaceCuration
+public class StaySearchResultCurationManager
 {
+    private static StaySearchResultCurationManager mInstance;
+
+    private Location mLocation; // Not Parcelable
+
     private SaleTime mCheckInSaleTime;
     private SaleTime mCheckOutSaleTime;
     private Category mCategory;
     private StayCurationOption mStayCurationOption;
+
+    public static synchronized StaySearchResultCurationManager getInstance()
+    {
+        if (mInstance == null)
+        {
+            mInstance = new StaySearchResultCurationManager();
+        }
+
+        return mInstance;
+    }
+
+    private StaySearchResultCurationManager()
+    {
+        mStayCurationOption = new StayCurationOption();
+
+        clear();
+    }
 
     public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
     {
@@ -22,6 +47,12 @@ public class StayCuration extends PlaceCuration
 
         mCheckInSaleTime.setCurrentTime(currentDateTime);
         mCheckInSaleTime.setDailyTime(dailyDateTime);
+    }
+
+    public void destroy()
+    {
+        clear();
+        mInstance = null;
     }
 
     public void setCheckInSaleTime(SaleTime saleTime)
@@ -54,47 +85,28 @@ public class StayCuration extends PlaceCuration
         return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
     }
 
-    public StayCuration()
-    {
-        mStayCurationOption = new StayCurationOption();
-
-        clear();
-    }
-
-    @Override
-    public PlaceCurationOption getCurationOption()
+    public StayCurationOption getStayCurationOption()
     {
         return mStayCurationOption;
     }
 
-    @Override
-    public void setCurationOption(PlaceCurationOption placeCurationOption)
+    public Location getLocation()
     {
-        if (mStayCurationOption == null)
-        {
-            mStayCurationOption = new StayCurationOption();
-        }
+        return mLocation;
+    }
 
-        mStayCurationOption.setCurationOption((StayCurationOption) placeCurationOption);
+    public void setLocation(Location location)
+    {
+        mLocation = location;
     }
 
     public Category getCategory()
     {
-        if (mCategory == null)
-        {
-            mCategory = Category.ALL;
-        }
-
         return mCategory;
     }
 
     public void setCategory(Category category)
     {
-        if (category == null)
-        {
-            category = Category.ALL;
-        }
-
         mCategory = category;
     }
 
@@ -104,17 +116,7 @@ public class StayCuration extends PlaceCuration
 
         params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
         params.stays = getNights();
-        params.provinceIdx = mProvince.getProvinceIndex();
-
-        if (mProvince instanceof Area)
-        {
-            Area area = (Area) mProvince;
-            if (area != null)
-            {
-                params.areaIdx = area.index;
-            }
-        }
-
+        params.provinceIdx = 5;//mProvince.getProvinceIndex();
         params.persons = mStayCurationOption.person;
         params.category = mCategory;
         params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
@@ -138,7 +140,6 @@ public class StayCuration extends PlaceCuration
         return params;
     }
 
-    @Override
     public void clear()
     {
         mCategory = Category.ALL;
@@ -148,53 +149,6 @@ public class StayCuration extends PlaceCuration
         mCheckInSaleTime = null;
         mCheckOutSaleTime = null;
 
-        mProvince = null;
         mLocation = null;
     }
-
-    public StayCuration(Parcel in)
-    {
-        readFromParcel(in);
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeParcelable(mProvince, flags);
-        dest.writeParcelable(mLocation, flags);
-        dest.writeParcelable(mCheckInSaleTime, flags);
-        dest.writeParcelable(mCheckOutSaleTime, flags);
-        dest.writeParcelable(mCategory, flags);
-        dest.writeParcelable(mStayCurationOption, flags);
-    }
-
-    protected void readFromParcel(Parcel in)
-    {
-        mProvince = in.readParcelable(Province.class.getClassLoader());
-        mLocation = in.readParcelable(Location.class.getClassLoader());
-        mCheckInSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
-        mCheckOutSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
-        mCategory = in.readParcelable(Category.class.getClassLoader());
-        mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public StayCuration createFromParcel(Parcel in)
-        {
-            return new StayCuration(in);
-        }
-
-        @Override
-        public StayCuration[] newArray(int size)
-        {
-            return new StayCuration[size];
-        }
-    };
 }

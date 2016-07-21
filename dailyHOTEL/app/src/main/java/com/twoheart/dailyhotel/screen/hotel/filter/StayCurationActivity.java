@@ -16,9 +16,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
@@ -36,22 +34,9 @@ import java.util.Map;
 
 public class StayCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
-    public static final String INTENT_EXTRA_DATA_CURATION_OPTIONS = "curationOptions";
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
-    public static final String INTENT_EXTRA_DATA_CATEGORY = "category";
-    public static final String INTENT_EXTRA_DATA_PROVINCE = "province";
-    public static final String INTENT_EXTRA_DATA_CHECKIN_SALETIME = "checkInSaleTime";
-    public static final String INTENT_EXTRA_DATA_CHECKOUT_SALETIME = "checkOutSaleTime";
-    public static final String INTENT_EXTRA_DATA_LOCATION = "location";
 
-    private StayCurationOption mStayCurationOption;
-    private Category mCategory;
-    private Province mProvince;
-    private Location mLocation;
-    private SaleTime mCheckInSaleTime;
-    private SaleTime mCheckOutSaleTime;
-
-    private boolean mIsGlobal;
+    private StayCuration mStayCuration;
     private StayParams mLastParams;
     private ViewType mViewType;
 
@@ -87,16 +72,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
 
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-
-        StayCuration stayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
-
-        mCheckInSaleTime = stayCuration.getCheckInSaleTime();
-        mCheckOutSaleTime = stayCuration.getCheckOutSaleTime();
-        mStayCurationOption = stayCuration.getStayCurationOption();
-        mCategory = stayCuration.getCategory();
-        mProvince = stayCuration.getProvince();
-        mIsGlobal = mProvince.isOverseas;
-
+        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
         mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         initLayout();
@@ -116,18 +92,21 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void initContentLayout(ViewGroup contentLayout)
     {
         View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
-        initSortLayout(sortLayout, mViewType, mStayCurationOption);
+
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+        initSortLayout(sortLayout, mViewType, stayCurationOption);
 
         contentLayout.addView(sortLayout);
 
-        if (mIsGlobal == false)
+        if (mStayCuration.getProvince().isOverseas == false)
         {
             View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
-            initFilterLayout(filterLayout, mStayCurationOption);
+            initFilterLayout(filterLayout, stayCurationOption);
 
             contentLayout.addView(filterLayout);
 
-            initAmenitiesLayout(filterLayout, mStayCurationOption);
+            initAmenitiesLayout(filterLayout, stayCurationOption);
         } else
         {
             requestUpdateResult();
@@ -138,7 +117,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
-        if (mIsGlobal == true)
+        if (mStayCuration.getProvince().isOverseas == true)
         {
             View satisfactionCheckView = view.findViewById(R.id.satisfactionCheckView);
             satisfactionCheckView.setVisibility(View.INVISIBLE);
@@ -238,17 +217,19 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                     return;
                 }
 
+                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
                 if (v.isSelected() == true)
                 {
                     v.setSelected(false);
-                    mStayCurationOption.flagAmenitiesFilters ^= flag;
+                    stayCurationOption.flagAmenitiesFilters ^= flag;
 
                     AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
-                    mStayCurationOption.flagAmenitiesFilters |= flag;
+                    stayCurationOption.flagAmenitiesFilters |= flag;
 
                     AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
@@ -320,7 +301,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             person = StayFilter.MAX_PERSON;
         }
 
-        mStayCurationOption.person = person;
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        stayCurationOption.person = person;
 
         mPersonCountView.setText(getString(R.string.label_more_person, person));
 
@@ -352,14 +334,16 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     private void updateBedTypeFilter(View view, int flag)
     {
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
         if (view.isSelected() == true)
         {
             view.setSelected(false);
-            mStayCurationOption.flagBedTypeFilters ^= flag;
+            stayCurationOption.flagBedTypeFilters ^= flag;
         } else
         {
             view.setSelected(true);
-            mStayCurationOption.flagBedTypeFilters |= flag;
+            stayCurationOption.flagBedTypeFilters |= flag;
         }
 
         requestUpdateResultDelayed();
@@ -367,7 +351,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     private void resetCuration()
     {
-        mStayCurationOption.clear();
+        mStayCuration.getCurationOption().clear();
 
         if (mViewType == ViewType.LIST)
         {
@@ -376,7 +360,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             mSortRadioGroup.setOnCheckedChangeListener(this);
         }
 
-        if (mIsGlobal == false)
+        if (mStayCuration.getProvince().isOverseas == false)
         {
             updatePersonFilter(StayFilter.MIN_PERSON);
 
@@ -387,59 +371,19 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         requestUpdateResult();
     }
 
-
-    private StayParams getStayParams()
-    {
-        StayParams params = new StayParams();
-
-        params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-        params.provinceIdx = mProvince.getProvinceIndex();
-
-        if (mProvince instanceof Area)
-        {
-            Area area = (Area) mProvince;
-            if (area != null)
-            {
-                params.areaIdx = area.index;
-            }
-        }
-
-        params.persons = mStayCurationOption.person;
-        params.category = mCategory;
-        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
-
-        Constants.SortType sortType = mStayCurationOption.getSortType();
-        if (Constants.SortType.DISTANCE == sortType)
-        {
-            if (mLocation != null)
-            {
-                params.latitude = mLocation.getLatitude();
-                params.longitude = mLocation.getLongitude();
-            }
-        }
-
-        params.page = 0;
-        params.limit = 0;
-        params.setSortType(sortType);
-        params.details = false;
-
-        return params;
-    }
-
     @Override
     protected void requestUpdateResult()
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (mCheckInSaleTime == null)
+        if (mStayCuration == null || mStayCuration.getCheckInSaleTime() == null)
         {
             Util.restartApp(StayCurationActivity.this);
             return;
         }
 
-        mLastParams = getStayParams();
+        setLastStayParams(mStayCuration);
+
         super.requestUpdateResult();
     }
 
@@ -448,13 +392,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (mCheckInSaleTime == null)
+        if (mStayCuration == null || mStayCuration.getCheckInSaleTime() == null)
         {
-            unLockUI();
             Util.restartApp(StayCurationActivity.this);
             return;
         }
-        mLastParams = getStayParams();
+
+        setLastStayParams(mStayCuration);
+
         super.requestUpdateResultDelayed();
     }
 
@@ -463,8 +408,23 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setConfirmOnClickListener(null);
 
-        //        mLastParams = getStayParams();
         mNetworkController.requestStayList(mLastParams);
+    }
+
+    private void setLastStayParams(StayCuration stayCuration)
+    {
+        if (stayCuration == null)
+        {
+            return;
+        }
+
+        if (mLastParams == null)
+        {
+            mLastParams = new StayParams(stayCuration);
+        } else
+        {
+            mLastParams.setStayParams(stayCuration);
+        }
     }
 
     private void setDisabledSortLayout(View view, RadioGroup sortLayout)
@@ -527,7 +487,18 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                     searchMyLocation();
                 } else
                 {
-                    switch (mStayCurationOption.getSortType())
+                    StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+                    SortType sortType;
+
+                    if (stayCurationOption == null)
+                    {
+                        sortType = SortType.DEFAULT;
+                    } else
+                    {
+                        sortType = stayCurationOption.getSortType();
+                    }
+
+                    switch (sortType)
                     {
                         case DEFAULT:
                             mSortRadioGroup.check(R.id.regionCheckView);
@@ -571,33 +542,31 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             return;
         }
 
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
         switch (checkedId)
         {
             case R.id.regionCheckView:
-                mStayCurationOption.setSortType(SortType.DEFAULT);
+                stayCurationOption.setSortType(SortType.DEFAULT);
                 label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
             case R.id.distanceCheckView:
-            {
                 searchMyLocation();
-                //                Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                //                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
                 return;
-            }
 
             case R.id.lowPriceCheckView:
-                mStayCurationOption.setSortType(SortType.LOW_PRICE);
+                stayCurationOption.setSortType(SortType.LOW_PRICE);
                 label = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case R.id.highPriceCheckView:
-                mStayCurationOption.setSortType(SortType.HIGH_PRICE);
+                stayCurationOption.setSortType(SortType.HIGH_PRICE);
                 label = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case R.id.satisfactionCheckView:
-                mStayCurationOption.setSortType(SortType.SATISFACTION);
+                stayCurationOption.setSortType(SortType.SATISFACTION);
                 label = AnalyticsManager.Label.SORTFILTER_RATING;
                 break;
 
@@ -605,18 +574,20 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 return;
         }
 
+        Province province = mStayCuration.getProvince();
+
         Map<String, String> eventParams = new HashMap<>();
 
-        if (mProvince instanceof Area)
+        if (province instanceof Area)
         {
-            Area area = (Area) mProvince;
+            Area area = (Area) province;
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
@@ -629,20 +600,22 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         super.onClick(v);
 
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
         switch (v.getId())
         {
             case R.id.minusPersonView:
-                updatePersonFilter(mStayCurationOption.person - 1);
+                updatePersonFilter(stayCurationOption.person - 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mStayCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(stayCurationOption.person), null);
                 break;
 
             case R.id.plusPersonView:
-                updatePersonFilter(mStayCurationOption.person + 1);
+                updatePersonFilter(stayCurationOption.person + 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mStayCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(stayCurationOption.person), null);
                 break;
 
             case R.id.doubleCheckView:
@@ -674,40 +647,36 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     @Override
     protected void onComplete()
     {
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        Province province = mStayCuration.getProvince();
+
         Map<String, String> eventParams = new HashMap<>();
 
-        eventParams.put(AnalyticsManager.KeyType.SORTING, mStayCurationOption.getSortType().name());
+        eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
 
-        if (mProvince instanceof Area)
+        if (province instanceof Area)
         {
-            Area area = (Area) mProvince;
+            Area area = (Area) province;
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mStayCurationOption.toString(), eventParams);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
 
         if (Constants.DEBUG == true)
         {
-            ExLog.d(mStayCurationOption.toString());
+            ExLog.d(stayCurationOption.toString());
         }
 
         Intent intent = new Intent();
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mStayCurationOption);
-        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, mCategory);
-        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE, mProvince);
-
-        if (mStayCurationOption.getSortType() == SortType.DISTANCE && mLocation != null)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_LOCATION, mLocation);
-        }
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mStayCuration);
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -734,7 +703,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     @Override
     protected void onSearchLoacationResult(Location location)
     {
-        mLocation = location;
+        mStayCuration.setLocation(location);
 
         if (location == null)
         {
@@ -748,21 +717,24 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     private void checkedChangedDistance()
     {
-        mStayCurationOption.setSortType(SortType.DISTANCE);
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        Province province = mStayCuration.getProvince();
+
+        stayCurationOption.setSortType(SortType.DISTANCE);
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
         Map<String, String> eventParams = new HashMap<>();
 
-        if (mProvince instanceof Area)
+        if (province instanceof Area)
         {
-            Area area = (Area) mProvince;
+            Area area = (Area) province;
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else
         {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+            eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 

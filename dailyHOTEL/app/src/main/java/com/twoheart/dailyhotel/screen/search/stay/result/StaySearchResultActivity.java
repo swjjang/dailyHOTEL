@@ -147,30 +147,28 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            PlaceCurationOption placeCurationOption = data.getParcelableExtra(StaySearchResultCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
-            Category category = data.getParcelableExtra(StaySearchResultCurationActivity.INTENT_EXTRA_DATA_CATEGORY);
+            PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
-            if ((placeCurationOption instanceof StayCurationOption) == false)
+            if ((placeCuration instanceof StayCuration) == false)
             {
                 return;
             }
 
-            StayCurationOption changeCurationOption = (StayCurationOption) placeCurationOption;
-            StayCurationOption stayCurationOption = mStayCuration.getStayCurationOption();
-
-            stayCurationOption.setCurationOption(changeCurationOption);
-
-            mStayCuration.setCategory(category);
-
-            mPlaceSearchResultLayout.setOptionFilterEnabled(mStayCuration.getStayCurationOption().isDefaultFilter() == false);
-
-            if (changeCurationOption.getSortType() == SortType.DISTANCE)
-            {
-                searchMyLocation();
-            } else
-            {
-                refreshCurrentFragment(true);
-            }
+            //            StayCuration changedStayCuration = (StayCuration) placeCuration;
+            //            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+            //
+            //            mStayCuration.setCurationOption(changedStayCurationOption);
+            //            mPlaceMainLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
+            //
+            //            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
+            //            {
+            //                mStayCuration.setLocation(changedStayCuration.getLocation());
+            //
+            //                searchMyLocation();
+            //            } else
+            //            {
+            //                refreshCurrentFragment(true);
+            //            }
         }
     }
 
@@ -414,8 +412,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, //
-                mStayCuration.getStayCurationOption(), //
-                mStayCuration.getCategory());
+                StaySearchResultCurationManager.getInstance().getStayCurationOption(), //
+                StaySearchResultCurationManager.getInstance().getCategory());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -536,8 +534,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         private String getSearchDate()
         {
-            String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkInDate = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkOutDate = StaySearchResultCurationManager.getInstance().getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
 
             //            Calendar calendar = Calendar.getInstance();
             //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
@@ -693,7 +691,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            mStayCuration.getStayCurationOption().setSortType(SortType.DISTANCE);
+            StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DISTANCE);
 
             Stay stay;
             float[] results = new float[3];
