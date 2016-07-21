@@ -127,16 +127,16 @@ public class StaySearchResultListFragment extends PlaceListFragment
             lockUI(isShowProgress);
         }
 
-//        SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-//
-//        Province province = mStayCuration.getProvince();
-//
-//        if (province == null || checkInSaleTime == null)
-//        {
-//            unLockUI();
-//            Util.restartApp(mBaseActivity);
-//            return;
-//        }
+        //        SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
+        //
+        //        Province province = mStayCuration.getProvince();
+        //
+        //        if (province == null || checkInSaleTime == null)
+        //        {
+        //            unLockUI();
+        //            Util.restartApp(mBaseActivity);
+        //            return;
+        //        }
 
         int nights = mStayCuration.getNights();
         if (nights <= 0)
@@ -147,16 +147,18 @@ public class StaySearchResultListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        if (mStayCuration == null || mStayCuration.getCurationOption() == null//
-            || mStayCuration.getCurationOption().getSortType() == null//
-            || mStayCuration.getLocation() == null)
+        //        if (mStayCuration == null || mStayCuration.getCurationOption() == null//
+        //            || mStayCuration.getCurationOption().getSortType() == null//
+        //            || mStayCuration.getLocation() == null)
+        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
+        if (SortType.DISTANCE == mStayCuration.getCurationOption().getSortType() && params.hasLocation() == false)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
+        //        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
         mNetworkController.requestStayList(params);
     }
 

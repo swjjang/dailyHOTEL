@@ -153,21 +153,21 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-//            StayCuration changedStayCuration = (StayCuration) placeCuration;
-//            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
-//
-//            mStayCuration.setCurationOption(changedStayCurationOption);
-//            mPlaceSearchResultLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
-//
-//            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
-//            {
-//                mStayCuration.setLocation(changedStayCuration.getLocation());
-//
-//                searchMyLocation();
-//            } else
-//            {
-//                refreshCurrentFragment(true);
-//            }
+            StayCuration changedStayCuration = (StayCuration) placeCuration;
+            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+
+            mStayCuration.setCurationOption(changedStayCurationOption);
+            mPlaceSearchResultLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
+
+            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
+            {
+                mStayCuration.setLocation(changedStayCuration.getLocation());
+
+                searchMyLocation();
+            } else
+            {
+                refreshCurrentFragment(true);
+            }
         }
     }
 
