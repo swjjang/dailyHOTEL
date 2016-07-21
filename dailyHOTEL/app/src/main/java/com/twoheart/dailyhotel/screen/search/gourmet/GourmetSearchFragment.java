@@ -275,11 +275,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (keyword.price < 0)
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, keyword, GourmetSearchResultActivity.SEARCHTYPE_RECENT);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text, keyword, GourmetSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }

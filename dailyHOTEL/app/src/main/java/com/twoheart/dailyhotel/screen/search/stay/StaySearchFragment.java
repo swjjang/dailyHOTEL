@@ -293,11 +293,11 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (keyword.price < 0)
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, keyword, StaySearchResultActivity.SEARCHTYPE_RECENT);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text, keyword, StaySearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }

@@ -25,6 +25,13 @@ import java.util.List;
 
 public class GourmetSearchResultListFragment extends PlaceListFragment
 {
+    public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
+    {
+        void onGourmetClick(PlaceViewItem placeViewItem);
+
+        void onResultListCount(int count);
+    }
+
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {

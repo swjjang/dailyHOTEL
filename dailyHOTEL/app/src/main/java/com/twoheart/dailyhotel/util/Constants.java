@@ -75,6 +75,13 @@ public interface Constants
         HIDE_END
     }
 
+    public enum SearchType {
+        SEARCHES,
+        AUTOCOMPLETE,
+        RECENT,
+        LOCATION
+    }
+
     public static String DAILY_USER = "normal";
     public static String KAKAO_USER = "kakao_talk";
     public static String FACEBOOK_USER = "facebook";

@@ -40,7 +40,7 @@ public class StayListFragment extends PlaceListFragment
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onStayClick(PlaceViewItem placeViewItem, SaleTime checkInSaleTime);
+        void onStayClick(PlaceViewItem placeViewItem);
     }
 
     @Override
@@ -333,8 +333,7 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem, checkInSaleTime);
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem);
         }
 
         @Override

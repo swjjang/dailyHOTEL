@@ -44,40 +44,36 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searcyType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    public static final int SEARCHTYPE_SEARCHES = 0;
-    public static final int SEARCHTYPE_AUTOCOMPLETE = 1;
-    public static final int SEARCHTYPE_RECENT = 2;
-    public static final int SEARCHTYPE_LOCATION = 3;
-
+    private SaleTime mSaleTime;
     private Keyword mKeyword;
     private String mInputText;
 
     private int mOffset, mTotalCount;
-    private int mSearchType;
+    private SearchType mSearchType;
     private GourmetSearchResultNetworkController mNetworkController;
 
     private GourmetCuration mGourmetCuration;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, String inputText, Keyword keyword, int searchType)
+    public static Intent newInstance(Context context, SaleTime saleTime, String inputText, Keyword keyword, SearchType searchType)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new GourmetCuration());
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, Keyword keyword, int searchType)
+    public static Intent newInstance(Context context, SaleTime saleTime, Keyword keyword, SearchType searchType)
     {
         return newInstance(context, saleTime, null, keyword, searchType);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, String text)
     {
-        return newInstance(context, saleTime, null, new Keyword(0, text), SEARCHTYPE_SEARCHES);
+        return newInstance(context, saleTime, null, new Keyword(0, text), SearchType.SEARCHES);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, Location location)
@@ -85,7 +81,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_LOCATION);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new GourmetCuration());
 
         return intent;
@@ -98,7 +94,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         lockUI();
 
-        if (mSearchType == SEARCHTYPE_LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             mNetworkController.requestAddress(mGourmetCuration.getLocation());
         }
@@ -215,7 +211,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
         }
 
-        mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
+        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
         mGourmetCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
@@ -246,7 +242,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         mGourmetCuration.setSaleTime(saleTime);
 
-        if (mSearchType == SEARCHTYPE_LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             mGourmetCuration.getCurationOption().setSortType(SortType.DISTANCE);
             mGourmetCuration.setLocation(location);
@@ -265,7 +261,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        if (mSearchType == SEARCHTYPE_LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             mPlaceSearchResultLayout.setToolbarTitle("");
         } else
@@ -435,7 +431,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
+    private GourmetSearchResultListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetListFragmentListener()
     {
         @Override
         public void onGourmetClick(PlaceViewItem placeViewItem)
@@ -569,64 +565,64 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         private String mAddress;
         private int mSize = -100;
 
-        @Override
-        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mOffset == 0)
-            {
-                // 연박인 경우 사이즈가 0이면 검색개수가 없음
-                if (totalCount == -1)
-                {
-                    if (placeViewItemList == null || placeViewItemList.size() == 0)
-                    {
-                        analyticsOnResponseSearchResultListForSearches(mKeyword, 0);
-                    } else
-                    {
-                        analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
-                    }
-                } else
-                {
-                    analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
-                }
-            }
-
-            responseSearchResultList(totalCount, placeViewItemList);
-        }
-
-        @Override
-        public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mOffset == 0)
-            {
-                if (totalCount == -1)
-                {
-                    if (placeViewItemList == null || placeViewItemList.size() == 0)
-                    {
-                        mSize = 0;
-                    } else
-                    {
-                        mSize = totalCount;
-                    }
-                } else
-                {
-                    mSize = totalCount;
-                }
-
-                analyticsOnResponseSearchResultListForLocation();
-            }
-
-            responseSearchResultList(totalCount, placeViewItemList);
-        }
+//        @Override
+//        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+//        {
+//            if (isFinishing() == true)
+//            {
+//                return;
+//            }
+//
+//            if (mOffset == 0)
+//            {
+//                // 연박인 경우 사이즈가 0이면 검색개수가 없음
+//                if (totalCount == -1)
+//                {
+//                    if (placeViewItemList == null || placeViewItemList.size() == 0)
+//                    {
+//                        analyticsOnResponseSearchResultListForSearches(mKeyword, 0);
+//                    } else
+//                    {
+//                        analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+//                    }
+//                } else
+//                {
+//                    analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+//                }
+//            }
+//
+//            responseSearchResultList(totalCount, placeViewItemList);
+//        }
+//
+//        @Override
+//        public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+//        {
+//            if (isFinishing() == true)
+//            {
+//                return;
+//            }
+//
+//            if (mOffset == 0)
+//            {
+//                if (totalCount == -1)
+//                {
+//                    if (placeViewItemList == null || placeViewItemList.size() == 0)
+//                    {
+//                        mSize = 0;
+//                    } else
+//                    {
+//                        mSize = totalCount;
+//                    }
+//                } else
+//                {
+//                    mSize = totalCount;
+//                }
+//
+//                analyticsOnResponseSearchResultListForLocation();
+//            }
+//
+//            responseSearchResultList(totalCount, placeViewItemList);
+//        }
 
         @Override
         public void onResponseAddress(String address)
@@ -691,11 +687,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 switch (mSearchType)
                 {
-                    case SEARCHTYPE_SEARCHES:
+                    case SEARCHES:
                         action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND;
                         break;
 
-                    case SEARCHTYPE_AUTOCOMPLETE:
+                    case AUTOCOMPLETE:
                         action = AnalyticsManager.Action.GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
 
                         if (keyword.price == 0)
@@ -707,7 +703,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         }
                         break;
 
-                    case SEARCHTYPE_RECENT:
+                    case RECENT:
                         action = AnalyticsManager.Action.GOURMET_RECENT_KEYWORD_NOT_FOUND;
                         break;
 
@@ -741,11 +737,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 switch (mSearchType)
                 {
-                    case SEARCHTYPE_SEARCHES:
+                    case SEARCHES:
                         action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
                         break;
 
-                    case SEARCHTYPE_AUTOCOMPLETE:
+                    case AUTOCOMPLETE:
                         action = AnalyticsManager.Action.GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED;
 
                         if (keyword.price == 0)
@@ -757,7 +753,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         }
                         break;
 
-                    case SEARCHTYPE_RECENT:
+                    case RECENT:
                         action = AnalyticsManager.Action.GOURMET_RECENT_KEYWORD_SEARCH_CLICKED;
                         break;
 
@@ -826,59 +822,59 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
-
-            Gourmet gourmet;
-            float[] results = new float[3];
-
-            for (PlaceViewItem placeViewItem : placeViewItemList)
-            {
-                gourmet = placeViewItem.getItem();
-
-                Location.distanceBetween(location.getLatitude(), location.getLongitude(), gourmet.latitude, gourmet.longitude, results);
-                gourmet.distance = results[0];
-            }
-        }
-
-        private void responseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-        {
-            mTotalCount = totalCount;
-
-            if (totalCount == 0 || (mOffset == 0 && (placeViewItemList == null || placeViewItemList.size() == 0)))
-            {
-                mPlaceSearchResultLayout.showEmptyLayout();
-            } else
-            {
-                if (placeViewItemList != null)
-                {
-                    int size = placeViewItemList.size();
-                    if (size < PAGENATION_LIST_SIZE)
-                    {
-                        mOffset = -1;
-                    } else
-                    {
-                        mOffset += placeViewItemList.size();
-                    }
-
-                    // 위치 요청 타입인 경우에는 위치를 계산해 주어야 한다.
-                    Location location = mGourmetCuration.getLocation();
-                    if (location != null)
-                    {
-                        distanceBetween(location, placeViewItemList);
-                    }
-                } else
-                {
-                    mOffset = -1;
-                }
-
-                mPlaceSearchResultLayout.showListLayout();
-                ((GourmetSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
-            }
-
-            mPlaceSearchResultLayout.updateResultCount(totalCount);
-            unLockUI();
-        }
+//        private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
+//        {
+//            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
+//
+//            Gourmet gourmet;
+//            float[] results = new float[3];
+//
+//            for (PlaceViewItem placeViewItem : placeViewItemList)
+//            {
+//                gourmet = placeViewItem.getItem();
+//
+//                Location.distanceBetween(location.getLatitude(), location.getLongitude(), gourmet.latitude, gourmet.longitude, results);
+//                gourmet.distance = results[0];
+//            }
+//        }
+//
+//        private void responseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+//        {
+//            mTotalCount = totalCount;
+//
+//            if (totalCount == 0 || (mOffset == 0 && (placeViewItemList == null || placeViewItemList.size() == 0)))
+//            {
+//                mPlaceSearchResultLayout.showEmptyLayout();
+//            } else
+//            {
+//                if (placeViewItemList != null)
+//                {
+//                    int size = placeViewItemList.size();
+//                    if (size < PAGENATION_LIST_SIZE)
+//                    {
+//                        mOffset = -1;
+//                    } else
+//                    {
+//                        mOffset += placeViewItemList.size();
+//                    }
+//
+//                    // 위치 요청 타입인 경우에는 위치를 계산해 주어야 한다.
+//                    Location location = mGourmetCuration.getLocation();
+//                    if (location != null)
+//                    {
+//                        distanceBetween(location, placeViewItemList);
+//                    }
+//                } else
+//                {
+//                    mOffset = -1;
+//                }
+//
+//                mPlaceSearchResultLayout.showListLayout();
+//                ((GourmetSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
+//            }
+//
+//            mPlaceSearchResultLayout.updateResultCount(totalCount);
+//            unLockUI();
+//        }
     };
 }
