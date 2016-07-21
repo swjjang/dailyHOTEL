@@ -60,7 +60,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private int mSearchType;
     private StaySearchResultNetworkController mNetworkController;
 
-    private StayCuration mPlaceCuration;
+    private StayCuration mStayCuration;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, int searchType)
     {
@@ -105,12 +105,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
             mNetworkController.requestAddress(mLocation);
-            mNetworkController.requestCategoryList(StaySearchResultCurationManager.getInstance().getCheckInSaleTime()//
-                , StaySearchResultCurationManager.getInstance().getNights(), mLocation);
+            mNetworkController.requestCategoryList(mStayCuration.getCheckInSaleTime()//
+                , mStayCuration.getNights(), mLocation);
         } else
         {
-            mNetworkController.requestCategoryList(StaySearchResultCurationManager.getInstance().getCheckInSaleTime()//
-                , StaySearchResultCurationManager.getInstance().getNights(), mKeyword.name);
+            mNetworkController.requestCategoryList(mStayCuration.getCheckInSaleTime()//
+                , mStayCuration.getNights(), mKeyword.name);
         }
     }
 
@@ -133,8 +133,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            StaySearchResultCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
-            StaySearchResultCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
+            mStayCuration.setCheckInSaleTime(checkInSaleTime);
+            mStayCuration.setCheckOutSaleTime(checkOutSaleTime);
 
             ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(checkInSaleTime, checkOutSaleTime);
 
@@ -156,13 +156,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             StayCurationOption changeCurationOption = (StayCurationOption) placeCurationOption;
-            StayCurationOption stayCurationOption = StaySearchResultCurationManager.getInstance().getStayCurationOption();
+            StayCurationOption stayCurationOption = mStayCuration.getStayCurationOption();
 
             stayCurationOption.setCurationOption(changeCurationOption);
 
-            StaySearchResultCurationManager.getInstance().setCategory(category);
+            mStayCuration.setCategory(category);
 
-            mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+            mPlaceSearchResultLayout.setOptionFilterEnabled(mStayCuration.getStayCurationOption().isDefaultFilter() == false);
 
             if (changeCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -177,8 +177,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationFailed()
     {
-        StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+        mStayCuration.getStayCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceSearchResultLayout.setOptionFilterEnabled(mStayCuration.getStayCurationOption().isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -186,8 +186,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationProviderDisabled()
     {
-        StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
+        mStayCuration.getStayCurationOption().setSortType(SortType.DEFAULT);
+        mPlaceSearchResultLayout.setOptionFilterEnabled(mStayCuration.getStayCurationOption().isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -197,14 +197,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (location == null)
         {
-            StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+            mStayCuration.getStayCurationOption().setSortType(SortType.DEFAULT);
             refreshCurrentFragment(true);
         } else
         {
-            StaySearchResultCurationManager.getInstance().setLocation(location);
+            mStayCuration.setLocation(location);
 
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (StaySearchResultCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
+            if (mStayCuration.getStayCurationOption().getSortType() == SortType.DISTANCE)
             {
                 refreshCurrentFragment(true);
             }
@@ -228,22 +228,27 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
-        mPlaceCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+        //        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
         if (saleTime == null)
         {
             finish();
         }
 
-        StaySearchResultCurationManager.getInstance().setCheckInSaleTime(saleTime);
-        StaySearchResultCurationManager.getInstance().setCheckOutSaleTime(saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+        if (mStayCuration == null)
+        {
+            mStayCuration = new StayCuration();
+        }
+
+        mStayCuration.setCheckInSaleTime(saleTime);
+        mStayCuration.setCheckOutSaleTime(saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
     }
 
     @Override
     protected void initLayout()
     {
-        String checkInDate = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = StaySearchResultCurationManager.getInstance().getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         if (mSearchType == SEARCHTYPE_LOCATION)
         {
@@ -253,7 +258,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
         }
 
-        mPlaceSearchResultLayout.setCalendarText(String.format("%s - %s, %d박", checkInDate, checkOutDate, StaySearchResultCurationManager.getInstance().getNights()));
+        mPlaceSearchResultLayout.setCalendarText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStayCuration.getNights()));
 
         mNetworkController = new StaySearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
     }
@@ -267,7 +272,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected PlaceCuration getPlaceCuration()
     {
-        return mPlaceCuration;
+        return mStayCuration;
     }
 
     @Override
@@ -292,7 +297,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
             Category category = (Category) tab.getTag();
-            StaySearchResultCurationManager.getInstance().setCategory(category);
+            mStayCuration.setCategory(category);
 
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
             mPlaceSearchResultLayout.showBottomLayout(false);
@@ -320,8 +325,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            SaleTime checkInSaleTime = StaySearchResultCurationManager.getInstance().getCheckInSaleTime();
-            int nights = StaySearchResultCurationManager.getInstance().getNights();
+            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
+            int nights = mStayCuration.getNights();
 
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
@@ -361,7 +366,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     mViewType = ViewType.LIST;
 
                     //                    Map<String, String> params = new HashMap<>();
-                    //                    Province province = StaySearchResultCurationManager.getInstance().getProvince();
+                    //                    Province province = mStayCuration.getProvince();
                     //
                     //                    if (province == null)
                     //                    {
@@ -411,8 +416,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, //
-                StaySearchResultCurationManager.getInstance().getStayCurationOption(), //
-                StaySearchResultCurationManager.getInstance().getCategory());
+                mStayCuration.getStayCurationOption(), //
+                mStayCuration.getCategory());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -533,8 +538,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         private String getSearchDate()
         {
-            String checkInDate = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = StaySearchResultCurationManager.getInstance().getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
 
             //            Calendar calendar = Calendar.getInstance();
             //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
@@ -690,7 +695,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            StaySearchResultCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DISTANCE);
+            mStayCuration.getStayCurationOption().setSortType(SortType.DISTANCE);
 
             Stay stay;
             float[] results = new float[3];
@@ -718,7 +723,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             Stay stay = placeViewItem.getItem();
 
             Intent intent = new Intent(StaySearchResultActivity.this, StayDetailActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, StaySearchResultCurationManager.getInstance().getCheckInSaleTime());
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mStayCuration.getCheckInSaleTime());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
@@ -737,10 +742,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (count == 0)
             {
-//                mPlaceSearchResultLayout.showEmptyLayout();
+                //                mPlaceSearchResultLayout.showEmptyLayout();
             } else
             {
-//                mPlaceSearchResultLayout.showListLayout();
+                //                mPlaceSearchResultLayout.showListLayout();
                 mPlaceSearchResultLayout.updateResultCount(count);
             }
         }
@@ -764,7 +769,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
-                currentPlaceListFragment.setPlaceCuration(mPlaceCuration);
+                currentPlaceListFragment.setPlaceCuration(mStayCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {

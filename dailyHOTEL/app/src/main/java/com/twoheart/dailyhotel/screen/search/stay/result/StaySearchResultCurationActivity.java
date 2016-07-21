@@ -53,7 +53,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     private TextView mPersonCountView;
     private ViewGroup mBedTypeLayout;
 
-    private StayCuration mPlaceCuration;
+    private StayCuration mStayCuration;
 
     public static Intent newInstance(Context context, ViewType viewType, StayCurationOption stayCurationOption, Category category)
     {
@@ -82,7 +82,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mStayCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
         mCategory = intent.getParcelableExtra(INTENT_EXTRA_DATA_CATEGORY);
-        mPlaceCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
         mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
@@ -363,8 +363,8 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
     {
         StayParams params = new StayParams();
 
-        params.dateCheckIn = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = StaySearchResultCurationManager.getInstance().getNights();
+        params.dateCheckIn = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
+        params.stays = mStayCuration.getNights();
         params.persons = mStayCurationOption.person;
         params.category = mCategory;
         params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
@@ -373,7 +373,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
         SortType sortType = mStayCurationOption.getSortType();
         if (SortType.DISTANCE == sortType)
         {
-            Location location = StaySearchResultCurationManager.getInstance().getLocation();
+            Location location = mStayCuration.getLocation();
             if (location != null)
             {
                 params.latitude = location.getLatitude();
@@ -556,23 +556,23 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
                 return;
         }
 
-//        Map<String, String> eventParams = new HashMap<>();
-//
-//        if (mProvince instanceof Area)
-//        {
-//            Area area = (Area) mProvince;
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//        } else
-//        {
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//        }
-//
-//        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-//            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
+        //        Map<String, String> eventParams = new HashMap<>();
+        //
+        //        if (mProvince instanceof Area)
+        //        {
+        //            Area area = (Area) mProvince;
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        //        } else
+        //        {
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        //        }
+        //
+        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+        //            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
 
     @Override
@@ -629,18 +629,18 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
         eventParams.put(AnalyticsManager.KeyType.SORTING, mStayCurationOption.getSortType().name());
 
-//        if (mProvince instanceof Area)
-//        {
-//            Area area = (Area) mProvince;
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//        } else
-//        {
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//        }
+        //        if (mProvince instanceof Area)
+        //        {
+        //            Area area = (Area) mProvince;
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        //        } else
+        //        {
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        //        }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mStayCurationOption.toString(), eventParams);
@@ -684,18 +684,18 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
         Map<String, String> eventParams = new HashMap<>();
 
-//        if (mProvince instanceof Area)
-//        {
-//            Area area = (Area) mProvince;
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//        } else
-//        {
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//        }
+        //        if (mProvince instanceof Area)
+        //        {
+        //            Area area = (Area) mProvince;
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        //        } else
+        //        {
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        //        }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);

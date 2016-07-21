@@ -31,7 +31,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
     protected StayListNetworkController mNetworkController;
 
     protected BaseActivity mBaseActivity;
-    private StayCuration mPlaceCuration;
+    private StayCuration mStayCuration;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -78,7 +78,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
-        mPlaceCuration = (StayCuration) curation;
+        mStayCuration = (StayCuration) curation;
     }
 
     @Override
@@ -124,9 +124,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
             lockUI(isShowProgress);
         }
 
-        SaleTime checkInSaleTime = StaySearchResultCurationManager.getInstance().getCheckInSaleTime();
-
-        int nights = StaySearchResultCurationManager.getInstance().getNights();
+        int nights = mStayCuration.getNights();
         if (nights <= 0)
         {
             unLockUI();
@@ -135,7 +133,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        mNetworkController.requestStayList(StaySearchResultCurationManager.getInstance().getStayParams(page, PAGENATION_LIST_SIZE, true));
+        mNetworkController.requestStayList(mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true));
     }
 
     public boolean hasSalesPlace()
@@ -203,7 +201,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
                 mStaySearchResultListLayout.clearList();
             }
 
-            SortType sortType = StaySearchResultCurationManager.getInstance().getStayCurationOption().getSortType();
+            SortType sortType = mStayCuration.getStayCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
 
@@ -276,7 +274,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            SaleTime checkInSaleTime = StaySearchResultCurationManager.getInstance().getCheckInSaleTime();
+            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem, checkInSaleTime);
         }
 
