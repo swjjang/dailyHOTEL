@@ -228,8 +228,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
-        //        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
-
         if (saleTime == null)
         {
             finish();

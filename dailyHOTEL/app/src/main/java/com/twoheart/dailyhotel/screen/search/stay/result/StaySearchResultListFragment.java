@@ -15,10 +15,12 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListNetworkController;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +81,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
     public void setPlaceCuration(PlaceCuration curation)
     {
         mStayCuration = (StayCuration) curation;
+        mStaySearchResultListLayout.setStayCuration(mStayCuration);
     }
 
     @Override
@@ -124,6 +127,17 @@ public class StaySearchResultListFragment extends PlaceListFragment
             lockUI(isShowProgress);
         }
 
+//        SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
+//
+//        Province province = mStayCuration.getProvince();
+//
+//        if (province == null || checkInSaleTime == null)
+//        {
+//            unLockUI();
+//            Util.restartApp(mBaseActivity);
+//            return;
+//        }
+
         int nights = mStayCuration.getNights();
         if (nights <= 0)
         {
@@ -132,6 +146,14 @@ public class StaySearchResultListFragment extends PlaceListFragment
         }
 
         mPageIndex = page;
+
+        StayParams params = mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true);
+        if (SortType.DISTANCE == params.getSortType() && params.hasLocation() == false)
+        {
+            unLockUI();
+            Util.restartApp(mBaseActivity);
+            return;
+        }
 
         mNetworkController.requestStayList(mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true));
     }
@@ -164,9 +186,6 @@ public class StaySearchResultListFragment extends PlaceListFragment
         {
             return stayViewItemList;
         }
-
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
 
         for (Stay stay : stayList)
         {
@@ -281,6 +300,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
         @Override
         public void onEventBannerClick(EventBanner eventBanner)
         {
+            // do nothing.
         }
 
         @Override
@@ -312,7 +332,7 @@ public class StaySearchResultListFragment extends PlaceListFragment
         @Override
         public void onFilterClick()
         {
-
+            mOnPlaceListFragmentListener.onFilterClick();
         }
 
         @Override
