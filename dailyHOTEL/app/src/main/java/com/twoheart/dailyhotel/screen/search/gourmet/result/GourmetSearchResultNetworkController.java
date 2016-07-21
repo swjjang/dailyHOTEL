@@ -65,8 +65,6 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
 
     public void requestSearchResultList(SaleTime saleTime, Location location, int offset, int count)
     {
-        requestAddress(location, mLocationToAddressListener);
-
         DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, mGourmetLocationSearchListJsonResponseListener);
     }
 
@@ -97,14 +95,14 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
         return placeViewItemList;
     }
 
-    private void requestAddress(Location location, DailyHotelJsonResponseListener listener)
+    public void requestAddress(Location location)
     {
         final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
             , Double.toString(location.getLatitude())//
             , Double.toString(location.getLongitude())//
             , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-        new SearchAddressAsyncTask(url, listener).execute();
+        new SearchAddressAsyncTask(url, mLocationToAddressListener).execute();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

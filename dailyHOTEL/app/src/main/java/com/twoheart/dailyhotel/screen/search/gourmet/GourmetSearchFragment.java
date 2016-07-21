@@ -147,10 +147,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
-    @Override
-    public void setSaleTime(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    public void setSaleTime(SaleTime saleTime)
     {
-        mSaleTime = checkInSaleTime;
+        mSaleTime = saleTime;
     }
 
     @Override

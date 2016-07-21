@@ -276,6 +276,8 @@
     <string name="dialog_msg_facebook_update">계속 진행하려면 회원정보를 추가로 입력해주세요.</string>
     <string name="dialog_msg_none_gcmid">Google Play Service(업데이트 혹은 미설치)를 사용할 수 없어 결제 알림을 받지 못할 수 있습니다. 결제 후 예약 내역에서 확인해주세요.</string>
     <string name="dialog_msg_internal_error">세션이 만료되었습니다. 종료 후 다시 시도해주세요.\n사용에 불편함이 있으시면 데일리 고객센터 1800-9120 문의해주세요.</string>
+    <string name="dialog_msg_exfired_session">세션이 만료되어 로그아웃되었습니다.\n다시 로그인해주세요.</string>
+
     <string name="dialog_msg_changed_price">상품의 가격이 변경되었습니다. 확인 후 결제해주세요.</string>
     <string name="dialog_msg_changed_time">방문할 수 있는 시간이 변경되었습니다. 확인 후 다시 선택해주세요.</string>
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>

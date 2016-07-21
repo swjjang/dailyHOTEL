@@ -234,6 +234,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (saleTime == null)
         {
             finish();
+            return;
         }
 
         if (mStayCuration == null)

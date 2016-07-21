@@ -52,8 +52,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract void startSearchResultActivity();
 
-    public abstract void setSaleTime(SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
-
     public interface OnSearchFragmentListener
     {
         void finish();
