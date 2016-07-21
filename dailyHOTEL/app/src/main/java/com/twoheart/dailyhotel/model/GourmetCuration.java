@@ -10,6 +10,11 @@ public class GourmetCuration extends PlaceCuration
 
     private GourmetCurationOption mGourmetCurationOption;
 
+    public GourmetCuration(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
     public GourmetCuration()
     {
         mGourmetCurationOption = new GourmetCurationOption();
@@ -17,18 +22,21 @@ public class GourmetCuration extends PlaceCuration
         clear();
     }
 
-    public void clear()
-    {
-        mGourmetCurationOption.clear();
-
-        mProvince = null;
-        mLocation = null;
-        mSaleTime = null;
-    }
-
-    public GourmetCurationOption getGourmetCurationOption()
+    @Override
+    public PlaceCurationOption getCurationOption()
     {
         return mGourmetCurationOption;
+    }
+
+    @Override
+    public void setCurationOption(PlaceCurationOption placeCurationOption)
+    {
+        if (mGourmetCurationOption == null)
+        {
+            mGourmetCurationOption = new GourmetCurationOption();
+        }
+
+        mGourmetCurationOption.setCurationOption((GourmetCurationOption) placeCurationOption);
     }
 
     public void setSaleTime(long currentDateTime, long dailyDateTime)
@@ -52,9 +60,13 @@ public class GourmetCuration extends PlaceCuration
         return mSaleTime;
     }
 
-    public GourmetCuration(Parcel in)
+    public void clear()
     {
-        readFromParcel(in);
+        mGourmetCurationOption.clear();
+
+        mProvince = null;
+        mLocation = null;
+        mSaleTime = null;
     }
 
     @Override

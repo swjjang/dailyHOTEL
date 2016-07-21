@@ -122,15 +122,19 @@ public class StayCurationOption extends PlaceCurationOption
         flagAmenitiesFilters = StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
-    public void setCurationOption(StayCurationOption option)
+    protected void setCurationOption(StayCurationOption stayCurationOption)
     {
-        setSortType(option.getSortType());
-        setFiltersList(option.getFiltersList());
+        if (stayCurationOption == null)
+        {
+            return;
+        }
 
-        person = option.person;
-        flagBedTypeFilters = option.flagBedTypeFilters;
-        flagAmenitiesFilters = option.flagAmenitiesFilters;
+        setSortType(stayCurationOption.getSortType());
+        setFiltersList(stayCurationOption.getFiltersList());
 
+        person = stayCurationOption.person;
+        flagBedTypeFilters = stayCurationOption.flagBedTypeFilters;
+        flagAmenitiesFilters = stayCurationOption.flagAmenitiesFilters;
     }
 
     public boolean isDefaultFilter()

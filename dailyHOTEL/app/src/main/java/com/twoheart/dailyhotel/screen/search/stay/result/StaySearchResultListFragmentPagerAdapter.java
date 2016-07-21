@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 
 import java.util.ArrayList;
 

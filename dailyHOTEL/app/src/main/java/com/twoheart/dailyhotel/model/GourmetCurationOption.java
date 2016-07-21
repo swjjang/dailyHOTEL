@@ -81,6 +81,19 @@ public class GourmetCurationOption extends PlaceCurationOption
         return true;
     }
 
+    protected void setCurationOption(GourmetCurationOption gourmetCurationOption)
+    {
+        if (gourmetCurationOption == null)
+        {
+            return;
+        }
+
+        setSortType(gourmetCurationOption.getSortType());
+        setFilterMap(gourmetCurationOption.getFilterMap());
+        flagTimeFilter = gourmetCurationOption.flagTimeFilter;
+        flagAmenitiesFilters = gourmetCurationOption.flagAmenitiesFilters;
+    }
+
     public void setFilterMap(HashMap<String, Integer> filterMap)
     {
         mFilterMap.clear();

@@ -2,9 +2,7 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.location.Location;
 
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayParams;

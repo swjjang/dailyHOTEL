@@ -256,7 +256,7 @@ public class StayListFragment extends PlaceListFragment
                 mStayListLayout.clearList();
             }
 
-            SortType sortType = mStayCuration.getStayCurationOption().getSortType();
+            SortType sortType = mStayCuration.getCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
 

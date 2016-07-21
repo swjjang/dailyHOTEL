@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -27,76 +28,75 @@ public class StayParams implements Parcelable
     public String sortDirection;
     public boolean details;
 
-
     public StayParams()
     {
     }
 
+    public StayParams(StayCuration stayCuration)
+    {
+        setStayParams(stayCuration);
+    }
 
     public StayParams(Parcel in)
     {
         readFromParcel(in);
     }
 
-    protected void readFromParcel(Parcel in)
+    public void setStayParams(StayCuration stayCuration)
     {
-        dateCheckIn = in.readString();
-        stays = in.readInt();
-        provinceIdx = in.readInt();
-        areaIdx = in.readInt();
-        persons = in.readInt();
-        category = in.readParcelable(Category.class.getClassLoader());
-        bedType = in.readString();
-        luxury = in.readString();
-        longitude = in.readDouble();
-        latitude = in.readDouble();
-        page = in.readInt();
-        limit = in.readInt();
-        sortProperty = in.readString();
-        sortDirection = in.readString();
-        details = in.readInt() == 1 ? true : false;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeString(dateCheckIn);
-        dest.writeInt(stays);
-        dest.writeInt(provinceIdx);
-        dest.writeInt(areaIdx);
-        dest.writeInt(persons);
-        dest.writeParcelable(category, flags);
-        dest.writeString(bedType);
-        dest.writeString(luxury);
-        dest.writeDouble(longitude);
-        dest.writeDouble(latitude);
-        dest.writeInt(page);
-        dest.writeInt(limit);
-        dest.writeString(sortProperty);
-        dest.writeString(sortDirection);
-        dest.writeInt(details ? 1 : 0);
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
-    }
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public StayParams createFromParcel(Parcel in)
+        if (stayCuration == null)
         {
-            return new StayParams(in);
+            return;
         }
 
-        @Override
-        public StayParams[] newArray(int size)
+        clear();
+
+        SaleTime checkInSaleTime = stayCuration.getCheckInSaleTime();
+        SaleTime checkOutSaleTime = stayCuration.getCheckOutSaleTime();
+
+        if (checkInSaleTime != null && checkOutSaleTime != null)
         {
-            return new StayParams[size];
+            dateCheckIn = checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+            stays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
         }
 
-    };
+        Province province = stayCuration.getProvince();
+
+        if (province != null)
+        {
+            provinceIdx = province.getProvinceIndex();
+
+            if (province instanceof Area)
+            {
+                areaIdx = ((Area) province).index;
+            }
+        }
+
+        category = stayCuration.getCategory();
+
+        StayCurationOption stayCurationOption = (StayCurationOption) stayCuration.getCurationOption();
+
+        if (stayCurationOption != null)
+        {
+            persons = stayCurationOption.person;
+            bedType = stayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
+            luxury = stayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+        }
+
+        Constants.SortType sortType = stayCurationOption.getSortType();
+        setSortType(sortType);
+
+        if (Constants.SortType.DISTANCE == sortType)
+        {
+            Location location = stayCuration.getLocation();
+
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+    }
 
     public void setSortType(Constants.SortType sortType)
     {
@@ -282,4 +282,82 @@ public class StayParams implements Parcelable
 
         return String.format("%s=%s", key, stringValue);
     }
+
+    private void clear()
+    {
+        dateCheckIn = null;
+        stays = 1;
+        provinceIdx = 0;
+        areaIdx = 0;
+        persons = 0;
+        category = Category.ALL;
+        bedType = null;
+        luxury = null;
+        longitude = 0.0d;
+        latitude = 0.0d;
+        page = 0;
+        limit = 0;
+        sortProperty = null;
+        sortDirection = null;
+        details = false;
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        dateCheckIn = in.readString();
+        stays = in.readInt();
+        provinceIdx = in.readInt();
+        areaIdx = in.readInt();
+        persons = in.readInt();
+        category = in.readParcelable(Category.class.getClassLoader());
+        bedType = in.readString();
+        luxury = in.readString();
+        longitude = in.readDouble();
+        latitude = in.readDouble();
+        page = in.readInt();
+        limit = in.readInt();
+        sortProperty = in.readString();
+        sortDirection = in.readString();
+        details = in.readInt() == 1 ? true : false;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(dateCheckIn);
+        dest.writeInt(stays);
+        dest.writeInt(provinceIdx);
+        dest.writeInt(areaIdx);
+        dest.writeInt(persons);
+        dest.writeParcelable(category, flags);
+        dest.writeString(bedType);
+        dest.writeString(luxury);
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
+        dest.writeInt(page);
+        dest.writeInt(limit);
+        dest.writeString(sortProperty);
+        dest.writeString(sortDirection);
+        dest.writeInt(details ? 1 : 0);
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public StayParams createFromParcel(Parcel in)
+        {
+            return new StayParams(in);
+        }
+
+        @Override
+        public StayParams[] newArray(int size)
+        {
+            return new StayParams[size];
+        }
+    };
 }

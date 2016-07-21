@@ -61,18 +61,40 @@ public class StayCuration extends PlaceCuration
         clear();
     }
 
-    public StayCurationOption getStayCurationOption()
+    @Override
+    public PlaceCurationOption getCurationOption()
     {
         return mStayCurationOption;
     }
 
+    @Override
+    public void setCurationOption(PlaceCurationOption placeCurationOption)
+    {
+        if (mStayCurationOption == null)
+        {
+            mStayCurationOption = new StayCurationOption();
+        }
+
+        mStayCurationOption.setCurationOption((StayCurationOption) placeCurationOption);
+    }
+
     public Category getCategory()
     {
+        if (mCategory == null)
+        {
+            mCategory = Category.ALL;
+        }
+
         return mCategory;
     }
 
     public void setCategory(Category category)
     {
+        if (category == null)
+        {
+            category = Category.ALL;
+        }
+
         mCategory = category;
     }
 

@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
+import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
@@ -70,7 +71,9 @@ public class StayListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                if (mStayCuration.getStayCurationOption().isDefaultFilter() == true)
+                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+                if (stayCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);

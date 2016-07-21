@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 

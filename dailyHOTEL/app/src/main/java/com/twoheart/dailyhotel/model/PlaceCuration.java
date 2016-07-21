@@ -7,7 +7,7 @@ import android.os.Parcelable;
 /**
  * Created by android_sam on 2016. 7. 20..
  */
-public class PlaceCuration implements Parcelable
+public abstract class PlaceCuration implements Parcelable
 {
     protected Province mProvince;
     protected Location mLocation;
@@ -15,6 +15,10 @@ public class PlaceCuration implements Parcelable
     public PlaceCuration()
     {
     }
+
+    public abstract PlaceCurationOption getCurationOption();
+
+    public abstract void setCurationOption(PlaceCurationOption placeCurationOption);
 
     public void clear()
     {
@@ -65,18 +69,4 @@ public class PlaceCuration implements Parcelable
         mProvince = in.readParcelable(Province.class.getClassLoader());
         mLocation = in.readParcelable(Location.class.getClassLoader());
     }
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public PlaceCuration createFromParcel(Parcel in)
-        {
-            return new PlaceCuration(in);
-        }
-
-        @Override
-        public PlaceCuration[] newArray(int size)
-        {
-            return new PlaceCuration[size];
-        }
-    };
 }

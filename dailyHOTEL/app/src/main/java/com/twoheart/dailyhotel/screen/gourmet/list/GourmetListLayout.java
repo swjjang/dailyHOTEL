@@ -7,6 +7,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
+import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
@@ -72,7 +73,9 @@ public class GourmetListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                if (mGourmetCuration.getGourmetCurationOption().isDefaultFilter() == true)
+                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+
+                if (gourmetCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);

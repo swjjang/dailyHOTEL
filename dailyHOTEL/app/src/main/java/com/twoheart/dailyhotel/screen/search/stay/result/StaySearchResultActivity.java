@@ -15,12 +15,10 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
-import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
-import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
@@ -147,30 +145,28 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            PlaceCurationOption placeCurationOption = data.getParcelableExtra(StaySearchResultCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
-            Category category = data.getParcelableExtra(StaySearchResultCurationActivity.INTENT_EXTRA_DATA_CATEGORY);
+            PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
-            if ((placeCurationOption instanceof StayCurationOption) == false)
+            if ((placeCuration instanceof StayCuration) == false)
             {
                 return;
             }
 
-            StayCurationOption changeCurationOption = (StayCurationOption) placeCurationOption;
-            StayCurationOption stayCurationOption = StaySearchResultCurationManager.getInstance().getStayCurationOption();
-
-            stayCurationOption.setCurationOption(changeCurationOption);
-
-            StaySearchResultCurationManager.getInstance().setCategory(category);
-
-            mPlaceSearchResultLayout.setOptionFilterEnabled(StaySearchResultCurationManager.getInstance().getStayCurationOption().isDefaultFilter() == false);
-
-            if (changeCurationOption.getSortType() == SortType.DISTANCE)
-            {
-                searchMyLocation();
-            } else
-            {
-                refreshCurrentFragment(true);
-            }
+            //            StayCuration changedStayCuration = (StayCuration) placeCuration;
+            //            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+            //
+            //            mStayCuration.setCurationOption(changedStayCurationOption);
+            //            mPlaceMainLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
+            //
+            //            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
+            //            {
+            //                mStayCuration.setLocation(changedStayCuration.getLocation());
+            //
+            //                searchMyLocation();
+            //            } else
+            //            {
+            //                refreshCurrentFragment(true);
+            //            }
         }
     }
 
@@ -737,10 +733,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (count == 0)
             {
-//                mPlaceSearchResultLayout.showEmptyLayout();
+                //                mPlaceSearchResultLayout.showEmptyLayout();
             } else
             {
-//                mPlaceSearchResultLayout.showListLayout();
+                //                mPlaceSearchResultLayout.showListLayout();
                 mPlaceSearchResultLayout.updateResultCount(count);
             }
         }

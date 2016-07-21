@@ -442,7 +442,7 @@ public class GourmetListFragment extends PlaceListFragment
 
                     mGourmetList.clear();
 
-                    GourmetCurationOption gourmetCurationOption = mGourmetCuration.getGourmetCurationOption();
+                    GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
                     if (length == 0)
                     {
