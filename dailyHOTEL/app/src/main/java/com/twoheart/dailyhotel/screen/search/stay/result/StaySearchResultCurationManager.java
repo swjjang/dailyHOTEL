@@ -112,32 +112,32 @@ public class StaySearchResultCurationManager
 
     public StayParams getStayParams(int page, int limit, boolean isDetails)
     {
-        StayParams params = new StayParams();
+//        StayParams params = new StayParams();
+//
+//        params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+//        params.stays = getNights();
+//        params.provinceIdx = 5;//mProvince.getProvinceIndex();
+//        params.persons = mStayCurationOption.person;
+//        params.category = mCategory;
+//        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
+//        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+//
+//        Constants.SortType sortType = mStayCurationOption.getSortType();
+//        if (Constants.SortType.DISTANCE == sortType)
+//        {
+//            if (mLocation != null)
+//            {
+//                params.latitude = mLocation.getLatitude();
+//                params.longitude = mLocation.getLongitude();
+//            }
+//        }
+//
+//        params.page = page;
+//        params.limit = limit;
+//        params.setSortType(sortType);
+//        params.details = isDetails;
 
-        params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = getNights();
-        params.provinceIdx = 5;//mProvince.getProvinceIndex();
-        params.persons = mStayCurationOption.person;
-        params.category = mCategory;
-        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
-
-        Constants.SortType sortType = mStayCurationOption.getSortType();
-        if (Constants.SortType.DISTANCE == sortType)
-        {
-            if (mLocation != null)
-            {
-                params.latitude = mLocation.getLatitude();
-                params.longitude = mLocation.getLongitude();
-            }
-        }
-
-        params.page = page;
-        params.limit = limit;
-        params.setSortType(sortType);
-        params.details = isDetails;
-
-        return params;
+        return null;
     }
 
     public void clear()

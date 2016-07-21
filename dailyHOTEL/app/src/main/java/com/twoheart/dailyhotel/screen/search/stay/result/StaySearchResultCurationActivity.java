@@ -361,32 +361,32 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
     protected StayParams getStayParams()
     {
-        StayParams params = new StayParams();
+//        StayParams params = new StayParams();
+//
+//        params.dateCheckIn = StaySearchResultCurationManager.getInstance().getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
+//        params.stays = StaySearchResultCurationManager.getInstance().getNights();
+//        params.persons = mStayCurationOption.person;
+//        params.category = mCategory;
+//        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
+//        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+//
+//        SortType sortType = mStayCurationOption.getSortType();
+//        if (SortType.DISTANCE == sortType)
+//        {
+//            Location location = StaySearchResultCurationManager.getInstance().getLocation();
+//            if (location != null)
+//            {
+//                params.latitude = location.getLatitude();
+//                params.longitude = location.getLongitude();
+//            }
+//        }
+//
+//        params.page = 0;
+//        params.limit = 0;
+//        params.setSortType(sortType);
+//        params.details = false;
 
-        params.dateCheckIn = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = mStayCuration.getNights();
-        params.persons = mStayCurationOption.person;
-        params.category = mCategory;
-        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
-
-        SortType sortType = mStayCurationOption.getSortType();
-        if (SortType.DISTANCE == sortType)
-        {
-            Location location = mStayCuration.getLocation();
-            if (location != null)
-            {
-                params.latitude = location.getLatitude();
-                params.longitude = location.getLongitude();
-            }
-        }
-
-        params.page = 0;
-        params.limit = 0;
-        params.setSortType(sortType);
-        params.details = false;
-
-        return params;
+        return null;
     }
 
     @Override

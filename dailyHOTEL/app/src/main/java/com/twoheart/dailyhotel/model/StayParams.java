@@ -12,25 +12,23 @@ import com.twoheart.dailyhotel.util.Util;
  */
 public class StayParams implements Parcelable
 {
-    public String dateCheckIn;
-    public int stays;
-    public int provinceIdx;
-    public int areaIdx;
-    public int persons;
-    public Category category;
-    public String bedType; // curationOption에서 가져온 스트링
-    public String luxury; // curationOption에서 가져온 스트링
-    public double longitude;
-    public double latitude;
-    public int page;
-    public int limit;
-    public String sortProperty;
-    public String sortDirection;
-    public boolean details;
+    private String dateCheckIn;
+    private int stays;
+    private int provinceIdx;
+    private int areaIdx;
+    private int persons;
+    private Category category;
+    private String bedType;
+    private String luxury;
+    private double longitude;
+    private double latitude;
+    private int page;
+    private int limit;
+    private String sortProperty;
+    private String sortDirection;
+    private boolean details;
 
-    public StayParams()
-    {
-    }
+    private Constants.SortType mSort;
 
     public StayParams(StayCuration stayCuration)
     {
@@ -79,14 +77,14 @@ public class StayParams implements Parcelable
         if (stayCurationOption != null)
         {
             persons = stayCurationOption.person;
-            bedType = stayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-            luxury = stayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
+            bedType = toParamStringByBedTypes(stayCurationOption.flagBedTypeFilters);
+            luxury = toParamStingByAmenities(stayCurationOption.flagAmenitiesFilters);
         }
 
-        Constants.SortType sortType = stayCurationOption.getSortType();
-        setSortType(sortType);
+        mSort = stayCurationOption.getSortType();
+        setSortType(mSort);
 
-        if (Constants.SortType.DISTANCE == sortType)
+        if (Constants.SortType.DISTANCE == mSort)
         {
             Location location = stayCuration.getLocation();
 
@@ -96,6 +94,13 @@ public class StayParams implements Parcelable
                 longitude = location.getLongitude();
             }
         }
+    }
+
+    public void setPageInformation(int page, int limit, boolean isDetails)
+    {
+        this.page = page;
+        this.limit = limit;
+        this.details = isDetails;
     }
 
     public void setSortType(Constants.SortType sortType)
@@ -127,31 +132,6 @@ public class StayParams implements Parcelable
                 sortDirection = null;
                 break;
         }
-    }
-
-    public Constants.SortType getSortType()
-    {
-        if (Util.isTextEmpty(sortProperty) == true)
-        {
-            return Constants.SortType.DEFAULT;
-        }
-
-        switch (sortProperty)
-        {
-            case "Distance":
-                return Constants.SortType.DISTANCE;
-            case "Price":
-                if ("Desc".equalsIgnoreCase(sortDirection))
-                {
-                    return Constants.SortType.LOW_PRICE;
-                }
-
-                return Constants.SortType.HIGH_PRICE;
-            case "Rating":
-                return Constants.SortType.SATISFACTION;
-        }
-
-        return Constants.SortType.DEFAULT;
     }
 
     public boolean hasLocation()
@@ -217,13 +197,12 @@ public class StayParams implements Parcelable
             sb.append(getParamString("limit", limit)).append("&");
         }
 
-        Constants.SortType sortType = getSortType();
-        if (Constants.SortType.DEFAULT != sortType)
+        if (Constants.SortType.DEFAULT != mSort)
         {
             sb.append(getParamString("sortProperty", sortProperty)).append("&");
             sb.append(getParamString("sortDirection", sortDirection)).append("&");
 
-            if (Constants.SortType.DISTANCE == sortType && hasLocation() == true)
+            if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
             {
                 sb.append(getParamString("latitude", latitude)).append("&");
                 sb.append(getParamString("longitude", longitude)).append("&");
@@ -232,9 +211,101 @@ public class StayParams implements Parcelable
 
         sb.append(getParamString("details", details)).append("&");
 
-        removeLastAndCoupler(sb);
+        int length = sb.length();
+        if (length > 0)
+        {
+            sb.setLength(length - 1);
+        }
 
         //        ExLog.d(" params : " + sb.toString());
+        return sb.toString();
+    }
+
+    private String toParamStringByBedTypes(int flagBedTypeFilters)
+    {
+        if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
+        {
+            return null;
+        }
+
+        String prefix = "bedType=";
+        StringBuilder sb = new StringBuilder();
+
+        if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
+        {
+            sb.append(prefix).append("Double").append("&");
+        }
+
+        if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
+        {
+            sb.append(prefix).append("Twin").append("&");
+        }
+
+        if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
+        {
+            sb.append(prefix).append("Ondol").append("&");
+        }
+
+        int length = sb.length();
+        if (length > 0)
+        {
+            sb.setLength(length - 1);
+        }
+
+        return sb.toString();
+    }
+
+    private String toParamStingByAmenities(int flagAmenitiesFilters)
+    {
+        if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        {
+            return null;
+        }
+
+        String prefix = "luxury=";
+        StringBuilder sb = new StringBuilder();
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+        {
+            sb.append(prefix).append("Wifi").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+        {
+            sb.append(prefix).append("Breakfast").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
+        {
+            sb.append(prefix).append("Cooking").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
+        {
+            sb.append(prefix).append("Bath").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+        {
+            sb.append(prefix).append("Parking").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
+        {
+            sb.append(prefix).append("Pool").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
+        {
+            sb.append(prefix).append("Fitness").append("&");
+        }
+
+        int length = sb.length();
+        if (length > 0)
+        {
+            sb.setLength(length - 1);
+        }
+
         return sb.toString();
     }
 
@@ -252,24 +323,6 @@ public class StayParams implements Parcelable
         }
 
         return getParamString("category", category.code);
-    }
-
-    private StringBuilder removeLastAndCoupler(StringBuilder sb)
-    {
-        if (Util.isTextEmpty(sb.toString()) == false)
-        {
-            int length = sb.length();
-            if (length > 0)
-            {
-                String dest = sb.substring(length - 1);
-                if ("&".equalsIgnoreCase(dest) == true)
-                {
-                    sb.setLength(length - 1);
-                }
-            }
-        }
-
-        return sb;
     }
 
     private String getParamString(String key, Object value)

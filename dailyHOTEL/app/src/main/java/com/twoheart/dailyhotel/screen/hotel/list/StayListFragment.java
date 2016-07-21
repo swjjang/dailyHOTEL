@@ -121,7 +121,6 @@ public class StayListFragment extends PlaceListFragment
         }
 
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-
         Province province = mStayCuration.getProvince();
 
         if (province == null || checkInSaleTime == null)
@@ -140,15 +139,17 @@ public class StayListFragment extends PlaceListFragment
 
         mPageIndex = page;
 
-        StayParams params = mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true);
-        if (SortType.DISTANCE == params.getSortType() && params.hasLocation() == false)
+        if (mStayCuration == null || mStayCuration.getCurationOption() == null//
+            || mStayCuration.getCurationOption().getSortType() == null//
+            || mStayCuration.getLocation() == null)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        mNetworkController.requestStayList(mStayCuration.getStayParams(page, PAGENATION_LIST_SIZE, true));
+        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
+        mNetworkController.requestStayList(params);
     }
 
     public boolean hasSalesPlace()

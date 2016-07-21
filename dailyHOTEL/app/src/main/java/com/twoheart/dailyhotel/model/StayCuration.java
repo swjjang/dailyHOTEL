@@ -98,44 +98,12 @@ public class StayCuration extends PlaceCuration
         mCategory = category;
     }
 
-    public StayParams getStayParams(int page, int limit, boolean isDetails)
+    public StayParams toStayParams(int page, int limit, boolean isDetails)
     {
-        StayParams params = new StayParams();
+        StayParams stayParams = new StayParams(this);
+        stayParams.setPageInformation(page, limit, isDetails);
 
-        params.dateCheckIn = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-        params.stays = getNights();
-        params.provinceIdx = mProvince.getProvinceIndex();
-
-        if (mProvince instanceof Area)
-        {
-            Area area = (Area) mProvince;
-            if (area != null)
-            {
-                params.areaIdx = area.index;
-            }
-        }
-
-        params.persons = mStayCurationOption.person;
-        params.category = mCategory;
-        params.bedType = mStayCurationOption.getParamStringByBedTypes(); // curationOption에서 가져온 스트링
-        params.luxury = mStayCurationOption.getParamStingByAmenities(); // curationOption에서 가져온 스트링
-
-        Constants.SortType sortType = mStayCurationOption.getSortType();
-        if (Constants.SortType.DISTANCE == sortType)
-        {
-            if (mLocation != null)
-            {
-                params.latitude = mLocation.getLatitude();
-                params.longitude = mLocation.getLongitude();
-            }
-        }
-
-        params.page = page;
-        params.limit = limit;
-        params.setSortType(sortType);
-        params.details = isDetails;
-
-        return params;
+        return stayParams;
     }
 
     @Override
