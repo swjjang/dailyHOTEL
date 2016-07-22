@@ -644,13 +644,13 @@ public class InformationFragment extends BaseFragment implements Constants
 
         baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage,//
             getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
             {
-                releaseUiComponent();
-            }
-        }, true);
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    releaseUiComponent();
+                }
+            }, true);
     }
 
     private void registerReceiver()

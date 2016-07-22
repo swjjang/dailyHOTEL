@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;

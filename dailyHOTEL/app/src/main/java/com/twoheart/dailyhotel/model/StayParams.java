@@ -10,42 +10,33 @@ import com.twoheart.dailyhotel.util.Util;
 /**
  * Created by android_sam on 2016. 6. 30..
  */
-public class StayParams implements Parcelable
+public class StayParams extends PlaceParams
 {
     private String dateCheckIn;
     private int stays;
-    private int provinceIdx;
-    private int areaIdx;
-    private int persons;
     private Category category;
     private String bedType;
     private String luxury;
-    private double longitude;
-    private double latitude;
-    private int page;
-    private int limit;
-    private String sortProperty;
-    private String sortDirection;
-    private boolean details;
 
-    private Constants.SortType mSort;
-
-    public StayParams(StayCuration stayCuration)
+    public StayParams(PlaceCuration placeCuration)
     {
-        setStayParams(stayCuration);
+        super(placeCuration);
     }
 
     public StayParams(Parcel in)
     {
-        readFromParcel(in);
+        super(in);
     }
 
-    public void setStayParams(StayCuration stayCuration)
+    @Override
+    public void setPlaceParams(PlaceCuration placeCuration)
     {
-        if (stayCuration == null)
+        if (placeCuration == null)
         {
             return;
         }
+
+        StayCuration stayCuration = (StayCuration) placeCuration;
 
         clear();
 
@@ -96,49 +87,6 @@ public class StayParams implements Parcelable
         }
     }
 
-    public void setPageInformation(int page, int limit, boolean isDetails)
-    {
-        this.page = page;
-        this.limit = limit;
-        this.details = isDetails;
-    }
-
-    public void setSortType(Constants.SortType sortType)
-    {
-        switch (sortType)
-        {
-            case DEFAULT:
-                sortProperty = null;
-                sortDirection = null;
-                break;
-
-            case DISTANCE:
-                sortProperty = "Distance";
-                sortDirection = "Asc";
-                break;
-
-            case LOW_PRICE:
-                sortProperty = "Price";
-                sortDirection = "Asc";
-                break;
-
-            case HIGH_PRICE:
-                sortProperty = "Price";
-                sortDirection = "Desc";
-                break;
-
-            case SATISFACTION:
-                sortProperty = "Rating";
-                sortDirection = null;
-                break;
-        }
-    }
-
-    public boolean hasLocation()
-    {
-        return (latitude == 0d || longitude == 0d) ? false : true;
-    }
-
     /**
      * http://dev.dailyhotel.me/goodnight/api/v3/hotels/sales?
      * dateCheckIn=2016-06-18
@@ -157,7 +105,8 @@ public class StayParams implements Parcelable
      * &sortDirection=Desc
      * &details=true
      */
-    public String toParamString()
+    @Override
+    public String toParamsString()
     {
         StringBuilder sb = new StringBuilder();
 
@@ -325,73 +274,39 @@ public class StayParams implements Parcelable
         return getParamString("category", category.code);
     }
 
-    private String getParamString(String key, Object value)
+    @Override
+    protected void clear()
     {
-        String stringValue = String.valueOf(value);
-        if (Util.isTextEmpty(stringValue))
-        {
-            return "";
-        }
+        super.clear();
 
-        return String.format("%s=%s", key, stringValue);
-    }
-
-    private void clear()
-    {
         dateCheckIn = null;
         stays = 1;
-        provinceIdx = 0;
-        areaIdx = 0;
-        persons = 0;
         category = Category.ALL;
         bedType = null;
         luxury = null;
-        longitude = 0.0d;
-        latitude = 0.0d;
-        page = 0;
-        limit = 0;
-        sortProperty = null;
-        sortDirection = null;
-        details = false;
     }
 
     protected void readFromParcel(Parcel in)
     {
+        super.readFromParcel(in);
+
         dateCheckIn = in.readString();
         stays = in.readInt();
-        provinceIdx = in.readInt();
-        areaIdx = in.readInt();
-        persons = in.readInt();
         category = in.readParcelable(Category.class.getClassLoader());
         bedType = in.readString();
         luxury = in.readString();
-        longitude = in.readDouble();
-        latitude = in.readDouble();
-        page = in.readInt();
-        limit = in.readInt();
-        sortProperty = in.readString();
-        sortDirection = in.readString();
-        details = in.readInt() == 1 ? true : false;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        super.writeToParcel(dest, flags);
+
         dest.writeString(dateCheckIn);
         dest.writeInt(stays);
-        dest.writeInt(provinceIdx);
-        dest.writeInt(areaIdx);
-        dest.writeInt(persons);
         dest.writeParcelable(category, flags);
         dest.writeString(bedType);
         dest.writeString(luxury);
-        dest.writeDouble(longitude);
-        dest.writeDouble(latitude);
-        dest.writeInt(page);
-        dest.writeInt(limit);
-        dest.writeString(sortProperty);
-        dest.writeString(sortDirection);
-        dest.writeInt(details ? 1 : 0);
     }
 
     @Override

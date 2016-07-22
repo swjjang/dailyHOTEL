@@ -28,7 +28,12 @@ public class StayCurationNetworkController extends BaseNetworkController
 
     public void requestStayList(StayParams params)
     {
-        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params, mStayListJsonResponseListener);
+        if (params == null)
+        {
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -431,7 +431,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private GourmetSearchResultListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetListFragmentListener()
+    private GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
     {
         @Override
         public void onGourmetClick(PlaceViewItem placeViewItem)
@@ -565,64 +565,64 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         private String mAddress;
         private int mSize = -100;
 
-//        @Override
-//        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-//        {
-//            if (isFinishing() == true)
-//            {
-//                return;
-//            }
-//
-//            if (mOffset == 0)
-//            {
-//                // 연박인 경우 사이즈가 0이면 검색개수가 없음
-//                if (totalCount == -1)
-//                {
-//                    if (placeViewItemList == null || placeViewItemList.size() == 0)
-//                    {
-//                        analyticsOnResponseSearchResultListForSearches(mKeyword, 0);
-//                    } else
-//                    {
-//                        analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
-//                    }
-//                } else
-//                {
-//                    analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
-//                }
-//            }
-//
-//            responseSearchResultList(totalCount, placeViewItemList);
-//        }
-//
-//        @Override
-//        public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-//        {
-//            if (isFinishing() == true)
-//            {
-//                return;
-//            }
-//
-//            if (mOffset == 0)
-//            {
-//                if (totalCount == -1)
-//                {
-//                    if (placeViewItemList == null || placeViewItemList.size() == 0)
-//                    {
-//                        mSize = 0;
-//                    } else
-//                    {
-//                        mSize = totalCount;
-//                    }
-//                } else
-//                {
-//                    mSize = totalCount;
-//                }
-//
-//                analyticsOnResponseSearchResultListForLocation();
-//            }
-//
-//            responseSearchResultList(totalCount, placeViewItemList);
-//        }
+        //        @Override
+        //        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        //        {
+        //            if (isFinishing() == true)
+        //            {
+        //                return;
+        //            }
+        //
+        //            if (mOffset == 0)
+        //            {
+        //                // 연박인 경우 사이즈가 0이면 검색개수가 없음
+        //                if (totalCount == -1)
+        //                {
+        //                    if (placeViewItemList == null || placeViewItemList.size() == 0)
+        //                    {
+        //                        analyticsOnResponseSearchResultListForSearches(mKeyword, 0);
+        //                    } else
+        //                    {
+        //                        analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+        //                    }
+        //                } else
+        //                {
+        //                    analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+        //                }
+        //            }
+        //
+        //            responseSearchResultList(totalCount, placeViewItemList);
+        //        }
+        //
+        //        @Override
+        //        public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        //        {
+        //            if (isFinishing() == true)
+        //            {
+        //                return;
+        //            }
+        //
+        //            if (mOffset == 0)
+        //            {
+        //                if (totalCount == -1)
+        //                {
+        //                    if (placeViewItemList == null || placeViewItemList.size() == 0)
+        //                    {
+        //                        mSize = 0;
+        //                    } else
+        //                    {
+        //                        mSize = totalCount;
+        //                    }
+        //                } else
+        //                {
+        //                    mSize = totalCount;
+        //                }
+        //
+        //                analyticsOnResponseSearchResultListForLocation();
+        //            }
+        //
+        //            responseSearchResultList(totalCount, placeViewItemList);
+        //        }
 
         @Override
         public void onResponseAddress(String address)
@@ -822,59 +822,59 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-//        private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
-//        {
-//            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
-//
-//            Gourmet gourmet;
-//            float[] results = new float[3];
-//
-//            for (PlaceViewItem placeViewItem : placeViewItemList)
-//            {
-//                gourmet = placeViewItem.getItem();
-//
-//                Location.distanceBetween(location.getLatitude(), location.getLongitude(), gourmet.latitude, gourmet.longitude, results);
-//                gourmet.distance = results[0];
-//            }
-//        }
-//
-//        private void responseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
-//        {
-//            mTotalCount = totalCount;
-//
-//            if (totalCount == 0 || (mOffset == 0 && (placeViewItemList == null || placeViewItemList.size() == 0)))
-//            {
-//                mPlaceSearchResultLayout.showEmptyLayout();
-//            } else
-//            {
-//                if (placeViewItemList != null)
-//                {
-//                    int size = placeViewItemList.size();
-//                    if (size < PAGENATION_LIST_SIZE)
-//                    {
-//                        mOffset = -1;
-//                    } else
-//                    {
-//                        mOffset += placeViewItemList.size();
-//                    }
-//
-//                    // 위치 요청 타입인 경우에는 위치를 계산해 주어야 한다.
-//                    Location location = mGourmetCuration.getLocation();
-//                    if (location != null)
-//                    {
-//                        distanceBetween(location, placeViewItemList);
-//                    }
-//                } else
-//                {
-//                    mOffset = -1;
-//                }
-//
-//                mPlaceSearchResultLayout.showListLayout();
-//                ((GourmetSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
-//            }
-//
-//            mPlaceSearchResultLayout.updateResultCount(totalCount);
-//            unLockUI();
-//        }
+        //        private void distanceBetween(Location location, ArrayList<PlaceViewItem> placeViewItemList)
+        //        {
+        //            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
+        //
+        //            Gourmet gourmet;
+        //            float[] results = new float[3];
+        //
+        //            for (PlaceViewItem placeViewItem : placeViewItemList)
+        //            {
+        //                gourmet = placeViewItem.getItem();
+        //
+        //                Location.distanceBetween(location.getLatitude(), location.getLongitude(), gourmet.latitude, gourmet.longitude, results);
+        //                gourmet.distance = results[0];
+        //            }
+        //        }
+        //
+        //        private void responseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        //        {
+        //            mTotalCount = totalCount;
+        //
+        //            if (totalCount == 0 || (mOffset == 0 && (placeViewItemList == null || placeViewItemList.size() == 0)))
+        //            {
+        //                mPlaceSearchResultLayout.showEmptyLayout();
+        //            } else
+        //            {
+        //                if (placeViewItemList != null)
+        //                {
+        //                    int size = placeViewItemList.size();
+        //                    if (size < PAGENATION_LIST_SIZE)
+        //                    {
+        //                        mOffset = -1;
+        //                    } else
+        //                    {
+        //                        mOffset += placeViewItemList.size();
+        //                    }
+        //
+        //                    // 위치 요청 타입인 경우에는 위치를 계산해 주어야 한다.
+        //                    Location location = mGourmetCuration.getLocation();
+        //                    if (location != null)
+        //                    {
+        //                        distanceBetween(location, placeViewItemList);
+        //                    }
+        //                } else
+        //                {
+        //                    mOffset = -1;
+        //                }
+        //
+        //                mPlaceSearchResultLayout.showListLayout();
+        //                ((GourmetSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
+        //            }
+        //
+        //            mPlaceSearchResultLayout.updateResultCount(totalCount);
+        //            unLockUI();
+        //        }
     };
 }

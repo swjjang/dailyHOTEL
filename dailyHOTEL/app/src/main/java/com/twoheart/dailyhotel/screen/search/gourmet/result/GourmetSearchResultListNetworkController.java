@@ -13,15 +13,15 @@
  * @author Mike Han(mike@dailyhotel.co.kr)
  * @since 2014-02-24
  */
-package com.twoheart.dailyhotel.screen.hotel.list;
+package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -33,26 +33,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class StayListNetworkController extends BaseNetworkController
+public class GourmetSearchResultListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page);
+        void onGourmetList(ArrayList<Gourmet> list, int page);
     }
 
-    public StayListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public GourmetSearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
-    public void requestStayList(StayParams params)
+    public void requestGourmetList(GourmetParams params)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,23 +75,23 @@ public class StayListNetworkController extends BaseNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = null;
+                    JSONArray gourmetJSONArray = null;
 
-                    if (dataJSONObject.has("hotelSales") == true)
+                    if (dataJSONObject.has("gourmetSales") == true)
                     {
-                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                     }
 
                     int page;
                     String imageUrl;
 
-                    ArrayList<Stay> stayList = new ArrayList<>();
+                    ArrayList<Gourmet> gourmetList = new ArrayList<>();
 
-                    if (hotelJSONArray != null)
+                    if (gourmetJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
                         int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl, nights);
                     }
 
                     try
@@ -105,7 +105,7 @@ public class StayListNetworkController extends BaseNetworkController
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page);
 
                 } else
                 {
@@ -119,7 +119,7 @@ public class StayListNetworkController extends BaseNetworkController
             }
         }
 
-        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
         {
             if (jsonArray == null)
             {
@@ -127,20 +127,20 @@ public class StayListNetworkController extends BaseNetworkController
             }
 
             int length = jsonArray.length();
-            ArrayList<Stay> stayList = new ArrayList<>(length);
+            ArrayList<Gourmet> stayList = new ArrayList<>(length);
             JSONObject jsonObject;
-            Stay stay;
+            Gourmet gourmet;
 
             for (int i = 0; i < length; i++)
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                stay = new Stay();
+                gourmet = new Gourmet();
 
-                if (stay.setStay(jsonObject, imageUrl, nights) == true)
-                {
-                    stayList.add(stay); // 추가.
-                }
+                //                if (gourmet.setStay(jsonObject, imageUrl, nights) == true)
+                //                {
+                //                    stayList.add(stay); // 추가.
+                //                }
             }
 
             return stayList;

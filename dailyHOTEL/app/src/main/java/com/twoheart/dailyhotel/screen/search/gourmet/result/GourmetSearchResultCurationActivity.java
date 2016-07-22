@@ -46,9 +46,9 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             return;
         }
 
-        RadioButton radioButton = (RadioButton)mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
 
-        if(mSearchType == SearchType.LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
 
@@ -92,7 +92,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if(mSearchType == SearchType.LOCATION)
+            if (mSearchType == SearchType.LOCATION)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

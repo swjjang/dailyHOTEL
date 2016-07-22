@@ -21,7 +21,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -404,7 +403,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         mViewTypeOptionImageView.setEnabled(enabled);
         mFilterOptionImageView.setEnabled(enabled);
 
-        ((OnEventListener)mOnEventListener).onMenuBarEnabled(enabled);
+        ((OnEventListener) mOnEventListener).onMenuBarEnabled(enabled);
     }
 
     private void setMenuBarLayoutTranslationY(float dy)
@@ -415,7 +414,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
 
         mBottomOptionLayout.setTranslationY(dy);
-        ((OnEventListener)mOnEventListener).onMenuBarTranslationY(dy);
+        ((OnEventListener) mOnEventListener).onMenuBarTranslationY(dy);
     }
 
     public void calculationMenuBarLayoutTranslationY(int dy)

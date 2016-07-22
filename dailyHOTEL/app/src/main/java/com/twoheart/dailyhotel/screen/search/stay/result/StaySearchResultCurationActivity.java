@@ -2,15 +2,23 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationNetworkController;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
@@ -113,7 +121,96 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             resetLayout(mBedTypeLayout);
             resetLayout(mGridLayout);
         }
+    }
+
+    @Override
+    protected void onComplete()
+    {
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+        Map<String, String> eventParams = new HashMap<>();
+
+        eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
+
+        //        if (mProvince instanceof Area)
+        //        {
+        //            Area area = (Area) mProvince;
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        //        } else
+        //        {
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        //        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
 
         requestUpdateResult();
     }
+
+    private StayCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCurationNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onStayCount(String url, int hotelSaleCount)
+        {
+            if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
+            {
+                // OnNetworkControllerListener onErrorResponse
+                setResultMessage(getString(R.string.label_hotel_filter_result_count, 0));
+
+                setConfirmOnClickListener(StaySearchResultCurationActivity.this);
+                setConfirmEnable(false);
+                return;
+            }
+
+            String requestParams = null;
+            try
+            {
+                Uri requestUrl = Uri.parse(url);
+                requestParams = requestUrl.getQuery();
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+
+            String lastParams = mLastParams.toParamsString();
+            if (lastParams.equalsIgnoreCase(requestParams) == false)
+            {
+                // already running another request!
+                return;
+            }
+
+            setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+
+            setConfirmOnClickListener(StaySearchResultCurationActivity.this);
+            setConfirmEnable(hotelSaleCount == 0 ? false : true);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            StaySearchResultCurationActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            StaySearchResultCurationActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            StaySearchResultCurationActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            StaySearchResultCurationActivity.this.onErrorToastMessage(message);
+        }
+    };
 }

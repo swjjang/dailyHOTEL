@@ -39,6 +39,15 @@ public class GourmetCuration extends PlaceCuration
         mGourmetCurationOption.setCurationOption((GourmetCurationOption) placeCurationOption);
     }
 
+    @Override
+    public PlaceParams toPlaceParams(int page, int limit, boolean isDetails)
+    {
+        GourmetParams gourmetParams = new GourmetParams(this);
+        gourmetParams.setPageInformation(page, limit, isDetails);
+
+        return gourmetParams;
+    }
+
     public void setSaleTime(long currentDateTime, long dailyDateTime)
     {
         if (mSaleTime == null)

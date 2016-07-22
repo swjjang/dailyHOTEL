@@ -474,13 +474,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         showSimpleDialog(getString(R.string.label_call_service), operatingTimeMessage, //
             getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
             {
-                releaseUiComponent();
-            }
-        }, true);
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    releaseUiComponent();
+                }
+            }, true);
     }
 
     protected void showStopOnSaleDialog()
