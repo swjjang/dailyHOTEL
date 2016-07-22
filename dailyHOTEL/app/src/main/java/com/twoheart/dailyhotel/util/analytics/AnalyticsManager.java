@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.ArrayList;
@@ -222,13 +223,13 @@ public class AnalyticsManager
         }
     }
 
-    public void recordDeepLink(String deepLink)
+    public void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.recordDeepLink(deepLink);
+                analyticsManager.recordDeepLink(dailyDeepLink);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -420,6 +421,7 @@ public class AnalyticsManager
         public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
         //
         public static final String SIGNIN = "Menu_Login";
+        public static final String MENU_REGISTRATION = "Menu_Registration";
         public static final String MENU_REGISTRATION_CONFIRM = "Menu_Registration_Confirm";
         public static final String MENU_LOGIN_COMPLETE = "Menu_Login_Complete";
         public static final String MENU_LOGOUT_COMPLETE = "Menu_Logout_Complete";

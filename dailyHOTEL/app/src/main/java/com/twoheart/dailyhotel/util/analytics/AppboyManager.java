@@ -8,6 +8,7 @@ import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -358,7 +359,7 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordDeepLink(String deepLink)
+    void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
 
     }

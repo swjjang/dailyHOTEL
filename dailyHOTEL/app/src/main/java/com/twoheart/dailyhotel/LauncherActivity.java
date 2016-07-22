@@ -38,7 +38,7 @@ public class LauncherActivity extends Activity
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
-                AnalyticsManager.getInstance(this).recordDeepLink(uri.toString());
+                AnalyticsManager.getInstance(this).recordDeepLink(DailyDeepLink.getInstance());
 
                 newIntent.setData(uri);
                 newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -11,6 +11,7 @@ import com.facebook.applinks.AppLinkData;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -214,7 +215,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordDeepLink(String deepLink)
+    void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
 
     }
