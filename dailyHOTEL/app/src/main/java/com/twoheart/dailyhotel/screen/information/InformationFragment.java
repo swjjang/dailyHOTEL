@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -373,7 +374,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc, DailyHotel.VERSION, Build.VERSION.RELEASE));
             intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
 
             startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));

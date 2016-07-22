@@ -41,14 +41,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searcyType";
+    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    private SaleTime mSaleTime;
     private Keyword mKeyword;
     private String mInputText;
 
-    private int mOffset, mTotalCount;
     private SearchType mSearchType;
     private GourmetSearchResultNetworkController mNetworkController;
 
@@ -61,7 +59,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new GourmetCuration());
 
         return intent;
     }
@@ -82,7 +79,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, new GourmetCuration());
 
         return intent;
     }
@@ -213,19 +209,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
-        mGourmetCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
-
-        mOffset = 0;
 
         if (saleTime == null)
         {
             finish();
         }
 
-        if (mGourmetCuration == null)
-        {
-            mGourmetCuration = new GourmetCuration();
-        }
+        mGourmetCuration = new GourmetCuration();
 
         // ---> 테스트를 위한 임시 코드
         Province province = mGourmetCuration.getProvince();

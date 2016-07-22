@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListMapFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayEventBannerManager;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -35,7 +34,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        return new StayListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        return new GourmetSearchResultListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
     }
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
