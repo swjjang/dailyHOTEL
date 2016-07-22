@@ -52,7 +52,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             radioButton.setVisibility(View.GONE);
 
-            mSortRadioGroup.check(R.id.distanceCheckView);
+            gourmetCurationOption.setSortType(SortType.DISTANCE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);

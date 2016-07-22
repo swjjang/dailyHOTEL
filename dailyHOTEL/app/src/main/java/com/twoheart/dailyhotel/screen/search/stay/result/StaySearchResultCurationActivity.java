@@ -53,7 +53,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         {
             radioButton.setVisibility(View.GONE);
 
-            mSortRadioGroup.check(R.id.distanceCheckView);
+            stayCurationOption.setSortType(SortType.DISTANCE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
