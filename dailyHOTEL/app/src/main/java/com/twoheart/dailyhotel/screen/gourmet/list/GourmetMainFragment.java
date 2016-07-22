@@ -402,6 +402,24 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
+        public void onMenuBarTranslationY(float y)
+        {
+            if (mOnMenuBarListener != null)
+            {
+                mOnMenuBarListener.onMenuBarTranslationY(y);
+            }
+        }
+
+        @Override
+        public void onMenuBarEnabled(boolean enabled)
+        {
+            if (mOnMenuBarListener != null)
+            {
+                mOnMenuBarListener.onMenuBarEnabled(enabled);
+            }
+        }
+
+        @Override
         public void finish()
         {
             mBaseActivity.finish();

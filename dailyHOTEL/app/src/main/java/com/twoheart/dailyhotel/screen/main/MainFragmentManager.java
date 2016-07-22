@@ -30,10 +30,11 @@ public class MainFragmentManager
     private int mIndexMainLastFragment; // 호텔, 고메
 
     private BaseActivity mBaseActivity;
-    private MenuBarLayout mMenuBarLayout;
+    private PlaceMainFragment.OnMenuBarListener mOnMenuBarListener;
     private MenuBarLayout.MenuBarLayoutOnPageChangeListener mMenuBarLayoutOnPageChangeListener;
 
-    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout menuBarLayout, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
+    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, //
+                               PlaceMainFragment.OnMenuBarListener onMenuBarListener, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
     {
         if (activity == null || viewGroup == null)
         {
@@ -43,7 +44,7 @@ public class MainFragmentManager
         mBaseActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
-        mMenuBarLayout = menuBarLayout;
+        mOnMenuBarListener = onMenuBarListener;
         mMenuBarLayoutOnPageChangeListener = listener;
     }
 
@@ -75,7 +76,7 @@ public class MainFragmentManager
             case INDEX_HOTEL_FRAGMENT:
             {
                 PlaceMainFragment placeMainFragment = new StayMainFragment();
-                placeMainFragment.setMenuBarLayout(mMenuBarLayout);
+                placeMainFragment.setMenuBarListener(mOnMenuBarListener);
 
                 return placeMainFragment;
             }
@@ -83,7 +84,7 @@ public class MainFragmentManager
             case INDEX_GOURMET_FRAGMENT:
             {
                 PlaceMainFragment placeMainFragment = new GourmetMainFragment();
-                placeMainFragment.setMenuBarLayout(mMenuBarLayout);
+                placeMainFragment.setMenuBarListener(mOnMenuBarListener);
 
                 return placeMainFragment;
             }

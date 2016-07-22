@@ -48,8 +48,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private MenuBarLayout mMenuBarLayout;
-
     private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private boolean mUpScrolling;
@@ -72,6 +70,10 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         void onViewTypeClick();// 리스트, 맵 타입
 
         void onFilterClick();
+
+        void onMenuBarTranslationY(float y);
+
+        void onMenuBarEnabled(boolean enabled);
     }
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
@@ -92,7 +94,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         initCategoryTabLayout(view);
         initOptionLayout(view);
     }
-
 
     private void initToolbar(View view)
     {
@@ -142,11 +143,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
         mToolbarUnderlineView = view.findViewById(R.id.toolbarUnderline);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-    }
-
-    public void setMenuBarLayout(MenuBarLayout menuBarLayout)
-    {
-        mMenuBarLayout = menuBarLayout;
     }
 
     public void setToolbarRegionText(String region)
@@ -407,18 +403,19 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     {
         mViewTypeOptionImageView.setEnabled(enabled);
         mFilterOptionImageView.setEnabled(enabled);
-        mMenuBarLayout.setEnabled(enabled);
+
+        ((OnEventListener)mOnEventListener).onMenuBarEnabled(enabled);
     }
 
     private void setMenuBarLayoutTranslationY(float dy)
     {
-        if (mBottomOptionLayout == null || mMenuBarLayout == null)
+        if (mBottomOptionLayout == null)
         {
             return;
         }
 
         mBottomOptionLayout.setTranslationY(dy);
-        mMenuBarLayout.setTranslationY(dy);
+        ((OnEventListener)mOnEventListener).onMenuBarTranslationY(dy);
     }
 
     public void calculationMenuBarLayoutTranslationY(int dy)
@@ -467,9 +464,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
 
+        int menuBarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.menubar_height);
+
         if (mUpScrolling == true)
         {
-            if (translationY >= mMenuBarLayout.getHeight() / 2)
+            if (translationY >= menuBarHeight / 2)
             {
                 hideBottomLayout(true);
             } else
@@ -478,7 +477,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             }
         } else
         {
-            if (translationY <= mMenuBarLayout.getHeight() / 2)
+            if (translationY <= menuBarHeight / 2)
             {
                 showBottomLayout(true);
             } else

@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
@@ -181,7 +182,21 @@ public class MainActivity extends BaseActivity implements Constants
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
 
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
-        mMainFragmentManager = new MainFragmentManager(this, contentLayout, mMenuBarLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
+        mMainFragmentManager = new MainFragmentManager(this, contentLayout, new PlaceMainFragment.OnMenuBarListener()
+        {
+            @Override
+            public void onMenuBarTranslationY(float y)
+            {
+                mMenuBarLayout.setTranslationY(y);
+            }
+
+            @Override
+            public void onMenuBarEnabled(boolean enabled)
+            {
+                mMenuBarLayout.setEnabled(enabled);
+            }
+        }, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
+
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 
