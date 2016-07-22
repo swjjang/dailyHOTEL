@@ -8,7 +8,9 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -161,10 +163,77 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordDeepLink(String deepLink)
+    void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
-        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder()//
-            .setCampaignParamsFromUrl(deepLink).build());
+        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
+        {
+            return;
+        }
+
+        String screenName = null;
+
+        if (dailyDeepLink.isHotelListView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST;
+        } else if (dailyDeepLink.isHotelDetailView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYHOTEL_DETAIL;
+        } else if (dailyDeepLink.isHotelRegionListView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+        } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
+        } else if (dailyDeepLink.isGourmetListView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST;
+        } else if (dailyDeepLink.isGourmetDetailView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYGOURMET_DETAIL;
+        } else if (dailyDeepLink.isGourmetRegionListView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
+        } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
+        {
+            screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
+        } else if (dailyDeepLink.isBookingView() == true)
+        {
+            screenName = AnalyticsManager.Screen.BOOKING_LIST;
+        } else if (dailyDeepLink.isEventView() == true)
+        {
+            screenName = AnalyticsManager.Screen.EVENT_LIST;
+        } else if (dailyDeepLink.isEventDetailView() == true)
+        {
+            screenName = AnalyticsManager.Screen.EVENT_DETAIL;
+        } else if (dailyDeepLink.isBonusView() == true)
+        {
+            screenName = AnalyticsManager.Screen.BONUS;
+        } else if (dailyDeepLink.isSingUpView() == true)
+        {
+            screenName = AnalyticsManager.Screen.MENU_REGISTRATION;
+        } else if (dailyDeepLink.isInformationView() == true)
+        {
+            if (DailyHotel.isLogin() == true)
+            {
+                screenName = AnalyticsManager.Screen.INFORMATION_SIGNIN;
+            } else
+            {
+                screenName = AnalyticsManager.Screen.INFORMATION_SIGNOUT;
+            }
+        } else if (dailyDeepLink.isCouponView() == true)
+        {
+            screenName = AnalyticsManager.Screen.MENU_COUPON_BOX;
+        } else if (dailyDeepLink.isRecommendFriendView() == true)
+        {
+            screenName = AnalyticsManager.Screen.MENU_INVITE_FRIENDS;
+        }
+
+        if (Util.isTextEmpty(screenName) == false)
+        {
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder()//
+                .setCampaignParamsFromUrl(dailyDeepLink.getDeepLink()).build());
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

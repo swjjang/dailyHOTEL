@@ -2,6 +2,8 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+
 import java.util.Map;
 
 public abstract class BaseAnalyticsManager
@@ -14,7 +16,7 @@ public abstract class BaseAnalyticsManager
 
     abstract void recordEvent(Map<String, String> params);
 
-    abstract void recordDeepLink(String deepLink);
+    abstract void recordDeepLink(DailyDeepLink dailyDeepLink);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event

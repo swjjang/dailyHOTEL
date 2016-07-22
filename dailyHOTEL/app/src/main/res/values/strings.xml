@@ -293,9 +293,9 @@
 
 
     <!-- Mail Text -->
-    <string name="mail_text_dialog_title">이메일 어플리케이션 선택</string>
+    <string name="mail_text_dialog_title">이메일 선택</string>
     <string name="mail_text_subject">데일리호텔에 문의합니다</string>
-    <string name="mail_text_desc">데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.</string>
+    <string name="mail_text_desc">데일리호텔(v%1$s)의 안드로이드(%2$s) 어플리케이션에 관한 문의입니다.</string>
 
     <!-- Prefix Text -->
     <string name="prefix_expire_time">유효기간</string>

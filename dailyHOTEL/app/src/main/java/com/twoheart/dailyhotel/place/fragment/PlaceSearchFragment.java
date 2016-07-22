@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -22,6 +21,7 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class PlaceSearchFragment extends BaseFragment
@@ -156,6 +156,12 @@ public abstract class PlaceSearchFragment extends BaseFragment
         {
             case REQUEST_ACTIVITY_SEARCHRESULT:
             {
+                if (mOnSearchFragmentListener == null)
+                {
+                    Util.restartApp(mBaseActivity);
+                    return;
+                }
+
                 if (data != null)
                 {
                     Keyword keyword = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_KEYWORD);

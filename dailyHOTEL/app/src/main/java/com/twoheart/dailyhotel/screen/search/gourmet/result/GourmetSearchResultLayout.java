@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
@@ -30,44 +29,11 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
         setMenuBarLayoutVisible(false);
     }
 
-//    public void setSortType(Constants.SortType sortType)
-//    {
-//        PlaceListFragment placeListFragment = getCurrentPlaceListFragment();
-//
-//        if (placeListFragment != null)
-//        {
-//            ((GourmetSearchResultListFragment) placeListFragment).setSortType(sortType);
-//        }
-//    }
-//
-//    @Override
-//    public void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
-//    {
-//        if (placeViewItemList == null)
-//        {
-//            return;
-//        }
-//
-//        PlaceListFragment placeListFragment = getCurrentPlaceListFragment();
-//
-//        if (placeListFragment != null)
-//        {
-//            ((GourmetSearchResultListFragment) placeListFragment).addSearchResultList(placeViewItemList);
-//        }
-//
-//    }
-
     public void setCalendarText(SaleTime saleTime)
     {
         String checkInDate = saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         setCalendarText(checkInDate);
-    }
-
-    @Override
-    protected void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
-    {
-
     }
 
     @Override

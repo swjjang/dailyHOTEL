@@ -542,20 +542,19 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160731&cal=1";
                     //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160721";
 
-                    DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
-                    dailyDeepLink.setDeepLink(Uri.parse(uri));
+                    DailyDeepLink.getInstance().setDeepLink(Uri.parse(uri));
 
-                    if (dailyDeepLink.isValidateLink() == true)
+                    if (DailyDeepLink.getInstance().isValidateLink() == true)
                     {
-                        AnalyticsManager.getInstance(EventWebActivity.this).recordDeepLink(uri);
+                        AnalyticsManager.getInstance(EventWebActivity.this).recordDeepLink(DailyDeepLink.getInstance());
 
-                        if (dailyDeepLink.isHotelDetailView() == true)
+                        if (DailyDeepLink.getInstance().isHotelDetailView() == true)
                         {
                             if (deepLinkHotelDetail(mSaleTime) == true)
                             {
                                 return;
                             }
-                        } else if (dailyDeepLink.isGourmetDetailView() == true)
+                        } else if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
                         {
                             if (deepLinkGourmetDetail(mSaleTime) == true)
                             {

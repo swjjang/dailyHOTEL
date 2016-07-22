@@ -37,7 +37,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
 
     protected StayCuration mStayCuration;
-    private StayParams mLastParams;
+    protected StayParams mLastParams;
     protected ViewType mViewType;
 
     private StayCurationNetworkController mNetworkController;
@@ -429,7 +429,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             mLastParams = new StayParams(stayCuration);
         } else
         {
-            mLastParams.setStayParams(stayCuration);
+            mLastParams.setPlaceParams(stayCuration);
         }
     }
 
@@ -774,7 +774,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 // do nothing!
             }
 
-            String lastParams = mLastParams.toParamString();
+            String lastParams = mLastParams.toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

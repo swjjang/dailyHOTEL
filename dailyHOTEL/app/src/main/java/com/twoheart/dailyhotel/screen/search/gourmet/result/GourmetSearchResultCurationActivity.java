@@ -33,6 +33,14 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         super.initIntent(intent);
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+
+        if (mSearchType == SearchType.LOCATION)
+        {
+            mGourmetCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        } else
+        {
+            mGourmetCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
+        }
     }
 
     @Override
@@ -46,9 +54,9 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             return;
         }
 
-        RadioButton radioButton = (RadioButton)mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
 
-        if(mSearchType == SearchType.LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
 
@@ -92,7 +100,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if(mSearchType == SearchType.LOCATION)
+            if (mSearchType == SearchType.LOCATION)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -137,9 +136,10 @@ public class StayCurationOption extends PlaceCurationOption
         flagAmenitiesFilters = stayCurationOption.flagAmenitiesFilters;
     }
 
+    @Override
     public boolean isDefaultFilter()
     {
-        if (getSortType() != Constants.SortType.DEFAULT//
+        if (isDefaultSortType() == true//
             || person != StayFilter.MIN_PERSON//
             || flagBedTypeFilters != StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
             || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)

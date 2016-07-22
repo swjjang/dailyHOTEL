@@ -234,10 +234,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        if (mStayCuration == null)
-        {
-            mStayCuration = new StayCuration();
-        }
+        mStayCuration = new StayCuration();
 
         // Test Source - start
         Province province = mStayCuration.getProvince();

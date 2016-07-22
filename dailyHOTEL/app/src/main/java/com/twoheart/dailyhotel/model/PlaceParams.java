@@ -1,0 +1,143 @@
+package com.twoheart.dailyhotel.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
+
+/**
+ * Created by android_sam on 2016. 6. 30..
+ */
+public abstract class PlaceParams implements Parcelable
+{
+    protected int provinceIdx;
+    protected int areaIdx;
+    protected int persons;
+    protected double longitude;
+    protected double latitude;
+    protected int page;
+    protected int limit;
+    protected String sortProperty;
+    protected String sortDirection;
+    protected boolean details;
+
+    protected Constants.SortType mSort;
+
+    public PlaceParams(PlaceCuration placeCuration)
+    {
+        setPlaceParams(placeCuration);
+    }
+
+    public PlaceParams(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    public abstract void setPlaceParams(PlaceCuration placeCuration);
+
+    public abstract String toParamsString();
+
+    public void setPageInformation(int page, int limit, boolean isDetails)
+    {
+        this.page = page;
+        this.limit = limit;
+        this.details = isDetails;
+    }
+
+    public void setSortType(Constants.SortType sortType)
+    {
+        switch (sortType)
+        {
+            case DEFAULT:
+                sortProperty = null;
+                sortDirection = null;
+                break;
+
+            case DISTANCE:
+                sortProperty = "Distance";
+                sortDirection = "Asc";
+                break;
+
+            case LOW_PRICE:
+                sortProperty = "Price";
+                sortDirection = "Asc";
+                break;
+
+            case HIGH_PRICE:
+                sortProperty = "Price";
+                sortDirection = "Desc";
+                break;
+
+            case SATISFACTION:
+                sortProperty = "Rating";
+                sortDirection = null;
+                break;
+        }
+    }
+
+    protected boolean hasLocation()
+    {
+        return (latitude == 0d || longitude == 0d) ? false : true;
+    }
+
+    protected String getParamString(String key, Object value)
+    {
+        String stringValue = String.valueOf(value);
+        if (Util.isTextEmpty(stringValue))
+        {
+            return "";
+        }
+
+        return String.format("%s=%s", key, stringValue);
+    }
+
+    protected void clear()
+    {
+        provinceIdx = 0;
+        areaIdx = 0;
+        persons = 0;
+        longitude = 0.0d;
+        latitude = 0.0d;
+        page = 0;
+        limit = 0;
+        sortProperty = null;
+        sortDirection = null;
+        details = false;
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        provinceIdx = in.readInt();
+        areaIdx = in.readInt();
+        persons = in.readInt();
+        longitude = in.readDouble();
+        latitude = in.readDouble();
+        page = in.readInt();
+        limit = in.readInt();
+        sortProperty = in.readString();
+        sortDirection = in.readString();
+        details = in.readInt() == 1 ? true : false;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(provinceIdx);
+        dest.writeInt(areaIdx);
+        dest.writeInt(persons);
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
+        dest.writeInt(page);
+        dest.writeInt(limit);
+        dest.writeString(sortProperty);
+        dest.writeString(sortDirection);
+        dest.writeInt(details ? 1 : 0);
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+}

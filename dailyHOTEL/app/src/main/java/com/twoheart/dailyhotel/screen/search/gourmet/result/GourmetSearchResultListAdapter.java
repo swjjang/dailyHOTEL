@@ -18,13 +18,10 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class GourmetSearchResultListAdapter extends PlaceListAdapter
 {
-    private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
-    private Context mContext;
 
     public GourmetSearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
     {
@@ -37,35 +34,13 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
     }
 
     @Override
-    public void addAll(Collection<? extends PlaceViewItem> collection)
-    {
-        if (collection == null || collection.size() == 0)
-        {
-            return;
-        }
-
-        mPlaceViewItemList.addAll(collection);
-    }
-
-    public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
-    {
-        setAll(collection);
-        setSortType(sortType);
-    }
-
-    public void setSortType(Constants.SortType sortType)
-    {
-        mSortType = sortType;
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         switch (viewType)
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
                 return new GourmetViewHolder(view);
             }
@@ -195,13 +170,13 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (mSortType == Constants.SortType.DISTANCE)
+        if (getSortType() == Constants.SortType.DISTANCE)
         {
-            holder.distanceView.setVisibility(View.VISIBLE);
-            holder.distanceView.setText(new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km");
+            holder.distanceTextView.setVisibility(View.VISIBLE);
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
         } else
         {
-            holder.distanceView.setVisibility(View.GONE);
+            holder.distanceTextView.setVisibility(View.GONE);
         }
     }
 
@@ -217,7 +192,7 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
         TextView gradeView;
         TextView satisfactionView;
         TextView personsTextView;
-        TextView distanceView;
+        TextView distanceTextView;
 
         public GourmetViewHolder(View itemView)
         {
@@ -233,7 +208,7 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
             addressView = (TextView) itemView.findViewById(R.id.addressTextView);
             gradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
-            distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
         }

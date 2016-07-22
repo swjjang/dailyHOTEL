@@ -142,6 +142,11 @@ public class DailyDeepLink
         }
     }
 
+    public String getDeepLink()
+    {
+        return mDeepLinkUri.toString();
+    }
+
     public void clear()
     {
         mVersionCode = 0;

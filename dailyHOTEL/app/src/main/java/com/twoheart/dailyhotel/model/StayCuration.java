@@ -4,8 +4,6 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 public class StayCuration extends PlaceCuration
 {
     private SaleTime mCheckInSaleTime;
@@ -78,6 +76,15 @@ public class StayCuration extends PlaceCuration
         mStayCurationOption.setCurationOption((StayCurationOption) placeCurationOption);
     }
 
+    @Override
+    public PlaceParams toPlaceParams(int page, int limit, boolean isDetails)
+    {
+        StayParams stayParams = new StayParams(this);
+        stayParams.setPageInformation(page, limit, isDetails);
+
+        return stayParams;
+    }
+
     public Category getCategory()
     {
         if (mCategory == null)
@@ -96,14 +103,6 @@ public class StayCuration extends PlaceCuration
         }
 
         mCategory = category;
-    }
-
-    public StayParams toStayParams(int page, int limit, boolean isDetails)
-    {
-        StayParams stayParams = new StayParams(this);
-        stayParams.setPageInformation(page, limit, isDetails);
-
-        return stayParams;
     }
 
     @Override

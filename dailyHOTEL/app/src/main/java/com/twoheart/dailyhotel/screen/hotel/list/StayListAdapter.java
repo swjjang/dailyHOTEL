@@ -48,12 +48,6 @@ public class StayListAdapter extends PlaceListAdapter
     }
 
     @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == PlaceViewItem.TYPE_SECTION;
-    }
-
-    @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder)
     {
         super.onViewRecycled(holder);

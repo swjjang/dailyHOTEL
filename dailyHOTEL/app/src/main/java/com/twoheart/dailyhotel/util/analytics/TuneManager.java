@@ -12,6 +12,7 @@ import com.mobileapptracker.MATGender;
 import com.mobileapptracker.MobileAppTracker;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -260,7 +261,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordDeepLink(String deepLink)
+    void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
 
     }
