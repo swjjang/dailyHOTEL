@@ -1,18 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * StayListFragment (호텔 목록 화면)
- * <p>
- * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
- * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
- * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
- * 한다. 리스트뷰의 맨 첫 아이템은 이벤트 참여하기 버튼이 있으며, 이 버튼은
- * 서버의 이벤트 API에 따라 NEW 아이콘을 붙여주기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
@@ -22,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.model.GourmetSearch;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -52,13 +38,14 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsString(), mGourmetListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
+
+    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
@@ -90,8 +77,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                     if (gourmetJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
-                        int nights = dataJSONObject.getInt("stays");
-                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl, nights);
+                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
                     }
 
                     try
@@ -99,14 +85,12 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         Uri uri = Uri.parse(url);
                         String pageString = uri.getQueryParameter("page");
                         page = Integer.parseInt(pageString);
-
                     } catch (Exception e)
                     {
                         page = 0;
                     }
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page);
-
                 } else
                 {
                     String message = response.getString("msg");
@@ -119,7 +103,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
             }
         }
 
-        private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
         {
             if (jsonArray == null)
             {
@@ -127,7 +111,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
             }
 
             int length = jsonArray.length();
-            ArrayList<Gourmet> stayList = new ArrayList<>(length);
+            ArrayList<Gourmet> gourmetList = new ArrayList<>(length);
             JSONObject jsonObject;
             Gourmet gourmet;
 
@@ -135,15 +119,15 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                gourmet = new Gourmet();
+                gourmet = new GourmetSearch();
 
-                //                if (gourmet.setStay(jsonObject, imageUrl, nights) == true)
-                //                {
-                //                    stayList.add(stay); // 추가.
-                //                }
+                if (gourmet.setData(jsonObject, imageUrl) == true)
+                {
+                    gourmetList.add(gourmet);
+                }
             }
 
-            return stayList;
+            return gourmetList;
         }
     };
 }

@@ -38,13 +38,6 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
     {
         switch (viewType)
         {
-            case PlaceViewItem.TYPE_SECTION:
-            {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
-
-                return new SectionViewHolder(view);
-            }
-
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
@@ -218,18 +211,6 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
-        }
-    }
-
-    private class SectionViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView regionDetailName;
-
-        public SectionViewHolder(View itemView)
-        {
-            super(itemView);
-
-            regionDetailName = (TextView) itemView;
         }
     }
 

@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -68,9 +67,10 @@ public class GourmetCurationOption extends PlaceCurationOption
         flagAmenitiesFilters = GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
+    @Override
     public boolean isDefaultFilter()
     {
-        if (getSortType() != Constants.SortType.DEFAULT//
+        if (isDefaultSortType() == true//
             || mFilterMap.size() != 0//
             || flagTimeFilter != GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE//
             || flagAmenitiesFilters != GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE)

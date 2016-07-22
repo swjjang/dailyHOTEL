@@ -31,36 +31,6 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         setCalendarText(String.format("%s - %s, %d박", checkInDay, checkOutDay, nights));
     }
 
-    //    public void setSortType(Constants.SortType sortType)
-    //    {
-    //        if (mListAdapter == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        mListAdapter.setSortType(sortType);
-    //    }
-    //
-    //    @Override
-    //    public void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
-    //    {
-    //        mIsLoading = false;
-    //
-    //        if (placeViewItemList == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        mListAdapter.setAll(placeViewItemList);
-    //        mListAdapter.notifyDataSetChanged();
-    //    }
-
-    @Override
-    protected void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
-    {
-
-    }
-
     @Override
     protected int getEmptyIconResourceId()
     {

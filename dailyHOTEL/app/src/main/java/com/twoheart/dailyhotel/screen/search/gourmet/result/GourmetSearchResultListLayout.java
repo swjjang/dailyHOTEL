@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -13,7 +12,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListMapFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayEventBannerManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -132,9 +130,9 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             setVisibility(fragmentManager, viewType, true);
 
             // 리스트의 경우 Pagenation 상황 고려
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(getList());
+            List<PlaceViewItem> oldList = getList();
 
-            int oldListSize = oldList == null ? 0 : oldList.size();
+            int oldListSize = oldList.size();
             if (oldListSize > 0)
             {
                 PlaceViewItem placeViewItem = oldList.get(oldListSize - 1);
@@ -150,49 +148,21 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 }
             }
 
-            // 삭제 이벤트가 발생하였을수 있어서 재 검사
-            int start = oldList == null ? 0 : oldList.size() - 1;
-            int end = oldList == null ? 0 : oldListSize - 5;
-            end = end < 0 ? 0 : end;
-
-            String districtName = null;
-            // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-            for (int i = start; i >= end; i--)
-            {
-                PlaceViewItem item = oldList.get(i);
-                if (item.mType == PlaceViewItem.TYPE_ENTRY)
-                {
-                    Stay stay = item.getItem();
-                    districtName = stay.districtName;
-                    break;
-                } else if (item.mType == PlaceViewItem.TYPE_SECTION)
-                {
-                    districtName = item.getItem();
-                    break;
-                }
-            }
-
             if (list != null && list.size() > 0)
             {
-                if (Util.isTextEmpty(districtName) == false)
-                {
-                    PlaceViewItem firstItem = list.get(0);
-                    if (firstItem.mType == PlaceViewItem.TYPE_SECTION)
-                    {
-                        String firstDistricName = firstItem.getItem();
-                        if (districtName.equalsIgnoreCase(firstDistricName))
-                        {
-                            list.remove(0);
-                        }
-                    }
-                }
-
-                mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.addAll(list);
+
+                if (list.size() < Constants.PAGENATION_LIST_SIZE)
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
+                } else
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
+                }
             } else
             {
                 // 요청 온 데이터가 empty 일때 기존 리스트가 있으면 라스트 footer 재 생성
-                if (oldListSize > 0)
+                if (oldList.size() > 0)
                 {
                     mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
                 }
@@ -203,23 +173,8 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             {
                 mPlaceListAdapter.notifyDataSetChanged();
                 setVisibility(fragmentManager, Constants.ViewType.GONE, true);
-
             } else
             {
-                // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
-                if (oldList == null || oldList.size() == 0)
-                {
-                    if (sortType == Constants.SortType.DEFAULT)
-                    {
-                        if (StayEventBannerManager.getInstance().getCount() > 0)
-                        {
-                            PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
-                                StayEventBannerManager.getInstance().getList());
-                            mPlaceListAdapter.add(0, placeViewItem);
-                        }
-                    }
-                }
-
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.notifyDataSetChanged();
             }
@@ -328,21 +283,6 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
                 ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
-            }
-        }
-    };
-
-    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View view)
-        {
-            Integer index = (Integer) view.getTag(view.getId());
-            if (index != null)
-            {
-                EventBanner eventBanner = StayEventBannerManager.getInstance().getEventBanner(index);
-
-                ((OnEventListener) mOnEventListener).onEventBannerClick(eventBanner);
             }
         }
     };

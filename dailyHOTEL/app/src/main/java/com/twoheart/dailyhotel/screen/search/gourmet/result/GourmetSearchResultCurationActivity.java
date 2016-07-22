@@ -33,6 +33,14 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         super.initIntent(intent);
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+
+        if (mSearchType == SearchType.LOCATION)
+        {
+            mGourmetCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        } else
+        {
+            mGourmetCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
+        }
     }
 
     @Override

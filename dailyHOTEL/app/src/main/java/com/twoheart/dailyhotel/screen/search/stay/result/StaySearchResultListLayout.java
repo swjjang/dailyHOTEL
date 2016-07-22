@@ -18,6 +18,7 @@ public class StaySearchResultListLayout extends StayListLayout
         super(context, eventListener);
     }
 
+    @Override
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
                               ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {

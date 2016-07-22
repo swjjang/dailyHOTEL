@@ -75,8 +75,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         void onShowCallDialog();
     }
 
-    protected abstract void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
-
     protected abstract int getEmptyIconResourceId();
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);

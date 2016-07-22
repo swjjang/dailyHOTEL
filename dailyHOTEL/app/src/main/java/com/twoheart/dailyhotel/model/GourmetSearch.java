@@ -10,7 +10,8 @@ import java.util.Iterator;
 
 public class GourmetSearch extends Gourmet
 {
-    public boolean setGourmet(JSONObject jsonObject, String imageUrl)
+    @Override
+    public boolean setData(JSONObject jsonObject, String imageUrl)
     {
         try
         {

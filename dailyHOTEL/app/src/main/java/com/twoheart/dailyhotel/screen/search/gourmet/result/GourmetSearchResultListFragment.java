@@ -59,7 +59,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
         mPageIndex = 1;
 
-        return mGourmetSearchResultListLayout.onCreateView(R.layout.fragment_hotel_list, container);
+        return mGourmetSearchResultListLayout.onCreateView(R.layout.fragment_gourmet_search_result_list, container);
     }
 
     @Override
@@ -228,10 +228,13 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     mGourmetSearchResultListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
                     int size = mGourmetSearchResultListLayout.getItemCount();
-                    if (size == 0)
+
+                    if (size == 0 && mGourmetCuration.getCurationOption().isDefaultFilter() == false)
                     {
                         setVisibility(ViewType.GONE, true);
                     }
+
+                    ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                     break;
                 }
 

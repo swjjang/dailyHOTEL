@@ -42,6 +42,14 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         super.initIntent(intent);
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+
+        if (mSearchType == SearchType.LOCATION)
+        {
+            mStayCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        } else
+        {
+            mStayCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
+        }
     }
 
     @Override
