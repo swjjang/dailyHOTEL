@@ -37,7 +37,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
 
     protected StayCuration mStayCuration;
-    private StayParams mLastParams;
+    protected StayParams mLastParams;
     protected ViewType mViewType;
 
     private StayCurationNetworkController mNetworkController;
