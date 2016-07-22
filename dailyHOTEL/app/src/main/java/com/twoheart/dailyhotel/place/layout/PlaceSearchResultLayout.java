@@ -208,7 +208,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
         mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
 
-        mViewTypeOptionImageView.setOnClickListener(this);
+        mViewTypeOptionImageView.setVisibility(View.GONE);
         mFilterOptionImageView.setOnClickListener(this);
 
         // 기본 설정
