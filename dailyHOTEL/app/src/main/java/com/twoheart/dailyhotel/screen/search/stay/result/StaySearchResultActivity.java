@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -741,7 +740,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onResultListCount(int count)
+        public void onResultListCount(Category category, int count)
         {
             if (mPlaceSearchResultLayout == null)
             {
@@ -749,6 +748,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             mPlaceSearchResultLayout.updateResultCount(count);
+
+            if (count == 0 && Category.ALL.code.equals(category.code) //
+                && mStayCuration.getCurationOption().isDefaultFilter() == true) //
+            {
+                mPlaceSearchResultLayout.showEmptyLayout();
+            } else
+            {
+                mPlaceSearchResultLayout.showListLayout();
+            }
         }
 
         @Override
@@ -850,25 +858,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = StayCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, mStayCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
-        }
-
-        @Override
-        public void onShowActivityEmptyView(boolean isShow)
-        {
-            if (mPlaceSearchResultLayout == null)
-            {
-                return;
-            }
-
-            if (isShow == true)
-            {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.showEmptyLayout();
-            } else
-            {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
-                mPlaceSearchResultLayout.showListLayout();
-            }
         }
     };
 }

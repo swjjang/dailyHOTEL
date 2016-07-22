@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -40,8 +39,6 @@ public class StayListLayout extends PlaceListLayout
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
-        boolean isShowActivityEmptyView = false;
-
         switch (viewType)
         {
             case LIST:
@@ -80,12 +77,6 @@ public class StayListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-
-                    Category category = mStayCuration.getCategory();
-                    if (Category.ALL.code.equalsIgnoreCase(category.code))
-                    {
-                        isShowActivityEmptyView = true;
-                    }
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -99,8 +90,6 @@ public class StayListLayout extends PlaceListLayout
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY);
                 break;
         }
-
-        ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
     }
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)
