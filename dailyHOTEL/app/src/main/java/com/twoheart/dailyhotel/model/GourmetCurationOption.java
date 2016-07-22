@@ -70,7 +70,7 @@ public class GourmetCurationOption extends PlaceCurationOption
     @Override
     public boolean isDefaultFilter()
     {
-        if (isDefaultSortType() == true//
+        if (isDefaultSortType() == false//
             || mFilterMap.size() != 0//
             || flagTimeFilter != GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE//
             || flagAmenitiesFilters != GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE)

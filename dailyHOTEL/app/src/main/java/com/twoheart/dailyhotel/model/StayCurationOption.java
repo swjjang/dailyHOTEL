@@ -139,7 +139,7 @@ public class StayCurationOption extends PlaceCurationOption
     @Override
     public boolean isDefaultFilter()
     {
-        if (isDefaultSortType() == true//
+        if (isDefaultSortType() == false//
             || person != StayFilter.MIN_PERSON//
             || flagBedTypeFilters != StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
             || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
