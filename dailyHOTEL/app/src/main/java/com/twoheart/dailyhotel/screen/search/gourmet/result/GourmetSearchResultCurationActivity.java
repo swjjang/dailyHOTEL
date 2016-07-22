@@ -52,12 +52,11 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             radioButton.setVisibility(View.GONE);
 
-            mSortRadioGroup.check(R.id.distanceCheckView);
+            gourmetCurationOption.setSortType(SortType.DISTANCE);
         } else
         {
-            // 추후 아이콘 변경필요
             radioButton.setText(R.string.label_sort_by_rank);
-            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_area_button, 0, 0);
+            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
         }
 
         switch (gourmetCurationOption.getSortType())
