@@ -2,20 +2,35 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
+import com.twoheart.dailyhotel.util.Util;
+
+import org.json.JSONObject;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searcyType";
+    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
 
     private SearchType mSearchType;
+    protected GourmetParams mLastParams;
+
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
+    {
+        void onStayCount(String url, int hotelSaleCount);
+    }
 
     public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetCuration gourmetCuration)
     {
@@ -92,9 +107,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     @Override
     protected void resetCuration()
     {
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
-
-        gourmetCurationOption.clear();
+        mGourmetCuration.getCurationOption().clear();
 
         if (mViewType == ViewType.LIST)
         {
@@ -120,4 +133,129 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
         requestUpdateResult();
     }
+
+    @Override
+    protected void requestUpdateResult()
+    {
+        setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        setLastGourmetParams(mGourmetCuration);
+
+        super.requestUpdateResult();
+    }
+
+    @Override
+    protected void requestUpdateResultDelayed()
+    {
+        setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        setLastGourmetParams(mGourmetCuration);
+
+        super.requestUpdateResultDelayed();
+    }
+
+    @Override
+    protected void updateResultMessage()
+    {
+        setConfirmOnClickListener(null);
+
+        DailyNetworkAPI.getInstance(this).requestGourmetList(mNetworkTag, mLastParams.toParamsString(), mGourmetListJsonResponseListener);
+    }
+
+    private void setLastGourmetParams(GourmetCuration gourmetCuration)
+    {
+        if (gourmetCuration == null)
+        {
+            return;
+        }
+
+        if (mLastParams == null)
+        {
+            mLastParams = new GourmetParams(gourmetCuration);
+        } else
+        {
+            mLastParams.setPlaceParams(gourmetCuration);
+        }
+    }
+
+    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            onGourmetCount(null, -1);
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            int gourmetSaleCount;
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    gourmetSaleCount = dataJSONObject.getInt("gourmetSalesCount");
+
+                } else
+                {
+                    gourmetSaleCount = 0;
+                }
+            } catch (Exception e)
+            {
+                gourmetSaleCount = 0;
+            }
+
+            onGourmetCount(url, gourmetSaleCount);
+        }
+
+        private void onGourmetCount(String url, int gourmetSaleCount)
+        {
+            if (Util.isTextEmpty(url) == true && gourmetSaleCount == -1)
+            {
+                // OnNetworkControllerListener onErrorResponse
+                setResultMessage(getString(R.string.label_gourmet_filter_result_count, 0));
+
+                setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
+                setConfirmEnable(false);
+                return;
+            }
+
+            String requestParams = null;
+            try
+            {
+                Uri requestUrl = Uri.parse(url);
+                requestParams = requestUrl.getQuery();
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+
+            String lastParams = mLastParams.toParamsString();
+            if (lastParams.equalsIgnoreCase(requestParams) == false)
+            {
+                // already running another request!
+                return;
+            }
+
+            setResultMessage(getString(R.string.label_gourmet_filter_result_count, gourmetSaleCount));
+
+            setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
+            setConfirmEnable(gourmetSaleCount == 0 ? false : true);
+        }
+    };
 }
