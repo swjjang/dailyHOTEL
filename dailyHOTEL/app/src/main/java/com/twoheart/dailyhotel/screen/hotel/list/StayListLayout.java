@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -39,6 +40,8 @@ public class StayListLayout extends PlaceListLayout
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
+        boolean isShowActivityEmptyView = false;
+
         switch (viewType)
         {
             case LIST:
@@ -77,6 +80,12 @@ public class StayListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
+
+                    Category category = mStayCuration.getCategory();
+                    if (Category.ALL.code.equalsIgnoreCase(category.code))
+                    {
+                        isShowActivityEmptyView = true;
+                    }
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -90,6 +99,8 @@ public class StayListLayout extends PlaceListLayout
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY);
                 break;
         }
+
+        ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
     }
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)
@@ -152,25 +163,30 @@ public class StayListLayout extends PlaceListLayout
                 }
             }
 
-            // 삭제 이벤트가 발생하였을수 있어서 재 검사
-            int start = oldList == null ? 0 : oldList.size() - 1;
-            int end = oldList == null ? 0 : oldListSize - 5;
-            end = end < 0 ? 0 : end;
-
             String districtName = null;
-            // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-            for (int i = start; i >= end; i--)
+
+            // 지역순(StayList의 경우 기본이 지역순) 일때 상위 섹션명을 가지고 가기위한 처리
+            if (Constants.SortType.DEFAULT == sortType)
             {
-                PlaceViewItem item = oldList.get(i);
-                if (item.mType == PlaceViewItem.TYPE_ENTRY)
+                // 삭제 이벤트가 발생하였을수 있어서 재 검사
+                int start = oldList == null ? 0 : oldList.size() - 1;
+                int end = oldList == null ? 0 : oldListSize - 5;
+                end = end < 0 ? 0 : end;
+
+                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
+                for (int i = start; i >= end; i--)
                 {
-                    Stay stay = item.getItem();
-                    districtName = stay.districtName;
-                    break;
-                } else if (item.mType == PlaceViewItem.TYPE_SECTION)
-                {
-                    districtName = item.getItem();
-                    break;
+                    PlaceViewItem item = oldList.get(i);
+                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
+                    {
+                        Stay stay = item.getItem();
+                        districtName = stay.districtName;
+                        break;
+                    } else if (item.mType == PlaceViewItem.TYPE_SECTION)
+                    {
+                        districtName = item.getItem();
+                        break;
+                    }
                 }
             }
 
@@ -191,6 +207,14 @@ public class StayListLayout extends PlaceListLayout
 
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.addAll(list);
+
+                if (list.size() < Constants.PAGENATION_LIST_SIZE)
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
+                } else
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
+                }
             } else
             {
                 // 요청 온 데이터가 empty 일때 기존 리스트가 있으면 라스트 footer 재 생성

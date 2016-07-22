@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -26,6 +27,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -837,7 +839,39 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onFilterClick()
         {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            Province province = mStayCuration.getProvince();
+            if (province == null)
+            {
+                releaseUiComponent();
+                return;
+            }
+
+            Intent intent = StayCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, mStayCuration);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+        }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            if (isShow == true)
+            {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+                mPlaceSearchResultLayout.showEmptyLayout();
+            } else
+            {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
+                mPlaceSearchResultLayout.showListLayout();
+            }
         }
     };
 }

@@ -1331,5 +1331,17 @@ public class StayMainFragment extends PlaceMainFragment
         {
             mOnEventListener.onFilterClick();
         }
+
+        @Override
+        public void onResultListCount(int count)
+        {
+            // do nothing.
+        }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            // do nothing
+        }
     };
 }

@@ -22,7 +22,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -30,8 +29,10 @@ import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
-    private int mPageIndex;
-    private StayCuration mStayCuration;
+    protected int mPageIndex;
+    protected int mStayCount;
+
+    protected StayCuration mStayCuration;
 
     protected StayListLayout mStayListLayout;
     protected StayListNetworkController mNetworkController;
@@ -41,6 +42,10 @@ public class StayListFragment extends PlaceListFragment
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
         void onStayClick(PlaceViewItem placeViewItem);
+
+        void onResultListCount(int count);
+
+        void onShowActivityEmptyView(boolean isShow);
     }
 
     @Override
@@ -48,16 +53,72 @@ public class StayListFragment extends PlaceListFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
 
-        mStayListLayout = new StayListLayout(mBaseActivity, mEventListener);
+        mStayListLayout = getStayListLayout();
         mStayListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
-        mNetworkController = new StayListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
+        mNetworkController = new StayListNetworkController(mBaseActivity, mNetworkTag, getNetworkControllerListener());
 
         mViewType = ViewType.LIST;
 
         mPageIndex = 1;
 
-        return mStayListLayout.onCreateView(R.layout.fragment_hotel_list, container);
+        return mStayListLayout.onCreateView(getLayoutResourceId(), container);
+    }
+
+    protected int getLayoutResourceId()
+    {
+        return R.layout.fragment_hotel_list;
+    }
+
+    protected StayListLayout getStayListLayout()
+    {
+        return new StayListLayout(mBaseActivity, mEventListener);
+    }
+
+    protected StayListNetworkController.OnNetworkControllerListener getNetworkControllerListener()
+    {
+        StayListNetworkController.OnNetworkControllerListener networkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+        {
+            @Override
+            public void onStayList(ArrayList<Stay> list, int page)
+            {
+                StayListFragment.this.onStayList(list, page);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                StayListFragment.this.onErrorResponse(volleyError);
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                if (DEBUG == false && e != null)
+                {
+                    Crashlytics.logException(e);
+                }
+
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.onError(e);
+            }
+
+            @Override
+            public void onErrorPopupMessage(int msgCode, String message)
+            {
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
+            }
+
+            @Override
+            public void onErrorToastMessage(String message)
+            {
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.onRuntimeError("message : " + message);
+            }
+        };
+
+        return networkControllerListener;
     }
 
     @Override
@@ -84,12 +145,18 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void clearList()
     {
+        mStayCount = 0;
         mStayListLayout.clearList();
     }
 
     @Override
     public void refreshList(boolean isShowProgress)
     {
+        if (mViewType == null)
+        {
+            return;
+        }
+
         switch (mViewType)
         {
             case LIST:
@@ -97,11 +164,19 @@ public class StayListFragment extends PlaceListFragment
                 if (size == 0)
                 {
                     refreshList(isShowProgress, 1);
+                } else
+                {
+                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                 }
                 break;
 
             case MAP:
                 refreshList(isShowProgress, 0);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
+                break;
+
+            default:
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
         }
     }
@@ -111,7 +186,7 @@ public class StayListFragment extends PlaceListFragment
         refreshList(isShowProgress, mPageIndex + 1);
     }
 
-    private void refreshList(boolean isShowProgress, int page)
+    protected void refreshList(boolean isShowProgress, int page)
     {
         // 더보기 시 uilock 걸지않음
         if (page <= 1)
@@ -224,105 +299,70 @@ public class StayListFragment extends PlaceListFragment
             stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
         }
 
-        if (Constants.PAGENATION_LIST_SIZE > stayList.size())
-        {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-        } else
-        {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
-        }
-
         return stayViewItemList;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+    protected void onStayList(ArrayList<Stay> list, int page)
     {
-        @Override
-        public void onStayList(ArrayList<Stay> list, int page)
+        if (isFinishing() == true)
         {
-            if (isFinishing() == true)
-            {
-                unLockUI();
-                return;
-            }
-
-            // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
-            if (page <= 1)
-            {
-                mStayListLayout.clearList();
-            }
-
-            SortType sortType = mStayCuration.getCurationOption().getSortType();
-
-            ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
-
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
-
-                    int size = mStayListLayout.getItemCount();
-                    if (size == 0)
-                    {
-                        setVisibility(ViewType.GONE, true);
-                    }
-                    break;
-                }
-
-                case MAP:
-                {
-                    mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
-
-                    int mapSize = mStayListLayout.getMapItemSize();
-                    if (mapSize == 0)
-                    {
-                        setVisibility(ViewType.GONE, true);
-                    }
-                    break;
-                }
-            }
-
             unLockUI();
-            mStayListLayout.setSwipeRefreshing(false);
+            return;
         }
 
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
+        // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
+        if (page <= 1)
         {
-            StayListFragment.this.onErrorResponse(volleyError);
+            mStayCount = 0;
+            mStayListLayout.clearList();
         }
 
-        @Override
-        public void onError(Exception e)
+        mStayCount += list == null ? 0 : list.size();
+
+        SortType sortType = mStayCuration.getCurationOption().getSortType();
+
+        ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
+
+        switch (mViewType)
         {
-            if (DEBUG == false && e != null)
+            case LIST:
             {
-                Crashlytics.logException(e);
+                mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+
+                int size = mStayListLayout.getItemCount();
+                if (size == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
+                break;
             }
 
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onError(e);
+            case MAP:
+            {
+                mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+
+                int mapSize = mStayListLayout.getMapItemSize();
+                if (mapSize == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
+                break;
+            }
+
+            default:
+            {
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
+                break;
+            }
         }
 
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("message : " + message);
-        }
-    };
+        unLockUI();
+        mStayListLayout.setSwipeRefreshing(false);
+    }
 
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////   Listener   //////////////////////////////////////
@@ -372,6 +412,12 @@ public class StayListFragment extends PlaceListFragment
         public void onFilterClick()
         {
             mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(isShow);
         }
 
         @Override
