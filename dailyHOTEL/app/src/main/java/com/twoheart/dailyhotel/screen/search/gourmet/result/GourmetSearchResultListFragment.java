@@ -43,6 +43,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         void onGourmetClick(PlaceViewItem placeViewItem);
 
         void onResultListCount(int count);
+
+        void onShowActivityEmptyView(boolean isShow);
     }
 
     @Override
@@ -335,6 +337,12 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         public void onFilterClick()
         {
             mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(isShow);
         }
 
         @Override

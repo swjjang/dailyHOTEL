@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Category;
@@ -450,14 +451,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            if (count == 0 && mGourmetCuration.getCurationOption().isDefaultFilter() == true)
-            {
-                mPlaceSearchResultLayout.showEmptyLayout();
-            } else
-            {
-                mPlaceSearchResultLayout.showListLayout();
-                mPlaceSearchResultLayout.updateResultCount(count);
-            }
+            mPlaceSearchResultLayout.updateResultCount(count);
         }
 
         @Override
@@ -572,6 +566,25 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 case MAP:
                     viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
                     break;
+            }
+        }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            if (isShow == true)
+            {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+                mPlaceSearchResultLayout.showEmptyLayout();
+            } else
+            {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
+                mPlaceSearchResultLayout.showListLayout();
             }
         }
     };

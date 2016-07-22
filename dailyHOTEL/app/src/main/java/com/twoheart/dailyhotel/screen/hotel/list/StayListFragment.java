@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -44,7 +43,10 @@ public class StayListFragment extends PlaceListFragment
     {
         void onStayClick(PlaceViewItem placeViewItem);
 
-        void onResultListCount(Category category, int count);
+        void onResultListCount(int count);
+
+        void onShowActivityEmptyView(boolean isShow);
+
     }
 
     @Override
@@ -165,17 +167,17 @@ public class StayListFragment extends PlaceListFragment
                     refreshList(isShowProgress, 1);
                 } else
                 {
-                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCuration.getCategory(), mStayCount);
+                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                 }
                 break;
 
             case MAP:
                 refreshList(isShowProgress, 0);
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCuration.getCategory(), 0);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
 
             default:
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCuration.getCategory(), 0);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
         }
     }
@@ -334,7 +336,7 @@ public class StayListFragment extends PlaceListFragment
                     setVisibility(ViewType.GONE, true);
                 }
 
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCuration.getCategory(), mStayCount);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                 break;
             }
 
@@ -348,13 +350,13 @@ public class StayListFragment extends PlaceListFragment
                     setVisibility(ViewType.GONE, true);
                 }
 
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCuration.getCategory(), 0);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
             }
 
             default:
             {
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCuration.getCategory(), 0);
+                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
             }
         }
@@ -412,6 +414,13 @@ public class StayListFragment extends PlaceListFragment
         {
             mOnPlaceListFragmentListener.onFilterClick();
         }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(isShow);
+        }
+
 
         @Override
         public void finish()

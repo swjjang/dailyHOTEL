@@ -393,6 +393,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            // do nothing
+        }
+
+        @Override
         public void finish()
         {
             mBaseActivity.finish();
