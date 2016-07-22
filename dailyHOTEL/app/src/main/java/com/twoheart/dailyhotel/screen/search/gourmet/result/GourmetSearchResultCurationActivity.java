@@ -2,38 +2,14 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
-import com.twoheart.dailyhotel.model.GourmetFilter;
-import com.twoheart.dailyhotel.model.GourmetFilters;
-import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToast;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
@@ -70,9 +46,9 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             return;
         }
 
-        RadioButton radioButton = (RadioButton)mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
 
-        if(mSearchType == SearchType.LOCATION)
+        if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
 
@@ -117,7 +93,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if(mSearchType == SearchType.LOCATION)
+            if (mSearchType == SearchType.LOCATION)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

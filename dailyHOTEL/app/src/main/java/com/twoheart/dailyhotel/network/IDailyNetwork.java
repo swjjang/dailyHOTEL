@@ -5,7 +5,6 @@ import android.location.Location;
 import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
@@ -157,7 +156,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestStayList(Object tag, StayParams stayParams, DailyHotelJsonResponseListener listener);
+    void requestStayList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag
@@ -295,6 +294,8 @@ interface IDailyNetwork
      * @return
      */
     void requestGourmetList(Object tag, Province province, SaleTime saleTime, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    void requestGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
 
     void requestGourmetSearchList(Object tag, SaleTime saleTime, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 

@@ -20,6 +20,8 @@ public abstract class PlaceCuration implements Parcelable
 
     public abstract void setCurationOption(PlaceCurationOption placeCurationOption);
 
+    public abstract PlaceParams toPlaceParams(int page, int limit, boolean isDetails);
+
     public void clear()
     {
         mProvince = null;

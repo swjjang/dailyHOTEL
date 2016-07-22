@@ -423,7 +423,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             mLastParams = new StayParams(stayCuration);
         } else
         {
-            mLastParams.setStayParams(stayCuration);
+            mLastParams.setPlaceParams(stayCuration);
         }
     }
 
@@ -768,7 +768,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 // do nothing!
             }
 
-            String lastParams = mLastParams.toParamString();
+            String lastParams = mLastParams.toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

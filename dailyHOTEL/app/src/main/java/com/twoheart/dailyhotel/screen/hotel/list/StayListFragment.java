@@ -147,7 +147,7 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        StayParams params = mStayCuration.toStayParams(page, PAGENATION_LIST_SIZE, true);
+        StayParams params = (StayParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
         mNetworkController.requestStayList(params);
     }
 

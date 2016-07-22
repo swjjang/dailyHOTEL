@@ -635,7 +635,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
 
         Map<String, String> eventParams = new HashMap<>();
 
-        eventParams.put(AnalyticsManager.KeyType.SORTING,stayCurationOption.getSortType().name());
+        eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
 
         //        if (mProvince instanceof Area)
         //        {
@@ -735,7 +735,7 @@ public class StaySearchResultCurationActivity extends PlaceCurationActivity impl
                 // do nothing!
             }
 
-            String lastParams = mLastParams.toParamString();
+            String lastParams = mLastParams.toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!
