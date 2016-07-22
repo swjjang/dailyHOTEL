@@ -239,7 +239,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void setCategoryTabLayoutVisibility(int visibility)
     {
-        mCategoryTabLayout.setVisibility(visibility);
+        ((View)mCategoryTabLayout.getParent()).setVisibility(visibility);
 
         ViewGroup.LayoutParams layoutParams = mCalendarUnderlineView.getLayoutParams();
 
