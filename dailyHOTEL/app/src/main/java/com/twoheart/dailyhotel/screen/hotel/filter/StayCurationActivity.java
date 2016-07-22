@@ -36,19 +36,19 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 {
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
 
-    private StayCuration mStayCuration;
+    protected StayCuration mStayCuration;
     private StayParams mLastParams;
-    private ViewType mViewType;
+    protected ViewType mViewType;
 
     private StayCurationNetworkController mNetworkController;
 
-    private RadioGroup mSortRadioGroup;
-    private android.support.v7.widget.GridLayout mGridLayout;
+    protected RadioGroup mSortRadioGroup;
+    protected android.support.v7.widget.GridLayout mGridLayout;
 
     private View mMinusPersonView;
     private View mPlusPersonView;
     private TextView mPersonCountView;
-    private ViewGroup mBedTypeLayout;
+    protected ViewGroup mBedTypeLayout;
 
     public static Intent newInstance(Context context, ViewType viewType, StayCuration stayCuration)
     {
@@ -71,8 +71,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             return;
         }
 
-        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+        initIntent(intent);
+
         mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         initLayout();
@@ -86,6 +86,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 showAnimation();
             }
         }, 20);
+    }
+
+    protected void initIntent(Intent intent)
+    {
+        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
     }
 
     @Override
@@ -113,7 +119,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
     }
 
-    private void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
+    protected void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
@@ -291,7 +297,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
     }
 
-    private void updatePersonFilter(int person)
+    protected void updatePersonFilter(int person)
     {
         if (person < StayFilter.MIN_PERSON)
         {
@@ -349,7 +355,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         requestUpdateResultDelayed();
     }
 
-    private void resetCuration()
+    protected void resetCuration()
     {
         mStayCuration.getCurationOption().clear();
 
@@ -427,7 +433,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
     }
 
-    private void setDisabledSortLayout(View view, RadioGroup sortLayout)
+    protected void setDisabledSortLayout(View view, RadioGroup sortLayout)
     {
         if (sortLayout == null)
         {
@@ -447,7 +453,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         dimView.setVisibility(View.VISIBLE);
     }
 
-    private void resetLayout(ViewGroup viewGroup)
+    protected void resetLayout(ViewGroup viewGroup)
     {
         if (viewGroup == null)
         {

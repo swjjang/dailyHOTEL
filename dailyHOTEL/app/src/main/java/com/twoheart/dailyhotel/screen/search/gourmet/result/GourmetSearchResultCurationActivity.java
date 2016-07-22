@@ -2,38 +2,14 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
-import com.twoheart.dailyhotel.model.GourmetFilter;
-import com.twoheart.dailyhotel.model.GourmetFilters;
-import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToast;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
@@ -79,9 +55,8 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             mSortRadioGroup.check(R.id.distanceCheckView);
         } else
         {
-            // 추후 아이콘 변경필요
             radioButton.setText(R.string.label_sort_by_rank);
-            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_area_button, 0, 0);
+            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
         }
 
         switch (gourmetCurationOption.getSortType())

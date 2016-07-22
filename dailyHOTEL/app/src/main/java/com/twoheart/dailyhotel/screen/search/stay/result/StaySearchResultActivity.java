@@ -425,8 +425,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, //
-                mStayCuration, mSearchType);
+            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this,//
+                mViewType, mSearchType, mStayCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
