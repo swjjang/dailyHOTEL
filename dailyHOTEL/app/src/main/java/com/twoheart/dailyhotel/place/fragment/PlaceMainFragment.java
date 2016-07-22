@@ -32,7 +32,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected PlaceMainNetworkController mPlaceMainNetworkController;
 
     protected BaseActivity mBaseActivity;
-    private MenuBarLayout mMenuBarLayout;
+    protected PlaceMainFragment.OnMenuBarListener mOnMenuBarListener;
 
     protected abstract PlaceMainLayout getPlaceMainLayout(Context context);
 
@@ -52,6 +52,13 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract PlaceCuration getPlaceCuration();
 
+    public interface OnMenuBarListener
+    {
+        void onMenuBarTranslationY(float y);
+
+        void onMenuBarEnabled(boolean enabled);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -59,8 +66,6 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         mPlaceMainLayout = getPlaceMainLayout(mBaseActivity);
         mPlaceMainNetworkController = getPlaceMainNetworkController(mBaseActivity);
-
-        mPlaceMainLayout.setMenuBarLayout(mMenuBarLayout);
 
         return mPlaceMainLayout.onCreateView(R.layout.fragment_place_main, container);
     }
@@ -249,14 +254,9 @@ public abstract class PlaceMainFragment extends BaseFragment
         }
     }
 
-    /**
-     * 호출 시점에는 아직 GUI가 만들어진 상태가 아니다.
-     *
-     * @param menuBarLayout
-     */
-    public void setMenuBarLayout(MenuBarLayout menuBarLayout)
+    public void setMenuBarListener(PlaceMainFragment.OnMenuBarListener onMenuBarListener)
     {
-        mMenuBarLayout = menuBarLayout;
+        mOnMenuBarListener = onMenuBarListener;
     }
 
     protected void searchMyLocation()
