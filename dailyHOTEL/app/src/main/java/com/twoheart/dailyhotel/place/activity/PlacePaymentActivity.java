@@ -52,7 +52,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     private ProgressDialog mProgressDialog;
 
-    private boolean mDontReload;
+    protected boolean mDontReload;
 
     protected abstract void requestUserInformationForPayment();
 
@@ -71,6 +71,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected abstract boolean hasWarningMessage();
 
     protected abstract void showWarningMessageDialog();
+
+    protected abstract void showChangedPriceDialog();
 
     protected abstract void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
@@ -485,32 +487,30 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showStopOnSaleDialog()
     {
-        showChangedValueDialog(R.string.dialog_msg_stop_onsale);
-    }
-
-    protected void showChangedPriceDialog()
-    {
-        showChangedValueDialog(R.string.dialog_msg_changed_price);
+        showChangedValueDialog(R.string.dialog_msg_stop_onsale, null);
     }
 
     protected void showChangedTimeDialog()
     {
-        showChangedValueDialog(R.string.dialog_msg_changed_time);
+        showChangedValueDialog(R.string.dialog_msg_changed_time, null);
     }
 
-    protected void showChangedValueDialog(int messageResId)
+    protected void showChangedValueDialog(int messageResId, OnDismissListener onDismissListener)
     {
-        OnClickListener positiveListener = new OnClickListener()
+        if (onDismissListener == null)
         {
-            @Override
-            public void onClick(View v)
+            onDismissListener = new OnDismissListener()
             {
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            }
-        };
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                }
+            };
+        }
 
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(messageResId), getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, null, null, false);
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(messageResId), getString(R.string.dialog_btn_text_confirm), null, null, null, null, onDismissListener, true);
     }
 
     protected void showChangedBonusDialog()
