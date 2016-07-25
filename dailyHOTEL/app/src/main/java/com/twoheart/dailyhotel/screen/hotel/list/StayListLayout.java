@@ -302,8 +302,6 @@ public class StayListLayout extends PlaceListLayout
                 });
 
                 mStayListMapFragment.setPlaceViewItemList(list, true);
-
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
             }
         } else
         {

@@ -45,8 +45,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         void onGourmetClick(PlaceViewItem placeViewItem);
 
         void onResultListCount(int count);
-
-        void onShowActivityEmptyView(boolean isShow);
     }
 
     @Override
@@ -181,11 +179,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
-            mGourmetCount = 0;
             return stayViewItemList;
         }
-
-        mGourmetCount = gourmetList.size();
 
         for (Gourmet gourmet : gourmetList)
         {
@@ -203,7 +198,9 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         return stayViewItemList;
     }
 
-    public int getGourmetScount() {
+    @Override
+    public int getPlaceCount()
+    {
         return mGourmetCount;
     }
 
@@ -225,9 +222,11 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
             if (page <= 1)
             {
+                mGourmetCount = 0;
                 mGourmetSearchResultListLayout.clearList();
             }
 
+            mGourmetCount += list == null ? 0 : list.size();
             SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);

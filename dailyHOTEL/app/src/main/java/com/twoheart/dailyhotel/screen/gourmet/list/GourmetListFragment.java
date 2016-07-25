@@ -47,6 +47,8 @@ public class GourmetListFragment extends PlaceListFragment
 
     private GourmetCuration mGourmetCuration;
 
+    private int mGourmetCount;
+
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
         void onGourmetClick(PlaceViewItem placeViewItem);
@@ -341,6 +343,12 @@ public class GourmetListFragment extends PlaceListFragment
         return list;
     }
 
+    @Override
+    public int getPlaceCount()
+    {
+        return mGourmetCount;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +403,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-            // do nothing
+            mOnPlaceListFragmentListener.onShowActivityEmptyView(isShow);
         }
 
         @Override
@@ -446,6 +454,7 @@ public class GourmetListFragment extends PlaceListFragment
                     }
 
                     mGourmetList.clear();
+                    mGourmetCount = length;
 
                     GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
 

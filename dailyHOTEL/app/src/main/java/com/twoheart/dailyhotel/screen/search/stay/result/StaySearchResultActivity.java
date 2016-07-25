@@ -322,9 +322,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true)
         {
-            StaySearchResultListFragment staySearchResultListFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-            int stayCount = staySearchResultListFragment.getStayCount();
-            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(stayCount));
+            PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
+            int placeCount = placeListFragment.getPlaceCount();
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
         }
 
         AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(screen, params);

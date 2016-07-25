@@ -337,9 +337,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true)
         {
-            GourmetSearchResultListFragment gourmetSearchResultListFragment = (GourmetSearchResultListFragment) mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-            int gourmetCount = gourmetSearchResultListFragment.getGourmetScount();
-            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(gourmetCount));
+            PlaceListFragment gourmetSearchResultListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
+            int placeCount = gourmetSearchResultListFragment.getPlaceCount();
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
         }
 
         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);

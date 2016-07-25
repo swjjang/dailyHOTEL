@@ -688,6 +688,62 @@ public class StayMainFragment extends PlaceMainFragment
         return mStayCuration;
     }
 
+    private void analyticsScreen(String screen)
+    {
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == false //
+            && AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == false)
+        {
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.CHECK_IN, mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.CHECK_OUT, mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+        if (DailyHotel.isLogin() == false)
+        {
+            params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+        } else
+        {
+            params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+        }
+
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
+        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);
+        params.put(AnalyticsManager.KeyType.CATEGORY, mStayCuration.getCategory().code);
+
+        Province province = mStayCuration.getProvince();
+
+        if (province == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else if (province != null)
+        {
+            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        }
+
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen))
+        {
+            PlaceListFragment placeListFragment = mPlaceMainLayout.getPlaceListFragment().get(0);
+            int placeCount = placeListFragment.getPlaceCount();
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
+        }
+
+        AnalyticsManager.getInstance(mBaseActivity).recordScreen(screen, params);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -816,28 +872,6 @@ public class StayMainFragment extends PlaceMainFragment
                 {
                     mViewType = ViewType.LIST;
 
-                    Map<String, String> params = new HashMap<>();
-                    Province province = mStayCuration.getProvince();
-
-                    if (province == null)
-                    {
-                        Util.restartApp(getContext());
-                        return;
-                    }
-
-                    if (province instanceof Area)
-                    {
-                        Area area = (Area) province;
-                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-
-                    } else
-                    {
-                        params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                    }
-
-                    AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
                     AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
                 }
@@ -1240,32 +1274,6 @@ public class StayMainFragment extends PlaceMainFragment
                 currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.setPlaceCuration(mStayCuration);
                 currentPlaceListFragment.refreshList(true);
-
-                // Analytics
-                Map<String, String> params = new HashMap<>();
-                Province province = mStayCuration.getProvince();
-
-                if (province instanceof Area)
-                {
-                    Area area = (Area) province;
-                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                }
-
-                if (DailyHotel.isLogin() == false)
-                {
-                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-                }
-
-                AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
             } else
             {
                 placeListFragment.setVisibility(mViewType, false);
@@ -1342,7 +1350,20 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-            // do nothing
+            if (isShow == true)
+            {
+                // 기존 처리 유지
+            } else
+            {
+                if (mViewType == ViewType.MAP)
+                {
+                    analyticsScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+                } else
+                {
+                    analyticsScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+                }
+            }
+
         }
 
     };

@@ -45,6 +45,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onShowMenuBar();
 
         void onFilterClick();
+
+        void onShowActivityEmptyView(boolean isShow);
     }
 
     public abstract void setPlaceCuration(PlaceCuration curation);
@@ -56,6 +58,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
 
     public abstract void setScrollListTop();
+
+    public abstract int getPlaceCount();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)

@@ -41,6 +41,8 @@ public class GourmetListLayout extends PlaceListLayout
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
+        boolean isShowActivityEmptyView = false;
+
         switch (viewType)
         {
             case LIST:
@@ -73,7 +75,9 @@ public class GourmetListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+                GourmetCurationOption gourmetCurationOption = mGourmetCuration == null //
+                    ? new GourmetCurationOption() //
+                    : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
                 if (gourmetCurationOption.isDefaultFilter() == true)
                 {
@@ -92,6 +96,8 @@ public class GourmetListLayout extends PlaceListLayout
                 AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
                 break;
         }
+
+        ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
     }
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)

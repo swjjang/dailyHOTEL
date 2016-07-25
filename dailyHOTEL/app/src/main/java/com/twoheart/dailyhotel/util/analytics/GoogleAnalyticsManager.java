@@ -90,11 +90,49 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
-        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            String checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
+
+            if (Util.isTextEmpty(checkIn) == false)
+            {
+                screenViewBuilder.setCustomDimension(1, checkIn);
+            }
+
+            if (Util.isTextEmpty(checkOut) == false)
+            {
+                screenViewBuilder.setCustomDimension(2, checkOut);
+            }
+
             screenViewBuilder.setCustomDimension(5, params.get(AnalyticsManager.KeyType.IS_SIGNED));
-            screenViewBuilder.setCustomDimension(6, AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true ? "hotel" : "gourmet");
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
+            screenViewBuilder.setCustomDimension(7, params.get(AnalyticsManager.KeyType.COUNTRY));
+            screenViewBuilder.setCustomDimension(8, params.get(AnalyticsManager.KeyType.PROVINCE));
+
+            String district = params.get(AnalyticsManager.KeyType.DISTRICT);
+            if (Util.isTextEmpty(district) == false)
+            {
+                screenViewBuilder.setCustomDimension(12, district);
+            }
+
+            String category = params.get(AnalyticsManager.KeyType.CATEGORY);
+            if (Util.isTextEmpty(category) == false)
+            {
+                screenViewBuilder.setCustomDimension(13, category);
+            }
+
+            if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true //
+                || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+            {
+                screenViewBuilder.setCustomDimension(20, params.get(AnalyticsManager.KeyType.PLACE_COUNT));
+            }
 
             mGoogleAnalyticsTracker.setScreenName(screen);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());

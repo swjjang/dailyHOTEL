@@ -44,8 +44,6 @@ public class StayListFragment extends PlaceListFragment
         void onStayClick(PlaceViewItem placeViewItem);
 
         void onResultListCount(int count);
-
-        void onShowActivityEmptyView(boolean isShow);
     }
 
     @Override
@@ -364,7 +362,8 @@ public class StayListFragment extends PlaceListFragment
         mStayListLayout.setSwipeRefreshing(false);
     }
 
-    public int getStayCount()
+    @Override
+    public int getPlaceCount()
     {
         return mStayCount;
     }
@@ -422,7 +421,7 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(isShow);
+            mOnPlaceListFragmentListener.onShowActivityEmptyView(isShow);
         }
 
         @Override
