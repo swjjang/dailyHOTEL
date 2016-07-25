@@ -688,7 +688,7 @@ public class StayMainFragment extends PlaceMainFragment
         return mStayCuration;
     }
 
-    private void analyticsScreen(String screen)
+    private void recordAnalyticsStayList(String screen)
     {
         if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == false)
@@ -1357,10 +1357,10 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 if (mViewType == ViewType.MAP)
                 {
-                    analyticsScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+                    recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
                 } else
                 {
-                    analyticsScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+                    recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST);
                 }
             }
 

@@ -306,7 +306,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void analyticsScreen(String screen)
+    private void recordAnalyticsGourmetSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -622,13 +622,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
 
-                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
 
-                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT);
+                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
         }
     };
@@ -739,7 +739,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
 //                    , action, label, eventParams);
 //
-////                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+////                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
 //
 ////                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
 ////                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, screenParams);
@@ -795,7 +795,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
 //                    , action, label, eventParams);
 //
-////                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
+////                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
 //            }
 //        }
 
@@ -812,7 +812,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_NOT_FOUND, label, null);
 
-//                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+//                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
 
                 //                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
                 //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
@@ -831,7 +831,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_CLICKED, label, null);
 
-//                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
+//                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
             }
         }
     };

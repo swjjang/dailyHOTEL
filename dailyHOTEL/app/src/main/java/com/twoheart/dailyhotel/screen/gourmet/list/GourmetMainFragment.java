@@ -211,7 +211,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         return mGourmetCuration;
     }
 
-    private void analyticsScreen(String screen)
+    private void recordAnalyticsGourmetList(String screen)
     {
         if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == false)
@@ -860,10 +860,10 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 if (mViewType == ViewType.MAP)
                 {
-                    analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
+                    recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
                 } else
                 {
-                    analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST);
+                    recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST);
                 }
             }
 

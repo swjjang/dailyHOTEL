@@ -289,7 +289,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void analyticsScreen(String screen)
+    private void recordAnalyticsStaySearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -647,7 +647,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
 //                    , action, label, eventParams);
 //
-////                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+////                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
 //
 ////                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
 ////                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, screenParams);
@@ -703,7 +703,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
 //                    , action, label, eventParams);
 //
-////                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT);
+////                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
 //            }
 //        }
 
@@ -720,7 +720,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_NOT_FOUND, label, null);
 
-//                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+//                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
 
 //                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
 //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, params);
@@ -739,7 +739,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
 
-//                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT);
+//                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
         }
     };
@@ -891,13 +891,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
 
-                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
 
-                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT);
+                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
         }
 

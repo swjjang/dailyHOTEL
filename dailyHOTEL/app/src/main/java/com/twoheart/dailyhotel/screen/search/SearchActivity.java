@@ -74,7 +74,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     public void onStart()
     {
         super.onStart();
-        analyticsScreenOpen(mSaleTime, mNights, mPlaceType);
+        recordAnalyticsSearch(mSaleTime, mNights, mPlaceType);
     }
 
     private void initLayout(PlaceType placeType)
@@ -347,7 +347,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SWITCHING, label, null);
     }
 
-    private void analyticsScreenOpen(SaleTime saleTime, int nights, PlaceType placeType)
+    private void recordAnalyticsSearch(SaleTime saleTime, int nights, PlaceType placeType)
     {
         SaleTime checkInSaleTime = saleTime;
         SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
