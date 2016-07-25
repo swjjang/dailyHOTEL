@@ -813,6 +813,23 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     }
 
     @Override
+    protected void showChangedPriceDialog()
+    {
+        showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mDontReload = false;
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
+                lockUI();
+                requestUserInformationForPayment();
+            }
+        });
+    }
+
+    @Override
     protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         Intent intent = new Intent(this, HotelPaymentWebActivity.class);
@@ -2278,40 +2295,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         Calendar calendarCheckin = DailyCalendar.getInstance();
                         calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckin.setTimeInMillis(checkInDate);
-                        //
-                        //                        SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.M.d (EEE) HH시", Locale.KOREA);
-                        //                        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-                        //
-                        //                        mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
                         mCheckinDayTextView.setText(DailyCalendar.format(checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
 
                         // CheckOut
                         Calendar calendarCheckout = DailyCalendar.getInstance();
                         calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckout.setTimeInMillis(checkOutDate);
-                        //
-                        //                        mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
                         mCheckoutDayTextView.setText(DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
-
-                        //                        SimpleDateFormat checkInOutFormat = new SimpleDateFormat("yyyy.M.d(EEE) HH시", Locale.KOREA);
-                        //                        checkInOutFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                         if (Util.getLCDWidth(HotelPaymentActivity.this) >= 720)
                         {
-                            //                            hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
-                            //                                , checkInOutFormat.format(calendarCheckin.getTime())//
-                            //                                , checkInOutFormat.format(calendarCheckout.getTime()));
-
                             hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
                                 , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
                                 , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
-
                         } else
                         {
-                            //                            hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
-                            //                                , checkInOutFormat.format(calendarCheckin.getTime())//
-                            //                                , checkInOutFormat.format(calendarCheckout.getTime()));
-
                             hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
                                 , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
                                 , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
@@ -2319,9 +2317,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                         calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
                         calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
-
-                        //                        hotelPaymentInformation.checkInDateFormat = Util.getISO8601String(calendarCheckin.getTime());
-                        //                        hotelPaymentInformation.checkOutDateFormat = Util.getISO8601String(calendarCheckout.getTime());
 
                         hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
                         hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);

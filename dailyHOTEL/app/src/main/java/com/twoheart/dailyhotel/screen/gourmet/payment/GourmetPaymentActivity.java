@@ -246,6 +246,23 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
+    protected void showChangedPriceDialog()
+    {
+        showChangedValueDialog(R.string.dialog_msg_changed_price, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mDontReload = false;
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
+                lockUI();
+                requestUserInformationForPayment();
+            }
+        });
+    }
+
+    @Override
     protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         Intent intent = new Intent(this, GourmetPaymentWebActivity.class);
@@ -1293,15 +1310,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     gourmetPaymentInformation.getTicketInformation().discountPrice = discountPrice;
                     gourmetPaymentInformation.ticketMaxCount = maxCount;
-
-                    //                    Calendar calendarCheckin = DailyCalendar.getInstance();
-                    //                    calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    //                    calendarCheckin.setTimeInMillis(sday);
-                    //
-                    //                    SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
-                    //                    formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    //
-                    //                    gourmetPaymentInformation.checkInTime = formatDay.format(calendarCheckin.getTime());
                     gourmetPaymentInformation.checkInTime = DailyCalendar.format(sday, "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"));
 
                     if (gourmetPaymentInformation.ticketTime == 0)
