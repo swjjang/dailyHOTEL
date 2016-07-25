@@ -74,18 +74,16 @@ public class StayListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+                StayCurationOption stayCurationOption = mStayCuration == null //
+                    ? new StayCurationOption() //
+                    : (StayCurationOption) mStayCuration.getCurationOption();
 
                 if (stayCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
 
-                    Category category = mStayCuration.getCategory();
-                    if (Category.ALL.code.equalsIgnoreCase(category.code))
-                    {
-                        isShowActivityEmptyView = true;
-                    }
+                    isShowActivityEmptyView = true;
 
                 } else
                 {
@@ -101,7 +99,17 @@ public class StayListLayout extends PlaceListLayout
                 break;
         }
 
-        ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
+        if (mStayCuration == null)
+        {
+            // skip!
+            return;
+        }
+
+        Category category = mStayCuration.getCategory();
+        if (Category.ALL.code.equalsIgnoreCase(category.code))
+        {
+            ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
+        }
     }
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)

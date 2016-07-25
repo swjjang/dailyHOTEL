@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -33,8 +34,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
@@ -303,6 +304,45 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     protected void onResume()
     {
         super.onResume();
+    }
+
+    private void analyticsScreen(String screen)
+    {
+        if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
+            && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
+        {
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+
+        Province province = mGourmetCuration.getProvince();
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else if (province != null)
+        {
+            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        }
+
+        if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true)
+        {
+            GourmetSearchResultListFragment gourmetSearchResultListFragment = (GourmetSearchResultListFragment) mPlaceSearchResultLayout.getPlaceListFragment().get(0);
+            int gourmetCount = gourmetSearchResultListFragment.getGourmetScount();
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(gourmetCount));
+        }
+
+        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -581,10 +621,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
+
+                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
+
+                analyticsScreen(AnalyticsManager.Screen.SEARCH_RESULT);
             }
         }
     };
@@ -644,115 +688,116 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
 
-        //        private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
-        //        {
-        //            String action;
-        //
-        //            if (totalCount == 0)
-        //            {
-        //                String prefix = null;
-        //
-        //                switch (mSearchType)
-        //                {
-        //                    case SEARCHES:
-        //                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND;
-        //                        break;
-        //
-        //                    case AUTOCOMPLETE:
-        //                        action = AnalyticsManager.Action.GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
-        //
-        //                        if (keyword.price == 0)
-        //                        {
-        //                            prefix = String.format("지역-%s", mInputText);
-        //                        } else
-        //                        {
-        //                            prefix = String.format("고메-%s", mInputText);
-        //                        }
-        //                        break;
-        //
-        //                    case RECENT:
-        //                        action = AnalyticsManager.Action.GOURMET_RECENT_KEYWORD_NOT_FOUND;
-        //                        break;
-        //
-        //                    default:
-        //                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND;
-        //                        break;
-        //                }
-        //
-        //                String label;
-        //
-        //                if (Util.isTextEmpty(prefix) == true)
-        //                {
-        //                    label = String.format("%s-%s", keyword.name, getSearchDate());
-        //                } else
-        //                {
-        //                    label = String.format("%s-%s-%s", prefix, keyword.name, getSearchDate());
-        //                }
-        //
-        //                Map<String, String> eventParams = new HashMap<>();
-        //                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-        //                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
-        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-        //                    , action, label, eventParams);
-        //
-        //                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
-        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, screenParams);
-        //            } else
-        //            {
-        //                String prefix = null;
-        //
-        //                switch (mSearchType)
-        //                {
-        //                    case SEARCHES:
-        //                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
-        //                        break;
-        //
-        //                    case AUTOCOMPLETE:
-        //                        action = AnalyticsManager.Action.GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED;
-        //
-        //                        if (keyword.price == 0)
-        //                        {
-        //                            prefix = String.format("지역-%s", mInputText);
-        //                        } else
-        //                        {
-        //                            prefix = String.format("고메-%s", mInputText);
-        //                        }
-        //                        break;
-        //
-        //                    case RECENT:
-        //                        action = AnalyticsManager.Action.GOURMET_RECENT_KEYWORD_SEARCH_CLICKED;
-        //                        break;
-        //
-        //                    default:
-        //                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
-        //                        break;
-        //                }
-        //
-        //                String label;
-        //
-        //                if (totalCount == -1)
-        //                {
-        //                    label = String.format("%s-Los-%s", keyword.name, getSearchDate());
-        //                } else
-        //                {
-        //                    label = String.format("%s-%d-%s", keyword.name, totalCount, getSearchDate());
-        //                }
-        //
-        //                if (Util.isTextEmpty(prefix) == false)
-        //                {
-        //                    label = String.format("%s-%s", prefix, label);
-        //                }
-        //
-        //                Map<String, String> eventParams = new HashMap<>();
-        //                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-        //                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
-        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-        //                    , action, label, eventParams);
-        //
-        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
-        //            }
-        //        }
+//        private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
+//        {
+//            String action;
+//
+//            if (totalCount == 0)
+//            {
+//                String prefix = null;
+//
+//                switch (mSearchType)
+//                {
+//                    case SEARCHES:
+//                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND;
+//                        break;
+//
+//                    case AUTOCOMPLETE:
+//                        action = AnalyticsManager.Action.GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
+//
+//                        if (keyword.price == 0)
+//                        {
+//                            prefix = String.format("지역-%s", mInputText);
+//                        } else
+//                        {
+//                            prefix = String.format("고메-%s", mInputText);
+//                        }
+//                        break;
+//
+//                    case RECENT:
+//                        action = AnalyticsManager.Action.GOURMET_RECENT_KEYWORD_NOT_FOUND;
+//                        break;
+//
+//                    default:
+//                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND;
+//                        break;
+//                }
+//
+//                String label;
+//
+//                if (Util.isTextEmpty(prefix) == true)
+//                {
+//                    label = String.format("%s-%s", keyword.name, getSearchDate());
+//                } else
+//                {
+//                    label = String.format("%s-%s-%s", prefix, keyword.name, getSearchDate());
+//                }
+//
+//                Map<String, String> eventParams = new HashMap<>();
+//                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+//                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
+//                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
+//                    , action, label, eventParams);
+//
+////                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+//
+////                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+////                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, screenParams);
+//            } else
+//            {
+//                String prefix = null;
+//
+//                switch (mSearchType)
+//                {
+//                    case SEARCHES:
+//                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
+//                        break;
+//
+//                    case AUTOCOMPLETE:
+//                        action = AnalyticsManager.Action.GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED;
+//
+//                        if (keyword.price == 0)
+//                        {
+//                            prefix = String.format("지역-%s", mInputText);
+//                        } else
+//                        {
+//                            prefix = String.format("고메-%s", mInputText);
+//                        }
+//                        break;
+//
+//                    case RECENT:
+//                        action = AnalyticsManager.Action.GOURMET_RECENT_KEYWORD_SEARCH_CLICKED;
+//                        break;
+//
+//                    default:
+//                        action = AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
+//                        break;
+//                }
+//
+//                String label;
+//
+//                if (totalCount == -1)
+//                {
+//                    label = String.format("%s-Los-%s", keyword.name, getSearchDate());
+//                } else
+//                {
+//                    label = String.format("%s-%d-%s", keyword.name, totalCount, getSearchDate());
+//                }
+//
+//                if (Util.isTextEmpty(prefix) == false)
+//                {
+//                    label = String.format("%s-%s", prefix, label);
+//                }
+//
+//                Map<String, String> eventParams = new HashMap<>();
+//                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+//                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
+//                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
+//                    , action, label, eventParams);
+//
+////                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
+//            }
+//        }
 
         private void analyticsOnResponseSearchResultListForLocation()
         {
@@ -767,9 +812,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_NOT_FOUND, label, null);
 
-                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
+//                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+
+                //                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
+                //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
             } else
             {
                 String label;
@@ -785,7 +831,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_CLICKED, label, null);
 
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
+//                analyticsScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
             }
         }
     };

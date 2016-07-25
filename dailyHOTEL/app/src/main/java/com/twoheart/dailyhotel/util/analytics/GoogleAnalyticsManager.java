@@ -55,15 +55,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void recordScreen(String screen)
     {
-        if (AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT.equalsIgnoreCase(screen) == true//
-            || AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT.equalsIgnoreCase(screen) == true)
-        {
-            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
-            screenViewBuilder.setCustomDimension(6, AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT.equalsIgnoreCase(screen) == true ? "hotel" : "gourmet");
-
-            mGoogleAnalyticsTracker.setScreenName(screen);
-            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-        } else if (AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM.equalsIgnoreCase(screen) == true//
+        if (AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM.equalsIgnoreCase(screen) == true//
             || AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screen) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
@@ -127,35 +119,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screen) == true)
         {
             recordScreen(screen);
-        } else if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screen) == true) {
-            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
-
-            String checkIn = null;
-            if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
-            {
-                checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
-            } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
-            {
-                checkIn = params.get(AnalyticsManager.KeyType.DATE);
-            }
-
-            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
-
-            if (Util.isTextEmpty(checkIn) == false)
-            {
-                screenViewBuilder.setCustomDimension(1, checkIn);
-            }
-
-            if (Util.isTextEmpty(checkOut) == false)
-            {
-                screenViewBuilder.setCustomDimension(2, checkOut);
-            }
-
-            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
-            screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
-
-            mGoogleAnalyticsTracker.setScreenName(screen);
-            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        } else if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == true)
+        {
+            sendSearchAnalytics(screen, null, params);
         }
     }
 
@@ -596,5 +564,75 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         {
             ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + transId + " | " + productAction.toString());
         }
+    }
+
+    private void sendSearchAnalytics(String screen, String transId, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return;
+        }
+
+        if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screen) == false //
+            && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false //
+            && AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false)
+        {
+            return;
+        }
+
+        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+        String checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
+        String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
+
+        if (Util.isTextEmpty(checkIn) == false)
+        {
+            screenViewBuilder.setCustomDimension(1, checkIn);
+        }
+
+        if (Util.isTextEmpty(checkOut) == false)
+        {
+            screenViewBuilder.setCustomDimension(2, checkOut);
+        }
+
+        screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+        screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
+
+        if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screen) == true)
+        {
+            // CD1, CD2, CD6, CD19
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+            return;
+        }
+
+        screenViewBuilder.setCustomDimension(7, params.get(AnalyticsManager.KeyType.COUNTRY));
+        screenViewBuilder.setCustomDimension(8, params.get(AnalyticsManager.KeyType.PROVINCE));
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT);
+        if (Util.isTextEmpty(district) == false)
+        {
+            screenViewBuilder.setCustomDimension(12, district);
+        }
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY);
+        if (Util.isTextEmpty(category) == false)
+        {
+            screenViewBuilder.setCustomDimension(13, category);
+        }
+
+        if (AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == true)
+        {
+            // SEARCH_MAIN + CD7, CD8, CD12, CD13
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+            return;
+        }
+
+        screenViewBuilder.setCustomDimension(20, params.get(AnalyticsManager.KeyType.PLACE_COUNT));
+
+        // SEARCH_RESULT_EMPTY + CD20
+        mGoogleAnalyticsTracker.setScreenName(screen);
+        mGoogleAnalyticsTracker.send(screenViewBuilder.build());
     }
 }

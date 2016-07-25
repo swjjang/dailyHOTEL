@@ -71,7 +71,9 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 break;
 
             case GONE:
-                GourmetCurationOption GourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+                GourmetCurationOption GourmetCurationOption = mGourmetCuration == null //
+                    ? new GourmetCurationOption() //
+                    : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
                 if (GourmetCurationOption.isDefaultFilter() == true)
                 {

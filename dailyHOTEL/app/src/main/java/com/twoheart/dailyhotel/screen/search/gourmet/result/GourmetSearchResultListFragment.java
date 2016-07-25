@@ -38,6 +38,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     protected GourmetSearchResultListLayout mGourmetSearchResultListLayout;
     protected GourmetSearchResultListNetworkController mNetworkController;
 
+    protected int mGourmetCount;
+
     public interface OnGourmetSearchResultListFragmentListener extends OnPlaceListFragmentListener
     {
         void onGourmetClick(PlaceViewItem placeViewItem);
@@ -179,8 +181,11 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
+            mGourmetCount = 0;
             return stayViewItemList;
         }
+
+        mGourmetCount = gourmetList.size();
 
         for (Gourmet gourmet : gourmetList)
         {
@@ -196,6 +201,10 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         }
 
         return stayViewItemList;
+    }
+
+    public int getGourmetScount() {
+        return mGourmetCount;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

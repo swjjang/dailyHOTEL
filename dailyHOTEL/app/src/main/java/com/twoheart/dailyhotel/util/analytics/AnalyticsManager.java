@@ -371,8 +371,6 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_LIST_CALENDAR = "DailyHotel_HotelBookingWindow";
         public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
         public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";
-        public static final String DAILYHOTEL_SEARCH_RESULT = "DailyHotel_SearchResultView";
-        public static final String DAILYHOTEL_SEARCH_RESULT_EMPTY = "DailyHotel_EmptySearchResultView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
         public static final String DAILYHOTEL_DETAIL_ROOMTYPE = " DailyHotel_HotelRoomTypeList";
@@ -384,7 +382,6 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_PAYMENT_COMPLETE = "DailyHotel_PaymentComplete";
         public static final String DAILYHOTEL_PAYMENT_THANKYOU = "DailyHotel_Thankyou";
         //
-        //
         public static final String DAILYGOURMET_LIST = "DailyGourmet_GourmetList";
         public static final String DAILYGOURMET_LIST_MAP = "DailyGourmet_GourmetMapView";
         public static final String DAILYGOURMET_LIST_EMPTY = "DailyGourmet_NotGourmetAvailable";
@@ -392,8 +389,6 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_LIST_CALENDAR = "DailyGourmet_GourmetBookingWindow";
         public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
         public static final String DAILYGOURMET_CURATION = "DailyGourmet_SortFilterSelectView";
-        public static final String DAILYGOURMET_SEARCH_RESULT = "DailyGourmet_SearchResultView";
-        public static final String DAILYGOURMET_SEARCH_RESULT_EMPTY = "DailyGourmet_EmptySearchResultView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
         public static final String DAILYGOURMET_DETAIL_TICKETTYPE = " DailyGourmet_GourmetMenuTypeList";
@@ -790,6 +785,7 @@ public class AnalyticsManager
         public static final String IS_SIGNED = "is_signed";
         public static final String PLACE_TYPE = "place_type";
         public static final String PLACE_HIT_TYPE = "place_hit_type";
+        public static final String PLACE_COUNT = "place_count";
     }
 
     public static class ValueType
