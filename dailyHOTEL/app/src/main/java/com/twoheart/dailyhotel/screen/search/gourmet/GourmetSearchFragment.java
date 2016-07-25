@@ -155,14 +155,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         mSaleTime = saleTime;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH);
-    }
-
     private void setDateText(SaleTime saleTime)
     {
         if (saleTime == null || mPlaceSearchLayout == null)

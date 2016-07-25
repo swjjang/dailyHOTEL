@@ -371,7 +371,6 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_LIST_CALENDAR = "DailyHotel_HotelBookingWindow";
         public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
         public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";
-        public static final String DAILYHOTEL_SEARCH = "DailyHotel_SearchScreenView";
         public static final String DAILYHOTEL_SEARCH_RESULT = "DailyHotel_SearchResultView";
         public static final String DAILYHOTEL_SEARCH_RESULT_EMPTY = "DailyHotel_EmptySearchResultView";
         //
@@ -393,7 +392,6 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_LIST_CALENDAR = "DailyGourmet_GourmetBookingWindow";
         public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
         public static final String DAILYGOURMET_CURATION = "DailyGourmet_SortFilterSelectView";
-        public static final String DAILYGOURMET_SEARCH = "DailyGourmet_SearchScreenView";
         public static final String DAILYGOURMET_SEARCH_RESULT = "DailyGourmet_SearchResultView";
         public static final String DAILYGOURMET_SEARCH_RESULT_EMPTY = "DailyGourmet_EmptySearchResultView";
         //
@@ -451,8 +449,6 @@ public class AnalyticsManager
         public static final String MENU_SETPROFILE_NAME = "Menu_SetProfileName";
         public static final String MENU_SETPROFILE_PASSWORD = "Menu_SetProfilePassword";
         public static final String MENU_SETPROFILE_PHONENUMBER = "Menu_SetProfilePhoneNumber";
-
-
         public static final String MENU_COUPON_BOX = "Menu_CouponBox";
         public static final String MENU_INVITE_FRIENDS_BEFORE_LOGIN = "Menu_InviteFriends_BeforeLogIn";
         public static final String MENU_INVITE_FRIENDS = "Menu_InviteFriends";
@@ -465,7 +461,9 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_DEPOSITWAITING = "DailyHotel_DepositWaiting";
         public static final String DAILYGOURMET_DEPOSITWAITING = "DailyGourmet_DepositWaiting";
 
-
+        public static final String SEARCH_MAIN = "SearchScreenView";
+        public static final String SEARCH_RESULT = "SearchResultView";
+        public static final String SEARCH_RESULT_EMPTY = "SearchResultView_Empty";
     }
 
     public static class Action
@@ -790,6 +788,8 @@ public class AnalyticsManager
         public static final String DOWNLOAD_FROM = "download_from";
         public static final String COUPON_CODE = "coupon_code";
         public static final String IS_SIGNED = "is_signed";
+        public static final String PLACE_TYPE = "place_type";
+        public static final String PLACE_HIT_TYPE = "place_hit_type";
     }
 
     public static class ValueType
@@ -803,5 +803,7 @@ public class AnalyticsManager
         public static final String MEMBER = "member";
         public static final String GUEST = "guest";
         public static final String DETAIL = "detailview";
+        public static final String HOTEL = "hotel";
+        public static final String GOURMET = "gourmet";
     }
 }

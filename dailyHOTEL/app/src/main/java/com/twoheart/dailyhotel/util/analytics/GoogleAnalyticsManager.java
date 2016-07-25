@@ -127,6 +127,35 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screen) == true)
         {
             recordScreen(screen);
+        } else if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screen) == true) {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            String checkIn = null;
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
+            } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.DATE);
+            }
+
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
+
+            if (Util.isTextEmpty(checkIn) == false)
+            {
+                screenViewBuilder.setCustomDimension(1, checkIn);
+            }
+
+            if (Util.isTextEmpty(checkOut) == false)
+            {
+                screenViewBuilder.setCustomDimension(2, checkOut);
+            }
+
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         }
     }
 

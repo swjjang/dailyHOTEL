@@ -18,6 +18,8 @@ import com.twoheart.dailyhotel.widget.DailySwitchCompat;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SearchActivity extends BaseActivity implements View.OnClickListener
 {
@@ -66,6 +68,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         initLayout(mPlaceType);
 
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        analyticsScreenOpen(mSaleTime, mNights, mPlaceType);
     }
 
     private void initLayout(PlaceType placeType)
@@ -336,5 +345,33 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
 
         AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SWITCHING, label, null);
+    }
+
+    private void analyticsScreenOpen(SaleTime saleTime, int nights, PlaceType placeType)
+    {
+        SaleTime checkInSaleTime = saleTime;
+        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
+
+        String placeValueType = null;
+
+        Map<String, String> params = new HashMap<>();
+
+        switch (placeType)
+        {
+            case HOTEL:
+                params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                placeValueType = AnalyticsManager.ValueType.HOTEL;
+                break;
+
+            case FNB:
+                params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                placeValueType = AnalyticsManager.ValueType.GOURMET;
+                break;
+        }
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeValueType);
+        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeValueType);
+
+        AnalyticsManager.getInstance(SearchActivity.this).recordScreen(AnalyticsManager.Screen.SEARCH_MAIN, params);
     }
 }

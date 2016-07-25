@@ -163,14 +163,6 @@ public class StaySearchFragment extends PlaceSearchFragment
         mCheckOutSaleTime = checkOutSaleTime;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH);
-    }
-
     private void setDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         if (checkInSaleTime == null || checkOutSaleTime == null || mPlaceSearchLayout == null)
