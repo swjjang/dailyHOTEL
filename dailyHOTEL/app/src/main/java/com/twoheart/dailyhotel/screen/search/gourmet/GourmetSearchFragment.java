@@ -73,11 +73,14 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_SALETIME) == true)
+                    {
+                        SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
-                    setDateText(saleTime);
+                        setDateText(saleTime);
 
-                    mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+                        mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+                    }
                 }
 
                 mShowSearchKeyboard = true;

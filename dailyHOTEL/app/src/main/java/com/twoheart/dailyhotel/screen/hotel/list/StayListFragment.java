@@ -46,7 +46,6 @@ public class StayListFragment extends PlaceListFragment
         void onResultListCount(int count);
 
         void onShowActivityEmptyView(boolean isShow);
-
     }
 
     @Override
@@ -420,7 +419,6 @@ public class StayListFragment extends PlaceListFragment
         {
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(isShow);
         }
-
 
         @Override
         public void finish()

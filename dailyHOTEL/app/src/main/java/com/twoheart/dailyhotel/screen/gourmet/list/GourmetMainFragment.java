@@ -686,6 +686,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
 
+            // 이벤트 배너 딥링크 사용하지 않기로 했음.
             if (eventBanner.isDeepLink() == true)
             {
                 // 이벤트 베너 클릭후 바로 딥링크로 이동하는 것은 사용하지 않기로 한다.

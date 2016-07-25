@@ -74,12 +74,16 @@ public class StaySearchFragment extends PlaceSearchFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-                    SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE) == true//
+                        && data.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE) == true)
+                    {
+                        SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                        SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 
-                    setDateText(checkInSaleTime, checkOutSaleTime);
+                        setDateText(checkInSaleTime, checkOutSaleTime);
 
-                    mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+                        mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+                    }
                 }
 
                 mShowSearchKeyboard = true;

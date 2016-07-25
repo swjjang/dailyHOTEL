@@ -1181,6 +1181,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
 
+            // 이벤트 배너 딥링크 사용하지 않기로 했음.
             if (eventBanner.isDeepLink() == true)
             {
                 //                try
