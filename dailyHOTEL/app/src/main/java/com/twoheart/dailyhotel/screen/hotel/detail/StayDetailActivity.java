@@ -880,6 +880,8 @@ public class StayDetailActivity extends BaseActivity
                             mStayDetailLayout.setHotelDetail(mStayDetail, mCheckInSaleTime, mCurrentImage);
                         }
 
+                        checkStayPrice(mIsStartByShare, mStayDetail, mViewPrice);
+
                         recordAnalyticsHotelDetail(Screen.DAILYHOTEL_DETAIL, mStayDetail);
                         break;
                     }
@@ -931,6 +933,56 @@ public class StayDetailActivity extends BaseActivity
             } finally
             {
                 unLockUI();
+            }
+        }
+
+        private void checkStayPrice(boolean isStartByShare, StayDetail stayDetail, int listViewPrice)
+        {
+            // 판매 완료 혹은 가격이 변동되었는지 조사한다
+            ArrayList<SaleRoomInformation> saleRoomList = stayDetail.getSaleRoomList();
+
+            if (saleRoomList == null || saleRoomList.size() == 0)
+            {
+                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                            finish();
+                        }
+                    });
+            } else
+            {
+                if (isStartByShare == false)
+                {
+                    boolean hasPrice = false;
+
+                    for (SaleRoomInformation saleRoomInformation : saleRoomList)
+                    {
+                        if (listViewPrice == saleRoomInformation.averageDiscount)
+                        {
+                            hasPrice = true;
+                            break;
+                        }
+                    }
+
+                    if (hasPrice == false)
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
+                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
+                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    mOnUserActionListener.showRoomType();
+                                }
+                            });
+                    }
+                }
             }
         }
     };
