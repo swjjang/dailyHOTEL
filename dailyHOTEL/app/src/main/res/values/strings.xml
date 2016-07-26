@@ -576,7 +576,6 @@
     <string name="frag_tab_map_title">지도</string>
 
     <!-- KaKaoLinkManager -->
-    <string name="kakao_btn_move">앱으로 이동하기</string>
     <string name="kakao_btn_invited_friend">데일리호텔 다운받기</string>
     <string name="kakao_btn_go_hotel">추천 호텔 확인!</string>
     <string name="kakao_btn_go_fnb">추천 레스토랑 확인!</string>
