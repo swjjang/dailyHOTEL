@@ -68,6 +68,8 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
             return;
         }
 
+        lockUI();
+
         DailyNetworkAPI.getInstance(this) //
             .requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyMMdd"), //
                 mJsonResponseListener, this);

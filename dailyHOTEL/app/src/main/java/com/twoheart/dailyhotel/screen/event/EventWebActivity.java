@@ -322,14 +322,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             gourmetSaleTime.setOffsetDailyDay(dailyDayOfDays);
 
-            Intent intent = new Intent(EventWebActivity.this, GourmetDetailActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnbIndex);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, gourmetSaleTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
+            Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
+                gourmetSaleTime, fnbIndex, calendarFlag == 1 ? true : false);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         } catch (Exception e)

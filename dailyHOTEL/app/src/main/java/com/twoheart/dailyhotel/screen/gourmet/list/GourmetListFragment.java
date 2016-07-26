@@ -249,7 +249,7 @@ public class GourmetListFragment extends PlaceListFragment
         String previousRegion = null;
         boolean hasDailyChoice = false;
 
-        int entryIndex = 1;
+        int entryPosition = 1;
 
         if (mGourmetListLayout != null)
         {
@@ -269,7 +269,7 @@ public class GourmetListFragment extends PlaceListFragment
                     if (item.mType == PlaceViewItem.TYPE_ENTRY)
                     {
                         Place place = item.getItem();
-                        entryIndex = place.entryIndex + 1;
+                        entryPosition = place.entryPosition + 1;
                         break;
                     }
                 }
@@ -305,9 +305,9 @@ public class GourmetListFragment extends PlaceListFragment
                 }
             }
 
-            gourmet.entryIndex = entryIndex;
+            gourmet.entryPosition = entryPosition;
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
-            entryIndex++;
+            entryPosition++;
         }
 
         return placeViewItemList;

@@ -193,6 +193,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_DBENEFIT = "dBenefit";
     public static final String NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION = "paymentInformation";
     public static final String NAME_INTENT_EXTRA_DATA_PRICE = "price";
+    public static final String NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE = "discountPrice";
     public static final String NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG = "calendarFlag";
     public static final String NAME_INTENT_EXTRA_DATA_ADDRESS = "address";
     public static final String NAME_INTENT_EXTRA_DATA_PLACECURATION = "placeCuration";
@@ -231,6 +232,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_SHAREKAKAO = 36;
     public static final int CODE_REQUEST_ACTIVITY_GOURMETCURATION = 37;
     public static final int CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER = 38;
+    public static final int CODE_REQUEST_ACTIVITY_EXTERNAL_MAP = 39;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

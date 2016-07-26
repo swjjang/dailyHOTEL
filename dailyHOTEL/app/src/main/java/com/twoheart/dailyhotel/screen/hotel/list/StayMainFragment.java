@@ -284,9 +284,9 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mStayCuration.getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.discountPrice);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryIndex);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
 
                 String showTagPriceYn;
                 if (stay.price <= 0 || stay.price <= stay.discountPrice)

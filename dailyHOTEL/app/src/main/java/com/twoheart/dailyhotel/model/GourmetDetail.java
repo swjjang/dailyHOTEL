@@ -14,9 +14,13 @@ public class GourmetDetail extends PlaceDetail
     public Gourmet.Grade grade;
     public String category;
 
-    public GourmetDetail(int index, int entryIndex, String showTagPriceYn)
+    protected ArrayList<TicketInformation> mTicketInformationList;
+
+    public GourmetDetail(int index, int entryPosition, String isShowOriginalPrice)
     {
-        super(index, entryIndex, showTagPriceYn);
+        this.index = index;
+        this.entryPosition = entryPosition;
+        this.isShowOriginalPrice = isShowOriginalPrice;
     }
 
     @Override
@@ -91,5 +95,10 @@ public class GourmetDetail extends PlaceDetail
         {
             mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
         }
+    }
+
+    public ArrayList<TicketInformation> getTicketInformation()
+    {
+        return mTicketInformationList;
     }
 }

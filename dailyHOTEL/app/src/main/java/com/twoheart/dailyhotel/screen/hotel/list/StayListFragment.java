@@ -221,7 +221,7 @@ public class StayListFragment extends PlaceListFragment
         String previousRegion = null;
         boolean hasDailyChoice = false;
 
-        int entryIndex = 1;
+        int entryPosition = 1;
 
         if (mStayListLayout != null)
         {
@@ -241,7 +241,7 @@ public class StayListFragment extends PlaceListFragment
                     if (item.mType == PlaceViewItem.TYPE_ENTRY)
                     {
                         Place place = item.getItem();
-                        entryIndex = place.entryIndex + 1;
+                        entryPosition = place.entryPosition + 1;
                         break;
                     }
                 }
@@ -281,9 +281,9 @@ public class StayListFragment extends PlaceListFragment
                 }
             }
 
-            stay.entryIndex = entryIndex;
+            stay.entryPosition = entryPosition;
             stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-            entryIndex++;
+            entryPosition++;
         }
 
         return stayViewItemList;

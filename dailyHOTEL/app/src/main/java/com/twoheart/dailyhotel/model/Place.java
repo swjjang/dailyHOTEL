@@ -17,7 +17,7 @@ public abstract class Place implements Parcelable
     public boolean isSoldOut;
     public int satisfaction;
     public String districtName;
-    public int entryIndex;
+    public int entryPosition;
 
     public Place()
     {
@@ -46,7 +46,7 @@ public abstract class Place implements Parcelable
         dest.writeInt(isSoldOut ? 1 : 0);
         dest.writeInt(satisfaction);
         dest.writeString(districtName);
-        dest.writeInt(entryIndex);
+        dest.writeInt(entryPosition);
     }
 
     protected void readFromParcel(Parcel in)
@@ -63,6 +63,6 @@ public abstract class Place implements Parcelable
         isSoldOut = in.readInt() == 1 ? true : false;
         satisfaction = in.readInt();
         districtName = in.readString();
-        entryIndex = in.readInt();
+        entryPosition = in.readInt();
     }
 }

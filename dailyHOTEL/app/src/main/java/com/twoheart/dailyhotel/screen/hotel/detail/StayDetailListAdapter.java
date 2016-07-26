@@ -26,7 +26,7 @@ import java.util.List;
 
 public class StayDetailListAdapter extends BaseAdapter
 {
-    private static final int NUMBER_OF_ROWSLIST = 9;
+    private static final int NUMBER_OF_ROWSLIST = 8;
 
     private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
@@ -125,7 +125,7 @@ public class StayDetailListAdapter extends BaseAdapter
         linearLayout.addView(mDeatilViews[2]);
 
         // D Benefit
-        if (Util.isTextEmpty(mStayDetail.hotelBenefit) == false)
+        if (Util.isTextEmpty(mStayDetail.benefit) == false)
         {
             if (mDeatilViews[3] == null)
             {
@@ -154,32 +154,23 @@ public class StayDetailListAdapter extends BaseAdapter
         getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
         linearLayout.addView(mDeatilViews[5]);
 
-        // 호텔 더보기 정보
+        // 확인 사항
         if (mDeatilViews[6] == null)
         {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
-        }
-
-        getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mStayDetail);
-        linearLayout.addView(mDeatilViews[6]);
-
-        // 확인 사항
-        if (mDeatilViews[7] == null)
-        {
-            mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
         }
 
         getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mStayDetail);
-        linearLayout.addView(mDeatilViews[7]);
+        linearLayout.addView(mDeatilViews[6]);
 
         // 카카오톡 문의
-        if (mDeatilViews[8] == null)
+        if (mDeatilViews[7] == null)
         {
-            mDeatilViews[8] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getDeatil08View(mDeatilViews[8]);
-        linearLayout.addView(mDeatilViews[8]);
+        getDeatil08View(mDeatilViews[7]);
+        linearLayout.addView(mDeatilViews[7]);
 
         return linearLayout;
     }
@@ -244,7 +235,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         // 호텔명
         mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        mHotelNameTextView.setText(stayDetail.hotelName);
+        mHotelNameTextView.setText(stayDetail.name);
 
         int width = Util.getLCDWidth(mFragmentActivity) - Util.dpToPx(mFragmentActivity, 60) - Util.dpToPx(mFragmentActivity, 48);
         mHotelNameTextView.setTag(mHotelNameTextView.getId(), width);
@@ -296,7 +287,7 @@ public class StayDetailListAdapter extends BaseAdapter
                     return;
                 }
 
-                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights, mStayDetail.hotelIndex);
+                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights, mStayDetail.index);
             }
         });
 
@@ -414,7 +405,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         final TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
 
-        final String benefit = stayDetail.hotelBenefit;
+        final String benefit = stayDetail.benefit;
 
         benefitTextView.setText(benefit);
         return view;
@@ -437,7 +428,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         View topDividerViw = viewGroup.findViewById(R.id.topDividerViw);
 
-        if (Util.isTextEmpty(mStayDetail.hotelBenefit) == false)
+        if (Util.isTextEmpty(mStayDetail.benefit) == false)
         {
             topDividerViw.setVisibility(View.GONE);
         } else
@@ -481,39 +472,6 @@ public class StayDetailListAdapter extends BaseAdapter
             DetailInformation information = arrayList.get(1);
 
             makeInformationLayout(layoutInflater, viewGroup, information);
-        }
-
-        return viewGroup;
-    }
-
-    /**
-     * 호텔 더보기 정보
-     *
-     * @return
-     */
-    private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
-    {
-        if (layoutInflater == null || viewGroup == null || stayDetail == null)
-        {
-            return viewGroup;
-        }
-
-        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
-
-        ArrayList<DetailInformation> arrayList = stayDetail.getMoreInformation();
-
-        if (arrayList != null)
-        {
-            viewGroup.removeAllViews();
-
-            for (DetailInformation information : arrayList)
-            {
-                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
-
-                makeInformationLayout(layoutInflater, childGroup, information);
-
-                viewGroup.addView(childGroup);
-            }
         }
 
         return viewGroup;

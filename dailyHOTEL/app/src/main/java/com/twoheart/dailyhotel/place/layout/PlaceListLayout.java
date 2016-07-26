@@ -98,7 +98,6 @@ public abstract class PlaceListLayout extends BaseLayout
             }
         });
 
-        // edgeglow을 보이게 하기 위해서
         mPlaceRecyclerView.addOnScrollListener(new OnScrollListener()
         {
             @Override

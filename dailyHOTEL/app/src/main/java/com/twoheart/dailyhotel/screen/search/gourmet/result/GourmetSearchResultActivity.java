@@ -473,25 +473,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             Gourmet gourmet = placeViewItem.getItem();
 
-            Intent intent = new Intent(GourmetSearchResultActivity.this, GourmetDetailActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mGourmetCuration.getSaleTime());
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryIndex);
-
-            String showTagPriceYn;
-            if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
-            {
-                showTagPriceYn = "N";
-            } else
-            {
-                showTagPriceYn = "Y";
-            }
-
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
-
+            Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
+                mGourmetCuration.getSaleTime(), gourmet);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }

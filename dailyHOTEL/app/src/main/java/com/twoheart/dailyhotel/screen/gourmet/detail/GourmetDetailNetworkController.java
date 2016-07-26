@@ -1,0 +1,76 @@
+package com.twoheart.dailyhotel.screen.gourmet.detail;
+
+import android.content.Context;
+
+import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
+
+import org.json.JSONObject;
+
+public class GourmetDetailNetworkController extends PlaceDetailNetworkController
+{
+    public GourmetDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    {
+        super(context, networkTag, listener);
+    }
+
+    public void requestGourmetDetailInformation(int index, String day)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestGourmetDetailInformation(mNetworkTag, //
+            index, day, mGourmetDetailJsonResponseListener, mGourmetDetailJsonResponseListener);
+    }
+
+    public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
+    {
+        void onGourmetDetailInformation(JSONObject dataJSONObject);
+    }
+
+    private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                JSONObject dataJSONObject = null;
+
+                if (response.has("data") == true && response.isNull("data") == false)
+                {
+                    dataJSONObject = response.getJSONObject("data");
+                }
+
+                if (msgCode != 0 || dataJSONObject == null)
+                {
+                    String msg;
+                    if (response.has("msg") == true)
+                    {
+                        msg = response.getString("msg");
+                    } else
+                    {
+                        msg = mContext.getString(R.string.act_base_network_connect);
+                    }
+
+                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                } else
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+}
