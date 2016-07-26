@@ -249,4 +249,13 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             }
         }
     }
+
+    @Override
+    public void hideAnimationTicketInformationLayout()
+    {
+        super.hideAnimationTicketInformationLayout();
+
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            , AnalyticsManager.Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
+    }
 }
