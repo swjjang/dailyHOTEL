@@ -400,6 +400,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+            params.put(AnalyticsManager.KeyType.GRADE, ((GourmetDetail) placeDetail).grade.name()); // 14
             params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) placeDetail).category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(placeDetail.benefit) ? "no" : "yes");
 

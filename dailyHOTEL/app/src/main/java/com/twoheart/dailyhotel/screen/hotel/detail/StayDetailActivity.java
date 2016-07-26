@@ -431,7 +431,7 @@ public class StayDetailActivity extends BaseActivity
         {
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, stayDetail.hotelName);
-            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(StayDetailActivity.this)); // 14
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.name());
             params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.hotelBenefit) ? "no" : "yes"); // 3
 
             if (stayDetail.getSaleRoomList() == null || stayDetail.getSaleRoomList().size() == 0)

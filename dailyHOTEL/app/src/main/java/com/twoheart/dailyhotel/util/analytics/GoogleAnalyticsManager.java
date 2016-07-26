@@ -530,6 +530,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String address = params.get(AnalyticsManager.KeyType.ADDRESS);
         String hotelCategory = params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
+        String grade = params.get(AnalyticsManager.KeyType.GRADE);
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX);
         String rating = params.get(AnalyticsManager.KeyType.RATING);
@@ -567,7 +568,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(category) == false)
         {
-            screenViewBuilder.setCustomDimension(14, category);
+            screenViewBuilder.setCustomDimension(13, category);
+        }
+
+        if (Util.isTextEmpty(grade) == false)
+        {
+            screenViewBuilder.setCustomDimension(14, grade);
         }
 
         if (Util.isTextEmpty(placeIndex) == false)
