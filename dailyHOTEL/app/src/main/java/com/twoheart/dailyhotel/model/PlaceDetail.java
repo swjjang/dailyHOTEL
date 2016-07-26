@@ -9,34 +9,22 @@ public abstract class PlaceDetail
     public int index;
     public String name;
     public String address;
+    public boolean isOverseas; // 0 : 국내 , 1 : 해외
     public String benefit;
     public String satisfaction;
     public double latitude;
     public double longitude;
     protected ArrayList<ImageInformation> mImageInformationList;
     protected ArrayList<DetailInformation> mInformationList;
-    protected ArrayList<TicketInformation> mTicketInformationList;
-
-    public int entryIndex;
-    public String showTagPriceYn;
-
-    public PlaceDetail(int index, int entryIndex, String showTagPriceYn)
-    {
-        this.index = index;
-        this.entryIndex = entryIndex;
-        this.showTagPriceYn = showTagPriceYn;
-    }
+    // GA용
+    public int entryPosition;
+    public String isShowOriginalPrice; // "Y", "N", empty
 
     public abstract void setData(JSONObject jsonObject) throws Exception;
 
     public ArrayList<ImageInformation> getImageInformationList()
     {
         return mImageInformationList;
-    }
-
-    public ArrayList<TicketInformation> getTicketInformation()
-    {
-        return mTicketInformationList;
     }
 
     public ArrayList<DetailInformation> getInformation()

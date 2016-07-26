@@ -7,33 +7,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class StayDetail
+public class StayDetail extends PlaceDetail
 {
-    public int hotelIndex;
     public int nights;
     public Stay.Grade grade;
-    public String hotelName;
-    public String address;
-    public double latitude;
-    public double longitude;
-    public boolean isOverseas; // 0 : 국내 , 1 : 해외
-    public String hotelBenefit;
-    public String satisfaction; // 만족도
-    private ArrayList<ImageInformation> mImageInformationList;
-    private ArrayList<DetailInformation> mInformationList;
-    private ArrayList<DetailInformation> mMoreInformationList;
     private ArrayList<SaleRoomInformation> mSaleRoomList;
     //
     public String categoryCode;
-    public int entryIndex;
-    public String showTagPriceYn;
 
-    public StayDetail(int hotelIndex, int nights, int entryIndex, String showTagPriceYn)
+    public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice)
     {
-        this.hotelIndex = hotelIndex;
+        this.index = hotelIndex;
         this.nights = nights;
-        this.entryIndex = entryIndex;
-        this.showTagPriceYn = showTagPriceYn;
+        this.entryPosition = entryIndex;
+        this.isShowOriginalPrice = isShowOriginalPrice;
     }
 
     public void setData(JSONObject jsonObject) throws Exception
@@ -46,7 +33,7 @@ public class StayDetail
             grade = Stay.Grade.etc;
         }
 
-        hotelName = jsonObject.getString("hotelName");
+        name = jsonObject.getString("hotelName");
         address = jsonObject.getString("address");
 
         longitude = jsonObject.getDouble("longitude");
@@ -91,7 +78,7 @@ public class StayDetail
 
         if (jsonObject.has("hotelBenefit") == true)
         {
-            hotelBenefit = jsonObject.getString("hotelBenefit");
+            benefit = jsonObject.getString("hotelBenefit");
         }
 
         // Detail
@@ -109,16 +96,11 @@ public class StayDetail
         JSONArray detailMoreJSONArray = jsonObject.getJSONArray("detailMore");
         int detailMoreLength = detailMoreJSONArray.length();
 
-        if (detailMoreLength == 0)
+        if (detailMoreLength != 0)
         {
-            mMoreInformationList = null;
-        } else
-        {
-            mMoreInformationList = new ArrayList<>(detailMoreLength);
-
             for (int i = 0; i < detailMoreLength; i++)
             {
-                mMoreInformationList.add(new DetailInformation(detailMoreJSONArray.getJSONObject(i)));
+                mInformationList.add(new DetailInformation(detailMoreJSONArray.getJSONObject(i)));
             }
         }
 
@@ -130,30 +112,15 @@ public class StayDetail
 
         for (int i = 0; i < saleRoomLength; i++)
         {
-            SaleRoomInformation saleRoomInformation = new SaleRoomInformation(hotelName, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
+            SaleRoomInformation saleRoomInformation = new SaleRoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
             saleRoomInformation.grade = grade;
             saleRoomInformation.address = address;
             mSaleRoomList.add(saleRoomInformation);
         }
     }
 
-    public ArrayList<ImageInformation> getImageInformationList()
-    {
-        return mImageInformationList;
-    }
-
     public ArrayList<SaleRoomInformation> getSaleRoomList()
     {
         return mSaleRoomList;
-    }
-
-    public ArrayList<DetailInformation> getInformation()
-    {
-        return mInformationList;
-    }
-
-    public ArrayList<DetailInformation> getMoreInformation()
-    {
-        return mMoreInformationList;
     }
 }

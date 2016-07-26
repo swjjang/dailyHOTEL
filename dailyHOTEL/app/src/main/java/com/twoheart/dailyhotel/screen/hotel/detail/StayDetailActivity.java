@@ -167,7 +167,7 @@ public class StayDetailActivity extends BaseActivity
 
             mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
+            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
 
             initLayout(hotelName, hotelImageUrl);
 
@@ -353,9 +353,9 @@ public class StayDetailActivity extends BaseActivity
                     mCheckInSaleTime = checkInSaleTime;
 
                     int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-                    mStayDetail = new StayDetail(mStayDetail.hotelIndex, nights, mStayDetail.entryIndex, mStayDetail.showTagPriceYn);
+                    mStayDetail = new StayDetail(mStayDetail.index, nights, mStayDetail.entryPosition, mStayDetail.isShowOriginalPrice);
 
-                    DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mStayDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
+                    DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mStayDetail.index, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
                 }
                 break;
         }
@@ -389,7 +389,7 @@ public class StayDetailActivity extends BaseActivity
         saleRoomInformation.categoryCode = stayDetail.categoryCode;
 
         Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, saleRoomInformation//
-            , checkInSaleTime, imageUrl, stayDetail.hotelIndex, !Util.isTextEmpty(stayDetail.hotelBenefit), mProvince, mArea);
+            , checkInSaleTime, imageUrl, stayDetail.index, !Util.isTextEmpty(stayDetail.benefit), mProvince, mArea);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
@@ -430,9 +430,9 @@ public class StayDetailActivity extends BaseActivity
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, stayDetail.hotelName);
+            params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
             params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(StayDetailActivity.this)); // 14
-            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.hotelBenefit) ? "no" : "yes"); // 3
+            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.benefit) ? "no" : "yes"); // 3
 
             if (stayDetail.getSaleRoomList() == null || stayDetail.getSaleRoomList().size() == 0)
             {
@@ -443,7 +443,7 @@ public class StayDetailActivity extends BaseActivity
             }
 
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mStayDetail.nights));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mStayDetail.hotelIndex)); // 15
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mStayDetail.index)); // 15
 
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayDetail.nights);
 
@@ -485,9 +485,9 @@ public class StayDetailActivity extends BaseActivity
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayDetail.entryIndex));
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayDetail.entryPosition));
             params.put(AnalyticsManager.KeyType.RATING, stayDetail.satisfaction);
-            params.put(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN, stayDetail.showTagPriceYn);
+            params.put(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN, stayDetail.isShowOriginalPrice);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(screen, params);
         } catch (Exception e)
@@ -506,9 +506,9 @@ public class StayDetailActivity extends BaseActivity
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, mStayDetail.hotelName);
+            params.put(AnalyticsManager.KeyType.NAME, mStayDetail.name);
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mStayDetail.nights));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mStayDetail.hotelIndex));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mStayDetail.index));
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mStayDetail.categoryCode);
 
             if (mProvince == null)
@@ -561,15 +561,15 @@ public class StayDetailActivity extends BaseActivity
             name += "님이";
         }
 
-        KakaoLinkManager.newInstance(StayDetailActivity.this).shareHotel(name, mStayDetail.hotelName, mStayDetail.address//
-            , mStayDetail.hotelIndex//
+        KakaoLinkManager.newInstance(StayDetailActivity.this).shareHotel(name, mStayDetail.name, mStayDetail.address//
+            , mStayDetail.index//
             , mDefaultImageUrl//
             , mCheckInSaleTime, mStayDetail.nights);
 
         SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mStayDetail.nights);
 
         HashMap<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.NAME, mStayDetail.hotelName);
+        params.put(AnalyticsManager.KeyType.NAME, mStayDetail.name);
         params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
@@ -578,7 +578,7 @@ public class StayDetailActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , Action.SOCIAL_SHARE_CLICKED, mStayDetail.hotelName, params);
+            , Action.SOCIAL_SHARE_CLICKED, mStayDetail.name, params);
     }
 
 
@@ -714,7 +714,7 @@ public class StayDetailActivity extends BaseActivity
                 DailyNetworkAPI.getInstance(StayDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener, StayDetailActivity.this);
             }
 
-            String label = String.format("%s-%s", mStayDetail.hotelName, mSelectedSaleRoomInformation.roomName);
+            String label = String.format("%s-%s", mStayDetail.name, mSelectedSaleRoomInformation.roomName);
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mStayDetail, saleRoomInformation));
         }
@@ -739,7 +739,7 @@ public class StayDetailActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , Action.KAKAO_INQUIRY_CLICKED, mStayDetail.hotelName, null);
+                , Action.KAKAO_INQUIRY_CLICKED, mStayDetail.name, null);
         }
 
         @Override
@@ -761,7 +761,7 @@ public class StayDetailActivity extends BaseActivity
 
             recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL_ROOMTYPE, mStayDetail);
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , Action.ROOM_TYPE_CLICKED, mStayDetail.hotelName, null);
+                , Action.ROOM_TYPE_CLICKED, mStayDetail.name, null);
         }
 
         @Override
@@ -793,12 +793,12 @@ public class StayDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = ZoomMapActivity.newInstance(StayDetailActivity.this//
-                , ZoomMapActivity.SourceType.HOTEL, mStayDetail.hotelName, mStayDetail.address//
+                , ZoomMapActivity.SourceType.HOTEL, mStayDetail.name, mStayDetail.address//
                 , mStayDetail.latitude, mStayDetail.longitude, mStayDetail.isOverseas);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_MAP_CLICKED, mStayDetail.hotelName, null);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_MAP_CLICKED, mStayDetail.name, null);
         }
 
         @Override
@@ -808,7 +808,7 @@ public class StayDetailActivity extends BaseActivity
 
             DailyToast.showToast(StayDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, mStayDetail.hotelName, null);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, mStayDetail.name, null);
         }
 
         @Override
@@ -819,7 +819,7 @@ public class StayDetailActivity extends BaseActivity
                 return;
             }
 
-            Util.showShareMapDialog(StayDetailActivity.this, mStayDetail.hotelName//
+            Util.showShareMapDialog(StayDetailActivity.this, mStayDetail.name//
                 , mStayDetail.latitude, mStayDetail.longitude, mStayDetail.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
@@ -879,7 +879,7 @@ public class StayDetailActivity extends BaseActivity
                             mStayDetail.categoryCode = mStayDetail.grade.getName(StayDetailActivity.this);
 
                             mIsStartByShare = false;
-                            mDailyToolbarLayout.setToolbarText(mStayDetail.hotelName);
+                            mDailyToolbarLayout.setToolbarText(mStayDetail.name);
                         }
 
                         if (mStayDetailLayout != null)
@@ -1161,7 +1161,7 @@ public class StayDetailActivity extends BaseActivity
                 }
 
                 DailyNetworkAPI.getInstance(StayDetailActivity.this).requestHotelDetailInformation(mNetworkTag//
-                    , mStayDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+                    , mStayDetail.index, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
                     , mStayDetail.nights, mHotelDetailInformationJsonResponseListener, StayDetailActivity.this);
             } catch (Exception e)
             {

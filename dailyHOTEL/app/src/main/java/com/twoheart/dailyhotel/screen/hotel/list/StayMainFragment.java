@@ -284,7 +284,7 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mStayCuration.getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.discountPrice);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");

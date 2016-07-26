@@ -5,12 +5,12 @@
                 android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/defaultHotelImageLayout"
+        android:id="@+id/defaultImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.twoheart.dailyhotel.widget.DailyLoopViewPager
-            android:id="@+id/defaultHotelImageView"
+            android:id="@+id/defaulLoopViewPager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -18,8 +18,8 @@
             android:id="@+id/viewpagerIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/defaultHotelImageView"
-            android:layout_alignBottom="@+id/defaultHotelImageView"
+            android:layout_alignBaseline="@+id/defaulLoopViewPager"
+            android:layout_alignBottom="@+id/defaulLoopViewPager"
             android:paddingBottom="13dp"/>
 
         <View
@@ -51,7 +51,7 @@
     </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.DailyPlaceDetailListView
-        android:id="@+id/hotelListView"
+        android:id="@+id/placeListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout"
@@ -81,14 +81,14 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/roomTypeBackgroundView"
+        android:id="@+id/productTypeBackgroundView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/textView_textColor_shadow_soldout"
         android:visibility="gone"/>
 
     <LinearLayout
-        android:id="@+id/ticketTypeLayout"
+        android:id="@+id/productTypeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
@@ -101,6 +101,7 @@
             android:background="@color/white">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/productTypeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -120,7 +121,7 @@
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/ticketTypeRecyclerView"
+            android:id="@+id/productTypeRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"

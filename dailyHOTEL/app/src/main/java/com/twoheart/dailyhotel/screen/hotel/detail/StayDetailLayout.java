@@ -604,7 +604,7 @@ public class StayDetailLayout
         }
 
         AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mStayDetail.hotelName, null);
+            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mStayDetail.name, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

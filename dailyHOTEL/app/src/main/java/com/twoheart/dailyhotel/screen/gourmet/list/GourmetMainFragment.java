@@ -701,7 +701,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mGourmetCuration.getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
 
                     String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
 

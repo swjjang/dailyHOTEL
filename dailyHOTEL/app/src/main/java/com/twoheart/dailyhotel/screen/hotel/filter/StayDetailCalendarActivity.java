@@ -70,6 +70,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
             return;
         }
 
+        lockUI();
+
         int nights = chekcOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
 
         // 호텔 정보를 가져온다.

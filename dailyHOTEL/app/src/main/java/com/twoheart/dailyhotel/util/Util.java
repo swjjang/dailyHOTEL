@@ -854,9 +854,9 @@ public class Util implements Constants
         }
     }
 
-    public static void shareDaumMap(Context context, String latitude, String longitude)
+    public static void shareDaumMap(Activity activity, String latitude, String longitude)
     {
-        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
         {
             return;
         }
@@ -867,18 +867,18 @@ public class Util implements Constants
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
 
-        if (isInstalledPackage(context, packageName, intent) == true)
+        if (isInstalledPackage(activity, packageName, intent) == true)
         {
-            context.startActivity(intent);
+            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
         } else
         {
-            installPackage(context, packageName);
+            installPackage(activity, packageName);
         }
     }
 
-    public static void shareNaverMap(Context context, String name, String latitude, String longitude)
+    public static void shareNaverMap(Activity activity, String name, String latitude, String longitude)
     {
-        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
         {
             return;
         }
@@ -889,12 +889,12 @@ public class Util implements Constants
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
 
-        if (isInstalledPackage(context, packageName, intent) == true)
+        if (isInstalledPackage(activity, packageName, intent) == true)
         {
-            context.startActivity(intent);
+            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
         } else
         {
-            installPackage(context, packageName);
+            installPackage(activity, packageName);
         }
     }
 
@@ -925,9 +925,9 @@ public class Util implements Constants
     //        }
     //    }
 
-    public static void shareGoogleMap(Context context, String placeName, String latitude, String longitude)
+    public static void shareGoogleMap(Activity activity, String placeName, String latitude, String longitude)
     {
-        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
         {
             return;
         }
@@ -940,12 +940,12 @@ public class Util implements Constants
         intent.setData(Uri.parse(url));
         intent.setPackage(packageName);
 
-        if (isInstalledPackage(context, packageName, intent) == true)
+        if (isInstalledPackage(activity, packageName, intent) == true)
         {
-            context.startActivity(intent);
+            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
         } else
         {
-            installPackage(context, packageName);
+            installPackage(activity, packageName);
         }
     }
 
