@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public abstract class PlaceListLayout extends BaseLayout
 {
-    public static final int LOAD_MORE_POSITION_GAP = Constants.PAGENATION_LIST_SIZE * 1 / 3;
+    public static final int LOAD_MORE_POSITION_GAP = Constants.PAGENATION_LIST_SIZE / 3;
 
     protected PinnedSectionRecyclerView mPlaceRecyclerView;
     protected PlaceListAdapter mPlaceListAdapter;

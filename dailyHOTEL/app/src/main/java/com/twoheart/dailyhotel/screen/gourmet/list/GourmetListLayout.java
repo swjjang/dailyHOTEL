@@ -36,7 +36,7 @@ public class GourmetListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        return new GourmetListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        return new GourmetListAdapter(context, arrayList, mOnItemClickListener, mOnEventBannerItemClickListener);
     }
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)

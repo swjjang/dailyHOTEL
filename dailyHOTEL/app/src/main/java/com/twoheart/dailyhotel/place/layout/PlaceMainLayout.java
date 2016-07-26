@@ -34,7 +34,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 {
     private static final int ANIMATION_DEALY = 200;
 
-    private TextView mSearchTextView;
     private TextView mRegionTextView;
     private TextView mDateTextView;
 
@@ -99,7 +98,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         // 검색
         // 지역 이름
         // 날짜
-        mSearchTextView = (TextView) view.findViewById(R.id.searchTextView);
+        View searchTextView = (TextView) view.findViewById(R.id.searchTextView);
 
         View regionTextLayout = view.findViewById(R.id.regionTextLayout);
         mRegionTextView = (TextView) view.findViewById(R.id.regionTextView);
@@ -107,7 +106,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         View dateTextLayout = view.findViewById(R.id.dateTextLayout);
         mDateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
-        mSearchTextView.setOnClickListener(this);
+        searchTextView.setOnClickListener(this);
         regionTextLayout.setOnClickListener(this);
         dateTextLayout.setOnClickListener(this);
     }

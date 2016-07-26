@@ -209,20 +209,6 @@ public class AnalyticsManager
         }
     }
 
-    public void recordEvent(Map<String, String> params)
-    {
-        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
-        {
-            try
-            {
-                analyticsManager.recordEvent(params);
-            } catch (Exception e)
-            {
-                ExLog.d(TAG + e.toString());
-            }
-        }
-    }
-
     public void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)

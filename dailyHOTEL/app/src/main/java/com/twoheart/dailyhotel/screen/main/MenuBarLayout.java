@@ -44,7 +44,7 @@ public class MenuBarLayout implements View.OnClickListener
 
         void onMenuUnselected(int index);
 
-        void onMenuReselected(int intdex);
+        void onMenuReselected(int index);
     }
 
     public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)

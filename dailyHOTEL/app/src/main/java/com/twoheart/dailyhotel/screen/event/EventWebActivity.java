@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EventWebActivity extends WebViewActivity implements Constants
@@ -243,7 +244,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             } else
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
@@ -303,7 +304,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             } else
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(gourmetSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 

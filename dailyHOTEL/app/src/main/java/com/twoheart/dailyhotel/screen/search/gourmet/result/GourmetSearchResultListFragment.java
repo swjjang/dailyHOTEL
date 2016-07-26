@@ -350,7 +350,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(isShow);
+            mOnPlaceListFragmentListener.onShowActivityEmptyView(isShow);
         }
 
         @Override

@@ -177,7 +177,7 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void showListItemNotice(View view, int position, Coupon coupon)
+        public void showListItemNotice(Coupon coupon)
         {
             // 리스트 아이템 쿠폰 유의사항 팝업
             // 쿠폰 사용시 유의사항 안내
@@ -186,7 +186,7 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onListItemDownLoadClick(View view, int position, Coupon coupon)
+        public void onListItemDownLoadClick(Coupon coupon)
         {
             // 리스트 아이템 쿠폰 다운로드
             mCouponListNetworkController.requestDownloadCoupon(coupon);

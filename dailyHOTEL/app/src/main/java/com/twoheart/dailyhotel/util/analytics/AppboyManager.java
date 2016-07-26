@@ -353,12 +353,6 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordEvent(Map<String, String> params)
-    {
-
-    }
-
-    @Override
     void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
 
@@ -377,11 +371,11 @@ public class AppboyManager extends BaseAnalyticsManager
             int count = Integer.parseInt(params.get(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED));
             appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, count);
 
-            mAppboy.logCustomEvent(EventName.SEARCH_TERM, appboyProperties);
+            mAppboy.logCustomEvent(eventName, appboyProperties);
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + " : " + EventName.SEARCH_TERM + ", " + appboyProperties.forJsonPut().toString());
+                ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
             }
         } catch (NumberFormatException e)
         {

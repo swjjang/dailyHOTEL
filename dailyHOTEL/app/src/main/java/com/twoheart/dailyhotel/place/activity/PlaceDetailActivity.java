@@ -107,7 +107,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
 
-    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+    protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
     protected abstract void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation);
 
@@ -356,7 +356,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 case CODE_REQUEST_ACTIVITY_CALENDAR:
                     mDontReloadAtOnResume = true;
-                    onCalendarActivityResult(requestCode, resultCode, data);
+                    onCalendarActivityResult(resultCode, data);
                     break;
             }
 

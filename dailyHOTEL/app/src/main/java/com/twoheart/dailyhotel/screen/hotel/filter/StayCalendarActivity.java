@@ -30,7 +30,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     private TextView mConfirmTextView;
     protected String mCallByScreen;
 
-    private boolean mIsAnimation;
     protected boolean mIsChanged;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
@@ -56,7 +55,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         final int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
-        mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
+        boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
         if (saleTime == null)
         {
@@ -67,7 +66,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 
-        if (mIsAnimation == true)
+        if (isAnimation == true)
         {
             mAnimationLayout.setVisibility(View.INVISIBLE);
             mAnimationLayout.postDelayed(new Runnable()

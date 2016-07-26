@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class GourmetMainFragment extends PlaceMainFragment
@@ -69,7 +70,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onRegionActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -93,7 +94,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCalendarActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -112,7 +113,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCurationActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -917,7 +918,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 }
             } else
             {
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
@@ -1038,7 +1039,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             try
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 SaleTime saleTime = mGourmetCuration.getSaleTime();
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));

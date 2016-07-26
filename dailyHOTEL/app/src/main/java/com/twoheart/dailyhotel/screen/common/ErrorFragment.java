@@ -72,7 +72,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_error_frag), new OnClickListener()
+        dailyToolbarLayout.initToolbar(title, new OnClickListener()
         {
             @Override
             public void onClick(View v)

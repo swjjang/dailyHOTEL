@@ -219,13 +219,13 @@ public class GourmetDetailLayout
 
             setBookingStatus(STATUS_SEARCH_TICKET);
 
-            updateTicketInformationLayout(0, ticketInformationList);
+            updateTicketInformationLayout(ticketInformationList);
         }
 
         mListAdapter.notifyDataSetChanged();
     }
 
-    protected void updateTicketInformationLayout(int nights, ArrayList<TicketInformation> ticketInformationList)
+    protected void updateTicketInformationLayout(ArrayList<TicketInformation> ticketInformationList)
     {
         if (ticketInformationList == null || ticketInformationList.size() == 0)
         {
