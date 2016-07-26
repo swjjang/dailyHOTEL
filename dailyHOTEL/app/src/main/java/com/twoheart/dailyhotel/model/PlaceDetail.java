@@ -17,9 +17,14 @@ public abstract class PlaceDetail
     protected ArrayList<DetailInformation> mInformationList;
     protected ArrayList<TicketInformation> mTicketInformationList;
 
-    public PlaceDetail(int index)
+    public int entryIndex;
+    public String showTagPriceYn;
+
+    public PlaceDetail(int index, int entryIndex, String showTagPriceYn)
     {
         this.index = index;
+        this.entryIndex = entryIndex;
+        this.showTagPriceYn = showTagPriceYn;
     }
 
     public abstract void setData(JSONObject jsonObject) throws Exception;
