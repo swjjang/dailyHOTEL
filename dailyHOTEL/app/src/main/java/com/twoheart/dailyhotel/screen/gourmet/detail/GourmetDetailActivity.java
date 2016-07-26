@@ -80,6 +80,19 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
 
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
+
+        String isShowOriginalPrice;
+        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+        {
+            isShowOriginalPrice = "N";
+        } else
+        {
+            isShowOriginalPrice = "Y";
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, isShowOriginalPrice);
+
         return intent;
     }
 
@@ -100,6 +113,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
 
         return intent;
     }
@@ -124,6 +138,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
+
+        String isShowOriginalPrice;
+        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+        {
+            isShowOriginalPrice = "N";
+        } else
+        {
+            isShowOriginalPrice = "Y";
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, isShowOriginalPrice);
 
         return intent;
     }
@@ -355,6 +381,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetail.name);
+            params.put(AnalyticsManager.KeyType.GRADE, gourmetDetail.grade.name()); // 14
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetail.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(gourmetDetail.benefit) ? "no" : "yes");
 
@@ -396,7 +423,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.RATING, gourmetDetail.satisfaction);
             params.put(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN, gourmetDetail.isShowOriginalPrice);
 
-            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordScreen(screen, params);
+            AnalyticsManager.getInstance(this).recordScreen(screen, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -405,7 +432,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, TicketInformation ticketInformation)
     {
-        if (saleTime == null || gourmetDetail == null || ticketInformation == null)
+        if (gourmetDetail == null || ticketInformation == null)
         {
             return null;
         }
@@ -414,7 +441,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetail.name);
-            params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) gourmetDetail).category);
+            params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetail.category);
 
             if (mProvince == null)
             {

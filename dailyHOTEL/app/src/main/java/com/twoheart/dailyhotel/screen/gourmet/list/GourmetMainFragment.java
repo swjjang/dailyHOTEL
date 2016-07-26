@@ -694,18 +694,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceRegion(region);
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceName(gourmet.name);
 
-                    Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mGourmetCuration.getSaleTime());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mGourmetCuration.getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
-
-                    String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
-
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
+                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mGourmetCuration.getSaleTime(),
+                        mGourmetCuration.getProvince(), gourmet);
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
@@ -890,6 +880,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
     }

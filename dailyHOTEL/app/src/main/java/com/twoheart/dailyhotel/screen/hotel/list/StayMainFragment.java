@@ -286,6 +286,18 @@ public class StayMainFragment extends PlaceMainFragment
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mStayCuration.getProvince());
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
+
+                String showTagPriceYn;
+                if (stay.price <= 0 || stay.price <= stay.discountPrice)
+                {
+                    showTagPriceYn = "N";
+                } else
+                {
+                    showTagPriceYn = "Y";
+                }
+
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
 
                 String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -328,6 +340,8 @@ public class StayMainFragment extends PlaceMainFragment
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
     }
