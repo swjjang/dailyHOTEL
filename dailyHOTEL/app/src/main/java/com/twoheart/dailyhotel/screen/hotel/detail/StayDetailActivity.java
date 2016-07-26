@@ -428,16 +428,16 @@ public class StayDetailActivity extends BaseActivity
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, mStayDetail.hotelName);
-            params.put(AnalyticsManager.KeyType.GRADE, mStayDetail.grade.getName(StayDetailActivity.this));
-            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mStayDetail.hotelBenefit) ? "no" : "yes");
+            params.put(AnalyticsManager.KeyType.NAME, stayDetail.hotelName);
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(StayDetailActivity.this));
+            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.hotelBenefit) ? "no" : "yes"); // 3
 
-            if (mStayDetail.getSaleRoomList() == null || mStayDetail.getSaleRoomList().size() == 0)
+            if (stayDetail.getSaleRoomList() == null || stayDetail.getSaleRoomList().size() == 0)
             {
                 params.put(AnalyticsManager.KeyType.PRICE, "0");
             } else
             {
-                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mStayDetail.getSaleRoomList().get(0).averageDiscount));
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getSaleRoomList().get(0).averageDiscount));
             }
 
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mStayDetail.nights));
@@ -445,17 +445,19 @@ public class StayDetailActivity extends BaseActivity
 
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayDetail.nights);
 
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd")); // 1
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd")); // 2
 
-            params.put(AnalyticsManager.KeyType.ADDRESS, mStayDetail.address);
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayDetail.address);
 
-            if (Util.isTextEmpty(mStayDetail.categoryCode) == true)
+            if (Util.isTextEmpty(stayDetail.categoryCode) == true) //
             {
                 params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
             } else
             {
-                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mStayDetail.categoryCode);
+                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetail.categoryCode);
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.categoryCode);
             }
 
             if (mProvince == null)

@@ -534,6 +534,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
         String address = params.get(AnalyticsManager.KeyType.ADDRESS);
         String hotelCategory = params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY);
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY);
 
         if (Util.isTextEmpty(checkIn) == false)
         {
@@ -563,6 +564,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         if (Util.isTextEmpty(hotelCategory) == false)
         {
             screenViewBuilder.setCustomDimension(10, hotelCategory);
+        }
+
+        if (Util.isTextEmpty(category) == false)
+        {
+            screenViewBuilder.setCustomDimension(14, category);
         }
 
         return screenViewBuilder;
