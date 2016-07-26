@@ -101,7 +101,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     @Override
     protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
     {
-        return new StaySearchNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        return new StaySearchNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override

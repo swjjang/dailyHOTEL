@@ -51,7 +51,6 @@ import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class PlaceListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
@@ -72,7 +71,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     private PlaceViewItem mSelectedPlaceViewItem;
     protected boolean mIsOpenMakrer; // 마커를 선택한 경우.
-    private HashMap<String, ArrayList<Place>> mDuplicatePlace;
 
     private ClusterManager<PlaceClusterItem> mClusterManager;
     private PlaceClusterRenderer mPlaceClusterRenderer;
@@ -111,11 +109,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         if (mLoadingDialog == null)
         {
             mLoadingDialog = new LoadingDialog(mBaseActivity);
-        }
-
-        if (mDuplicatePlace == null)
-        {
-            mDuplicatePlace = new HashMap<>();
         }
 
         getMapAsync(new OnMapReadyCallback()
@@ -408,13 +401,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        if (mDuplicatePlace == null)
-        {
-            mDuplicatePlace = new HashMap<>();
-        }
-
-        mDuplicatePlace.clear();
-
         // 중복 지역을 찾아내기 위한 로직.
         if (mPlaceViewItemViewPagerList != null)
         {
@@ -422,7 +408,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         mPlaceViewItemViewPagerList = null;
-        mPlaceViewItemViewPagerList = searchDuplicateLocateion(mPlaceViewItemList, mDuplicatePlace);
+        mPlaceViewItemViewPagerList = searchDuplicateLocateion(mPlaceViewItemList);
 
         mClusterManager.clearItems();
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
@@ -921,7 +907,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
      * @param hashMap
      * @return
      */
-    private ArrayList<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList, HashMap<String, ArrayList<Place>> hashMap)
+    private ArrayList<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList)
     {
         ArrayList<PlaceViewItem> arrangeList = new ArrayList<>(hotelArrayList);
 

@@ -401,7 +401,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onPushClick(View v)
+        public void onPushClick()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {

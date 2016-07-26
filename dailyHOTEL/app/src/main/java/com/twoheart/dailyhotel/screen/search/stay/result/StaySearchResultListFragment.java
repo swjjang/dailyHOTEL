@@ -29,42 +29,9 @@ public class StaySearchResultListFragment extends StayListFragment
     }
 
     @Override
-    protected StayListNetworkController.OnNetworkControllerListener getNetworkControllerListener()
+    protected StayListNetworkController getStayListNetworkController()
     {
-        StayListNetworkController.OnNetworkControllerListener networkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
-        {
-            @Override
-            public void onStayList(ArrayList<Stay> list, int page)
-            {
-                StaySearchResultListFragment.this.onStayList(list, page);
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                StaySearchResultListFragment.this.onErrorResponse(volleyError);
-            }
-
-            @Override
-            public void onError(Exception e)
-            {
-                StaySearchResultListFragment.this.onError(e);
-            }
-
-            @Override
-            public void onErrorPopupMessage(int msgCode, String message)
-            {
-                StaySearchResultListFragment.this.onErrorPopupMessage(msgCode, message);
-            }
-
-            @Override
-            public void onErrorToastMessage(String message)
-            {
-                StaySearchResultListFragment.this.onErrorToastMessage(message);
-            }
-        };
-
-        return networkControllerListener;
+        return new StayListNetworkController(mBaseActivity, mNetworkTag, onNetworkControllerListener);
     }
 
     @Override
@@ -123,4 +90,37 @@ public class StaySearchResultListFragment extends StayListFragment
 
         return stayViewItemList;
     }
+
+    private StayListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onStayList(ArrayList<Stay> list, int page)
+        {
+            StaySearchResultListFragment.this.onStayList(list, page);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            StaySearchResultListFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            StaySearchResultListFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            StaySearchResultListFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            StaySearchResultListFragment.this.onErrorToastMessage(message);
+        }
+    };
 }

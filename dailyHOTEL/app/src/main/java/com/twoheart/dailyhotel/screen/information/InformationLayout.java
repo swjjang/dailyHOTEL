@@ -66,7 +66,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startAbout();
 
-        void onPushClick(View view);
+        void onPushClick();
 
         void startFacebook();
 
@@ -155,7 +155,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View editProfileView = view.findViewById(R.id.editProfileTextView);
         TextView profileTextView = (TextView) view.findViewById(R.id.profileTextView);
 
-        if (Util.getLCDWidth(mContext) < 720)
+        if (Util.getLCDWidth(context) < 720)
         {
             profileTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, SMALL_PROFILE_TEXT_SIZE_DP);
         } else
@@ -515,7 +515,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.pushTextView:
             {
-                ((OnEventListener) mOnEventListener).onPushClick(v);
+                ((OnEventListener) mOnEventListener).onPushClick();
                 break;
             }
 

@@ -54,13 +54,18 @@ public class StayListFragment extends PlaceListFragment
         mStayListLayout = getStayListLayout();
         mStayListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
-        mNetworkController = new StayListNetworkController(mBaseActivity, mNetworkTag, getNetworkControllerListener());
+        mNetworkController = getStayListNetworkController();
 
         mViewType = ViewType.LIST;
 
         mPageIndex = 1;
 
         return mStayListLayout.onCreateView(getLayoutResourceId(), container);
+    }
+
+    protected StayListNetworkController getStayListNetworkController()
+    {
+        return new StayListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
 
     protected int getLayoutResourceId()
@@ -71,52 +76,6 @@ public class StayListFragment extends PlaceListFragment
     protected StayListLayout getStayListLayout()
     {
         return new StayListLayout(mBaseActivity, mEventListener);
-    }
-
-    protected StayListNetworkController.OnNetworkControllerListener getNetworkControllerListener()
-    {
-        StayListNetworkController.OnNetworkControllerListener networkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
-        {
-            @Override
-            public void onStayList(ArrayList<Stay> list, int page)
-            {
-                StayListFragment.this.onStayList(list, page);
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                StayListFragment.this.onErrorResponse(volleyError);
-            }
-
-            @Override
-            public void onError(Exception e)
-            {
-                if (DEBUG == false && e != null)
-                {
-                    Crashlytics.logException(e);
-                }
-
-                MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.onError(e);
-            }
-
-            @Override
-            public void onErrorPopupMessage(int msgCode, String message)
-            {
-                MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
-            }
-
-            @Override
-            public void onErrorToastMessage(String message)
-            {
-                MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.onRuntimeError("message : " + message);
-            }
-        };
-
-        return networkControllerListener;
     }
 
     @Override
@@ -431,6 +390,47 @@ public class StayListFragment extends PlaceListFragment
             {
                 mBaseActivity.finish();
             }
+        }
+    };
+
+    private StayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onStayList(ArrayList<Stay> list, int page)
+        {
+            StayListFragment.this.onStayList(list, page);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            StayListFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            if (DEBUG == false && e != null)
+            {
+                Crashlytics.logException(e);
+            }
+
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.onRuntimeError("message : " + message);
         }
     };
 }

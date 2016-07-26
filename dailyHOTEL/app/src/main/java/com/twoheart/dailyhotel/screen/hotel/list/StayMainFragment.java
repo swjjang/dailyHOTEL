@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class StayMainFragment extends PlaceMainFragment
@@ -67,7 +68,7 @@ public class StayMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onRegionActivityResult(int resultCode, Intent data)
     {
         // 지역 선택하고 돌아온 경우
         if (resultCode == Activity.RESULT_OK && data != null)
@@ -139,7 +140,7 @@ public class StayMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCalendarActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -161,7 +162,7 @@ public class StayMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCurationActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -363,7 +364,7 @@ public class StayMainFragment extends PlaceMainFragment
                 }
             } else
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
@@ -628,7 +629,7 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 SaleTime todaySaleTime = mStayCuration.getCheckInSaleTime();
 
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(todaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 

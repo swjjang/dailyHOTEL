@@ -98,7 +98,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     @Override
     protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
     {
-        return new GourmetSearchNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        return new GourmetSearchNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override

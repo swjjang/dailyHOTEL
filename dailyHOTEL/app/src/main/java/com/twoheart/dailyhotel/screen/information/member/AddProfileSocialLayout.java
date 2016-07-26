@@ -33,8 +33,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
 
-    private View mConfirmView;
-    private View mCountryView, mPhoneView;
+    private View mPhoneView;
     private EditText mCountryEditText, mPhoneEditText;
     private TextWatcher mTextWatcher;
 
@@ -85,7 +84,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailLayout = view.findViewById(R.id.emailLayout);
         mNameLayout = view.findViewById(R.id.nameLayout);
 
-        mCountryView = mPhoneLayout.findViewById(R.id.countryView);
         mCountryEditText = (EditText) mPhoneLayout.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
@@ -102,8 +100,8 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mPhoneEditText = (EditText) mPhoneLayout.findViewById(R.id.phoneEditText);
         mPhoneEditText.setOnFocusChangeListener(this);
 
-        mConfirmView = view.findViewById(R.id.confirmView);
-        mConfirmView.setOnClickListener(this);
+        View confirmView = view.findViewById(R.id.confirmView);
+        confirmView.setOnClickListener(this);
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
         mEmailEditText = (EditText) mEmailLayout.findViewById(R.id.emailEditText);

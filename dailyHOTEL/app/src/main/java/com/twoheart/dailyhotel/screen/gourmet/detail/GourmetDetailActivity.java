@@ -116,7 +116,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCalendarActivityResult(int resultCode, Intent data)
     {
         if (resultCode == RESULT_OK)
         {

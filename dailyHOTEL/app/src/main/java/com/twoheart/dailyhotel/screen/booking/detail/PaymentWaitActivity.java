@@ -366,7 +366,6 @@ public class PaymentWaitActivity extends BaseActivity
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
                     finish();
-                    return;
                 }
             } catch (Exception e)
             {
@@ -405,7 +404,6 @@ public class PaymentWaitActivity extends BaseActivity
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
                     finish();
-                    return;
                 }
             } catch (Exception e)
             {

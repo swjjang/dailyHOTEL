@@ -37,11 +37,11 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract PlaceMainNetworkController getPlaceMainNetworkController(Context context);
 
-    protected abstract void onRegionActivityResult(int requestCode, int resultCode, Intent data);
+    protected abstract void onRegionActivityResult(int resultCode, Intent data);
 
-    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+    protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void onCurationActivityResult(int requestCode, int resultCode, Intent data);
+    protected abstract void onCurationActivityResult(int resultCode, Intent data);
 
     protected abstract void onLocationFailed();
 
@@ -126,7 +126,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                     mIsDeepLink = false;
                 }
 
-                onRegionActivityResult(requestCode, resultCode, data);
+                onRegionActivityResult(resultCode, data);
                 break;
             }
 
@@ -134,7 +134,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                onCalendarActivityResult(requestCode, resultCode, data);
+                onCalendarActivityResult(resultCode, data);
                 break;
             }
 
@@ -142,7 +142,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                onCurationActivityResult(requestCode, resultCode, data);
+                onCurationActivityResult(resultCode, data);
                 break;
             }
 
@@ -150,7 +150,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                onCurationActivityResult(requestCode, resultCode, data);
+                onCurationActivityResult(resultCode, data);
                 break;
             }
 

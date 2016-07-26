@@ -604,13 +604,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             Action.HOTEL_USING_COUPON_CLICKED, Label.HOTEL_USING_COUPON_CLICKED, null);
     }
 
-    private void startCancelBonusPopup(final HotelPaymentInformation hotelPaymentInformation, View.OnClickListener positiveListener)
+    private void startCancelBonusPopup(View.OnClickListener positiveListener)
     {
         showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
             getString(R.string.dialog_btn_text_no), positiveListener, null);
     }
 
-    private void startCancelCouponPopup(final HotelPaymentInformation hotelPaymentInformation, View.OnClickListener positiveListener)
+    private void startCancelCouponPopup(View.OnClickListener positiveListener)
     {
         showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
             getString(R.string.dialog_btn_text_no), positiveListener, null);
@@ -842,7 +842,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
     {
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) paymentInformation;
 
         SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
@@ -1356,7 +1356,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
                     // 쿠폰 기 선택 상태 일때 쿠폰 선택 취소 팝업 생성 필요함 (">" 아이콘 이므로)
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    startCancelCouponPopup(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1374,7 +1374,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     // 적립금 삭제
-                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    startCancelBonusPopup(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1391,7 +1391,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
                 {
                     // 적립금 기 선택 상태 일때 적립금 선택 취소 팝업 생성 필요함 (">" 아이콘 이므로)
-                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    startCancelBonusPopup(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1409,7 +1409,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     // 쿠폰 삭제
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    startCancelCouponPopup(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1426,7 +1426,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    startCancelCouponPopup(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1448,7 +1448,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
                 {
-                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    startCancelBonusPopup(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1715,7 +1715,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         int addMessagesCount = 2;
         int startPosition = 2;
 
-        switch (mPensionPopupMessageType)
+        switch (messageType)
         {
             case 1:
             case 2:

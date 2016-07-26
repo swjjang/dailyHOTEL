@@ -275,19 +275,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
     {
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
         String placyType = String.format("%s X %d", ticketInformation.name, gourmetPaymentInformation.ticketCount);
-
-        //        Calendar calendarTime = DailyCalendar.getInstance();
-        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
-        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
-        //        String time = formatDay.format(calendarTime.getTime());
         String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 

@@ -35,7 +35,7 @@ public class StayListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        return new StayListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        return new StayListAdapter(context, arrayList, mOnItemClickListener, mOnEventBannerItemClickListener);
     }
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
