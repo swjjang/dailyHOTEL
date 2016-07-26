@@ -346,7 +346,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void hideTicketInformationLayout()
     {
-        mOnEventListener.hideTicketInformationLayout();
+        mOnEventListener.hideProductInformationLayout();
     }
 
     @Override
@@ -576,7 +576,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void showTicketInformationLayout()
+        public void showProductInformationLayout()
         {
             if (isLockUiComponent() == true || isFinishing() == true)
             {
@@ -587,7 +587,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.showAnimationTicketInformationLayout();
+                mPlaceDetailLayout.showAnimationProductInformationLayout();
             }
 
             releaseUiComponent();
@@ -598,7 +598,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void hideTicketInformationLayout()
+        public void hideProductInformationLayout()
         {
             if (isLockUiComponent() == true || isFinishing() == true)
             {
@@ -609,7 +609,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.hideAnimationTicketInformationLayout();
+                mPlaceDetailLayout.hideAnimationProductInformationLayout();
             }
 
             releaseUiComponent();

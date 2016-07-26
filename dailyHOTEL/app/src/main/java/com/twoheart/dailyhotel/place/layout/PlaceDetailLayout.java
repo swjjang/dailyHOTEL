@@ -43,11 +43,11 @@ import java.util.ArrayList;
 public abstract class PlaceDetailLayout extends BaseLayout
 {
     public static final int STATUS_NONE = 0;
-    public static final int STATUS_SEARCH_TICKET = 1;
+    public static final int STATUS_SELECT_PRODUCT = 1;
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    private static final int MAX_OF_TICKETTYPE = 4;
+    private static final int VIEW_COUNT = 4;
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
@@ -84,9 +84,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void doKakaotalkConsult();
 
-        void showTicketInformationLayout();
+        void showProductInformationLayout();
 
-        void hideTicketInformationLayout();
+        void hideProductInformationLayout();
 
         void showMap();
 
@@ -144,7 +144,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                hideAnimationTicketInformationLayout();
+                hideAnimationProductInformationLayout();
             }
         });
 
@@ -152,7 +152,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
 
         setBookingStatus(STATUS_NONE);
-        hideTicketInformationLayout();
+        hideProductInformationLayout();
     }
 
     public void setDefaultImage(String url)
@@ -226,14 +226,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return 0;
     }
 
-    private void setTicketInformationLayoutEnabled(boolean enabled)
+    private void setProductInformationLayoutEnabled(boolean enabled)
     {
         mProductTypeLayout.setEnabled(enabled);
         mProductTypeRecyclerView.setEnabled(enabled);
         mProductTypeBackgroundView.setEnabled(enabled);
     }
 
-    public void hideTicketInformationLayout()
+    public void hideProductInformationLayout()
     {
         if (mObjectAnimator != null)
         {
@@ -254,7 +254,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         if (Util.isOverAPI12() == true)
         {
             mProductTypeLayout.setVisibility(View.INVISIBLE);
-            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, MAX_OF_TICKETTYPE * 92));
+            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, VIEW_COUNT * 92));
         } else
         {
             mProductTypeLayout.setVisibility(View.GONE);
@@ -263,7 +263,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
     }
 
-    public void showAnimationTicketInformationLayout()
+    public void showAnimationProductInformationLayout()
     {
         if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
         {
@@ -317,7 +317,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                         mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
                         mAnimationState = Constants.ANIMATION_STATE.END;
 
-                        setTicketInformationLayoutEnabled(true);
+                        setProductInformationLayoutEnabled(true);
 
                         setBookingStatus(STATUS_BOOKING);
                     }
@@ -346,7 +346,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
                 mAnimationState = Constants.ANIMATION_STATE.END;
 
-                setTicketInformationLayoutEnabled(true);
+                setProductInformationLayoutEnabled(true);
 
                 setBookingStatus(STATUS_BOOKING);
             }
@@ -355,7 +355,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         showAnimationFadeOut();
     }
 
-    public void hideAnimationTicketInformationLayout()
+    public void hideAnimationProductInformationLayout()
     {
         if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
         {
@@ -396,7 +396,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
 
-                    setTicketInformationLayoutEnabled(false);
+                    setProductInformationLayoutEnabled(false);
                 }
 
                 @Override
@@ -407,9 +407,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
                         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
                         mAnimationState = Constants.ANIMATION_STATE.END;
 
-                        hideTicketInformationLayout();
+                        hideProductInformationLayout();
 
-                        setBookingStatus(STATUS_SEARCH_TICKET);
+                        setBookingStatus(STATUS_SELECT_PRODUCT);
                     }
                 }
 
@@ -430,14 +430,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
             showAnimationFadeIn();
         } else
         {
-            setTicketInformationLayoutEnabled(false);
+            setProductInformationLayoutEnabled(false);
 
             mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
             mAnimationState = Constants.ANIMATION_STATE.END;
 
-            hideTicketInformationLayout();
+            hideProductInformationLayout();
 
-            setBookingStatus(STATUS_SEARCH_TICKET);
+            setBookingStatus(STATUS_SELECT_PRODUCT);
         }
     }
 

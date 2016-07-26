@@ -107,7 +107,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         setCurrentImage(imagePosition);
 
-        hideTicketInformationLayout();
+        hideProductInformationLayout();
 
         // SOLD OUT 판단 조건.
         ArrayList<TicketInformation> ticketInformationList = gourmetDetail.getTicketInformation();
@@ -132,8 +132,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                             ((GourmetDetailLayout.OnEventListener) mOnEventListener).doBooking(mSelectedTicketInformation);
                             break;
 
-                        case STATUS_SEARCH_TICKET:
-                            ((OnEventListener) mOnEventListener).showTicketInformationLayout();
+                        case STATUS_SELECT_PRODUCT:
+                            ((OnEventListener) mOnEventListener).showProductInformationLayout();
                             break;
                     }
                 }
@@ -141,7 +141,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             mSoldoutTextView.setVisibility(View.GONE);
 
-            setBookingStatus(STATUS_SEARCH_TICKET);
+            setBookingStatus(STATUS_SELECT_PRODUCT);
 
             updateTicketInformationLayout(ticketInformationList);
         }
@@ -223,7 +223,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 break;
             }
 
-            case STATUS_SEARCH_TICKET:
+            case STATUS_SELECT_PRODUCT:
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
@@ -251,9 +251,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     }
 
     @Override
-    public void hideAnimationTicketInformationLayout()
+    public void hideAnimationProductInformationLayout()
     {
-        super.hideAnimationTicketInformationLayout();
+        super.hideAnimationProductInformationLayout();
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
