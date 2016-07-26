@@ -264,6 +264,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         } catch (Exception e)
@@ -326,6 +328,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, gourmetSaleTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         } catch (Exception e)

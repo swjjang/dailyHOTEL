@@ -702,6 +702,18 @@ public class GourmetMainFragment extends PlaceMainFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mGourmetCuration.getProvince());
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryIndex);
+
+                    String showTagPriceYn;
+                    if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+                    {
+                        showTagPriceYn = "N";
+                    } else
+                    {
+                        showTagPriceYn = "Y";
+                    }
+
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
 
                     String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
 
@@ -890,6 +902,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
     }

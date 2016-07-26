@@ -161,7 +161,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true //
             || AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == true)
         {
-            sendSearchAnalytics(screen, null, params);
+            recordSearchAnalytics(screen, params);
         }
     }
 
@@ -625,11 +625,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + transId + " | " + productAction.toString());
+            ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + transId + " | " + productAction.toString() + " | " + screenViewBuilder.build().toString());
         }
     }
 
-    private void sendSearchAnalytics(String screen, String transId, Map<String, String> params)
+    private void recordSearchAnalytics(String screen, Map<String, String> params)
     {
         if (params == null)
         {

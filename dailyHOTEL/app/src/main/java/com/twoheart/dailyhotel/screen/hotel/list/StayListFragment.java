@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -220,6 +221,33 @@ public class StayListFragment extends PlaceListFragment
         String previousRegion = null;
         boolean hasDailyChoice = false;
 
+        int entryIndex = 1;
+
+        if (mStayListLayout != null)
+        {
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mStayListLayout.getList());
+
+            int oldListSize = oldList == null ? 0 : oldList.size();
+            if (oldListSize > 0)
+            {
+                int start = oldList == null ? 0 : oldList.size() - 1;
+                int end = oldList == null ? 0 : oldListSize - 5;
+                end = end < 0 ? 0 : end;
+
+                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
+                for (int i = start; i >= end; i--)
+                {
+                    PlaceViewItem item = oldList.get(i);
+                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
+                    {
+                        Place place = item.getItem();
+                        entryIndex = place.entryIndex + 1;
+                        break;
+                    }
+                }
+            }
+        }
+
         for (Stay stay : stayList)
         {
             // 지역순에만 section 존재함
@@ -253,7 +281,9 @@ public class StayListFragment extends PlaceListFragment
                 }
             }
 
+            stay.entryIndex = entryIndex;
             stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            entryIndex++;
         }
 
         return stayViewItemList;

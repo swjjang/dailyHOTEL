@@ -479,6 +479,19 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryIndex);
+
+            String showTagPriceYn;
+            if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+            {
+                showTagPriceYn = "N";
+            } else
+            {
+                showTagPriceYn = "Y";
+            }
+
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
+
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }

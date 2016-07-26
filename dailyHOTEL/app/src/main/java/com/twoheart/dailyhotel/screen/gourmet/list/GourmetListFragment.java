@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilters;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -248,6 +249,33 @@ public class GourmetListFragment extends PlaceListFragment
         String previousRegion = null;
         boolean hasDailyChoice = false;
 
+        int entryIndex = 1;
+
+        if (mGourmetListLayout != null)
+        {
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mGourmetListLayout.getList());
+
+            int oldListSize = oldList == null ? 0 : oldList.size();
+            if (oldListSize > 0)
+            {
+                int start = oldList == null ? 0 : oldList.size() - 1;
+                int end = oldList == null ? 0 : oldListSize - 5;
+                end = end < 0 ? 0 : end;
+
+                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
+                for (int i = start; i >= end; i--)
+                {
+                    PlaceViewItem item = oldList.get(i);
+                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
+                    {
+                        Place place = item.getItem();
+                        entryIndex = place.entryIndex + 1;
+                        break;
+                    }
+                }
+            }
+        }
+
         for (Gourmet gourmet : gourmetList)
         {
             String region = gourmet.districtName;
@@ -277,7 +305,9 @@ public class GourmetListFragment extends PlaceListFragment
                 }
             }
 
+            gourmet.entryIndex = entryIndex;
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+            entryIndex++;
         }
 
         return placeViewItemList;
