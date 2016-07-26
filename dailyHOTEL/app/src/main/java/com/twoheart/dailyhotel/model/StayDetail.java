@@ -11,7 +11,7 @@ public class StayDetail extends PlaceDetail
 {
     public int nights;
     public Stay.Grade grade;
-    private ArrayList<SaleRoomInformation> mSaleRoomList;
+    private ArrayList<RoomInformation> mSaleRoomList;
     //
     public String categoryCode;
 
@@ -112,14 +112,14 @@ public class StayDetail extends PlaceDetail
 
         for (int i = 0; i < saleRoomLength; i++)
         {
-            SaleRoomInformation saleRoomInformation = new SaleRoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
-            saleRoomInformation.grade = grade;
-            saleRoomInformation.address = address;
-            mSaleRoomList.add(saleRoomInformation);
+            RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
+            roomInformation.grade = grade;
+            roomInformation.address = address;
+            mSaleRoomList.add(roomInformation);
         }
     }
 
-    public ArrayList<SaleRoomInformation> getSaleRoomList()
+    public ArrayList<RoomInformation> getSaleRoomList()
     {
         return mSaleRoomList;
     }

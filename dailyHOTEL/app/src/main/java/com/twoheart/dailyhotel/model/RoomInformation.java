@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import org.json.JSONObject;
 
-public class SaleRoomInformation implements Parcelable
+public class RoomInformation implements Parcelable
 {
     public int roomIndex;
     public String roomName;
@@ -23,12 +23,12 @@ public class SaleRoomInformation implements Parcelable
     //
     public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
 
-    public SaleRoomInformation(Parcel in)
+    public RoomInformation(Parcel in)
     {
         readFromParcel(in);
     }
 
-    public SaleRoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas, int nights) throws Exception
+    public RoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas, int nights) throws Exception
     {
         roomIndex = jsonObject.getInt("roomIdx");
         averageDiscount = jsonObject.getInt("discountAvg");
@@ -101,15 +101,15 @@ public class SaleRoomInformation implements Parcelable
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public SaleRoomInformation createFromParcel(Parcel in)
+        public RoomInformation createFromParcel(Parcel in)
         {
-            return new SaleRoomInformation(in);
+            return new RoomInformation(in);
         }
 
         @Override
-        public SaleRoomInformation[] newArray(int size)
+        public RoomInformation[] newArray(int size)
         {
-            return new SaleRoomInformation[size];
+            return new RoomInformation[size];
         }
 
     };

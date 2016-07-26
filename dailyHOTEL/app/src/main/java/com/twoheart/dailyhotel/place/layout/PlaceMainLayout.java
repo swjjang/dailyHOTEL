@@ -45,6 +45,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private View mToolbarUnderlineView;
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
+    private float mMenuBarLayoutTranslationY;
 
     private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
@@ -428,6 +429,14 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         } else if (translationY <= 0)
         {
             translationY = 0;
+        }
+
+        if (mMenuBarLayoutTranslationY == translationY)
+        {
+            return;
+        } else
+        {
+            mMenuBarLayoutTranslationY = translationY;
         }
 
         if (dy > 0)

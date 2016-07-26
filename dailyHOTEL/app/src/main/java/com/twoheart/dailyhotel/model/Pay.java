@@ -9,7 +9,7 @@ public class Pay implements Parcelable
     public int hotelIndex;
     public boolean isDBenefit;
     public Stay.Grade grade;
-    private SaleRoomInformation mSaleRoomInformation;
+    private RoomInformation mRoomInformation;
     private Customer mCustomer;
     private int mOriginalPrice;
     private boolean isSaleCredit;
@@ -30,7 +30,7 @@ public class Pay implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeValue(mSaleRoomInformation);
+        dest.writeValue(mRoomInformation);
         dest.writeInt(credit);
         dest.writeValue(mCustomer);
         dest.writeInt(mOriginalPrice);
@@ -44,7 +44,7 @@ public class Pay implements Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        mSaleRoomInformation = (SaleRoomInformation) in.readValue(SaleRoomInformation.class.getClassLoader());
+        mRoomInformation = (RoomInformation) in.readValue(RoomInformation.class.getClassLoader());
         credit = in.readInt();
         mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
         mOriginalPrice = in.readInt();
@@ -63,14 +63,14 @@ public class Pay implements Parcelable
         }
     }
 
-    public SaleRoomInformation getSaleRoomInformation()
+    public RoomInformation getSaleRoomInformation()
     {
-        return mSaleRoomInformation;
+        return mRoomInformation;
     }
 
-    public void setSaleRoomInformation(SaleRoomInformation information)
+    public void setSaleRoomInformation(RoomInformation information)
     {
-        mSaleRoomInformation = information;
+        mRoomInformation = information;
     }
 
     public Customer getCustomer()

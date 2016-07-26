@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
@@ -21,31 +21,31 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 {
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<SaleRoomInformation> mSaleRoomInformationList;
+    private List<RoomInformation> mRoomInformationList;
     private View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
 
 
-    public StayDetailRoomTypeListAdapter(Context context, ArrayList<SaleRoomInformation> arrayList, View.OnClickListener listener)
+    public StayDetailRoomTypeListAdapter(Context context, ArrayList<RoomInformation> arrayList, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;
 
-        mSaleRoomInformationList = new ArrayList<>();
-        mSaleRoomInformationList.addAll(arrayList);
+        mRoomInformationList = new ArrayList<>();
+        mRoomInformationList.addAll(arrayList);
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addAll(Collection<? extends SaleRoomInformation> collection)
+    public void addAll(Collection<? extends RoomInformation> collection)
     {
         if (collection == null)
         {
             return;
         }
 
-        mSaleRoomInformationList.clear();
-        mSaleRoomInformationList.addAll(collection);
+        mRoomInformationList.clear();
+        mRoomInformationList.addAll(collection);
     }
 
     public void setSelected(int position)
@@ -53,14 +53,14 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         mSelectedPosition = position;
     }
 
-    public SaleRoomInformation getItem(int position)
+    public RoomInformation getItem(int position)
     {
-        if (mSaleRoomInformationList.size() <= position)
+        if (mRoomInformationList.size() <= position)
         {
             return null;
         }
 
-        return mSaleRoomInformationList.get(position);
+        return mRoomInformationList.get(position);
     }
 
     @Override
@@ -74,9 +74,9 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        SaleRoomInformation saleRoomInformation = getItem(position);
+        RoomInformation roomInformation = getItem(position);
 
-        if (saleRoomInformation == null)
+        if (roomInformation == null)
         {
             return;
         }
@@ -93,14 +93,14 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.viewRoot.setSelected(false);
         }
 
-        saleRoomInformationViewHolder.roomTypeTextView.setText(saleRoomInformation.roomName);
+        saleRoomInformationViewHolder.roomTypeTextView.setText(roomInformation.roomName);
 
         DecimalFormat comma = new DecimalFormat("###,##0");
         String currency = mContext.getString(R.string.currency);
-        String price = comma.format(saleRoomInformation.price);
-        String discountPrice = comma.format(saleRoomInformation.averageDiscount);
+        String price = comma.format(roomInformation.price);
+        String discountPrice = comma.format(roomInformation.averageDiscount);
 
-        if (saleRoomInformation.price <= 0 || saleRoomInformation.price <= saleRoomInformation.averageDiscount)
+        if (roomInformation.price <= 0 || roomInformation.price <= roomInformation.averageDiscount)
         {
             saleRoomInformationViewHolder.priceTextView.setVisibility(View.GONE);
             saleRoomInformationViewHolder.priceTextView.setText(null);
@@ -112,43 +112,43 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         saleRoomInformationViewHolder.discountPriceTextView.setText(discountPrice + currency);
 
-        if (Util.isTextEmpty(saleRoomInformation.option) == true)
+        if (Util.isTextEmpty(roomInformation.option) == true)
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.GONE);
         } else
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.optionTextView.setText(saleRoomInformation.option);
+            saleRoomInformationViewHolder.optionTextView.setText(roomInformation.option);
         }
 
-        if (Util.isTextEmpty(saleRoomInformation.amenities) == true)
+        if (Util.isTextEmpty(roomInformation.amenities) == true)
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.GONE);
         } else
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.amenitiesTextView.setText(saleRoomInformation.amenities);
+            saleRoomInformationViewHolder.amenitiesTextView.setText(roomInformation.amenities);
         }
 
-        if (Util.isTextEmpty(saleRoomInformation.roomBenefit) == true)
+        if (Util.isTextEmpty(roomInformation.roomBenefit) == true)
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.GONE);
         } else
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.benefitTextView.setText(saleRoomInformation.roomBenefit);
+            saleRoomInformationViewHolder.benefitTextView.setText(roomInformation.roomBenefit);
         }
     }
 
     @Override
     public int getItemCount()
     {
-        if (mSaleRoomInformationList == null)
+        if (mRoomInformationList == null)
         {
             return 0;
         }
 
-        return mSaleRoomInformationList.size();
+        return mRoomInformationList.size();
     }
 
     private class SaleRoomInformationViewHolder extends RecyclerView.ViewHolder

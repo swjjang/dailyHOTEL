@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
@@ -58,7 +58,7 @@ public class StayDetailLayout
     private DailyPlaceDetailListView mListView;
     private PlaceDetailImageViewPagerAdapter mImageAdapter;
     private StayDetailListAdapter mListAdapter;
-    private SaleRoomInformation mSelectedSaleRoomInformation;
+    private RoomInformation mSelectedRoomInformation;
 
     private RecyclerView mRoomTypeRecyclerView;
     private StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
@@ -183,7 +183,7 @@ public class StayDetailLayout
         View soldoutView = mActivity.findViewById(R.id.soldoutTextView);
 
         // SOLD OUT 판단 조건.
-        ArrayList<SaleRoomInformation> saleRoomList = stayDetail.getSaleRoomList();
+        ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
 
         if (saleRoomList == null || saleRoomList.size() == 0)
         {
@@ -204,7 +204,7 @@ public class StayDetailLayout
                         case STATUS_BOOKING:
                             if (mOnUserActionListener != null)
                             {
-                                mOnUserActionListener.doBooking(mSelectedSaleRoomInformation);
+                                mOnUserActionListener.doBooking(mSelectedRoomInformation);
                             }
                             break;
 
@@ -228,7 +228,7 @@ public class StayDetailLayout
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void updateRoomTypeLayout(ArrayList<SaleRoomInformation> saleRoomList)
+    private void updateRoomTypeLayout(ArrayList<RoomInformation> saleRoomList)
     {
         if (saleRoomList == null || saleRoomList.size() == 0)
         {
@@ -238,7 +238,7 @@ public class StayDetailLayout
         // 처음 세팅하는 경우 객실 타입 세팅
         if (mRoomTypeListAdapter == null)
         {
-            mSelectedSaleRoomInformation = saleRoomList.get(0);
+            mSelectedRoomInformation = saleRoomList.get(0);
 
             mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
             {
@@ -252,18 +252,18 @@ public class StayDetailLayout
                         return;
                     }
 
-                    mSelectedSaleRoomInformation = mRoomTypeListAdapter.getItem(position);
+                    mSelectedRoomInformation = mRoomTypeListAdapter.getItem(position);
                     mRoomTypeListAdapter.setSelected(position);
                     mRoomTypeListAdapter.notifyDataSetChanged();
 
                     AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, null);
+                        , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedRoomInformation.roomName, null);
                 }
             });
         } else
         {
             // 재세팅 하는 경우
-            mSelectedSaleRoomInformation = saleRoomList.get(0);
+            mSelectedRoomInformation = saleRoomList.get(0);
 
             mRoomTypeListAdapter.addAll(saleRoomList);
             mRoomTypeListAdapter.setSelected(0);

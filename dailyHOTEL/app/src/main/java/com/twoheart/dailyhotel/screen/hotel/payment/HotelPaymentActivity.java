@@ -48,7 +48,7 @@ import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -129,12 +129,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private Province mProvince;
     private String mArea; // Analytics용 소지역
 
-    public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation//
+    public static Intent newInstance(Context context, RoomInformation roomInformation//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit, Province province, String area)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, saleRoomInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, roomInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
@@ -164,7 +164,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mPaymentInformation = new HotelPaymentInformation();
         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-        hotelPaymentInformation.setSaleRoomInformation((SaleRoomInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
+        hotelPaymentInformation.setSaleRoomInformation((RoomInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
         mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         hotelPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
@@ -585,16 +585,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private void startCouponPopup(HotelPaymentInformation hotelPaymentInformation)
     {
-        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
         int hotelIdx = hotelPaymentInformation.placeIndex;
-        int roomIdx = saleRoomInformation.roomIndex;
+        int roomIdx = roomInformation.roomIndex;
         String checkInDate = hotelPaymentInformation.checkInDateFormat;
         String checkOutDate = hotelPaymentInformation.checkOutDateFormat;
 
-        String categoryCode = saleRoomInformation.categoryCode;
-        String hotelName = saleRoomInformation.hotelName;
-        String roomPrice = Integer.toString(saleRoomInformation.averageDiscount);
+        String categoryCode = roomInformation.categoryCode;
+        String hotelName = roomInformation.hotelName;
+        String roomPrice = Integer.toString(roomInformation.averageDiscount);
 
         Intent intent = SelectCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
             roomIdx, checkInDate, checkOutDate, categoryCode, hotelName, roomPrice);
@@ -642,12 +642,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             guest.message = mMemoEditText.getText().toString().trim();
         }
 
-        SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+        RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
 
         Map<String, String> params = new HashMap<>();
-        params.put("room_idx", String.valueOf(saleRoomInformation.roomIndex));
+        params.put("room_idx", String.valueOf(roomInformation.roomIndex));
         params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", String.valueOf(saleRoomInformation.nights));
+        params.put("nights", String.valueOf(roomInformation.nights));
         params.put("billkey", mSelectedCreditCard.billingkey);
 
         switch (paymentInformation.discountType)
@@ -679,13 +679,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+        RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
 
         // 호텔 디테일 정보 재 요청
         DailyNetworkAPI.getInstance(this).requestHotelPaymentInformation(mNetworkTag//
-            , saleRoomInformation.roomIndex//
+            , roomInformation.roomIndex//
             , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , saleRoomInformation.nights, mHotelPaymentInformationJsonResponseListener, this);
+            , roomInformation.nights, mHotelPaymentInformationJsonResponseListener, this);
     }
 
     @Override
@@ -844,10 +844,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) paymentInformation;
 
-        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
-            , saleRoomInformation.roomName, hotelPaymentInformation.checkInOutDate);
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.hotelName//
+            , roomInformation.roomName, hotelPaymentInformation.checkInOutDate);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -1772,15 +1772,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         try
         {
-            SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+            RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
-            params.put(AnalyticsManager.KeyType.NAME, saleRoomInformation.hotelName);
+            params.put(AnalyticsManager.KeyType.NAME, roomInformation.hotelName);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(saleRoomInformation.averageDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(saleRoomInformation.nights));
-            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, saleRoomInformation.roomName);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(roomInformation.averageDiscount));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(roomInformation.nights));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(roomInformation.totalDiscount));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, roomInformation.roomName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomInformation.roomIndex));
             params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.getSaleRoomInformation().grade.getName(this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
 
@@ -1793,13 +1793,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 case BONUS:
                 {
-                    int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
+                    int payPrice = roomInformation.totalDiscount - hotelPaymentInformation.bonus;
                     int bonus;
 
                     if (payPrice <= 0)
                     {
                         payPrice = 0;
-                        bonus = saleRoomInformation.totalDiscount;
+                        bonus = roomInformation.totalDiscount;
                     } else
                     {
                         bonus = hotelPaymentInformation.bonus;
@@ -1814,7 +1814,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 case COUPON:
                 {
                     Coupon coupon = hotelPaymentInformation.getCoupon();
-                    int payPrice = saleRoomInformation.totalDiscount - coupon.amount;
+                    int payPrice = roomInformation.totalDiscount - coupon.amount;
 
                     if (payPrice < 0)
                     {
@@ -1838,7 +1838,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 {
                     params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
                     params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
+                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(roomInformation.totalDiscount));
                     break;
                 }
             }
@@ -2281,15 +2281,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         boolean isOnSale = jsonData.getBoolean("on_sale");
                         int availableRooms = jsonData.getInt("available_rooms");
 
-                        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+                        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
                         // 가격이 변동 되었다.
-                        if (saleRoomInformation.totalDiscount != discount)
+                        if (roomInformation.totalDiscount != discount)
                         {
                             mIsChangedPrice = true;
                         }
 
-                        saleRoomInformation.totalDiscount = discount;
+                        roomInformation.totalDiscount = discount;
 
                         // Check In
                         Calendar calendarCheckin = DailyCalendar.getInstance();
@@ -2459,15 +2459,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-                        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+                        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
                         // 가격이 변동 되었다.
-                        if (saleRoomInformation.totalDiscount != discount)
+                        if (roomInformation.totalDiscount != discount)
                         {
                             mIsChangedPrice = true;
                         }
 
-                        saleRoomInformation.totalDiscount = discount;
+                        roomInformation.totalDiscount = discount;
 
                         // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                         if (isOnSale == false || availableRooms == 0)

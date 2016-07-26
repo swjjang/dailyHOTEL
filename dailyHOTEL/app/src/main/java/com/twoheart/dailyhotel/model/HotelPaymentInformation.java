@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class HotelPaymentInformation extends PlacePaymentInformation
 {
-    private SaleRoomInformation mSaleRoomInformation;
+    private RoomInformation mRoomInformation;
     //
     public String checkInOutDate; // Thankyou에 넘기기 위한 데이터 저장
 
@@ -28,7 +28,7 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeParcelable(mSaleRoomInformation, flags);
+        dest.writeParcelable(mRoomInformation, flags);
 
     }
 
@@ -37,17 +37,17 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     {
         super.readFromParcel(in);
 
-        mSaleRoomInformation = in.readParcelable(SaleRoomInformation.class.getClassLoader());
+        mRoomInformation = in.readParcelable(RoomInformation.class.getClassLoader());
     }
 
-    public SaleRoomInformation getSaleRoomInformation()
+    public RoomInformation getSaleRoomInformation()
     {
-        return mSaleRoomInformation;
+        return mRoomInformation;
     }
 
-    public void setSaleRoomInformation(SaleRoomInformation information)
+    public void setSaleRoomInformation(RoomInformation information)
     {
-        mSaleRoomInformation = information;
+        mRoomInformation = information;
     }
 
     @Override

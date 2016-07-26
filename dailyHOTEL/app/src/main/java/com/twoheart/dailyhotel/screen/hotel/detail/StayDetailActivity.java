@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -65,7 +65,7 @@ public class StayDetailActivity extends BaseActivity
     private int mViewPrice; // Analytics용 리스트 가격
 
     private int mCurrentImage;
-    private SaleRoomInformation mSelectedSaleRoomInformation;
+    private RoomInformation mSelectedRoomInformation;
     private boolean mIsStartByShare;
     private String mDefaultImageUrl;
 
@@ -89,7 +89,7 @@ public class StayDetailActivity extends BaseActivity
 
         void onSelectedImagePosition(int position);
 
-        void doBooking(SaleRoomInformation saleRoomInformation);
+        void doBooking(RoomInformation roomInformation);
 
         void doKakaotalkConsult();
 
@@ -326,7 +326,7 @@ public class StayDetailActivity extends BaseActivity
 
                 if (resultCode == RESULT_OK)
                 {
-                    mOnUserActionListener.doBooking(mSelectedSaleRoomInformation);
+                    mOnUserActionListener.doBooking(mSelectedRoomInformation);
                 }
                 break;
             }
@@ -371,9 +371,9 @@ public class StayDetailActivity extends BaseActivity
         finish();
     }
 
-    private void moveToBooking(StayDetail stayDetail, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime)
+    private void moveToBooking(StayDetail stayDetail, RoomInformation roomInformation, SaleTime checkInSaleTime)
     {
-        if (stayDetail == null || saleRoomInformation == null || checkInSaleTime == null)
+        if (stayDetail == null || roomInformation == null || checkInSaleTime == null)
         {
             return;
         }
@@ -386,9 +386,9 @@ public class StayDetailActivity extends BaseActivity
             imageUrl = mImageInformationList.get(0).url;
         }
 
-        saleRoomInformation.categoryCode = stayDetail.categoryCode;
+        roomInformation.categoryCode = stayDetail.categoryCode;
 
-        Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, saleRoomInformation//
+        Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, roomInformation//
             , checkInSaleTime, imageUrl, stayDetail.index, !Util.isTextEmpty(stayDetail.benefit), mProvince, mArea);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
@@ -496,9 +496,9 @@ public class StayDetailActivity extends BaseActivity
         }
     }
 
-    private Map<String, String> recordAnalyticsBooking(StayDetail stayDetail, SaleRoomInformation saleRoomInformation)
+    private Map<String, String> recordAnalyticsBooking(StayDetail stayDetail, RoomInformation roomInformation)
     {
-        if (stayDetail == null || saleRoomInformation == null)
+        if (stayDetail == null || roomInformation == null)
         {
             return null;
         }
@@ -532,7 +532,7 @@ public class StayDetailActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(saleRoomInformation.averageDiscount));
+            params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(roomInformation.averageDiscount));
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
 
             return params;
@@ -689,9 +689,9 @@ public class StayDetailActivity extends BaseActivity
         }
 
         @Override
-        public void doBooking(SaleRoomInformation saleRoomInformation)
+        public void doBooking(RoomInformation roomInformation)
         {
-            if (saleRoomInformation == null)
+            if (roomInformation == null)
             {
                 finish();
                 return;
@@ -702,7 +702,7 @@ public class StayDetailActivity extends BaseActivity
                 return;
             }
 
-            mSelectedSaleRoomInformation = saleRoomInformation;
+            mSelectedRoomInformation = roomInformation;
 
             if (DailyHotel.isLogin() == false)
             {
@@ -714,9 +714,9 @@ public class StayDetailActivity extends BaseActivity
                 DailyNetworkAPI.getInstance(StayDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener, StayDetailActivity.this);
             }
 
-            String label = String.format("%s-%s", mStayDetail.name, mSelectedSaleRoomInformation.roomName);
+            String label = String.format("%s-%s", mStayDetail.name, mSelectedRoomInformation.roomName);
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mStayDetail, saleRoomInformation));
+                , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mStayDetail, roomInformation));
         }
 
         @Override
@@ -946,7 +946,7 @@ public class StayDetailActivity extends BaseActivity
         private void checkStayPrice(boolean isStartByShare, StayDetail stayDetail, int listViewPrice)
         {
             // 판매 완료 혹은 가격이 변동되었는지 조사한다
-            ArrayList<SaleRoomInformation> saleRoomList = stayDetail.getSaleRoomList();
+            ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
 
             if (saleRoomList == null || saleRoomList.size() == 0)
             {
@@ -966,9 +966,9 @@ public class StayDetailActivity extends BaseActivity
                 {
                     boolean hasPrice = false;
 
-                    for (SaleRoomInformation saleRoomInformation : saleRoomList)
+                    for (RoomInformation roomInformation : saleRoomList)
                     {
-                        if (listViewPrice == saleRoomInformation.averageDiscount)
+                        if (listViewPrice == roomInformation.averageDiscount)
                         {
                             hasPrice = true;
                             break;
@@ -1037,7 +1037,7 @@ public class StayDetailActivity extends BaseActivity
                             moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
                         } else
                         {
-                            moveToBooking(mStayDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
+                            moveToBooking(mStayDetail, mSelectedRoomInformation, mCheckInSaleTime);
                         }
                     }
                 } else
@@ -1088,7 +1088,7 @@ public class StayDetailActivity extends BaseActivity
                             moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
                         } else
                         {
-                            moveToBooking(mStayDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
+                            moveToBooking(mStayDetail, mSelectedRoomInformation, mCheckInSaleTime);
                         }
                     }
                 } else
