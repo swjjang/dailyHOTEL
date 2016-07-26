@@ -282,7 +282,7 @@
     <string name="dialog_msg_changed_time">방문할 수 있는 시간이 변경되었습니다. 확인 후 다시 선택해주세요.</string>
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
-    <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침 %1$d시부터 다음날 새벽 %2$d시까지입니다.</string>
+    <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침%1$d시부터 다음 날 새벽%2$d시까지입니다.</string>
     <string name="dialog_message_coupon_list_login">로그인 후 할인 쿠폰함을 확인할 수 있습니다.\n로그인 할까요?</string>
 
     <!-- Main Drawer Menu Titles -->

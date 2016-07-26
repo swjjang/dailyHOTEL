@@ -123,7 +123,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mNameEditText.setFilters(allowAlphanumericHangul);
 
-        // 추천코드 최대 길이
+        // 추천인 코드 최대 길이
         InputFilter[] fArray = new InputFilter[1];
         fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
         mRecommenderEditText.setFilters(fArray);
