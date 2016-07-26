@@ -16,7 +16,7 @@
             android:id="@+id/searchTextView"
             android:layout_width="60dp"
             android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/shape_fillrect_leeeef0_bf8f8f9"
             android:drawableLeft="@drawable/navibar_ic_s_search"
@@ -32,15 +32,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/searchTextView"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/searchTextView"
             android:orientation="horizontal">
 
             <RelativeLayout
                 android:id="@+id/regionTextLayout"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_fillrect_leeeef0_bf8f8f9"
