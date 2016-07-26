@@ -53,8 +53,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
+        int entryIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        String showTagPriceYn = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN);
 
-        return new GourmetDetail(index);
+        return new GourmetDetail(index, entryIndex, showTagPriceYn);
     }
 
     @Override
@@ -128,7 +130,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             mCheckInSaleTime = checkInSaleTime;
-            mPlaceDetail = new GourmetDetail(mPlaceDetail.index);
+            mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryIndex, mPlaceDetail.showTagPriceYn);
 
             requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
         }

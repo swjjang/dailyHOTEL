@@ -530,6 +530,10 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String address = params.get(AnalyticsManager.KeyType.ADDRESS);
         String hotelCategory = params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+        String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX);
+        String rating = params.get(AnalyticsManager.KeyType.RATING);
+        String showTagPriceYn = params.get(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN);
 
         if (Util.isTextEmpty(checkIn) == false)
         {
@@ -564,6 +568,26 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         if (Util.isTextEmpty(category) == false)
         {
             screenViewBuilder.setCustomDimension(14, category);
+        }
+
+        if (Util.isTextEmpty(placeIndex) == false)
+        {
+            screenViewBuilder.setCustomDimension(15, placeIndex);
+        }
+
+        if (Util.isTextEmpty(listIndex) == false)
+        {
+            screenViewBuilder.setCustomDimension(16, listIndex);
+        }
+
+        if (Util.isTextEmpty(rating) == false)
+        {
+            screenViewBuilder.setCustomDimension(17, rating);
+        }
+
+        if (Util.isTextEmpty(showTagPriceYn) == false)
+        {
+            screenViewBuilder.setCustomDimension(18, showTagPriceYn);
         }
 
         return screenViewBuilder;

@@ -18,18 +18,22 @@ public class StayDetail
     public double longitude;
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
     public String hotelBenefit;
-    public String satisfaction;
+    public String satisfaction; // 만족도
     private ArrayList<ImageInformation> mImageInformationList;
     private ArrayList<DetailInformation> mInformationList;
     private ArrayList<DetailInformation> mMoreInformationList;
     private ArrayList<SaleRoomInformation> mSaleRoomList;
     //
     public String categoryCode;
+    public int entryIndex;
+    public String showTagPriceYn;
 
-    public StayDetail(int hotelIndex, int nights)
+    public StayDetail(int hotelIndex, int nights, int entryIndex, String showTagPriceYn)
     {
         this.hotelIndex = hotelIndex;
         this.nights = nights;
+        this.entryIndex = entryIndex;
+        this.showTagPriceYn = showTagPriceYn;
     }
 
     public void setData(JSONObject jsonObject) throws Exception

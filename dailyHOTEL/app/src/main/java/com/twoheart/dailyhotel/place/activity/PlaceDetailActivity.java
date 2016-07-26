@@ -437,6 +437,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
             params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(placeDetail.entryIndex));
+            params.put(AnalyticsManager.KeyType.RATING, placeDetail.satisfaction);
+            params.put(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN, placeDetail.showTagPriceYn);
 
             AnalyticsManager.getInstance(this).recordScreen(screen, params);
         } catch (Exception e)

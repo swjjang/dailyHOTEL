@@ -14,9 +14,9 @@ public class GourmetDetail extends PlaceDetail
     public Gourmet.Grade grade;
     public String category;
 
-    public GourmetDetail(int index)
+    public GourmetDetail(int index, int entryIndex, String showTagPriceYn)
     {
-        super(index);
+        super(index, entryIndex, showTagPriceYn);
     }
 
     @Override
