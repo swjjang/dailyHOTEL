@@ -195,9 +195,6 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             mPlaceSearchLayout.resetSearchKeyword();
-
-            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-            //                , AnalyticsManager.Action.HOTEL_KEYWORD_RESET_CLICKED, AnalyticsManager.Label.SEARCH_KEYWORD_RESET, null);
         }
 
         @Override

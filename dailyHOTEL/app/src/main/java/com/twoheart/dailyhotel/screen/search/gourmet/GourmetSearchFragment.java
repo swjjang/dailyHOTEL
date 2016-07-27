@@ -182,9 +182,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             mPlaceSearchLayout.resetSearchKeyword();
-
-            //            AnalyticsManager.getInstance(GourmetSearchActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-            //                , AnalyticsManager.Action.GOURMET_KEYWORD_RESET_CLICKED, AnalyticsManager.Label.SEARCH_KEYWORD_RESET, null);
         }
 
         @Override

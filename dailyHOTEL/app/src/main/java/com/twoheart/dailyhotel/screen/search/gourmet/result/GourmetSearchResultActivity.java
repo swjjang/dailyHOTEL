@@ -405,21 +405,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Intent intent = GourmetCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-
-            switch (mViewType)
-            {
-                case LIST:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-                    break;
-
-                case MAP:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-                    break;
-            }
-
-            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
+                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
         @Override

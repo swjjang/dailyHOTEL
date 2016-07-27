@@ -508,7 +508,6 @@ public class AnalyticsManager
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
         public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked"; // 앱보이 사용
-        public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
         public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
         public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED = "HotelAutoCompletedKeywordClicked";
@@ -519,7 +518,6 @@ public class AnalyticsManager
         public static final String HOTEL_RECENT_KEYWORD_NOT_FOUND = "HotelRecentKeywordSearchNotFound";
         //
         public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
-        public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
         public static final String GOURMET_AROUND_SEARCH_CLICKED = "GourmetAroundSearchClicked";
         public static final String GOURMET_RECENT_KEYWORD_SEARCH_CLICKED = "GourmetRecentKeywordSearchClicked";
         public static final String GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED = "GourmetAutoCompletedKeywordClicked";
@@ -686,6 +684,7 @@ public class AnalyticsManager
         public static final String CLOSED = "Closed";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String EVENT = "event";
+        public static final String SEARCH_RESULT_VIEW = "SearchResultView";
     }
 
     public static class UserType

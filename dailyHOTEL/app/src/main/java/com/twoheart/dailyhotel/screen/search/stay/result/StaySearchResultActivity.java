@@ -469,21 +469,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mViewType, mSearchType, mStayCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-
-            switch (mViewType)
-            {
-                case LIST:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-                    break;
-
-                case MAP:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-                    break;
-            }
-
-            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
+                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
         @Override
