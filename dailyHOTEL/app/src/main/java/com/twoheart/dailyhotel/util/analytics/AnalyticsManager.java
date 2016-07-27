@@ -536,7 +536,6 @@ public class AnalyticsManager
         public static final String GOURMET_SEARCH_RESULT_CANCELED = "GourmetSearchResultCanceled";
         //
         public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
-        public static final String CALL_INQUIRY_CLICKED = "CallInquiryClicked";
         //
         public static final String UPCOMING_BOOKING_MAP_VIEW_CLICKED = "UpcomingBookingMapViewClicked";
         public static final String UPCOMING_BOOKING_ADDRESS_COPY_CLICKED = "UpcomingBookingAddressCopyClicked";
@@ -577,8 +576,7 @@ public class AnalyticsManager
         public static final String SEARCH_BUTTON_CLICKED = "SearchButtonClicked";
         public static final String KEYWORD = "Keyword";
         public static final String SEARCHSCREEN = "SearchScreen";
-
-
+        public static final String SEARCH_RESULT_VIEW = "SearchResultView";
     }
 
     public static class Category
@@ -681,8 +679,6 @@ public class AnalyticsManager
         public static final String DELETE_ALL_KEYWORDS = "DeleteAllKeywords";
         public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
         public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
-        public static final String CALL_KEYWORD_HOTEL = "Call-KeywordHotel";
-        public static final String CALL_KEYWORD_GOURMET = "Call-KeywordGourmet";
         //
         public static final String CREDIT_MANAGEMENT = "CreditManagement";
         public static final String INVITE_FRIENDS = "InviteFriends";
@@ -695,6 +691,7 @@ public class AnalyticsManager
         //
         public static final String SWITCHING_HOTEL = "SwitchingHotel";
         public static final String SWITCHING_GOURMET = "SwitchingGourmet";
+        public static final String CALL = "Call";
     }
 
     public static class UserType
