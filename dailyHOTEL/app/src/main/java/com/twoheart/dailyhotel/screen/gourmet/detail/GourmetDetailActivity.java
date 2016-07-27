@@ -1,9 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
- * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
- */
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
@@ -89,7 +83,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             isShowOriginalPrice = "Y";
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
 
         return intent;
     }
@@ -147,7 +141,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             isShowOriginalPrice = "Y";
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
 
         return intent;
     }
@@ -253,7 +247,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
         int entryIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN);
+        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
 
         return new GourmetDetail(index, entryIndex, isShowOriginalPrice);
     }

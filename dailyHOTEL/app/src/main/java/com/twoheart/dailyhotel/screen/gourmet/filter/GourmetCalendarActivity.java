@@ -85,6 +85,15 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         } else
         {
             setTouchEnabled(true);
+
+            makeCalendar(saleTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+
+            reset();
+
+            if (isSelected == true)
+            {
+                setSelectedDay(saleTime);
+            }
         }
     }
 

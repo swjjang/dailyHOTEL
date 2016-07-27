@@ -395,16 +395,6 @@ public class StayDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
-        View topDividerViw = viewGroup.findViewById(R.id.topDividerViw);
-
-        if (Util.isTextEmpty(mStayDetail.benefit) == false)
-        {
-            topDividerViw.setVisibility(View.GONE);
-        } else
-        {
-            topDividerViw.setVisibility(View.VISIBLE);
-        }
-
         ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
 
         if (arrayList != null)

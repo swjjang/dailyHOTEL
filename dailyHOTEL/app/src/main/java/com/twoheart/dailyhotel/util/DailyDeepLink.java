@@ -733,7 +733,7 @@ public class DailyDeepLink
         return Constants.SortType.DEFAULT;
     }
 
-    public int getCalendarFlag()
+    public boolean isShowCalendar()
     {
         switch (mVersionCode)
         {
@@ -744,10 +744,10 @@ public class DailyDeepLink
                 {
                     try
                     {
-                        return Integer.parseInt(value);
+                        return Integer.parseInt(value) == 1 ? true : false;
                     } catch (NumberFormatException e)
                     {
-                        return 0;
+                        return false;
                     }
                 }
                 break;
@@ -756,7 +756,7 @@ public class DailyDeepLink
                 break;
         }
 
-        return 0;
+        return false;
     }
 
     private boolean decodingLinkV5(Uri uri)

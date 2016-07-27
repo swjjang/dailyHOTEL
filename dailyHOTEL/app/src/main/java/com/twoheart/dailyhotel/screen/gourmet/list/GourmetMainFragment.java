@@ -865,7 +865,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void startGourmetDetailByDeepLink(int gourmetIndex, SaleTime saleTime)
+    private void startGourmetDetailByDeepLink(int gourmetIndex, SaleTime saleTime, boolean isShowCalendar)
     {
         if (isFinishing() || gourmetIndex < 0 || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -874,14 +874,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         lockUI();
 
-        Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
+        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, saleTime, gourmetIndex, isShowCalendar);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
     }
@@ -896,6 +889,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
+            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
             // date가 비어 있는 경우
             if (Util.isTextEmpty(date) == true)
@@ -903,7 +897,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 if (datePlus >= 0)
                 {
                     saleTime.setOffsetDailyDay(datePlus);
-                    startGourmetDetailByDeepLink(gourmetIndex, saleTime);
+                    startGourmetDetailByDeepLink(gourmetIndex, saleTime, isShowCalendar);
                 } else
                 {
                     return false;
@@ -922,7 +916,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 }
 
                 saleTime.setOffsetDailyDay(dailyDayOfDays);
-                startGourmetDetailByDeepLink(gourmetIndex, saleTime);
+                startGourmetDetailByDeepLink(gourmetIndex, saleTime, isShowCalendar);
             }
 
             mIsDeepLink = true;
