@@ -690,6 +690,8 @@ public class AnalyticsManager
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
         public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
+        public static final String CHANGE_LOCATION = "changelocation";
+        public static final String EVENT = "event";
     }
 
     public static class UserType
