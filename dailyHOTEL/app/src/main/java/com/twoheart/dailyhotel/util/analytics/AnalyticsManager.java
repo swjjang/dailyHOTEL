@@ -792,5 +792,7 @@ public class AnalyticsManager
         public static final String DETAIL = "detailview";
         public static final String HOTEL = "hotel";
         public static final String GOURMET = "gourmet";
+        public static final String EVENT = "event";
+        public static final String CHANGE_LOCATION = "changelocation";
     }
 }

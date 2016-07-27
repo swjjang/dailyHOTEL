@@ -183,11 +183,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-
                 startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, false);
-
             }
         } else
         {
@@ -358,7 +354,13 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+        String closedLabel = null;
+        if (mIsDeepLink == true)
+        {
+            closedLabel = AnalyticsManager.Label.EVENT;
+        }
+
+        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, nights, placeIndex, closedLabel, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -790,7 +792,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     ((StayDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (StayDetail) mPlaceDetail, mCurrentImage);
                 }
 
-                if(mCheckPrice == false)
+                if (mCheckPrice == false)
                 {
                     mCheckPrice = true;
                     checkStayPrice(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);

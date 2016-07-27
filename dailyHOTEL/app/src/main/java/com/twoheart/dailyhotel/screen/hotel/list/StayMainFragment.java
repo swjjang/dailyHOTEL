@@ -131,7 +131,7 @@ public class StayMainFragment extends PlaceMainFragment
 
                 ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(checkInSaleTime, checkOutSaleTime);
 
-                startCalendar();
+                startCalendar(AnalyticsManager.Label.CHANGE_LOCATION);
 
                 mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), province.getCategoryList(), //
                     mStayCuration.getCategory(), mStayListFragmentListener);
@@ -239,7 +239,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    public void startCalendar()
+    public void startCalendar(String closedLabel)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -249,7 +249,7 @@ public class StayMainFragment extends PlaceMainFragment
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
         int nights = mStayCuration.getNights();
 
-        Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
+        Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, closedLabel, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -341,7 +341,7 @@ public class StayMainFragment extends PlaceMainFragment
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
     }
@@ -813,7 +813,7 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onDateClick()
         {
-            startCalendar();
+            startCalendar(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);

@@ -24,12 +24,13 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     private int mPlaceIndex;
     private SaleTime mSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int placeIndex, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, SaleTime saleTime, int placeIndex, String screen, String closedLabel, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+        intent.putExtra(INTENT_EXTRA_DATA_CLOSED_LABEL, closedLabel);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
 
