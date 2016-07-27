@@ -88,6 +88,19 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                     showAnimation();
                 }
             }, 20);
+        } else
+        {
+            setTouchEnabled(true);
+
+            makeCalendar(saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+
+            reset();
+
+            if (isSelected == true)
+            {
+                setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+                checkLastDay();
+            }
         }
     }
 

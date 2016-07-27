@@ -87,7 +87,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             isShowOriginalPrice = "Y";
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
 
         return intent;
     }
@@ -146,7 +146,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             showTagPriceYn = "Y";
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, showTagPriceYn);
 
         return intent;
     }
@@ -253,7 +253,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         int stayIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
         int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN);
+        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
 
         return new StayDetail(stayIndex, nights, entryPosition, isShowOriginalPrice);
     }
@@ -854,7 +854,6 @@ public class StayDetailActivity extends PlaceDetailActivity
                         public void onDismiss(DialogInterface dialog)
                         {
                             setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                            finish();
                         }
                     });
             } else

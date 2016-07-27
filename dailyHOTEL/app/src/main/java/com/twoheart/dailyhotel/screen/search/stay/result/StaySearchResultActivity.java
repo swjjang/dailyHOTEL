@@ -757,13 +757,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
-            Intent intent = new Intent(StaySearchResultActivity.this, StayDetailActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mStayCuration.getCheckInSaleTime());
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
+            Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, mStayCuration.getCheckInSaleTime(), stay);
 
             String showTagPriceYn;
             if (stay.price <= 0 || stay.price <= stay.discountPrice)
@@ -774,7 +768,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 showTagPriceYn = "Y";
             }
 
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, showTagPriceYn);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }

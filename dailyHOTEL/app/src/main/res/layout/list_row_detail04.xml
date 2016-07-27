@@ -5,24 +5,6 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/topDividerViw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@color/default_background"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/default_line_cf0f0f0"/>
-    </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="20dp"/>

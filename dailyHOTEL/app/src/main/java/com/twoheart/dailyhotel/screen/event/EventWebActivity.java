@@ -222,7 +222,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             SaleTime checkInSaleTime = saleTime.getClone(0);
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
-            int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
+            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -258,18 +258,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
 
-            Intent intent = new Intent(EventWebActivity.this, StayDetailActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, calendarFlag);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
+            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, checkInSaleTime, nights, hotelIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
-            if (calendarFlag == 1)
+            if (isShowCalendar == true)
             {
                 AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
@@ -295,7 +288,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             SaleTime gourmetSaleTime = saleTime.getClone(0);
             int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             int nights = 1;
-            int calendarFlag = DailyDeepLink.getInstance().getCalendarFlag();
+            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -329,11 +322,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
             gourmetSaleTime.setOffsetDailyDay(dailyDayOfDays);
 
             Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                gourmetSaleTime, fnbIndex, calendarFlag == 1 ? true : false);
+                gourmetSaleTime, fnbIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
-            if (calendarFlag == 1)
+            if (isShowCalendar == true)
             {
                 AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);

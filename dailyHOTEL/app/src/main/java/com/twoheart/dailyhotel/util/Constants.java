@@ -198,7 +198,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_ADDRESS = "address";
     public static final String NAME_INTENT_EXTRA_DATA_PLACECURATION = "placeCuration";
     public static final String NAME_INTENT_EXTRA_DATA_ENTRY_INDEX = "entryIndex";
-    public static final String NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN = "showTagPriceYn";
+    public static final String NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE = "isShowOriginalPrice";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;

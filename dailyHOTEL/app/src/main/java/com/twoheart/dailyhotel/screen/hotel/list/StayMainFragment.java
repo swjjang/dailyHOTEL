@@ -276,32 +276,7 @@ public class StayMainFragment extends PlaceMainFragment
                 DailyPreference.getInstance(mBaseActivity).setGASelectedRegion(region);
                 DailyPreference.getInstance(mBaseActivity).setGAHotelName(stay.name);
 
-                Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mStayCuration.getCheckInSaleTime());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mStayCuration.getProvince());
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
-
-                String showTagPriceYn;
-                if (stay.price <= 0 || stay.price <= stay.discountPrice)
-                {
-                    showTagPriceYn = "N";
-                } else
-                {
-                    showTagPriceYn = "Y";
-                }
-
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, showTagPriceYn);
-
-                String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
-
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mStayCuration.getCheckInSaleTime(), mStayCuration.getProvince(), stay);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
@@ -320,7 +295,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    public void startStayDetailByDeeplink(int hotelIndex, SaleTime saleTime, int nights)
+    public void startStayDetailByDeeplink(int hotelIndex, SaleTime saleTime, int nights, boolean isShowCalendar)
     {
         if (isFinishing() == true || hotelIndex < 0)
         {
@@ -333,15 +308,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
 
         lockUI();
-
-        Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
+        Intent intent = StayDetailActivity.newInstance(mBaseActivity, saleTime, nights, hotelIndex, isShowCalendar);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
     }
@@ -363,6 +330,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
+            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
             DailyDeepLink.getInstance().clear();
 
@@ -371,7 +339,7 @@ public class StayMainFragment extends PlaceMainFragment
                 if (datePlus >= 0)
                 {
                     checkInSaleTime.setOffsetDailyDay(datePlus);
-                    startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights);
+                    startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights, isShowCalendar);
                 } else
                 {
                     return false;
@@ -390,7 +358,7 @@ public class StayMainFragment extends PlaceMainFragment
                 }
 
                 checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
-                startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights);
+                startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights, isShowCalendar);
             }
 
             mIsDeepLink = true;
