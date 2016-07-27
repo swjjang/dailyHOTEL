@@ -46,11 +46,20 @@
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp">
 
+                <ImageView
+                    android:id="@+id/regionImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/navibar_ic_v"/>
+
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/regionTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="false"
+                    android:layout_toLeftOf="@id/regionImageView"
                     android:drawableLeft="@drawable/navibar_ic_s_region"
                     android:drawablePadding="3dp"
                     android:ellipsize="end"
@@ -60,12 +69,6 @@
                     android:textColor="@color/default_text_c323232"
                     android:textSize="12dp"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/navibar_ic_v"/>
             </RelativeLayout>
 
             <RelativeLayout
