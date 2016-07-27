@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
@@ -123,6 +124,8 @@ public class MainActivity extends BaseActivity implements Constants
 
         // URL 만들때 사용
         //                com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+
+        DailyRemoteConfig.getInstance().requestRemoteConfig();
 
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);

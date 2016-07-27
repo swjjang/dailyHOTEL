@@ -186,12 +186,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
             mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
-            String category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
-
-            if (mPlaceDetail instanceof GourmetDetail && Util.isTextEmpty(category) == false)
-            {
-                ((GourmetDetail) mPlaceDetail).category = category;
-            }
+            ((GourmetDetail) mPlaceDetail).category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
 
             if (placeName == null)
             {

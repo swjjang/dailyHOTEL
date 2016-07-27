@@ -1,20 +1,51 @@
 {
   "project_info": {
-    "project_number": "1025681158000",
-    "project_id": "dh-dc-140804"
+    "project_number": "192790829312",
+    "firebase_url": "https://dailyhotel-1266.firebaseio.com",
+    "project_id": "dailyhotel-1266",
+    "storage_bucket": "dailyhotel-1266.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1025681158000:android:a16acdd735662081",
+        "mobilesdk_app_id": "1:192790829312:android:a16acdd735662081",
         "android_client_info": {
           "package_name": "com.twoheart.dailyhotel"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "192790829312-9qbegdpoh82d7niu32jdaobf7db1i9tf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.twoheart.dailyhotel",
+            "certificate_hash": "F1AE9B611C999173E7C7616EBA480472B837E5B9"
+          }
+        },
+        {
+          "client_id": "192790829312-0p1fdtkctblm54c3mjh379qtbmqe5rmm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.twoheart.dailyhotel",
+            "certificate_hash": "B31857E37BE377B0A3A348176C92E145A5083E72"
+          }
+        },
+        {
+          "client_id": "192790829312-qurg38euo8mnj1jfo1tikdgk2r9fcmsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.twoheart.dailyhotel",
+            "certificate_hash": "3217BE9C9D3EFC708523EDD99E471496FC77FBD1"
+          }
+        },
+        {
+          "client_id": "192790829312-4e0go3i3ir37t0cit5vt4de5mp0evu1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAEXsBCoh3kpErI39GwFguXb8V_OGr5VTo"
+          "current_key": "AIzaSyDjhmWw3dUuqYB9E9bbykjh53RFFdKiSuQ"
         }
       ],
       "services": {
@@ -29,9 +60,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 2,
-          "test_banner_ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
-          "test_interstitial_ad_unit_id": "ca-app-pub-3940256099942544/1033173712"
+          "status": 2
         }
       }
     }

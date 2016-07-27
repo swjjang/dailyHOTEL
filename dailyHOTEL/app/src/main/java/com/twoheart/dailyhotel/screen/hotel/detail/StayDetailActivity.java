@@ -191,12 +191,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
             mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
-            String category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
-
-            if (mPlaceDetail instanceof StayDetail && Util.isTextEmpty(category) == false)
-            {
-                ((StayDetail) mPlaceDetail).categoryCode = category;
-            }
+            ((StayDetail) mPlaceDetail).categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
 
             if (placeName == null)
             {
