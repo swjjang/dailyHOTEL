@@ -360,7 +360,8 @@ public class StayDetailActivity extends PlaceDetailActivity
             closedLabel = AnalyticsManager.Label.EVENT;
         }
 
-        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, nights, placeIndex, closedLabel, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, //
+            nights, placeIndex, closedLabel, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//

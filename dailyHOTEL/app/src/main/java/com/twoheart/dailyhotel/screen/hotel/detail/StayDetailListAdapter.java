@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 import android.content.Context;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class StayDetailListAdapter extends BaseAdapter
 {
-    private static final int NUMBER_OF_ROWSLIST = 7;
+    private static final int NUMBER_OF_ROWSLIST = 6;
 
     private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
@@ -137,32 +136,23 @@ public class StayDetailListAdapter extends BaseAdapter
             linearLayout.addView(mDeatilViews[3]);
         }
 
-        // 데일리's comment
+        // 정보 화면
         if (mDeatilViews[4] == null)
         {
             mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getDailysCommentView(layoutInflater, (ViewGroup) mDeatilViews[4], mStayDetail);
+        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[4], mStayDetail);
         linearLayout.addView(mDeatilViews[4]);
 
-        // 호텔 정보
+        // 카카오톡 문의
         if (mDeatilViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
+            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
+        getKakaoView(mDeatilViews[5]);
         linearLayout.addView(mDeatilViews[5]);
-
-        // 카카오톡 문의
-        if (mDeatilViews[6] == null)
-        {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
-        }
-
-        getDeatil08View(mDeatilViews[6]);
-        linearLayout.addView(mDeatilViews[6]);
 
         return linearLayout;
     }
@@ -391,14 +381,14 @@ public class StayDetailListAdapter extends BaseAdapter
     }
 
     /**
-     * 데일리 추천 이유
+     * 정보
      *
      * @param layoutInflater
      * @param viewGroup
      * @param stayDetail
      * @return
      */
-    private View getDailysCommentView(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
+    private View getInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
     {
         if (layoutInflater == null || viewGroup == null || stayDetail == null)
         {
@@ -419,36 +409,18 @@ public class StayDetailListAdapter extends BaseAdapter
 
         if (arrayList != null)
         {
-            DetailInformation information = arrayList.get(0);
+            ViewGroup informationLayout = (ViewGroup) viewGroup.findViewById(R.id.informationLayout);
 
-            makeInformationLayout(layoutInflater, viewGroup, information);
-        }
+            informationLayout.removeAllViews();
 
-        return viewGroup;
-    }
+            for (DetailInformation information : arrayList)
+            {
+                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, informationLayout, false);
 
-    /**
-     * 호텔 정보
-     *
-     * @param layoutInflater
-     * @param viewGroup
-     * @param stayDetail
-     * @return
-     */
-    private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
-    {
-        if (layoutInflater == null || viewGroup == null || stayDetail == null)
-        {
-            return viewGroup;
-        }
+                makeInformationLayout(layoutInflater, childGroup, information);
 
-        viewGroup.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-
-        ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
-
-        for(DetailInformation detailInformation : arrayList)
-        {
-            makeInformationLayout(layoutInflater, viewGroup, detailInformation);
+                informationLayout.addView(childGroup);
+            }
         }
 
         return viewGroup;
@@ -459,7 +431,7 @@ public class StayDetailListAdapter extends BaseAdapter
      *
      * @return
      */
-    private View getDeatil08View(View view)
+    private View getKakaoView(View view)
     {
         if (view == null)
         {

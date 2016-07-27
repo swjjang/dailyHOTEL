@@ -156,7 +156,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             linearLayout.addView(mDeatilViews[3]);
         }
 
-        // 호텔 정보
+        // 정보
         if (mDeatilViews[4] == null)
         {
             mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
@@ -394,8 +394,6 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             return viewGroup;
         }
-
-        viewGroup.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         ArrayList<DetailInformation> arrayList = placeDetail.getInformation();
 
