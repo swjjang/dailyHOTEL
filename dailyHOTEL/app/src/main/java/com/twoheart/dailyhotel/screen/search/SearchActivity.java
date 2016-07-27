@@ -235,7 +235,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
                 }
 
-                analyticsSwitchChanged(startPlactType, mPlaceType);
+                analyticsSwitchChanged(mPlaceType);
             }
         });
 
@@ -317,34 +317,23 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void analyticsSwitchChanged(PlaceType startPlaceType, PlaceType changedPlaceType)
+    private void analyticsSwitchChanged(PlaceType changedPlaceType)
     {
-        String category = AnalyticsManager.ValueType.EMPTY;
+        String category = AnalyticsManager.Category.SEARCH;
         String label = AnalyticsManager.ValueType.EMPTY;
-
-        switch (startPlaceType)
-        {
-            case HOTEL:
-                category = AnalyticsManager.Category.HOTEL_SEARCH;
-                break;
-
-            case FNB:
-                category = AnalyticsManager.Category.GOURMET_SEARCH;
-                break;
-        }
 
         switch (changedPlaceType)
         {
             case HOTEL:
-                label = "Hotel";
+                label = AnalyticsManager.Label.SWITCHING_HOTEL;
                 break;
 
             case FNB:
-                label = "Gourmet";
+                label = AnalyticsManager.Label.SWITCHING_GOURMET;
                 break;
         }
 
-        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SWITCHING, label, null);
+        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SEARCH_SCREEN, label, null);
     }
 
     private void recordAnalyticsSearch(SaleTime saleTime, int nights, PlaceType placeType)

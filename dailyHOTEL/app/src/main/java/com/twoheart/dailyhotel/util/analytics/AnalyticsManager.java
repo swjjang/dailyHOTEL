@@ -507,12 +507,9 @@ public class AnalyticsManager
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
-        public static final String HOTEL_SEARCH_BUTTON_CLICKED = "HotelSearchButtonClicked";
-        public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked";
-        public static final String HOTEL_SEARCH_BACK_BUTTON_CLICKED = "HotelSearchBackButtonClicked";
+        public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked"; // 앱보이 사용
         public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
         public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
-        public static final String HOTEL_KEYWORD_HISTORY_DELETED = "HotelKeywordsHistoryDeleted";
         public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED = "HotelAutoCompletedKeywordClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "HotelAutoCompletedKeywordNotMatched";
@@ -520,15 +517,10 @@ public class AnalyticsManager
         public static final String HOTEL_KEYWORD_SEARCH_NOT_FOUND = "HotelKeywordSearchNotFound";
         public static final String HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "HotelAutoCompletedKeywordNotFound";
         public static final String HOTEL_RECENT_KEYWORD_NOT_FOUND = "HotelRecentKeywordSearchNotFound";
-        public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
-        public static final String HOTEL_SEARCH_RESULT_CANCELED = "HotelSearchResultCanceled";
         //
-        public static final String GOURMET_SEARCH_BUTTON_CLICKED = "GourmetSearchButtonClicked";
         public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
-        public static final String GOURMET_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
         public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
         public static final String GOURMET_AROUND_SEARCH_CLICKED = "GourmetAroundSearchClicked";
-        public static final String GOURMET_KEYWORD_HISTORY_DELETED = "GourmetKeywordsHistoryDeleted";
         public static final String GOURMET_RECENT_KEYWORD_SEARCH_CLICKED = "GourmetRecentKeywordSearchClicked";
         public static final String GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED = "GourmetAutoCompletedKeywordClicked";
         public static final String GOURMET_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "GourmetAutoCompletedKeywordNotMatched";
@@ -536,11 +528,8 @@ public class AnalyticsManager
         public static final String GOURMET_KEYWORD_SEARCH_NOT_FOUND = "GourmetKeywordSearchNotFound";
         public static final String GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "GourmetAutoCompletedKeywordNotFound";
         public static final String GOURMET_RECENT_KEYWORD_NOT_FOUND = "GourmetRecentKeywordSearchNotFound";
-        public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
-        public static final String GOURMET_SEARCH_RESULT_CANCELED = "GourmetSearchResultCanceled";
         //
         public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
-        public static final String CALL_INQUIRY_CLICKED = "CallInquiryClicked";
         //
         public static final String UPCOMING_BOOKING_MAP_VIEW_CLICKED = "UpcomingBookingMapViewClicked";
         public static final String UPCOMING_BOOKING_ADDRESS_COPY_CLICKED = "UpcomingBookingAddressCopyClicked";
@@ -577,7 +566,11 @@ public class AnalyticsManager
         public static final String HOTEL_MAP_DETAIL_VIEW_CLICKED = "HotelMapDetailViewClicked";
         public static final String GOURMET_MAP_ICON_CLICKED = "GourmetMapIconClicked";
         public static final String GOURMET_MAP_DETAIL_VIEW_CLICKED = "GourmetMapDetailViewClicked";
-        public static final String SWITCHING = "Switching";
+
+        public static final String SEARCH_BUTTON_CLICKED = "SearchButtonClicked";
+        public static final String KEYWORD = "Keyword";
+        public static final String SEARCH_SCREEN = "SearchScreen";
+        public static final String SEARCH_RESULT_VIEW = "SearchResultView";
     }
 
     public static class Category
@@ -591,6 +584,7 @@ public class AnalyticsManager
         public static final String BOOKING_STATUS = "BookingStatus";
         public static final String COUPON_BOX = "CouponBox";
         public static final String INVITE_FRIEND = "InviteFriend";
+        public static final String SEARCH = "Search";
     }
 
     public static class Label
@@ -670,17 +664,10 @@ public class AnalyticsManager
         public static final String GOURMET_LOCATION_LIST = "GourmetLocationList";
         public static final String GOURMET_MAP = "GourmetMap";
         //
-        public static final String KEYWORD_BACK_BUTTON_CLICKED = "KeywordBackButtonClicked";
-        public static final String RESULT_BACK_BUTTON_CLICKED = "ResultBackButtonClicked";
-        public static final String SEARCH_RESULT_CANCELED = "SearchResultCanceled";
         public static final String SEARCH_KEYWORD_RESET = "SearchKeywordReset";
         public static final String TERMSOF_LOCATION = "TermsofLocation";
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
         public static final String DELETE_ALL_KEYWORDS = "DeleteAllKeywords";
-        public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
-        public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
-        public static final String CALL_KEYWORD_HOTEL = "Call-KeywordHotel";
-        public static final String CALL_KEYWORD_GOURMET = "Call-KeywordGourmet";
         //
         public static final String CREDIT_MANAGEMENT = "CreditManagement";
         public static final String INVITE_FRIENDS = "InviteFriends";
@@ -690,6 +677,13 @@ public class AnalyticsManager
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
         public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
+        //
+        public static final String SWITCHING_HOTEL = "SwitchingHotel";
+        public static final String SWITCHING_GOURMET = "SwitchingGourmet";
+        public static final String CALL = "Call";
+        public static final String SEARCH_AGAIN = "SearchAgain";
+        public static final String BACK_BUTTON = "BackButton";
+        public static final String CLOSED = "Closed";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String EVENT = "event";
     }

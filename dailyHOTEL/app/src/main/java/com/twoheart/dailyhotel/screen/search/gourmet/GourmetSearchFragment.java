@@ -217,8 +217,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                , AnalyticsManager.Action.GOURMET_KEYWORD_HISTORY_DELETED, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
         @Override
@@ -314,8 +314,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         {
             mBaseActivity.finish();
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                , AnalyticsManager.Action.GOURMET_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.KEYWORD_BACK_BUTTON_CLICKED, null);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.CLOSED, null);
         }
     };
 
