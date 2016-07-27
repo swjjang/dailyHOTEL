@@ -101,6 +101,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void doBooking();
     }
 
+    protected abstract String getProductTypeTitle();
+
     protected abstract View getTitleLayout();
 
     protected abstract View getGradeTextView();
@@ -131,6 +133,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
         layoutParams.height = mImageHeight;
 
         mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
+
+        TextView productTypeTextView = (TextView)mProductTypeLayout.findViewById(R.id.productTypeTextView);
+
+        productTypeTextView.setText(getProductTypeTitle());
+
         mProductTypeRecyclerView = (RecyclerView) mProductTypeLayout.findViewById(R.id.productTypeRecyclerView);
         mProductTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         EdgeEffectColor.setEdgeGlowColor(mProductTypeRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));

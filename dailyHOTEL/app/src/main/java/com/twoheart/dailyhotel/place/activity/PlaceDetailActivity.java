@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -28,6 +29,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
+
+    protected SaleTime mSaleTime;
     protected int mCurrentImage;
     protected boolean mIsDeepLink;
     protected String mDefaultImageUrl;
@@ -48,7 +51,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void hideTicketInformationLayout();
+    protected abstract void hideProductInformationLayout();
 
     protected abstract void doBooking();
 
@@ -133,6 +136,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mDontReloadAtOnResume = false;
         } else
         {
+            // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
             lockUI();
             mPlaceDetailNetworkController.requestCommonDatetime();
         }
@@ -157,7 +161,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 case StayDetailLayout.STATUS_BOOKING:
                 case StayDetailLayout.STATUS_NONE:
-                    hideTicketInformationLayout();
+                    hideProductInformationLayout();
                     return;
             }
         }

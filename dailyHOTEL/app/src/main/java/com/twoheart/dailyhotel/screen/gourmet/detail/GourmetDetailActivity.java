@@ -51,7 +51,6 @@ import java.util.TimeZone;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
-    private SaleTime mSaleTime;
     private TicketInformation mSelectedTicketInformation;
 
     /**
@@ -76,11 +75,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
 
         String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
 
         String isShowOriginalPrice;
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
@@ -182,12 +180,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
 
-            if (mPlaceDetail == null)
-            {
-                Util.restartApp(this);
-                return;
-            }
-
             initLayout(null, null);
 
             if (isShowCalendar == true)
@@ -251,11 +243,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         return new GourmetDetailNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
 
-    protected void requestPlaceDetailInformation(SaleTime saleTime, int placeIndex)
-    {
-        ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(placeIndex, saleTime.getDayOfDaysDateFormat("yyMMdd"));
-    }
-
     @Override
     protected PlaceDetail createPlaceDetail(Intent intent)
     {
@@ -292,9 +279,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         HashMap<String, String> params = new HashMap<>();
         params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
         params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-        //        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        //        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
         params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
@@ -339,12 +323,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mSaleTime = checkInSaleTime;
             mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, mPlaceDetail.isShowOriginalPrice);
 
-            requestPlaceDetailInformation(mSaleTime, mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyMMdd"), mPlaceDetail.index);
         }
     }
 
     @Override
-    protected void hideTicketInformationLayout()
+    protected void hideProductInformationLayout()
     {
         mOnEventListener.hideProductInformationLayout();
     }
@@ -355,7 +339,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.doBooking();
     }
 
-    protected void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
+    private void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -432,7 +416,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, TicketInformation ticketInformation)
     {
-        if (gourmetDetail == null || ticketInformation == null)
+        if (saleTime ==  null || gourmetDetail == null || ticketInformation == null)
         {
             return null;
         }
@@ -681,40 +665,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onGourmetDetailInformation(JSONObject dataJSONObject)
-        {
-            if (dataJSONObject == null)
-            {
-                return;
-            }
-
-            try
-            {
-                mPlaceDetail.setData(dataJSONObject);
-
-                if (mIsDeepLink == true)
-                {
-                    mIsDeepLink = false;
-                    mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
-                }
-
-                if (mPlaceDetailLayout != null)
-                {
-                    ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
-                }
-
-                recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
-            } catch (Exception e)
-            {
-                DailyToast.showToast(GourmetDetailActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
-                finish();
-            } finally
-            {
-                unLockUI();
-            }
-        }
-
-        @Override
         public void onCommonDateTime(long currentDateTime, long dailyDateTime)
         {
             if (mIsDeepLink == true)
@@ -735,7 +685,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
             }
 
-            requestPlaceDetailInformation(mSaleTime, mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyMMdd"), mPlaceDetail.index);
         }
 
         @Override
@@ -776,6 +726,35 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 {
                     processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation);
                 }
+            }
+        }
+
+        @Override
+        public void onGourmetDetailInformation(JSONObject dataJSONObject)
+        {
+            try
+            {
+                mPlaceDetail.setData(dataJSONObject);
+
+                if (mIsDeepLink == true)
+                {
+                    mIsDeepLink = false;
+                    mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
+                }
+
+                if (mPlaceDetailLayout != null)
+                {
+                    ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
+                }
+
+                recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
+            } catch (Exception e)
+            {
+                DailyToast.showToast(GourmetDetailActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
+                finish();
+            } finally
+            {
+                unLockUI();
             }
         }
 

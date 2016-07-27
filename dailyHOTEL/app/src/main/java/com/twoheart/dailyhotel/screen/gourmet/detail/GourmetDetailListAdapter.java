@@ -39,8 +39,8 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private GourmetDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public GourmetDetailListAdapter(Context context, GourmetDetail gourmetDetail, //
-                                    SaleTime saleTime, GourmetDetailLayout.OnEventListener onEventListener, //
+    public GourmetDetailListAdapter(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, //
+                                    GourmetDetailLayout.OnEventListener onEventListener, //
                                     View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;

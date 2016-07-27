@@ -23,7 +23,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     private GourmetDetailListAdapter mListAdapter;
     private TicketInformation mSelectedTicketInformation;
 
-    private GourmetDetailRoomTypeListAdapter mTicketTypeListAdapter;
+    private GourmetDetailTicketTypeListAdapter mTicketTypeListAdapter;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
@@ -33,6 +33,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
+    }
+
+    @Override
+    protected String getProductTypeTitle()
+    {
+        return mContext.getString(R.string.act_hotel_search_ticket);
     }
 
     @Override
@@ -97,7 +103,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter(mContext, (GourmetDetail) mPlaceDetail, saleTime,//
+            mListAdapter = new GourmetDetailListAdapter(mContext, saleTime, (GourmetDetail) mPlaceDetail,//
                 (GourmetDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
@@ -161,7 +167,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         {
             mSelectedTicketInformation = ticketInformationList.get(0);
 
-            mTicketTypeListAdapter = new GourmetDetailRoomTypeListAdapter(mContext, ticketInformationList, new OnClickListener()
+            mTicketTypeListAdapter = new GourmetDetailTicketTypeListAdapter(mContext, ticketInformationList, new OnClickListener()
             {
                 @Override
                 public void onClick(View v)

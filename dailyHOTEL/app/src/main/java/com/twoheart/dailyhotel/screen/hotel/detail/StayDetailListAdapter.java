@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -26,11 +25,11 @@ import java.util.List;
 
 public class StayDetailListAdapter extends BaseAdapter
 {
-    private static final int NUMBER_OF_ROWSLIST = 8;
+    private static final int NUMBER_OF_ROWSLIST = 7;
 
     private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
-    private FragmentActivity mFragmentActivity;
+    private Context mContext;
     private View[] mDeatilViews;
     private int mImageHeight;
     private View mHotelTitleLayout;
@@ -38,18 +37,20 @@ public class StayDetailListAdapter extends BaseAdapter
     private TextView mHotelNameTextView;
     protected View mMagicToolbar;
 
-    private StayDetailActivity.OnUserActionListener mOnUserActionListener;
+    private StayDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public StayDetailListAdapter(FragmentActivity activity, StayDetail stayDetail, SaleTime checkInSaleTime, StayDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
+    public StayDetailListAdapter(Context context, SaleTime saleTime, StayDetail stayDetail,//
+                                 StayDetailLayout.OnEventListener onEventListener,//
+                                 View.OnTouchListener emptyViewOnTouchListener)
     {
-        mFragmentActivity = activity;
+        mContext = context;
+        mCheckInSaleTime = saleTime;
         mStayDetail = stayDetail;
-        mCheckInSaleTime = checkInSaleTime;
         mDeatilViews = new View[NUMBER_OF_ROWSLIST];
-        mImageHeight = Util.getLCDWidth(activity);
+        mImageHeight = Util.getLCDWidth(mContext);
 
-        mOnUserActionListener = onUserActionListener;
+        mOnEventListener = onEventListener;
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
@@ -84,11 +85,11 @@ public class StayDetailListAdapter extends BaseAdapter
     {
         LinearLayout linearLayout;
 
-        LayoutInflater layoutInflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null)
         {
-            linearLayout = new LinearLayout(mFragmentActivity);
+            linearLayout = new LinearLayout(mContext);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
         } else
         {
@@ -154,38 +155,29 @@ public class StayDetailListAdapter extends BaseAdapter
         getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
         linearLayout.addView(mDeatilViews[5]);
 
-        // 확인 사항
+        // 카카오톡 문의
         if (mDeatilViews[6] == null)
         {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mStayDetail);
+        getDeatil08View(mDeatilViews[6]);
         linearLayout.addView(mDeatilViews[6]);
-
-        // 카카오톡 문의
-        if (mDeatilViews[7] == null)
-        {
-            mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
-        }
-
-        getDeatil08View(mDeatilViews[7]);
-        linearLayout.addView(mDeatilViews[7]);
 
         return linearLayout;
     }
 
-    public View getHotelTitleLayout()
+    public View getTitleLayout()
     {
         return mHotelTitleLayout;
     }
 
-    public View getHotelGradeTextView()
+    public View getGradeTextView()
     {
         return mHotelGradeTextView;
     }
 
-    public View getHotelNameTextView()
+    public View getNameTextView()
     {
         return mHotelNameTextView;
     }
@@ -222,7 +214,7 @@ public class StayDetailListAdapter extends BaseAdapter
     private View getTitleView(View view, StayDetail stayDetail)
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
-        mHotelTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+        mHotelTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         mMagicToolbar = view.findViewById(R.id.magicToolbar);
 
@@ -230,14 +222,14 @@ public class StayDetailListAdapter extends BaseAdapter
         mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
         mHotelGradeTextView.setVisibility(View.VISIBLE);
 
-        mHotelGradeTextView.setText(stayDetail.grade.getName(mFragmentActivity));
+        mHotelGradeTextView.setText(stayDetail.grade.getName(mContext));
         mHotelGradeTextView.setBackgroundResource(stayDetail.grade.getColorResId());
 
         // 호텔명
         mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
         mHotelNameTextView.setText(stayDetail.name);
 
-        int width = Util.getLCDWidth(mFragmentActivity) - Util.dpToPx(mFragmentActivity, 60) - Util.dpToPx(mFragmentActivity, 48);
+        int width = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60) - Util.dpToPx(mContext, 48);
         mHotelNameTextView.setTag(mHotelNameTextView.getId(), width);
         mHotelNameTextView.setSelected(true);
 
@@ -282,12 +274,12 @@ public class StayDetailListAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener == null)
+                if (mOnEventListener == null)
                 {
                     return;
                 }
 
-                mOnUserActionListener.onCalendarClick(mCheckInSaleTime, mStayDetail.nights, mStayDetail.index);
+                mOnEventListener.onCalendarClick();
             }
         });
 
@@ -303,7 +295,7 @@ public class StayDetailListAdapter extends BaseAdapter
      */
     private View getAddressView(final View view, StayDetail stayDetail)
     {
-        view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+        view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         // 주소지
         final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
@@ -317,12 +309,12 @@ public class StayDetailListAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener == null)
+                if (mOnEventListener == null)
                 {
                     return;
                 }
 
-                mOnUserActionListener.clipAddress(address);
+                mOnEventListener.clipAddress(address);
             }
         });
 
@@ -333,19 +325,19 @@ public class StayDetailListAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener == null)
+                if (mOnEventListener == null)
                 {
                     return;
                 }
 
-                mOnUserActionListener.showNavigatorDialog();
+                mOnEventListener.showNavigatorDialog();
             }
         });
 
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
 
         double width = mImageHeight;
-        double height = Util.dpToPx(mFragmentActivity, 200);
+        double height = Util.dpToPx(mContext, 200);
         double ratio = height / width;
 
         if (width >= 640)
@@ -362,30 +354,17 @@ public class StayDetailListAdapter extends BaseAdapter
 
         mapImageView.setImageURI(Uri.parse(url));
 
-        if (Util.isInstallGooglePlayService(mFragmentActivity) == true)
+        mapImageView.setOnClickListener(new OnClickListener()
         {
-            mapImageView.setOnClickListener(new OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
+                if (mOnEventListener != null)
                 {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.showMap();
-                    }
+                    mOnEventListener.showMap();
                 }
-            });
-        } else
-        {
-            mapImageView.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Util.installGooglePlayService((BaseActivity) mFragmentActivity);
-                }
-            });
-        }
+            }
+        });
 
         return view;
     }
@@ -463,41 +442,13 @@ public class StayDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
-        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+        viewGroup.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
 
-        if (arrayList != null)
+        for(DetailInformation detailInformation : arrayList)
         {
-            DetailInformation information = arrayList.get(1);
-
-            makeInformationLayout(layoutInflater, viewGroup, information);
-        }
-
-        return viewGroup;
-    }
-
-    /**
-     * 확인 사항
-     *
-     * @return
-     */
-    private View getDeatil07View(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
-    {
-        if (layoutInflater == null || viewGroup == null || stayDetail == null)
-        {
-            return viewGroup;
-        }
-
-        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
-
-        ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
-
-        if (arrayList != null && arrayList.size() >= 3)
-        {
-            DetailInformation information = arrayList.get(2);
-
-            makeInformationLayout(layoutInflater, viewGroup, information);
+            makeInformationLayout(layoutInflater, viewGroup, detailInformation);
         }
 
         return viewGroup;
@@ -515,7 +466,7 @@ public class StayDetailListAdapter extends BaseAdapter
             return null;
         }
 
-        view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+        view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         // 카톡 1:1 실시간 상담
         View consultKakaoView = view.findViewById(R.id.kakaoImageView);
@@ -524,9 +475,9 @@ public class StayDetailListAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
+                if (mOnEventListener != null)
                 {
-                    mOnUserActionListener.doKakaotalkConsult();
+                    mOnEventListener.doKakaotalkConsult();
                 }
             }
         });
