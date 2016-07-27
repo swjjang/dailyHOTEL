@@ -355,7 +355,8 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, //
+            nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
