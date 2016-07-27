@@ -380,6 +380,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
                 checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, null, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
+                AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
         @Override
@@ -470,7 +474,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 

@@ -386,6 +386,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
                 mGourmetCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, null, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED,//
+                AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
         @Override
@@ -406,7 +410,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
