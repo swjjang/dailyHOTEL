@@ -444,7 +444,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             GourmetSearchResultActivity.this.finish(resultCode);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                , AnalyticsManager.Action.GOURMET_SEARCH_AGAIN_CLICKED, AnalyticsManager.Label.GOURMET_SEARCH_AGAIN_CLICKED, null);
+                , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.SEARCH_AGAIN, null);
         }
 
         @Override

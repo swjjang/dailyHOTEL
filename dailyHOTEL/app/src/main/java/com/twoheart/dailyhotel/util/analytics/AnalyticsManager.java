@@ -518,7 +518,6 @@ public class AnalyticsManager
         public static final String HOTEL_KEYWORD_SEARCH_NOT_FOUND = "HotelKeywordSearchNotFound";
         public static final String HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "HotelAutoCompletedKeywordNotFound";
         public static final String HOTEL_RECENT_KEYWORD_NOT_FOUND = "HotelRecentKeywordSearchNotFound";
-        public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
         public static final String HOTEL_SEARCH_RESULT_CANCELED = "HotelSearchResultCanceled";
         //
         public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
@@ -532,7 +531,6 @@ public class AnalyticsManager
         public static final String GOURMET_KEYWORD_SEARCH_NOT_FOUND = "GourmetKeywordSearchNotFound";
         public static final String GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "GourmetAutoCompletedKeywordNotFound";
         public static final String GOURMET_RECENT_KEYWORD_NOT_FOUND = "GourmetRecentKeywordSearchNotFound";
-        public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
         public static final String GOURMET_SEARCH_RESULT_CANCELED = "GourmetSearchResultCanceled";
         //
         public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
@@ -575,7 +573,7 @@ public class AnalyticsManager
 
         public static final String SEARCH_BUTTON_CLICKED = "SearchButtonClicked";
         public static final String KEYWORD = "Keyword";
-        public static final String SEARCHSCREEN = "SearchScreen";
+        public static final String SEARCH_SCREEN = "SearchScreen";
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
     }
 
@@ -677,8 +675,6 @@ public class AnalyticsManager
         public static final String TERMSOF_LOCATION = "TermsofLocation";
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
         public static final String DELETE_ALL_KEYWORDS = "DeleteAllKeywords";
-        public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
-        public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
         //
         public static final String CREDIT_MANAGEMENT = "CreditManagement";
         public static final String INVITE_FRIENDS = "InviteFriends";
@@ -692,6 +688,7 @@ public class AnalyticsManager
         public static final String SWITCHING_HOTEL = "SwitchingHotel";
         public static final String SWITCHING_GOURMET = "SwitchingGourmet";
         public static final String CALL = "Call";
+        public static final String SEARCH_AGAIN = "SearchAgain";
     }
 
     public static class UserType

@@ -218,7 +218,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
-                , AnalyticsManager.Action.SEARCHSCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
+                , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
         @Override

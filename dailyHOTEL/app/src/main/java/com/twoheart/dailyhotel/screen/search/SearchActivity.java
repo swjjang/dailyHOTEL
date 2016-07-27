@@ -333,7 +333,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
 
-        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SEARCHSCREEN, label, null);
+        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SEARCH_SCREEN, label, null);
     }
 
     private void recordAnalyticsSearch(SaleTime saleTime, int nights, PlaceType placeType)
