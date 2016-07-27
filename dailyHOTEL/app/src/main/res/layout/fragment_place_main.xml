@@ -63,7 +63,7 @@
                     android:drawableLeft="@drawable/navibar_ic_s_region"
                     android:drawablePadding="3dp"
                     android:ellipsize="end"
-                    android:gravity="center"
+                    android:gravity="left|center_vertical"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@color/default_text_c323232"
