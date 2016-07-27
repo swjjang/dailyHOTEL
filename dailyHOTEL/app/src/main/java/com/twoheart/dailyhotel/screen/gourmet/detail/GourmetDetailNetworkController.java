@@ -13,20 +13,20 @@ import org.json.JSONObject;
 
 public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 {
+    public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
+    {
+        void onGourmetDetailInformation(JSONObject dataJSONObject);
+    }
+
     public GourmetDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
-    public void requestGourmetDetailInformation(int index, String day)
+    public void requestGourmetDetailInformation(String day, int index)
     {
         DailyNetworkAPI.getInstance(mContext).requestGourmetDetailInformation(mNetworkTag, //
             index, day, mGourmetDetailJsonResponseListener, mGourmetDetailJsonResponseListener);
-    }
-
-    public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
-    {
-        void onGourmetDetailInformation(JSONObject dataJSONObject);
     }
 
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GourmetDetailRoomTypeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private LayoutInflater mInflater;
@@ -25,7 +25,7 @@ public class GourmetDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recyc
     private int mSelectedPosition;
 
 
-    public GourmetDetailRoomTypeListAdapter(Context context, ArrayList<TicketInformation> arrayList, View.OnClickListener listener)
+    public GourmetDetailTicketTypeListAdapter(Context context, ArrayList<TicketInformation> arrayList, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;
