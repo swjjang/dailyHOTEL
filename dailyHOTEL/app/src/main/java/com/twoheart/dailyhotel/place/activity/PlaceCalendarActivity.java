@@ -229,11 +229,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             {
                 // 일요일
                 case 1:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.drawable.selector_calendar_sunday_textcolor));
+                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
                     break;
 
                 default:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.drawable.selector_calendar_default_text_color));
+                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
                     break;
             }
 
