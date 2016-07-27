@@ -508,7 +508,6 @@ public class AnalyticsManager
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
         public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked"; // 앱보이 사용
-        public static final String HOTEL_SEARCH_BACK_BUTTON_CLICKED = "HotelSearchBackButtonClicked";
         public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
         public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
         public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
@@ -518,10 +517,8 @@ public class AnalyticsManager
         public static final String HOTEL_KEYWORD_SEARCH_NOT_FOUND = "HotelKeywordSearchNotFound";
         public static final String HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "HotelAutoCompletedKeywordNotFound";
         public static final String HOTEL_RECENT_KEYWORD_NOT_FOUND = "HotelRecentKeywordSearchNotFound";
-        public static final String HOTEL_SEARCH_RESULT_CANCELED = "HotelSearchResultCanceled";
         //
         public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
-        public static final String GOURMET_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
         public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
         public static final String GOURMET_AROUND_SEARCH_CLICKED = "GourmetAroundSearchClicked";
         public static final String GOURMET_RECENT_KEYWORD_SEARCH_CLICKED = "GourmetRecentKeywordSearchClicked";
@@ -531,7 +528,6 @@ public class AnalyticsManager
         public static final String GOURMET_KEYWORD_SEARCH_NOT_FOUND = "GourmetKeywordSearchNotFound";
         public static final String GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "GourmetAutoCompletedKeywordNotFound";
         public static final String GOURMET_RECENT_KEYWORD_NOT_FOUND = "GourmetRecentKeywordSearchNotFound";
-        public static final String GOURMET_SEARCH_RESULT_CANCELED = "GourmetSearchResultCanceled";
         //
         public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
         //
@@ -668,9 +664,6 @@ public class AnalyticsManager
         public static final String GOURMET_LOCATION_LIST = "GourmetLocationList";
         public static final String GOURMET_MAP = "GourmetMap";
         //
-        public static final String KEYWORD_BACK_BUTTON_CLICKED = "KeywordBackButtonClicked";
-        public static final String RESULT_BACK_BUTTON_CLICKED = "ResultBackButtonClicked";
-        public static final String SEARCH_RESULT_CANCELED = "SearchResultCanceled";
         public static final String SEARCH_KEYWORD_RESET = "SearchKeywordReset";
         public static final String TERMSOF_LOCATION = "TermsofLocation";
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
@@ -689,6 +682,8 @@ public class AnalyticsManager
         public static final String SWITCHING_GOURMET = "SwitchingGourmet";
         public static final String CALL = "Call";
         public static final String SEARCH_AGAIN = "SearchAgain";
+        public static final String BACK_BUTTON = "BackButton";
+        public static final String CLOSED = "Closed";
     }
 
     public static class UserType

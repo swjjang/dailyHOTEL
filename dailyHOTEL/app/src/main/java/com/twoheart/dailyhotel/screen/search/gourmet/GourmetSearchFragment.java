@@ -313,8 +313,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         {
             mBaseActivity.finish();
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                , AnalyticsManager.Action.GOURMET_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.KEYWORD_BACK_BUTTON_CLICKED, null);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.CLOSED, null);
         }
     };
 
