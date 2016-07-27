@@ -507,7 +507,6 @@ public class AnalyticsManager
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
-        public static final String HOTEL_SEARCH_BUTTON_CLICKED = "HotelSearchButtonClicked";
         public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked";
         public static final String HOTEL_SEARCH_BACK_BUTTON_CLICKED = "HotelSearchBackButtonClicked";
         public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
@@ -523,7 +522,6 @@ public class AnalyticsManager
         public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
         public static final String HOTEL_SEARCH_RESULT_CANCELED = "HotelSearchResultCanceled";
         //
-        public static final String GOURMET_SEARCH_BUTTON_CLICKED = "GourmetSearchButtonClicked";
         public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
         public static final String GOURMET_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
         public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
@@ -578,6 +576,10 @@ public class AnalyticsManager
         public static final String GOURMET_MAP_ICON_CLICKED = "GourmetMapIconClicked";
         public static final String GOURMET_MAP_DETAIL_VIEW_CLICKED = "GourmetMapDetailViewClicked";
         public static final String SWITCHING = "Switching";
+
+        public static final String SEARCH_BUTTON_CLICKED = "SearchButtonClicked";
+
+
     }
 
     public static class Category

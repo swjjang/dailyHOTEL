@@ -135,7 +135,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
+            , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
     }
 
     @Override
