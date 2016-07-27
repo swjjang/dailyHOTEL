@@ -507,7 +507,7 @@ public class AnalyticsManager
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
-        public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked";
+        public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked"; // 앱보이 사용
         public static final String HOTEL_SEARCH_BACK_BUTTON_CLICKED = "HotelSearchBackButtonClicked";
         public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
         public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
@@ -575,9 +575,10 @@ public class AnalyticsManager
         public static final String HOTEL_MAP_DETAIL_VIEW_CLICKED = "HotelMapDetailViewClicked";
         public static final String GOURMET_MAP_ICON_CLICKED = "GourmetMapIconClicked";
         public static final String GOURMET_MAP_DETAIL_VIEW_CLICKED = "GourmetMapDetailViewClicked";
-        public static final String SWITCHING = "Switching";
 
         public static final String SEARCH_BUTTON_CLICKED = "SearchButtonClicked";
+        public static final String KEYWORD = "Keyword";
+        public static final String SEARCHSCREEN = "SearchScreen";
 
 
     }
@@ -593,6 +594,7 @@ public class AnalyticsManager
         public static final String BOOKING_STATUS = "BookingStatus";
         public static final String COUPON_BOX = "CouponBox";
         public static final String INVITE_FRIEND = "InviteFriend";
+        public static final String SEARCH = "Search";
     }
 
     public static class Label
@@ -692,6 +694,9 @@ public class AnalyticsManager
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
         public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
+        //
+        public static final String SWITCHING_HOTEL = "SwitchingHotel";
+        public static final String SWITCHING_GOURMET = "SwitchingGourmet";
     }
 
     public static class UserType
