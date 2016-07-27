@@ -268,6 +268,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
 //            intent.putExtra(NAME_INTENT_EXTRA_DATA_SHOW_TAGPRICE_YN, AnalyticsManager.ValueType.EMPTY);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+
+            if (calendarFlag == 1)
+            {
+                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
+            }
         } catch (Exception e)
         {
             result = false;
@@ -326,6 +332,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 gourmetSaleTime, fnbIndex, calendarFlag == 1 ? true : false);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+
+            if (calendarFlag == 1)
+            {
+                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
+            }
         } catch (Exception e)
         {
             result = false;

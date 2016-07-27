@@ -314,7 +314,8 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, //
+                AnalyticsManager.ValueType.SEARCH, null, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 

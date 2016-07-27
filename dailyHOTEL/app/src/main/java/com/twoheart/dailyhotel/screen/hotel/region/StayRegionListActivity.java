@@ -347,6 +347,9 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                                     , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CONFIRMED, analyticsLabel, null);
                             }
 
+                            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.CHANGE_LOCATION, null);
+
                             // 날짜 선택 화면으로 이동한다.
                             Intent intent = new Intent();
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);

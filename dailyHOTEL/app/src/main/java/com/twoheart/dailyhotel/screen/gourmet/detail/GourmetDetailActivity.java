@@ -346,8 +346,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        String closedLabel = null;
+        if (mIsDeepLink == true)
+        {
+            closedLabel = AnalyticsManager.Label.EVENT;
+        }
+
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            saleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+            saleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, closedLabel, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -416,7 +422,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, TicketInformation ticketInformation)
     {
-        if (saleTime ==  null || gourmetDetail == null || ticketInformation == null)
+        if (saleTime == null || gourmetDetail == null || ticketInformation == null)
         {
             return null;
         }

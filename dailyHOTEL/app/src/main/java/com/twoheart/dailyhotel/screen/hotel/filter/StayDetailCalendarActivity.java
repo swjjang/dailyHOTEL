@@ -25,13 +25,14 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     private SaleTime mCheckInSaleTime;
     private SaleTime mCheckOutSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int hotelIndex, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int hotelIndex, String screen, String closedLabel, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+        intent.putExtra(INTENT_EXTRA_DATA_CLOSED_LABEL, closedLabel);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
 

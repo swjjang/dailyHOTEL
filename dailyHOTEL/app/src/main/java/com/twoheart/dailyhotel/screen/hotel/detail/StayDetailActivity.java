@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -355,8 +354,14 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        String closedLabel = null;
+        if (mIsDeepLink == true)
+        {
+            closedLabel = AnalyticsManager.Label.EVENT;
+        }
+
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, //
-            nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+            nights, placeIndex, closedLabel, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -788,7 +793,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     ((StayDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (StayDetail) mPlaceDetail, mCurrentImage);
                 }
 
-                if(mCheckPrice == false)
+                if (mCheckPrice == false)
                 {
                     mCheckPrice = true;
                     checkStayPrice(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
