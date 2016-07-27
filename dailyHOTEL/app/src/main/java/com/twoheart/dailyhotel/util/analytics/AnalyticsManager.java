@@ -511,7 +511,6 @@ public class AnalyticsManager
         public static final String HOTEL_SEARCH_BACK_BUTTON_CLICKED = "HotelSearchBackButtonClicked";
         public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
         public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
-        public static final String HOTEL_KEYWORD_HISTORY_DELETED = "HotelKeywordsHistoryDeleted";
         public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED = "HotelAutoCompletedKeywordClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "HotelAutoCompletedKeywordNotMatched";
@@ -526,7 +525,6 @@ public class AnalyticsManager
         public static final String GOURMET_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
         public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
         public static final String GOURMET_AROUND_SEARCH_CLICKED = "GourmetAroundSearchClicked";
-        public static final String GOURMET_KEYWORD_HISTORY_DELETED = "GourmetKeywordsHistoryDeleted";
         public static final String GOURMET_RECENT_KEYWORD_SEARCH_CLICKED = "GourmetRecentKeywordSearchClicked";
         public static final String GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED = "GourmetAutoCompletedKeywordClicked";
         public static final String GOURMET_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "GourmetAutoCompletedKeywordNotMatched";

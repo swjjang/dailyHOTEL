@@ -230,8 +230,8 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                , AnalyticsManager.Action.HOTEL_KEYWORD_HISTORY_DELETED, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.SEARCHSCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
         @Override
