@@ -794,32 +794,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
+                Location location = mGourmetCuration.getLocation();
+                String label = String.format("%s-%s-%s", location.getLatitude(), location.getLongitude(), mAddress);
             if (mSize == 0)
             {
-                String label = String.format("%s-%s", mAddress, getSearchDate());
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                    , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_NOT_FOUND, label, null);
-
-                //                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
-
-                //                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
-                //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                    , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, label, null);
             } else
             {
-                String label;
 
-                if (mSize == -1)
-                {
-                    label = String.format("%s-Los-%s", mAddress, getSearchDate());
-                } else
-                {
-                    label = String.format("%s-%d-%s", mAddress, mSize, getSearchDate());
-                }
-
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                    , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_CLICKED, label, null);
-
-                //                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                    , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, label, null);
             }
         }
     };

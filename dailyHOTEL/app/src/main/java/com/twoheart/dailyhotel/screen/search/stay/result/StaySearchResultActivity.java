@@ -31,12 +31,10 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -577,18 +575,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             StaySearchResultActivity.this.onErrorToastMessage(message);
         }
 
-        private String getSearchDate()
-        {
-            String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
-
-            //            Calendar calendar = Calendar.getInstance();
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-            //
-            //            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
-        }
-
         //        private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
         //        {
         //            String action;
@@ -707,32 +693,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
+            Location location = mStayCuration.getLocation();
+            String label = String.format("%s-%s-%s", location.getLatitude(), location.getLongitude(), mAddress);
+
             if (mSize == 0)
             {
-                String label = String.format("%s-%s", mAddress, getSearchDate());
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_NOT_FOUND, label, null);
-
-                //                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
-
-                //                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
-                //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, params);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                    , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, label, null);
             } else
             {
-                String label;
-
-                if (mSize == -1)
-                {
-                    label = String.format("%s-Los-%s", mAddress, getSearchDate());
-                } else
-                {
-                    label = String.format("%s-%d-%s", mAddress, mSize, getSearchDate());
-                }
-
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
-
-                //                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                    , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, label, null);
             }
         }
     };
