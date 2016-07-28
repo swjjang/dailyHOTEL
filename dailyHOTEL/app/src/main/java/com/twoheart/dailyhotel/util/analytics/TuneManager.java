@@ -39,6 +39,7 @@ public class TuneManager extends BaseAnalyticsManager
 
         mTune = Tune.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
         mTune.setCurrencyCode("KRW");
+        mTune.setShouldAutoCollectDeviceLocation(false);
 
         // 기존 사용자와 구분하기 위한 값
         if (Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)

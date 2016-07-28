@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.firebase;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -9,25 +10,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DailyRemoteConfig
 {
     private static DailyRemoteConfig mInstance = null;
 
+    private Context mContext;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
-    public synchronized static DailyRemoteConfig getInstance()
+    public synchronized static DailyRemoteConfig getInstance(Context context)
     {
         if (mInstance == null)
         {
-            mInstance = new DailyRemoteConfig();
+            mInstance = new DailyRemoteConfig(context);
         }
         return mInstance;
     }
 
-    private DailyRemoteConfig()
+    private DailyRemoteConfig(Context context)
     {
+        mContext = context;
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mFirebaseRemoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(Constants.DEBUG).build());
     }
@@ -50,7 +58,7 @@ public class DailyRemoteConfig
                 String androidUpdateVersion = mFirebaseRemoteConfig.getString("androidUpdateVersion");
                 String androidPaymentType = mFirebaseRemoteConfig.getString("androidPaymentType");
                 String companyInfo = mFirebaseRemoteConfig.getString("companyInfo");
-                String androidSplashImageLink = mFirebaseRemoteConfig.getString("androidSplashImageLink");
+                String androidSplashImageUrl = mFirebaseRemoteConfig.getString("androidSplashImageLink");
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
                 String androidServiceShutdown = mFirebaseRemoteConfig.getString("androidServiceShutdown");
                 String androidServiceShutdownMessage = mFirebaseRemoteConfig.getString("androidServiceShutdownMessage");
@@ -68,6 +76,9 @@ public class DailyRemoteConfig
                 //                {
                 //                    ExLog.d(e.toString());
                 //                }
+
+                // 이미지 로딩 관련
+//                processIntroImage(androidSplashImageUpdateTime, androidSplashImageUrl);
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -83,5 +94,47 @@ public class DailyRemoteConfig
                 }
             }
         });
+    }
+
+    private void processIntroImage(String updateTime, String imageUrl)
+    {
+        if (Util.isTextEmpty(updateTime) == true || Util.isTextEmpty(imageUrl) == true)
+        {
+            return;
+        }
+
+        // 이미지 로딩 관련
+        int densityDpi = mContext.getResources().getDisplayMetrics().densityDpi;
+        String dpi;
+
+        if (densityDpi < 240)
+        {
+            dpi = "hdpi";
+        } else if (densityDpi < 640)
+        {
+            dpi = "xhdpi";
+        } else
+        {
+            dpi = "xxxhdpi";
+        }
+
+        try
+        {
+            JSONObject updateTimeJSONObject = new JSONObject(updateTime);
+            JSONObject imageUrlJSONObject = new JSONObject(imageUrl);
+
+            String url = imageUrlJSONObject.getString(dpi);
+            String currentVersion = DailyPreference.getInstance(mContext).getIntroImageVersion();
+            String newVersion = updateTimeJSONObject.getString("time");
+
+            // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
+            if (Util.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
+            {
+                new ImageDownloadAsyncTask(mContext).execute(url, newVersion);
+            }
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 }

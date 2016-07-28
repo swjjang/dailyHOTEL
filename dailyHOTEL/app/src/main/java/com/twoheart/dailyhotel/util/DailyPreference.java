@@ -58,6 +58,11 @@ public class DailyPreference
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
+    private static final String KEY_INTRO_VERSION = "110";
+
+    private static final String KEY_INTRO_NEW_VERSION = "112";
+    private static final String KEY_INTRO_NEW_URL = "113";
+
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
 
@@ -489,6 +494,36 @@ public class DailyPreference
     public void setGourmetLastViewDate(String value)
     {
         setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
+    }
+
+    public String getIntroImageVersion()
+    {
+        return getValue(mPreferences, KEY_INTRO_VERSION, null);
+    }
+
+    public void setIntroImageVersion(String value)
+    {
+        setValue(mEditor, KEY_INTRO_VERSION, value);
+    }
+
+    public String getIntroImageNewVersion()
+    {
+        return getValue(mPreferences, KEY_INTRO_NEW_VERSION, null);
+    }
+
+    public void setIntroImageNewVersion(String value)
+    {
+        setValue(mEditor, KEY_INTRO_NEW_VERSION, value);
+    }
+
+    public String getIntroImageNewUrl()
+    {
+        return getValue(mPreferences, KEY_INTRO_NEW_URL, null);
+    }
+
+    public void setIntroImageNewUrl(String value)
+    {
+        setValue(mEditor, KEY_INTRO_NEW_URL, value);
     }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)

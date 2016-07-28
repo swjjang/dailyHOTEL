@@ -55,6 +55,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -62,10 +63,15 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
 
 public class Util implements Constants
 {
     public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+    private static final String REMOVE_CHARACTER = "[\\-\\:\\+]";
 
     private static String MEMORY_CLEAR;
 
@@ -1287,5 +1293,16 @@ public class Util implements Constants
 
         p.reset();
         return width;
+    }
+
+    public static String makeIntroImageFileName(String version)
+    {
+        if(Util.isTextEmpty(version) == true)
+        {
+            return "daily_intro";
+        }
+
+        String[] versions = version.split("\\+");
+        return versions[0].replaceAll(REMOVE_CHARACTER, "");
     }
 }

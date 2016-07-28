@@ -16,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
+import com.twoheart.dailyhotel.firebase.ImageDownloadAsyncTask;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
@@ -37,6 +39,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -125,7 +128,7 @@ public class MainActivity extends BaseActivity implements Constants
         // URL 만들때 사용
         //                com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
-        DailyRemoteConfig.getInstance().requestRemoteConfig();
+        DailyRemoteConfig.getInstance(this).requestRemoteConfig();
 
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
@@ -181,6 +184,8 @@ public class MainActivity extends BaseActivity implements Constants
 
         mSplashLayout = findViewById(R.id.splashLayout);
 
+        loadSplash(mSplashLayout);
+
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
 
@@ -201,6 +206,38 @@ public class MainActivity extends BaseActivity implements Constants
         }, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
 
         mBackButtonHandler = new CloseOnBackPressed(this);
+    }
+
+    private void loadSplash(View splashLayout)
+    {
+        String splashVersion = DailyPreference.getInstance(this).getIntroImageVersion();
+
+        ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
+
+        if (splashVersion == null)
+        {
+            imageView.setImageResource(R.drawable.splash);
+        } else
+        {
+            String fileName = Util.makeIntroImageFileName(splashVersion);
+            File file = new File(getCacheDir(), fileName);
+
+            if (file.exists() == false)
+            {
+                DailyPreference.getInstance(this).setIntroImageVersion(null);
+                imageView.setImageResource(R.drawable.splash);
+            } else
+            {
+                try
+                {
+                    imageView.setImageURI(Uri.fromFile(file));
+                } catch (Exception e)
+                {
+                    DailyPreference.getInstance(this).setIntroImageVersion(null);
+                    imageView.setImageResource(R.drawable.splash);
+                }
+            }
+        }
     }
 
     @Override
