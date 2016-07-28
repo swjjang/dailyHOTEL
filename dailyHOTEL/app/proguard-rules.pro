@@ -87,9 +87,6 @@
 
 -keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
 
--keep public class com.mobileapptracker.** { public *; }
--keep public class com.google.android.gms.ads.identifier.** { *; }
-
 -keepnames class android.widget.ScrollView { *; }
 -keepnames class android.widget.AbsListView { *; }
 -keepnames class android.support.v4.widget.NestedScrollView { *; }
@@ -106,6 +103,16 @@
 -dontwarn com.google.android.gms.**
 -keep class bo.app.** { *; }
 -keep class com.appboy.** { *; }
+
+#Tune
+-keep public class com.tune.** { public *; }
+-keep public class com.google.android.gms.ads.identifier.** { *; }
+-keep public class com.google.android.gms.gcm.** { *; }
+-keep public class com.google.android.gms.common.** { *; }
+
+-keepclassmembers class ** {
+    public void onEvent(**);
+}
 
 -dontwarn okhttp3.**
 -dontwarn okio.**

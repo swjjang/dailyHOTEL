@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.mobileapptracker.MATDeeplinkListener;
-import com.mobileapptracker.MATEvent;
-import com.mobileapptracker.MATEventItem;
-import com.mobileapptracker.MATGender;
-import com.mobileapptracker.MobileAppTracker;
+import com.tune.Tune;
+import com.tune.TuneDeeplinkListener;
+import com.tune.TuneEvent;
+import com.tune.TuneEventItem;
+import com.tune.TuneGender;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -29,20 +29,21 @@ public class TuneManager extends BaseAnalyticsManager
     private static final String ADVERTISE_ID = "190723";
     private static final String CONVERSION_KEY = "93aa9a40026991386dd92922cb14f58f";
 
-    private MobileAppTracker mMobileAppTracker;
+    private Tune mTune;
     private Context mContext;
     private String mUserIndex;
 
     public TuneManager(Context context)
     {
         mContext = context;
-        mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
-        mMobileAppTracker.setCurrencyCode("KRW");
+
+        mTune = Tune.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
+        mTune.setCurrencyCode("KRW");
 
         // 기존 사용자와 구분하기 위한 값
         if (Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)
         {
-            mMobileAppTracker.setExistingUser(true);
+            mTune.setExistingUser(true);
         }
 
         setDeferredDeepLink();
@@ -50,12 +51,12 @@ public class TuneManager extends BaseAnalyticsManager
 
     void setGoogleClientId(String clientId)
     {
-        mMobileAppTracker.setGoogleUserId(clientId);
+        mTune.setGoogleUserId(clientId);
     }
 
     private void setDeferredDeepLink()
     {
-        mMobileAppTracker.checkForDeferredDeeplink(new MATDeeplinkListener()
+        mTune.checkForDeferredDeeplink(new TuneDeeplinkListener()
         {
             @Override
             public void didReceiveDeeplink(String deeplink)
@@ -93,19 +94,19 @@ public class TuneManager extends BaseAnalyticsManager
 
         if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params, false);
+            TuneEvent tuneEvent = getTuneEvent(TuneEventId.DAILYHOTEL_DETAIL, params, false);
 
-            MATEventItem matEventItem = getMATEventItem(params);
-            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.GRADE));
-            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
+            TuneEventItem tuneEventItem = getTuneEventItem(params);
+            tuneEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.GRADE));
+            tuneEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
 
-            List<MATEventItem> list = new ArrayList<>();
-            list.add(matEventItem);
-            matEvent.withEventItems(list);
+            List<TuneEventItem> list = new ArrayList<>();
+            list.add(tuneEventItem);
+            tuneEvent.withEventItems(list);
 
             setUserIndex(mUserIndex);
 
-            mMobileAppTracker.measureEvent(matEvent);
+            mTune.measureEvent(tuneEvent);
 
             if (DEBUG == true)
             {
@@ -113,19 +114,19 @@ public class TuneManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params, false);
+            TuneEvent tuneEvent = getTuneEvent(TuneEventId.DAILYGOURMET_DETAIL, params, false);
 
-            MATEventItem matEventItem = getMATEventItem(params);
-            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.CATEGORY));
-            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
+            TuneEventItem tuneEventItem = getTuneEventItem(params);
+            tuneEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.CATEGORY));
+            tuneEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
 
-            List<MATEventItem> list = new ArrayList<>();
-            list.add(matEventItem);
-            matEvent.withEventItems(list);
+            List<TuneEventItem> list = new ArrayList<>();
+            list.add(tuneEventItem);
+            tuneEvent.withEventItems(list);
 
             setUserIndex(mUserIndex);
 
-            mMobileAppTracker.measureEvent(matEvent);
+            mTune.measureEvent(tuneEvent);
 
             if (DEBUG == true)
             {
@@ -133,19 +134,19 @@ public class TuneManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params, true);
+            TuneEvent tuneEvent = getTuneEvent(TuneEventId.DAILYHOTEL_PAYMENT, params, true);
 
-            MATEventItem matEventItem = getMATEventItem(params);
-            matEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
-            matEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
+            TuneEventItem tuneEventItem = getTuneEventItem(params);
+            tuneEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
+            tuneEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
 
-            List<MATEventItem> list = new ArrayList<>();
-            list.add(matEventItem);
-            matEvent.withEventItems(list);
+            List<TuneEventItem> list = new ArrayList<>();
+            list.add(tuneEventItem);
+            tuneEvent.withEventItems(list);
 
             setUserIndex(mUserIndex);
 
-            mMobileAppTracker.measureEvent(matEvent);
+            mTune.measureEvent(tuneEvent);
 
             if (DEBUG == true)
             {
@@ -153,19 +154,19 @@ public class TuneManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params, true);
+            TuneEvent tuneEvent = getTuneEvent(TuneEventId.DAILYGOURMET_PAYMENT, params, true);
 
-            MATEventItem matEventItem = getMATEventItem(params);
-            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.CATEGORY));
-            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
+            TuneEventItem tuneEventItem = getTuneEventItem(params);
+            tuneEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.CATEGORY));
+            tuneEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
 
-            List<MATEventItem> list = new ArrayList<>();
-            list.add(matEventItem);
-            matEvent.withEventItems(list);
+            List<TuneEventItem> list = new ArrayList<>();
+            list.add(tuneEventItem);
+            tuneEvent.withEventItems(list);
 
             setUserIndex(mUserIndex);
 
-            mMobileAppTracker.measureEvent(matEvent);
+            mTune.measureEvent(tuneEvent);
 
             if (DEBUG == true)
             {
@@ -186,17 +187,17 @@ public class TuneManager extends BaseAnalyticsManager
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
-                MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params, false);
+                TuneEvent tuneEvent = getTuneEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params, false);
 
-                MATEventItem matEventItem = getMATEventItem(params);
+                TuneEventItem tuneEventItem = getTuneEventItem(params);
 
-                List<MATEventItem> list = new ArrayList<>();
-                list.add(matEventItem);
-                matEvent.withEventItems(list);
+                List<TuneEventItem> list = new ArrayList<>();
+                list.add(tuneEventItem);
+                tuneEvent.withEventItems(list);
 
                 setUserIndex(mUserIndex);
 
-                mMobileAppTracker.measureEvent(matEvent);
+                mTune.measureEvent(tuneEvent);
 
                 if (DEBUG == true)
                 {
@@ -207,17 +208,17 @@ public class TuneManager extends BaseAnalyticsManager
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
-                MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params, false);
+                TuneEvent tuneEvent = getTuneEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params, false);
 
-                MATEventItem matEventItem = getMATEventItem(params);
+                TuneEventItem tuneEventItem = getTuneEventItem(params);
 
-                List<MATEventItem> list = new ArrayList<>();
-                list.add(matEventItem);
-                matEvent.withEventItems(list);
+                List<TuneEventItem> list = new ArrayList<>();
+                list.add(tuneEventItem);
+                tuneEvent.withEventItems(list);
 
                 setUserIndex(mUserIndex);
 
-                mMobileAppTracker.measureEvent(matEvent);
+                mTune.measureEvent(tuneEvent);
 
                 if (DEBUG == true)
                 {
@@ -228,11 +229,11 @@ public class TuneManager extends BaseAnalyticsManager
         {
             if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)
             {
-                MATEvent matEvent = new MATEvent(TuneEventId.MENU_GOURMET);
+                TuneEvent tuneEvent = new TuneEvent(TuneEventId.MENU_GOURMET);
 
                 setUserIndex(mUserIndex);
 
-                mMobileAppTracker.measureEvent(matEvent);
+                mTune.measureEvent(tuneEvent);
 
                 if (DEBUG == true)
                 {
@@ -240,11 +241,11 @@ public class TuneManager extends BaseAnalyticsManager
                 }
             } else if (AnalyticsManager.Action.INVITE_FRIEND_CLICKED.equalsIgnoreCase(action) == true)
             {
-                MATEvent matEvent = new MATEvent(TuneEventId.INVITE_FRIEND);
+                TuneEvent tuneEvent = new TuneEvent(TuneEventId.INVITE_FRIEND);
 
                 setUserIndex(mUserIndex);
 
-                mMobileAppTracker.measureEvent(matEvent);
+                mTune.measureEvent(tuneEvent);
 
                 if (DEBUG == true)
                 {
@@ -271,10 +272,10 @@ public class TuneManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(index) == true)
         {
-            mMobileAppTracker.setUserId(AnalyticsManager.ValueType.EMPTY);
+            mTune.setUserId(AnalyticsManager.ValueType.EMPTY);
         } else
         {
-            mMobileAppTracker.setUserId(index);
+            mTune.setUserId(index);
         }
     }
 
@@ -299,8 +300,8 @@ public class TuneManager extends BaseAnalyticsManager
     @Override
     void onResume(Activity activity)
     {
-        mMobileAppTracker.setReferralSources(activity);
-        mMobileAppTracker.measureSession();
+        mTune.setReferralSources(activity);
+        mTune.measureSession();
     }
 
     @Override
@@ -317,12 +318,12 @@ public class TuneManager extends BaseAnalyticsManager
     @Override
     void addCreditCard(String cardType)
     {
-        MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
-        matEvent.withAttribute1(cardType);
+        TuneEvent tuneEvent = new TuneEvent(TuneEventId.CARDLIST_ADDED_CARD);
+        tuneEvent.withAttribute1(cardType);
 
         setUserIndex(mUserIndex);
 
-        mMobileAppTracker.measureEvent(matEvent);
+        mTune.measureEvent(tuneEvent);
 
         if (DEBUG == true)
         {
@@ -339,40 +340,40 @@ public class TuneManager extends BaseAnalyticsManager
     @Override
     void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        mMobileAppTracker.setUserId(userIndex);
+        mTune.setUserId(userIndex);
 
         if (Util.isTextEmpty(email) == false)
         {
-            mMobileAppTracker.setUserEmail(email);
+            mTune.setUserEmail(email);
         }
 
         if (Util.isTextEmpty(name) == false)
         {
-            mMobileAppTracker.setUserName(name);
+            mTune.setUserName(name);
         }
 
         if (Util.isTextEmpty(gender) == false)
         {
             if ("male".equalsIgnoreCase(gender) == true)
             {
-                mMobileAppTracker.setGender(MATGender.MALE);
+                mTune.setGender(TuneGender.MALE);
             } else if ("female".equalsIgnoreCase(gender) == true)
             {
-                mMobileAppTracker.setGender(MATGender.FEMALE);
+                mTune.setGender(TuneGender.FEMALE);
             }
         }
 
         if (Util.isTextEmpty(phoneNumber) == false)
         {
-            mMobileAppTracker.setPhoneNumber(phoneNumber);
+            mTune.setPhoneNumber(phoneNumber);
         }
 
-        mMobileAppTracker.setCurrencyCode("KRW");
+        mTune.setCurrencyCode("KRW");
 
-        MATEvent matEvent = new MATEvent(TuneEventId.SIGNUP_REGISTRATION);
-        matEvent.withAttribute1(userType);
+        TuneEvent tuneEvent = new TuneEvent(TuneEventId.SIGNUP_REGISTRATION);
+        tuneEvent.withAttribute1(userType);
 
-        mMobileAppTracker.measureEvent(matEvent);
+        mTune.measureEvent(tuneEvent);
 
         if (DEBUG == true)
         {
@@ -384,16 +385,16 @@ public class TuneManager extends BaseAnalyticsManager
     void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
     {
         // Tune
-        mMobileAppTracker.setUserId(userIndex);
-        mMobileAppTracker.setUserEmail(email);
-        mMobileAppTracker.setUserName(name);
-        mMobileAppTracker.setPhoneNumber(phoneNumber);
-        mMobileAppTracker.setCurrencyCode("KRW");
+        mTune.setUserId(userIndex);
+        mTune.setUserEmail(email);
+        mTune.setUserName(name);
+        mTune.setPhoneNumber(phoneNumber);
+        mTune.setCurrencyCode("KRW");
 
-        MATEvent matEvent = new MATEvent(TuneEventId.SIGNUP_REGISTRATION);
-        matEvent.withAttribute1(userType);
+        TuneEvent tuneEvent = new TuneEvent(TuneEventId.SIGNUP_REGISTRATION);
+        tuneEvent.withAttribute1(userType);
 
-        mMobileAppTracker.measureEvent(matEvent);
+        mTune.measureEvent(tuneEvent);
 
         if (DEBUG == true)
         {
@@ -404,25 +405,25 @@ public class TuneManager extends BaseAnalyticsManager
     @Override
     void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PURCHASE_COMPLETE, params, true);
+        TuneEvent tuneEvent = getTuneEvent(TuneEventId.DAILYHOTEL_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
         {
-            matEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
+            tuneEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_TYPE) == true)
         {
-            matEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
+            tuneEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
         }
 
-        MATEventItem matEventItem = getMATEventItem(params);
-        matEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
-        matEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
+        TuneEventItem tuneEventItem = getTuneEventItem(params);
+        tuneEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
+        tuneEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
 
-        List<MATEventItem> list = new ArrayList<>();
-        list.add(matEventItem);
-        matEvent.withEventItems(list);
+        List<TuneEventItem> list = new ArrayList<>();
+        list.add(tuneEventItem);
+        tuneEvent.withEventItems(list);
 
         if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
@@ -432,7 +433,7 @@ public class TuneManager extends BaseAnalyticsManager
             setUserIndex(mUserIndex);
         }
 
-        mMobileAppTracker.measureEvent(matEvent);
+        mTune.measureEvent(tuneEvent);
 
         if (DEBUG == true)
         {
@@ -443,30 +444,30 @@ public class TuneManager extends BaseAnalyticsManager
     @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
+        TuneEvent tuneEvent = getTuneEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
         {
-            matEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
+            tuneEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_TYPE) == true)
         {
-            matEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
+            tuneEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.RESERVATION_TIME) == true)
         {
-            matEvent.withAttribute3(params.get(AnalyticsManager.KeyType.RESERVATION_TIME));
+            tuneEvent.withAttribute3(params.get(AnalyticsManager.KeyType.RESERVATION_TIME));
         }
 
-        MATEventItem matEventItem = getMATEventItem(params);
-        matEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.CATEGORY));
-        matEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
+        TuneEventItem tuneEventItem = getTuneEventItem(params);
+        tuneEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.CATEGORY));
+        tuneEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
 
-        List<MATEventItem> list = new ArrayList<>();
-        list.add(matEventItem);
-        matEvent.withEventItems(list);
+        List<TuneEventItem> list = new ArrayList<>();
+        list.add(tuneEventItem);
+        tuneEvent.withEventItems(list);
 
         if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
@@ -476,7 +477,7 @@ public class TuneManager extends BaseAnalyticsManager
             setUserIndex(mUserIndex);
         }
 
-        mMobileAppTracker.measureEvent(matEvent);
+        mTune.measureEvent(tuneEvent);
 
         if (DEBUG == true)
         {
@@ -484,72 +485,72 @@ public class TuneManager extends BaseAnalyticsManager
         }
     }
 
-    private MATEventItem getMATEventItem(Map<String, String> params)
+    private TuneEventItem getTuneEventItem(Map<String, String> params)
     {
-        MATEventItem matEventItem = new MATEventItem(params.get(AnalyticsManager.KeyType.NAME));
+        TuneEventItem tuneEventItem = new TuneEventItem(params.get(AnalyticsManager.KeyType.NAME));
 
         if (params.containsKey(AnalyticsManager.KeyType.PRICE) == true)
         {
-            matEventItem.withUnitPrice(Double.parseDouble(params.get(AnalyticsManager.KeyType.PRICE)));
+            tuneEventItem.withUnitPrice(Double.parseDouble(params.get(AnalyticsManager.KeyType.PRICE)));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.QUANTITY) == true)
         {
-            matEventItem.withQuantity(Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
+            tuneEventItem.withQuantity(Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.TOTAL_PRICE) == true)
         {
-            matEventItem.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
+            tuneEventItem.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.PLACE_INDEX) == true)
         {
-            matEventItem.withAttribute1(params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+            tuneEventItem.withAttribute1(params.get(AnalyticsManager.KeyType.PLACE_INDEX));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.TICKET_NAME) == true)
         {
-            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.TICKET_NAME));
+            tuneEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.TICKET_NAME));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.TICKET_INDEX) == true)
         {
-            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.TICKET_INDEX));
+            tuneEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.TICKET_INDEX));
         }
 
-        return matEventItem;
+        return tuneEventItem;
     }
 
-    private MATEvent getMATEvent(int eventId, Map<String, String> params, boolean usedRevenue)
+    private TuneEvent getTuneEvent(int eventId, Map<String, String> params, boolean usedRevenue)
     {
-        MATEvent matEvent = new MATEvent(eventId);
-        matEvent.withCurrencyCode("KRW");
+        TuneEvent tuneEvent = new TuneEvent(eventId);
+        tuneEvent.withCurrencyCode("KRW");
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
         {
             String[] checkInDate = params.get(AnalyticsManager.KeyType.CHECK_IN).split("\\-");
-            matEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
+            tuneEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
         {
             String[] checkOutDate = params.get(AnalyticsManager.KeyType.CHECK_OUT).split("\\-");
-            matEvent.withDate2(new GregorianCalendar(Integer.parseInt(checkOutDate[0]), Integer.parseInt(checkOutDate[1]), Integer.parseInt(checkOutDate[2])).getTime());
+            tuneEvent.withDate2(new GregorianCalendar(Integer.parseInt(checkOutDate[0]), Integer.parseInt(checkOutDate[1]), Integer.parseInt(checkOutDate[2])).getTime());
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
         {
             String[] checkInDate = params.get(AnalyticsManager.KeyType.DATE).split("\\-");
-            matEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
+            tuneEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
         }
 
         if (usedRevenue == true && params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
         {
-            matEvent.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
+            tuneEvent.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
         }
 
-        return matEvent;
+        return tuneEvent;
     }
 
 

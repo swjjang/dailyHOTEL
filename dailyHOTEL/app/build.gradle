@@ -70,8 +70,8 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.12.0'
     compile 'com.facebook.fresco:drawee:0.12.0'
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.12.0'
-    compile 'com.kakao.sdk:kakaolink:1.1.10'
-    compile 'com.kakao.sdk:kakaotalk:1.1.10'
+    compile 'com.kakao.sdk:kakaolink:1.1.20'
+    compile 'com.kakao.sdk:kakaotalk:1.1.20'
     compile 'com.appboy:android-sdk-ui:1.13.+'
     compile 'com.android.support:multidex:1.0.1'
 
@@ -80,11 +80,12 @@ dependencies {
     }
 
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.tune:tune-marketing-console-sdk:4.4.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
 
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
 
-    compile files('libs/MobileAppTracker.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
 
     compile 'com.google.android.gms:play-services-base:9.2.1'
