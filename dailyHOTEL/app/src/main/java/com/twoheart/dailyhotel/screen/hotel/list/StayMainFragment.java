@@ -39,11 +39,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class StayMainFragment extends PlaceMainFragment
@@ -340,7 +337,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             if (Util.isTextEmpty(date) == false)
             {
-                changedSaleTime = changeDateSaleTime(changedSaleTime, date);
+                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
             } else if (datePlus >= 0)
             {
                 changedSaleTime.setOffsetDailyDay(datePlus);
@@ -609,7 +606,7 @@ public class StayMainFragment extends PlaceMainFragment
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
-            checkInSaleTime = changeDateSaleTime(saleTime, date);
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
 
             if (checkInSaleTime == null)
             {
@@ -653,36 +650,6 @@ public class StayMainFragment extends PlaceMainFragment
         mPlaceMainNetworkController.requestRegionList();
 
         return true;
-    }
-
-    /**
-     * yyyyMMdd의 날짜를 기존의 SaleTime에 적용한다.
-     *
-     * @param saleTime
-     * @param date
-     */
-    private SaleTime changeDateSaleTime(SaleTime saleTime, String date)
-    {
-        SaleTime changedSaleTime = null;
-
-        try
-        {
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (dailyDayOfDays >= 0)
-            {
-                changedSaleTime = saleTime.getClone(dailyDayOfDays);
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return changedSaleTime;
     }
 
     @Override
@@ -968,9 +935,9 @@ public class StayMainFragment extends PlaceMainFragment
             try
             {
                 mStayCuration.setCheckInSaleTime(currentDateTime, dailyDateTime);
+
                 SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-                mStayCuration.setCheckOutSaleTime( //
-                    checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+                mStayCuration.setCheckOutSaleTime(checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
 
                 String lastViewDate = DailyPreference.getInstance(mBaseActivity).getStayLastViewDate();
 
@@ -979,27 +946,28 @@ public class StayMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setStayLastViewDate(null);
 
                     String[] lastViewDates = lastViewDate.split("\\,");
-                    int nights;
+                    int nights = 1;
 
                     try
                     {
                         nights = Integer.parseInt(lastViewDates[1]);
                     } catch (Exception e)
                     {
-                        nights = 1;
+                        ExLog.d(e.toString());
+                    } finally
+                    {
+                        if (nights <= 0)
+                        {
+                            nights = 1;
+                        }
                     }
 
-                    SaleTime todaySaleTime = mStayCuration.getCheckInSaleTime();
+                    checkInSaleTime = SaleTime.changeDateSaleTime(checkInSaleTime, lastViewDates[0]);
 
-                    SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    Date schemeDate = format.parse(lastViewDates[0]);
-                    Date dailyDate = format.parse(todaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-                    if (dailyDayOfDays >= 0)
+                    if (checkInSaleTime != null)
                     {
-                        mStayCuration.setCheckInSaleTime(todaySaleTime.getClone(dailyDayOfDays));
-                        mStayCuration.setCheckOutSaleTime(todaySaleTime.getClone(dailyDayOfDays + nights));
+                        mStayCuration.setCheckInSaleTime(checkInSaleTime);
+                        mStayCuration.setCheckOutSaleTime(checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights));
                     }
                 }
 

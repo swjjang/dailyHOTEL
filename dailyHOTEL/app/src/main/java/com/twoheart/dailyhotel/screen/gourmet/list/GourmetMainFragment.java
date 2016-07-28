@@ -491,7 +491,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(null);
 
-                    SaleTime changedSaleTime = changeDateSaleTime(mGourmetCuration.getSaleTime(), lastViewDate);
+                    SaleTime changedSaleTime = SaleTime.changeDateSaleTime(mGourmetCuration.getSaleTime(), lastViewDate);
 
                     if (changedSaleTime != null)
                     {
@@ -915,7 +915,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             // date가 비어 있는 경우
             if (Util.isTextEmpty(date) == false)
             {
-                changedSaleTime = changeDateSaleTime(changedSaleTime, date);
+                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
             } else if (datePlus >= 0)
             {
                 changedSaleTime.setOffsetDailyDay(datePlus);
@@ -1035,7 +1035,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
-            changedSaleTime = changeDateSaleTime(saleTime, date);
+            changedSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
         } else if (datePlus >= 0)
         {
             try
@@ -1061,36 +1061,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         mPlaceMainNetworkController.requestRegionList();
 
         return true;
-    }
-
-    /**
-     * yyyyMMdd의 날짜를 기존의 SaleTime에 적용한다.
-     *
-     * @param saleTime
-     * @param date
-     */
-    private SaleTime changeDateSaleTime(SaleTime saleTime, String date)
-    {
-        SaleTime changedSaleTime = null;
-
-        try
-        {
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (dailyDayOfDays >= 0)
-            {
-                changedSaleTime = saleTime.getClone(dailyDayOfDays);
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return changedSaleTime;
     }
 
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, List<Province> provinceList, List<Area> areaList)

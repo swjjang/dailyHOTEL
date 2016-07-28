@@ -4,8 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class SaleTime implements Parcelable
@@ -102,6 +105,36 @@ public class SaleTime implements Parcelable
     public void setOffsetDailyDay(int dayOfDays)
     {
         mDayOfDays = dayOfDays;
+    }
+
+    /**
+     * yyyyMMdd의 날짜를 기존의 SaleTime에 적용한다.
+     *
+     * @param saleTime
+     * @param date
+     */
+    public static SaleTime changeDateSaleTime(SaleTime saleTime, String date)
+    {
+        SaleTime changedSaleTime = null;
+
+        try
+        {
+            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+            Date schemeDate = format.parse(date);
+            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+            if (dailyDayOfDays >= 0)
+            {
+                changedSaleTime = saleTime.getClone(dailyDayOfDays);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return changedSaleTime;
     }
 
     @Override
