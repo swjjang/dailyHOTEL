@@ -323,10 +323,12 @@ public class StayMainFragment extends PlaceMainFragment
         {
             // 신규 타입의 화면이동
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-
-            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -334,32 +336,22 @@ public class StayMainFragment extends PlaceMainFragment
 
             DailyDeepLink.getInstance().clear();
 
-            if (Util.isTextEmpty(date) == true)
+            SaleTime changedSaleTime = mStayCuration.getCheckInSaleTime().getClone(0);
+
+            if (Util.isTextEmpty(date) == false)
             {
-                if (datePlus >= 0)
-                {
-                    checkInSaleTime.setOffsetDailyDay(datePlus);
-                    startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights, isShowCalendar);
-                } else
-                {
-                    return false;
-                }
-            } else
+                changedSaleTime = changeDateSaleTime(changedSaleTime, date);
+            } else if (datePlus >= 0)
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                if (nights <= 0 || dailyDayOfDays < 0)
-                {
-                    return false;
-                }
-
-                checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
-                startStayDetailByDeeplink(hotelIndex, checkInSaleTime, nights, isShowCalendar);
+                changedSaleTime.setOffsetDailyDay(datePlus);
             }
+
+            if (changedSaleTime == null)
+            {
+                return false;
+            }
+
+            startStayDetailByDeeplink(hotelIndex, changedSaleTime, nights, isShowCalendar);
 
             mIsDeepLink = true;
         } catch (Exception e)
@@ -547,16 +539,22 @@ public class StayMainFragment extends PlaceMainFragment
 
         mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
 
-        int night;
+        int nights = 1;
         int provinceIndex;
         int areaIndex;
 
         try
         {
-            night = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
         } catch (Exception e)
         {
-            night = 1;
+            ExLog.d(e.toString());
+        } finally
+        {
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
         }
 
         try
@@ -604,42 +602,27 @@ public class StayMainFragment extends PlaceMainFragment
 
         DailyDeepLink.getInstance().clear();
 
+        SaleTime saleTime = mStayCuration.getCheckInSaleTime().getClone(0);
+        SaleTime checkInSaleTime;
+        SaleTime checkOutSaleTime;
+
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
-            try
-            {
-                SaleTime todaySaleTime = mStayCuration.getCheckInSaleTime();
+            checkInSaleTime = changeDateSaleTime(saleTime, date);
 
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(todaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-                if (dailyDayOfDays >= 0)
-                {
-                    SaleTime checkInSaleTime = todaySaleTime.getClone(dailyDayOfDays);
-                    SaleTime checkOutSaleTime = todaySaleTime.getClone(dailyDayOfDays + night);
-
-                    mStayCuration.setCheckInSaleTime(checkInSaleTime);
-                    mStayCuration.setCheckOutSaleTime(checkOutSaleTime);
-                } else
-                {
-                    return false;
-                }
-            } catch (Exception e)
+            if (checkInSaleTime == null)
             {
                 return false;
             }
+
+            checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
         } else if (datePlus >= 0)
         {
             try
             {
-                SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime().getClone(datePlus);
-                SaleTime checkOutSaleTime = checkInSaleTime.getClone(datePlus + night);
-
-                mStayCuration.setCheckInSaleTime(checkInSaleTime);
-                mStayCuration.setCheckOutSaleTime(checkOutSaleTime);
+                checkInSaleTime = saleTime.getClone(datePlus);
+                checkOutSaleTime = checkInSaleTime.getClone(datePlus + nights);
             } catch (Exception e)
             {
                 return false;
@@ -649,20 +632,57 @@ public class StayMainFragment extends PlaceMainFragment
             // 날짜 정보가 없는 경우 예외 처리 추가
             try
             {
-                SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-                SaleTime checkOutSaleTime = checkInSaleTime.getClone(night);
-
-                mStayCuration.setCheckInSaleTime(checkInSaleTime);
-                mStayCuration.setCheckOutSaleTime(checkOutSaleTime);
+                checkInSaleTime = saleTime;
+                checkOutSaleTime = checkInSaleTime.getClone(nights);
             } catch (Exception e)
             {
                 return false;
             }
         }
 
+        if (checkInSaleTime == null || checkOutSaleTime == null)
+        {
+            return false;
+        }
+
+        mStayCuration.setCheckInSaleTime(checkInSaleTime);
+        mStayCuration.setCheckOutSaleTime(checkOutSaleTime);
+
+        ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(checkInSaleTime, checkOutSaleTime);
+
         mPlaceMainNetworkController.requestRegionList();
 
         return true;
+    }
+
+    /**
+     * yyyyMMdd의 날짜를 기존의 SaleTime에 적용한다.
+     *
+     * @param saleTime
+     * @param date
+     */
+    private SaleTime changeDateSaleTime(SaleTime saleTime, String date)
+    {
+        SaleTime changedSaleTime = null;
+
+        try
+        {
+            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+            Date schemeDate = format.parse(date);
+            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+            if (dailyDayOfDays >= 0)
+            {
+                changedSaleTime = saleTime.getClone(dailyDayOfDays);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return changedSaleTime;
     }
 
     @Override
@@ -951,6 +971,37 @@ public class StayMainFragment extends PlaceMainFragment
                 SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
                 mStayCuration.setCheckOutSaleTime( //
                     checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
+
+                String lastViewDate = DailyPreference.getInstance(mBaseActivity).getStayLastViewDate();
+
+                if (Util.isTextEmpty(lastViewDate) == false)
+                {
+                    DailyPreference.getInstance(mBaseActivity).setStayLastViewDate(null);
+
+                    String[] lastViewDates = lastViewDate.split("\\,");
+                    int nights;
+
+                    try
+                    {
+                        nights = Integer.parseInt(lastViewDates[1]);
+                    } catch (Exception e)
+                    {
+                        nights = 1;
+                    }
+
+                    SaleTime todaySaleTime = mStayCuration.getCheckInSaleTime();
+
+                    SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                    Date schemeDate = format.parse(lastViewDates[0]);
+                    Date dailyDate = format.parse(todaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+                    if (dailyDayOfDays >= 0)
+                    {
+                        mStayCuration.setCheckInSaleTime(todaySaleTime.getClone(dailyDayOfDays));
+                        mStayCuration.setCheckOutSaleTime(todaySaleTime.getClone(dailyDayOfDays + nights));
+                    }
+                }
 
                 if (DailyDeepLink.getInstance().isValidateLink() == true //
                     && processDeepLinkByDateTime(mBaseActivity) == true)
