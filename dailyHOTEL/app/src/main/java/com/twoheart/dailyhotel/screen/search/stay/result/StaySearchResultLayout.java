@@ -12,6 +12,9 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
     public StaySearchResultLayout(Context context, OnBaseEventListener listener)
@@ -43,15 +46,17 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     @Override
     protected void onAnalyticsCategoryFlicking(String category)
     {
+        Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.SCREEN, AnalyticsManager.Screen.SEARCH_RESULT);
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, null);
+            , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, params);
     }
 
     @Override
     protected void onAnalyticsCategoryClick(String category)
     {
+        Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.SCREEN, AnalyticsManager.Screen.SEARCH_RESULT);
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, null);
+            , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, params);
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()

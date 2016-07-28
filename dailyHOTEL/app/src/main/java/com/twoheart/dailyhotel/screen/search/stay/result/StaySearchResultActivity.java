@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -49,13 +48,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    private Keyword mKeyword;
     private String mInputText;
+    private String mAddress;
 
+    private Keyword mKeyword;
     private SearchType mSearchType;
-    private StaySearchResultNetworkController mNetworkController;
-
     private StayCuration mStayCuration;
+
+    private StaySearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, SearchType searchType)
     {
@@ -289,7 +289,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void recordAnalyticsStaySearchResult(String screen)
+    private void recordScreenSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -380,6 +380,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
                 checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, null, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
+                AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
         @Override
@@ -414,30 +418,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 case MAP:
                 {
                     mViewType = ViewType.LIST;
-
-                    //                    Map<String, String> params = new HashMap<>();
-                    //                    Province province = mStayCuration.getProvince();
-                    //
-                    //                    if (province == null)
-                    //                    {
-                    //                        Util.restartApp(StaySearchResultActivity.this);
-                    //                        return;
-                    //                    }
-                    //
-                    //                    if (province instanceof Area)
-                    //                    {
-                    //                        Area area = (Area) province;
-                    //                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    //                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                    //
-                    //                    } else
-                    //                    {
-                    //                        params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    //                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                    //                    }
-                    //
-                    //                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
-                    //                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHAGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
                 }
             }
@@ -470,7 +450,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
@@ -515,8 +495,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private StaySearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchResultNetworkController.OnNetworkControllerListener()
     {
-        private String mAddress;
-        private int mSize = -100;
+        //        private int mSize = -100;
 
         @Override
         public void onResponseAddress(String address)
@@ -528,8 +507,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             mAddress = address;
             mPlaceSearchResultLayout.setToolbarTitle(address);
-
-            analyticsOnResponseSearchResultListForLocation();
         }
 
         @Override
@@ -537,11 +514,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             if (list != null && list.size() > 0)
             {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
                 mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), list, null, mOnStayListFragmentListener);
             } else
             {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
+
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             }
         }
 
@@ -571,165 +552,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             unLockUI();
             StaySearchResultActivity.this.onErrorToastMessage(message);
-        }
-
-        private String getSearchDate()
-        {
-            String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
-
-            //            Calendar calendar = Calendar.getInstance();
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-            //
-            //            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
-        }
-
-        //        private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
-        //        {
-        //            String action;
-        //
-        //            if (totalCount == 0)
-        //            {
-        //                String prefix = null;
-        //
-        //                switch (mSearchType)
-        //                {
-        //                    case SEARCHES:
-        //                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND;
-        //                        break;
-        //
-        //                    case AUTOCOMPLETE:
-        //                        action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
-        //
-        //                        if (keyword.price == 0)
-        //                        {
-        //                            prefix = String.format("지역-%s", mInputText);
-        //                        } else
-        //                        {
-        //                            prefix = String.format("호텔-%s", mInputText);
-        //                        }
-        //                        break;
-        //
-        //                    case RECENT:
-        //                        action = AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_NOT_FOUND;
-        //                        break;
-        //
-        //                    default:
-        //                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND;
-        //                        break;
-        //                }
-        //
-        //                String label;
-        //
-        //                if (Util.isTextEmpty(prefix) == true)
-        //                {
-        //                    label = String.format("%s-%s", keyword.name, getSearchDate());
-        //                } else
-        //                {
-        //                    label = String.format("%s-%s-%s", prefix, keyword.name, getSearchDate());
-        //                }
-        //
-        //                Map<String, String> eventParams = new HashMap<>();
-        //                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-        //                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
-        //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-        //                    , action, label, eventParams);
-        //
-        ////                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
-        //
-        ////                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-        ////                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, screenParams);
-        //            } else
-        //            {
-        //                String prefix = null;
-        //
-        //                switch (mSearchType)
-        //                {
-        //                    case SEARCHES:
-        //                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
-        //                        break;
-        //
-        //                    case AUTOCOMPLETE:
-        //                        action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED;
-        //
-        //                        if (keyword.price == 0)
-        //                        {
-        //                            prefix = String.format("지역-%s", mInputText);
-        //                        } else
-        //                        {
-        //                            prefix = String.format("호텔-%s", mInputText);
-        //                        }
-        //                        break;
-        //
-        //                    case RECENT:
-        //                        action = AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED;
-        //                        break;
-        //
-        //                    default:
-        //                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
-        //                        break;
-        //                }
-        //
-        //                String label;
-        //
-        //                if (totalCount == -1)
-        //                {
-        //                    label = String.format("%s-Los-%s", keyword.name, getSearchDate());
-        //                } else
-        //                {
-        //                    label = String.format("%s-%d-%s", keyword.name, totalCount, getSearchDate());
-        //                }
-        //
-        //                if (Util.isTextEmpty(prefix) == false)
-        //                {
-        //                    label = String.format("%s-%s", prefix, label);
-        //                }
-        //
-        //                Map<String, String> eventParams = new HashMap<>();
-        //                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-        //                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
-        //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-        //                    , action, label, eventParams);
-        //
-        ////                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
-        //            }
-        //        }
-
-        private void analyticsOnResponseSearchResultListForLocation()
-        {
-            if (Util.isTextEmpty(mAddress) == true || mSize == -100)
-            {
-                return;
-            }
-
-            if (mSize == 0)
-            {
-                String label = String.format("%s-%s", mAddress, getSearchDate());
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_NOT_FOUND, label, null);
-
-                //                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
-
-                //                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
-                //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, params);
-            } else
-            {
-                String label;
-
-                if (mSize == -1)
-                {
-                    label = String.format("%s-Los-%s", mAddress, getSearchDate());
-                } else
-                {
-                    label = String.format("%s-%d-%s", mAddress, mSize, getSearchDate());
-                }
-
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
-
-                //                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
-            }
         }
     };
 
@@ -886,15 +708,48 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
 
-                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
 
-                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+            }
+
+            if (mSearchType == SearchType.LOCATION)
+            {
+                recordEventSearchResultByLocation(mAddress, isShow);
+            } else if (mSearchType == SearchType.RECENT)
+            {
+                recordEventSearchResultByRecentKeyword(mKeyword, isShow);
+            } else if (mSearchType == SearchType.AUTOCOMPLETE)
+            {
+                recordEventSearchResultByAutoSearch(mKeyword, mInputText, isShow);
+            } else
+            {
+                recordEventSearchResultByKeyword(mKeyword, isShow);
+
+                // 기존 AppBoy 이벤트
+                PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
+                int placeCount = placeListFragment.getPlaceCount();
+
+                String action = isShow == true ? AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND : AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
+                String label = isShow == true ? String.format("%s-%s", mKeyword.name, getSearchDate()) : String.format("%s-%d-%s", mKeyword.name, placeCount, getSearchDate());
+
+                Map<String, String> eventParams = new HashMap<>();
+                eventParams.put(AnalyticsManager.KeyType.KEYWORD, mKeyword.name);
+                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(placeCount));
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , action, label, eventParams);
             }
         }
 
+        private String getSearchDate()
+        {
+            String checkInDate = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkOutDate = mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
+        }
     };
 }

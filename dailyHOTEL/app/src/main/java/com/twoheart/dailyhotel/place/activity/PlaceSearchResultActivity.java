@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class PlaceSearchResultActivity extends BaseActivity
@@ -361,5 +362,37 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                     releaseUiComponent();
                 }
             }, true);
+    }
+
+    protected void recordEventSearchResultByLocation(String address, boolean isEmpty)
+    {
+        String action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , action, address, null);
+    }
+
+    protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty)
+    {
+        String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , action, keyword.name, null);
+    }
+
+    protected void recordEventSearchResultByKeyword(Keyword keyword, boolean isEmpty)
+    {
+        String action = (isEmpty == true) ? AnalyticsManager.Action.KEYWORD_NOT_FOUND : AnalyticsManager.Action.KEYWORD;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , action, keyword.name, null);
+    }
+
+    protected void recordEventSearchResultByAutoSearch(Keyword keyword, String inputText, boolean isEmpty)
+    {
+        String category = (isEmpty == true) ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
+            , keyword.name, inputText, null);
     }
 }

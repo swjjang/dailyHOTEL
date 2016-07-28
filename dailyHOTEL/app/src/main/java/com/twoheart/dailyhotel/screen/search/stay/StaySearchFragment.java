@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Handler;
-import android.os.Message;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -17,13 +15,10 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.lang.ref.WeakReference;
-import java.util.Date;
 import java.util.List;
 
 public class StaySearchFragment extends PlaceSearchFragment
@@ -31,14 +26,10 @@ public class StaySearchFragment extends PlaceSearchFragment
     private SaleTime mCheckInSaleTime;
     private SaleTime mCheckOutSaleTime;
 
-    private Handler mAnalyticsHandler;
-
     @Override
     protected void initContents()
     {
         super.initContents();
-
-        mAnalyticsHandler = new AnalyticsHandler(this);
 
         if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
         {
@@ -351,14 +342,6 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            mAnalyticsHandler.removeMessages(0);
-
-            if (list != null && list.size() == 0)
-            {
-                Message message = mAnalyticsHandler.obtainMessage(0, keyword);
-                mAnalyticsHandler.sendMessageDelayed(message, 1000);
-            }
-
             mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
         }
 
@@ -390,41 +373,4 @@ public class StaySearchFragment extends PlaceSearchFragment
             mBaseActivity.onErrorToastMessage(message);
         }
     };
-
-    private static class AnalyticsHandler extends Handler
-    {
-        private final WeakReference<StaySearchFragment> mWeakReference;
-
-        public AnalyticsHandler(StaySearchFragment activity)
-        {
-            mWeakReference = new WeakReference<>(activity);
-        }
-
-        private String getSearchDate(StaySearchFragment staySearchFragment)
-        {
-            String checkInDate = staySearchFragment.mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = staySearchFragment.mCheckOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
-
-            //            Calendar calendar = Calendar.getInstance();
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-            //
-            //            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
-        }
-
-        @Override
-        public void handleMessage(Message msg)
-        {
-            StaySearchFragment staySearchFragment = mWeakReference.get();
-
-            if (staySearchFragment == null)
-            {
-                return;
-            }
-
-            String label = String.format("%s-%s", msg.obj, getSearchDate(staySearchFragment));
-            AnalyticsManager.getInstance(staySearchFragment.getContext()).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
-        }
-    }
 }
