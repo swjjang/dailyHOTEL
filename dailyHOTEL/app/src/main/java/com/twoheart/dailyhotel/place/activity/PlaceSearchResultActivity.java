@@ -21,7 +21,6 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -367,27 +366,33 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void recordEventSearchResultByLocation(String address, boolean isEmpty)
     {
-        if (isEmpty == true)
-        {
-            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, address, null);
-        } else
-        {
-            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, address, null);
-        }
+        String action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , action, address, null);
     }
 
-    protected void recordEventSearchResultByRecentKeyword(String inputText, boolean isEmpty)
+    protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty)
     {
-        if (isEmpty == true)
-        {
-            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                , AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND, inputText, null);
-        } else
-        {
-            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                , AnalyticsManager.Action.RECENT_KEYWORD, inputText, null);
-        }
+        String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , action, keyword.name, null);
+    }
+
+    protected void recordEventSearchResultByKeyword(Keyword keyword, boolean isEmpty)
+    {
+        String action = (isEmpty == true) ? AnalyticsManager.Action.KEYWORD_NOT_FOUND : AnalyticsManager.Action.KEYWORD;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , action, keyword.name, null);
+    }
+
+    protected void recordEventSearchResultByAutoSearch(Keyword keyword, String inputText, boolean isEmpty)
+    {
+        String category = (isEmpty == true) ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
+            , keyword.name, inputText, null);
     }
 }

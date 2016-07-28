@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Handler;
-import android.os.Message;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -17,27 +15,20 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.lang.ref.WeakReference;
-import java.util.Date;
 import java.util.List;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
     private SaleTime mSaleTime;
 
-    private Handler mAnalyticsHandler;
-
     @Override
     protected void initContents()
     {
         super.initContents();
-
-        mAnalyticsHandler = new AnalyticsHandler(this);
 
         if (mSaleTime == null)
         {
@@ -330,14 +321,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            mAnalyticsHandler.removeMessages(0);
-
-            if (list != null && list.size() == 0)
-            {
-                Message message = mAnalyticsHandler.obtainMessage(0, keyword);
-                mAnalyticsHandler.sendMessageDelayed(message, 1000);
-            }
-
             mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
         }
 
@@ -369,40 +352,4 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             mBaseActivity.onErrorToastMessage(message);
         }
     };
-
-    private static class AnalyticsHandler extends Handler
-    {
-        private final WeakReference<GourmetSearchFragment> mWeakReference;
-
-        public AnalyticsHandler(GourmetSearchFragment activity)
-        {
-            mWeakReference = new WeakReference<>(activity);
-        }
-
-        private String getSearchDate(GourmetSearchFragment gourmetSearchFragment)
-        {
-            String saleDate = gourmetSearchFragment.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
-
-            //            Calendar calendar = Calendar.getInstance();
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
-            //
-            //            return String.format("%s-%s", saleDate, simpleDateFormat.format(calendar.getTime()));
-            return String.format("%s-%s", saleDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
-        }
-
-        @Override
-        public void handleMessage(Message msg)
-        {
-            GourmetSearchFragment gourmetSearchFragment = mWeakReference.get();
-
-            if (gourmetSearchFragment == null)
-            {
-                return;
-            }
-
-            String label = String.format("%s-%s", msg.obj, getSearchDate(gourmetSearchFragment));
-            AnalyticsManager.getInstance(gourmetSearchFragment.getContext()).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                , AnalyticsManager.Action.GOURMET_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
-        }
-    }
 }
