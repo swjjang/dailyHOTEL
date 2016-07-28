@@ -134,7 +134,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
 
-        TextView productTypeTextView = (TextView)mProductTypeLayout.findViewById(R.id.productTypeTextView);
+        TextView productTypeTextView = (TextView) mProductTypeLayout.findViewById(R.id.productTypeTextView);
 
         productTypeTextView.setText(getProductTypeTitle());
 

@@ -852,6 +852,16 @@ public class StayDetailActivity extends PlaceDetailActivity
                             setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         }
                     });
+
+                if (isDeepLink == true)
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT_CHANGESTAY_DEEPLINK, stayDetail.name, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT_CHANGESTAY, stayDetail.name, null);
+                }
             } else
             {
                 if (isDeepLink == false)
@@ -880,6 +890,9 @@ public class StayDetailActivity extends PlaceDetailActivity
                                     mOnEventListener.showProductInformationLayout();
                                 }
                             });
+
+                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                            Action.SOLDOUT_CHANGEPRICE, stayDetail.name, null);
                     }
                 }
             }

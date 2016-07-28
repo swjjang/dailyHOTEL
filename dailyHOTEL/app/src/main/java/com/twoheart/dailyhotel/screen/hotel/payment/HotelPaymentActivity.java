@@ -827,6 +827,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 requestUserInformationForPayment();
             }
         });
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
+            Action.SOLDOUT_CHANGEPRICE, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+    }
+
+    @Override
+    protected void showStopOnSaleDialog()
+    {
+        super.showStopOnSaleDialog();
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
+            Action.SOLDOUT_CHANGESTAY, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
     }
 
     @Override

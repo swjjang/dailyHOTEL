@@ -569,6 +569,10 @@ public class AnalyticsManager
         public static final String KEYWORD = "Keyword";
         public static final String SEARCH_SCREEN = "SearchScreen";
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
+        //
+        public static final String SOLDOUT_CHANGEPRICE = "Soldout_ChangePrice";
+        public static final String SOLDOUT_CHANGESTAY_DEEPLINK = "Soldout_ChangeStay_Deeplink";
+        public static final String SOLDOUT_CHANGESTAY = "Soldout_ChangeStay";
     }
 
     public static class Category
