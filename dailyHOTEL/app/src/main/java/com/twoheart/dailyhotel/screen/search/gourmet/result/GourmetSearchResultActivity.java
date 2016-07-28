@@ -29,12 +29,9 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +42,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    private Keyword mKeyword;
     private String mInputText;
+    private String mAddress;
 
+    private Keyword mKeyword;
     private SearchType mSearchType;
-    private GourmetSearchResultNetworkController mNetworkController;
-
     private GourmetCuration mGourmetCuration;
+
+    private GourmetSearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, String inputText, Keyword keyword, SearchType searchType)
     {
@@ -306,7 +304,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void recordAnalyticsGourmetSearchResult(String screen)
+    private void recordScreenSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -610,21 +608,28 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
 
-                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
 
-                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+            }
+
+            if (mSearchType == SearchType.LOCATION)
+            {
+                recordEventSearchResultByLocation(mAddress, isShow);
+            } else if (mSearchType == SearchType.RECENT)
+            {
+                recordEventSearchResultByRecentKeyword(mInputText, isShow);
             }
         }
     };
 
     private GourmetSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetSearchResultNetworkController.OnNetworkControllerListener()
     {
-        private String mAddress;
-        private int mSize = -100;
+        //        private int mSize = -100;
 
         @Override
         public void onResponseAddress(String address)
@@ -638,7 +643,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             mPlaceSearchResultLayout.setToolbarTitle(address);
 
-            analyticsOnResponseSearchResultListForLocation();
+            //            analyticsOnResponseSearchResultListForLocation();
         }
 
         @Override
@@ -669,12 +674,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             GourmetSearchResultActivity.this.onErrorToastMessage(message);
         }
 
-        private String getSearchDate()
-        {
-            String checkInDate = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");
-
-            return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
-        }
+        //        private String getSearchDate()
+        //        {
+        //            String checkInDate = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");
+        //
+        //            return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
+        //        }
 
         //        private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
         //        {
@@ -727,7 +732,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
         //                    , action, label, eventParams);
         //
-        ////                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+        ////                recordScreenSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
         //
         ////                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
         ////                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, screenParams);
@@ -783,29 +788,29 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
         //                    , action, label, eventParams);
         //
-        ////                recordAnalyticsGourmetSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
+        ////                recordScreenSearchResult(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
         //            }
         //        }
 
-        private void analyticsOnResponseSearchResultListForLocation()
-        {
-            if (Util.isTextEmpty(mAddress) == true || mSize == -100)
-            {
-                return;
-            }
-
-                Location location = mGourmetCuration.getLocation();
-                String label = String.format("%s-%s-%s", location.getLatitude(), location.getLongitude(), mAddress);
-            if (mSize == 0)
-            {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, label, null);
-            } else
-            {
-
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, label, null);
-            }
-        }
+        //        private void analyticsOnResponseSearchResultListForLocation()
+        //        {
+        //            if (Util.isTextEmpty(mAddress) == true || mSize == -100)
+        //            {
+        //                return;
+        //            }
+        //
+        //                Location location = mGourmetCuration.getLocation();
+        //                String label = String.format("%s-%s-%s", location.getLatitude(), location.getLongitude(), mAddress);
+        //            if (mSize == 0)
+        //            {
+        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+        //                    , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, label, null);
+        //            } else
+        //            {
+        //
+        //                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+        //                    , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, label, null);
+        //            }
+        //        }
     };
 }

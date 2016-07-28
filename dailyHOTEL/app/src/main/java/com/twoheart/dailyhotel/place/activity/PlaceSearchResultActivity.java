@@ -21,10 +21,12 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class PlaceSearchResultActivity extends BaseActivity
@@ -361,5 +363,31 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                     releaseUiComponent();
                 }
             }, true);
+    }
+
+    protected void recordEventSearchResultByLocation(String address, boolean isEmpty)
+    {
+        if (isEmpty == true)
+        {
+            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, address, null);
+        } else
+        {
+            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, address, null);
+        }
+    }
+
+    protected void recordEventSearchResultByRecentKeyword(String inputText, boolean isEmpty)
+    {
+        if (isEmpty == true)
+        {
+            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND, inputText, null);
+        } else
+        {
+            AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                , AnalyticsManager.Action.RECENT_KEYWORD, inputText, null);
+        }
     }
 }

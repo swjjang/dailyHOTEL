@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -47,13 +46,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
-    private Keyword mKeyword;
     private String mInputText;
+    private String mAddress;
 
+    private Keyword mKeyword;
     private SearchType mSearchType;
-    private StaySearchResultNetworkController mNetworkController;
-
     private StayCuration mStayCuration;
+
+    private StaySearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, SearchType searchType)
     {
@@ -287,7 +287,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void recordAnalyticsStaySearchResult(String screen)
+    private void recordScreenSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -517,8 +517,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private StaySearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchResultNetworkController.OnNetworkControllerListener()
     {
-        private String mAddress;
-        private int mSize = -100;
+//        private int mSize = -100;
 
         @Override
         public void onResponseAddress(String address)
@@ -531,7 +530,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mAddress = address;
             mPlaceSearchResultLayout.setToolbarTitle(address);
 
-            analyticsOnResponseSearchResultListForLocation();
+//            analyticsOnResponseSearchResultListForLocation();
         }
 
         @Override
@@ -539,11 +538,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             if (list != null && list.size() > 0)
             {
-                mPlaceSearchResultLayout.showListLayout();
+                mOnStayListFragmentListener.onShowActivityEmptyView(false);
                 mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), list, null, mOnStayListFragmentListener);
             } else
             {
-                mPlaceSearchResultLayout.showEmptyLayout();
+                mOnStayListFragmentListener.onShowActivityEmptyView(true);
             }
         }
 
@@ -626,7 +625,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
         //                    , action, label, eventParams);
         //
-        ////                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+        ////                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
         //
         ////                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
         ////                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, screenParams);
@@ -682,30 +681,30 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         //                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
         //                    , action, label, eventParams);
         //
-        ////                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+        ////                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
         //            }
         //        }
 
-        private void analyticsOnResponseSearchResultListForLocation()
-        {
-            if (Util.isTextEmpty(mAddress) == true || mSize == -100)
-            {
-                return;
-            }
-
-            Location location = mStayCuration.getLocation();
-            String label = String.format("%s-%s-%s", location.getLatitude(), location.getLongitude(), mAddress);
-
-            if (mSize == 0)
-            {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, label, null);
-            } else
-            {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, label, null);
-            }
-        }
+//        private void analyticsOnResponseSearchResultListForLocation()
+//        {
+//            if (Util.isTextEmpty(mAddress) == true || mSize == -100)
+//            {
+//                return;
+//            }
+//
+//            Location location = mStayCuration.getLocation();
+//            String label = String.format("%s-%s-%s", location.getLatitude(), location.getLongitude(), mAddress);
+//
+//            if (mSize == 0)
+//            {
+//                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+//                    , AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND, label, null);
+//            } else
+//            {
+//                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+//                    , AnalyticsManager.Action.AROUND_SEARCH_CLICKED, label, null);
+//            }
+//        }
     };
 
     private StaySearchResultListFragment.OnStayListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStayListFragmentListener()
@@ -861,15 +860,22 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
 
-                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
 
-                recordAnalyticsStaySearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+            }
+
+            if (mSearchType == SearchType.LOCATION)
+            {
+                recordEventSearchResultByLocation(mAddress, isShow);
+            } else if (mSearchType == SearchType.RECENT)
+            {
+                recordEventSearchResultByRecentKeyword(mInputText, isShow);
             }
         }
-
     };
 }
