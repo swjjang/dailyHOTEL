@@ -733,7 +733,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 if (mIsDeepLink == true)
                 {
-                    mIsDeepLink = false;
                     mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
                 }
 
@@ -741,6 +740,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 {
                     ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
                 }
+
+                mIsDeepLink = false;
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
             } catch (Exception e)
