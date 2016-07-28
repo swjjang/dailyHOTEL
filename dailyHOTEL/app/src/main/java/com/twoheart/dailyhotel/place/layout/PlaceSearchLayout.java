@@ -603,11 +603,17 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                         if (startIndex > separatorIndex)
                         {
-                            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
-                            spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                                startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            try
+                            {
+                                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
+                                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                            textView01.setText(spannableStringBuilder);
+                                textView01.setText(spannableStringBuilder);
+                            } catch (Exception e)
+                            {
+                                textView01.setText(keyword.name);
+                            }
                         } else
                         {
                             textView01.setText(keyword.name);

@@ -162,6 +162,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
             case R.id.confirmView:
             {
+                if (mCheckInDayView == null || mCheckOutDayView == null)
+                {
+                    return;
+                }
+
                 Day checkInDay = (Day) mCheckInDayView.getTag();
                 Day checkOutDay = (Day) mCheckOutDayView.getTag();
 

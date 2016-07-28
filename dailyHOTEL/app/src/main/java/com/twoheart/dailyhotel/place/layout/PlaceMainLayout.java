@@ -431,20 +431,20 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             translationY = 0;
         }
 
-        if (mMenuBarLayoutTranslationY == translationY)
-        {
-            return;
-        } else
-        {
-            mMenuBarLayoutTranslationY = translationY;
-        }
-
         if (dy > 0)
         {
             mUpScrolling = true;
         } else if (dy < 0)
         {
             mUpScrolling = false;
+        }
+
+        if (mMenuBarLayoutTranslationY == translationY)
+        {
+            return;
+        } else
+        {
+            mMenuBarLayoutTranslationY = translationY;
         }
 
         // 움직이는 동안에는 터치가 불가능 하다.
