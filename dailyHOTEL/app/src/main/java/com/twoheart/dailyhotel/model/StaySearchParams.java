@@ -142,7 +142,7 @@ public class StaySearchParams extends StayParams
 
         if (Util.isTextEmpty(term) == false)
         {
-//            sb.append(getParamString("term", URLEncoder.encode(term))).append("&");
+            //            sb.append(getParamString("term", URLEncoder.encode(term))).append("&");
             sb.append(getParamString("term", term)).append("&");
         }
 
