@@ -320,11 +320,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             mViewPager.setOffscreenPageLimit(size);
 
             Class reflectionClass = ViewPager.class;
-            Field mCurItem = null;
 
             try
             {
-                mCurItem = reflectionClass.getDeclaredField("mCurItem");
+                Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
                 mCurItem.setAccessible(true);
                 mCurItem.setInt(mViewPager, position);
             } catch (Exception e)

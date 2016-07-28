@@ -99,7 +99,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         // 검색
         // 지역 이름
         // 날짜
-        View searchTextView = (TextView) view.findViewById(R.id.searchTextView);
+        View searchTextView = view.findViewById(R.id.searchTextView);
 
         View regionTextLayout = view.findViewById(R.id.regionTextLayout);
         mRegionTextView = (TextView) view.findViewById(R.id.regionTextView);
@@ -161,7 +161,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         } else
         {
             float scaleX = 1f;
-            float scaleWidth = width;
+            float scaleWidth;
+
             for (int i = 99; i >= 80; i--)
             {
                 scaleX = (float) i / 100;
@@ -288,11 +289,10 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mViewPager.setOffscreenPageLimit(size);
 
             Class reflectionClass = ViewPager.class;
-            Field mCurItem = null;
 
             try
             {
-                mCurItem = reflectionClass.getDeclaredField("mCurItem");
+                Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
                 mCurItem.setAccessible(true);
                 mCurItem.setInt(mViewPager, position);
             } catch (Exception e)

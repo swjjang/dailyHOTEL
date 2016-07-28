@@ -185,64 +185,34 @@ public class GourmetCurationOption extends PlaceCurationOption
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            boolean isFirst = true;
-
             if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
             {
-                isFirst = false;
-                result.append(AnalyticsManager.Label.SORTFILTER_0611);
+                result.append(AnalyticsManager.Label.SORTFILTER_0611).append(',');
             }
 
             if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
             {
-                if (isFirst == true)
-                {
-                    isFirst = false;
-                } else
-                {
-                    result.append(',');
-                }
-
-                result.append(AnalyticsManager.Label.SORTFILTER_1115);
+                result.append(AnalyticsManager.Label.SORTFILTER_1115).append(',');
             }
 
             if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
             {
-                if (isFirst == true)
-                {
-                    isFirst = false;
-                } else
-                {
-                    result.append(',');
-                }
-
-                result.append(AnalyticsManager.Label.SORTFILTER_1517);
+                result.append(AnalyticsManager.Label.SORTFILTER_1517).append(',');
             }
 
             if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
             {
-                if (isFirst == true)
-                {
-                    isFirst = false;
-                } else
-                {
-                    result.append(',');
-                }
-
-                result.append(AnalyticsManager.Label.SORTFILTER_1721);
+                result.append(AnalyticsManager.Label.SORTFILTER_1721).append(',');
             }
 
             if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
             {
-                if (isFirst == true)
-                {
-                    isFirst = false;
-                } else
-                {
-                    result.append(',');
-                }
+                result.append(AnalyticsManager.Label.SORTFILTER_2106).append(',');
+            }
 
-                result.append(AnalyticsManager.Label.SORTFILTER_2106);
+            if (result.charAt(result.length() - 1) == ',')
+            {
+                result.setLength(result.length() - 1);
             }
         }
 
@@ -253,11 +223,8 @@ public class GourmetCurationOption extends PlaceCurationOption
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            boolean isFirst = true;
-
             if ((flagAmenitiesFilters & GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
             {
-                isFirst = false;
                 result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
             }
         }
