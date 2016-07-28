@@ -498,7 +498,7 @@ public class DailyPreference
 
     public String getIntroImageVersion()
     {
-        return getValue(mPreferences, KEY_INTRO_VERSION, null);
+        return getValue(mPreferences, KEY_INTRO_VERSION, Constants.DAILY_INTRO_DEFAULT_VERSION);
     }
 
     public void setIntroImageVersion(String value)

@@ -89,8 +89,8 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
         {
             String currentVersion = DailyPreference.getInstance(mContext).getIntroImageVersion();
             String newVersion = DailyPreference.getInstance(mContext).getIntroImageNewVersion();
-            DailyPreference.getInstance(mContext).setIntroImageVersion(newVersion);
 
+            DailyPreference.getInstance(mContext).setIntroImageVersion(newVersion);
             DailyPreference.getInstance(mContext).setIntroImageNewUrl(null);
             DailyPreference.getInstance(mContext).setIntroImageNewVersion(null);
 

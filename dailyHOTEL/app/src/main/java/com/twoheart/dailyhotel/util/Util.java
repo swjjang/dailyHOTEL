@@ -55,7 +55,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -63,10 +62,6 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okio.BufferedSink;
-import okio.Okio;
 
 public class Util implements Constants
 {
@@ -1297,7 +1292,7 @@ public class Util implements Constants
 
     public static String makeIntroImageFileName(String version)
     {
-        if(Util.isTextEmpty(version) == true)
+        if (Util.isTextEmpty(version) == true)
         {
             return "daily_intro";
         }

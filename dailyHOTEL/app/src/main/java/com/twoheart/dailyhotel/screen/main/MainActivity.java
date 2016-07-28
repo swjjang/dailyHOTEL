@@ -23,7 +23,6 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
-import com.twoheart.dailyhotel.firebase.ImageDownloadAsyncTask;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
@@ -214,7 +213,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
 
-        if (splashVersion == null)
+        if (splashVersion == null || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setImageResource(R.drawable.splash);
         } else
@@ -224,7 +223,7 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (file.exists() == false)
             {
-                DailyPreference.getInstance(this).setIntroImageVersion(null);
+                DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                 imageView.setImageResource(R.drawable.splash);
             } else
             {
@@ -233,7 +232,7 @@ public class MainActivity extends BaseActivity implements Constants
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception e)
                 {
-                    DailyPreference.getInstance(this).setIntroImageVersion(null);
+                    DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                     imageView.setImageResource(R.drawable.splash);
                 }
             }

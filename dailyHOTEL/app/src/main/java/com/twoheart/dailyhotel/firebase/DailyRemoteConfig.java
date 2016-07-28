@@ -77,8 +77,8 @@ public class DailyRemoteConfig
                 //                    ExLog.d(e.toString());
                 //                }
 
-                // 이미지 로딩 관련
-//                processIntroImage(androidSplashImageUpdateTime, androidSplashImageUrl);
+                // 이미지 로딩 관련(추후 진행)
+                //                processIntroImage(androidSplashImageUpdateTime, androidSplashImageUrl);
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -96,7 +96,7 @@ public class DailyRemoteConfig
         });
     }
 
-    private void processIntroImage(String updateTime, String imageUrl)
+    private void processIntroImage(Context context, String updateTime, String imageUrl)
     {
         if (Util.isTextEmpty(updateTime) == true || Util.isTextEmpty(imageUrl) == true)
         {
@@ -104,7 +104,7 @@ public class DailyRemoteConfig
         }
 
         // 이미지 로딩 관련
-        int densityDpi = mContext.getResources().getDisplayMetrics().densityDpi;
+        int densityDpi = context.getResources().getDisplayMetrics().densityDpi;
         String dpi;
 
         if (densityDpi < 240)
@@ -124,13 +124,13 @@ public class DailyRemoteConfig
             JSONObject imageUrlJSONObject = new JSONObject(imageUrl);
 
             String url = imageUrlJSONObject.getString(dpi);
-            String currentVersion = DailyPreference.getInstance(mContext).getIntroImageVersion();
+            String currentVersion = DailyPreference.getInstance(context).getIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");
 
             // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
             if (Util.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
             {
-                new ImageDownloadAsyncTask(mContext).execute(url, newVersion);
+                new ImageDownloadAsyncTask(context).execute(url, newVersion);
             }
         } catch (JSONException e)
         {
