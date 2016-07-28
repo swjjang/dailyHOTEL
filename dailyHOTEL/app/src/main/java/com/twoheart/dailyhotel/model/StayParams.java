@@ -12,11 +12,11 @@ import com.twoheart.dailyhotel.util.Util;
  */
 public class StayParams extends PlaceParams
 {
-    private String dateCheckIn;
-    private int stays;
-    private Category category;
-    private String bedType;
-    private String luxury;
+    protected String dateCheckIn;
+    protected int stays;
+    protected Category category;
+    protected String bedType;
+    protected String luxury;
 
     public StayParams(PlaceCuration placeCuration)
     {
@@ -170,7 +170,7 @@ public class StayParams extends PlaceParams
         return sb.toString();
     }
 
-    private String toParamStringByBedTypes(int flagBedTypeFilters)
+    protected String toParamStringByBedTypes(int flagBedTypeFilters)
     {
         if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
@@ -204,7 +204,7 @@ public class StayParams extends PlaceParams
         return sb.toString();
     }
 
-    private String toParamStingByAmenities(int flagAmenitiesFilters)
+    protected String toParamStingByAmenities(int flagAmenitiesFilters)
     {
         if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
@@ -258,7 +258,7 @@ public class StayParams extends PlaceParams
         return sb.toString();
     }
 
-    private String getCategoryString()
+    protected String getCategoryString()
     {
         if (category == null)
         {

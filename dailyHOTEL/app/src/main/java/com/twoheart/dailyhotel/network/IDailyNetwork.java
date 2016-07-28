@@ -159,16 +159,12 @@ interface IDailyNetwork
     void requestStayList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
 
     /**
-     * @param tag
-     * @param saleTime
-     * @param nights
-     * @param text
-     * @param listener
-     * @param errorListener
+     * /api/v3/hotels/sales
+     * StaySearch 리스트를 요청한다
+     *
+     * @return
      */
-    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestStaySearchList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag

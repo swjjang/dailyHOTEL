@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -53,6 +54,16 @@ public class StayListNetworkController extends BaseNetworkController
         }
 
         DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
+    }
+
+    public void requestStaySearchList(StaySearchParams params)
+    {
+        if (params == null)
+        {
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(mContext).requestStaySearchList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

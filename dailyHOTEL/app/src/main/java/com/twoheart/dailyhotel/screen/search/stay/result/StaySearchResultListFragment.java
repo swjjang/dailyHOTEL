@@ -4,7 +4,8 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.model.StaySearchCuration;
+import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListNetworkController;
@@ -61,8 +62,8 @@ public class StaySearchResultListFragment extends StayListFragment
             return;
         }
 
-        StayParams params = (StayParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        mNetworkController.requestStayList(params);
+        StaySearchParams params = (StaySearchParams) ((StaySearchCuration) mStayCuration).toPlaceParams(page, PAGENATION_LIST_SIZE, true);
+        mNetworkController.requestStaySearchList(params);
     }
 
     @Override

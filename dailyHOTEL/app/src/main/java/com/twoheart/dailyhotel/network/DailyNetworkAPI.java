@@ -320,30 +320,22 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestStaySearchList(Object tag, String stayParams, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "ODUkMjEkNjYkNCQ3JA==$NTMxCQzTM3OTVEQUU3NTg3NYUQxMzVDMURERjk5QjE3QkFGOEMxRTIxOUMzNEQ1OEUxNGkUyMEM5Q0UxQUY1RTAxOTA==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "MjkkODAkNjEkMjgkMzUk$QTE4Nzc0QjUwQTQ4QzBFMjcwOTk1LNZTg2QQTg2QjQ0REJEQ0MwNzA3MTdCRDQzRMzA1NjYxNjA5QzVENTNABRjlENA==$";
 
-        String params = String.format("?dateCheckIn=%s&lengthStay=%d&offset=%d&count=%d&term=%s"//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights, offeset, count, text);
+        String params;
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
+        if (Util.isTextEmpty(stayParams) == false)
+        {
+            params = "?" + stayParams;
+        } else
+        {
+            return;
+        }
 
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "ODUkMjEkNjYkNCQ3JA==$NTMxCQzTM3OTVEQUU3NTg3NYUQxMzVDMURERjk5QjE3QkFGOEMxRTIxOUMzNEQ1OEUxNGkUyMEM5Q0UxQUY1RTAxOTA==$";
-
-        String params = String.format("?dateCheckIn=%s&lengthStay=%d&userLatitude=%s&userLongitude=%s&offset=%d&count=%d"//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights//
-            , Double.toString(location.getLatitude()), Double.toString(location.getLongitude())//
-            , offeset, count);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
-
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
         mQueue.add(dailyHotelJsonRequest);
     }
 

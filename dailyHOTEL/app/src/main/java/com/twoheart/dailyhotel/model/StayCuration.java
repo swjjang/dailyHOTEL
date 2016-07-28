@@ -6,10 +6,10 @@ import android.os.Parcelable;
 
 public class StayCuration extends PlaceCuration
 {
-    private SaleTime mCheckInSaleTime;
-    private SaleTime mCheckOutSaleTime;
-    private Category mCategory;
-    private StayCurationOption mStayCurationOption;
+    protected SaleTime mCheckInSaleTime;
+    protected SaleTime mCheckOutSaleTime;
+    protected Category mCategory;
+    protected StayCurationOption mStayCurationOption;
 
     public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
     {
