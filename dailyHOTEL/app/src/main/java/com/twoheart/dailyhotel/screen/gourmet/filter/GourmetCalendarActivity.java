@@ -28,12 +28,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     protected boolean mIsChanged;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, String screen, String closedLabel, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-        intent.putExtra(INTENT_EXTRA_DATA_CLOSED_LABEL, closedLabel);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
 
@@ -49,7 +48,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         final SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
-        mClosedLabel = intent.getStringExtra(INTENT_EXTRA_DATA_CLOSED_LABEL);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
@@ -138,13 +136,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
-        if (AnalyticsManager.Label.CHANGE_LOCATION.equalsIgnoreCase(mClosedLabel) //
-            || AnalyticsManager.Label.EVENT.equalsIgnoreCase(mClosedLabel))
-        {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLOSED, mClosedLabel, null);
-        }
-
         hideAnimation();
     }
 
@@ -158,13 +149,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
-
-                if (AnalyticsManager.Label.CHANGE_LOCATION.equalsIgnoreCase(mClosedLabel) //
-                    || AnalyticsManager.Label.EVENT.equalsIgnoreCase(mClosedLabel))
-                {
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLOSED, mClosedLabel, null);
-                }
 
                 hideAnimation();
                 break;

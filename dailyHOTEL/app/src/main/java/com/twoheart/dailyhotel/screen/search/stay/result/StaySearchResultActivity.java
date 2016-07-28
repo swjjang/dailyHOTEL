@@ -374,7 +374,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             int nights = mStaySearchCuration.getNights();
 
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
-                checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, null, true, true);
+                checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //

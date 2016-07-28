@@ -236,7 +236,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    public void startCalendar(String closedLabel)
+    public void startCalendar(String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -246,7 +246,7 @@ public class StayMainFragment extends PlaceMainFragment
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
         int nights = mStayCuration.getNights();
 
-        Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, closedLabel, true, true);
+        Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, callByScreen, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -768,7 +768,7 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onDateClick()
         {
-            startCalendar(null);
+            startCalendar(AnalyticsManager.ValueType.LIST);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);

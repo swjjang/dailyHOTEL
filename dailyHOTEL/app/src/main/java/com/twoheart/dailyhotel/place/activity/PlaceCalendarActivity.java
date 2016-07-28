@@ -28,7 +28,6 @@ import java.util.TimeZone;
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
     public static final String INTENT_EXTRA_DATA_SCREEN = "screen";
-    public static final String INTENT_EXTRA_DATA_CLOSED_LABEL = "closedLabel";
     public static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
     public static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
 
@@ -44,7 +43,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private TextView mTitleTextView;
     protected String mCallByScreen;
-    protected String mClosedLabel;
 
     private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;

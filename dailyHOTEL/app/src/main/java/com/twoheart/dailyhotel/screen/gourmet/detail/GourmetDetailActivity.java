@@ -335,14 +335,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String closedLabel = null;
+        String callByScreen;
         if (mIsDeepLink == true)
         {
-            closedLabel = AnalyticsManager.Label.EVENT;
+            callByScreen = AnalyticsManager.Label.EVENT;
+        } else {
+            callByScreen = AnalyticsManager.ValueType.DETAIL;
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            saleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, closedLabel, true, isAnimation);
+            saleTime, placeIndex, callByScreen, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//

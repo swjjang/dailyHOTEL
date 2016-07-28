@@ -363,7 +363,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
-                mGourmetCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, null, true, true);
+                mGourmetCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //

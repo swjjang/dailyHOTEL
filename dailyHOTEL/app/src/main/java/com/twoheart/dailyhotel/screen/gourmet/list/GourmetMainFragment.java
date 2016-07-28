@@ -315,7 +315,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            Intent intent = GourmetCalendarActivity.newInstance(getContext(), mGourmetCuration.getSaleTime(), AnalyticsManager.ValueType.LIST, AnalyticsManager.ValueType.LIST, true, true);
+            Intent intent = GourmetCalendarActivity.newInstance(getContext(), mGourmetCuration.getSaleTime(), AnalyticsManager.ValueType.LIST, true, true);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//

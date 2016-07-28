@@ -349,14 +349,16 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String closedLabel = null;
+        String callByScreen;
         if (mIsDeepLink == true)
         {
-            closedLabel = AnalyticsManager.Label.EVENT;
+            callByScreen = AnalyticsManager.Label.EVENT;
+        } else {
+            callByScreen = AnalyticsManager.ValueType.DETAIL;
         }
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, //
-            nights, placeIndex, closedLabel, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+            nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//

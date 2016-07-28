@@ -282,7 +282,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mSaleTime, //
-                AnalyticsManager.ValueType.SEARCH, null, true, isAnimation);
+                AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
