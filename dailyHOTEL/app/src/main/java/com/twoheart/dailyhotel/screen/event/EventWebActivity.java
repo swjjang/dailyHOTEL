@@ -34,11 +34,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class EventWebActivity extends WebViewActivity implements Constants
@@ -219,46 +217,37 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
-            SaleTime checkInSaleTime = saleTime.getClone(0);
+            // 신규 타입의 화면이동
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
-            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
+
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            int dailyDayOfDays;
+            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
-            if (Util.isTextEmpty(date) == true)
+            DailyDeepLink.getInstance().clear();
+
+            SaleTime changedSaleTime = saleTime.getClone(0);
+
+            if (Util.isTextEmpty(date) == false)
             {
-                if (datePlus >= 0)
-                {
-                    dailyDayOfDays = datePlus;
-
-                    if (nights <= 0 || dailyDayOfDays < 0)
-                    {
-                        throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-                    }
-                } else
-                {
-                    throw new NullPointerException("datePlus < 0");
-                }
-            } else
+                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
+            } else if (datePlus >= 0)
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                if (nights <= 0 || dailyDayOfDays < 0)
-                {
-                    throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-                }
+                changedSaleTime.setOffsetDailyDay(datePlus);
             }
 
-            checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+            if (changedSaleTime == null)
+            {
+                return false;
+            }
 
-            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, checkInSaleTime, nights, hotelIndex, isShowCalendar);
+            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, changedSaleTime, nights, hotelIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
@@ -285,44 +274,30 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
-            SaleTime gourmetSaleTime = saleTime.getClone(0);
-            int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            int nights = 1;
-            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
+            int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            int dailyDayOfDays;
+            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
-            if (Util.isTextEmpty(date) == true)
+            SaleTime changedSaleTime = saleTime.getClone(0);
+
+            // date가 비어 있는 경우
+            if (Util.isTextEmpty(date) == false)
             {
-                if (datePlus >= 0)
-                {
-                    dailyDayOfDays = datePlus;
-                } else
-                {
-                    throw new NullPointerException("datePlus < 0");
-                }
-            } else
+                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
+            } else if (datePlus >= 0)
             {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(gourmetSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                ExLog.d(schemeDate + " / " + dailyDate + " / " + dailyDayOfDays);
-
-                if (dailyDayOfDays < 0)
-                {
-                    throw new NullPointerException("dailyDayOfDays < 0");
-                }
+                changedSaleTime.setOffsetDailyDay(datePlus);
             }
 
-            gourmetSaleTime.setOffsetDailyDay(dailyDayOfDays);
+            if (changedSaleTime == null)
+            {
+                return false;
+            }
 
             Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                gourmetSaleTime, fnbIndex, isShowCalendar);
+                changedSaleTime, gourmetIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 

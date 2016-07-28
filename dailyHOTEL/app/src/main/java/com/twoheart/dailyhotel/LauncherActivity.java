@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -28,6 +28,10 @@ public class LauncherActivity extends Activity
         Util.initializeMemory();
 
         DailyDeepLink.getInstance().clear();
+
+        // 선택 날짜를 초기화 한다.
+        DailyPreference.getInstance(this).setStayLastViewDate(null);
+        DailyPreference.getInstance(this).setGourmetLastViewDate(null);
 
         Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
 

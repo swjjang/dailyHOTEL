@@ -779,7 +779,6 @@ public class StayDetailActivity extends PlaceDetailActivity
                     StayDetail stayDetail = (StayDetail) mPlaceDetail;
                     stayDetail.categoryCode = stayDetail.grade.getName(StayDetailActivity.this);
 
-                    mIsDeepLink = false;
                     mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
                 }
 
@@ -793,6 +792,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                     mCheckPrice = true;
                     checkStayPrice(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
                 }
+
+                mIsDeepLink = false;
 
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);
             } catch (Exception e)

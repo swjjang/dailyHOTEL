@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -428,6 +429,9 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onStayList(ArrayList<Stay> list, int page)
         {
+            String value = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyyMMdd") + "," + mStayCuration.getNights();
+            DailyPreference.getInstance(mBaseActivity).setStayLastViewDate(value);
+
             StayListFragment.this.onStayList(list, page);
         }
 

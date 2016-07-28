@@ -481,17 +481,39 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            mGourmetCuration.setSaleTime(currentDateTime, dailyDateTime);
-
-            if (DailyDeepLink.getInstance().isValidateLink() == true //
-                && processDeepLinkByDateTime(mBaseActivity) == true)
+            try
             {
-                // 딥링크 이동
-            } else
-            {
-                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mGourmetCuration.getSaleTime());
+                mGourmetCuration.setSaleTime(currentDateTime, dailyDateTime);
 
-                mPlaceMainNetworkController.requestEventBanner();
+                String lastViewDate = DailyPreference.getInstance(mBaseActivity).getGourmetLastViewDate();
+
+                if (Util.isTextEmpty(lastViewDate) == false)
+                {
+                    DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(null);
+
+                    SaleTime changedSaleTime = SaleTime.changeDateSaleTime(mGourmetCuration.getSaleTime(), lastViewDate);
+
+                    if (changedSaleTime != null)
+                    {
+                        mGourmetCuration.setSaleTime(changedSaleTime);
+                        ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(changedSaleTime);
+                    }
+                }
+
+                if (DailyDeepLink.getInstance().isValidateLink() == true //
+                    && processDeepLinkByDateTime(mBaseActivity) == true)
+                {
+                    // 딥링크 이동
+                } else
+                {
+                    ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mGourmetCuration.getSaleTime());
+
+                    mPlaceMainNetworkController.requestEventBanner();
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
             }
         }
 
@@ -694,8 +716,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceRegion(region);
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceName(gourmet.name);
 
-                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mGourmetCuration.getSaleTime(),
-                        mGourmetCuration.getProvince(), gourmet);
+                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mGourmetCuration.getSaleTime(), mGourmetCuration.getProvince(), gourmet);
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
@@ -883,41 +904,29 @@ public class GourmetMainFragment extends PlaceMainFragment
     {
         try
         {
-            // 신규 타입의 화면이동
-            SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
             int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
+            SaleTime changedSaleTime = mGourmetCuration.getSaleTime().getClone(0);
+
             // date가 비어 있는 경우
-            if (Util.isTextEmpty(date) == true)
+            if (Util.isTextEmpty(date) == false)
             {
-                if (datePlus >= 0)
-                {
-                    saleTime.setOffsetDailyDay(datePlus);
-                    startGourmetDetailByDeepLink(gourmetIndex, saleTime, isShowCalendar);
-                } else
-                {
-                    return false;
-                }
-            } else
+                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
+            } else if (datePlus >= 0)
             {
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                if (dailyDayOfDays < 0)
-                {
-                    return false;
-                }
-
-                saleTime.setOffsetDailyDay(dailyDayOfDays);
-                startGourmetDetailByDeepLink(gourmetIndex, saleTime, isShowCalendar);
+                changedSaleTime.setOffsetDailyDay(datePlus);
             }
+
+            if (changedSaleTime == null)
+            {
+                return false;
+            }
+
+            startGourmetDetailByDeepLink(gourmetIndex, changedSaleTime, isShowCalendar);
 
             mIsDeepLink = true;
         } catch (Exception e)
@@ -1020,56 +1029,34 @@ public class GourmetMainFragment extends PlaceMainFragment
         mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
         DailyDeepLink.getInstance().clear();
 
+        SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
+        SaleTime changedSaleTime;
+
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
-            try
-            {
-                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                SaleTime saleTime = mGourmetCuration.getSaleTime();
-                Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-
-                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                if (dailyDayOfDays >= 0)
-                {
-                    SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
-                    mGourmetCuration.setSaleTime(deepLinkSaleTime);
-                    ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
-                } else
-                {
-                    return false;
-                }
-            } catch (Exception e)
-            {
-                return false;
-            }
+            changedSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
         } else if (datePlus >= 0)
         {
-            SaleTime saleTime = mGourmetCuration.getSaleTime();
-
             try
             {
-                SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
-                mGourmetCuration.setSaleTime(deepLinkSaleTime);
-                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
+                changedSaleTime = saleTime.getClone(datePlus);
             } catch (Exception e)
             {
                 return false;
             }
         } else
         {
-            try
-            {
-                SaleTime deepLinkSaleTime = mGourmetCuration.getSaleTime();
-                mGourmetCuration.setSaleTime(deepLinkSaleTime);
-                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
-            } catch (Exception e)
-            {
-                return false;
-            }
+            changedSaleTime = saleTime;
         }
+
+        if (changedSaleTime == null)
+        {
+            return false;
+        }
+
+        mGourmetCuration.setSaleTime(changedSaleTime);
+        ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(changedSaleTime);
 
         mPlaceMainNetworkController.requestRegionList();
 

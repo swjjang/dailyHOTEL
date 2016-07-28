@@ -55,6 +55,9 @@ public class DailyPreference
     private static final String KEY_COMPANY_FAX = "106";
     private static final String KEY_COMPANY_PRIVACY_EMAIL = "107";
 
+    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
+    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
+
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
 
@@ -468,15 +471,25 @@ public class DailyPreference
         setValue(mEditor, KEY_COLLAPSEKEY, value);
     }
 
-    //    public boolean isSocialSignUp()
-    //    {
-    //        return getValue(mPreferences, KEY_SOCIAL_SIGNUP, false);
-    //    }
-    //
-    //    public void setSocialSignUp(boolean value)
-    //    {
-    //        setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
-    //    }
+    public String getStayLastViewDate()
+    {
+        return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
+    }
+
+    public void setStayLastViewDate(String value)
+    {
+        setValue(mEditor, KEY_STAY_LAST_VIEW_DATE, value);
+    }
+
+    public String getGourmetLastViewDate()
+    {
+        return getValue(mPreferences, KEY_GOURMET_LAST_VIEW_DATE, null);
+    }
+
+    public void setGourmetLastViewDate(String value)
+    {
+        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
+    }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {

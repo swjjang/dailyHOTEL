@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -465,6 +466,9 @@ public class GourmetListFragment extends PlaceListFragment
 
                 if (msgCode == 100)
                 {
+                    String value = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyyMMdd");
+                    DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(value);
+
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     JSONArray gourmetJSONArray = null;
 
