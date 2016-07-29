@@ -252,6 +252,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initLayout()
     {
+        if (mStaySearchCuration == null)
+        {
+            finish();
+            return;
+        }
+
         String checkInDate = mStaySearchCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
         String checkOutDate = mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
@@ -712,28 +718,32 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
 
+            Keyword keyword = mStaySearchCuration.getKeyword();
+
             if (mSearchType == SearchType.LOCATION)
             {
                 recordEventSearchResultByLocation(mAddress, isShow);
             } else if (mSearchType == SearchType.RECENT)
             {
-                recordEventSearchResultByRecentKeyword(mStaySearchCuration.getKeyword(), isShow);
+                recordEventSearchResultByRecentKeyword(keyword, isShow);
             } else if (mSearchType == SearchType.AUTOCOMPLETE)
             {
-                recordEventSearchResultByAutoSearch(mStaySearchCuration.getKeyword(), mInputText, isShow);
+                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow);
             } else
             {
-                recordEventSearchResultByKeyword(mStaySearchCuration.getKeyword(), isShow);
+                recordEventSearchResultByKeyword(keyword, isShow);
 
                 // 기존 AppBoy 이벤트
                 PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
                 int placeCount = placeListFragment.getPlaceCount();
 
                 String action = isShow == true ? AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND : AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
-                String label = isShow == true ? String.format("%s-%s", mStaySearchCuration.getKeyword().name, getSearchDate()) : String.format("%s-%d-%s", mStaySearchCuration.getKeyword().name, placeCount, getSearchDate());
+                String label = isShow == true ? //
+                    String.format("%s-%s", keyword.name, getSearchDate())//
+                    : String.format("%s-%d-%s", keyword.name, placeCount, getSearchDate());
 
                 Map<String, String> eventParams = new HashMap<>();
-                eventParams.put(AnalyticsManager.KeyType.KEYWORD, mStaySearchCuration.getKeyword().name);
+                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
                 eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(placeCount));
                 AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , action, label, eventParams);

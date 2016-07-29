@@ -124,14 +124,9 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             mSortRadioGroup.setOnCheckedChangeListener(this);
         }
 
-        if (mGourmetCuration.getProvince().isOverseas == false)
-        {
-            resetLayout(mGridLayout);
-            resetLayout(mAmenitiesLayout);
-            resetLayout(mTimeRangeLayout);
-        }
-
-        requestUpdateResult();
+        resetLayout(mGridLayout);
+        resetLayout(mAmenitiesLayout);
+        resetLayout(mTimeRangeLayout);
     }
 
     @Override

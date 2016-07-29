@@ -146,13 +146,10 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             mSortRadioGroup.setOnCheckedChangeListener(this);
         }
 
-        if (mStayCuration.getProvince().isOverseas == false)
-        {
-            updatePersonFilter(StayFilter.MIN_PERSON);
+        updatePersonFilter(StayFilter.MIN_PERSON);
 
-            resetLayout(mBedTypeLayout);
-            resetLayout(mGridLayout);
-        }
+        resetLayout(mBedTypeLayout);
+        resetLayout(mGridLayout);
     }
 
     @Override

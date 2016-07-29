@@ -48,7 +48,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private String mInputText;
     private String mAddress;
 
-    private Keyword mKeyword;
     private SearchType mSearchType;
     private GourmetSearchCuration mGourmetSearchCuration;
 
@@ -200,10 +199,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     {
         SaleTime saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         Location location = null;
+        Keyword keyword = null;
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
         {
-            mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
+            keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
@@ -218,29 +218,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         mGourmetSearchCuration = new GourmetSearchCuration();
-        mGourmetSearchCuration.setKeyword(mKeyword);
-
-        // ---> 테스트를 위한 임시 코드
-        Province province = mGourmetSearchCuration.getProvince();
-        if (province == null)
-        {
-            province = new Province();
-            province.index = 5;
-            province.name = "서울";
-            province.isOverseas = false;
-        }
-
-        mGourmetSearchCuration.setProvince(province);
-        // <----
+        mGourmetSearchCuration.setKeyword(keyword);
 
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
         if (mSearchType == SearchType.LOCATION)
         {
             mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
             mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
-        } else
-        {
-
         }
 
         mGourmetSearchCuration.setLocation(location);
@@ -261,7 +245,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarTitle("");
         } else
         {
-            mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
+            mPlaceSearchResultLayout.setToolbarTitle(mGourmetSearchCuration.getKeyword().name);
         }
 
         ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getSaleTime());
@@ -274,7 +258,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected Keyword getKeyword()
     {
-        return mKeyword;
+        return mGourmetSearchCuration.getKeyword();
     }
 
     @Override
@@ -602,28 +586,32 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
 
+            Keyword keyword = mGourmetSearchCuration.getKeyword();
+
             if (mSearchType == SearchType.LOCATION)
             {
                 recordEventSearchResultByLocation(mAddress, isShow);
             } else if (mSearchType == SearchType.RECENT)
             {
-                recordEventSearchResultByRecentKeyword(mKeyword, isShow);
+                recordEventSearchResultByRecentKeyword(keyword, isShow);
             } else if (mSearchType == SearchType.AUTOCOMPLETE)
             {
-                recordEventSearchResultByAutoSearch(mKeyword, mInputText, isShow);
+                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow);
             } else
             {
-                recordEventSearchResultByKeyword(mKeyword, isShow);
+                recordEventSearchResultByKeyword(keyword, isShow);
 
                 // 기존 AppBoy 이벤트
                 PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
                 int placeCount = placeListFragment.getPlaceCount();
 
                 String action = isShow == true ? AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND : AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
-                String label = isShow == true ? String.format("%s-%s", mKeyword.name, getSearchDate()) : String.format("%s-%d-%s", mKeyword.name, placeCount, getSearchDate());
+                String label = isShow == true ? //
+                    String.format("%s-%s", keyword.name, getSearchDate())//
+                    : String.format("%s-%d-%s", keyword.name, placeCount, getSearchDate());
 
                 Map<String, String> eventParams = new HashMap<>();
-                eventParams.put(AnalyticsManager.KeyType.KEYWORD, mKeyword.name);
+                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
                 eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(placeCount));
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , action, label, eventParams);

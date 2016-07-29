@@ -583,6 +583,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         Province province = mStayCuration.getProvince();
 
+        if (province == null)
+        {
+            return;
+        }
+
         Map<String, String> eventParams = new HashMap<>();
 
         if (province instanceof Area)
@@ -655,7 +660,19 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void onComplete()
     {
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mStayCuration);
+
+        setResult(RESULT_OK, intent);
+        hideAnimation();
+
         Province province = mStayCuration.getProvince();
+
+        if(province == null)
+        {
+            return;
+        }
 
         Map<String, String> eventParams = new HashMap<>();
 
@@ -681,12 +698,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             ExLog.d(stayCurationOption.toString());
         }
-
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mStayCuration);
-
-        setResult(RESULT_OK, intent);
-        hideAnimation();
     }
 
     @Override
@@ -725,9 +736,15 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     private void checkedChangedDistance()
     {
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        stayCurationOption.setSortType(SortType.DISTANCE);
+
         Province province = mStayCuration.getProvince();
 
-        stayCurationOption.setSortType(SortType.DISTANCE);
+        if (province == null)
+        {
+            return;
+        }
+
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
         Map<String, String> eventParams = new HashMap<>();
