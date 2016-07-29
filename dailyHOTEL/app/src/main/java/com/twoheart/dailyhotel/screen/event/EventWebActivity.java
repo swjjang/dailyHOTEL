@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyWebView;
 
 import org.json.JSONObject;
 
@@ -134,6 +135,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         setWebView(url);
+
+        initLayout((DailyWebView) webView);
     }
 
     private void initToolbar()
@@ -146,6 +149,36 @@ public class EventWebActivity extends WebViewActivity implements Constants
             public void onClick(View v)
             {
                 finish();
+            }
+        });
+    }
+
+    private void initLayout(final DailyWebView dailyWebView)
+    {
+        final View topButtonView = findViewById(R.id.topButtonView);
+        topButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                dailyWebView.setScrollY(0);
+            }
+        });
+
+        topButtonView.setVisibility(View.INVISIBLE);
+
+        dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
+        {
+            @Override
+            public void onScroll(int l, int t, int oldl, int oldt)
+            {
+                if (t == 0)
+                {
+                    topButtonView.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    topButtonView.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

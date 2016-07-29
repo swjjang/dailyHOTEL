@@ -5,15 +5,20 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <ScrollView
+    <com.twoheart.dailyhotel.widget.DailyWebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:fadingEdge="none">
+        android:layout_below="@+id/toolbar"/>
 
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+    <ImageView
+        android:id="@+id/topButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_top"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"/>
 </RelativeLayout>

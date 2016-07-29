@@ -11,10 +11,8 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyWebView;
 
-/**
- * Created by android_sam on 2016. 5. 30..
- */
 public class CouponTermActivity extends WebViewActivity
 {
     private static final String INTENT_EXTRA_DATA_COUPON_IDX = "coupon_idx";
@@ -68,7 +66,16 @@ public class CouponTermActivity extends WebViewActivity
             mCouponIdx = intent.getStringExtra(INTENT_EXTRA_DATA_COUPON_IDX);
         }
 
+        if (Util.isTextEmpty(mCouponIdx) == true)
+        {
+            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
+        } else
+        {
+            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+        }
+
         initToolbar();
+        initLayout((DailyWebView) webView);
     }
 
     private void initToolbar()
@@ -95,6 +102,36 @@ public class CouponTermActivity extends WebViewActivity
         });
     }
 
+    private void initLayout(final DailyWebView dailyWebView)
+    {
+        final View topButtonView = findViewById(R.id.topButtonView);
+        topButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                dailyWebView.setScrollY(0);
+            }
+        });
+
+        topButtonView.setVisibility(View.INVISIBLE);
+
+        dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
+        {
+            @Override
+            public void onScroll(int l, int t, int oldl, int oldt)
+            {
+                if (t == 0)
+                {
+                    topButtonView.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    topButtonView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
     @Override
     protected void onStart()
     {
@@ -108,19 +145,5 @@ public class CouponTermActivity extends WebViewActivity
             AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_INDIVIDUAL_TERMS_OF_USE);
         }
 
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        if (Util.isTextEmpty(mCouponIdx) == true)
-        {
-            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
-        } else
-        {
-            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
-        }
     }
 }
