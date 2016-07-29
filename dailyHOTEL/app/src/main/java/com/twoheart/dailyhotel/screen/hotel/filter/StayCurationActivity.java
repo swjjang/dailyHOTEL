@@ -669,7 +669,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         Province province = mStayCuration.getProvince();
 
-        if(province == null)
+        if (province == null)
         {
             return;
         }

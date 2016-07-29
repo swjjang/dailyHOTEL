@@ -5,7 +5,6 @@ import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -18,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class StaySearchResultListNetworkController extends BaseNetworkController

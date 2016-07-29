@@ -599,7 +599,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onCategoryList(HashSet<String> categorySet)
         {
-            if(categorySet == null || categorySet.size() == 0)
+            if (categorySet == null || categorySet.size() == 0)
             {
                 return;
             }
