@@ -176,7 +176,7 @@ public class StayListFragment extends PlaceListFragment
         }
 
         StayParams params = (StayParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        ((StayListNetworkController)mNetworkController).requestStayList(params);
+        ((StayListNetworkController) mNetworkController).requestStayList(params);
     }
 
     public boolean hasSalesPlace()

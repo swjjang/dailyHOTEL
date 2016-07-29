@@ -6,7 +6,7 @@ import android.net.Uri;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.GourmetSearch;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -23,7 +23,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount);
+        void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount);
     }
 
     public GourmetSearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -31,7 +31,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
         super(context, networkTag, listener);
     }
 
-    public void requestGourmetList(GourmetParams params)
+    public void requestGourmetList(GourmetSearchParams params)
     {
         if (params == null)
         {
@@ -69,7 +69,8 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                     }
 
-                    int totalCount = dataJSONObject.getInt("gourmetSalesCount");
+                    int totalCount = dataJSONObject.getInt("searchTotalCount");
+                    int maxCount = dataJSONObject.getInt("searchMaxCount");
                     int page;
                     String imageUrl;
 
@@ -91,7 +92,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page, totalCount);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page, totalCount, maxCount);
                 } else
                 {
                     String message = response.getString("msg");

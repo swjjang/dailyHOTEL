@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
-import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -44,7 +44,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     {
         void onGourmetClick(PlaceViewItem placeViewItem);
 
-        void onResultListCount(int count);
+        void onResultListCount(int count, int maxCount);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             return;
         }
 
-        GourmetParams params = (GourmetParams) mGourmetCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
+        GourmetSearchParams params = (GourmetSearchParams) mGourmetCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
         mNetworkController.requestGourmetList(params);
     }
 
@@ -211,7 +211,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     private GourmetSearchResultListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetSearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount)
+        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount)
         {
             if (isFinishing() == true)
             {
@@ -259,7 +259,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 }
             }
 
-            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount);
+            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
 
             unLockUI();
             mGourmetSearchResultListLayout.setSwipeRefreshing(false);

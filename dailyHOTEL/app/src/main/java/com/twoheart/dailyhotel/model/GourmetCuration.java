@@ -8,7 +8,7 @@ public class GourmetCuration extends PlaceCuration
 {
     private SaleTime mSaleTime;
 
-    private GourmetCurationOption mGourmetCurationOption;
+    protected GourmetCurationOption mGourmetCurationOption;
 
     public GourmetCuration(Parcel in)
     {
@@ -42,7 +42,7 @@ public class GourmetCuration extends PlaceCuration
     @Override
     public PlaceParams toPlaceParams(int page, int limit, boolean isDetails)
     {
-        GourmetParams gourmetParams = new GourmetParams(this);
+        GourmetSearchParams gourmetParams = new GourmetSearchParams(this);
         gourmetParams.setPageInformation(page, limit, isDetails);
 
         return gourmetParams;

@@ -235,11 +235,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         mStaySearchCuration = new StaySearchCuration();
-
         mStaySearchCuration.setKeyword(keyword);
 
-        if (location != null)
+        // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
+        if (mSearchType == SearchType.LOCATION)
         {
+            mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
             mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
         }
 
@@ -578,14 +579,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onResultListCount(int count)
+        public void onResultListCount(int count, int maxCount)
         {
             if (mPlaceSearchResultLayout == null)
             {
                 return;
             }
 
-            mPlaceSearchResultLayout.updateResultCount(count);
+            mPlaceSearchResultLayout.updateResultCount(count, maxCount);
         }
 
         @Override

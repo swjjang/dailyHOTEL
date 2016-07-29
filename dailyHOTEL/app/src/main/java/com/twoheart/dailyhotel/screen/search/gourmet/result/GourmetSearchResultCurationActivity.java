@@ -11,7 +11,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
-import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -25,7 +25,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
 
     private SearchType mSearchType;
-    protected GourmetParams mLastParams;
+    protected GourmetSearchParams mLastParams;
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -183,7 +183,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
         if (mLastParams == null)
         {
-            mLastParams = new GourmetParams(gourmetCuration);
+            mLastParams = new GourmetSearchParams(gourmetCuration);
         } else
         {
             mLastParams.setPlaceParams(gourmetCuration);

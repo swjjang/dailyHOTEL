@@ -8,22 +8,19 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.HashMap;
 
-/**
- * Created by android_sam on 2016. 6. 30..
- */
-public class GourmetParams extends PlaceParams
+public class GourmetSearchParams extends PlaceParams
 {
     private String date;
     private String category;
     private String time;
     private String luxury;
 
-    public GourmetParams(PlaceCuration placeCuration)
+    public GourmetSearchParams(PlaceCuration placeCuration)
     {
         super(placeCuration);
     }
 
-    public GourmetParams(Parcel in)
+    public GourmetSearchParams(Parcel in)
     {
         super(in);
     }
@@ -272,15 +269,15 @@ public class GourmetParams extends PlaceParams
 
     public static final Creator CREATOR = new Creator()
     {
-        public GourmetParams createFromParcel(Parcel in)
+        public GourmetSearchParams createFromParcel(Parcel in)
         {
-            return new GourmetParams(in);
+            return new GourmetSearchParams(in);
         }
 
         @Override
-        public GourmetParams[] newArray(int size)
+        public GourmetSearchParams[] newArray(int size)
         {
-            return new GourmetParams[size];
+            return new GourmetSearchParams[size];
         }
     };
 }

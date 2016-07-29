@@ -32,7 +32,6 @@ import java.util.List;
 public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
 {
     private static final int ANIMATION_DEALY = 200;
-    private static final int SEARCH_MAX_COUNT = 600;
 
     private View mToolbar;
     protected TextView mResultTextView;
@@ -398,7 +397,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         return mFragmentPagerAdapter.getFragmentList();
     }
 
-    public void updateResultCount(int count)
+    public void updateResultCount(int count, int maxCount)
     {
         if (mResultTextView == null)
         {
@@ -412,7 +411,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         {
             mResultTextView.setVisibility(View.VISIBLE);
 
-            if (count > SEARCH_MAX_COUNT)
+            if (count >= maxCount)
             {
                 mResultTextView.setText(mContext.getString(R.string.label_searchresult_over_resultcount, count));
             } else

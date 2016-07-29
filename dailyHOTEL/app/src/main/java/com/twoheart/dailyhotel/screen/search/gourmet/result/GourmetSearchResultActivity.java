@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -49,7 +50,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     private Keyword mKeyword;
     private SearchType mSearchType;
-    private GourmetCuration mGourmetCuration;
+    private GourmetSearchCuration mGourmetSearchCuration;
 
     private GourmetSearchResultNetworkController mNetworkController;
 
@@ -93,7 +94,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
-            mNetworkController.requestAddress(mGourmetCuration.getLocation());
+            mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
         }
     }
 
@@ -115,7 +116,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            mGourmetCuration.setSaleTime(saleTime);
+            mGourmetSearchCuration.setSaleTime(saleTime);
 
             ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(saleTime);
 
@@ -138,12 +139,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             GourmetCuration changedGourmetCuration = (GourmetCuration) placeCuration;
             GourmetCurationOption changedGourmetCurationOption = (GourmetCurationOption) changedGourmetCuration.getCurationOption();
 
-            mGourmetCuration.setCurationOption(changedGourmetCurationOption);
+            mGourmetSearchCuration.setCurationOption(changedGourmetCurationOption);
             mPlaceSearchResultLayout.setOptionFilterEnabled(changedGourmetCurationOption.isDefaultFilter() == false);
 
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
-                mGourmetCuration.setLocation(changedGourmetCuration.getLocation());
+                mGourmetSearchCuration.setLocation(changedGourmetCuration.getLocation());
 
                 searchMyLocation();
             } else
@@ -156,7 +157,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationFailed()
     {
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetSearchCuration.getCurationOption();
 
         gourmetCurationOption.setSortType(SortType.DEFAULT);
         mPlaceSearchResultLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
@@ -167,7 +168,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationProviderDisabled()
     {
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetSearchCuration.getCurationOption();
 
         gourmetCurationOption.setSortType(SortType.DEFAULT);
         mPlaceSearchResultLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
@@ -180,14 +181,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     {
         if (location == null)
         {
-            mGourmetCuration.getCurationOption().setSortType(SortType.DEFAULT);
+            mGourmetSearchCuration.getCurationOption().setSortType(SortType.DEFAULT);
             refreshCurrentFragment(true);
         } else
         {
-            mGourmetCuration.setLocation(location);
+            mGourmetSearchCuration.setLocation(location);
 
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (mGourmetCuration.getCurationOption().getSortType() == SortType.DISTANCE)
+            if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE)
             {
                 refreshCurrentFragment(true);
             }
@@ -216,10 +217,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             finish();
         }
 
-        mGourmetCuration = new GourmetCuration();
+        mGourmetSearchCuration = new GourmetSearchCuration();
+        mGourmetSearchCuration.setKeyword(mKeyword);
 
         // ---> 테스트를 위한 임시 코드
-        Province province = mGourmetCuration.getProvince();
+        Province province = mGourmetSearchCuration.getProvince();
         if (province == null)
         {
             province = new Province();
@@ -228,25 +230,27 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             province.isOverseas = false;
         }
 
-        mGourmetCuration.setProvince(province);
+        mGourmetSearchCuration.setProvince(province);
         // <----
 
-        mGourmetCuration.setSaleTime(saleTime);
-
+        // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
         if (mSearchType == SearchType.LOCATION)
         {
-            mGourmetCuration.getCurationOption().setSortType(SortType.DISTANCE);
-            mGourmetCuration.setLocation(location);
+            mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+            mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
         } else
         {
 
         }
+
+        mGourmetSearchCuration.setLocation(location);
+        mGourmetSearchCuration.setSaleTime(saleTime);
     }
 
     @Override
     protected void initLayout()
     {
-        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        if (mGourmetSearchCuration == null || mGourmetSearchCuration.getSaleTime() == null)
         {
             finish();
             return;
@@ -260,7 +264,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarTitle(mKeyword.name);
         }
 
-        ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetCuration.getSaleTime());
+        ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getSaleTime());
 
         mNetworkController = new GourmetSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
@@ -276,7 +280,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected PlaceCuration getPlaceCuration()
     {
-        return mGourmetCuration;
+        return mGourmetSearchCuration;
     }
 
     @Override
@@ -295,12 +299,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         Map<String, String> params = new HashMap<>();
 
-        params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
 
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
 
-        Province province = mGourmetCuration.getProvince();
+        Province province = mGourmetSearchCuration.getProvince();
         if (province instanceof Area)
         {
             Area area = (Area) province;
@@ -363,7 +367,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
-                mGourmetCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+                mGourmetSearchCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
@@ -385,7 +389,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = GourmetCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetCuration);
+            Intent intent = GourmetCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetSearchCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
@@ -445,20 +449,20 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Gourmet gourmet = placeViewItem.getItem();
 
             Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-                mGourmetCuration.getSaleTime(), gourmet);
+                mGourmetSearchCuration.getSaleTime(), gourmet);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }
 
         @Override
-        public void onResultListCount(int count)
+        public void onResultListCount(int count, int maxCount)
         {
             if (mPlaceSearchResultLayout == null)
             {
                 return;
             }
 
-            mPlaceSearchResultLayout.updateResultCount(count);
+            mPlaceSearchResultLayout.updateResultCount(count, maxCount);
         }
 
         @Override
@@ -480,7 +484,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
-                currentPlaceListFragment.setPlaceCuration(mGourmetCuration);
+                currentPlaceListFragment.setPlaceCuration(mGourmetSearchCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
@@ -551,7 +555,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Province province = mGourmetCuration.getProvince();
+            Province province = mGourmetSearchCuration.getProvince();
 
             if (province == null)
             {
@@ -559,7 +563,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetCuration);
+            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetSearchCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -628,7 +632,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         private String getSearchDate()
         {
-            String checkInDate = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");
+            String checkInDate = mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");
 
             return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }

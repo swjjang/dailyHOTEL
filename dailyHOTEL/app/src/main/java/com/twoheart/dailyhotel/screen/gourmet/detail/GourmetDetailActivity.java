@@ -339,7 +339,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         if (mIsDeepLink == true)
         {
             callByScreen = AnalyticsManager.Label.EVENT;
-        } else {
+        } else
+        {
             callByScreen = AnalyticsManager.ValueType.DETAIL;
         }
 

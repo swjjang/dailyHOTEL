@@ -6,7 +6,6 @@ import android.net.Uri;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -23,7 +22,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page, int totalCount);
+        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount);
     }
 
     public StaySearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -69,7 +68,8 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                     }
 
-                    int totalCount = dataJSONObject.getInt("hotelSalesCount");
+                    int totalCount = dataJSONObject.getInt("searchTotalCount");
+                    int maxCount = dataJSONObject.getInt("searchMaxCount");
                     int page;
                     String imageUrl;
 
@@ -96,7 +96,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount);
                 } else
                 {
                     String message = response.getString("msg");

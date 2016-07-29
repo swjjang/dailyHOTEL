@@ -4,12 +4,10 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -20,7 +18,7 @@ public class StaySearchResultListFragment extends StayListFragment
 {
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
-        void onResultListCount(int count);
+        void onResultListCount(int count, int maxCount);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class StaySearchResultListFragment extends StayListFragment
         }
 
         StaySearchParams params = (StaySearchParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        ((StaySearchResultListNetworkController)mNetworkController).requestStaySearchList(params);
+        ((StaySearchResultListNetworkController) mNetworkController).requestStaySearchList(params);
     }
 
     @Override
@@ -101,13 +99,13 @@ public class StaySearchResultListFragment extends StayListFragment
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int totalCount)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount)
         {
             StaySearchResultListFragment.this.onStayList(list, page);
 
             mStayCount = totalCount;
 
-            ((OnStaySearchResultListFragmentListener)mOnPlaceListFragmentListener).onResultListCount(totalCount);
+            ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
         }
 
         @Override
