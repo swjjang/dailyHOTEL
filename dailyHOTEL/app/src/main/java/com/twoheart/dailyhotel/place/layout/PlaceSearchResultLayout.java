@@ -405,6 +405,20 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 mFragmentPagerAdapter.removeItem(i);
             }
         }
+
+        int existTabCount = (mCategoryTabLayout.getTabCount();
+
+        // 2개 이하면 전체 탭 한개로 통합한다.
+        if(existTabCount <= 2)
+        {
+            mCategoryTabLayout.removeTabAt(1);
+            mViewPager.setOffscreenPageLimit(1);
+            mViewPager.clearOnPageChangeListeners();
+            setCategoryTabLayoutVisibility(View.GONE);
+        } else
+        {
+            mViewPager.setOffscreenPageLimit(existTabCount);
+        }
     }
 
     public PlaceListFragment getCurrentPlaceListFragment()
