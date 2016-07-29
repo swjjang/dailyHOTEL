@@ -69,11 +69,11 @@ public class DailyViewPagerCircleIndicator extends View
 
             if (i == mPosition)
             {
-                mPaint.setColor(getResources().getColor(R.color.white_a80));
+                mPaint.setColor(getResources().getColor(R.color.black_a25));
                 canvas.drawCircle(x, y, mRadius * SELECTED_FACTOR, mPaint);
             } else
             {
-                mPaint.setColor(getResources().getColor(R.color.white_a20));
+                mPaint.setColor(getResources().getColor(R.color.black_a5));
                 canvas.drawCircle(x, y, mRadius * SELECTED_FACTOR, mPaint);
             }
         }
