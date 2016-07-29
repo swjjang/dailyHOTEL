@@ -71,8 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/search_ic_01_date"
-                />
+                android:src="@drawable/search_ic_01_date"/>
 
             <ImageView
                 android:id="@+id/calendarDownArrowView"
@@ -80,9 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="14dp"
-                android:src="@drawable/navibar_m_ic_v"
-                />
+                android:layout_marginRight="9dp"
+                android:src="@drawable/navibar_m_ic_v"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/calendarTextView"
@@ -219,7 +217,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/categoryLayout"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/resultCountView"

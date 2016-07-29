@@ -406,8 +406,6 @@ public class MainActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View view)
             {
-                mSettingNetworkDialog.dismiss();
-
                 if (VolleyHttpClient.isAvailableNetwork(MainActivity.this) == true)
                 {
                     lockUI();
@@ -432,22 +430,6 @@ public class MainActivity extends BaseActivity implements Constants
             public void onClick(View view)
             {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                mSettingNetworkDialog.dismiss();
-            }
-        };
-
-        DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener()
-        {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
-            {
-                if (keyCode == KeyEvent.KEYCODE_BACK)
-                {
-                    mSettingNetworkDialog.dismiss();
-                    finish();
-                    return true;
-                }
-                return false;
             }
         };
 
@@ -455,7 +437,15 @@ public class MainActivity extends BaseActivity implements Constants
             , getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi)//
             , getString(R.string.dialog_btn_text_retry)//
             , getString(R.string.dialog_btn_text_setting), positiveListener, negativeListener);
-        mSettingNetworkDialog.setOnKeyListener(keyListener);
+
+        mSettingNetworkDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                finish();
+            }
+        });
 
         try
         {

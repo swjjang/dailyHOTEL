@@ -36,6 +36,7 @@ public abstract class PlaceListLayout extends BaseLayout
     protected View mBottomOptionLayout;
 
     protected boolean mIsLoading;
+    private boolean mBannerVisibility;
 
     protected LinearLayoutManager mLayoutManager;
 
@@ -160,6 +161,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
         mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
         mPlaceRecyclerView.setShadowVisible(false);
+        setBannerVisibility(true);
     }
 
     public void clearList()
@@ -181,6 +183,16 @@ public abstract class PlaceListLayout extends BaseLayout
         }
 
         return mPlaceListAdapter.getItemCount();
+    }
+
+    public void setBannerVisibility(Boolean visibility)
+    {
+        mBannerVisibility = visibility;
+    }
+
+    public boolean isBannerVisibility()
+    {
+        return mBannerVisibility;
     }
 
     public boolean canScrollUp()

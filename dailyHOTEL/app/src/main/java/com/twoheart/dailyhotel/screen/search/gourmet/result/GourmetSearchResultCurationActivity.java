@@ -228,7 +228,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             if (Util.isTextEmpty(url) == true && gourmetSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
-                setResultMessage(getString(R.string.label_gourmet_filter_result_count, 0));
+                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
 
                 setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
                 setConfirmEnable(false);
@@ -252,7 +252,13 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
                 return;
             }
 
-            setResultMessage(getString(R.string.label_gourmet_filter_result_count, gourmetSaleCount));
+            if (gourmetSaleCount <= 0)
+            {
+                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
+            } else
+            {
+                setResultMessage(getString(R.string.label_gourmet_filter_result_count, gourmetSaleCount));
+            }
 
             setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
             setConfirmEnable(gourmetSaleCount == 0 ? false : true);

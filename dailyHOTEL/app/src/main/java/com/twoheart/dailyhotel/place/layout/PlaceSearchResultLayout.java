@@ -32,6 +32,7 @@ import java.util.List;
 public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
 {
     private static final int ANIMATION_DEALY = 200;
+    private static final int SEARCH_MAX_COUNT = 600;
 
     private View mToolbar;
     protected TextView mResultTextView;
@@ -288,7 +289,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             mViewPager.clearOnPageChangeListeners();
         } else
         {
-            setCategoryTabLayoutVisibility(View.VISIBLE);
+            setCategoryTabLayoutVisibility(View.INVISIBLE);
 
             Category category;
             TabLayout.Tab tab;
@@ -410,7 +411,14 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         } else
         {
             mResultTextView.setVisibility(View.VISIBLE);
-            mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
+
+            if (count > SEARCH_MAX_COUNT)
+            {
+                mResultTextView.setText(mContext.getString(R.string.label_searchresult_over_resultcount, count));
+            } else
+            {
+                mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
+            }
         }
     }
 
@@ -424,6 +432,12 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     {
         mEmptyLayout.setVisibility(View.GONE);
         mResultLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void processListLayout()
+    {
+        mEmptyLayout.setVisibility(View.GONE);
+        mResultLayout.setVisibility(View.INVISIBLE);
     }
 
     public boolean isEmtpyLayout()

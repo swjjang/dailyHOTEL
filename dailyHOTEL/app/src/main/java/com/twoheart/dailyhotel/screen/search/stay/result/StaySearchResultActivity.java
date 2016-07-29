@@ -491,8 +491,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private StaySearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchResultNetworkController.OnNetworkControllerListener()
     {
-        //        private int mSize = -100;
-
         @Override
         public void onResponseAddress(String address)
         {
@@ -510,8 +508,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             if (list != null && list.size() > 0)
             {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
-                mPlaceSearchResultLayout.showListLayout();
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.processListLayout();
                 mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), list, null, mOnStayListFragmentListener);
             } else
             {
@@ -551,7 +549,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
     };
 
-    private StaySearchResultListFragment.OnStayListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStayListFragmentListener()
+    private StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
     {
         @Override
         public void onStayClick(PlaceViewItem placeViewItem)

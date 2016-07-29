@@ -6,6 +6,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListNetworkController;
@@ -17,6 +18,11 @@ import java.util.List;
 
 public class StaySearchResultListFragment extends StayListFragment
 {
+    public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
+    {
+        void onResultListCount(int count);
+    }
+
     @Override
     protected int getLayoutResourceId()
     {
@@ -30,9 +36,9 @@ public class StaySearchResultListFragment extends StayListFragment
     }
 
     @Override
-    protected StayListNetworkController getStayListNetworkController()
+    protected BaseNetworkController getStayListNetworkController()
     {
-        return new StayListNetworkController(mBaseActivity, mNetworkTag, onNetworkControllerListener);
+        return new StaySearchResultListNetworkController(mBaseActivity, mNetworkTag, onNetworkControllerListener);
     }
 
     @Override
@@ -62,8 +68,8 @@ public class StaySearchResultListFragment extends StayListFragment
             return;
         }
 
-        StaySearchParams params = (StaySearchParams) ((StaySearchCuration) mStayCuration).toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        mNetworkController.requestStaySearchList(params);
+        StaySearchParams params = (StaySearchParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
+        ((StaySearchResultListNetworkController)mNetworkController).requestStaySearchList(params);
     }
 
     @Override
@@ -92,12 +98,16 @@ public class StaySearchResultListFragment extends StayListFragment
         return stayViewItemList;
     }
 
-    private StayListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+    private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount)
         {
             StaySearchResultListFragment.this.onStayList(list, page);
+
+            mStayCount = totalCount;
+
+            ((OnStaySearchResultListFragmentListener)mOnPlaceListFragmentListener).onResultListCount(totalCount);
         }
 
         @Override

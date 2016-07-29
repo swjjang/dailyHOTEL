@@ -91,6 +91,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected void initIntent(Intent intent)
     {
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
     }
 
@@ -161,7 +162,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mSortRadioGroup.setOnCheckedChangeListener(this);
     }
 
-    private void initFilterLayout(View view, StayCurationOption stayCurationOption)
+    protected void initFilterLayout(View view, StayCurationOption stayCurationOption)
     {
         // 인원
         mMinusPersonView = view.findViewById(R.id.minusPersonView);
@@ -206,7 +207,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
     }
 
-    private void initAmenitiesLayout(View view, StayCurationOption stayCurationOption)
+    protected void initAmenitiesLayout(View view, StayCurationOption stayCurationOption)
     {
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
 
@@ -781,7 +782,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 return;
             }
 
-            setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+            if (hotelSaleCount <= 0)
+            {
+                setResultMessage(getString(R.string.label_hotel_filter_result_empty));
+            } else
+            {
+                setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+            }
 
             setConfirmOnClickListener(StayCurationActivity.this);
             setConfirmEnable(hotelSaleCount == 0 ? false : true);

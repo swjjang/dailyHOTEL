@@ -23,7 +23,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onGourmetList(ArrayList<Gourmet> list, int page);
+        void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount);
     }
 
     public GourmetSearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -69,6 +69,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                     }
 
+                    int totalCount = dataJSONObject.getInt("gourmetSalesCount");
                     int page;
                     String imageUrl;
 
@@ -90,7 +91,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page, totalCount);
                 } else
                 {
                     String message = response.getString("msg");

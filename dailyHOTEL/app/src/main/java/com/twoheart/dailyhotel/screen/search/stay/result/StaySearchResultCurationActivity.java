@@ -3,7 +3,9 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -53,6 +55,26 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             mStayCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
         }
     }
+
+    @Override
+    protected void initContentLayout(ViewGroup contentLayout)
+    {
+        View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
+
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+        initSortLayout(sortLayout, mViewType, stayCurationOption);
+
+        contentLayout.addView(sortLayout);
+
+        View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
+        initFilterLayout(filterLayout, stayCurationOption);
+
+        contentLayout.addView(filterLayout);
+
+        initAmenitiesLayout(filterLayout, stayCurationOption);
+    }
+
 
     @Override
     protected void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
@@ -178,7 +200,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
-                setResultMessage(getString(R.string.label_hotel_filter_result_count, 0));
+                setResultMessage(getString(R.string.label_hotel_filter_result_empty));
 
                 setConfirmOnClickListener(StaySearchResultCurationActivity.this);
                 setConfirmEnable(false);
@@ -202,7 +224,13 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
                 return;
             }
 
-            setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+            if (hotelSaleCount <= 0)
+            {
+                setResultMessage(getString(R.string.label_hotel_filter_result_empty));
+            } else
+            {
+                setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+            }
 
             setConfirmOnClickListener(StaySearchResultCurationActivity.this);
             setConfirmEnable(hotelSaleCount == 0 ? false : true);

@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -37,15 +38,13 @@ public class StayListFragment extends PlaceListFragment
     protected StayCuration mStayCuration;
 
     protected StayListLayout mStayListLayout;
-    protected StayListNetworkController mNetworkController;
+    protected BaseNetworkController mNetworkController;
 
     protected BaseActivity mBaseActivity;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
         void onStayClick(PlaceViewItem placeViewItem);
-
-        void onResultListCount(int count);
     }
 
     @Override
@@ -65,7 +64,7 @@ public class StayListFragment extends PlaceListFragment
         return mStayListLayout.onCreateView(getLayoutResourceId(), container);
     }
 
-    protected StayListNetworkController getStayListNetworkController()
+    protected BaseNetworkController getStayListNetworkController()
     {
         return new StayListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
@@ -123,19 +122,14 @@ public class StayListFragment extends PlaceListFragment
                 if (size == 0)
                 {
                     refreshList(isShowProgress, 1);
-                } else
-                {
-                    ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                 }
                 break;
 
             case MAP:
                 refreshList(isShowProgress, 0);
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
 
             default:
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
         }
     }
@@ -182,7 +176,7 @@ public class StayListFragment extends PlaceListFragment
         }
 
         StayParams params = (StayParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        mNetworkController.requestStayList(params);
+        ((StayListNetworkController)mNetworkController).requestStayList(params);
     }
 
     public boolean hasSalesPlace()
@@ -322,8 +316,6 @@ public class StayListFragment extends PlaceListFragment
                 {
                     setVisibility(ViewType.GONE, true);
                 }
-
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(mStayCount);
                 break;
             }
 
@@ -336,16 +328,11 @@ public class StayListFragment extends PlaceListFragment
                 {
                     setVisibility(ViewType.GONE, true);
                 }
-
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
             }
 
             default:
-            {
-                ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                 break;
-            }
         }
 
         unLockUI();

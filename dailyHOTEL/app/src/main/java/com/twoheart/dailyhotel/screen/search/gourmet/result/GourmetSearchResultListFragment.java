@@ -211,7 +211,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     private GourmetSearchResultListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetSearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onGourmetList(ArrayList<Gourmet> list, int page)
+        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount)
         {
             if (isFinishing() == true)
             {
@@ -226,7 +226,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 mGourmetSearchResultListLayout.clearList();
             }
 
-            mGourmetCount += list == null ? 0 : list.size();
+            mGourmetCount = totalCount;
             SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
@@ -243,8 +243,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     {
                         setVisibility(ViewType.GONE, true);
                     }
-
-                    ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(0);
                     break;
                 }
 
@@ -260,6 +258,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     break;
                 }
             }
+
+            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount);
 
             unLockUI();
             mGourmetSearchResultListLayout.setSwipeRefreshing(false);

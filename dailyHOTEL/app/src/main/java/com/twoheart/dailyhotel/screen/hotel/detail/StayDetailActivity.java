@@ -135,18 +135,19 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
 
-        String showTagPriceYn;
+        String isShowOriginalPrice;
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
         {
-            showTagPriceYn = "N";
+            isShowOriginalPrice = "N";
         } else
         {
-            showTagPriceYn = "Y";
+            isShowOriginalPrice = "Y";
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, showTagPriceYn);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
 
         return intent;
     }

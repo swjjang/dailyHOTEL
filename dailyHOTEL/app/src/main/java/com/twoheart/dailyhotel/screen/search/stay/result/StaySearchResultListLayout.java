@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
+import android.view.View;
 
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 
@@ -11,4 +12,11 @@ public class StaySearchResultListLayout extends StayListLayout
         super(context, eventListener);
     }
 
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        setBannerVisibility(false);
+    }
 }

@@ -244,7 +244,7 @@ public class StayListLayout extends PlaceListLayout
                 // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
                 if (oldList == null || oldList.size() == 0)
                 {
-                    if (sortType == Constants.SortType.DEFAULT)
+                    if (sortType == Constants.SortType.DEFAULT && isBannerVisibility() == true)
                     {
                         if (StayEventBannerManager.getInstance().getCount() > 0)
                         {

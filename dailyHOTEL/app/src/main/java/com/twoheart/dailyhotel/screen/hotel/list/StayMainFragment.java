@@ -1344,12 +1344,6 @@ public class StayMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onResultListCount(int count)
-        {
-            // do nothing.
-        }
-
-        @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
             if (isShow == true)
