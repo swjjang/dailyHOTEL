@@ -434,7 +434,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayDetail.entryPosition));
             params.put(AnalyticsManager.KeyType.RATING, stayDetail.satisfaction);
-            params.put(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN, stayDetail.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayDetail.isShowOriginalPrice);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(screen, params);
         } catch (Exception e)

@@ -527,14 +527,14 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
         String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
-        String address = params.get(AnalyticsManager.KeyType.ADDRESS);
+        String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD);
         String hotelCategory = params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
         String grade = params.get(AnalyticsManager.KeyType.GRADE);
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX);
         String rating = params.get(AnalyticsManager.KeyType.RATING);
-        String showTagPriceYn = params.get(AnalyticsManager.KeyType.SHOW_TAG_PRICE_YN);
+        String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE);
 
         if (Util.isTextEmpty(checkIn) == false)
         {
@@ -556,9 +556,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenViewBuilder.setCustomDimension(4, paymentType);
         }
 
-        if (Util.isTextEmpty(address) == false)
+        if (Util.isTextEmpty(registeredSimpleCard) == false)
         {
-            screenViewBuilder.setCustomDimension(9, address);
+            screenViewBuilder.setCustomDimension(9, registeredSimpleCard);
         }
 
         if (Util.isTextEmpty(hotelCategory) == false)
@@ -591,9 +591,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenViewBuilder.setCustomDimension(17, rating);
         }
 
-        if (Util.isTextEmpty(showTagPriceYn) == false)
+        if (Util.isTextEmpty(isShowOriginalPrice) == false)
         {
-            screenViewBuilder.setCustomDimension(18, showTagPriceYn);
+            screenViewBuilder.setCustomDimension(18, isShowOriginalPrice);
         }
 
         return screenViewBuilder;

@@ -1911,7 +1911,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         }
     }
 
-    private void recordAnalyticsPayment(PlacePaymentInformation paymentInformation)
+    @Override
+    protected void recordAnalyticsPayment(PlacePaymentInformation paymentInformation)
     {
         if (paymentInformation == null)
         {
@@ -1939,6 +1940,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
 
             if (mProvince == null)
             {
@@ -2332,8 +2334,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                         hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
                         hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
-                        recordAnalyticsPayment(hotelPaymentInformation);
 
                         // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                         if (isOnSale == false || availableRooms == 0)

@@ -764,8 +764,9 @@ public class AnalyticsManager
         public static final String PLACE_HIT_TYPE = "place_hit_type";
         public static final String PLACE_COUNT = "place_count";
         public static final String RATING = "rating";
-        public static final String SHOW_TAG_PRICE_YN = "show_tag_price_yn";
+        public static final String IS_SHOW_ORIGINAL_PRICE = "isShowOriginalPrice";
         public static final String LIST_INDEX = "list_index";
+        public static final String REGISTERED_SIMPLE_CARD = "registeredSimpleCard";
     }
 
     public static class ValueType

@@ -86,6 +86,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation);
 
+    protected abstract void recordAnalyticsPayment(PlacePaymentInformation paymentInformation);
+
     protected abstract void setCoupon(Coupon coupon);
 
     protected abstract void setCancelCoupon();
@@ -637,6 +639,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 {
                     showWarningMessageDialog();
                 }
+
+                recordAnalyticsPayment(mPaymentInformation);
             } catch (Exception e)
             {
                 // 해당 화면 에러시에는 일반 결제가 가능해야 한다.

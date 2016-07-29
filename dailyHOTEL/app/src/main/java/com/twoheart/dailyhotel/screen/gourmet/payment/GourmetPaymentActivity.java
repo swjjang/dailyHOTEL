@@ -752,12 +752,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     }
 
-    private void recordAnalyticsPayment(GourmetPaymentInformation gourmetPaymentInformation)
+    @Override
+    protected void recordAnalyticsPayment(PlacePaymentInformation placePaymentInformation)
     {
-        if (gourmetPaymentInformation == null)
+        if (placePaymentInformation == null)
         {
             return;
         }
+
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) placePaymentInformation;
 
         try
         {
@@ -770,6 +773,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(gourmetPaymentInformation.getTicketInformation().index));
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
 
             if (mProvince == null)
             {
@@ -1315,8 +1319,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation);
                     mGourmetPaymentLayout.setUserInformation(gourmetPaymentInformation);
                     mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
-
-                    recordAnalyticsPayment(gourmetPaymentInformation);
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"));
