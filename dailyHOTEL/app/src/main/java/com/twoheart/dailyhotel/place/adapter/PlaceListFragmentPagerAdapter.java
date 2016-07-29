@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
 {
     private ArrayList<PlaceListFragment> mFragmentList;
-    private int mTabCount;
 
     protected abstract void makePlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
@@ -20,7 +19,6 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
     {
         super(fragmentManager);
 
-        mTabCount = count;
         mFragmentList = new ArrayList<>(count);
 
         makePlaceListFragment(mFragmentList, count, bottomOptionLayout, listener);
@@ -37,9 +35,19 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
         return mFragmentList;
     }
 
+    public void removeItem(int position)
+    {
+        mFragmentList.remove(position);
+    }
+
     @Override
     public int getCount()
     {
-        return mTabCount;
+        if (mFragmentList == null)
+        {
+            return 0;
+        }
+
+        return mFragmentList.size();
     }
 }

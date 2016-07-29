@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
@@ -384,6 +385,25 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 
             FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
+        }
+    }
+
+    public void removeCategoryTab(HashSet<String> existCategorySet)
+    {
+        int count = mCategoryTabLayout.getTabCount();
+        TabLayout.Tab tab;
+        Category category;
+
+        for (int i = count - 1; i > 0; i--)
+        {
+            tab = mCategoryTabLayout.getTabAt(i);
+            category = (Category) tab.getTag();
+
+            if (existCategorySet.contains(category.code) == false)
+            {
+                mCategoryTabLayout.removeTabAt(i);
+                mFragmentPagerAdapter.removeItem(i);
+            }
         }
     }
 

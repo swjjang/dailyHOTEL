@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class StaySearchResultListFragment extends StayListFragment
@@ -19,6 +20,8 @@ public class StaySearchResultListFragment extends StayListFragment
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
         void onResultListCount(int count, int maxCount);
+
+        void onCategoryList(HashSet<String> categorySet);
     }
 
     @Override
@@ -99,8 +102,13 @@ public class StaySearchResultListFragment extends StayListFragment
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, HashSet<String> categorSet)
         {
+            if (totalCount < Constants.PAGENATION_LIST_SIZE)
+            {
+                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categorSet);
+            }
+
             StaySearchResultListFragment.this.onStayList(list, page);
 
             mStayCount = totalCount;

@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -17,12 +18,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class StaySearchResultListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount);
+        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, HashSet<String> categorSet);
     }
 
     public StaySearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -74,12 +77,13 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                     String imageUrl;
 
                     ArrayList<Stay> stayList;
+                    HashSet<String> categorSet = new HashSet<>();
 
                     if (hotelJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
                         int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        stayList = makeStayList(hotelJSONArray, imageUrl, nights, categorSet);
                     } else
                     {
                         stayList = new ArrayList<>();
@@ -96,7 +100,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, categorSet);
                 } else
                 {
                     String message = response.getString("msg");
@@ -109,9 +113,9 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
             }
         }
 
-        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights, HashSet<String> categorySet) throws JSONException
         {
-            if (jsonArray == null)
+            if (jsonArray == null || categorySet == null)
             {
                 return new ArrayList<>();
             }
@@ -130,6 +134,8 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                 if (stay.setStay(jsonObject, imageUrl, nights) == true)
                 {
                     stayList.add(stay); // 추가.
+
+                    categorySet.add(stay.categoryCode);
                 }
             }
 

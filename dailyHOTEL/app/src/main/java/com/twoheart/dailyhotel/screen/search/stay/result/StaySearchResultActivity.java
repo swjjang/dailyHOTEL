@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -593,6 +594,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             mPlaceSearchResultLayout.updateResultCount(count, maxCount);
+        }
+
+        @Override
+        public void onCategoryList(HashSet<String> categorySet)
+        {
+            if(categorySet == null || categorySet.size() == 0)
+            {
+                return;
+            }
+
+            mPlaceSearchResultLayout.removeCategoryTab(categorySet);
         }
 
         @Override
