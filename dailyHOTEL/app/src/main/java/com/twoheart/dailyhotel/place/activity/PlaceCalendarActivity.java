@@ -283,6 +283,12 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void showAnimation()
     {
+        if (mAnimationLayout == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.SHOW)
         {
             return;
@@ -371,6 +377,12 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void hideAnimation()
     {
+        if (mAnimationLayout == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.HIDE)
         {
             return;

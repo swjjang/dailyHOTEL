@@ -88,16 +88,20 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         }
 
         RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton emptyCheckView = (RadioButton) mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
         if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
+            emptyCheckView.setVisibility(View.INVISIBLE);
 
             stayCurationOption.setSortType(SortType.DISTANCE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
             radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
+
+            emptyCheckView.setVisibility(View.GONE);
         }
 
         switch (stayCurationOption.getSortType())

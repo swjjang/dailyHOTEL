@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -744,6 +745,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
                 }
 
+                checkGourmetTicket((GourmetDetail) mPlaceDetail);
+
                 mIsDeepLink = false;
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
@@ -785,6 +788,25 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
+        }
+
+        private void checkGourmetTicket(GourmetDetail gourmetDetail)
+        {
+            // 판매 완료 혹은 가격이 변동되었는지 조사한다
+            ArrayList<TicketInformation> saleRoomList = gourmetDetail.getTicketInformation();
+
+            if (saleRoomList == null || saleRoomList.size() == 0)
+            {
+                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
+                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        }
+                    });
+            }
         }
     };
 }

@@ -406,7 +406,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             }
         }
 
-        int existTabCount = (mCategoryTabLayout.getTabCount();
+        int existTabCount = mCategoryTabLayout.getTabCount();
 
         // 2개 이하면 전체 탭 한개로 통합한다.
         if(existTabCount <= 2)

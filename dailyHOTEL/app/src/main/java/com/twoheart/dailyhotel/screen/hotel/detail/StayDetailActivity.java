@@ -794,7 +794,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 if (mCheckPrice == false)
                 {
                     mCheckPrice = true;
-                    checkStayPrice(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
+                    checkStayRoom(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
                 }
 
                 mIsDeepLink = false;
@@ -840,7 +840,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             finish();
         }
 
-        private void checkStayPrice(boolean isDeepLink, StayDetail stayDetail, int listViewPrice)
+        private void checkStayRoom(boolean isDeepLink, StayDetail stayDetail, int listViewPrice)
         {
             // 판매 완료 혹은 가격이 변동되었는지 조사한다
             ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
