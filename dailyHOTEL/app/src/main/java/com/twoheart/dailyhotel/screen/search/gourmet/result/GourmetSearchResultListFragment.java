@@ -33,6 +33,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 {
     private int mPageIndex;
     private GourmetCuration mGourmetCuration;
+    private int mResultTotalCount;
+    private int mResultMaxCount;
 
     protected BaseActivity mBaseActivity;
 
@@ -206,6 +208,16 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         return mGourmetCount;
     }
 
+    public int getResultTotalCount()
+    {
+        return mResultTotalCount;
+    }
+
+    public int getResultMaxCount()
+    {
+        return mResultMaxCount;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -263,6 +275,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
             if (page <= 1)
             {
+                mResultTotalCount = totalCount;
+                mResultMaxCount = maxCount;
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
             }
 

@@ -54,8 +54,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     private boolean mUpScrolling;
     private ValueAnimator mValueAnimator;
 
-    private int mResultMaxCount;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCategoryTabSelected(TabLayout.Tab tab);
@@ -455,8 +453,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             return;
         }
 
-        mResultMaxCount = maxCount;
-
         if (count <= 0)
         {
             mResultTextView.setVisibility(View.GONE);
@@ -472,11 +468,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
             }
         }
-    }
-
-    public int getResultMaxCount()
-    {
-        return mResultMaxCount;
     }
 
     public void showEmptyLayout()

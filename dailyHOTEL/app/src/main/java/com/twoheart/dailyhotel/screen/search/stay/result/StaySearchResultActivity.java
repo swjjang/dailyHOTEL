@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -355,12 +354,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
             mPlaceSearchResultLayout.showBottomLayout(false);
 
-            PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+            StaySearchResultListFragment staySearchResultListFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
 
-            if (placeListFragment != null)
+            if (staySearchResultListFragment != null)
             {
-                int count = placeListFragment.getPlaceCount();
-                int maxCount = mPlaceSearchResultLayout.getResultMaxCount();
+                int count = staySearchResultListFragment.getResultTotalCount();
+                int maxCount = staySearchResultListFragment.getResultMaxCount();
 
                 mPlaceSearchResultLayout.updateResultCount(count, maxCount);
             }

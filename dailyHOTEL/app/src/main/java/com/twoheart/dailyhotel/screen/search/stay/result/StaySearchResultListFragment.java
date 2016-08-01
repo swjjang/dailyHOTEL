@@ -20,6 +20,8 @@ import java.util.List;
 public class StaySearchResultListFragment extends StayListFragment
 {
     private boolean mIsOptimizeCategory;
+    private int mResultTotalCount;
+    private int mResultMaxCount;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
@@ -94,6 +96,16 @@ public class StaySearchResultListFragment extends StayListFragment
         return stayViewItemList;
     }
 
+    public int getResultTotalCount()
+    {
+        return mResultTotalCount;
+    }
+
+    public int getResultMaxCount()
+    {
+        return mResultMaxCount;
+    }
+
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
@@ -114,6 +126,8 @@ public class StaySearchResultListFragment extends StayListFragment
 
             if (page <= 1)
             {
+                mResultTotalCount = totalCount;
+                mResultMaxCount = maxCount;
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
             }
         }
