@@ -255,6 +255,16 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
+    public int getCategoryTabCount()
+    {
+        if (mCategoryTabLayout == null)
+        {
+            return 0;
+        }
+
+        return mCategoryTabLayout.getTabCount();
+    }
+
     public void setCurrentItem(int item)
     {
         if (mViewPager != null)
@@ -409,14 +419,19 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         int existTabCount = mCategoryTabLayout.getTabCount();
 
         // 2개 이하면 전체 탭 한개로 통합한다.
-        if(existTabCount <= 2)
+        if (existTabCount <= 2)
         {
             mCategoryTabLayout.removeTabAt(1);
+            mFragmentPagerAdapter.removeItem(1);
+            mFragmentPagerAdapter.notifyDataSetChanged();
+
             mViewPager.setOffscreenPageLimit(1);
             mViewPager.clearOnPageChangeListeners();
             setCategoryTabLayoutVisibility(View.GONE);
         } else
         {
+            mFragmentPagerAdapter.notifyDataSetChanged();
+
             mViewPager.setOffscreenPageLimit(existTabCount);
         }
     }

@@ -724,7 +724,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
+                if (mPlaceSearchResultLayout.getCategoryTabCount() <= 2)
+                {
+                    mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+                } else
+                {
+                    mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
+                }
+
                 mPlaceSearchResultLayout.showListLayout();
 
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
