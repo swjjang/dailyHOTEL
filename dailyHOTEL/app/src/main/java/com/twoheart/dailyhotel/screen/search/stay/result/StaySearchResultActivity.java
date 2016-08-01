@@ -355,6 +355,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
             mPlaceSearchResultLayout.showBottomLayout(false);
 
+            int count = mPlaceSearchResultLayout.getCurrentPlaceListFragment().getPlaceCount();
+            int maxCount = mPlaceSearchResultLayout.getResultMaxCount();
+
+            mPlaceSearchResultLayout.updateResultCount(count, maxCount);
+
             refreshCurrentFragment(false);
         }
 
