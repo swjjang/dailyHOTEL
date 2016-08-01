@@ -75,20 +75,8 @@ public class StaySearchParams extends StayParams
         term = staySearchCuration.getKeyword() == null ? null : staySearchCuration.getKeyword().name;
         radius = staySearchCuration.getRadius();
 
-        boolean isNeedLocation = false;
-
-        if (radius != 0d)
-        {
-            isNeedLocation = true;
-        }
-
-        if (Constants.SortType.DISTANCE == mSort)
-        {
-            isNeedLocation = true;
-        }
-
         Location location = staySearchCuration.getLocation();
-        if (isNeedLocation == true && location != null)
+        if (location != null)
         {
             latitude = location.getLatitude();
             longitude = location.getLongitude();

@@ -5,6 +5,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
@@ -63,7 +64,8 @@ public class StaySearchResultListFragment extends StayListFragment
 
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
-            || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null))
+            || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null) //
+            || (((StaySearchCuration) mStayCuration).getRadius() != 0d && mStayCuration.getLocation() == null))
         {
             unLockUI();
             Util.restartApp(mBaseActivity); // 제거 할 것인지 고민 필요.
