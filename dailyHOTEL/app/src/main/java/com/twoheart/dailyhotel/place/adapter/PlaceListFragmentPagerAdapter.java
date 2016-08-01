@@ -27,6 +27,11 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
     @Override
     public Fragment getItem(int position)
     {
+        if(mFragmentList.size() == 0)
+        {
+            return null;
+        }
+
         return mFragmentList.get(position);
     }
 
@@ -38,6 +43,11 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
     public void removeItem(int position)
     {
         mFragmentList.remove(position);
+    }
+
+    public void removeAll()
+    {
+        mFragmentList.clear();
     }
 
     @Override

@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
+import com.twoheart.dailyhotel.model.StaySearchParams;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
@@ -193,12 +195,43 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         hideAnimation();
     }
 
-    private StayCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCurationNetworkController.OnNetworkControllerListener()
+    @Override
+    protected BaseNetworkController getNetworkController(Context context)
+    {
+        return new StaySearchResultCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);
+    }
+
+    @Override
+    protected void updateResultMessage()
+    {
+        setConfirmOnClickListener(null);
+
+        ((StaySearchResultCurationNetworkController)mNetworkController).requestStaySearchList(mLastParams);
+    }
+
+    @Override
+    protected void setLastStayParams(StayCuration stayCuration)
+    {
+        if (stayCuration == null)
+        {
+            return;
+        }
+
+        if (mLastParams == null)
+        {
+            mLastParams = new StaySearchParams(stayCuration);
+        } else
+        {
+            mLastParams.setPlaceParams(stayCuration);
+        }
+    }
+
+    private StaySearchResultCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StaySearchResultCurationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayCount(String url, int hotelSaleCount)
+        public void onStayCount(String url, int totalCount, int maxCount)
         {
-            if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
+            if (Util.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));
@@ -225,16 +258,22 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
                 return;
             }
 
-            if (hotelSaleCount <= 0)
+            if (totalCount <= 0)
             {
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));
             } else
             {
-                setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
+                if(totalCount >= maxCount)
+                {
+                    setResultMessage(getString(R.string.label_hotel_filter_result_over_count, maxCount));
+                } else
+                {
+                    setResultMessage(getString(R.string.label_hotel_filter_result_count, totalCount));
+                }
             }
 
             setConfirmOnClickListener(StaySearchResultCurationActivity.this);
-            setConfirmEnable(hotelSaleCount == 0 ? false : true);
+            setConfirmEnable(totalCount == 0 ? false : true);
         }
 
         @Override

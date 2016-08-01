@@ -18,7 +18,7 @@ import java.util.List;
 
 public class StaySearchResultListFragment extends StayListFragment
 {
-    private boolean mIsRemoveCategory;
+    private boolean mIsOptimizeCategory;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
@@ -98,10 +98,14 @@ public class StaySearchResultListFragment extends StayListFragment
         public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, HashSet<String> categorSet)
         {
             // 첫페이지 호출시에 카테고리 목록 조절
-            if (mIsRemoveCategory == false && page == 1 && totalCount <= Constants.PAGENATION_LIST_SIZE && mStayCuration.getCategory() == Category.ALL)
+            if (mIsOptimizeCategory == false)
             {
-                mIsRemoveCategory = true;
-                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categorSet);
+                mIsOptimizeCategory = true;
+
+                if (page == 1 && totalCount <= Constants.PAGENATION_LIST_SIZE && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
+                {
+                    ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categorSet);
+                }
             }
 
             StaySearchResultListFragment.this.onStayList(list, page);
