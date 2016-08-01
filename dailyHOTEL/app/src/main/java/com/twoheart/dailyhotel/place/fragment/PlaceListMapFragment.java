@@ -362,7 +362,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         mGoogleMap.clear();
-        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 0.79f));
+        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
 
         if (mPlaceViewItemList == null || mPlaceViewItemList.size() == 0)
         {
