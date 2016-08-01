@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -137,7 +138,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
         if (mGourmetCuration == null || mGourmetCuration.getCurationOption() == null//
             || mGourmetCuration.getCurationOption().getSortType() == null//
-            || (mGourmetCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetCuration.getLocation() == null))
+            || (mGourmetCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetCuration.getLocation() == null) //
+            || (((GourmetSearchCuration) mGourmetCuration).getRadius() != 0d && mGourmetCuration.getLocation() == null))
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
