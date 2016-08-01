@@ -48,14 +48,6 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         super.initIntent(intent);
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
-
-        if (mSearchType == SearchType.LOCATION)
-        {
-            mStayCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else
-        {
-            mStayCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
-        }
     }
 
     @Override
@@ -96,8 +88,6 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         {
             radioButton.setVisibility(View.GONE);
             emptyCheckView.setVisibility(View.INVISIBLE);
-
-            stayCurationOption.setSortType(SortType.DISTANCE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
