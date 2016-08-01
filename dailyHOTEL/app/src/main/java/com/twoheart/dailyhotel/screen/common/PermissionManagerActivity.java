@@ -164,7 +164,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
             case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
             {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     finish(RESULT_OK);
                 } else
