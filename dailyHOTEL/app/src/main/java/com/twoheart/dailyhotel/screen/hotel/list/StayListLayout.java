@@ -47,6 +47,7 @@ public class StayListLayout extends PlaceListLayout
             case LIST:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
+                mFilterEmptyView.setVisibility(View.GONE);
 
                 if (mStayListMapFragment != null)
                 {
@@ -62,6 +63,7 @@ public class StayListLayout extends PlaceListLayout
             case MAP:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
+                mFilterEmptyView.setVisibility(View.GONE);
 
                 if (isCurrentPage == true && mStayListMapFragment == null)
                 {

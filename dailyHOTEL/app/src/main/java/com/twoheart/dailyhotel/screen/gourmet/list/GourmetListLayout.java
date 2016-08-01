@@ -48,6 +48,7 @@ public class GourmetListLayout extends PlaceListLayout
             case LIST:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
+                mFilterEmptyView.setVisibility(View.GONE);
 
                 if (mGourmetListMapFragment != null)
                 {
@@ -63,6 +64,7 @@ public class GourmetListLayout extends PlaceListLayout
             case MAP:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
+                mFilterEmptyView.setVisibility(View.GONE);
 
                 if (isCurrentPage == true && mGourmetListMapFragment == null)
                 {
