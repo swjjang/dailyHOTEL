@@ -466,7 +466,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
             if (count >= maxCount)
             {
-                mResultTextView.setText(mContext.getString(R.string.label_searchresult_over_resultcount, maxCount));
+                mResultTextView.setText(mContext.getString(R.string.label_searchresult_over_resultcount, count));
             } else
             {
                 mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
