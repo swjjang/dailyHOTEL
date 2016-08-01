@@ -32,7 +32,7 @@ import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
-    protected int mPageIndex;
+    protected int mLoadMorePageIndex;
     protected int mStayCount;
 
     protected StayCuration mStayCuration;
@@ -59,7 +59,7 @@ public class StayListFragment extends PlaceListFragment
 
         mViewType = ViewType.LIST;
 
-        mPageIndex = 1;
+        mLoadMorePageIndex = 1;
 
         return mStayListLayout.onCreateView(getLayoutResourceId(), container);
     }
@@ -136,7 +136,7 @@ public class StayListFragment extends PlaceListFragment
 
     public void addList(boolean isShowProgress)
     {
-        refreshList(isShowProgress, mPageIndex + 1);
+        refreshList(isShowProgress, mLoadMorePageIndex + 1);
     }
 
     protected void refreshList(boolean isShowProgress, int page)
@@ -163,8 +163,6 @@ public class StayListFragment extends PlaceListFragment
             unLockUI();
             return;
         }
-
-        mPageIndex = page;
 
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
@@ -299,7 +297,13 @@ public class StayListFragment extends PlaceListFragment
             mStayListLayout.clearList();
         }
 
-        mStayCount += list == null ? 0 : list.size();
+        int listSize = list == null ? 0 : list.size();
+        if (listSize > 0)
+        {
+            mLoadMorePageIndex = page;
+        }
+
+        mStayCount += listSize;
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
 

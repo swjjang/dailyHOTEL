@@ -61,8 +61,6 @@ public class StaySearchResultListFragment extends StayListFragment
             return;
         }
 
-        mPageIndex = page;
-
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
             || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null))

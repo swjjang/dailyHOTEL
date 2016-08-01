@@ -122,12 +122,16 @@ public abstract class PlaceListLayout extends BaseLayout
                 {
                     if (mIsLoading == false)
                     {
-
                         int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
                         int itemCount = mLayoutManager.getItemCount();
+
+                        int loadMorePosition = itemCount > LOAD_MORE_POSITION_GAP //
+                            ? lastVisibleItemPosition + LOAD_MORE_POSITION_GAP //
+                            : lastVisibleItemPosition + (itemCount / 3);
+
                         if (itemCount > 0)
                         {
-                            if ((itemCount - 1) <= (lastVisibleItemPosition + LOAD_MORE_POSITION_GAP))
+                            if ((itemCount - 1) <= (loadMorePosition))
                             {
                                 mIsLoading = true;
                                 ((OnEventListener) mOnEventListener).onLoadMoreList();

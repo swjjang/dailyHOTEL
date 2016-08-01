@@ -75,13 +75,13 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                     String imageUrl;
 
                     ArrayList<Stay> stayList;
-                    HashSet<String> categorSet = new HashSet<>();
+                    HashSet<String> categorySet = new HashSet<>();
 
                     if (hotelJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
                         int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights, categorSet);
+                        stayList = makeStayList(hotelJSONArray, imageUrl, nights, categorySet);
                     } else
                     {
                         stayList = new ArrayList<>();
@@ -98,7 +98,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, categorSet);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, categorySet);
                 } else
                 {
                     String message = response.getString("msg");
