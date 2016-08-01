@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -60,6 +62,8 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     protected abstract void updateResultMessage();
 
     protected abstract void onSearchLoacationResult(Location location);
+
+    protected abstract BaseNetworkController getNetworkController(Context context);
 
     protected void initLayout()
     {

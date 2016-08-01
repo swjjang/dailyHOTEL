@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -745,6 +746,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             checkedChangedDistance();
         }
+    }
+
+    @Override
+    protected BaseNetworkController getNetworkController(Context context)
+    {
+        return null;
     }
 
     private void checkedChangedDistance()

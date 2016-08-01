@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.filter;
+package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 
@@ -8,32 +8,30 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
 
-/**
- * Created by android_sam on 2016. 7. 1..
- */
-public class StayCurationNetworkController extends BaseNetworkController
+public class StaySearchResultCurationNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayCount(String url, int hotelSaleCount);
+        void onStayCount(String url, int totalCount, int maxCount);
     }
 
-    public StayCurationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public StaySearchResultCurationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
-    public void requestStayList(StayParams params)
+    public void requestStaySearchList(StayParams params)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestStaySearchList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,13 +42,14 @@ public class StayCurationNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(null, -1);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(null, -1, -1);
         }
 
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int hotelSaleCount;
+            int totalCount = 0;
+            int maxCount = 0;
 
             try
             {
@@ -58,17 +57,15 @@ public class StayCurationNetworkController extends BaseNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    hotelSaleCount = dataJSONObject.getInt("hotelSalesCount");
-                } else
-                {
-                    hotelSaleCount = 0;
+                    totalCount = dataJSONObject.getInt("hotelSalesCount");
+                    maxCount = dataJSONObject.getInt("searchMaxCount");
                 }
             } catch (Exception e)
             {
-                hotelSaleCount = 0;
+                ExLog.d(e.toString());
             }
 
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(url, hotelSaleCount);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(url, totalCount, maxCount);
         }
     };
 }

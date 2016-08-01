@@ -717,6 +717,7 @@
     <string name="label_heatedfloors">온돌</string>
     <string name="label_more_person">%1$d명 이상</string>
     <string name="label_hotel_filter_result_count">%1$d개의 숙소 보기</string>
+    <string name="label_hotel_filter_result_over_count">%1$d개 이상의 숙소 보기</string>
     <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑 보기</string>
     <string name="label_hotel_filter_result_empty">0개의 숙소</string>
     <string name="label_gourmet_filter_result_empty">0개의 레스토랑</string>

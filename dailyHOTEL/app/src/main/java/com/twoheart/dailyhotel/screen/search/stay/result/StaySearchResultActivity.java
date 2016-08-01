@@ -355,10 +355,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
             mPlaceSearchResultLayout.showBottomLayout(false);
 
-            int count = mPlaceSearchResultLayout.getCurrentPlaceListFragment().getPlaceCount();
-            int maxCount = mPlaceSearchResultLayout.getResultMaxCount();
+            PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
 
-            mPlaceSearchResultLayout.updateResultCount(count, maxCount);
+            if (placeListFragment != null)
+            {
+                int count = placeListFragment.getPlaceCount();
+                int maxCount = mPlaceSearchResultLayout.getResultMaxCount();
+
+                mPlaceSearchResultLayout.updateResultCount(count, maxCount);
+            }
 
             refreshCurrentFragment(false);
         }
@@ -406,6 +411,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             lockUI();
 
             StaySearchResultListFragment currentFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+            if (currentFragment == null)
+            {
+                unLockUI();
+                return;
+            }
 
             switch (mViewType)
             {
@@ -702,14 +713,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Province province = mStaySearchCuration.getProvince();
-            if (province == null)
-            {
-                releaseUiComponent();
-                return;
-            }
-
-            Intent intent = StayCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, mStaySearchCuration);
+            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, mSearchType, mStaySearchCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 

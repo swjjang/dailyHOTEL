@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -40,7 +41,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected StayParams mLastParams;
     protected ViewType mViewType;
 
-    private StayCurationNetworkController mNetworkController;
+    protected BaseNetworkController mNetworkController;
 
     protected RadioGroup mSortRadioGroup;
     protected android.support.v7.widget.GridLayout mGridLayout;
@@ -73,7 +74,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         initIntent(intent);
 
-        mNetworkController = new StayCurationNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        mNetworkController = getNetworkController(this);
 
         initLayout();
 
@@ -415,10 +416,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setConfirmOnClickListener(null);
 
-        mNetworkController.requestStayList(mLastParams);
+        ((StayCurationNetworkController)mNetworkController).requestStayList(mLastParams);
     }
 
-    private void setLastStayParams(StayCuration stayCuration)
+    protected void setLastStayParams(StayCuration stayCuration)
     {
         if (stayCuration == null)
         {
@@ -731,6 +732,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             checkedChangedDistance();
         }
+    }
+
+    @Override
+    protected BaseNetworkController getNetworkController(Context context)
+    {
+        return new StayCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);
     }
 
     private void checkedChangedDistance()
