@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,7 +97,12 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                 } else
                 {
                     String message = response.getString("msg");
-                    Crashlytics.log(url);
+
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log(url);
+                    }
+
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)

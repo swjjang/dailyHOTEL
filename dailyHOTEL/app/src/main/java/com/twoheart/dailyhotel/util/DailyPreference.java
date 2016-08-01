@@ -210,11 +210,14 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                + " , email : " + getUserEmail();
+            if (Constants.DEBUG == false)
+            {
+                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                    + " , email : " + getUserEmail();
 
-            Crashlytics.log(msg);
-            Crashlytics.logException(e);
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            }
         }
 
         return result;
@@ -242,11 +245,14 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                + " , email : " + getUserEmail();
+            if (Constants.DEBUG == false)
+            {
+                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                    + " , email : " + getUserEmail();
 
-            Crashlytics.log(msg);
-            Crashlytics.logException(e);
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            }
 
             if (sharedPreferences != null)
             {
@@ -280,11 +286,14 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                + " , email : " + getUserEmail();
+            if (Constants.DEBUG == false)
+            {
+                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                    + " , email : " + getUserEmail();
 
-            Crashlytics.log(msg);
-            Crashlytics.logException(e);
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            }
         }
 
         return result;
@@ -312,11 +321,15 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                + " , email : " + getUserEmail();
 
-            Crashlytics.log(msg);
-            Crashlytics.logException(e);
+            if (Constants.DEBUG == false)
+            {
+                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                    + " , email : " + getUserEmail();
+
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            }
         }
 
         return result;

@@ -108,7 +108,10 @@ public class StaySearchResultListFragment extends StayListFragment
 
             mStayCount = totalCount;
 
-            ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
+            if (page <= 1)
+            {
+                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
+            }
         }
 
         @Override

@@ -301,7 +301,11 @@ public class SignupStep2NetworkController extends BaseNetworkController
             if (volleyError != null && volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 422)
             {
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();
-                Crashlytics.logException(volleyError);
+
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.logException(volleyError);
+                }
             } else
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);

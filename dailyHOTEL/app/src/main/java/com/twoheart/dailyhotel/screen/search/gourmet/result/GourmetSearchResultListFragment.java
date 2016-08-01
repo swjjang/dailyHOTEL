@@ -259,7 +259,10 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 }
             }
 
-            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
+            if (page <= 1)
+            {
+                ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
+            }
 
             unLockUI();
             mGourmetSearchResultListLayout.setSwipeRefreshing(false);

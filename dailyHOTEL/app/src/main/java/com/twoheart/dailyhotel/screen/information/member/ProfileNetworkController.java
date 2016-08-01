@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
@@ -73,9 +74,13 @@ public class ProfileNetworkController extends BaseNetworkController
                     } else if (isVerified == false && isPhoneVerified == true)
                     {
                         verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";
-                        Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
-                            + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
-                            + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
+
+                        if (Constants.DEBUG == false)
+                        {
+                            Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
+                                + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
+                                + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
+                        }
                     }
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
