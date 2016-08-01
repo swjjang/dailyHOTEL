@@ -226,7 +226,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 mGourmetSearchResultListLayout.clearList();
             }
 
-            mGourmetCount = totalCount;
+            mGourmetCount += list == null ? 0 : list.size();
             SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);

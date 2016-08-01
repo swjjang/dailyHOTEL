@@ -110,8 +110,6 @@ public class StaySearchResultListFragment extends StayListFragment
 
             StaySearchResultListFragment.this.onStayList(list, page);
 
-            mStayCount = totalCount;
-
             if (page <= 1)
             {
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
