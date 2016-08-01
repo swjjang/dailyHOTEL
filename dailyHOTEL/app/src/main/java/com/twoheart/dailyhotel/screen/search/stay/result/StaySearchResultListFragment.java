@@ -88,14 +88,6 @@ public class StaySearchResultListFragment extends StayListFragment
             stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
         }
 
-        if (Constants.PAGENATION_LIST_SIZE > stayList.size())
-        {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-        } else
-        {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
-        }
-
         return stayViewItemList;
     }
 
