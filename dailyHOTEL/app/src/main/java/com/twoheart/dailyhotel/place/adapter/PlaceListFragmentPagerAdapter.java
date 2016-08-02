@@ -27,12 +27,19 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
     @Override
     public Fragment getItem(int position)
     {
-        if(mFragmentList.size() == 0)
+        if (mFragmentList.size() == 0)
         {
             return null;
         }
 
         return mFragmentList.get(position);
+    }
+
+    @Override
+    public int getItemPosition(Object object)
+    {
+        int position = mFragmentList.indexOf(object);
+        return position == -1 ? POSITION_NONE : position;
     }
 
     public ArrayList<PlaceListFragment> getFragmentList()

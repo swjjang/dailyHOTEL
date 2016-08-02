@@ -156,7 +156,7 @@ public class StayListLayout extends PlaceListLayout
             setVisibility(fragmentManager, viewType, true);
 
             // 리스트의 경우 Pagenation 상황 고려
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(getList());
+            List<PlaceViewItem> oldList = getList();
 
             int oldListSize = oldList == null ? 0 : oldList.size();
             if (oldListSize > 0)
