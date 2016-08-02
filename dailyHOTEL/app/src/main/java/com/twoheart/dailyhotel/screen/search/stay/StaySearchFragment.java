@@ -142,6 +142,12 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
+        if (mCheckOutSaleTime == null || mCheckInSaleTime == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);

@@ -137,6 +137,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             return;
         }
 
+        if (mSaleTime == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
