@@ -99,11 +99,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
+            mPlaceSearchResultLayout.setViewTypeVisibility(true);
+
             mNetworkController.requestAddress(mStaySearchCuration.getLocation());
             mNetworkController.requestCategoryList(mStaySearchCuration.getCheckInSaleTime()//
                 , mStaySearchCuration.getNights(), mStaySearchCuration.getLocation());
         } else
         {
+            mPlaceSearchResultLayout.setViewTypeVisibility(false);
+
             mNetworkController.requestCategoryList(mStaySearchCuration.getCheckInSaleTime()//
                 , mStaySearchCuration.getNights(), mStaySearchCuration.getKeyword().name);
         }

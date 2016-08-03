@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -75,12 +74,6 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
-        if (viewType == ViewType.MAP)
-        {
-            setDisabledSortLayout(view, mSortRadioGroup);
-            return;
-        }
-
         RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
         RadioButton emptyCheckView = (RadioButton) mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
@@ -94,6 +87,12 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
 
             emptyCheckView.setVisibility(View.GONE);
+        }
+
+        if (viewType == ViewType.MAP)
+        {
+            setDisabledSortLayout(view, mSortRadioGroup);
+            return;
         }
 
         switch (stayCurationOption.getSortType())

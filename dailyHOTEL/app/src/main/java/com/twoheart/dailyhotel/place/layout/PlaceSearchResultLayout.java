@@ -208,7 +208,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
         mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
 
-        mViewTypeOptionImageView.setVisibility(View.GONE);
+        setViewTypeVisibility(false);
+
+        mViewTypeOptionImageView.setOnClickListener(this);
         mFilterOptionImageView.setOnClickListener(this);
 
         // 기본 설정
@@ -754,6 +756,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
             setMenuBarLayoutEnabled(false);
         }
+    }
+
+    public void setViewTypeVisibility(boolean isShow) {
+        mViewTypeOptionImageView.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
