@@ -551,21 +551,6 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
                 DailyLocationFactory.getInstance(PlaceCurationActivity.this).stopLocationMeasure();
 
-                PlaceCurationActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                    , getString(R.string.dialog_msg_used_gps)//
-                    , getString(R.string.dialog_btn_text_dosetting)//
-                    , getString(R.string.dialog_btn_text_cancel)//
-                    , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }
-                    }, null, false);
-
-
                 View.OnClickListener positiveListener = new View.OnClickListener()//
                 {
                     @Override

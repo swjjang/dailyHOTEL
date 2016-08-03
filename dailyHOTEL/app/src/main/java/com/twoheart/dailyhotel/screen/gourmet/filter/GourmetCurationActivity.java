@@ -568,6 +568,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 }
                 break;
             }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                searchMyLocation();
+                break;
+            }
         }
     }
 

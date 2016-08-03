@@ -527,6 +527,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 }
                 break;
             }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                searchMyLocation();
+                break;
+            }
         }
     }
 
