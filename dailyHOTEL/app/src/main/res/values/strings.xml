@@ -680,7 +680,8 @@
     <string name="label_receipt_fax">팩스 | %1$s</string>
 
     <!-- Area -->
-    <string name="label_selectarea_area">지역</string>
+    <string name="label_selectarea_stay_area">호텔 지역 선택</string>
+    <string name="label_selectarea_gourmet_area">고메 지역 선택</string>
 
     <!-- EventFragment -->
     <string name="eventfragment_emptylist_maintext">현재 진행중인 이벤트가 없습니다.</string>
