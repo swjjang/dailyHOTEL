@@ -248,7 +248,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showChangedPriceDialog()
     {
-        showChangedValueDialog(R.string.dialog_msg_changed_price, new DialogInterface.OnDismissListener()
+        showChangedValueDialog(R.string.message_gourmet_detail_changed_price, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)

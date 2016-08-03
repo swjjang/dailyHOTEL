@@ -851,5 +851,6 @@
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="message_stay_detail_changed_price">업체 사정으로 해당 객실의 요금이 변동되었습니다.\n객실 금액을 한번 더 확인해주세요.</string>
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 숙소를 확인해주세요.</string>
+    <string name="message_gourmet_detail_changed_price">업체 사정으로 해당 상품의 요금이 변동되었습니다.\n상품 금액을 한번 더 확인해주세요.</string>
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 </resources>
