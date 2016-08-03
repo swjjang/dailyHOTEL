@@ -225,6 +225,8 @@ public class StayMainFragment extends PlaceMainFragment
                     refreshCurrentFragment(true);
                 } else
                 {
+                    DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    
                     stayCurationOption.setSortType(SortType.DEFAULT);
                     refreshCurrentFragment(true);
                 }

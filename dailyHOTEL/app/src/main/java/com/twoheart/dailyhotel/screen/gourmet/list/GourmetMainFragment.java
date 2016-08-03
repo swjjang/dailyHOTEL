@@ -175,6 +175,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     refreshCurrentFragment(false);
                 } else
                 {
+                    DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+
                     gourmetCurationOption.setSortType(SortType.DEFAULT);
                     refreshCurrentFragment(false);
                 }
