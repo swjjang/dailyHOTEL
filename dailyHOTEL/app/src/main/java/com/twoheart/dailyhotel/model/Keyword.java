@@ -21,11 +21,11 @@ public class Keyword implements Parcelable
 
     public Keyword(JSONObject jsonObject, int defaultPlaceIcon) throws JSONException
     {
-        name = jsonObject.getString("display_text");
+        name = jsonObject.getString("displayText");
 
-        if (jsonObject.has("sale_price") == true)
+        if (jsonObject.has("discount") == true)
         {
-            price = jsonObject.getInt("sale_price");
+            price = jsonObject.getInt("discount");
         } else
         {
             price = 0;

@@ -173,7 +173,7 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestHotelSearchAutoCompleteList(Object tag, String date, int lengthStay, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelSearchAutoCompleteList(Object tag, String date, int stay, String text, DailyHotelJsonResponseListener listener);
 
     /**
      * api/sale/region/all

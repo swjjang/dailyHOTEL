@@ -340,14 +340,14 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelSearchAutoCompleteList(Object tag, String date, int lengthStay, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelSearchAutoCompleteList(Object tag, String date, int stays, String text, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/auto_complete" : "NDYkNTIkNTYkMjQkNSQ=$NTQ3MFzUwNzVDMDNGMEU2OTlERNTZEQUNDMzM5NDBFNkQzNUEQ5MzhICNDElGMjI5NkZGMjNDRjFDRjY1REE1RjAxQg==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/search/auto_complete" : "";
 
-        String params = String.format("?dateCheckIn=%s&lengthStay=%d&term=%s", date, lengthStay, text);
+        String params = String.format("?dateCheckIn=%s&stays=%d&term=%s", date, stays, text);
 
-        DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
-
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
         mQueue.add(dailyHotelJsonRequest);
     }
 
