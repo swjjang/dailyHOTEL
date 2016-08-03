@@ -507,7 +507,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     public void updateAutoCompleteLayout(String text, List<Keyword> keywordList)
     {
-        if (mSearchEditText.length() == 0)
+        if (mSearchEditText.length() == 0 || keywordList == null || keywordList.size() == 0)
         {
             return;
         }
