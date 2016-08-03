@@ -226,7 +226,7 @@ public class StayMainFragment extends PlaceMainFragment
                 } else
                 {
                     DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                    
+
                     stayCurationOption.setSortType(SortType.DEFAULT);
                     refreshCurrentFragment(true);
                 }
@@ -1037,6 +1037,8 @@ public class StayMainFragment extends PlaceMainFragment
                     if (province.getProvinceIndex() == provinceIndex)
                     {
                         selectedProvince = province;
+                        DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
                         break;
                     }
                 }

@@ -558,6 +558,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     if (province.getProvinceIndex() == provinceIndex)
                     {
                         selectedProvince = province;
+                        DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
                         break;
                     }
                 }
