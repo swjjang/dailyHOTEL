@@ -145,6 +145,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             case DISTANCE:
                 mSortRadioGroup.check(R.id.distanceCheckView);
+
+                searchMyLocation();
                 break;
 
             case LOW_PRICE:

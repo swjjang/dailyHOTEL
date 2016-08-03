@@ -90,6 +90,8 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
             case DISTANCE:
                 mSortRadioGroup.check(R.id.distanceCheckView);
+
+                searchMyLocation();
                 break;
 
             case LOW_PRICE:
