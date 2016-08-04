@@ -745,7 +745,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
                 }
 
-                checkGourmetTicket((GourmetDetail) mPlaceDetail);
+                checkGourmetTicket(mIsDeepLink, (GourmetDetail) mPlaceDetail, mViewPrice);
 
                 mIsDeepLink = false;
 
@@ -790,12 +790,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             finish();
         }
 
-        private void checkGourmetTicket(GourmetDetail gourmetDetail)
+        private void checkGourmetTicket(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice)
         {
             // 판매 완료 혹은 가격이 변동되었는지 조사한다
-            ArrayList<TicketInformation> saleRoomList = gourmetDetail.getTicketInformation();
+            ArrayList<TicketInformation> ticketInformationList = gourmetDetail.getTicketInformation();
 
-            if (saleRoomList == null || saleRoomList.size() == 0)
+            if (ticketInformationList == null || ticketInformationList.size() == 0)
             {
                 showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
                     , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -806,6 +806,39 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                             setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         }
                     });
+            } else
+            {
+                if (isDeepLink == false)
+                {
+                    boolean hasPrice = false;
+
+                    for (TicketInformation ticketInformation : ticketInformationList)
+                    {
+                        if (listViewPrice == ticketInformation.discountPrice)
+                        {
+                            hasPrice = true;
+                            break;
+                        }
+                    }
+
+                    if (hasPrice == false)
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
+                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
+                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    mOnEventListener.showProductInformationLayout();
+                                }
+                            });
+
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                            AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, gourmetDetail.name, null);
+                    }
+                }
             }
         }
     };
