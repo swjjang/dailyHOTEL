@@ -815,16 +815,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void showChangedPriceDialog()
     {
+        unLockUI();
+
         showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
             {
                 mDontReload = false;
+                mIsChangedPrice = false;
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
-
-                lockUI();
-                requestUserInformationForPayment();
             }
         });
 
