@@ -31,7 +31,7 @@ import java.util.List;
 
 public class GourmetSearchResultListFragment extends PlaceListFragment
 {
-    private int mPageIndex;
+    private int mLoadMorePageIndex;
     private GourmetCuration mGourmetCuration;
     private int mResultTotalCount;
     private int mResultMaxCount;
@@ -62,7 +62,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
         mViewType = ViewType.LIST;
 
-        mPageIndex = 1;
+        mLoadMorePageIndex = 1;
 
         return mGourmetSearchResultListLayout.onCreateView(R.layout.fragment_gourmet_search_result_list, container);
     }
@@ -115,7 +115,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
     public void addList(boolean isShowProgress)
     {
-        refreshList(isShowProgress, mPageIndex + 1);
+        refreshList(isShowProgress, mLoadMorePageIndex + 1);
     }
 
     private void refreshList(boolean isShowProgress, int page)
@@ -135,8 +135,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             Util.restartApp(mBaseActivity);
             return;
         }
-
-        mPageIndex = page;
 
         if (mGourmetCuration == null || mGourmetCuration.getCurationOption() == null//
             || mGourmetCuration.getCurationOption().getSortType() == null//
@@ -240,7 +238,14 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 mGourmetSearchResultListLayout.clearList();
             }
 
-            mGourmetCount += list == null ? 0 : list.size();
+            int listSize = list == null ? 0 : list.size();
+            if (listSize > 0)
+            {
+                mLoadMorePageIndex = page;
+            }
+
+            mGourmetCount += listSize;
+
             SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
