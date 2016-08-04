@@ -24,6 +24,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 public abstract class PlaceMainFragment extends BaseFragment
 {
+    protected static final int REQUEST_ACTIVITY_SEARCH_RESULT = 10000;
+
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
 

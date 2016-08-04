@@ -9,6 +9,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 
@@ -33,20 +35,36 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
     private PlaceRegionListActivity.Region mRegion;
 
+    private View mHeaderView;
+    private View mTermsOfLocationView;
+    protected BaseActivity mBaseActivity;
+
     public interface OnPlaceRegionListFragment
     {
         void onActivityCreated(PlaceRegionListFragment placeRegionListFragment);
 
         void onRegionClick(Province province);
+
+        void onAroundSearchClick();
     }
+
+    protected abstract String getAroundPlaceText();
 
     protected abstract void recordAnalyticsScreen(PlaceRegionListActivity.Region region);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        mBaseActivity = (BaseActivity) getActivity();
+
         mListView = (DailyAnimatedExpandableListView) inflater.inflate(R.layout.fragment_region_list, container, false);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
+
+        mHeaderView = LayoutInflater.from(mBaseActivity).inflate(R.layout.layout_region_around_search_header, null);
+
+        initHeaderLayout(mHeaderView);
+
+        mListView.addHeaderView(mHeaderView);
 
         return mListView;
     }
@@ -70,6 +88,29 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         if (mOnPlaceRegionListFragment != null)
         {
             mOnPlaceRegionListFragment.onActivityCreated(this);
+        }
+    }
+
+    private void initHeaderLayout(View view)
+    {
+        View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
+        searchAroundLayout.setOnClickListener(mOnHeaderClickListener);
+
+        TextView text01View = (TextView) view.findViewById(R.id.text01View);
+        text01View.setText(getAroundPlaceText());
+
+        mTermsOfLocationView = view.findViewById(R.id.text02View);
+        updateTermsOfLocationView();
+    }
+
+    public void updateTermsOfLocationView()
+    {
+        if (DailyPreference.getInstance(mBaseActivity).isAgreeTermsOfLocation() == true)
+        {
+            mTermsOfLocationView.setVisibility(View.GONE);
+        } else
+        {
+            mTermsOfLocationView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -444,6 +485,15 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             {
                 mOnPlaceRegionListFragment.onRegionClick(area);
             }
+        }
+    };
+
+    private View.OnClickListener mOnHeaderClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            mOnPlaceRegionListFragment.onAroundSearchClick();
         }
     };
 }

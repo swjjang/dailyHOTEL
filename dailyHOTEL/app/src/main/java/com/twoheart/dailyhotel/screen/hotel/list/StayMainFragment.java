@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -132,6 +133,16 @@ public class StayMainFragment extends PlaceMainFragment
 
                 mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), province.getCategoryList(), //
                     mStayCuration.getCategory(), mStayListFragmentListener);
+            }
+        } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
+        {
+            // 검색 결과 화면으로 이동한다.
+            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_LOCATION) == true)
+            {
+                Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
+                mStayCuration.setLocation(location);
+
+                startAroundSearchResult();
             }
         }
     }
@@ -310,6 +321,20 @@ public class StayMainFragment extends PlaceMainFragment
         Intent intent = StayDetailActivity.newInstance(mBaseActivity, saleTime, nights, hotelIndex, isShowCalendar);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+    }
+
+    private void startAroundSearchResult()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, //
+            mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), mStayCuration.getLocation());
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -135,6 +135,7 @@ public interface Constants
 
     // Activity Result
     public static final int RESULT_CHANGED_DATE = Activity.RESULT_FIRST_USER + 1;
+    public static final int RESULT_ARROUND_SEARCH_LIST = RESULT_CHANGED_DATE + 1;
 
     // Event
     // Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
@@ -200,6 +201,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_PLACECURATION = "placeCuration";
     public static final String NAME_INTENT_EXTRA_DATA_ENTRY_INDEX = "entryIndex";
     public static final String NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE = "isShowOriginalPrice";
+    public static final String NAME_INTENT_EXTRA_DATA_LOCATION = "location";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;

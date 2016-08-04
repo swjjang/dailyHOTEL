@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.region;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -18,5 +19,11 @@ public class GourmetRegionListFragment extends PlaceRegionListFragment
             case GLOBAL:
                 break;
         }
+    }
+
+    @Override
+    protected String getAroundPlaceText()
+    {
+        return mBaseActivity.getString(R.string.label_view_myaround_gourmet);
     }
 }

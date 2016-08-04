@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -86,6 +87,16 @@ public class GourmetMainFragment extends PlaceMainFragment
                 DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
 
                 refreshCurrentFragment(true);
+            }
+        } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
+        {
+            // 검색 결과 화면으로 이동한다.
+            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_LOCATION) == true)
+            {
+                Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
+                mGourmetCuration.setLocation(location);
+
+                startAroundSearchResult();
             }
         }
     }
@@ -186,6 +197,20 @@ public class GourmetMainFragment extends PlaceMainFragment
                 refreshCurrentFragment(false);
             }
         }
+    }
+
+    private void startAroundSearchResult()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, //
+            mGourmetCuration.getSaleTime(), mGourmetCuration.getLocation());
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     private void curationCurrentFragment()
