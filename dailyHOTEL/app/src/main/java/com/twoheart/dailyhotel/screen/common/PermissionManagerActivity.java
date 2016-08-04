@@ -68,6 +68,12 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         mPermissionType = PermissionType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_PERMISSION));
 
+        if (mPermissionType == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         switch (mPermissionType)
         {
             case READ_PHONE_STATE:
