@@ -197,7 +197,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
+            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
 
             initLayout(placeName, mDefaultImageUrl);
 
