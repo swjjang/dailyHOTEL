@@ -113,6 +113,12 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     {
         super.onStart();
 
+        if (mBooking == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         lockUI();
 
         // 호텔 정보를 가져온다.
