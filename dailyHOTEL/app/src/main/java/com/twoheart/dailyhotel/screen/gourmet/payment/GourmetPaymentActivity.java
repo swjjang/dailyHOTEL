@@ -248,18 +248,30 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showChangedPriceDialog()
     {
+        unLockUI();
+
         showChangedValueDialog(R.string.message_gourmet_detail_changed_price, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
             {
                 mDontReload = false;
+                mIsChangedPrice = false;
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
-
-                lockUI();
-                requestUserInformationForPayment();
             }
         });
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
+            AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);
+    }
+
+    @Override
+    protected void showStopOnSaleDialog()
+    {
+        super.showStopOnSaleDialog();
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
+            AnalyticsManager.Action.SOLDOUT, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);
     }
 
     @Override

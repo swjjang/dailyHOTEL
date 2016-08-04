@@ -558,8 +558,8 @@ public class AnalyticsManager
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
         //
         public static final String SOLDOUT_CHANGEPRICE = "Soldout_ChangePrice";
-        public static final String SOLDOUT_CHANGESTAY_DEEPLINK = "Soldout_ChangeStay_Deeplink";
-        public static final String SOLDOUT_CHANGESTAY = "Soldout_ChangeStay";
+        public static final String SOLDOUT_DEEPLINK = "Soldout_Deeplink";
+        public static final String SOLDOUT = "Soldout";
         public static final String AROUND_SEARCH_NOT_FOUND = "AroundSearchNotFound";
         public static final String AROUND_SEARCH_CLICKED = "AroundSearchClicked";
         public static final String RECENT_KEYWORD_NOT_FOUND = "RecentKeywordNotFound";
