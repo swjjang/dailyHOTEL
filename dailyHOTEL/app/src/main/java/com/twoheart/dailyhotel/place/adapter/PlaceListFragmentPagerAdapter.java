@@ -15,6 +15,8 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
 
     protected abstract void makePlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
+    protected abstract void addPlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
+
     public PlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         super(fragmentManager);
@@ -40,6 +42,11 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
     {
         int position = mFragmentList.indexOf(object);
         return position == -1 ? POSITION_NONE : position;
+    }
+
+    public void addItemCount(int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        addPlaceListFragment(mFragmentList, count, bottomOptionLayout, listener);
     }
 
     public ArrayList<PlaceListFragment> getFragmentList()

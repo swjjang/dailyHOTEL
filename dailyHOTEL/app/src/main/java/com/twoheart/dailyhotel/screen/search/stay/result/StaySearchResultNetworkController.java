@@ -35,33 +35,11 @@ public class StaySearchResultNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onResponseAddress(String address);
-
-        void onResponseCategoryList(List<Category> list);
     }
 
     public StaySearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
-    }
-
-    public void requestCategoryList(SaleTime saleTime, int nights, String keyword)
-    {
-        String encodeKeyword;
-
-        try
-        {
-            encodeKeyword = URLEncoder.encode(keyword, "UTF-8");
-        } catch (UnsupportedEncodingException e)
-        {
-            encodeKeyword = keyword;
-        }
-
-        mStayCategoryListJsonResponseListener.onResponse(null, null);
-    }
-
-    public void requestCategoryList(SaleTime saleTime, int nights, Location location)
-    {
-        mStayCategoryListJsonResponseListener.onResponse(null, null);
     }
 
     public void requestAddress(Location location)
@@ -77,28 +55,6 @@ public class StaySearchResultNetworkController extends BaseNetworkController
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mStayCategoryListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            List<Category> list = new ArrayList<Category>();
-            list.add(new Category("전체", "all"));
-            list.add(new Category("호텔", "hotel"));
-            list.add(new Category("부띠크", "boutique"));
-            list.add(new Category("펜션", "pension"));
-            list.add(new Category("게스트하우스", "guest_house"));
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseCategoryList(list);
-        }
-    };
 
     private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
     {

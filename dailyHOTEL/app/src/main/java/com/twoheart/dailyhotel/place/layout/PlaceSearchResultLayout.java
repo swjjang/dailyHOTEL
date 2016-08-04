@@ -275,11 +275,82 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
+    public void setCategoryAllTabLayout(FragmentManager fragmentManager, PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        if (fragmentManager == null)
+        {
+            return;
+        }
+
+        setCategoryTabLayoutVisibility(View.INVISIBLE);
+
+        mCategoryTabLayout.removeAllTabs();
+
+        TabLayout.Tab tab;
+        tab = mCategoryTabLayout.newTab();
+        tab.setText(Category.ALL.name);
+        tab.setTag(Category.ALL);
+        mCategoryTabLayout.addTab(tab);
+
+        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, 1, mBottomOptionLayout, listener);
+        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.removeAllViews();
+        mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.clearOnPageChangeListeners();
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            boolean isScrolling = false;
+            int prevPosition = -1;
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+                if (prevPosition != position)
+                {
+                    if (isScrolling == true)
+                    {
+                        isScrolling = false;
+
+                        onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
+                    } else
+                    {
+                        onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
+                    }
+                } else
+                {
+                    isScrolling = false;
+                }
+
+                prevPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+                if (state == ViewPager.SCROLL_STATE_DRAGGING)
+                {
+                    isScrolling = true;
+                }
+            }
+        });
+
+        mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
+
+        FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
+    }
+
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
         , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         if (categoryList == null)
         {
+            mCategoryTabLayout.removeAllTabs();
             mCategoryTabLayout.setOnTabSelectedListener(null);
             mViewPager.removeAllViews();
             setCategoryTabLayoutVisibility(View.GONE);
@@ -291,6 +362,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         if (size <= 2)
         {
             size = 1;
+            mCategoryTabLayout.removeAllTabs();
             setCategoryTabLayoutVisibility(View.GONE);
 
             mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
@@ -393,6 +465,58 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             {
                 selectedTab.select();
             }
+
+            mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
+
+            FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
+        }
+    }
+
+    /**
+     * 매번 add하는 것은 아니고 setCategoryAllTabLayout이후로 한번만 호출되어야 한다 여러번 안됨.
+     *
+     * @param categoryList
+     * @param listener
+     */
+    public void addCategoryTabLayout(List<Category> categoryList,//
+                                     PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        if (categoryList == null)
+        {
+            return;
+        }
+
+        int size = categoryList.size();
+
+        if (size + mCategoryTabLayout.getTabCount() <= 2)
+        {
+            size = 1;
+            setCategoryTabLayoutVisibility(View.GONE);
+
+            mViewPager.setOffscreenPageLimit(size);
+            mViewPager.clearOnPageChangeListeners();
+        } else
+        {
+            setCategoryTabLayoutVisibility(View.VISIBLE);
+
+            Category category;
+            TabLayout.Tab tab;
+
+            for (int i = 0; i < size; i++)
+            {
+                category = categoryList.get(i);
+
+                tab = mCategoryTabLayout.newTab();
+                tab.setText(category.name);
+                tab.setTag(category);
+                mCategoryTabLayout.addTab(tab);
+            }
+
+            mFragmentPagerAdapter.addItemCount(size, mBottomOptionLayout, listener);
+            mFragmentPagerAdapter.notifyDataSetChanged();
+
+            mViewPager.setOffscreenPageLimit(mCategoryTabLayout.getTabCount());
+            mViewPager.setAdapter(mFragmentPagerAdapter);
 
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 
@@ -758,7 +882,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
-    public void setViewTypeVisibility(boolean isShow) {
+    public void setViewTypeVisibility(boolean isShow)
+    {
         mViewTypeOptionImageView.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 

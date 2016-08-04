@@ -27,7 +27,7 @@ public class StaySearchResultListFragment extends StayListFragment
     {
         void onResultListCount(int count, int maxCount);
 
-        void onCategoryList(HashSet<String> categorySet);
+        void onCategoryList(List<Category> categoryList);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class StaySearchResultListFragment extends StayListFragment
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, HashSet<String> categorSet)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList)
         {
             // 첫페이지 호출시에 카테고리 목록 조절
             if (mIsOptimizeCategory == false)
@@ -118,7 +118,7 @@ public class StaySearchResultListFragment extends StayListFragment
 
                 if (page == 1 && totalCount <= Constants.PAGENATION_LIST_SIZE && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
                 {
-                    ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categorSet);
+                    ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                 }
             }
 

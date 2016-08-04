@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 {
     private double mRadius;
+    private GourmetSearchResultListFragmentPagerAdapter mGourmetSearchResultListFragmentPagerAdapter;
 
     public GourmetSearchResultLayout(Context context, OnBaseEventListener listener)
     {
@@ -42,9 +43,14 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     }
 
     @Override
-    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new GourmetSearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        if (mGourmetSearchResultListFragmentPagerAdapter == null)
+        {
+            mGourmetSearchResultListFragmentPagerAdapter = new GourmetSearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        }
+
+        return mGourmetSearchResultListFragmentPagerAdapter;
     }
 
     @Override
