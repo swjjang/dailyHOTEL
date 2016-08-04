@@ -127,6 +127,12 @@ public class ZoomMapActivity extends BaseActivity
     @Override
     protected void onStart()
     {
+        if (mSourceType == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         switch (mSourceType)
         {
             case HOTEL:
