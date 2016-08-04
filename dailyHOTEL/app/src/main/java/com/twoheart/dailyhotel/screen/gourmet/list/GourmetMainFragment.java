@@ -210,7 +210,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, //
             mGourmetCuration.getSaleTime(), mGourmetCuration.getLocation());
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_MAIN_LIST);
     }
 
     private void curationCurrentFragment()
