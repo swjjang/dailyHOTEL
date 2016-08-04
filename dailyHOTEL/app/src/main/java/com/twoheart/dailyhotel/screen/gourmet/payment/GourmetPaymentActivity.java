@@ -260,6 +260,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
             }
         });
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
+            AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);
+    }
+
+    @Override
+    protected void showStopOnSaleDialog()
+    {
+        super.showStopOnSaleDialog();
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
+            AnalyticsManager.Action.SOLDOUT, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);
     }
 
     @Override

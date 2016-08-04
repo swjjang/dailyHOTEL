@@ -806,6 +806,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                             setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         }
                     });
+
+                if (isDeepLink == true)
+                {
+                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        AnalyticsManager.Action.SOLDOUT_DEEPLINK, gourmetDetail.name, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        AnalyticsManager.Action.SOLDOUT, gourmetDetail.name, null);
+                }
             } else
             {
                 if (isDeepLink == false)

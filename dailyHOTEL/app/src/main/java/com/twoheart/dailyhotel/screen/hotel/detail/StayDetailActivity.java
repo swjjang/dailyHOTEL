@@ -860,11 +860,11 @@ public class StayDetailActivity extends PlaceDetailActivity
                 if (isDeepLink == true)
                 {
                     AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                        Action.SOLDOUT_CHANGESTAY_DEEPLINK, stayDetail.name, null);
+                        Action.SOLDOUT_DEEPLINK, stayDetail.name, null);
                 } else
                 {
                     AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                        Action.SOLDOUT_CHANGESTAY, stayDetail.name, null);
+                        Action.SOLDOUT, stayDetail.name, null);
                 }
             } else
             {
