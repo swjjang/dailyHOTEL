@@ -16,7 +16,9 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -150,6 +152,18 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         mNetworkController.requestRegionList();
     }
 
+    @Override
+    protected void updateTermsOfLocationLayout()
+    {
+        for (PlaceRegionListFragment fragment : mFragmentPagerAdapter.getFragmentList())
+        {
+            if (fragment.isAdded() == true)
+            {
+                fragment.updateTermsOfLocationView();
+            }
+        }
+    }
+
     private PlaceRegionListFragment.OnPlaceRegionListFragment mOnPlaceListFragmentListener = new PlaceRegionListFragment.OnPlaceRegionListFragment()
     {
         private void recordEvent(Province province)
@@ -208,6 +222,18 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
             }
 
             finish();
+        }
+
+        @Override
+        public void onAroundSearchClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = PermissionManagerActivity.newInstance(GourmetRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
     };
 

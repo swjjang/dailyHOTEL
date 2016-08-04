@@ -17,7 +17,9 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -386,6 +388,18 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                 }
             }
         }
+
+        @Override
+        public void onAroundSearchClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = PermissionManagerActivity.newInstance(StayRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+        }
     };
 
     private void removeGlobalRegion()
@@ -398,6 +412,18 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
         mFragmentPagerAdapter.removeItem(1);
         mFragmentPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void updateTermsOfLocationLayout()
+    {
+        for (PlaceRegionListFragment fragment : mFragmentPagerAdapter.getFragmentList())
+        {
+            if (fragment.isAdded() == true)
+            {
+                fragment.updateTermsOfLocationView();
+            }
+        }
     }
 
     private void showTabLayout()

@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.region;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -19,5 +20,11 @@ public class StayRegionListFragment extends PlaceRegionListFragment
                 AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
                 break;
         }
+    }
+
+    @Override
+    protected String getAroundPlaceText()
+    {
+        return mBaseActivity.getString(R.string.label_view_myaround_hotel);
     }
 }
