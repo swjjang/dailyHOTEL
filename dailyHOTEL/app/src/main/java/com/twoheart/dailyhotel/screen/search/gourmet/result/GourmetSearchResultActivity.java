@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
@@ -29,9 +31,11 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,7 +97,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
+            mPlaceSearchResultLayout.setViewTypeVisibility(true);
+
             mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
+        } else
+        {
+            mPlaceSearchResultLayout.setViewTypeVisibility(false);
         }
     }
 
@@ -362,7 +371,61 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onViewTypeClick()
         {
+            if (isFinishing() == true || isLockUiComponent() == true)
+            {
+                return;
+            }
 
+            lockUI();
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+            if (currentFragment == null)
+            {
+                unLockUI();
+                return;
+            }
+
+            switch (mViewType)
+            {
+                case LIST:
+                {
+                    // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
+                    if (currentFragment.hasSalesPlace() == false)
+                    {
+                        unLockUI();
+
+                        DailyToast.showToast(GourmetSearchResultActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    mViewType = ViewType.MAP;
+
+                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
+                    break;
+                }
+
+                case MAP:
+                {
+                    mViewType = ViewType.LIST;
+
+                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST, null);
+                    break;
+                }
+            }
+
+            // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
+            mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+
+            for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
+            {
+                boolean isCurrentFragment = (placeListFragment == currentFragment) ? true : false;
+                placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            }
+
+            refreshCurrentFragment(false);
+
+            unLockUI();
         }
 
         @Override
@@ -549,19 +612,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetSearchCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
-
-            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-
-            switch (mViewType)
-            {
-                case LIST:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-                    break;
-
-                case MAP:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-                    break;
-            }
         }
 
         @Override
