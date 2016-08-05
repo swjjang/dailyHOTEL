@@ -108,12 +108,6 @@ public class StaySearchFragment extends PlaceSearchFragment
     }
 
     @Override
-    protected PlaceSearchLayout getLayout()
-    {
-        return new StaySearchLayout(mBaseActivity, mOnEventListener);
-    }
-
-    @Override
     protected void onSearch(Location location)
     {
         if (mIsScrolling == true)

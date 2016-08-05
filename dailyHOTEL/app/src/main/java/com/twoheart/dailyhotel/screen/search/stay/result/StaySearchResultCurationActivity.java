@@ -197,7 +197,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
     {
         setConfirmOnClickListener(null);
 
-        ((StaySearchResultCurationNetworkController)mNetworkController).requestStaySearchList(mLastParams);
+        ((StaySearchResultCurationNetworkController) mNetworkController).requestStaySearchList(mLastParams);
     }
 
     @Override
@@ -254,7 +254,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));
             } else
             {
-                if(totalCount >= maxCount)
+                if (totalCount >= maxCount)
                 {
                     setResultMessage(getString(R.string.label_hotel_filter_result_over_count, maxCount));
                 } else

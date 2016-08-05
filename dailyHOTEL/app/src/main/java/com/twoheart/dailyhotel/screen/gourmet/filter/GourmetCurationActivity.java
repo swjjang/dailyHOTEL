@@ -606,10 +606,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 break;
 
             case R.id.distanceCheckView:
-            {
                 searchMyLocation();
                 return;
-            }
 
             case R.id.lowPriceCheckView:
                 gourmetCurationOption.setSortType(SortType.LOW_PRICE);

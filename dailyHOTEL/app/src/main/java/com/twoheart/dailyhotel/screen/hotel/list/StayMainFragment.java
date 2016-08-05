@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -143,7 +144,7 @@ public class StayMainFragment extends PlaceMainFragment
                 Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
                 mStayCuration.setLocation(location);
 
-                startAroundSearchResult();
+                startAroundSearchResult(mBaseActivity, mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), location);
             }
         }
     }
@@ -324,7 +325,7 @@ public class StayMainFragment extends PlaceMainFragment
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
     }
 
-    private void startAroundSearchResult()
+    private void startAroundSearchResult(Context context, SaleTime saleTime, int nights, Location location)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -333,7 +334,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         lockUI();
 
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, //
+        Intent intent = StaySearchResultActivity.newInstance(context, //
             mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), mStayCuration.getLocation());
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
@@ -575,6 +576,8 @@ public class StayMainFragment extends PlaceMainFragment
             }
         }
 
+        DailyDeepLink.getInstance().clear();
+
         SaleTime saleTime = mStayCuration.getCheckInSaleTime().getClone(0);
         SaleTime checkInSaleTime;
 
@@ -613,10 +616,9 @@ public class StayMainFragment extends PlaceMainFragment
             return false;
         }
 
-        Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL, checkInSaleTime, nights);
+        Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL, checkInSaleTime, nights, word);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-        DailyDeepLink.getInstance().clear();
         mIsDeepLink = true;
 
         return true;
@@ -624,8 +626,11 @@ public class StayMainFragment extends PlaceMainFragment
 
     private boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
     {
-        String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
-        SortType sortType = DailyDeepLink.getInstance().getSorting();
+        String word = DailyDeepLink.getInstance().getSearchWord();
+        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
+        LatLng latLng = DailyDeepLink.getInstance().getLatLng();
+        double radius = DailyDeepLink.getInstance().getRadius();
+
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
         int nights = 1;
@@ -685,22 +690,29 @@ public class StayMainFragment extends PlaceMainFragment
             return false;
         }
 
-        String word = DailyDeepLink.getInstance().getSearchWord();
-        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
-
         switch (searchType)
         {
             case MY_LOCATION:
                 break;
 
             case LOCATION:
+            {
+                if (latLng != null)
+                {
+                    Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, latLng, radius);
+                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                } else
+                {
+                    return false;
+                }
                 break;
+            }
 
             default:
-                if(Util.isTextEmpty(word) == false)
+                if (Util.isTextEmpty(word) == false)
                 {
                     Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, new Keyword(0, word), SearchType.SEARCHES);
-                    mBaseActivity.startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
+                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
                     return false;
@@ -1366,6 +1378,16 @@ public class StayMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkRegionList(baseActivity);
+            } else if (DailyDeepLink.getInstance().isHotelSearchView() == true)
+            {
+                unLockUI();
+
+                return moveDeepLinkSearch(baseActivity);
+            } else if (DailyDeepLink.getInstance().isHotelSearchResultView() == true)
+            {
+                unLockUI();
+
+                return moveDeepLinkSearchResult(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
