@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,9 +79,28 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
 
                     // 카테고리 목록을 만든다
                     ArrayList<Category> categoryList = new ArrayList<>();
-                    categoryList.add(new Category("호텔", "hotel"));
-                    categoryList.add(new Category("부띠크", "boutique"));
-                    categoryList.add(new Category("펜션", "pension"));
+
+                    JSONArray categoryJSONArray = dataJSONObject.getJSONArray("categories");
+
+                    if(categoryJSONArray != null || categoryJSONArray.length() != 0)
+                    {
+                        int length = categoryJSONArray.length();
+                        JSONObject categoryJSONObject;
+
+                        for(int i = 1; i < length; i++)
+                        {
+                            categoryJSONObject = categoryJSONArray.getJSONObject(i);
+
+                            String name = categoryJSONObject.getString("name");
+                            String code = categoryJSONObject.getString("code");
+                            int count = categoryJSONObject.getInt("count");
+
+                            if(count == 0 && Util.isTextEmpty(name, code) == false)
+                            {
+                                categoryList.add(new Category(name, code));
+                            }
+                        }
+                    }
 
                     // 스테이 목록을 만든다.
                     ArrayList<Stay> stayList;
