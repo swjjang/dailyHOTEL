@@ -284,7 +284,7 @@ public class MainActivity extends BaseActivity implements Constants
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
-            case CODE_REQUEST_ACTIVITY_MAIN_LIST:
+            case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             {
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
