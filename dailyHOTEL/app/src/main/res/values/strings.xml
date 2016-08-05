@@ -195,8 +195,8 @@
 
     <string name="dialog_title_notice">공지</string>
     <string name="dialog_msg_sent_email">이메일이 발송되었습니다.</string>
-    <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어 있지 않습니다.\n설치를 눌러 진행해주세요.\n취소를 누르시면 결제가 취소됩니다.</string>
-    <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치 되어있지 않습니다.\n설치 하시겠어요?</string>
+    <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어있지 않습니다.\n설치를 눌러 진행해주세요.\n취소를 누르면 결제가 취소됩니다.</string>
+    <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치되어있지 않습니다.\n설치하시겠어요?</string>
     <string name="dialog_msg_chk_wanna_login">로그아웃하시겠어요?</string>
     <string name="dialog_msg_chk_cancel_payment">결제를 취소하시겠어요?</string>
     <string name="dialog_msg_chk_cancel_payment_progress">결제 진행중입니다.\n취소하시겠어요?</string>
@@ -414,11 +414,11 @@
     <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
     <string name="message_edit_phone_social_guide">휴대폰 번호를 입력하신 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
-    <string name="message_edit_name_guide">상품 예약 확인 시 필요한 정보이므로 실명으로 입력 하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_name_guide">상품 예약 확인 시 필요한 정보이므로 실명으로 입력한 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_password_guide">4자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
-    <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 등록을 해주세요.</string>
+    <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_invalid_verification">다른 기기에서 휴대폰 번호가 인증처리되었습니다.\n내정보에서 휴대폰 번호를 다시 확인해주세요.</string>
 
     <!-- Booking Activity -->
@@ -754,7 +754,7 @@
     <!-- PaymentResult Activity -->
     <string name="label_booking_information">예약정보</string>
     <string name="label_completed_payment">예약완료</string>
-    <string name="label_booking_place">예약장소</string>
+    <string name="label_booking_place">예약 장소</string>
     <string name="label_product_type">상품 타입</string>
     <string name="label_use_day">이용일</string>
     <string name="label_check_booking_history">예약내역 확인하기</string>
@@ -801,7 +801,7 @@
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
-    <string name="message_select_coupon_selected">사용하실 쿠폰을 선택해주세요.</string>
+    <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
     <string name="message_select_coupon_empty">사용할 수 있는 할인 쿠폰이 없습니다.</string>
     <string name="message_select_coupon_download">다운로드하기</string>
 
@@ -820,11 +820,10 @@
 
     <!-- Search Calendar -->
     <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
-    <string name="message_calendar_placelist_reset">방문하실 날짜를 확인해주세요.\n재설정하시려면 다른 날짜를 선택해주세요.</string>
     <string name="label_calendar_search_selected_date">선택 완료</string>
     <string name="label_calendar_gourmet_search_selected_date">방문일 선택 완료</string>
     <string name="label_calendar_stay_search_selected_date">%1$d박 선택 완료</string>
-    <string name="message_calendar_search_reset">검색하실 날짜를 확인해주세요.\n재설정하시려면 다른 날짜를 선택해주세요.</string>
+    <string name="message_calendar_search_reset">검색할 날짜를 확인해주세요.\n다시 설정하려면 다른 날짜를 선택해주세요.</string>
 
     <string name="information_empty_name_n_email_after_login">신속한 예약 확인 및 안내를 위해\n고객님의 이름과 이메일을 등록해주세요.</string>
 
@@ -843,7 +842,7 @@
     <string name="message_guide_dialog_denied_permission01">전화 정보에 대한 앱 권한 설정을 거부했습니다.</string>
     <string name="message_guide_dialog_denied_permission02">위치 정보에 대한 앱 권한 설정을 거부했습니다.</string>
     <string name="message_guide_dialog_denied_permission_read_phone_state">로그인 기능을 사용하거나 고객센터와 연결하려면 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
-    <string name="message_guide_dialog_denied_permission_access_fine_location">고객님의 현재 위치 기반 정보를 보시려면 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
+    <string name="message_guide_dialog_denied_permission_access_fine_location">고객님의 현재 위치 기반 정보를 보려면 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
 
     <!-- Detail -->
     <string name="label_detail_change_date">날짜변경</string>
