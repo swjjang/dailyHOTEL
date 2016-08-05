@@ -438,6 +438,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+            mOnPlaceListFragmentListener.onRecordAnalytics(viewType);
+        }
+
+        @Override
         public void finish()
         {
             mBaseActivity.finish();

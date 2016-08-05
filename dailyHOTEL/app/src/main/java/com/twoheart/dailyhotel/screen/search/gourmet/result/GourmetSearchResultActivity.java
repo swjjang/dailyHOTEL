@@ -699,6 +699,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
+        @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+
+        }
+
         private String getSearchDate()
         {
             String checkInDate = mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");

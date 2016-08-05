@@ -406,6 +406,12 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+            mOnPlaceListFragmentListener.onRecordAnalytics(viewType);
+        }
+
+        @Override
         public void finish()
         {
             if (mBaseActivity != null)

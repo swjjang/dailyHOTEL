@@ -903,20 +903,19 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-            if (isShow == true)
+
+        }
+
+        @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+            if (viewType == ViewType.MAP)
             {
-                // 기존 처리 유지
+                recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
             } else
             {
-                if (mViewType == ViewType.MAP)
-                {
-                    recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
-                } else
-                {
-                    recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST);
-                }
+                recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST);
             }
-
         }
     };
 

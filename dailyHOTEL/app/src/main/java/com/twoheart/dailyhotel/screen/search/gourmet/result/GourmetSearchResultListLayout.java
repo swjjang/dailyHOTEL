@@ -68,6 +68,8 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
                 break;
 
             case GONE:
@@ -170,7 +172,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             } else
             {
                 // 요청 온 데이터가 empty 일때 기존 리스트가 있으면 라스트 footer 재 생성
-                if (oldList.size() > 0)
+                if (oldListSize > 0)
                 {
                     mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
                 }
@@ -185,6 +187,11 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             {
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.notifyDataSetChanged();
+
+                if (oldListSize == 0)
+                {
+                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
+                }
             }
         } else
         {
@@ -227,6 +234,9 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 });
 
                 mGourmetListMapFragment.setPlaceViewItemList(list, true);
+
+                //                // AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
+                ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
             }
         } else
         {

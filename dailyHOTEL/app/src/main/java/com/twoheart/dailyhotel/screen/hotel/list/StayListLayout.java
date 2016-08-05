@@ -181,7 +181,7 @@ public class StayListLayout extends PlaceListLayout
             {
                 // 삭제 이벤트가 발생하였을수 있어서 재 검사
                 int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
+                int end = oldList == null ? 0 : oldList.size() - 5;
                 end = end < 0 ? 0 : end;
 
                 // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
@@ -244,8 +244,10 @@ public class StayListLayout extends PlaceListLayout
             } else
             {
                 // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
-                if (oldList == null || oldList.size() == 0)
+                if (oldListSize == 0)
                 {
+                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
+
                     if (sortType == Constants.SortType.DEFAULT && isBannerVisibility() == true)
                     {
                         if (StayEventBannerManager.getInstance().getCount() > 0)
@@ -304,6 +306,8 @@ public class StayListLayout extends PlaceListLayout
                 });
 
                 mStayListMapFragment.setPlaceViewItemList(list, true);
+
+                ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
             }
         } else
         {

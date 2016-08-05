@@ -588,12 +588,13 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(rating) == false)
         {
-            screenViewBuilder.setCustomDimension(17, rating);
+            String onlyRating = getOnlyRating(rating);
+            screenViewBuilder.setCustomDimension(17, Util.isTextEmpty(onlyRating) == false ? onlyRating : rating);
         }
 
         if (Util.isTextEmpty(isShowOriginalPrice) == false)
         {
-            screenViewBuilder.setCustomDimension(18, isShowOriginalPrice);
+            screenViewBuilder.setCustomDimension(18, isShowOriginalPrice.toLowerCase());
         }
 
         return screenViewBuilder;
@@ -703,5 +704,50 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         // SEARCH_RESULT_EMPTY + CD20
         mGoogleAnalyticsTracker.setScreenName(screen);
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+    }
+
+    private String getOnlyRating(String text)
+    {
+        if (Util.isTextEmpty(text) == true)
+        {
+            return null;
+        }
+
+        text = text.trim();
+        if (Util.isTextEmpty(text) == true)
+        {
+            return null;
+        }
+
+        String[] words = text.split(" ");
+        if (words != null)
+        {
+            for (String word : words)
+            {
+                int index = word.lastIndexOf("%");
+                if (index > 0)
+                {
+                    int start = 0;
+                    word = word.substring(0, index + 1);
+
+                    char check;
+                    for (int i = word.length() - 2; i > 0; i--)
+                    {
+                        check = word.charAt(i);
+                        if (check < 48 || check > 58)
+                        {
+                            //해당 char값이 숫자가 아닐 경우
+                            start = i;
+                            break;
+                        }
+                    }
+
+                    word = word.substring(start);
+                    return word;
+                }
+            }
+        }
+
+        return null;
     }
 }
