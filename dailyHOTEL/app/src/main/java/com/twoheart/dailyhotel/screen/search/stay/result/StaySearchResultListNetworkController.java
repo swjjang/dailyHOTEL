@@ -72,7 +72,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                     }
 
-                    int totalCount = dataJSONObject.getInt("searchTotalCount");
+                    int totalCount = 0;
                     int maxCount = dataJSONObject.getInt("searchMaxCount");
                     int page;
                     String imageUrl;
@@ -82,23 +82,25 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
 
                     JSONArray categoryJSONArray = dataJSONObject.getJSONArray("categories");
 
-                    if(categoryJSONArray != null || categoryJSONArray.length() != 0)
+                    if (categoryJSONArray != null || categoryJSONArray.length() != 0)
                     {
                         int length = categoryJSONArray.length();
                         JSONObject categoryJSONObject;
 
-                        for(int i = 1; i < length; i++)
+                        for (int i = 0; i < length; i++)
                         {
                             categoryJSONObject = categoryJSONArray.getJSONObject(i);
 
                             String name = categoryJSONObject.getString("name");
-                            String code = categoryJSONObject.getString("code");
+                            String code = categoryJSONObject.getString("alias");
                             int count = categoryJSONObject.getInt("count");
 
-                            if(count == 0 && Util.isTextEmpty(name, code) == false)
+                            if (count > 0 && Util.isTextEmpty(name, code) == false)
                             {
                                 categoryList.add(new Category(name, code));
                             }
+
+                            totalCount += count;
                         }
                     }
 

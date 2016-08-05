@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class StaySearchResultListFragment extends StayListFragment
@@ -116,7 +115,7 @@ public class StaySearchResultListFragment extends StayListFragment
             {
                 mIsOptimizeCategory = true;
 
-                if (page == 1 && totalCount <= Constants.PAGENATION_LIST_SIZE && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
+                if (page == 1 && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
                 {
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                 }
