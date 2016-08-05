@@ -350,15 +350,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String callByScreen;
-        if (mIsDeepLink == true)
-        {
-            callByScreen = AnalyticsManager.Label.EVENT;
-        } else
-        {
-            callByScreen = AnalyticsManager.ValueType.DETAIL;
-        }
-
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, //
             nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);

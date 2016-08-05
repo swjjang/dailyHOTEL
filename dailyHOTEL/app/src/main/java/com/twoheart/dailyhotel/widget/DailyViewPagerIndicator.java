@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -38,6 +40,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
         initLayout(context);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public DailyViewPagerIndicator(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
