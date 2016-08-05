@@ -39,9 +39,9 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected abstract PlaceSearchResultLayout getPlaceSearchResultLayout(Context context);
 
-    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+    protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void onCurationActivityResult(int requestCode, int resultCode, Intent data);
+    protected abstract void onCurationActivityResult(int resultCode, Intent data);
 
     protected abstract void onLocationFailed();
 

@@ -334,8 +334,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         lockUI();
 
-        Intent intent = StaySearchResultActivity.newInstance(context, //
-            mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), mStayCuration.getLocation());
+        Intent intent = StaySearchResultActivity.newInstance(context, saleTime, nights, location);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
