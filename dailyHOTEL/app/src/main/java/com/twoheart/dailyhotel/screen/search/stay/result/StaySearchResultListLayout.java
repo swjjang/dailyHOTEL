@@ -57,10 +57,10 @@ public class StaySearchResultListLayout extends StayListLayout
                 break;
 
             case MAP:
+                mResultTextView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
                 mFilterEmptyView.setVisibility(View.GONE);
-                mResultTextView.setVisibility(View.GONE);
 
                 if (isCurrentPage == true && mStayListMapFragment == null)
                 {
@@ -112,7 +112,7 @@ public class StaySearchResultListLayout extends StayListLayout
         }
     }
 
-    public void updateResultCount(int count, int maxCount)
+    public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
     {
         if (mResultTextView == null)
         {
@@ -124,7 +124,13 @@ public class StaySearchResultListLayout extends StayListLayout
             mResultTextView.setVisibility(View.GONE);
         } else
         {
-            mResultTextView.setVisibility(View.VISIBLE);
+            if(viewType == Constants.ViewType.LIST)
+            {
+                mResultTextView.setVisibility(View.VISIBLE);
+            } else
+            {
+                mResultTextView.setVisibility(View.GONE);
+            }
 
             if (count >= maxCount)
             {

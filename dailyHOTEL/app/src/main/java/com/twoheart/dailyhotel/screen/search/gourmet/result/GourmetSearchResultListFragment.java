@@ -124,7 +124,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             lockUI(isShowProgress);
 
             // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
-            mGourmetSearchResultListLayout.updateResultCount(-1, -1);
+            mGourmetSearchResultListLayout.updateResultCount(mViewType, -1, -1);
         }
 
         SaleTime saleTime = mGourmetCuration.getSaleTime();
@@ -283,7 +283,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             {
                 mResultTotalCount = totalCount;
                 mResultMaxCount = maxCount;
-                mGourmetSearchResultListLayout.updateResultCount(totalCount, maxCount);
+                mGourmetSearchResultListLayout.updateResultCount(mViewType, totalCount, maxCount);
             }
 
             unLockUI();
