@@ -334,7 +334,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, //
             mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), mStayCuration.getLocation());
-        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_MAIN_LIST);
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
