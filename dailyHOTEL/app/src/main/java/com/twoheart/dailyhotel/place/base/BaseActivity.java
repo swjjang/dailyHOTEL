@@ -519,7 +519,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
 
-        if (Util.isTextEmpty(positive) == false && Util.isTextEmpty(negative) == false)
+        if (Util.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
@@ -666,7 +666,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
 
-        if (Util.isTextEmpty(positive) == false && Util.isTextEmpty(negative) == false)
+        if (Util.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
@@ -817,7 +817,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
 
-        if (Util.isTextEmpty(positive) == false && Util.isTextEmpty(negative) == false)
+        if (Util.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
 

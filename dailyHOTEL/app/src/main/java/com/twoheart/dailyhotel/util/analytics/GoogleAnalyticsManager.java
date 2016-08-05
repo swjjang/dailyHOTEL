@@ -442,7 +442,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         String id;
 
-        if (Util.isTextEmpty(placeIndex) == false && Util.isTextEmpty(ticketIndex) == false)
+        if (Util.isTextEmpty(placeIndex, ticketIndex) == false)
         {
             id = placeIndex + "_" + ticketIndex;
         } else if (Util.isTextEmpty(placeIndex) == false)
@@ -457,7 +457,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         String name = null;
 
-        if (Util.isTextEmpty(placeName) == false && Util.isTextEmpty(ticketName) == false)
+        if (Util.isTextEmpty(placeName, ticketName) == false)
         {
             name = placeName + "_" + ticketName;
         } else if (Util.isTextEmpty(placeName) == false)

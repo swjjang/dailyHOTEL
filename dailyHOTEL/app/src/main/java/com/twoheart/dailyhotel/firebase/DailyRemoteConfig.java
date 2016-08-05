@@ -98,7 +98,7 @@ public class DailyRemoteConfig
 
     private void processIntroImage(Context context, String updateTime, String imageUrl)
     {
-        if (Util.isTextEmpty(updateTime) == true || Util.isTextEmpty(imageUrl) == true)
+        if (Util.isTextEmpty(updateTime, imageUrl) == true)
         {
             return;
         }

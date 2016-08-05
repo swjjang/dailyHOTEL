@@ -32,7 +32,7 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
         String url = params[0];
         String version = params[1];
 
-        if (Util.isTextEmpty(url) == true || Util.isTextEmpty(version) == true)
+        if (Util.isTextEmpty(url, version) == true)
         {
             return false;
         }

@@ -920,6 +920,7 @@ public class DailyDeepLink
                         }
                     } catch (NumberFormatException e)
                     {
+                        ExLog.d(e.toString());
                     }
                 }
                 break;
@@ -941,7 +942,7 @@ public class DailyDeepLink
                 String lat = mParams.get(PARAM_V6_LATITUDE);
                 String lng = mParams.get(PARAM_V6_LONGITUDE);
 
-                if (Util.isTextEmpty(lat) == false && Util.isTextEmpty(lng) == false)
+                if (Util.isTextEmpty(lat, lng) == false)
                 {
                     latLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
                 }

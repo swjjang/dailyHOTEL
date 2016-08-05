@@ -857,7 +857,7 @@ public class Util implements Constants
 
     public static void shareDaumMap(Activity activity, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || Util.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -879,7 +879,7 @@ public class Util implements Constants
 
     public static void shareNaverMap(Activity activity, String name, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || Util.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -928,7 +928,7 @@ public class Util implements Constants
 
     public static void shareGoogleMap(Activity activity, String placeName, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || Util.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
