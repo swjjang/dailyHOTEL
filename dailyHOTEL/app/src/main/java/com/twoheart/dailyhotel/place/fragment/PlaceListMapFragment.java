@@ -1,15 +1,12 @@
 package com.twoheart.dailyhotel.place.fragment;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -989,27 +986,15 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        DailyLocationFactory.getInstance((BaseActivity) getActivity()).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
             {
                 mBaseActivity.unLockUI();
 
-                if (Util.isOverAPI23() == true)
-                {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
-                    {
-                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
-
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
-                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    } else
-                    {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    }
-                }
+                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
             }
 
             @Override

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -83,7 +84,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                     return;
                 }
 
-                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
                 {
                     finish(RESULT_OK);
                     return;
@@ -102,7 +103,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                         return;
                     } else
                     {
-                        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                         {
                             finish(RESULT_OK);
                             return;
@@ -195,7 +196,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
             {
-                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
                 {
                     finish(RESULT_OK);
                 } else
@@ -206,7 +207,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             }
             case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
             {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 {
                     finish(RESULT_OK);
                 } else
@@ -244,7 +245,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 break;
         }
 
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
         {
             if (shouldShowRequestPermissionRationale(permission) == false)
             {
@@ -261,11 +262,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         switch (permissionType)
         {
             case READ_PHONE_STATE:
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
                 break;
 
             case ACCESS_FINE_LOCATION:
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
                 break;
         }
     }
