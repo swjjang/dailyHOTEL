@@ -3,7 +3,9 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.TextView;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -21,12 +23,21 @@ import java.util.List;
 public class GourmetSearchResultListLayout extends PlaceListLayout
 {
     private GourmetListMapFragment mGourmetListMapFragment;
+    private TextView mResultTextView;
 
     private GourmetCuration mGourmetCuration;
 
     public GourmetSearchResultListLayout(Context context, OnEventListener eventListener)
     {
         super(context, eventListener);
+    }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
     }
 
     @Override
@@ -44,6 +55,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             case LIST:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
+                mResultTextView.setVisibility(View.VISIBLE);
 
                 if (mGourmetListMapFragment != null)
                 {
@@ -59,6 +71,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             case MAP:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
+                mResultTextView.setVisibility(View.GONE);
 
                 if (isCurrentPage == true && mGourmetListMapFragment == null)
                 {
@@ -90,12 +103,37 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 }
 
                 mMapLayout.setVisibility(View.GONE);
+                mResultTextView.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
         }
 
         ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
+    }
+
+    public void updateResultCount(int count, int maxCount)
+    {
+        if (mResultTextView == null)
+        {
+            return;
+        }
+
+        if (count <= 0)
+        {
+            mResultTextView.setVisibility(View.GONE);
+        } else
+        {
+            mResultTextView.setVisibility(View.VISIBLE);
+
+            if (count >= maxCount)
+            {
+                mResultTextView.setText(mContext.getString(R.string.label_searchresult_over_resultcount, maxCount));
+            } else
+            {
+                mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
+            }
+        }
     }
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)

@@ -533,17 +533,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onResultListCount(int count, int maxCount)
-        {
-            if (mPlaceSearchResultLayout == null)
-            {
-                return;
-            }
-
-            mPlaceSearchResultLayout.updateResultCount(count, maxCount);
-        }
-
-        @Override
         public void onEventBannerClick(EventBanner eventBanner)
         {
 

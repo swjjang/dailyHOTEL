@@ -35,7 +35,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     private static final int ANIMATION_DEALY = 200;
 
     private View mToolbar;
-    protected TextView mResultTextView;
     private TextView mCalendarTextView;
     private View mEmptyLayout;
     private View mResultLayout;
@@ -135,7 +134,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     {
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
         mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
-        mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
@@ -570,30 +568,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     public ArrayList<PlaceListFragment> getPlaceListFragment()
     {
         return mFragmentPagerAdapter.getFragmentList();
-    }
-
-    public void updateResultCount(int count, int maxCount)
-    {
-        if (mResultTextView == null)
-        {
-            return;
-        }
-
-        if (count <= 0)
-        {
-            mResultTextView.setVisibility(View.GONE);
-        } else
-        {
-            mResultTextView.setVisibility(View.VISIBLE);
-
-            if (count >= maxCount)
-            {
-                mResultTextView.setText(mContext.getString(R.string.label_searchresult_over_resultcount, maxCount));
-            } else
-            {
-                mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
-            }
-        }
     }
 
     public void showEmptyLayout()
