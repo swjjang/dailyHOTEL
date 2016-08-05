@@ -783,21 +783,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             } else
             {
                 recordEventSearchResultByKeyword(keyword, isShow);
-
-                // 기존 AppBoy 이벤트
-                PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-                int placeCount = placeListFragment.getPlaceCount();
-
-                String action = isShow == true ? AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND : AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
-                String label = isShow == true ? //
-                    String.format("%s-%s", keyword.name, getSearchDate())//
-                    : String.format("%s-%d-%s", keyword.name, placeCount, getSearchDate());
-
-                Map<String, String> eventParams = new HashMap<>();
-                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(placeCount));
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , action, label, eventParams);
             }
         }
 
