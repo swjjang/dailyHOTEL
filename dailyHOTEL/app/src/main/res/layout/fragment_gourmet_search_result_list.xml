@@ -3,14 +3,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/mapLayout"
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/resultCountView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="25dp"
+        android:background="@color/default_background_section_c323232"
+        android:gravity="center_vertical"
+        android:paddingLeft="11dp"
+        android:textColor="@android:color/white"
+        android:textSize="12dp"
         android:visibility="gone"/>
 
-    <include
-        layout="@layout/view_empty_gourmet_list"
+    <FrameLayout
+        android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"/>
@@ -18,7 +23,9 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/resultCountView"
+        android:visibility="invisible">
 
         <com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView
             android:id="@+id/recycleView"
@@ -27,4 +34,10 @@
             android:divider="@null"
             android:scrollbars="vertical"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include
+        layout="@layout/view_empty_gourmet_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </RelativeLayout>

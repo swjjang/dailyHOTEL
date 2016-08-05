@@ -23,9 +23,8 @@ import java.util.List;
 
 public class StayListLayout extends PlaceListLayout
 {
-    private StayListMapFragment mStayListMapFragment;
-
-    private StayCuration mStayCuration;
+    protected StayListMapFragment mStayListMapFragment;
+    protected StayCuration mStayCuration;
 
     public StayListLayout(Context context, OnEventListener eventListener)
     {

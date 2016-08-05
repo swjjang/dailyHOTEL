@@ -23,8 +23,6 @@ public class StaySearchResultListFragment extends StayListFragment
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
-        void onResultListCount(int count, int maxCount);
-
         void onCategoryList(List<Category> categoryList);
     }
 
@@ -53,6 +51,9 @@ public class StaySearchResultListFragment extends StayListFragment
         if (page <= 1)
         {
             lockUI(isShowProgress);
+
+            // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
+            ((StaySearchResultListLayout)mStayListLayout).updateResultCount(-1, -1);
         }
 
         int nights = mStayCuration.getNights();
@@ -126,7 +127,7 @@ public class StaySearchResultListFragment extends StayListFragment
             {
                 mResultTotalCount = totalCount;
                 mResultMaxCount = maxCount;
-                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
+                ((StaySearchResultListLayout)mStayListLayout).updateResultCount(totalCount, maxCount);
             }
         }
 

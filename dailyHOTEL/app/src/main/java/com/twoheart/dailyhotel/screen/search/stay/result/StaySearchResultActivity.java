@@ -389,16 +389,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
             mPlaceSearchResultLayout.showBottomLayout(false);
 
-            StaySearchResultListFragment staySearchResultListFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
-
-            if (staySearchResultListFragment != null)
-            {
-                int count = staySearchResultListFragment.getResultTotalCount();
-                int maxCount = staySearchResultListFragment.getResultMaxCount();
-
-                mPlaceSearchResultLayout.updateResultCount(count, maxCount);
-            }
-
             refreshCurrentFragment(false);
         }
 
@@ -616,17 +606,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, showTagPriceYn);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
-        }
-
-        @Override
-        public void onResultListCount(int count, int maxCount)
-        {
-            if (mPlaceSearchResultLayout == null)
-            {
-                return;
-            }
-
-            mPlaceSearchResultLayout.updateResultCount(count, maxCount);
         }
 
         @Override

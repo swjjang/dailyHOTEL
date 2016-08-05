@@ -1333,10 +1333,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
                 } else
                 {
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 onError(e);
             }
         }

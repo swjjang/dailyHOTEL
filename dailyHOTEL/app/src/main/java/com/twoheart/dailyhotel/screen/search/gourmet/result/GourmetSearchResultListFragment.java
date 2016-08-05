@@ -46,8 +46,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     public interface OnGourmetSearchResultListFragmentListener extends OnPlaceListFragmentListener
     {
         void onGourmetClick(PlaceViewItem placeViewItem);
-
-        void onResultListCount(int count, int maxCount);
     }
 
     @Override
@@ -124,6 +122,9 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         if (page <= 1)
         {
             lockUI(isShowProgress);
+
+            // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
+            mGourmetSearchResultListLayout.updateResultCount(-1, -1);
         }
 
         SaleTime saleTime = mGourmetCuration.getSaleTime();
@@ -282,7 +283,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             {
                 mResultTotalCount = totalCount;
                 mResultMaxCount = maxCount;
-                ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onResultListCount(totalCount, maxCount);
+                mGourmetSearchResultListLayout.updateResultCount(totalCount, maxCount);
             }
 
             unLockUI();
