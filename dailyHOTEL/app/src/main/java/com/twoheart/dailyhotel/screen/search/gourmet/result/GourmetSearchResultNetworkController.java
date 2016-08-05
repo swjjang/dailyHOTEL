@@ -38,9 +38,19 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
 
     public void requestAddress(Location location)
     {
+        if (location == null)
+        {
+            return;
+        }
+
+        requestAddress(location.getLatitude(), location.getLongitude());
+    }
+
+    public void requestAddress(double latitude, double longitude)
+    {
         final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
-            , Double.toString(location.getLatitude())//
-            , Double.toString(location.getLongitude())//
+            , Double.toString(latitude)//
+            , Double.toString(longitude)//
             , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         new SearchAddressAsyncTask(url, mLocationToAddressListener).execute();

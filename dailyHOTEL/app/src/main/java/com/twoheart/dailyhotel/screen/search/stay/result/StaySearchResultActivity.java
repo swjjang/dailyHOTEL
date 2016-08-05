@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -47,6 +48,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
+    private static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
+    private static final String INTENT_EXTRA_DATA_RADIUS = "radius";
 
     private String mInputText;
     private String mAddress;
@@ -64,6 +67,18 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, LatLng latLng, double radius)
+    {
+        Intent intent = new Intent(context, StaySearchResultActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
+        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
 
         return intent;
     }
@@ -219,6 +234,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         Location location = null;
         Keyword keyword = null;
+        double radius = DEFAULT_SEARCH_RADIUS;
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
         {
@@ -226,6 +242,22 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
+        {
+            LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
+
+            if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
+            {
+                radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
+            }
+
+            location = new Location((String) null);
+            location.setLatitude(latLng.latitude);
+            location.setLongitude(latLng.longitude);
+        } else
+        {
+            finish();
+            return;
         }
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
@@ -244,7 +276,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (mSearchType == SearchType.LOCATION)
         {
             mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
-            mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
+            mStaySearchCuration.setRadius(radius);
         }
 
         mStaySearchCuration.setLocation(location);

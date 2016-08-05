@@ -105,12 +105,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     }
 
     @Override
-    protected PlaceSearchLayout getLayout()
-    {
-        return new GourmetSearchLayout(mBaseActivity, mOnEventListener);
-    }
-
-    @Override
     protected void onSearch(Location location)
     {
         if (mIsScrolling == true)

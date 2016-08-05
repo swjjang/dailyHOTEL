@@ -418,7 +418,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setConfirmOnClickListener(null);
 
-        ((StayCurationNetworkController)mNetworkController).requestStayList(mLastParams);
+        ((StayCurationNetworkController) mNetworkController).requestStayList(mLastParams);
     }
 
     protected void setLastStayParams(StayCuration stayCuration)

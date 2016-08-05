@@ -61,10 +61,16 @@ public class DailyDeepLink
     private static final String HOTEL_V3_DETAIL = "hd"; // 호텔 상세
     private static final String HOTEL_V3_REGION_LIST = "hrl"; // 호텔 지역 리스트
     private static final String HOTEL_V3_EVENT_BANNER_WEB = "hebw"; // 이벤트 배너 웹
+    private static final String HOTEL_V6_SEARCH = "hs"; // 호텔 검색화면
+    private static final String HOTEL_V6_SEARCH_RESULT = "hsr"; // 호텔 검색 결과 화면
+
     private static final String GOURMET_V3_LIST = "gl"; // 고메 리스트
     private static final String GOURMET_V3_DETAIL = "gd"; // 고메 상세
     private static final String GOURMET_V3_REGION_LIST = "grl"; // 고메 지역 리스트
     private static final String GOURMET_V3_EVENT_BANNER_WEB = "gebw"; // 이벤트 배너 웹
+    private static final String GOURMET_V6_SEARCH = "gs"; // 고메 검색화면
+    private static final String GOURMET_V6_SEARCH_RESULT = "gsr"; // 고메 검색 결과 화면
+
     private static final String BONUS_V3 = "b"; // 적립금
     private static final String EVENT_V3_LIST = "el"; // 이벤트 리스트
     private static final String BOOKING_V3_LIST = "bl"; // 예약 리스트
@@ -75,11 +81,6 @@ public class DailyDeepLink
     private static final String EVENT_V5_DETAIL = "ed";
     private static final String INFORMATION_V5 = "m"; // 더보기 화면
     private static final String RECOMMEND_FRIEND_V5 = "rf"; // 친구 추천하기 화면
-
-    private static final String HOTEL_V6_SEARCH = "hs"; // 호텔 검색화면
-    private static final String HOTEL_V6_SEARCH_RESULT = "hsr"; // 호텔 검색 결과 화면
-    private static final String GOURMET_V6_SEARCH = "gs"; // 고메 검색화면
-    private static final String GOURMET_V6_SEARCH_RESULT = "gsr"; // 고메 검색 결과 화면
 
     private static final String V3 = "3";
     private static final String V4 = "4";
@@ -213,7 +214,8 @@ public class DailyDeepLink
                 return HOTEL_V3_LIST.equalsIgnoreCase(view)//
                     || HOTEL_V3_DETAIL.equalsIgnoreCase(view)//
                     || HOTEL_V3_REGION_LIST.equalsIgnoreCase(view)//
-                    || HOTEL_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view);
+                    || HOTEL_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view)//
+                    || HOTEL_V6_SEARCH.equalsIgnoreCase(view) || HOTEL_V6_SEARCH_RESULT.equalsIgnoreCase(view);
 
             default:
                 return HOTEL_V2_LIST.equalsIgnoreCase(view);
@@ -306,7 +308,7 @@ public class DailyDeepLink
                 return GOURMET_V3_LIST.equalsIgnoreCase(view)//
                     || GOURMET_V3_DETAIL.equalsIgnoreCase(view)//
                     || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view)//
-                    || GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view);
+                    || GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view) || GOURMET_V6_SEARCH.equalsIgnoreCase(view) || GOURMET_V6_SEARCH_RESULT.equalsIgnoreCase(view);
 
             default:
                 return GOURMET_V2_LIST.equalsIgnoreCase(view);
@@ -888,7 +890,7 @@ public class DailyDeepLink
                 break;
         }
 
-        return null;
+        return value;
     }
 
     public SearchType getSearchLocationType()
@@ -904,7 +906,7 @@ public class DailyDeepLink
                 {
                     try
                     {
-                        switch(Integer.parseInt(value))
+                        switch (Integer.parseInt(value))
                         {
                             case 1:
                                 type = SearchType.MY_LOCATION;

@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -20,10 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -44,9 +38,19 @@ public class StaySearchResultNetworkController extends BaseNetworkController
 
     public void requestAddress(Location location)
     {
+        if (location == null)
+        {
+            return;
+        }
+
+        requestAddress(location.getLatitude(), location.getLongitude());
+    }
+
+    public void requestAddress(double latitude, double longitude)
+    {
         final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
-            , Double.toString(location.getLatitude())//
-            , Double.toString(location.getLongitude())//
+            , Double.toString(latitude)//
+            , Double.toString(longitude)//
             , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         new SearchAddressAsyncTask(url, mLocationToAddressListener).execute();

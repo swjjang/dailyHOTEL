@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailySwitchCompat;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class SearchActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int SEARCH_TAB_COUNT = 2;
+    private static final String INTENT_EXTRA_DATA_WORD = "word";
 
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
     private DailyViewPager mViewPager;
@@ -38,10 +40,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     public static Intent newInstance(Context context, PlaceType placeType, SaleTime saleTime, int nights)
     {
+        return newInstance(context, placeType, saleTime, nights, null);
+    }
+
+    public static Intent newInstance(Context context, PlaceType placeType, SaleTime saleTime, int nights, String word)
+    {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+
+        if (Util.isTextEmpty(word) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
+        }
         return intent;
     }
 
@@ -66,7 +78,14 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
 
-        initLayout(mPlaceType);
+        String word = null;
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_WORD) == true)
+        {
+            word = intent.getStringExtra(INTENT_EXTRA_DATA_WORD);
+        }
+
+        initLayout(mPlaceType, word);
 
     }
 
@@ -77,7 +96,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         recordAnalyticsSearch(mSaleTime, mNights, mPlaceType);
     }
 
-    private void initLayout(PlaceType placeType)
+    private void initLayout(PlaceType placeType, final String word)
     {
         initToolbar(placeType);
 
@@ -149,10 +168,35 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         {
             case HOTEL:
                 mViewPager.setCurrentItem(0);
+
+                if (Util.isTextEmpty(word) == false)
+                {
+                    // Fragment 가 생성되기 전이라서 지연시간 추가
+                    mViewPager.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mStaySearchFragment.setSearchWord(word);
+                        }
+                    }, 500);
+                }
                 break;
 
             case FNB:
                 mViewPager.setCurrentItem(1);
+
+                if (Util.isTextEmpty(word) == false)
+                {
+                    mViewPager.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mGourmetSearchFragment.setSearchWord(word);
+                        }
+                    }, 500);
+                }
                 break;
         }
     }

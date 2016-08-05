@@ -46,8 +46,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected abstract void writeRecentSearches(String text);
 
-    protected abstract PlaceSearchLayout getLayout();
-
     protected abstract void onSearch(Location location);
 
     public abstract void startSearchResultActivity();
@@ -126,6 +124,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         }
 
         mPlaceSearchLayout.hideSearchKeyboard();
+    }
+
+    public void setSearchWord(String word)
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.setSearchKeyword(word);
     }
 
     public void onScrollingFragment(boolean scrolling)
