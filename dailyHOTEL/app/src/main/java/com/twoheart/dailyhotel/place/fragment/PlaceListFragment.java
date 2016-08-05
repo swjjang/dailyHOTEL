@@ -32,6 +32,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onFilterClick();
 
         void onShowActivityEmptyView(boolean isShow);
+
+        void onRecordAnalytics(Constants.ViewType viewType);
     }
 
     public abstract void setPlaceCuration(PlaceCuration curation);

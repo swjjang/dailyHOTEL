@@ -1558,21 +1558,19 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-            if (isShow == true)
-            {
-                // 기존 처리 유지
-            } else
-            {
-                if (mViewType == ViewType.MAP)
-                {
-                    recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
-                } else
-                {
-                    recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST);
-                }
-            }
 
         }
 
+        @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+            if (viewType == ViewType.MAP)
+            {
+                recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+            } else
+            {
+                recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+            }
+        }
     };
 }

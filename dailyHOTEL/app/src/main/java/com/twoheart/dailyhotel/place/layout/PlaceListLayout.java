@@ -57,6 +57,8 @@ public abstract class PlaceListLayout extends BaseLayout
         void onFilterClick();
 
         void onShowActivityEmptyView(boolean isShow);
+
+        void onRecordAnalytics(Constants.ViewType viewType);
     }
 
     protected abstract PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);

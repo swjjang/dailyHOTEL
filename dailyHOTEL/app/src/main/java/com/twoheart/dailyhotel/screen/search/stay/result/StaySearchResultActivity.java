@@ -807,5 +807,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             String checkOutDate = mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
             return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
+
+        @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+
+        }
     };
 }

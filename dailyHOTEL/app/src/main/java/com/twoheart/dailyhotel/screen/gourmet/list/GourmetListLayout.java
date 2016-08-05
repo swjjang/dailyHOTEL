@@ -85,6 +85,8 @@ public class GourmetListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
+
+                    isShowActivityEmptyView = true;
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -153,6 +155,8 @@ public class GourmetListLayout extends PlaceListLayout
                 case LIST:
                 {
                     mPlaceRecyclerView.scrollToPosition(0);
+
+                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
                     break;
                 }
 
@@ -172,7 +176,8 @@ public class GourmetListLayout extends PlaceListLayout
 
                     mGourmetListMapFragment.setPlaceViewItemList(list, true);
 
-                    AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
+//                    AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
+                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
                     break;
                 }
             }
