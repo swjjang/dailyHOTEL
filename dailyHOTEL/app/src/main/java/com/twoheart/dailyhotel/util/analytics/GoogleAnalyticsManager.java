@@ -594,7 +594,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(isShowOriginalPrice) == false)
         {
-            screenViewBuilder.setCustomDimension(18, isShowOriginalPrice);
+            screenViewBuilder.setCustomDimension(18, isShowOriginalPrice.toLowerCase());
         }
 
         return screenViewBuilder;
