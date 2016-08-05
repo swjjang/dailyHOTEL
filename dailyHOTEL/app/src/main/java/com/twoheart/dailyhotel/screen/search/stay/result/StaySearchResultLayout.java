@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
+    private StaySearchResultListFragmentPagerAdapter mStaySearchResultListFragmentPagerAdapter;
+
     public StaySearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
@@ -38,9 +40,14 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     }
 
     @Override
-    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new StaySearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        if (mStaySearchResultListFragmentPagerAdapter == null)
+        {
+            mStaySearchResultListFragmentPagerAdapter = new StaySearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        }
+
+        return mStaySearchResultListFragmentPagerAdapter;
     }
 
     @Override
@@ -58,27 +65,4 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, params);
     }
-
-    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            //            int position = mRecyclerView.getChildAdapterPosition(v);
-            //
-            //            if (position < 0)
-            //            {
-            //                return;
-            //            }
-            //
-            //            PlaceViewItem placeViewItem = mListAdapter.getItem(position);
-            //
-            //            if (placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
-            //            {
-            //                return;
-            //            }
-            //
-            //            ((OnEventListener) mOnEventListener).onItemClick(placeViewItem);
-        }
-    };
 }

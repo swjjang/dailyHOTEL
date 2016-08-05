@@ -162,7 +162,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     {
         Guest guest = hotelPaymentInformation.getGuest();
 
-        if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
+        if (Util.isTextEmpty(guest.name, guest.phone, guest.email) == true)
         {
             restartExpiredSession();
             return;

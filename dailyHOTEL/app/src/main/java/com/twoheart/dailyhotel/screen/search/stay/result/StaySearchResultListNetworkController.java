@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -12,19 +13,20 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 
 public class StaySearchResultListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, HashSet<String> categorSet);
+        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList);
     }
 
     public StaySearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -70,19 +72,46 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                     }
 
-                    int totalCount = dataJSONObject.getInt("searchTotalCount");
+                    int totalCount = 0;
                     int maxCount = dataJSONObject.getInt("searchMaxCount");
                     int page;
                     String imageUrl;
 
+                    // 카테고리 목록을 만든다
+                    ArrayList<Category> categoryList = new ArrayList<>();
+
+                    JSONArray categoryJSONArray = dataJSONObject.getJSONArray("categories");
+
+                    if (categoryJSONArray != null || categoryJSONArray.length() != 0)
+                    {
+                        int length = categoryJSONArray.length();
+                        JSONObject categoryJSONObject;
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            categoryJSONObject = categoryJSONArray.getJSONObject(i);
+
+                            String name = categoryJSONObject.getString("name");
+                            String code = categoryJSONObject.getString("alias");
+                            int count = categoryJSONObject.getInt("count");
+
+                            if (count > 0 && Util.isTextEmpty(name, code) == false)
+                            {
+                                categoryList.add(new Category(name, code));
+                            }
+
+                            totalCount += count;
+                        }
+                    }
+
+                    // 스테이 목록을 만든다.
                     ArrayList<Stay> stayList;
-                    HashSet<String> categorySet = new HashSet<>();
 
                     if (hotelJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
                         int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights, categorySet);
+                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
                     } else
                     {
                         stayList = new ArrayList<>();
@@ -99,7 +128,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, categorySet);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, categoryList);
                 } else
                 {
                     String message = response.getString("msg");
@@ -117,9 +146,9 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
             }
         }
 
-        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights, HashSet<String> categorySet) throws JSONException
+        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
         {
-            if (jsonArray == null || categorySet == null)
+            if (jsonArray == null)
             {
                 return new ArrayList<>();
             }
@@ -138,8 +167,6 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                 if (stay.setStay(jsonObject, imageUrl, nights) == true)
                 {
                     stayList.add(stay); // 추가.
-
-                    categorySet.add(stay.categoryCode);
                 }
             }
 

@@ -161,7 +161,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     {
         Guest guest = gourmetPaymentInformation.getGuest();
 
-        if (guest == null || Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
+        if (guest == null || Util.isTextEmpty(guest.name, guest.phone, guest.email) == true)
         {
             restartExpiredSession();
             return;

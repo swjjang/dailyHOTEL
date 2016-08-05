@@ -37,7 +37,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -102,15 +101,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setViewTypeVisibility(true);
 
             mNetworkController.requestAddress(mStaySearchCuration.getLocation());
-            mNetworkController.requestCategoryList(mStaySearchCuration.getCheckInSaleTime()//
-                , mStaySearchCuration.getNights(), mStaySearchCuration.getLocation());
         } else
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(false);
-
-            mNetworkController.requestCategoryList(mStaySearchCuration.getCheckInSaleTime()//
-                , mStaySearchCuration.getNights(), mStaySearchCuration.getKeyword().name);
         }
+
+        // 기본적으로 시작시에 전체 카테고리를 넣는다.
+        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        mPlaceSearchResultLayout.processListLayout();
+        mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
     }
 
     @Override
@@ -531,23 +530,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onResponseCategoryList(List<Category> list)
-        {
-            if (list != null && list.size() > 0)
-            {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-                mPlaceSearchResultLayout.processListLayout();
-                mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), list, null, mOnStayListFragmentListener);
-            } else
-            {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.showEmptyLayout();
-
-                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
-            }
-        }
-
-        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
@@ -616,14 +598,20 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onCategoryList(HashSet<String> categorySet)
+        public void onCategoryList(List<Category> categoryList)
         {
-            if (categorySet == null || categorySet.size() == 0)
+            if (categoryList != null && categoryList.size() > 0)
             {
-                return;
-            }
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
+                mPlaceSearchResultLayout.processListLayout();
+                mPlaceSearchResultLayout.addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
+            } else
+            {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+                mPlaceSearchResultLayout.showEmptyLayout();
 
-            mPlaceSearchResultLayout.removeCategoryTab(categorySet);
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
+            }
         }
 
         @Override

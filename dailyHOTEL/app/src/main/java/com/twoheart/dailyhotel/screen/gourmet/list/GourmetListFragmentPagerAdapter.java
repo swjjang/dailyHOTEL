@@ -35,4 +35,23 @@ public class GourmetListFragmentPagerAdapter extends PlaceListFragmentPagerAdapt
             list.add(gourmetListFragment);
         }
     }
+
+    @Override
+    protected void addPlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        if (list == null)
+        {
+            return;
+        }
+
+        GourmetListFragment gourmetListFragment;
+
+        for (int i = 0; i < count; i++)
+        {
+            gourmetListFragment = new GourmetListFragment();
+            gourmetListFragment.setPlaceOnListFragmentListener(listener);
+            gourmetListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(gourmetListFragment);
+        }
+    }
 }

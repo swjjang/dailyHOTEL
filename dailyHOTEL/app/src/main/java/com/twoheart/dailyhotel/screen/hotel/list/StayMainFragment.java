@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -547,6 +548,166 @@ public class StayMainFragment extends PlaceMainFragment
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
+        mIsDeepLink = true;
+
+        return true;
+    }
+
+    private boolean moveDeepLinkSearch(BaseActivity baseActivity)
+    {
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        String word = DailyDeepLink.getInstance().getSearchWord();
+
+        int nights = 1;
+
+        try
+        {
+            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        } finally
+        {
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
+        }
+
+        SaleTime saleTime = mStayCuration.getCheckInSaleTime().getClone(0);
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL, checkInSaleTime, nights);
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+        DailyDeepLink.getInstance().clear();
+        mIsDeepLink = true;
+
+        return true;
+    }
+
+    private boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
+    {
+        String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
+        SortType sortType = DailyDeepLink.getInstance().getSorting();
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        int nights = 1;
+
+        try
+        {
+            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        } finally
+        {
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
+        }
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime saleTime = mStayCuration.getCheckInSaleTime().getClone(0);
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        String word = DailyDeepLink.getInstance().getSearchWord();
+        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
+
+        switch (searchType)
+        {
+            case MY_LOCATION:
+                break;
+
+            case LOCATION:
+                break;
+
+            default:
+                if(Util.isTextEmpty(word) == false)
+                {
+                    Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, new Keyword(0, word), SearchType.SEARCHES);
+                    mBaseActivity.startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
+                } else
+                {
+                    return false;
+                }
+                break;
+        }
+
         mIsDeepLink = true;
 
         return true;

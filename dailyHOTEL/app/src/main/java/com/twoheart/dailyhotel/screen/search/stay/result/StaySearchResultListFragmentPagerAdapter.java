@@ -35,4 +35,23 @@ public class StaySearchResultListFragmentPagerAdapter extends PlaceListFragmentP
             list.add(stayListFragment);
         }
     }
+
+    @Override
+    protected void addPlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        if (list == null)
+        {
+            return;
+        }
+
+        StaySearchResultListFragment stayListFragment;
+
+        for (int i = 0; i < count; i++)
+        {
+            stayListFragment = new StaySearchResultListFragment();
+            stayListFragment.setPlaceOnListFragmentListener(listener);
+            stayListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(stayListFragment);
+        }
+    }
 }
