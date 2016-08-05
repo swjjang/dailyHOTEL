@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <View
@@ -13,54 +12,61 @@
     <RelativeLayout
         android:id="@+id/searchAroundLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height">
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/aroundIconView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:src="@drawable/search_ic_01_surrounding"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="15dp"
-        android:layout_toRightOf="@+id/aroundIconView"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/text01View"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"/>
+            android:layout_centerInParent="true">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/text02View"
+            <ImageView
+                android:id="@+id/aroundIconView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/search_ic_01_surrounding"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/aroundIconView"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/text01View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/text02View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:text="@string/label_search_need_to_agree_termsoflocation"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="11dp"
+                    android:visibility="visible"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-2dp"
-            android:text="@string/label_search_need_to_agree_termsoflocation"
-            android:textColor="@color/search_hint_text"
-            android:textSize="11dp"
-            android:visibility="visible"/>
-    </LinearLayout>
+            android:layout_height="1px"
+            android:background="@color/default_line_cf0f0f0"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/default_line_cf0f0f0"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="@color/default_line_cf0f0f0"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_cf0f0f0"/>
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="9dp"/>
