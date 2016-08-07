@@ -295,7 +295,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation)
         {
-            if (mIsScrolling == true)
+            if (mIsScrolling == true || isAdded() == false)
             {
                 return;
             }
