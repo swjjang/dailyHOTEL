@@ -127,7 +127,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCalendarActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -147,7 +147,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCurationActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {

@@ -134,7 +134,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCalendarActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -151,12 +151,18 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(checkInSaleTime, checkOutSaleTime);
 
-            refreshCurrentFragment(true);
+            // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
+            mStaySearchCuration.setCategory(Category.ALL);
+
+            mPlaceSearchResultLayout.cleatCategoryTab();
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.processListLayout();
+            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
         }
     }
 
     @Override
-    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onCurationActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
