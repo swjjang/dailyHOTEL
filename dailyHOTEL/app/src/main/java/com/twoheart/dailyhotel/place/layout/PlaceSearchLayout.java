@@ -677,6 +677,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void validateKeyword(Keyword keyword)
     {
+        if (mOnEventListener == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
         ((OnEventListener) mOnEventListener).onSearch(mSearchEditText.getText().toString().trim(), keyword);
     }
 
