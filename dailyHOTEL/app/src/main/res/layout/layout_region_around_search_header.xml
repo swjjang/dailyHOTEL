@@ -60,16 +60,6 @@
                 android:visibility="visible"/>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/default_line_cf0f0f0"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentBottom="true"
-            android:background="@color/default_line_cf0f0f0"/>
     </RelativeLayout>
 
     <View
