@@ -152,8 +152,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(checkInSaleTime, checkOutSaleTime);
 
             // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
+            mStaySearchCuration.getCurationOption().clear();
             mStaySearchCuration.setCategory(Category.ALL);
 
+            mPlaceSearchResultLayout.setOptionFilterEnabled(false);
             mPlaceSearchResultLayout.cleatCategoryTab();
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.processListLayout();

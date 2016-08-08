@@ -142,7 +142,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(saleTime);
 
-            refreshCurrentFragment(true);
+            // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
+            mGourmetSearchCuration.getCurationOption().clear();
+
+            mPlaceSearchResultLayout.setOptionFilterEnabled(false);
+            mPlaceSearchResultLayout.cleatCategoryTab();
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.processListLayout();
+            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
         }
     }
 
