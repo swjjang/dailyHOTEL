@@ -113,19 +113,19 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
-                onCalendarActivityResult(requestCode, resultCode, data);
+                onCalendarActivityResult(resultCode, data);
                 break;
             }
 
             case CODE_REQUEST_ACTIVITY_STAYCURATION:
             {
-                onCurationActivityResult(requestCode, resultCode, data);
+                onCurationActivityResult(resultCode, data);
                 break;
             }
 
             case CODE_REQUEST_ACTIVITY_GOURMETCURATION:
             {
-                onCurationActivityResult(requestCode, resultCode, data);
+                onCurationActivityResult(resultCode, data);
                 break;
             }
 
