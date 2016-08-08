@@ -126,6 +126,7 @@
     <color name="selectarea_selcted">#a6a6a8</color>
     <color name="selectarea_title">#323232</color>
     <color name="selectarea_subtitle">#999999</color>
+    <color name="province_underline">#4ddcdcdd</color>
 
     <!-- New Hotel Detail -->
     <color name="hoteldetail_contents_text_color">#1c1c1c</color>
