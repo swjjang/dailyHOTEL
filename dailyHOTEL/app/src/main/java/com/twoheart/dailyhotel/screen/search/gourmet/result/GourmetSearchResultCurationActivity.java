@@ -23,6 +23,7 @@ import org.json.JSONObject;
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
+    private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
 
     private SearchType mSearchType;
     protected GourmetSearchParams mLastParams;
@@ -32,12 +33,13 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         void onStayCount(String url, int hotelSaleCount);
     }
 
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetCuration gourmetCuration)
+    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetCuration gourmetCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, GourmetCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
+        intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
 
         return intent;
     }
@@ -48,14 +50,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         super.initIntent(intent);
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
-
-        if (mSearchType == SearchType.LOCATION)
-        {
-            mGourmetCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else
-        {
-            mGourmetCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
-        }
+        mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
     }
 
     @Override
@@ -74,12 +69,16 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
-
-            gourmetCurationOption.setSortType(SortType.DISTANCE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
             radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
+        }
+
+        if (viewType == ViewType.MAP)
+        {
+            setDisabledSortLayout(view, mSortRadioGroup);
+            return;
         }
 
         switch (gourmetCurationOption.getSortType())

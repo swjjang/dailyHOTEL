@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -91,7 +92,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     protected void initIntent(Intent intent)
     {
-        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
     }
@@ -525,6 +525,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                         case SATISFACTION:
                             mSortRadioGroup.check(R.id.satisfactionCheckView);
                             break;
+
+                        // 거리 소트을 요청하였으나 동의를 하지 않는 경우 다시 거리 소트로 돌아오는 경우 종료시킨다.
+                        case DISTANCE:
+                            finish();
+                            break;
                     }
                 }
                 break;
@@ -746,6 +751,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     protected BaseNetworkController getNetworkController(Context context)
     {
         return new StayCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);
+    }
+
+    @Override
+    protected PlaceCuration getPlaceCuration()
+    {
+        return mStayCuration;
     }
 
     private void checkedChangedDistance()

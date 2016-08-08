@@ -192,6 +192,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
+            case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             {
                 if (mIsDeepLink == false)
                 {

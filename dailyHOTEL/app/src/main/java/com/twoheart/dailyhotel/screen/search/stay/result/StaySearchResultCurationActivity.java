@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
@@ -28,15 +29,17 @@ import java.util.Map;
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
+    private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
 
     private SearchType mSearchType;
 
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, StayCuration stayCuration)
+    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, StayCuration stayCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, StaySearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCuration);
+        intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
 
         return intent;
     }
@@ -47,6 +50,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         super.initIntent(intent);
 
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+        mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
     }
 
     @Override

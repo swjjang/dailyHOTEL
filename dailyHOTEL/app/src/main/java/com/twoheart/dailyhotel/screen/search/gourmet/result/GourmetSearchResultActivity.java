@@ -231,6 +231,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         Location location = null;
         Keyword keyword = null;
         double radius = DEFAULT_SEARCH_RADIUS;
+        mGourmetSearchCuration = new GourmetSearchCuration();
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
         {
@@ -238,6 +239,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+
+            mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
         {
             LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
@@ -250,6 +253,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             location = new Location((String) null);
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
+
+            mIsFixedLocation = true;
+            mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else
         {
             finish();
@@ -264,7 +270,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             finish();
         }
 
-        mGourmetSearchCuration = new GourmetSearchCuration();
         mGourmetSearchCuration.setKeyword(keyword);
 
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.

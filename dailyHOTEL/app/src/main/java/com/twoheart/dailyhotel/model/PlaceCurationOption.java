@@ -51,11 +51,13 @@ public abstract class PlaceCurationOption implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(mSortType.name());
+        dest.writeString(mDefaultSortType.name());
     }
 
     protected void readFromParcel(Parcel in)
     {
         mSortType = Constants.SortType.valueOf(in.readString());
+        mDefaultSortType = Constants.SortType.valueOf(in.readString());
     }
 
     @Override

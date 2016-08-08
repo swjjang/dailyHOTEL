@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -564,6 +565,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                         case SATISFACTION:
                             mSortRadioGroup.check(R.id.satisfactionCheckView);
                             break;
+
+                        // 거리 소트을 요청하였으나 동의를 하지 않는 경우 다시 거리 소트로 돌아오는 경우 종료시킨다.
+                        case DISTANCE:
+                            finish();
+                            break;
                     }
                 }
                 break;
@@ -756,6 +762,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected BaseNetworkController getNetworkController(Context context)
     {
         return null;
+    }
+
+    @Override
+    protected PlaceCuration getPlaceCuration()
+    {
+        return mGourmetCuration;
     }
 
     private void checkedChangedDistance()

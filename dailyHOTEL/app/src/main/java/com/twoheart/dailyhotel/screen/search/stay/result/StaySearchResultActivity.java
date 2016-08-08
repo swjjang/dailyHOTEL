@@ -244,12 +244,16 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         Keyword keyword = null;
         double radius = DEFAULT_SEARCH_RADIUS;
 
+        mStaySearchCuration = new StaySearchCuration();
+
         if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
         {
             keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+
+            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
         {
             LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
@@ -262,6 +266,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             location = new Location((String) null);
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
+
+            // 고정 위치로 진입한 경우
+            mIsFixedLocation = true;
+            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else
         {
             finish();
@@ -277,7 +285,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        mStaySearchCuration = new StaySearchCuration();
         mStaySearchCuration.setKeyword(keyword);
 
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
@@ -498,7 +505,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this,//
-                mViewType, mSearchType, mStaySearchCuration);
+                mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
@@ -723,7 +730,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, mViewType, mSearchType, mStaySearchCuration);
+            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, //
+                mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
