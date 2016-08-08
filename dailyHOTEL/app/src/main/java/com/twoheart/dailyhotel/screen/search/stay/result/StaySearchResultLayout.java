@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
-    private StaySearchResultListFragmentPagerAdapter mStaySearchResultListFragmentPagerAdapter;
-
     public StaySearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
@@ -42,12 +40,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     @Override
     protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        if (mStaySearchResultListFragmentPagerAdapter == null)
-        {
-            mStaySearchResultListFragmentPagerAdapter = new StaySearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
-        }
-
-        return mStaySearchResultListFragmentPagerAdapter;
+        return new StaySearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
     }
 
     @Override

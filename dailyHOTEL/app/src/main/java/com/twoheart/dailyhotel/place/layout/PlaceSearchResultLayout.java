@@ -560,6 +560,15 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
+    public void cleatCategoryTab()
+    {
+        mViewPager.setAdapter(null);
+        mCategoryTabLayout.setOnTabSelectedListener(null);
+        mCategoryTabLayout.removeAllTabs();
+        mFragmentPagerAdapter.removeAll();
+        mViewPager.removeAllViews();
+    }
+
     public PlaceListFragment getCurrentPlaceListFragment()
     {
         return (PlaceListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
