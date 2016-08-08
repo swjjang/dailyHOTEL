@@ -34,16 +34,16 @@
 
                 <ImageView
                     android:id="@+id/aroundIconView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_marginLeft="2dp"
-                    android:layout_centerVertical="true"
                     android:src="@drawable/region_ic_01_surrounding"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/text01View"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
 
