@@ -123,8 +123,11 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         {
             lockUI(isShowProgress);
 
-            // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
-            mGourmetSearchResultListLayout.updateResultCount(mViewType, -1, -1);
+            if (isShowProgress == true)
+            {
+                // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
+                mGourmetSearchResultListLayout.updateResultCount(mViewType, -1, -1);
+            }
         }
 
         SaleTime saleTime = mGourmetCuration.getSaleTime();
