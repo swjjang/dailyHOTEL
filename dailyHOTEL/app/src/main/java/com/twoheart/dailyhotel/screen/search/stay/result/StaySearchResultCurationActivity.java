@@ -11,7 +11,6 @@ import android.widget.RadioGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;

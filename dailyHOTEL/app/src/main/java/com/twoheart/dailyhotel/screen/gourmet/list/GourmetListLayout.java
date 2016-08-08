@@ -176,7 +176,6 @@ public class GourmetListLayout extends PlaceListLayout
 
                     mGourmetListMapFragment.setPlaceViewItemList(list, true);
 
-//                    AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
                     ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
                     break;
                 }

@@ -124,7 +124,7 @@ public class StaySearchResultListLayout extends StayListLayout
             mResultTextView.setVisibility(View.GONE);
         } else
         {
-            if(viewType == Constants.ViewType.LIST)
+            if (viewType == Constants.ViewType.LIST)
             {
                 mResultTextView.setVisibility(View.VISIBLE);
             } else
