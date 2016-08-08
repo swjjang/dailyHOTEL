@@ -14,6 +14,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:divider="@color/white"
         android:dividerHeight="10dp"
+        android:background="@color/white"
         android:fadingEdge="none"
         android:visibility="gone"/>
 
