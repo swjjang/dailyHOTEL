@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/default_background"
-    android:orientation="vertical">
+    android:background="@color/default_background">
 
     <RelativeLayout
         android:id="@+id/searchAroundLayout"
@@ -21,7 +20,6 @@
             android:layout_centerHorizontal="true"
             android:drawableLeft="@drawable/region_ic_01_surrounding"
             android:drawablePadding="8dp"
-            android:text="내 주변 호텔 보기"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"/>
 
@@ -37,4 +35,4 @@
             android:textSize="11dp"
             android:visibility="visible"/>
     </RelativeLayout>
-</LinearLayout>
+</FrameLayout>
