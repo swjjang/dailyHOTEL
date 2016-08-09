@@ -43,6 +43,8 @@ public class DailyLineIndicator extends RelativeLayout
 
     private int mIndicatorHeight = 2;
 
+    private int[][] mMeasureList;
+
     public DailyLineIndicator(Context context)
     {
         this(context, null);
@@ -117,13 +119,7 @@ public class DailyLineIndicator extends RelativeLayout
 
         mTabCount = mViewpager.getAdapter().getCount();
 
-        if (mTabCount > 1)
-        {
-            for (int i = 0; i < mTabCount; i++)
-            {
-                addTab(i, new View(getContext()));
-            }
-        }
+        mMeasureList = getMeasureWidthList(mTabsContainer, mTabCount);
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
@@ -148,19 +144,37 @@ public class DailyLineIndicator extends RelativeLayout
 
     }
 
-    private void addTab(final int position, View tab)
+    private int[][] getMeasureWidthList(View view, int tabCount)
     {
-//        tab.setFocusable(true);
-//        tab.setOnClickListener(new OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                mViewpager.setCurrentItem(position);
-//            }
-//        });
+        if (view == null || tabCount == 0)
+        {
+            return null;
+        }
 
-        mTabsContainer.addView(tab, position, new LinearLayout.LayoutParams(0, 1, 1.0f));
+        if (tabCount == 1)
+        {
+            return new int[][]{{view.getWidth(), 0}};
+        }
+
+        int[][] measureList = new int [tabCount][2];
+
+        int delta = view.getWidth();
+        int right = view.getRight();
+        int left;
+
+        for (int i = tabCount; i > 0; i--)
+        {
+            int oneWidth = delta / i;
+
+            measureList[i - 1][0] = oneWidth;
+            delta = delta - oneWidth;
+
+            left = right - oneWidth;
+            measureList[i - 1][1] = left;
+            right = left;
+        }
+
+        return measureList;
     }
 
     @Override
@@ -182,22 +196,19 @@ public class DailyLineIndicator extends RelativeLayout
         // draw indicator line
         mRectPaint.setColor(mIndicatorColor);
 
-        // default: line below current tab
-        View currentTab = mTabsContainer.getChildAt(mCurrentPosition);
-        if (currentTab == null)
-        {
+        if (mCurrentPosition < 0 || mCurrentPosition >= mTabCount) {
             return;
         }
 
-        float lineLeft = currentTab.getLeft();
-        float lineRight = currentTab.getRight();
+        int width = mMeasureList[mCurrentPosition][0];
+        float lineLeft = mMeasureList[mCurrentPosition][1];
+        float lineRight = lineLeft + width;
 
         // if there is an offset, start interpolating left and right coordinates between current and next tab
         if (mCurrentPositionOffset > 0f && mCurrentPosition < mTabCount - 1)
         {
-            View nextTab = mTabsContainer.getChildAt(mCurrentPosition + 1);
-            final float nextTabLeft = nextTab.getLeft();
-            final float nextTabRight = nextTab.getRight();
+            final float nextTabLeft = mMeasureList[mCurrentPosition + 1][1];
+            final float nextTabRight = nextTabLeft + mMeasureList[mCurrentPosition + 1][0];
 
             lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
             lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
