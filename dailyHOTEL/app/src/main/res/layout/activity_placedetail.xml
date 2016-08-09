@@ -14,13 +14,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <com.twoheart.dailyhotel.widget.DailyViewPagerIndicator
-            android:id="@+id/viewpagerIndicator"
+        <View
+            android:id="@+id/viewPagerBottomLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/defaulLoopViewPager"
-            android:layout_alignBottom="@+id/defaulLoopViewPager"
-            android:paddingBottom="13dp"/>
+            android:layout_height="1dp"
+            android:layout_below="@id/defaulLoopViewPager"/>
+
+        <com.twoheart.dailyhotel.widget.DailyLineIndicator
+        android:id="@+id/viewpagerIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        dailyFont:indicatorBackgroundColor="@color/white_a40"
+        dailyFont:indicatorColor="@color/white"
+        dailyFont:indicatorHeight="1dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_above="@id/viewPagerBottomLine"/>
 
         <View
             android:layout_width="match_parent"
@@ -113,11 +123,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_gravity="right"
                 android:layout_marginBottom="7dp"
-                android:src="@drawable/navibar_ic_x"
-                android:layout_centerVertical="true"
-                android:paddingRight="15dp"/>
+                android:paddingRight="15dp"
+                android:src="@drawable/navibar_ic_x"/>
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
