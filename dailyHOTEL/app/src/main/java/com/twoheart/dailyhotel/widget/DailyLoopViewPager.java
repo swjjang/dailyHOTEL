@@ -187,7 +187,7 @@ public class DailyLoopViewPager extends ViewPager
     @Override
     public PagerAdapter getAdapter()
     {
-        return mAdapter != null ? mAdapter.getRealAdapter() : null;
+        return mAdapter != null ? mAdapter.getRealAdapter() : super.getAdapter();
     }
 
     @Override
