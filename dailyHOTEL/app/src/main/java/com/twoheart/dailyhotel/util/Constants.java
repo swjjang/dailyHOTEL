@@ -15,8 +15,7 @@ public interface Constants
     public enum Stores
     {
         PLAY_STORE("PlayStore"),
-        T_STORE("Tstore"),
-        N_STORE("Nstore");
+        T_STORE("Tstore");
 
         private String mName;
 

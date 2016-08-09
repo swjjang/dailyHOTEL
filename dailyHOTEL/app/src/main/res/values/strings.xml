@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="default_company_information">{\"name\":\"(주)데일리\",\"ceo\":\"신인식\",\"bizRegNumber\":\"144-81-15781\",\"itcRegNumber\":\"2016-서울강남-00726\",\"address1\":\"서울시 강남구 테헤란로 20길 20 삼정빌딩 10,11층\",\"phoneNumber1\":\"1800-9120\",\"fax1\":\"02-6455-9331\",\"privacyManager\":\"privacy.korea@dailyhotel.com\"}</string>
+
     <!-- Basic Infos -->
     <string name="app_name">데일리호텔</string>
     <string name="facebook_app_id">268888829950610</string>

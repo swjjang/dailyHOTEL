@@ -217,9 +217,14 @@ public class MainActivity extends BaseActivity implements Constants
 
         ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
 
-        if (splashVersion == null || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        if(Util.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setImageResource(R.drawable.img_splash_logo);
+        } else if(Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        {
+            imageView.setPadding(0, 0, 0, 0);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageResource(R.drawable.splash);
         } else
         {
             String fileName = Util.makeIntroImageFileName(splashVersion);
@@ -688,7 +693,7 @@ public class MainActivity extends BaseActivity implements Constants
                         String maxVersion = DailyPreference.getInstance(MainActivity.this).getMaxVersion();
                         DailyPreference.getInstance(MainActivity.this).setSkipVersion(maxVersion);
 
-                        mNetworkController.requestConfiguration();
+                        onConfigurationResponse();
                     }
                 };
 
@@ -708,7 +713,7 @@ public class MainActivity extends BaseActivity implements Constants
                     , posListener, negListener, cancelListener, null, false);
             } else
             {
-                mNetworkController.requestConfiguration();
+                onConfigurationResponse();
             }
         }
 
