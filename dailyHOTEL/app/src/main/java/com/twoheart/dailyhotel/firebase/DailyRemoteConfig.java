@@ -24,6 +24,11 @@ public class DailyRemoteConfig
     private Context mContext;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
+    public interface OnCompleteListener
+    {
+        void onComplete();
+    }
+
     public synchronized static DailyRemoteConfig getInstance(Context context)
     {
         if (mInstance == null)
@@ -41,9 +46,9 @@ public class DailyRemoteConfig
         mFirebaseRemoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(Constants.DEBUG).build());
     }
 
-    public void requestRemoteConfig()
+    public void requestRemoteConfig(final OnCompleteListener listener)
     {
-        mFirebaseRemoteConfig.fetch(0L).addOnCompleteListener(new OnCompleteListener<Void>()
+        mFirebaseRemoteConfig.fetch(0L).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> task)
@@ -79,7 +84,12 @@ public class DailyRemoteConfig
                 //                }
 
                 // 이미지 로딩 관련(추후 진행)
-                //                processIntroImage(androidSplashImageUpdateTime, androidSplashImageUrl);
+                processIntroImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
+
+                if(listener != null)
+                {
+                    listener.onComplete();
+                }
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -93,6 +103,8 @@ public class DailyRemoteConfig
                 {
                     ExLog.e(e.toString());
                 }
+
+                listener.onComplete();
             }
         });
     }

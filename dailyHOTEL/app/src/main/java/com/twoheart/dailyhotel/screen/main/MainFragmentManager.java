@@ -90,11 +90,17 @@ public class MainFragmentManager
             }
 
             case INDEX_BOOKING_FRAGMENT:
+                mOnMenuBarListener.onMenuBarEnabled(true);
+
                 return new BookingListFragment();
             case INDEX_INFORMATION_FRAGMENT:
+                mOnMenuBarListener.onMenuBarEnabled(true);
+
                 return new InformationFragment();
             case INDEX_ERROR_FRAGMENT:
             {
+                mOnMenuBarListener.onMenuBarEnabled(true);
+
                 ErrorFragment fragment = new ErrorFragment();
                 fragment.setMenuManager(this);
                 return fragment;

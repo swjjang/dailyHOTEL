@@ -126,39 +126,43 @@ public class MainActivity extends BaseActivity implements Constants
 
         // URL 만들때 사용
         //                com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
-
-        DailyRemoteConfig.getInstance(this).requestRemoteConfig();
-
         mIsInitialization = true;
-        mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
         //        DailyPreference.getInstance(this).removeDeepLink();
-        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
-        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
-
-        String version = DailyPreference.getInstance(this).getAppVersion();
-        String currentVersion = Util.getAppVersion(this);
-        if (currentVersion.equalsIgnoreCase(version) == false)
-        {
-            DailyPreference.getInstance(this).setAppVersion(currentVersion);
-            AnalyticsManager.getInstance(this).currentAppVersion(currentVersion);
-        }
+        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
+        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
 
         initLayout();
 
-        mNetworkController.requestCheckServer();
-
-        // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
-        mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
-
-        // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
-        if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
+        DailyRemoteConfig.getInstance(this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
         {
-            AppboyManager.setPushEnabled(this, true);
-        } else
-        {
-            AppboyManager.setPushEnabled(this, false);
-        }
+            @Override
+            public void onComplete()
+            {
+                String version = DailyPreference.getInstance(MainActivity.this).getAppVersion();
+                String currentVersion = Util.getAppVersion(MainActivity.this);
+                if (currentVersion.equalsIgnoreCase(version) == false)
+                {
+                    DailyPreference.getInstance(MainActivity.this).setAppVersion(currentVersion);
+                    AnalyticsManager.getInstance(MainActivity.this).currentAppVersion(currentVersion);
+                }
+
+                mNetworkController.requestCheckServer();
+
+                // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+                mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+
+                // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
+                if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == true)
+                {
+                    AppboyManager.setPushEnabled(MainActivity.this, true);
+                } else
+                {
+                    AppboyManager.setPushEnabled(MainActivity.this, false);
+                }
+            }
+        });
     }
 
     @Override
@@ -215,7 +219,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (splashVersion == null || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
-            imageView.setImageResource(R.drawable.splash);
+            imageView.setImageResource(R.drawable.img_splash_logo);
         } else
         {
             String fileName = Util.makeIntroImageFileName(splashVersion);
@@ -224,16 +228,20 @@ public class MainActivity extends BaseActivity implements Constants
             if (file.exists() == false)
             {
                 DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                imageView.setImageResource(R.drawable.splash);
+                imageView.setImageResource(R.drawable.img_splash_logo);
             } else
             {
                 try
                 {
+                    imageView.setPadding(0, 0, 0, 0);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception e)
                 {
                     DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                    imageView.setImageResource(R.drawable.splash);
+                    imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
+                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+                    imageView.setImageResource(R.drawable.img_splash_logo);
                 }
             }
         }

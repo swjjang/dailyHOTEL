@@ -16,13 +16,14 @@
         android:id="@+id/splashLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/dh_theme_color"
+        android:background="@color/default_background_cf1f2f3"
         android:visibility="visible">
 
         <ImageView
             android:id="@+id/splashImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:paddingBottom="26dp"
+            android:scaleType="center"/>
     </RelativeLayout>
 </RelativeLayout>
