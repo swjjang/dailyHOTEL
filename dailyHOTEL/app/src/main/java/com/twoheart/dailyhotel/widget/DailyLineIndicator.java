@@ -125,7 +125,6 @@ public class DailyLineIndicator extends RelativeLayout
             }
         }
 
-
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
 
@@ -151,17 +150,17 @@ public class DailyLineIndicator extends RelativeLayout
 
     private void addTab(final int position, View tab)
     {
-        tab.setFocusable(true);
-        tab.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mViewpager.setCurrentItem(position);
-            }
-        });
+//        tab.setFocusable(true);
+//        tab.setOnClickListener(new OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                mViewpager.setCurrentItem(position);
+//            }
+//        });
 
-        mTabsContainer.addView(tab, position, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f));
+        mTabsContainer.addView(tab, position, new LinearLayout.LayoutParams(0, 1, 1.0f));
     }
 
     @Override
@@ -242,7 +241,6 @@ public class DailyLineIndicator extends RelativeLayout
                 mOnPageChangeListener.onPageSelected(position);
             }
         }
-
     }
 
     public void setIndicatorColor(int indicatorColor)
