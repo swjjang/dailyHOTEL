@@ -64,7 +64,21 @@ public class EditProfilePhoneActivity extends BaseActivity
 
         Intent intent = getIntent();
         mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
-        mType = Type.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_TYPE));
+
+        try
+        {
+            mType = Type.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_TYPE));
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        if (Util.isTextEmpty(mUserIndex) == true)
+        {
+            Util.restartApp(this);
+            return;
+        }
 
         mCountryCode = Util.getCountryNameNCode(this);
         mEditProfilePhoneLayout.setCountryCode(mCountryCode);

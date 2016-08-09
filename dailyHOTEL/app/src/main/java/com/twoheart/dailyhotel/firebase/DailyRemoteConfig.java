@@ -30,6 +30,7 @@ public class DailyRemoteConfig
         {
             mInstance = new DailyRemoteConfig(context);
         }
+
         return mInstance;
     }
 

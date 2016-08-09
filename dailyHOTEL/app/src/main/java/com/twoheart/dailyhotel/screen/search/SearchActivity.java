@@ -76,7 +76,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mNights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
-        mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        if (mSaleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        try
+        {
+            mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
 
         String word = null;
 
