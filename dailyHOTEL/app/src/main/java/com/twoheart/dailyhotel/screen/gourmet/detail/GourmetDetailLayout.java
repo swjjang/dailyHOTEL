@@ -91,15 +91,10 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         ArrayList<ImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
         mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
-        mDailyViewPagerIndicator.setTotalCount(imageInformationList.size());
 
-        if (imageInformationList.size() > 0)
-        {
-            mDailyViewPagerIndicator.setImageInformation(imageInformationList.get(0).description, 0);
-        } else
-        {
-            mDailyViewPagerIndicator.setImageInformation(null, 0);
-        }
+        mDailyLineIndicator.setViewPager(mViewPager);
+        mDailyLineIndicator.setImageInformation((imageInformationList.size() > 0) //
+            ? imageInformationList.get(0).description : null);
 
         if (mListAdapter == null)
         {

@@ -36,7 +36,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
-import com.twoheart.dailyhotel.widget.DailyViewPagerIndicator;
+import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 
 import java.util.ArrayList;
 
@@ -51,7 +51,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
-    protected DailyViewPagerIndicator mDailyViewPagerIndicator;
+    protected DailyLineIndicator mDailyLineIndicator;
 
     protected DailyPlaceDetailListView mListView;
     protected PlaceDetailImageViewPagerAdapter mImageAdapter;
@@ -123,10 +123,17 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.
-        mDailyViewPagerIndicator = (DailyViewPagerIndicator) view.findViewById(R.id.viewpagerIndicator);
+        mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
 
         mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaulLoopViewPager);
+
+        mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
+        mViewPager.setAdapter(mImageAdapter);
+
+        mDailyLineIndicator.setViewPager(mViewPager);
+
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+        mDailyLineIndicator.setmOnPageChangeListener(mOnPageChangeListener);
 
         mImageHeight = Util.getLCDWidth(mContext);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
@@ -179,6 +186,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         mImageAdapter.setData(arrayList);
         mViewPager.setAdapter(mImageAdapter);
+
+        mDailyLineIndicator.setViewPager(mViewPager);
     }
 
     public void setStatusBarHeight(Activity activity)
@@ -542,19 +551,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
     {
-        private int mSelectedPosition = -1;
-        private boolean mIsRefresh;
         private int mScrollState = -1;
         private int mScrollPosition = -1;
 
         @Override
         public void onPageSelected(int position)
         {
-            mIsRefresh = false;
-            mSelectedPosition = position;
-
             ((OnEventListener) mOnEventListener).onSelectedImagePosition(position);
-            mDailyViewPagerIndicator.setImageInformation(mPlaceDetail.getImageInformationList().get(position).description, position);
+            mDailyLineIndicator.setImageInformation(mPlaceDetail.getImageInformationList().get(position).description);
         }
 
         @Override

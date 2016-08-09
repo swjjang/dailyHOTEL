@@ -55,6 +55,7 @@
     <color name="white_a70">#B3ffffff</color>
     <color name="white_a55">#8cffffff</color>
     <color name="white_a50">#80ffffff</color>
+    <color name="white_a40">#66ffffff</color>
     <color name="white_a30">#4dffffff</color>
     <color name="white_a20">#33ffffff</color>
     <color name="white_a16">#29ffffff</color>
@@ -135,7 +136,7 @@
     <color name="hoteldetail_soldout_text">#8c8c8c</color>
     <color name="hoteldetail_viewpager_background">#c3c3c3</color>
     <color name="hoteldetail_dbenefit_background">#ebFFFFFF</color>
-    <color name="hoteldetail_image_tag_text">#353535</color>
+    <color name="hoteldetail_image_tag_text">#FFFFFF</color>
     <color name="hoteldetail_title_text">#323232</color>
 
     <!-- Wait Popup -->
