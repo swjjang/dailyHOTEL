@@ -681,6 +681,46 @@ public class DailyPreference
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
     }
 
+    public void setSimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isSimpleCardPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setCardPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_PAYMENT_IS_CARD_ENABLED, value);
+    }
+
+    public boolean isCardPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setPhonePaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
+    public boolean isPhonePaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setVirtualPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_PAYMENT_IS_VIRTUAL_ENABLED, value);
+    }
+
+    public boolean isVirtualPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_PAYMENT_IS_VIRTUAL_ENABLED, true);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////

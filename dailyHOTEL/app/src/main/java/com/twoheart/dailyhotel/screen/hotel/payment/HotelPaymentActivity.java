@@ -339,8 +339,29 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
 
-        // 기본이 간편카드 결제이다.
-        changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isVirtualPaymentEnabled();
+
+        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(this).isSimpleCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(this).isCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(this).isPhonePaymentEnabled());
+        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(this).isVirtualPaymentEnabled());
+
+        if (isSimpleCardPaymentEnabled == true)
+        {
+            changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+        } else if (isCardPaymentEnabled == true)
+        {
+            changedPaymentType(PlacePaymentInformation.PaymentType.CARD, mSelectedCreditCard);
+        } else if (isPhonePaymentEnabled == true)
+        {
+            changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
+        } else if (isVirtualPaymentEnabled == true)
+        {
+            changedPaymentType(PlacePaymentInformation.PaymentType.VBANK, mSelectedCreditCard);
+        }
     }
 
     private void setPaymentTypeEnabled(View view, boolean enabled)
@@ -459,8 +480,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
         } else
         {
-            setPaymentTypeEnabled(mDisableSimpleCardView, true);
-            setPaymentTypeEnabled(mDisableCardView, true);
+            if (DailyPreference.getInstance(this).isSimpleCardPaymentEnabled() == true)
+            {
+                setPaymentTypeEnabled(mDisableSimpleCardView, true);
+            }
+
+            if (DailyPreference.getInstance(this).isCardPaymentEnabled() == true)
+            {
+                setPaymentTypeEnabled(mDisableCardView, true);
+            }
 
             // 1000원 이하였다가 되돌아 오는 경우 한번 간편결제로 바꾸어준다.
             if (mIsUnderPrice == true)
