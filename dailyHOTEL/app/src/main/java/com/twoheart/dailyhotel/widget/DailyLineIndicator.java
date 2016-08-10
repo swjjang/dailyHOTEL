@@ -125,7 +125,7 @@ public class DailyLineIndicator extends View
             return new int[][]{{getWidth(), 0}};
         }
 
-        int[][] measureList = new int [tabCount][2];
+        int[][] measureList = new int[tabCount][2];
 
         int delta = getWidth();
 
@@ -161,7 +161,8 @@ public class DailyLineIndicator extends View
         // draw indicator line
         mRectPaint.setColor(mIndicatorColor);
 
-        if (mCurrentPosition < 0 || mCurrentPosition >= mTabCount) {
+        if (mCurrentPosition < 0 || mCurrentPosition >= mTabCount)
+        {
             return;
         }
 
@@ -172,11 +173,16 @@ public class DailyLineIndicator extends View
         // if there is an offset, start interpolating left and right coordinates between current and next tab
         if (mCurrentPositionOffset > 0f && mCurrentPosition < mTabCount - 1)
         {
-            final float nextTabLeft = mMeasureList[mCurrentPosition + 1][1];
-            final float nextTabRight = nextTabLeft + mMeasureList[mCurrentPosition + 1][0];
+            // 오른쪽 기준
+            //            final float nextTabLeft = mMeasureList[mCurrentPosition + 1][1];
+            //            final float nextTabRight = nextTabLeft + mMeasureList[mCurrentPosition + 1][0];
+            //
+            //            lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
+            //            lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
 
-            lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
-            lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
+            // 왼쪽 기준
+            lineLeft = lineLeft + mCurrentPositionOffset * width;
+            lineRight = lineRight + mCurrentPositionOffset * width;
         }
 
         canvas.drawRect(lineLeft, 0, lineRight, height, mRectPaint);
@@ -187,7 +193,6 @@ public class DailyLineIndicator extends View
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {
-
             mCurrentPosition = position;
             mCurrentPositionOffset = positionOffset;
 
