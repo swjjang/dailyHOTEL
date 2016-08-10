@@ -221,16 +221,19 @@ public class DailyRemoteConfig
         try
         {
             JSONObject jsonObject = new JSONObject(androidPaymentType);
+            JSONObject stayJSONObject = jsonObject.getJSONObject("stay");
 
-            boolean easyCard = jsonObject.getBoolean("easyCard");
-            boolean card = jsonObject.getBoolean("card");
-            boolean phoneBill = jsonObject.getBoolean("phoneBill");
-            boolean virtualAccount = jsonObject.getBoolean("virtualAccount");
+            DailyPreference.getInstance(context).setStaySimpleCardPaymentEnabled(stayJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setStayCardPaymentEnabled(stayJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setStayPhonePaymentEnabled(stayJSONObject.getBoolean("phoneBill"));
+            DailyPreference.getInstance(context).setStayVirtualPaymentEnabled(stayJSONObject.getBoolean("virtualAccount"));
 
-            DailyPreference.getInstance(context).setSimpleCardPaymentEnabled(easyCard);
-            DailyPreference.getInstance(context).setCardPaymentEnabled(card);
-            DailyPreference.getInstance(context).setPhonePaymentEnabled(phoneBill);
-            DailyPreference.getInstance(context).setVirtualPaymentEnabled(virtualAccount);
+            JSONObject gourmetJSONObject = jsonObject.getJSONObject("gourmet");
+
+            DailyPreference.getInstance(context).setGourmetSimpleCardPaymentEnabled(gourmetJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
+            DailyPreference.getInstance(context).setGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

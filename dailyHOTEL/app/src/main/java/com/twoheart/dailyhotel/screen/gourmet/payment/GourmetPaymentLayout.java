@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -233,15 +232,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
 
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(mContext).isSimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(mContext).isCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(mContext).isPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(mContext).isVirtualPaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled();
 
-        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(mContext).isSimpleCardPaymentEnabled());
-        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(mContext).isCardPaymentEnabled());
-        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(mContext).isPhonePaymentEnabled());
-        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(mContext).isVirtualPaymentEnabled());
+        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled());
+        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled());
 
         if (isSimpleCardPaymentEnabled == true)
         {

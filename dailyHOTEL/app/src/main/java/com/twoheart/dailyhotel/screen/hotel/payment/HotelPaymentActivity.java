@@ -339,15 +339,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
 
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isSimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isVirtualPaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isStayCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isStayPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isStayVirtualPaymentEnabled();
 
-        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(this).isSimpleCardPaymentEnabled());
-        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(this).isCardPaymentEnabled());
-        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(this).isPhonePaymentEnabled());
-        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(this).isVirtualPaymentEnabled());
+        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(this).isStayCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(this).isStayPhonePaymentEnabled());
+        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(this).isStayVirtualPaymentEnabled());
 
         if (isSimpleCardPaymentEnabled == true)
         {
@@ -480,12 +480,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
         } else
         {
-            if (DailyPreference.getInstance(this).isSimpleCardPaymentEnabled() == true)
+            if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true)
             {
                 setPaymentTypeEnabled(mDisableSimpleCardView, true);
             }
 
-            if (DailyPreference.getInstance(this).isCardPaymentEnabled() == true)
+            if (DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true)
             {
                 setPaymentTypeEnabled(mDisableCardView, true);
             }
