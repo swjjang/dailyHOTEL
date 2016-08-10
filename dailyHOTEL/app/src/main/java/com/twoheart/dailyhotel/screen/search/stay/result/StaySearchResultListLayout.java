@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StaySearchResultListLayout extends StayListLayout
 {
@@ -94,8 +93,6 @@ public class StaySearchResultListLayout extends StayListLayout
                 mResultTextView.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY);
                 break;
         }
 
