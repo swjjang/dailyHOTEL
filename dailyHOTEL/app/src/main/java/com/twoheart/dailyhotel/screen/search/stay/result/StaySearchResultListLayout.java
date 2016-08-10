@@ -82,7 +82,6 @@ public class StaySearchResultListLayout extends StayListLayout
                     mFilterEmptyView.setVisibility(View.GONE);
 
                     isShowActivityEmptyView = true;
-
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);

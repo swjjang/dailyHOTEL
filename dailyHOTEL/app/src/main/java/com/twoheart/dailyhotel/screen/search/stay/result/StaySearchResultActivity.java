@@ -300,7 +300,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initLayout()
     {
-        if (mStaySearchCuration == null)
+        if (mStaySearchCuration == null || mStaySearchCuration.getCheckInSaleTime() == null || mStaySearchCuration.getCheckOutSaleTime() == null)
         {
             finish();
             return;
@@ -331,7 +331,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected PlaceCuration getPlaceCuration()
     {
-        return mStaySearchCuration == null ? null : mStaySearchCuration;
+        return mStaySearchCuration;
     }
 
     @Override
@@ -458,6 +458,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             switch (mViewType)
             {
                 case LIST:
+                {
                     // 고메 쪽에서 보여지는 메세지로 Stay의 경우도 동일한 처리가 필요해보여서 추가함
                     if (currentFragment.hasSalesPlace() == false)
                     {
@@ -471,6 +472,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
+                }
 
                 case MAP:
                 {
@@ -606,18 +608,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             Stay stay = placeViewItem.getItem();
 
             Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, mStaySearchCuration.getCheckInSaleTime(), stay);
-
-            String showTagPriceYn;
-            if (stay.price <= 0 || stay.price <= stay.discountPrice)
-            {
-                showTagPriceYn = "N";
-            } else
-            {
-                showTagPriceYn = "Y";
-            }
-
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, showTagPriceYn);
-
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }
 

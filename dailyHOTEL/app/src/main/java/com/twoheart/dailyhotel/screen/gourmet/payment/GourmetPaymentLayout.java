@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -57,6 +58,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private View mCardManagerLayout;
     private TextView mCardManagerTextView;
+
+    private View mDisableSimpleCardView;
+    private View mDisableCardView;
+    private View mDisablePhoneView;
+    private View mDisableTransferView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -206,18 +212,74 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mSimpleCardLayout = view.findViewById(R.id.simpleCardLayout);
         mSimpleCardImageView = (ImageView) mSimpleCardLayout.findViewById(R.id.simpleCardImageView);
         mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
+        mDisableSimpleCardView = view.findViewById(R.id.disableSimpleCardView);
+
         mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
         mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
 
         mCardLayout = view.findViewById(R.id.cardLayout);
+        mDisableCardView = mCardLayout.findViewById(R.id.disableCardView);
+
         mPhoneLayout = view.findViewById(R.id.phoneLayout);
+        mDisablePhoneView = mPhoneLayout.findViewById(R.id.disablePhoneView);
+
         mTransferLayout = view.findViewById(R.id.transferLayout);
+        mDisableTransferView = mTransferLayout.findViewById(R.id.disableTransferView);
 
         mCardManagerLayout.setOnClickListener(this);
         mSimpleCardLayout.setOnClickListener(this);
         mCardLayout.setOnClickListener(this);
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
+
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled();
+
+        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled());
+        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled());
+        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled());
+
+        if (isSimpleCardPaymentEnabled == true)
+        {
+            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+        } else if (isCardPaymentEnabled == true)
+        {
+            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
+        } else if (isPhonePaymentEnabled == true)
+        {
+            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+        } else if (isVirtualPaymentEnabled == true)
+        {
+            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
+        }
+    }
+
+    private void setPaymentTypeEnabled(View view, boolean enabled)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            view.setOnClickListener(null);
+            view.setVisibility(View.GONE);
+        } else
+        {
+            view.setVisibility(View.VISIBLE);
+            view.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
+        }
     }
 
     public void setTicketInformation(GourmetPaymentInformation gourmetPaymentInformation)

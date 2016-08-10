@@ -171,7 +171,6 @@ interface IDailyNetwork
      * @param date
      * @param text
      * @param listener
-     * @param errorListener
      */
     void requestHotelSearchAutoCompleteList(Object tag, String date, int stay, String text, DailyHotelJsonResponseListener listener);
 
@@ -298,6 +297,8 @@ interface IDailyNetwork
     void requestGourmetSearchList(Object tag, SaleTime saleTime, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener);
+
+    void requestGourmetSearchList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
 
     /**
      * api/fnb/sale/restaurant/info

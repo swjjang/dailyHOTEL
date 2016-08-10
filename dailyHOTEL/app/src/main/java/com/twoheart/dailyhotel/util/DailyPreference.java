@@ -63,6 +63,16 @@ public class DailyPreference
     private static final String KEY_INTRO_NEW_VERSION = "112";
     private static final String KEY_INTRO_NEW_URL = "113";
 
+    private static final String KEY_STAY_PAYMENT_IS_SIMPLECARD_ENABLED = "120";
+    private static final String KEY_STAY_PAYMENT_IS_CARD_ENABLED = "121";
+    private static final String KEY_STAY_PAYMENT_IS_PHONE_ENABLED = "122";
+    private static final String KEY_STAY_PAYMENT_IS_VIRTUAL_ENABLED = "123";
+
+    private static final String KEY_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED = "124";
+    private static final String KEY_GOURMET_PAYMENT_IS_CARD_ENABLED = "125";
+    private static final String KEY_GOURMET_PAYMENT_IS_PHONE_ENABLED = "126";
+    private static final String KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED = "127";
+
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
 
@@ -674,6 +684,86 @@ public class DailyPreference
     public String getFirstAppVersion()
     {
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
+    }
+
+    public void setStaySimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isStaySimpleCardPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setStayCardPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_PAYMENT_IS_CARD_ENABLED, value);
+    }
+
+    public boolean isStayCardPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setStayPhonePaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
+    public boolean isStayPhonePaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setStayVirtualPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_PAYMENT_IS_VIRTUAL_ENABLED, value);
+    }
+
+    public boolean isStayVirtualPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_VIRTUAL_ENABLED, true);
+    }
+
+    public void setGourmetSimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isGourmetSimpleCardPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setGourmetCardPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_CARD_ENABLED, value);
+    }
+
+    public boolean isGourmetCardPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setGourmetPhonePaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
+    public boolean isGourmetPhonePaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setGourmetVirtualPaymentEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, value);
+    }
+
+    public boolean isGourmetVirtualPaymentEnabled()
+    {
+        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, true);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

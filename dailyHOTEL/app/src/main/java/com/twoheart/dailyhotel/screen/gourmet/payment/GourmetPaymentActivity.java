@@ -96,6 +96,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         super.onCreate(savedInstanceState);
 
         mGourmetPaymentLayout = new GourmetPaymentLayout(this, mOnEventListener);
+        mPaymentInformation = new GourmetPaymentInformation();
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
         setContentView(mGourmetPaymentLayout.onCreateView(R.layout.activity_booking_place));
 
@@ -107,9 +109,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             finish();
             return;
         }
-
-        mPaymentInformation = new GourmetPaymentInformation();
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
         gourmetPaymentInformation.setTicketInformation((TicketInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
         mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);

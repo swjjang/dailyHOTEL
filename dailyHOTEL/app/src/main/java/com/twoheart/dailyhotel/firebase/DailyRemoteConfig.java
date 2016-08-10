@@ -123,6 +123,7 @@ public class DailyRemoteConfig
                 }
 
                 writeCompanyInformation(mContext, companyInfo);
+                writePaymentType(mContext, androidPaymentType);
 
                 // 이미지 로딩 관련(추후 진행)
                 processIntroImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
@@ -207,8 +208,32 @@ public class DailyRemoteConfig
             String fax = jsonObject.getString("fax1");
             String privacyEmail = jsonObject.getString("privacyManager");
 
-            DailyPreference.getInstance(mContext).setCompanyInformation(companyName//
+            DailyPreference.getInstance(context).setCompanyInformation(companyName//
                 , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void writePaymentType(Context context, String androidPaymentType)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(androidPaymentType);
+            JSONObject stayJSONObject = jsonObject.getJSONObject("stay");
+
+            DailyPreference.getInstance(context).setStaySimpleCardPaymentEnabled(stayJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setStayCardPaymentEnabled(stayJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setStayPhonePaymentEnabled(stayJSONObject.getBoolean("phoneBill"));
+            DailyPreference.getInstance(context).setStayVirtualPaymentEnabled(stayJSONObject.getBoolean("virtualAccount"));
+
+            JSONObject gourmetJSONObject = jsonObject.getJSONObject("gourmet");
+
+            DailyPreference.getInstance(context).setGourmetSimpleCardPaymentEnabled(gourmetJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
+            DailyPreference.getInstance(context).setGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
