@@ -101,21 +101,27 @@ public class Stay extends Place
             sday = jsonObject.getString("sday");
             distance = jsonObject.getDouble("distance");
 
-            JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
-
-            Iterator<String> iterator = imageJSONObject.keys();
-            while (iterator.hasNext())
+            try
             {
-                String key = iterator.next();
+                JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
-                try
+                Iterator<String> iterator = imageJSONObject.keys();
+                while (iterator.hasNext())
                 {
-                    JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-                    this.imageUrl = imageUrl + key + pathJSONArray.getString(0);
-                    break;
-                } catch (JSONException e)
-                {
+                    String key = iterator.next();
+
+                    try
+                    {
+                        JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                        this.imageUrl = imageUrl + key + pathJSONArray.getString(0);
+                        break;
+                    } catch (JSONException e)
+                    {
+                    }
                 }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
 
             if (jsonObject.has("benefit") == true) // hotelBenefit ?
@@ -125,8 +131,6 @@ public class Stay extends Place
             {
                 dBenefitText = null;
             }
-
-            //            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
