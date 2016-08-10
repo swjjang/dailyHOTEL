@@ -146,7 +146,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mGourmetSearchCuration.getCurationOption().clear();
 
             mPlaceSearchResultLayout.setOptionFilterEnabled(false);
-            mPlaceSearchResultLayout.cleatCategoryTab();
+            mPlaceSearchResultLayout.clearCategoryTab();
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.processListLayout();
             mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);

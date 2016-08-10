@@ -560,7 +560,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
-    public void cleatCategoryTab()
+    public void clearCategoryTab()
     {
         mViewPager.setAdapter(null);
         mCategoryTabLayout.setOnTabSelectedListener(null);

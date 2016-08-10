@@ -118,7 +118,7 @@ public class StaySearchResultListFragment extends StayListFragment
             {
                 mIsOptimizeCategory = true;
 
-                if (page == 1 && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
+                if (page <= 1 && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
                 {
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                 }
