@@ -182,7 +182,7 @@ public class DailyLineIndicator extends View
 
             // 왼쪽 기준
             lineLeft = lineLeft + mCurrentPositionOffset * width;
-            lineRight = lineRight + mCurrentPositionOffset * width;
+            lineRight = lineRight + mCurrentPositionOffset * mMeasureList[mCurrentPosition + 1][0];
         }
 
         canvas.drawRect(lineLeft, 0, lineRight, height, mRectPaint);
