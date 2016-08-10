@@ -40,7 +40,7 @@ public class EventListNetworkController extends BaseNetworkController
     {
         String store;
 
-        if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE || Constants.RELEASE_STORE == Constants.Stores.N_STORE)
+        if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE)
         {
             store = "google";
         } else

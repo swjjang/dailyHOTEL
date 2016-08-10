@@ -127,15 +127,14 @@ public class MainActivity extends BaseActivity implements Constants
         // URL 만들때 사용
         //                com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
-        DailyRemoteConfig.getInstance(this).requestRemoteConfig();
-
         mIsInitialization = true;
-        mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
         //        DailyPreference.getInstance(this).removeDeepLink();
-        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
-        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
+        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
+        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
 
+        // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
         String currentVersion = Util.getAppVersion(this);
         if (currentVersion.equalsIgnoreCase(version) == false)
@@ -213,8 +212,13 @@ public class MainActivity extends BaseActivity implements Constants
 
         ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
 
-        if (splashVersion == null || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        if (Util.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
+            imageView.setImageResource(R.drawable.img_splash_logo);
+        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        {
+            imageView.setPadding(0, 0, 0, 0);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageResource(R.drawable.splash);
         } else
         {
@@ -224,16 +228,20 @@ public class MainActivity extends BaseActivity implements Constants
             if (file.exists() == false)
             {
                 DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                imageView.setImageResource(R.drawable.splash);
+                imageView.setImageResource(R.drawable.img_splash_logo);
             } else
             {
                 try
                 {
+                    imageView.setPadding(0, 0, 0, 0);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception e)
                 {
                     DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                    imageView.setImageResource(R.drawable.splash);
+                    imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
+                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+                    imageView.setImageResource(R.drawable.img_splash_logo);
                 }
             }
         }
@@ -366,6 +374,111 @@ public class MainActivity extends BaseActivity implements Constants
             super.onError();
 
             mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT);
+        }
+    }
+
+    public void checkAppVersion(final String currentVersion, final String forceVersion)
+    {
+        if (Util.isTextEmpty(currentVersion, forceVersion) == true)
+        {
+            mOnNetworkControllerListener.onConfigurationResponse();
+            return;
+        }
+
+        int appVersion = Integer.parseInt(Util.getAppVersion(MainActivity.this).replace(".", ""));
+        int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
+        int forceVersionNumber = Integer.parseInt(forceVersion.replace(".", ""));
+        int currentVersionNumber = Integer.parseInt(currentVersion.replace(".", ""));
+
+        boolean isForceUpdate = forceVersionNumber > appVersion;
+        boolean isUpdate = currentVersionNumber > appVersion;
+
+        if (isForceUpdate == true)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
+            View.OnClickListener posListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                    marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                    if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                    {
+                        marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                    }
+
+                    startActivity(marketLaunch);
+                    finish();
+                }
+            };
+
+            DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            };
+
+            showSimpleDialog(getString(R.string.label_alarm_update), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+
+        } else if (isUpdate == true && skipMaxVersion != currentVersionNumber)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
+            View.OnClickListener posListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                    marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                    if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                    {
+                        marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                    }
+
+                    startActivity(marketLaunch);
+                    finish();
+                }
+            };
+
+            final DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    DailyPreference.getInstance(MainActivity.this).setSkipVersion(currentVersion);
+
+                    mOnNetworkControllerListener.onConfigurationResponse();
+                }
+            };
+
+            View.OnClickListener negListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    cancelListener.onCancel(null);
+                }
+            };
+
+            showSimpleDialog(getString(R.string.label_alarm_update)//
+                , getString(R.string.dialog_msg_update_now)//
+                , getString(R.string.dialog_btn_text_update)//
+                , getString(R.string.dialog_btn_text_cancel)//
+                , posListener, negListener, cancelListener, null, false);
+        } else
+        {
+            mOnNetworkControllerListener.onConfigurationResponse();
         }
     }
 
@@ -595,114 +708,127 @@ public class MainActivity extends BaseActivity implements Constants
             mDelayTimeHandler.removeMessages(0);
             unLockUI();
 
-            showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+            if (Util.isTextEmpty(title, message) == true)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    setResult(RESULT_CANCELED);
-                    finish();
-                }
-            }, null, false);
-        }
-
-        @Override
-        public void onAppVersionResponse(int maxVersion, int minVersion)
-        {
-            int currentVersion = Integer.parseInt(DailyHotel.VERSION.replace(".", ""));
-            int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
-
-            ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
-
-            if (minVersion > currentVersion)
-            {
-                mDelayTimeHandler.removeMessages(0);
-                unLockUI();
-
-                View.OnClickListener posListener = new View.OnClickListener()
+                DailyRemoteConfig.getInstance(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                 {
                     @Override
-                    public void onClick(View view)
+                    public void onComplete(String currentVersion, String forceVersion)
                     {
-                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-
-                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
-                        {
-                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
-                        }
-
-                        startActivity(marketLaunch);
-                        finish();
+                        checkAppVersion(currentVersion, forceVersion);
                     }
-                };
-
-                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                });
+            } else
+            {
+                showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
                 {
                     @Override
-                    public void onCancel(DialogInterface dialog)
+                    public void onClick(View v)
                     {
                         setResult(RESULT_CANCELED);
                         finish();
                     }
-                };
-
-                showSimpleDialog(getString(R.string.label_alarm_update), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
-
-            } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
-            {
-                mDelayTimeHandler.removeMessages(0);
-                unLockUI();
-
-                View.OnClickListener posListener = new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-
-                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
-                        {
-                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
-                        }
-
-                        startActivity(marketLaunch);
-                        finish();
-                    }
-                };
-
-                final DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        String maxVersion = DailyPreference.getInstance(MainActivity.this).getMaxVersion();
-                        DailyPreference.getInstance(MainActivity.this).setSkipVersion(maxVersion);
-
-                        mNetworkController.requestConfiguration();
-                    }
-                };
-
-                View.OnClickListener negListener = new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        cancelListener.onCancel(null);
-                    }
-                };
-
-                showSimpleDialog(getString(R.string.label_alarm_update)//
-                    , getString(R.string.dialog_msg_update_now)//
-                    , getString(R.string.dialog_btn_text_update)//
-                    , getString(R.string.dialog_btn_text_cancel)//
-                    , posListener, negListener, cancelListener, null, false);
-            } else
-            {
-                mNetworkController.requestConfiguration();
+                }, null, false);
             }
         }
+
+//        @Override
+//        public void onAppVersionResponse(int maxVersion, int minVersion)
+//        {
+//            int currentVersion = Integer.parseInt(DailyHotel.VERSION.replace(".", ""));
+//            int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
+//
+//            ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
+//
+//            if (minVersion > currentVersion)
+//            {
+//                mDelayTimeHandler.removeMessages(0);
+//                unLockUI();
+//
+//                View.OnClickListener posListener = new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View view)
+//                    {
+//                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+//                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+//
+//                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
+//                        {
+//                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+//                        }
+//
+//                        startActivity(marketLaunch);
+//                        finish();
+//                    }
+//                };
+//
+//                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+//                {
+//                    @Override
+//                    public void onCancel(DialogInterface dialog)
+//                    {
+//                        setResult(RESULT_CANCELED);
+//                        finish();
+//                    }
+//                };
+//
+//                showSimpleDialog(getString(R.string.label_alarm_update), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+//
+//            } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
+//            {
+//                mDelayTimeHandler.removeMessages(0);
+//                unLockUI();
+//
+//                View.OnClickListener posListener = new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View view)
+//                    {
+//                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+//                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+//
+//                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
+//                        {
+//                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+//                        }
+//
+//                        startActivity(marketLaunch);
+//                        finish();
+//                    }
+//                };
+//
+//                final DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+//                {
+//                    @Override
+//                    public void onCancel(DialogInterface dialog)
+//                    {
+//                        String maxVersion = DailyPreference.getInstance(MainActivity.this).getMaxVersion();
+//                        DailyPreference.getInstance(MainActivity.this).setSkipVersion(maxVersion);
+//
+//                        onConfigurationResponse();
+//                    }
+//                };
+//
+//                View.OnClickListener negListener = new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View view)
+//                    {
+//                        cancelListener.onCancel(null);
+//                    }
+//                };
+//
+//                showSimpleDialog(getString(R.string.label_alarm_update)//
+//                    , getString(R.string.dialog_msg_update_now)//
+//                    , getString(R.string.dialog_btn_text_update)//
+//                    , getString(R.string.dialog_btn_text_cancel)//
+//                    , posListener, negListener, cancelListener, null, false);
+//            } else
+//            {
+//                onConfigurationResponse();
+//            }
+//        }
 
         @Override
         public void onConfigurationResponse()

@@ -152,7 +152,7 @@ public class Util implements Constants
 
     public static String storeReleaseAddress()
     {
-        if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
+        if (RELEASE_STORE == Stores.PLAY_STORE)
         {
             return URL_STORE_GOOGLE_DAILYHOTEL;
         } else

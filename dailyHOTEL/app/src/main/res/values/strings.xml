@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="default_company_information">{\"name\":\"(주)데일리\",\"ceo\":\"신인식\",\"bizRegNumber\":\"144-81-15781\",\"itcRegNumber\":\"2016-서울강남-00726\",\"address1\":\"서울시 강남구 테헤란로 20길 20 삼정빌딩 10,11층\",\"phoneNumber1\":\"1800-9120\",\"fax1\":\"02-6455-9331\",\"privacyManager\":\"privacy.korea@dailyhotel.com\"}</string>
+
     <!-- Basic Infos -->
     <string name="app_name">데일리호텔</string>
     <string name="facebook_app_id">268888829950610</string>
@@ -413,9 +415,9 @@
     <string name="label_date_verification">"(%1$s 인증됨)"</string>
     <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
-    <string name="message_edit_phone_social_guide">휴대폰 번호를 입력하신 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_phone_social_guide">휴대폰 번호를 입력한 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_name_guide">상품 예약 확인 시 필요한 정보이므로 실명으로 입력한 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
-    <string name="message_edit_password_guide">4자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_password_guide">4자 이상 비밀번호를 입력한 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
@@ -523,7 +525,7 @@
     <string name="label_confirm_signup">회원가입 완료</string>
     <string name="message_please_enter_the_same_password">동일한 비밀번호를 입력해주세요.</string>
     <string name="message_signup_step1_guide">데일리호텔 회원가입하시고 다양한 혜택을 누려보세요!</string>
-    <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력하신 후 인증 처리를 해주세요.</string>
+    <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
@@ -752,8 +754,8 @@
     <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
 
     <!-- PaymentResult Activity -->
-    <string name="label_booking_information">예약정보</string>
-    <string name="label_completed_payment">예약완료</string>
+    <string name="label_booking_information">예약 정보</string>
+    <string name="label_completed_payment">예약 완료</string>
     <string name="label_booking_place">예약 장소</string>
     <string name="label_product_type">상품 타입</string>
     <string name="label_use_day">이용일</string>

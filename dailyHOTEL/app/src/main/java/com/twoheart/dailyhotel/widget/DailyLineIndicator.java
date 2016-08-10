@@ -54,12 +54,12 @@ public class DailyLineIndicator extends View
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
         // get custom attrs
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DailyLineIndicator);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.dailyLineIndicator);
 
-        mIndicatorColor = a.getColor(R.styleable.DailyLineIndicator_indicatorColor, mIndicatorColor);
-        mIndicatorBackgroundColor = a.getColor(R.styleable.DailyLineIndicator_indicatorBackgroundColor, mIndicatorBackgroundColor);
+        mIndicatorColor = typedArray.getColor(R.styleable.dailyLineIndicator_indicatorColor, getResources().getColor(R.color.white));
+        mIndicatorBackgroundColor = typedArray.getColor(R.styleable.dailyLineIndicator_indicatorBackgroundColor, getResources().getColor(R.color.white_a40));
 
-        a.recycle();
+        typedArray.recycle();
 
         mRectPaint = new Paint();
         mRectPaint.setAntiAlias(true);
@@ -93,7 +93,6 @@ public class DailyLineIndicator extends View
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
-
             @SuppressWarnings("deprecation")
             @SuppressLint("NewApi")
             @Override
@@ -185,7 +184,6 @@ public class DailyLineIndicator extends View
 
     private class PageListener implements ViewPager.OnPageChangeListener
     {
-
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {

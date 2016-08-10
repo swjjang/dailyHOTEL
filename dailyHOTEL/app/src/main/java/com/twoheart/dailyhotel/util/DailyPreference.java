@@ -104,8 +104,6 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
 
     // Version
-    private static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
-    private static final String KEY_PREFERENCE_MAX_VERSION_NAME = "MAX_VERSION_NAME";
     private static final String KEY_PREFERENCE_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
 
 
@@ -511,7 +509,7 @@ public class DailyPreference
 
     public String getIntroImageVersion()
     {
-        return getValue(mPreferences, KEY_INTRO_VERSION, Constants.DAILY_INTRO_DEFAULT_VERSION);
+        return getValue(mPreferences, KEY_INTRO_VERSION, Constants.DAILY_INTRO_CURRENT_VERSION);
     }
 
     public void setIntroImageVersion(String value)
@@ -881,26 +879,6 @@ public class DailyPreference
 
             mOldEditor.apply();
         }
-    }
-
-    public String getMaxVersion()
-    {
-        return getValue(mOldPreferences, KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0");
-    }
-
-    public void setMaxVersion(String value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_MAX_VERSION_NAME, value);
-    }
-
-    public String getMinVersion()
-    {
-        return getValue(mOldPreferences, KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0");
-    }
-
-    public void setMinVersion(String value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_MIN_VERSION_NAME, value);
     }
 
     public String getSkipVersion()

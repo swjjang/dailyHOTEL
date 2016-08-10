@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -23,6 +23,11 @@ public class DailyRemoteConfig
 
     private Context mContext;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
+
+    public interface OnCompleteListener
+    {
+        void onComplete(String currentVersion, String forceVersion);
+    }
 
     public synchronized static DailyRemoteConfig getInstance(Context context)
     {
@@ -41,9 +46,14 @@ public class DailyRemoteConfig
         mFirebaseRemoteConfig.setConfigSettings(new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(Constants.DEBUG).build());
     }
 
-    public void requestRemoteConfig()
+    public void requestRemoteConfig(final OnCompleteListener listener)
     {
-        mFirebaseRemoteConfig.fetch(0L).addOnCompleteListener(new OnCompleteListener<Void>()
+        if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getCompanyName()) == true)
+        {
+            writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
+        }
+
+        mFirebaseRemoteConfig.fetch(0L).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> task)
@@ -64,22 +74,63 @@ public class DailyRemoteConfig
                 String androidServiceShutdown = mFirebaseRemoteConfig.getString("androidServiceShutdown");
                 String androidServiceShutdownMessage = mFirebaseRemoteConfig.getString("androidServiceShutdownMessage");
 
-                //                try
-                //                {
-                //                    ExLog.d("androidUpdateVersion : " + new JSONObject(androidUpdateVersion).toString());
-                //                    ExLog.d("androidPaymentType : " + new JSONObject(androidPaymentType).toString());
-                //                    ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
-                //                    ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageLink).toString());
-                //                    ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
-                //                    ExLog.d("androidServiceShutdown : " + new JSONObject(androidServiceShutdown).toString());
-                //                    ExLog.d("androidServiceShutdownMessage : " + new JSONObject(androidServiceShutdownMessage).toString());
-                //                } catch (Exception e)
-                //                {
-                //                    ExLog.d(e.toString());
-                //                }
+                if (Constants.DEBUG == true)
+                {
+                    try
+                    {
+                        ExLog.d("androidUpdateVersion : " + new JSONObject(androidUpdateVersion).toString());
+                        ExLog.d("androidPaymentType : " + new JSONObject(androidPaymentType).toString());
+                        ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
+                        ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
+                        ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
+                        ExLog.d("androidServiceShutdown : " + new JSONObject(androidServiceShutdown).toString());
+                        ExLog.d("androidServiceShutdownMessage : " + new JSONObject(androidServiceShutdownMessage).toString());
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+
+                // 버전
+
+                String currentVersion = null, forceVersion = null;
+
+                try
+                {
+                    JSONObject versionJSONObject = new JSONObject(androidUpdateVersion);
+
+                    switch (Constants.RELEASE_STORE)
+                    {
+                        case PLAY_STORE:
+                        {
+                            JSONObject jsonObject = versionJSONObject.getJSONObject("play");
+                            currentVersion = jsonObject.getString("current");
+                            forceVersion = jsonObject.getString("force");
+                            break;
+                        }
+
+                        case T_STORE:
+                        {
+                            JSONObject jsonObject = versionJSONObject.getJSONObject("one");
+                            currentVersion = jsonObject.getString("current");
+                            forceVersion = jsonObject.getString("force");
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                writeCompanyInformation(mContext, companyInfo);
 
                 // 이미지 로딩 관련(추후 진행)
-                //                processIntroImage(androidSplashImageUpdateTime, androidSplashImageUrl);
+                processIntroImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
+
+                if (listener != null)
+                {
+                    listener.onComplete(currentVersion, forceVersion);
+                }
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -93,6 +144,8 @@ public class DailyRemoteConfig
                 {
                     ExLog.e(e.toString());
                 }
+
+                listener.onComplete(null, null);
             }
         });
     }
@@ -136,6 +189,29 @@ public class DailyRemoteConfig
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    private void writeCompanyInformation(Context context, String companyInfo)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(companyInfo);
+
+            String companyName = jsonObject.getString("name");
+            String companyCEO = jsonObject.getString("ceo");
+            String companyBizRegNumber = jsonObject.getString("bizRegNumber");
+            String companyItcRegNumber = jsonObject.getString("itcRegNumber");
+            String address = jsonObject.getString("address1");
+            String phoneNumber = jsonObject.getString("phoneNumber1");
+            String fax = jsonObject.getString("fax1");
+            String privacyEmail = jsonObject.getString("privacyManager");
+
+            DailyPreference.getInstance(mContext).setCompanyInformation(companyName//
+                , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 }
