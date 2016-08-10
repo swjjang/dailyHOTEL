@@ -56,6 +56,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.SoftReference;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.UUID;
@@ -68,7 +69,7 @@ public class Util implements Constants
     public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
     private static final String REMOVE_CHARACTER = "[\\-\\:\\+]";
 
-    private static String MEMORY_CLEAR;
+    private static SoftReference<String> MEMORY_CLEAR;
 
     static
     {
@@ -83,12 +84,12 @@ public class Util implements Constants
 
     public static void initializeMemory()
     {
-        MEMORY_CLEAR = "MEMORY";
+        MEMORY_CLEAR = new SoftReference("MEMORY");
     }
 
     public static boolean isMemoryClear()
     {
-        return Util.isTextEmpty(MEMORY_CLEAR);
+        return MEMORY_CLEAR == null;
     }
 
     public static void initializeFresco(Context context)

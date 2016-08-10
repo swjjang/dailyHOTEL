@@ -10,7 +10,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -50,8 +49,6 @@ public class DailyLineIndicator extends View
         super(context, attrs, defStyle);
 
         setWillNotDraw(false);
-
-        DisplayMetrics dm = getResources().getDisplayMetrics();
 
         // get custom attrs
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.dailyLineIndicator);

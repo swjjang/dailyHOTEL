@@ -12,17 +12,12 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
-import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -169,18 +164,18 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         Map<String, String> eventParams = new HashMap<>();
         eventParams.put(AnalyticsManager.KeyType.SORTING, gourmetCurationOption.getSortType().name());
 
-//        if (province instanceof Area)
-//        {
-//            Area area = (Area) province;
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//        } else
-//        {
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//        }
+        //        if (province instanceof Area)
+        //        {
+        //            Area area = (Area) province;
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        //        } else
+        //        {
+        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        //        }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, gourmetCurationOption.toString(), eventParams);

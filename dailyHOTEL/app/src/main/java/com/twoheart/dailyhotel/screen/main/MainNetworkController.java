@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -29,7 +28,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onCheckServerResponse(String title, String message);
 
-//        void onAppVersionResponse(int maxVersion, int minVersion);
+        //        void onAppVersionResponse(int maxVersion, int minVersion);
 
         void onConfigurationResponse();
 
@@ -51,10 +50,10 @@ public class MainNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener);
     }
 
-//    public void requestConfiguration()
-//    {
-//        DailyNetworkAPI.getInstance(mContext).requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, mCompanyInformationJsonResponseListener);
-//    }
+    //    public void requestConfiguration()
+    //    {
+    //        DailyNetworkAPI.getInstance(mContext).requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, mCompanyInformationJsonResponseListener);
+    //    }
 
     public void requestUserInformation()
     {
@@ -202,95 +201,95 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-//    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
-//    {
-//        @Override
-//        public void onResponse(String url, JSONObject response)
-//        {
-//            try
-//            {
-//                String maxVersionName;
-//                String minVersionName;
-//
-//                switch (Constants.RELEASE_STORE)
-//                {
-//                    case N_STORE:
-//                        maxVersionName = response.getString("nstore_max");
-//                        minVersionName = response.getString("nstore_min");
-//                        break;
-//
-//                    case T_STORE:
-//                        maxVersionName = response.getString("tstore_max");
-//                        minVersionName = response.getString("tstore_min");
-//                        break;
-//
-//                    case PLAY_STORE:
-//                    default:
-//                        maxVersionName = response.getString("play_max");
-//                        minVersionName = response.getString("play_min");
-//                        break;
-//                }
-//
-//                DailyPreference.getInstance(mContext).setMaxVersion(maxVersionName);
-//                DailyPreference.getInstance(mContext).setMinVersion(minVersionName);
-//
-//                int maxVersion = Integer.parseInt(maxVersionName.replace(".", ""));
-//                int minVersion = Integer.parseInt(minVersionName.replace(".", ""));
-//
-//                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersion, minVersion);
-//            } catch (Exception e)
-//            {
-//                mOnNetworkControllerListener.onError(e);
-//            }
-//        }
-//
-//        @Override
-//        public void onErrorResponse(VolleyError volleyError)
-//        {
-//            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
-//        }
-//    };
+    //    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                String maxVersionName;
+    //                String minVersionName;
+    //
+    //                switch (Constants.RELEASE_STORE)
+    //                {
+    //                    case N_STORE:
+    //                        maxVersionName = response.getString("nstore_max");
+    //                        minVersionName = response.getString("nstore_min");
+    //                        break;
+    //
+    //                    case T_STORE:
+    //                        maxVersionName = response.getString("tstore_max");
+    //                        minVersionName = response.getString("tstore_min");
+    //                        break;
+    //
+    //                    case PLAY_STORE:
+    //                    default:
+    //                        maxVersionName = response.getString("play_max");
+    //                        minVersionName = response.getString("play_min");
+    //                        break;
+    //                }
+    //
+    //                DailyPreference.getInstance(mContext).setMaxVersion(maxVersionName);
+    //                DailyPreference.getInstance(mContext).setMinVersion(minVersionName);
+    //
+    //                int maxVersion = Integer.parseInt(maxVersionName.replace(".", ""));
+    //                int minVersion = Integer.parseInt(minVersionName.replace(".", ""));
+    //
+    //                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersion, minVersion);
+    //            } catch (Exception e)
+    //            {
+    //                mOnNetworkControllerListener.onError(e);
+    //            }
+    //        }
+    //
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+    //        }
+    //    };
 
-//    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-//    {
-//        @Override
-//        public void onResponse(String url, JSONObject response)
-//        {
-//            try
-//            {
-//                int msgCode = response.getInt("msg_code");
-//
-//                if (msgCode == 0)
-//                {
-//                    JSONObject jsonObject = response.getJSONObject("data");
-//                    JSONObject companyJSONObject = jsonObject.getJSONObject("companyInfo");
-//
-//                    String companyName = companyJSONObject.getString("name");
-//                    String companyCEO = companyJSONObject.getString("ceo");
-//                    String companyBizRegNumber = companyJSONObject.getString("bizRegNumber");
-//                    String companyItcRegNumber = companyJSONObject.getString("itcRegNumber");
-//                    String address = companyJSONObject.getString("address1");
-//                    String phoneNumber = companyJSONObject.getString("phoneNumber1");
-//                    String fax = companyJSONObject.getString("fax1");
-//                    String privacyEmail = companyJSONObject.getString("privacyManager");
-//
-//                    DailyPreference.getInstance(mContext).setCompanyInformation(companyName//
-//                        , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
-//                }
-//
-//                ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfigurationResponse();
-//            } catch (Exception e)
-//            {
-//                mOnNetworkControllerListener.onError(e);
-//            }
-//        }
-//
-//        @Override
-//        public void onErrorResponse(VolleyError volleyError)
-//        {
-//            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
-//        }
-//    };
+    //    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                int msgCode = response.getInt("msg_code");
+    //
+    //                if (msgCode == 0)
+    //                {
+    //                    JSONObject jsonObject = response.getJSONObject("data");
+    //                    JSONObject companyJSONObject = jsonObject.getJSONObject("companyInfo");
+    //
+    //                    String companyName = companyJSONObject.getString("name");
+    //                    String companyCEO = companyJSONObject.getString("ceo");
+    //                    String companyBizRegNumber = companyJSONObject.getString("bizRegNumber");
+    //                    String companyItcRegNumber = companyJSONObject.getString("itcRegNumber");
+    //                    String address = companyJSONObject.getString("address1");
+    //                    String phoneNumber = companyJSONObject.getString("phoneNumber1");
+    //                    String fax = companyJSONObject.getString("fax1");
+    //                    String privacyEmail = companyJSONObject.getString("privacyManager");
+    //
+    //                    DailyPreference.getInstance(mContext).setCompanyInformation(companyName//
+    //                        , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
+    //                }
+    //
+    //                ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfigurationResponse();
+    //            } catch (Exception e)
+    //            {
+    //                mOnNetworkControllerListener.onError(e);
+    //            }
+    //        }
+    //
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+    //        }
+    //    };
 
     private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {

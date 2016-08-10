@@ -152,7 +152,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         if (Util.isMemoryClear() == true)
         {
+            if (Constants.DEBUG == true)
+            {
+                ExLog.d("isMemoryClear is Restart");
+            }
+
             Util.restartApp(this);
+            return;
         }
 
         AnalyticsManager.getInstance(this).onStart(this);

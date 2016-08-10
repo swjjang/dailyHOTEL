@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
