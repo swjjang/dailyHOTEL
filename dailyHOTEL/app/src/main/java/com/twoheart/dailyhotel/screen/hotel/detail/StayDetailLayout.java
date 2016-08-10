@@ -98,8 +98,7 @@ public class StayDetailLayout extends PlaceDetailLayout
         mViewPager.setAdapter(mImageAdapter);
 
         mDailyLineIndicator.setViewPager(mViewPager);
-        mDailyLineIndicator.setImageInformation((imageInformationList.size() > 0) //
-            ? imageInformationList.get(0).description : null);
+        setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
 
         if (mListAdapter == null)
         {

@@ -11,25 +11,17 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
-public class DailyLineIndicator extends RelativeLayout
+public class DailyLineIndicator extends View
 {
     private final PageListener mPageListener = new PageListener();
     public ViewPager.OnPageChangeListener mOnPageChangeListener;
 
-    private LinearLayout mTabsContainer;
     private ViewPager mViewpager;
-
-    private DailyTextView mDescriptionTextView;
 
     private int mTabCount;
 
@@ -41,7 +33,7 @@ public class DailyLineIndicator extends RelativeLayout
     private int mIndicatorColor = 0xFFFFFFFF;
     private int mIndicatorBackgroundColor = 0x66FFFFFF;
 
-    private int mIndicatorHeight = 2;
+    private int[][] mMeasureList;
 
     public DailyLineIndicator(Context context)
     {
@@ -59,30 +51,13 @@ public class DailyLineIndicator extends RelativeLayout
 
         setWillNotDraw(false);
 
-        View indicatorLayout = LayoutInflater.from(context).inflate(R.layout.layout_daily_line_indicator, null);
-
-        RelativeLayout.LayoutParams textLayoutParams = new RelativeLayout.LayoutParams(//
-            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        textLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        textLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        indicatorLayout.setLayoutParams(textLayoutParams);
-        addView(indicatorLayout);
-
-        mTabsContainer = (LinearLayout) indicatorLayout.findViewById(R.id.tabLayout);
-        mDescriptionTextView = (DailyTextView) indicatorLayout.findViewById(R.id.descriptionTextView);
-
-        mDescriptionTextView.setVisibility(View.INVISIBLE);
-
         DisplayMetrics dm = getResources().getDisplayMetrics();
-
-        mIndicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight, dm);
 
         // get custom attrs
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DailyLineIndicator);
 
         mIndicatorColor = a.getColor(R.styleable.DailyLineIndicator_indicatorColor, mIndicatorColor);
         mIndicatorBackgroundColor = a.getColor(R.styleable.DailyLineIndicator_indicatorBackgroundColor, mIndicatorBackgroundColor);
-        mIndicatorHeight = a.getDimensionPixelSize(R.styleable.DailyLineIndicator_indicatorHeight, mIndicatorHeight);
 
         a.recycle();
 
@@ -112,19 +87,9 @@ public class DailyLineIndicator extends RelativeLayout
 
     public void notifyDataSetChanged()
     {
-
-        mTabsContainer.removeAllViews();
-
         mTabCount = mViewpager.getAdapter().getCount();
 
-        if (mTabCount > 1)
-        {
-            for (int i = 0; i < mTabCount; i++)
-            {
-                addTab(i, new View(getContext()));
-            }
-        }
-
+        mMeasureList = getMeasureWidthList(mTabCount);
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
@@ -149,19 +114,33 @@ public class DailyLineIndicator extends RelativeLayout
 
     }
 
-    private void addTab(final int position, View tab)
+    private int[][] getMeasureWidthList(int tabCount)
     {
-        tab.setFocusable(true);
-        tab.setOnClickListener(new OnClickListener()
+        if (tabCount == 0)
         {
-            @Override
-            public void onClick(View v)
-            {
-                mViewpager.setCurrentItem(position);
-            }
-        });
+            return null;
+        }
 
-        mTabsContainer.addView(tab, position, new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f));
+        if (tabCount == 1)
+        {
+            return new int[][]{{getWidth(), 0}};
+        }
+
+        int[][] measureList = new int [tabCount][2];
+
+        int delta = getWidth();
+
+        for (int i = tabCount; i > 0; i--)
+        {
+            int oneWidth = delta / i;
+
+            measureList[i - 1][0] = oneWidth;
+            delta = delta - oneWidth;
+
+            measureList[i - 1][1] = delta;
+        }
+
+        return measureList;
     }
 
     @Override
@@ -178,33 +157,30 @@ public class DailyLineIndicator extends RelativeLayout
 
         // draw indicator background line
         mRectPaint.setColor(mIndicatorBackgroundColor);
-        canvas.drawRect(mTabsContainer.getLeft(), height - mIndicatorHeight, mTabsContainer.getRight(), height, mRectPaint);
+        canvas.drawRect(0, 0, getRight(), height, mRectPaint);
 
         // draw indicator line
         mRectPaint.setColor(mIndicatorColor);
 
-        // default: line below current tab
-        View currentTab = mTabsContainer.getChildAt(mCurrentPosition);
-        if (currentTab == null)
-        {
+        if (mCurrentPosition < 0 || mCurrentPosition >= mTabCount) {
             return;
         }
 
-        float lineLeft = currentTab.getLeft();
-        float lineRight = currentTab.getRight();
+        int width = mMeasureList[mCurrentPosition][0];
+        float lineLeft = mMeasureList[mCurrentPosition][1];
+        float lineRight = lineLeft + width;
 
         // if there is an offset, start interpolating left and right coordinates between current and next tab
         if (mCurrentPositionOffset > 0f && mCurrentPosition < mTabCount - 1)
         {
-            View nextTab = mTabsContainer.getChildAt(mCurrentPosition + 1);
-            final float nextTabLeft = nextTab.getLeft();
-            final float nextTabRight = nextTab.getRight();
+            final float nextTabLeft = mMeasureList[mCurrentPosition + 1][1];
+            final float nextTabRight = nextTabLeft + mMeasureList[mCurrentPosition + 1][0];
 
             lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
             lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
         }
 
-        canvas.drawRect(lineLeft, height - mIndicatorHeight, lineRight, height, mRectPaint);
+        canvas.drawRect(lineLeft, 0, lineRight, height, mRectPaint);
     }
 
     private class PageListener implements ViewPager.OnPageChangeListener
@@ -242,7 +218,6 @@ public class DailyLineIndicator extends RelativeLayout
                 mOnPageChangeListener.onPageSelected(position);
             }
         }
-
     }
 
     public void setIndicatorColor(int indicatorColor)
@@ -262,17 +237,6 @@ public class DailyLineIndicator extends RelativeLayout
         return this.mIndicatorColor;
     }
 
-    public void setIndicatorHeight(int indicatorLineHeightPx)
-    {
-        this.mIndicatorHeight = indicatorLineHeightPx;
-        invalidate();
-    }
-
-    public int getIndicatorHeight()
-    {
-        return mIndicatorHeight;
-    }
-
     public void setIndicatorBackgroundColorResource(int resId)
     {
         this.mIndicatorBackgroundColor = getResources().getColor(resId);
@@ -288,18 +252,6 @@ public class DailyLineIndicator extends RelativeLayout
     public int getIndicatorBackgroundColor()
     {
         return this.mIndicatorBackgroundColor;
-    }
-
-    public void setImageInformation(String description)
-    {
-        if (Util.isTextEmpty(description) == false)
-        {
-            mDescriptionTextView.setVisibility(View.VISIBLE);
-            mDescriptionTextView.setText(description);
-        } else
-        {
-            mDescriptionTextView.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
