@@ -6,6 +6,7 @@ import android.os.Parcel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GourmetSearchParams extends PlaceParams
@@ -171,8 +172,12 @@ public class GourmetSearchParams extends PlaceParams
         String prefix = "category=";
         StringBuilder stringBuilder = new StringBuilder();
 
+        ArrayList<String> categoryCodeList = new ArrayList(map.values());
 
-        //;...............
+        for (String categoryCode : categoryCodeList)
+        {
+            stringBuilder.append(prefix).append(categoryCode).append("&");
+        }
 
         int length = stringBuilder.length();
         if (stringBuilder.charAt(length - 1) == '&')
@@ -190,11 +195,33 @@ public class GourmetSearchParams extends PlaceParams
             return null;
         }
 
-        String prefix = "time=";
+        String prefix = "timeFrame=";
         StringBuilder stringBuilder = new StringBuilder();
 
+        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
+        {
+            stringBuilder.append(prefix).append("6-11").append("&");
+        }
 
-        //;...............
+        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
+        {
+            stringBuilder.append(prefix).append("11-15").append("&");
+        }
+
+        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
+        {
+            stringBuilder.append(prefix).append("15-17").append("&");
+        }
+
+        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
+        {
+            stringBuilder.append(prefix).append("17-21").append("&");
+        }
+
+        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
+        {
+            stringBuilder.append(prefix).append("21-06").append("&");
+        }
 
         int length = stringBuilder.length();
         if (stringBuilder.charAt(length - 1) == '&')
@@ -217,7 +244,7 @@ public class GourmetSearchParams extends PlaceParams
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
         {
-            stringBuilder.append(prefix).append("Wifi").append("&");
+            stringBuilder.append(prefix).append("Parking").append("&");
         }
 
         int length = stringBuilder.length();

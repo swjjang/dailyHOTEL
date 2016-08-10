@@ -38,6 +38,8 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
         super.initLayout(view);
 
         mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
+
+        setBannerVisibility(false);
     }
 
     @Override
@@ -55,6 +57,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
             case LIST:
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
+                mFilterEmptyView.setVisibility(View.GONE);
                 mResultTextView.setVisibility(View.VISIBLE);
 
                 if (mGourmetListMapFragment != null)
@@ -72,6 +75,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 mResultTextView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
+                mFilterEmptyView.setVisibility(View.GONE);
 
                 if (isCurrentPage == true && mGourmetListMapFragment == null)
                 {

@@ -14,11 +14,18 @@ import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
@@ -27,11 +34,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
     private SearchType mSearchType;
     protected GourmetSearchParams mLastParams;
-
-    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
-    {
-        void onStayCount(String url, int hotelSaleCount);
-    }
+    protected BaseNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetCuration gourmetCuration, boolean isFixedLocation)
     {
@@ -49,6 +52,8 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     {
         super.initIntent(intent);
 
+        mNetworkController = getNetworkController(this);
+
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
     }
@@ -57,12 +62,6 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     protected void initSortLayout(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
-
-        if (viewType == ViewType.MAP)
-        {
-            setDisabledSortLayout(view, mSortRadioGroup);
-            return;
-        }
 
         RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
 
@@ -163,11 +162,53 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     }
 
     @Override
+    protected void onComplete()
+    {
+        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+
+        Map<String, String> eventParams = new HashMap<>();
+        eventParams.put(AnalyticsManager.KeyType.SORTING, gourmetCurationOption.getSortType().name());
+
+//        if (province instanceof Area)
+//        {
+//            Area area = (Area) province;
+//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+//        } else
+//        {
+//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+//        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, gourmetCurationOption.toString(), eventParams);
+
+        if (Constants.DEBUG == true)
+        {
+            ExLog.d(gourmetCurationOption.toString());
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mGourmetCuration);
+
+        setResult(RESULT_OK, intent);
+        hideAnimation();
+    }
+
+    @Override
+    protected BaseNetworkController getNetworkController(Context context)
+    {
+        return new GourmetSearchResultCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);
+    }
+
+    @Override
     protected void updateResultMessage()
     {
         setConfirmOnClickListener(null);
 
-        DailyNetworkAPI.getInstance(this).requestGourmetList(mNetworkTag, mLastParams.toParamsString(), mGourmetListJsonResponseListener);
+        ((GourmetSearchResultCurationNetworkController) mNetworkController).requestGourmetSearchList(mLastParams);
     }
 
     private void setLastGourmetParams(GourmetCuration gourmetCuration)
@@ -186,42 +227,12 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         }
     }
 
-    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private GourmetSearchResultCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetSearchResultCurationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onGourmetCount(String url, int totalCount, int maxCount)
         {
-            onGourmetCount(null, -1);
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            int gourmetSaleCount;
-
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    gourmetSaleCount = dataJSONObject.getInt("gourmetSalesCount");
-
-                } else
-                {
-                    gourmetSaleCount = 0;
-                }
-            } catch (Exception e)
-            {
-                gourmetSaleCount = 0;
-            }
-
-            onGourmetCount(url, gourmetSaleCount);
-        }
-
-        private void onGourmetCount(String url, int gourmetSaleCount)
-        {
-            if (Util.isTextEmpty(url) == true && gourmetSaleCount == -1)
+            if (Util.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
@@ -248,16 +259,122 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
                 return;
             }
 
-            if (gourmetSaleCount <= 0)
+            if (totalCount <= 0)
             {
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
             } else
             {
-                setResultMessage(getString(R.string.label_gourmet_filter_result_count, gourmetSaleCount));
+                if (totalCount >= maxCount)
+                {
+                    setResultMessage(getString(R.string.label_gourmet_filter_result_over_count, maxCount));
+                } else
+                {
+                    setResultMessage(getString(R.string.label_gourmet_filter_result_count, totalCount));
+                }
             }
 
             setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
-            setConfirmEnable(gourmetSaleCount == 0 ? false : true);
+            setConfirmEnable(totalCount == 0 ? false : true);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetSearchResultCurationActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            GourmetSearchResultCurationActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            GourmetSearchResultCurationActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            GourmetSearchResultCurationActivity.this.onErrorToastMessage(message);
         }
     };
+
+
+    //    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //            onGourmetCount(null, -1);
+    //        }
+    //
+    //        @Override
+    //        public void onResponse(String url, JSONObject response)
+    //        {
+    //            int gourmetSaleCount;
+    //
+    //            try
+    //            {
+    //                int msgCode = response.getInt("msgCode");
+    //                if (msgCode == 100)
+    //                {
+    //                    JSONObject dataJSONObject = response.getJSONObject("data");
+    //                    gourmetSaleCount = dataJSONObject.getInt("gourmetSalesCount");
+    //
+    //                } else
+    //                {
+    //                    gourmetSaleCount = 0;
+    //                }
+    //            } catch (Exception e)
+    //            {
+    //                gourmetSaleCount = 0;
+    //            }
+    //
+    //            onGourmetCount(url, gourmetSaleCount);
+    //        }
+    //
+    //        private void onGourmetCount(String url, int gourmetSaleCount)
+    //        {
+    //            if (Util.isTextEmpty(url) == true && gourmetSaleCount == -1)
+    //            {
+    //                // OnNetworkControllerListener onErrorResponse
+    //                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
+    //
+    //                setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
+    //                setConfirmEnable(false);
+    //                return;
+    //            }
+    //
+    //            String requestParams = null;
+    //            try
+    //            {
+    //                Uri requestUrl = Uri.parse(url);
+    //                requestParams = requestUrl.getQuery();
+    //            } catch (Exception e)
+    //            {
+    //                // do nothing!
+    //            }
+    //
+    //            String lastParams = mLastParams.toParamsString();
+    //            if (lastParams.equalsIgnoreCase(requestParams) == false)
+    //            {
+    //                // already running another request!
+    //                return;
+    //            }
+    //
+    //            if (gourmetSaleCount <= 0)
+    //            {
+    //                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
+    //            } else
+    //            {
+    //                setResultMessage(getString(R.string.label_gourmet_filter_result_count, gourmetSaleCount));
+    //            }
+    //
+    //            setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
+    //            setConfirmEnable(gourmetSaleCount == 0 ? false : true);
+    //        }
+    //    };
 }

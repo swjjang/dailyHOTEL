@@ -186,6 +186,13 @@
                 android:text="@string/act_booking_pay_mobile"
                 android:textColor="@drawable/selector_text_color_c323232_c900034"
                 android:textSize="13dp"/>
+
+            <View
+                android:id="@+id/disablePhoneView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/default_background_disable_cccffffff"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <View
@@ -219,6 +226,13 @@
                 android:text="@string/act_booking_pay_account"
                 android:textColor="@drawable/selector_text_color_c323232_c900034"
                 android:textSize="13dp"/>
+
+            <View
+                android:id="@+id/disableTransferView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/default_background_disable_cccffffff"
+                android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
