@@ -664,8 +664,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mPlaceSearchResultLayout.showListLayout();
-
-                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
 
             Keyword keyword = mGourmetSearchCuration.getKeyword();
@@ -703,7 +701,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-
+            if (viewType == ViewType.LIST)
+            {
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+            }
         }
 
         private String getSearchDate()
