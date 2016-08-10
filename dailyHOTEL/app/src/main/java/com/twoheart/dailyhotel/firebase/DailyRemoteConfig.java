@@ -74,45 +74,52 @@ public class DailyRemoteConfig
                 String androidServiceShutdown = mFirebaseRemoteConfig.getString("androidServiceShutdown");
                 String androidServiceShutdownMessage = mFirebaseRemoteConfig.getString("androidServiceShutdownMessage");
 
-                try
+                if (Constants.DEBUG == true)
                 {
-                    ExLog.d("androidUpdateVersion : " + new JSONObject(androidUpdateVersion).toString());
-                    ExLog.d("androidPaymentType : " + new JSONObject(androidPaymentType).toString());
-                    ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
-                    ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
-                    ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
-                    ExLog.d("androidServiceShutdown : " + new JSONObject(androidServiceShutdown).toString());
-                    ExLog.d("androidServiceShutdownMessage : " + new JSONObject(androidServiceShutdownMessage).toString());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
+                    try
+                    {
+                        ExLog.d("androidUpdateVersion : " + new JSONObject(androidUpdateVersion).toString());
+                        ExLog.d("androidPaymentType : " + new JSONObject(androidPaymentType).toString());
+                        ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
+                        ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
+                        ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
+                        ExLog.d("androidServiceShutdown : " + new JSONObject(androidServiceShutdown).toString());
+                        ExLog.d("androidServiceShutdownMessage : " + new JSONObject(androidServiceShutdownMessage).toString());
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
 
-                String currentVersion, forceVersion;
-
-
                 // 버전
+
+                String currentVersion = null, forceVersion = null;
+
                 try
                 {
                     JSONObject versionJSONObject = new JSONObject(androidUpdateVersion);
 
-                    switch(Constants.RELEASE_STORE)
+                    switch (Constants.RELEASE_STORE)
                     {
                         case PLAY_STORE:
                         {
                             JSONObject jsonObject = versionJSONObject.getJSONObject("play");
+                            currentVersion = jsonObject.getString("current");
+                            forceVersion = jsonObject.getString("force");
                             break;
                         }
 
                         case T_STORE:
                         {
                             JSONObject jsonObject = versionJSONObject.getJSONObject("one");
+                            currentVersion = jsonObject.getString("current");
+                            forceVersion = jsonObject.getString("force");
                             break;
                         }
                     }
-                }catch (Exception e)
+                } catch (Exception e)
                 {
-
+                    ExLog.e(e.toString());
                 }
 
                 writeCompanyInformation(mContext, companyInfo);
@@ -122,7 +129,7 @@ public class DailyRemoteConfig
 
                 if (listener != null)
                 {
-                    listener.onComplete();
+                    listener.onComplete(currentVersion, forceVersion);
                 }
             }
         }).addOnFailureListener(new OnFailureListener()
@@ -138,7 +145,7 @@ public class DailyRemoteConfig
                     ExLog.e(e.toString());
                 }
 
-                listener.onComplete();
+                listener.onComplete(null, null);
             }
         });
     }

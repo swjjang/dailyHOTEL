@@ -495,7 +495,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 String marketUrl;
 
-                if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
+                if (RELEASE_STORE == Stores.PLAY_STORE)
                 {
                     marketUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
                     marketLaunch.setData(Uri.parse(marketUrl));
@@ -523,36 +523,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         break;
                     }
-
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&dp=2";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&dp=3&n=4";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2&pi=5";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2&pi=5&ai=7";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2&pi=80&ios=1";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2&pi=80&ai=165&ios=1";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2&pi=45&cc=pension";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&d=20160710&n=2&pi=45&ai=12&ios=1&cc=pension&s=lp";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hl&dp=2&s=r";
-                    //
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gl&dp=2";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gl&d=20160710";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gl&d=20160711&pi=5";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gl&d=20160712&pi=5&ai=7";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gl&d=20160714&s=hp";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gl&dp=2&s=lp";
-                    //
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=m";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=rf";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=cl";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=su&rc=209329";
-
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hebw&url=http%3A%2F%2Fm.dailyhotel.co.kr%2Fbanner%2F160701coupon%2F";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=5&cal=1";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=hd&i=981&d=20160718&n=3";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160731&cal=1";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=5&v=gd&i=50136&d=20160721";
 
                     DailyDeepLink.getInstance().setDeepLink(Uri.parse(uri));
 
