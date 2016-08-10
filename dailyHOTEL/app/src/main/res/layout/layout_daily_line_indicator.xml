@@ -12,46 +12,5 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/tabLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp">
 
-        <View
-            android:id="@+id/dummyView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"/>
-
-        <View
-            android:id="@+id/imageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/detail_ic_more_img"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="27dp"
-            android:layout_marginRight="27dp"
-            android:layout_toLeftOf="@id/imageView"
-            android:layout_toRightOf="@id/dummyView"
-            android:background="@drawable/background_image_information_detail"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:paddingBottom="7dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="7dp"
-            android:textColor="@color/white"
-            android:textSize="12dp"/>
-    </RelativeLayout>
 </RelativeLayout>

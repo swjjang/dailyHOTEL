@@ -70,8 +70,6 @@
     <declare-styleable name="DailyLineIndicator">
         <attr name="indicatorColor" format="color" />
         <attr name="indicatorBackgroundColor" format="color" />
-        <attr name="indicatorHeight" format="dimension" />
-        <attr name="underlineHeight" format="dimension" />
     </declare-styleable>
 
 </resources>

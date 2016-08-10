@@ -11,25 +11,17 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
-public class DailyLineIndicator extends RelativeLayout
+public class DailyLineIndicator extends View
 {
     private final PageListener mPageListener = new PageListener();
     public ViewPager.OnPageChangeListener mOnPageChangeListener;
 
-    private LinearLayout mTabsContainer;
     private ViewPager mViewpager;
-
-    private DailyTextView mDescriptionTextView;
 
     private int mTabCount;
 
@@ -40,8 +32,6 @@ public class DailyLineIndicator extends RelativeLayout
 
     private int mIndicatorColor = 0xFFFFFFFF;
     private int mIndicatorBackgroundColor = 0x66FFFFFF;
-
-    private int mIndicatorHeight = 2;
 
     private int[][] mMeasureList;
 
@@ -61,30 +51,13 @@ public class DailyLineIndicator extends RelativeLayout
 
         setWillNotDraw(false);
 
-        View indicatorLayout = LayoutInflater.from(context).inflate(R.layout.layout_daily_line_indicator, null);
-
-        RelativeLayout.LayoutParams textLayoutParams = new RelativeLayout.LayoutParams(//
-            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        textLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        textLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        indicatorLayout.setLayoutParams(textLayoutParams);
-        addView(indicatorLayout);
-
-        mTabsContainer = (LinearLayout) indicatorLayout.findViewById(R.id.tabLayout);
-        mDescriptionTextView = (DailyTextView) indicatorLayout.findViewById(R.id.descriptionTextView);
-
-        mDescriptionTextView.setVisibility(View.INVISIBLE);
-
         DisplayMetrics dm = getResources().getDisplayMetrics();
-
-        mIndicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight, dm);
 
         // get custom attrs
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DailyLineIndicator);
 
         mIndicatorColor = a.getColor(R.styleable.DailyLineIndicator_indicatorColor, mIndicatorColor);
         mIndicatorBackgroundColor = a.getColor(R.styleable.DailyLineIndicator_indicatorBackgroundColor, mIndicatorBackgroundColor);
-        mIndicatorHeight = a.getDimensionPixelSize(R.styleable.DailyLineIndicator_indicatorHeight, mIndicatorHeight);
 
         a.recycle();
 
@@ -114,12 +87,9 @@ public class DailyLineIndicator extends RelativeLayout
 
     public void notifyDataSetChanged()
     {
-
-        mTabsContainer.removeAllViews();
-
         mTabCount = mViewpager.getAdapter().getCount();
 
-        mMeasureList = getMeasureWidthList(mTabsContainer, mTabCount);
+        mMeasureList = getMeasureWidthList(mTabCount);
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
@@ -144,23 +114,21 @@ public class DailyLineIndicator extends RelativeLayout
 
     }
 
-    private int[][] getMeasureWidthList(View view, int tabCount)
+    private int[][] getMeasureWidthList(int tabCount)
     {
-        if (view == null || tabCount == 0)
+        if (tabCount == 0)
         {
             return null;
         }
 
         if (tabCount == 1)
         {
-            return new int[][]{{view.getWidth(), 0}};
+            return new int[][]{{getWidth(), 0}};
         }
 
         int[][] measureList = new int [tabCount][2];
 
-        int delta = view.getWidth();
-        int right = view.getRight();
-        int left;
+        int delta = getWidth();
 
         for (int i = tabCount; i > 0; i--)
         {
@@ -169,9 +137,7 @@ public class DailyLineIndicator extends RelativeLayout
             measureList[i - 1][0] = oneWidth;
             delta = delta - oneWidth;
 
-            left = right - oneWidth;
-            measureList[i - 1][1] = left;
-            right = left;
+            measureList[i - 1][1] = delta;
         }
 
         return measureList;
@@ -191,7 +157,7 @@ public class DailyLineIndicator extends RelativeLayout
 
         // draw indicator background line
         mRectPaint.setColor(mIndicatorBackgroundColor);
-        canvas.drawRect(mTabsContainer.getLeft(), height - mIndicatorHeight, mTabsContainer.getRight(), height, mRectPaint);
+        canvas.drawRect(0, 0, getRight(), height, mRectPaint);
 
         // draw indicator line
         mRectPaint.setColor(mIndicatorColor);
@@ -214,7 +180,7 @@ public class DailyLineIndicator extends RelativeLayout
             lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
         }
 
-        canvas.drawRect(lineLeft, height - mIndicatorHeight, lineRight, height, mRectPaint);
+        canvas.drawRect(lineLeft, 0, lineRight, height, mRectPaint);
     }
 
     private class PageListener implements ViewPager.OnPageChangeListener
@@ -271,17 +237,6 @@ public class DailyLineIndicator extends RelativeLayout
         return this.mIndicatorColor;
     }
 
-    public void setIndicatorHeight(int indicatorLineHeightPx)
-    {
-        this.mIndicatorHeight = indicatorLineHeightPx;
-        invalidate();
-    }
-
-    public int getIndicatorHeight()
-    {
-        return mIndicatorHeight;
-    }
-
     public void setIndicatorBackgroundColorResource(int resId)
     {
         this.mIndicatorBackgroundColor = getResources().getColor(resId);
@@ -297,18 +252,6 @@ public class DailyLineIndicator extends RelativeLayout
     public int getIndicatorBackgroundColor()
     {
         return this.mIndicatorBackgroundColor;
-    }
-
-    public void setImageInformation(String description)
-    {
-        if (Util.isTextEmpty(description) == false)
-        {
-            mDescriptionTextView.setVisibility(View.VISIBLE);
-            mDescriptionTextView.setText(description);
-        } else
-        {
-            mDescriptionTextView.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override

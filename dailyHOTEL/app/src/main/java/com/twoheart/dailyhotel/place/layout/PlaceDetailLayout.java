@@ -57,6 +57,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected PlaceDetailImageViewPagerAdapter mImageAdapter;
     protected TextView mBookingTextView;
     protected TextView mSoldoutTextView;
+    protected TextView mDescriptionTextView;
 
     protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
@@ -138,6 +139,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mImageHeight = Util.getLCDWidth(mContext);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
+
+        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
 
         mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
 
@@ -549,6 +552,18 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
     }
 
+    public void setImageInformation(String description)
+    {
+        if (Util.isTextEmpty(description) == false)
+        {
+            mDescriptionTextView.setVisibility(View.VISIBLE);
+            mDescriptionTextView.setText(description);
+        } else
+        {
+            mDescriptionTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
     {
         private int mScrollState = -1;
@@ -558,7 +573,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         public void onPageSelected(int position)
         {
             ((OnEventListener) mOnEventListener).onSelectedImagePosition(position);
-            mDailyLineIndicator.setImageInformation(mPlaceDetail.getImageInformationList().get(position).description);
+            setImageInformation(mPlaceDetail.getImageInformationList().get(position).description);
         }
 
         @Override
