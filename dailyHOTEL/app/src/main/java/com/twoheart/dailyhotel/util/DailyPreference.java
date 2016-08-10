@@ -63,6 +63,11 @@ public class DailyPreference
     private static final String KEY_INTRO_NEW_VERSION = "112";
     private static final String KEY_INTRO_NEW_URL = "113";
 
+    private static final String KEY_PAYMENT_IS_SIMPLECARD_ENABLED = "120";
+    private static final String KEY_PAYMENT_IS_CARD_ENABLED = "121";
+    private static final String KEY_PAYMENT_IS_PHONE_ENABLED = "122";
+    private static final String KEY_PAYMENT_IS_VIRTUAL_ENABLED = "123";
+
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
 

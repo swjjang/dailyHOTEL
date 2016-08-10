@@ -581,6 +581,26 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
+    public void requestGourmetSearchList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "";
+
+        String params;
+
+        if (Util.isTextEmpty(gourmetParams) == false)
+        {
+            params = "?" + gourmetParams;
+        } else
+        {
+            return;
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
     public void requestGourmetDetailInformation(Object tag, int index, String day, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/restaurant/info" : "MjkkMzYkNDckMjUkODMk$M0FCMTY0Qjk2RDU1NTRFNTc1ROURDRVEFFOTEVyMUFDQTkwNJkExRTkwMzBGNUQ5MTgyQUI4MzJGNEQ2MTBUEOEY2OQ==$";

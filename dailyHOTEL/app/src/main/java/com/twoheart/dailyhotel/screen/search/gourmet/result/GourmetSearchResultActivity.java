@@ -254,6 +254,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
 
+            // 고정 위치로 진입한 경우
             mIsFixedLocation = true;
             mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else
@@ -268,6 +269,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         if (saleTime == null)
         {
             finish();
+            return;
         }
 
         mGourmetSearchCuration.setKeyword(keyword);
@@ -373,7 +375,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void finish()
         {
-            // 사용하지 않음
+            GourmetSearchResultActivity.this.finish();
         }
 
         @Override
@@ -526,6 +528,49 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private GourmetSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetSearchResultNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onResponseAddress(String address)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            mAddress = address;
+            mPlaceSearchResultLayout.setToolbarTitle(address);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            unLockUI();
+            GourmetSearchResultActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            unLockUI();
+            GourmetSearchResultActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            unLockUI();
+            GourmetSearchResultActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            GourmetSearchResultActivity.this.onErrorToastMessage(message);
+        }
+    };
+
     private GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
     {
         @Override
@@ -634,14 +679,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Province province = mGourmetSearchCuration.getProvince();
-
-            if (province == null)
-            {
-                releaseUiComponent();
-                return;
-            }
-
             Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetSearchCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
         }
@@ -700,61 +737,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        @Override
-        public void onRecordAnalytics(ViewType viewType)
-        {
-
-        }
-
         private String getSearchDate()
         {
             String checkInDate = mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");
 
             return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
-    };
-
-    private GourmetSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetSearchResultNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onResponseAddress(String address)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            mAddress = address;
-
-            mPlaceSearchResultLayout.setToolbarTitle(address);
-        }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onRecordAnalytics(ViewType viewType)
         {
-            unLockUI();
-            GourmetSearchResultActivity.this.onErrorResponse(volleyError);
-        }
 
-        @Override
-        public void onError(Exception e)
-        {
-            unLockUI();
-            GourmetSearchResultActivity.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            unLockUI();
-            GourmetSearchResultActivity.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            unLockUI();
-            GourmetSearchResultActivity.this.onErrorToastMessage(message);
         }
     };
 }

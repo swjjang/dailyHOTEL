@@ -112,6 +112,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private View mDisableSimpleCardView;
     private View mDisableCardView;
+    private View mDisablePhoneView;
+    private View mDisableTransferView;
 
     private View mCardManagerLayout;
     private TextView mCardManagerTextView;
@@ -327,7 +329,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mDisableCardView = mCardLayout.findViewById(R.id.disableCardView);
 
         mPhoneLayout = findViewById(R.id.phoneLayout);
+        mDisablePhoneView = mPhoneLayout.findViewById(R.id.disablePhoneView);
         mTransferLayout = findViewById(R.id.transferLayout);
+        mDisableTransferView = mPhoneLayout.findViewById(R.id.disableTransferView);
 
         mCardManagerLayout.setOnClickListener(this);
         mSimpleCardLayout.setOnClickListener(this);
@@ -337,6 +341,31 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         // 기본이 간편카드 결제이다.
         changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+    }
+
+    private void setPaymentTypeEnabled(View view, boolean enabled)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            view.setOnClickListener(null);
+            view.setVisibility(View.GONE);
+        } else
+        {
+            view.setVisibility(View.VISIBLE);
+            view.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
+        }
     }
 
     private void updatePaymentPrice(HotelPaymentInformation hotelPaymentInformation)
@@ -423,36 +452,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         {
             mIsUnderPrice = true;
 
-            mDisableSimpleCardView.setVisibility(View.VISIBLE);
-            mDisableCardView.setVisibility(View.VISIBLE);
-
-            mDisableSimpleCardView.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            });
-
-            mDisableCardView.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            });
+            setPaymentTypeEnabled(mDisableSimpleCardView, false);
+            setPaymentTypeEnabled(mDisableCardView, false);
 
             // 기본이 간편카드 결제이다.
             changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
         } else
         {
-            mDisableSimpleCardView.setOnClickListener(null);
-            mDisableCardView.setOnClickListener(null);
-
-            mDisableSimpleCardView.setVisibility(View.GONE);
-            mDisableCardView.setVisibility(View.GONE);
+            setPaymentTypeEnabled(mDisableSimpleCardView, true);
+            setPaymentTypeEnabled(mDisableCardView, true);
 
             // 1000원 이하였다가 되돌아 오는 경우 한번 간편결제로 바꾸어준다.
             if (mIsUnderPrice == true)
