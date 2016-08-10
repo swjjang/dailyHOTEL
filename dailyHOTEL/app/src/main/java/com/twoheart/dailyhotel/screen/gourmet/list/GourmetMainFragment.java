@@ -298,7 +298,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
 
         if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen))
