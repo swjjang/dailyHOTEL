@@ -32,11 +32,9 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -750,8 +748,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
 
                 mPlaceSearchResultLayout.showListLayout();
-
-                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
 
             Keyword keyword = mStaySearchCuration.getKeyword();
@@ -771,17 +767,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        private String getSearchDate()
-        {
-            String checkInDate = mStaySearchCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            String checkOutDate = mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyMMdd");
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
-        }
-
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-
+            if (viewType == ViewType.LIST)
+            {
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+            }
         }
     };
 }
