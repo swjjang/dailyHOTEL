@@ -154,7 +154,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mStaySearchCuration.setCategory(Category.ALL);
 
             mPlaceSearchResultLayout.setOptionFilterEnabled(false);
-            mPlaceSearchResultLayout.cleatCategoryTab();
+            mPlaceSearchResultLayout.clearCategoryTab();
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.processListLayout();
             mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
