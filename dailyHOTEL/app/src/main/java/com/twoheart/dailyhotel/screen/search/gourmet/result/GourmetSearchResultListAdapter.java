@@ -40,7 +40,7 @@ public class GourmetSearchResultListAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
 
                 return new GourmetViewHolder(view);
             }

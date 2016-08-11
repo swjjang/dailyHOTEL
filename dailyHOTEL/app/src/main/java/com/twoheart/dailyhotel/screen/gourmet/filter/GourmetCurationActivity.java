@@ -635,20 +635,22 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         Province province = mGourmetCuration.getProvince();
-
         Map<String, String> eventParams = new HashMap<>();
 
-        if (province instanceof Area)
+        if (province != null)
         {
-            Area area = (Area) province;
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else
-        {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else
+            {
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
@@ -697,17 +699,20 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         Map<String, String> eventParams = new HashMap<>();
         eventParams.put(AnalyticsManager.KeyType.SORTING, gourmetCurationOption.getSortType().name());
 
-        if (province instanceof Area)
+        if(province != null)
         {
-            Area area = (Area) province;
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else
-        {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else
+            {
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
@@ -770,7 +775,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         return mGourmetCuration;
     }
 
-    private void checkedChangedDistance()
+    protected void checkedChangedDistance()
     {
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
         Province province = mGourmetCuration.getProvince();
@@ -780,17 +785,20 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         Map<String, String> eventParams = new HashMap<>();
 
-        if (province instanceof Area)
+        if (province != null)
         {
-            Area area = (Area) province;
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else
-        {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else
+            {
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//

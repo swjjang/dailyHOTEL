@@ -19,7 +19,7 @@ public class Gourmet extends Place
     public String category;
     public int categoryCode;
     public int categorySequence;
-    public float distance;
+    public double distance;
 
     private GourmetFilters mGourmetFilters;
 

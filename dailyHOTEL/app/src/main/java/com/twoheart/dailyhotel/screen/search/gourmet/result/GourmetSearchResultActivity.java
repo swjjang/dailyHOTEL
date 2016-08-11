@@ -30,9 +30,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -118,6 +115,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(false);
         }
+
+        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+        mPlaceSearchResultLayout.processListLayout();
     }
 
     @Override
@@ -147,7 +147,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             mPlaceSearchResultLayout.setOptionFilterEnabled(false);
             mPlaceSearchResultLayout.clearCategoryTab();
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
             mPlaceSearchResultLayout.processListLayout();
             mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
         }
@@ -423,7 +423,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             lockUI();
 
-            GourmetListFragment currentFragment = (GourmetListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+            GourmetSearchResultListFragment currentFragment = (GourmetSearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
 
             if (currentFragment == null)
             {
@@ -481,8 +481,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = GourmetCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetSearchCuration);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
+                mViewType, mSearchType, mGourmetSearchCuration, mIsFixedLocation);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
@@ -590,6 +591,16 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
+        public void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
+        {
+            if (page <= 1 && mGourmetSearchCuration.getCurationOption().isDefaultFilter() == true)
+            {
+                ((GourmetCurationOption) mGourmetSearchCuration.getCurationOption()).setCategoryCoderMap(categoryCodeMap);
+                ((GourmetCurationOption) mGourmetSearchCuration.getCurationOption()).setCategorySequenceMap(categorySequenceMap);
+            }
+        }
+
+        @Override
         public void onEventBannerClick(EventBanner eventBanner)
         {
 
@@ -635,17 +646,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                     if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
-                        GourmetListAdapter stayListAdapter = (GourmetListAdapter) recyclerView.getAdapter();
+                        GourmetSearchResultListAdapter gourmetListAdapter = (GourmetSearchResultListAdapter) recyclerView.getAdapter();
 
-                        if (stayListAdapter != null)
+                        if (gourmetListAdapter != null)
                         {
-                            int count = stayListAdapter.getItemCount();
+                            int count = gourmetListAdapter.getItemCount();
 
                             if (count == 0)
                             {
                             } else
                             {
-                                PlaceViewItem placeViewItem = stayListAdapter.getItem(stayListAdapter.getItemCount() - 1);
+                                PlaceViewItem placeViewItem = gourmetListAdapter.getItem(gourmetListAdapter.getItemCount() - 1);
 
                                 if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                                 {
@@ -668,7 +679,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowMenuBar()
         {
-
         }
 
         @Override
@@ -679,7 +689,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this, mViewType, mGourmetSearchCuration);
+            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
+                mViewType, mSearchType, mGourmetSearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
         }
 
@@ -699,7 +710,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
             {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showListLayout();
             }
 

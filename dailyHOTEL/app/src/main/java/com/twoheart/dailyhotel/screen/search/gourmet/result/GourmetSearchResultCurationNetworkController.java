@@ -57,7 +57,7 @@ public class GourmetSearchResultCurationNetworkController extends BaseNetworkCon
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    totalCount = dataJSONObject.getInt("gourmetSalesCount");
+                    totalCount = dataJSONObject.getInt("searchCount");
                     maxCount = dataJSONObject.getInt("searchMaxCount");
                 }
             } catch (Exception e)

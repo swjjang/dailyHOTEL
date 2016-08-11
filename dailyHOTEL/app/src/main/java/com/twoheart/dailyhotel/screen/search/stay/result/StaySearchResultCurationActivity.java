@@ -153,43 +153,6 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
     }
 
     @Override
-    protected void onComplete()
-    {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
-
-        Map<String, String> eventParams = new HashMap<>();
-
-        eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
-
-        //        if (mProvince instanceof Area)
-        //        {
-        //            Area area = (Area) mProvince;
-        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        //        } else
-        //        {
-        //            eventParams.put(AnalyticsManager.KeyType.COUNTRY, mProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-        //            eventParams.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-        //            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-        //        }
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
-
-        if (Constants.DEBUG == true)
-        {
-            ExLog.d(stayCurationOption.toString());
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mStayCuration);
-
-        setResult(RESULT_OK, intent);
-        hideAnimation();
-    }
-
-    @Override
     protected BaseNetworkController getNetworkController(Context context)
     {
         return new StaySearchResultCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);

@@ -46,18 +46,6 @@ public class StaySearchParams extends StayParams
             stays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
         }
 
-        Province province = staySearchCuration.getProvince();
-
-        if (province != null)
-        {
-            provinceIdx = province.getProvinceIndex();
-
-            if (province instanceof Area)
-            {
-                areaIdx = ((Area) province).index;
-            }
-        }
-
         category = staySearchCuration.getCategory();
 
         StayCurationOption stayCurationOption = (StayCurationOption) staySearchCuration.getCurationOption();

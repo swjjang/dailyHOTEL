@@ -9,17 +9,19 @@ import com.twoheart.dailyhotel.util.Util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GourmetSearchParams extends GourmetParams
+public class GourmetParams extends PlaceParams
 {
-    private String term;
-    private double radius;
+    protected String date;
+    protected String category;
+    protected String time;
+    protected String luxury;
 
-    public GourmetSearchParams(PlaceCuration placeCuration)
+    public GourmetParams(PlaceCuration placeCuration)
     {
         super(placeCuration);
     }
 
-    public GourmetSearchParams(Parcel in)
+    public GourmetParams(Parcel in)
     {
         super(in);
     }
@@ -32,18 +34,30 @@ public class GourmetSearchParams extends GourmetParams
             return;
         }
 
-        GourmetSearchCuration gourmetSearchCuration = (GourmetSearchCuration) placeCuration;
+        GourmetCuration gourmetCuration = (GourmetCuration) placeCuration;
 
         clear();
 
-        SaleTime saleTime = gourmetSearchCuration.getSaleTime();
+        SaleTime saleTime = gourmetCuration.getSaleTime();
 
         if (saleTime != null)
         {
             date = saleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
         }
 
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetSearchCuration.getCurationOption();
+        Province province = gourmetCuration.getProvince();
+
+        if (province != null)
+        {
+            provinceIdx = province.getProvinceIndex();
+
+            if (province instanceof Area)
+            {
+                areaIdx = ((Area) province).index;
+            }
+        }
+
+        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetCuration.getCurationOption();
 
         if (gourmetCurationOption != null)
         {
@@ -55,14 +69,15 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
-        term = gourmetSearchCuration.getKeyword() == null ? null : gourmetSearchCuration.getKeyword().name;
-        radius = gourmetSearchCuration.getRadius();
-
-        Location location = gourmetSearchCuration.getLocation();
-        if (location != null)
+        if (Constants.SortType.DISTANCE == mSort)
         {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            Location location = gourmetCuration.getLocation();
+
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
         }
     }
 
@@ -89,12 +104,8 @@ public class GourmetSearchParams extends GourmetParams
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(getParamString("reserveDate", date)).append("&");
-
-        if (provinceIdx != 0)
-        {
-            stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
-        }
+        stringBuilder.append(getParamString("date", date)).append("&");
+        stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
 
         if (areaIdx != 0)
         {
@@ -127,35 +138,16 @@ public class GourmetSearchParams extends GourmetParams
             stringBuilder.append(getParamString("limit", limit)).append("&");
         }
 
-        if (Util.isTextEmpty(term) == false)
-        {
-            stringBuilder.append(getParamString("term", term)).append("&");
-        }
-
-        boolean isNeedLocation = false;
-
-        if (radius != 0d)
-        {
-            stringBuilder.append(getParamString("radius", radius)).append("&");
-
-            isNeedLocation = true;
-        }
-
         if (Constants.SortType.DEFAULT != mSort)
         {
             stringBuilder.append(getParamString("sortProperty", sortProperty)).append("&");
             stringBuilder.append(getParamString("sortDirection", sortDirection)).append("&");
 
-            if (Constants.SortType.DISTANCE == mSort)
+            if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
             {
-                isNeedLocation = true;
+                stringBuilder.append(getParamString("latitude", latitude)).append("&");
+                stringBuilder.append(getParamString("longitude", longitude)).append("&");
             }
-        }
-
-        if (hasLocation() == true && isNeedLocation == true)
-        {
-            stringBuilder.append(getParamString("latitude", latitude)).append("&");
-            stringBuilder.append(getParamString("longitude", longitude)).append("&");
         }
 
         stringBuilder.append(getParamString("details", details)).append("&");
@@ -166,6 +158,7 @@ public class GourmetSearchParams extends GourmetParams
             stringBuilder.setLength(length - 1);
         }
 
+        //        ExLog.d(" params : " + sb.toString());
         return stringBuilder.toString();
     }
 
@@ -278,8 +271,10 @@ public class GourmetSearchParams extends GourmetParams
     {
         super.readFromParcel(in);
 
-        term = in.readString();
-        radius = in.readDouble();
+        date = in.readString();
+        category = in.readString();
+        time = in.readString();
+        luxury = in.readString();
     }
 
     @Override
@@ -287,8 +282,10 @@ public class GourmetSearchParams extends GourmetParams
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeString(term);
-        dest.writeDouble(radius);
+        dest.writeString(date);
+        dest.writeString(category);
+        dest.writeString(time);
+        dest.writeString(luxury);
     }
 
     @Override
@@ -299,15 +296,15 @@ public class GourmetSearchParams extends GourmetParams
 
     public static final Creator CREATOR = new Creator()
     {
-        public GourmetSearchParams createFromParcel(Parcel in)
+        public GourmetParams createFromParcel(Parcel in)
         {
-            return new GourmetSearchParams(in);
+            return new GourmetParams(in);
         }
 
         @Override
-        public GourmetSearchParams[] newArray(int size)
+        public GourmetParams[] newArray(int size)
         {
-            return new GourmetSearchParams[size];
+            return new GourmetParams[size];
         }
     };
 }
