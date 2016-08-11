@@ -282,6 +282,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
         setCategoryTabLayoutVisibility(View.INVISIBLE);
 
+        setMenuBarLayoutTranslationY(0);
+
         mCategoryTabLayout.removeAllTabs();
 
         TabLayout.Tab tab;
