@@ -901,7 +901,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
      * 같은 영역에 있는 호텔들을 찾아낸다.
      *
      * @param hotelArrayList
-     * @param hashMap
      * @return
      */
     private ArrayList<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList)
