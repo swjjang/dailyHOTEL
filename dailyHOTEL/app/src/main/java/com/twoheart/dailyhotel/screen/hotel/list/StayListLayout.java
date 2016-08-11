@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -39,8 +38,6 @@ public class StayListLayout extends PlaceListLayout
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
-        boolean isShowActivityEmptyView = false;
-
         switch (viewType)
         {
             case LIST:
@@ -83,9 +80,6 @@ public class StayListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-
-                    isShowActivityEmptyView = true;
-
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -98,18 +92,6 @@ public class StayListLayout extends PlaceListLayout
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY);
                 break;
-        }
-
-        if (mStayCuration == null)
-        {
-            // skip!
-            return;
-        }
-
-        Category category = mStayCuration.getCategory();
-        if (Category.ALL.code.equalsIgnoreCase(category.code))
-        {
-            ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
         }
     }
 
@@ -239,7 +221,6 @@ public class StayListLayout extends PlaceListLayout
             {
                 mPlaceListAdapter.notifyDataSetChanged();
                 setVisibility(fragmentManager, Constants.ViewType.GONE, true);
-
             } else
             {
                 // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.

@@ -516,7 +516,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             mFragmentPagerAdapter.notifyDataSetChanged();
 
             mViewPager.setOffscreenPageLimit(mCategoryTabLayout.getTabCount());
-            mViewPager.setAdapter(mFragmentPagerAdapter);
 
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 

@@ -41,8 +41,6 @@ public class GourmetListLayout extends PlaceListLayout
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
-        boolean isShowActivityEmptyView = false;
-
         switch (viewType)
         {
             case LIST:
@@ -85,8 +83,6 @@ public class GourmetListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-
-                    isShowActivityEmptyView = true;
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -100,8 +96,6 @@ public class GourmetListLayout extends PlaceListLayout
                 AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
                 break;
         }
-
-        ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
     }
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)
