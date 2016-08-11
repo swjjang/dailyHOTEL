@@ -267,7 +267,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showStopOnSaleDialog()
     {
-        super.showStopOnSaleDialog();
+        showChangedValueDialog(R.string.dialog_msg_gourmet_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
             AnalyticsManager.Action.SOLDOUT, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);

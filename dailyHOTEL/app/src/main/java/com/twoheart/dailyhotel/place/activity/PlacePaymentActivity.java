@@ -74,6 +74,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void showChangedPriceDialog();
 
+    protected abstract void showStopOnSaleDialog();
+
     protected abstract void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
     protected abstract void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl);
@@ -485,11 +487,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     releaseUiComponent();
                 }
             }, true);
-    }
-
-    protected void showStopOnSaleDialog()
-    {
-        showChangedValueDialog(R.string.dialog_msg_stop_onsale, null);
     }
 
     protected void showChangedTimeDialog()

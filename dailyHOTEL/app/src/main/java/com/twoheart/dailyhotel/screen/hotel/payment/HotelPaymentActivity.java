@@ -871,7 +871,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void showStopOnSaleDialog()
     {
-        super.showStopOnSaleDialog();
+        showChangedValueDialog(R.string.dialog_msg_stay_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
             Action.SOLDOUT, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
