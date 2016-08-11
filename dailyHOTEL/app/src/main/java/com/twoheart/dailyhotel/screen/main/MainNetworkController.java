@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -28,7 +29,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onCheckServerResponse(String title, String message);
 
-        //        void onAppVersionResponse(int maxVersion, int minVersion);
+        void onAppVersionResponse(String currentVersion, String forceVersion);
 
         void onConfigurationResponse();
 
@@ -100,6 +101,11 @@ public class MainNetworkController extends BaseNetworkController
         }
 
         DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
+    }
+
+    protected void requestVersion()
+    {
+        DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener);
     }
 
     protected void requestGourmetIsExistRating()
@@ -201,54 +207,43 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    //    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String maxVersionName;
-    //                String minVersionName;
-    //
-    //                switch (Constants.RELEASE_STORE)
-    //                {
-    //                    case N_STORE:
-    //                        maxVersionName = response.getString("nstore_max");
-    //                        minVersionName = response.getString("nstore_min");
-    //                        break;
-    //
-    //                    case T_STORE:
-    //                        maxVersionName = response.getString("tstore_max");
-    //                        minVersionName = response.getString("tstore_min");
-    //                        break;
-    //
-    //                    case PLAY_STORE:
-    //                    default:
-    //                        maxVersionName = response.getString("play_max");
-    //                        minVersionName = response.getString("play_min");
-    //                        break;
-    //                }
-    //
-    //                DailyPreference.getInstance(mContext).setMaxVersion(maxVersionName);
-    //                DailyPreference.getInstance(mContext).setMinVersion(minVersionName);
-    //
-    //                int maxVersion = Integer.parseInt(maxVersionName.replace(".", ""));
-    //                int minVersion = Integer.parseInt(minVersionName.replace(".", ""));
-    //
-    //                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersion, minVersion);
-    //            } catch (Exception e)
-    //            {
-    //                mOnNetworkControllerListener.onError(e);
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onErrorResponse(VolleyError volleyError)
-    //        {
-    //            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
-    //        }
-    //    };
+    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String maxVersionName;
+                String minVersionName;
+
+                switch (Constants.RELEASE_STORE)
+                {
+                    case T_STORE:
+                        maxVersionName = response.getString("tstore_max");
+                        minVersionName = response.getString("tstore_min");
+                        break;
+
+                    case PLAY_STORE:
+                    default:
+                        maxVersionName = response.getString("play_max");
+                        minVersionName = response.getString("play_min");
+                        break;
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+        }
+    };
 
     //    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
