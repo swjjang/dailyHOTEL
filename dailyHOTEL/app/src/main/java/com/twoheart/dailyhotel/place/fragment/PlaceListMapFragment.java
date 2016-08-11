@@ -563,6 +563,16 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
             if (Util.isOverAPI21() == true)
             {
+                mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+                {
+                    @Override
+                    public void onCameraIdle()
+                    {
+                        mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                    }
+                });
+
+                mGoogleMap.setOnCameraChangeListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -809,6 +819,16 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
             if (Util.isOverAPI21() == true)
             {
+                mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+                {
+                    @Override
+                    public void onCameraIdle()
+                    {
+                        mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                    }
+                });
+
+                mGoogleMap.setOnCameraChangeListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -1067,6 +1087,16 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 if (Util.isOverAPI21() == true)
                 {
+                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+                    {
+                        @Override
+                        public void onCameraIdle()
+                        {
+                            mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                        }
+                    });
+
+                    mGoogleMap.setOnCameraChangeListener(null);
                     mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 } else
                 {
@@ -1097,6 +1127,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         {
             return null;
         }
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////
