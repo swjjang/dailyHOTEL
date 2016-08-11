@@ -623,8 +623,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.showEmptyLayout();
-
-                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             }
         }
 
@@ -643,7 +641,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             PlaceListFragment currentPlaceListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
-
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);

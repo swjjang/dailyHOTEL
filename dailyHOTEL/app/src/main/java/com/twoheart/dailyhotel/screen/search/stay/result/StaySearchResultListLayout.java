@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
@@ -34,8 +33,6 @@ public class StaySearchResultListLayout extends StayListLayout
     @Override
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
-        boolean isShowActivityEmptyView = false;
-
         switch (viewType)
         {
             case LIST:
@@ -80,8 +77,6 @@ public class StaySearchResultListLayout extends StayListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-
-                    isShowActivityEmptyView = true;
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -93,18 +88,6 @@ public class StaySearchResultListLayout extends StayListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
-        }
-
-        if (mStayCuration == null)
-        {
-            // skip!
-            return;
-        }
-
-        Category category = mStayCuration.getCategory();
-        if (Category.ALL.code.equalsIgnoreCase(category.code))
-        {
-            ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
         }
     }
 

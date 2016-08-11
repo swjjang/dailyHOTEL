@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -320,6 +321,12 @@ public class StayListFragment extends PlaceListFragment
                 {
                     setVisibility(ViewType.GONE, true);
                 }
+
+                Category category = mStayCuration.getCategory();
+                if (Category.ALL.code.equalsIgnoreCase(category.code))
+                {
+                    mEventListener.onShowActivityEmptyView(size == 0);
+                }
                 break;
             }
 
@@ -331,6 +338,12 @@ public class StayListFragment extends PlaceListFragment
                 if (mapSize == 0)
                 {
                     setVisibility(ViewType.GONE, true);
+                }
+
+                Category category = mStayCuration.getCategory();
+                if (Category.ALL.code.equalsIgnoreCase(category.code))
+                {
+                    mEventListener.onShowActivityEmptyView(mapSize == 0);
                 }
                 break;
             }

@@ -266,6 +266,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     {
                         setVisibility(ViewType.GONE, true);
                     }
+
+                    mEventListener.onShowActivityEmptyView(size == 0);
                     break;
                 }
 
@@ -278,6 +280,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     {
                         setVisibility(ViewType.GONE, true);
                     }
+
+                    mEventListener.onShowActivityEmptyView(mapSize == 0);
                     break;
                 }
             }

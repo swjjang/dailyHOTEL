@@ -50,8 +50,6 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
-        boolean isShowActivityEmptyView = false;
-
         switch (viewType)
         {
             case LIST:
@@ -98,8 +96,6 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-
-                    isShowActivityEmptyView = true;
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -112,8 +108,6 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
         }
-
-        ((OnEventListener) mOnEventListener).onShowActivityEmptyView(isShowActivityEmptyView);
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)

@@ -505,6 +505,8 @@ public class GourmetListFragment extends PlaceListFragment
                         mGourmetListLayout.setList(getChildFragmentManager(), mViewType, null, gourmetCurationOption.getSortType());
 
                         setVisibility(ViewType.GONE, true);
+
+                        mOnEventListener.onShowActivityEmptyView(true);
                     } else
                     {
                         String imageUrl = dataJSONObject.getString("imgUrl");
@@ -528,6 +530,8 @@ public class GourmetListFragment extends PlaceListFragment
 
                             mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
                         }
+
+                        mOnEventListener.onShowActivityEmptyView(false);
                     }
                 } else
                 {
