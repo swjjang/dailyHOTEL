@@ -158,7 +158,7 @@ public class Gourmet extends Place
 
     private void setAmenitiesFlag(GourmetFilters gourmetFilters, JSONObject jsonObject) throws JSONException
     {
-        gourmetFilters.amenitiesFlag = GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE;
+        gourmetFilters.amenitiesFlag = GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE;
 
         boolean parking = false;
 
@@ -169,7 +169,7 @@ public class Gourmet extends Place
 
         if (parking == true)
         {
-            gourmetFilters.amenitiesFlag |= GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING;
+            gourmetFilters.amenitiesFlag |= GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING;
         }
     }
 

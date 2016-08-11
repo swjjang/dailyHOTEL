@@ -261,7 +261,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         View parkingCheckView = mAmenitiesLayout.findViewById(R.id.parkingCheckView);
         parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
 
-        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
         {
             parkingCheckView.setSelected(true);
         }
@@ -663,7 +663,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         switch (v.getId())
         {
             case R.id.parkingCheckView:
-                updateAmenitiesFilter(v, GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING);
+                updateAmenitiesFilter(v, GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING);
                 break;
 
             case R.id.time0611View:

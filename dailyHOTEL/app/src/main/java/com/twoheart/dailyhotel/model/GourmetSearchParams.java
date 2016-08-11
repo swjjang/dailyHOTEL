@@ -200,27 +200,27 @@ public class GourmetSearchParams extends PlaceParams
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
         {
-            stringBuilder.append(prefix).append("6-11").append("&");
+            stringBuilder.append(prefix).append("T6-11").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
         {
-            stringBuilder.append(prefix).append("11-15").append("&");
+            stringBuilder.append(prefix).append("T11-15").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
         {
-            stringBuilder.append(prefix).append("15-17").append("&");
+            stringBuilder.append(prefix).append("T15-17").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
         {
-            stringBuilder.append(prefix).append("17-21").append("&");
+            stringBuilder.append(prefix).append("T17-21").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
         {
-            stringBuilder.append(prefix).append("21-06").append("&");
+            stringBuilder.append(prefix).append("T21-24").append("&");
         }
 
         int length = stringBuilder.length();
@@ -234,7 +234,7 @@ public class GourmetSearchParams extends PlaceParams
 
     private String toParamStingByAmenities(int flagAmenitiesFilters)
     {
-        if (flagAmenitiesFilters == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        if (flagAmenitiesFilters == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
         {
             return null;
         }
@@ -242,7 +242,7 @@ public class GourmetSearchParams extends PlaceParams
         String prefix = "luxury=";
         StringBuilder stringBuilder = new StringBuilder();
 
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+        if ((flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
         {
             stringBuilder.append(prefix).append("Parking").append("&");
         }

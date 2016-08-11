@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class GourmetFilters implements Parcelable
 {
-    public static final int FLAG_HOTEL_FILTER_AMENITIES_NONE = 0x00;
-    public static final int FLAG_HOTEL_FILTER_AMENITIES_PARKING = 0x01;
+    public static final int FLAG_GOURMET_FILTER_AMENITIES_NONE = 0x00;
+    public static final int FLAG_GOURMET_FILTER_AMENITIES_PARKING = 0x01;
 
     private GourmetFilter[] mGourmetFilterArray;
     public String category;
@@ -75,7 +75,7 @@ public class GourmetFilters implements Parcelable
 
     private boolean isAmenitiesFiltered(int flagAmenitiesFilters)
     {
-        if (flagAmenitiesFilters == FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        if (flagAmenitiesFilters == FLAG_GOURMET_FILTER_AMENITIES_NONE)
         {
             return true;
         }

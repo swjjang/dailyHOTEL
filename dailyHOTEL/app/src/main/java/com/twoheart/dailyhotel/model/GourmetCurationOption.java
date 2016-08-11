@@ -64,7 +64,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         }
 
         flagTimeFilter = GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE;
-        flagAmenitiesFilters = GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE;
+        flagAmenitiesFilters = GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         if (isDefaultSortType() == false//
             || mFilterMap.size() != 0//
             || flagTimeFilter != GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE//
-            || flagAmenitiesFilters != GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+            || flagAmenitiesFilters != GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
         {
             return false;
         }
@@ -218,12 +218,12 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         result.append('-');
 
-        if (flagAmenitiesFilters == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        if (flagAmenitiesFilters == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
         {
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            if ((flagAmenitiesFilters & GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+            if ((flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
             }
