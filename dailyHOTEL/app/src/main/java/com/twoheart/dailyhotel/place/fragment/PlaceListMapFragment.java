@@ -466,7 +466,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
         } else
         {
-            mGoogleMap.setOnCameraChangeListener(mClusterManager);
+            mGoogleMap.setOnCameraIdleListener(mClusterManager);
             mClusterManager.cluster();
         }
 
@@ -568,11 +568,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     @Override
                     public void onCameraIdle()
                     {
-                        mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                        mGoogleMap.setOnCameraIdleListener(mClusterManager);
                     }
                 });
-
-                mGoogleMap.setOnCameraChangeListener(null);
+                mGoogleMap.setOnCameraIdleListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -824,11 +823,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     @Override
                     public void onCameraIdle()
                     {
-                        mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                        mGoogleMap.setOnCameraIdleListener(mClusterManager);
                     }
                 });
-
-                mGoogleMap.setOnCameraChangeListener(null);
+                mGoogleMap.setOnCameraIdleListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -851,12 +849,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         } else if (hotelCount == 1)
         {
-            mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener()
+            mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
             {
                 @Override
-                public void onCameraChange(CameraPosition cameraPosition)
+                public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
 
                     if (isFinishing() == true)
                     {
@@ -871,12 +869,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             });
         } else
         {
-            mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener()
+            mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
             {
                 @Override
-                public void onCameraChange(CameraPosition cameraPosition)
+                public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
 
                     if (isFinishing() == true)
                     {
@@ -902,7 +900,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mGoogleMap.setOnCameraChangeListener(mClusterManager);
+        mGoogleMap.setOnCameraIdleListener(mClusterManager);
 
         if (hotelCount == 1)
         {
@@ -1092,11 +1090,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         @Override
                         public void onCameraIdle()
                         {
-                            mGoogleMap.setOnCameraChangeListener(mClusterManager);
+                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
                         }
                     });
-
-                    mGoogleMap.setOnCameraChangeListener(null);
+                    mGoogleMap.setOnCameraIdleListener(null);
                     mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 } else
                 {
