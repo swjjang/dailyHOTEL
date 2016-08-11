@@ -38,7 +38,6 @@ import java.util.Map;
 public class DailyNetworkAPI implements IDailyNetwork
 {
     public static final String URL_DAILYHOTEL_SERVER = Constants.URL_DAILYHOTEL_SERVER_DEFAULT;
-    public static final String URL_DAILYHOTEL_SEARCH_SERVER = Constants.URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT;
 
     // DailyHOTEL Reservation Controller WebAPI URL
     // api/hotel/v1/payment/session/common
@@ -49,14 +48,6 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     // Register Credit Card URL
     public static final String URL_REGISTER_CREDIT_CARD = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "MTA4JDgyJDY3JDM1JDgk$NjE5NTkxFODMxQTRCM0RFNzIzNjRCQjc2RThJGQzQxRDRCQkNEQjk5N0U4ODhBMUM5MUYU3RTlGMzY3ODA3NEVUzREQyQjM2MzEwN0VFNzA5ODQ2GMTgwNTVFODA5NzE2MzRE$";
-
-    // DailyHOTEL Site Controller WebAPI URL
-    // A/B Test
-    // api/abtest/testcase
-    public static final String URL_WEBAPI_ABTEST_TESTCASE = Constants.UNENCRYPTED_URL ? "api/abtest/testcase" : "NTYkMzgkOSQ3NyQ4MSQ=$QTc1QzU3QP0VBMkUyQ0RDMjA4RUZFQUEwRjBCOEOY1MkYwNzg4OEI4MEZDBMzAwRjExRkM4N0VBRUFRGMHDYxMkM3QQ==$";
-
-    // api/abtest/kakao/consult/feedback
-    public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = Constants.UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
 
     private static DailyNetworkAPI mInstance;
     private RequestQueue mQueue;
@@ -541,41 +532,13 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetSearchList(Object tag, SaleTime saleTime, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/gourmet/result/list" : "NjYkNzQkMTI5JDM3JDEyNSQ=$NjBDOURFNURBMDFFMjg1MDlFOEFEMjJCQ0U3OUTAyNTYwRDMwMDVFMkYwRDREOTAzQzFU5MEY4NPUM2QkEwREE2MkQwMkM1RTYwNEU4NTg1NDhGQ0FDQTAyMEI5MTMQ4QzITz$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales/search/auto_complete" : "";
 
-        String params = String.format("?dateTarget=%s&offset=%d&count=%d&term=%s"//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), offeset, count, text);
+        String params = String.format("?reserveDate=%s&term=%s", date, text);
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestGourmetSearchList(Object tag, SaleTime saleTime, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/gourmet/result/list" : "NTAkMTA1JDEyNSQ5NSQ1OSQ=$MzBENkE3RTcxMTJCRjM0RjdGMTQ2ODBFRkMxRTcwMkY4QTdERDEhBODAyNkLFBNDdFQ0M1NEU3NzQ2RDQ2RTdGQUZCMTRGMzZNBMUI2NDBEWOEYxMzNGOTlCNEJEQzQQxOERC$";
-
-        String params = String.format("?dateTarget=%s&userLatitude=%s&userLongitude=%s&offset=%d&count=%d"//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd")//
-            , Double.toString(location.getLatitude()), Double.toString(location.getLongitude())//
-            , offeset, count);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/gourmet/auto_complete" : "NDUkMzkkNjYkNSQ4MiQ=$RENBQDzdBREIzNDA0QUJFMzg4QjAxOTA1OTU5OEQNxOERFRDEY4NzRDQjRCNjE4Rjk3TRkM5MzMzMzE5OEERFRUUzMTczOTYzMzA3MzYzNTMxQkQzOURBREIzQUJCRERFQkQ2$";
-
-        String params = String.format("?dateTarget=%s&term=%s", date, text);
-
-        DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }

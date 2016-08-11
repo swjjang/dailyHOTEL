@@ -28,6 +28,7 @@ public class GourmetSearch extends Gourmet
             persons = jsonObject.getInt("persons");
             category = jsonObject.getString("category");
             categoryCode = jsonObject.getInt("categoryCode");
+            categorySequence = jsonObject.getInt("categorySeq");
             isSoldOut = jsonObject.getBoolean("isSoldOut");
             distance = jsonObject.getDouble("distance");
 

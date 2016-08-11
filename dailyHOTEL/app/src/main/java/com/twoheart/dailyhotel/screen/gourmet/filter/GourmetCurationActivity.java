@@ -201,7 +201,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 } else
                 {
                     dailyTextView.setSelected(true);
-                    filterMap.put(key, 0);
+                    filterMap.put(key, gourmetCurationOption.getCategoryCoderMap().get(key));
 
                     AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);

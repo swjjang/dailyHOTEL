@@ -98,6 +98,18 @@
                 android:textColor="@color/selector_curation_textcolor"
                 android:textSize="11dp"/>
 
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/emptyCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:paddingTop="10dp"
+                android:textSize="11dp"
+                android:visibility="gone"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

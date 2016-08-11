@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
@@ -25,7 +26,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     protected GourmetSearchParams mLastParams;
     protected BaseNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetCuration gourmetCuration, boolean isFixedLocation)
+    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, GourmetSearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
@@ -53,14 +54,18 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
         RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton emptyCheckView = (RadioButton) mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
         if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
+            emptyCheckView.setVisibility(View.INVISIBLE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
             radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
+
+            emptyCheckView.setVisibility(View.GONE);
         }
 
         if (viewType == ViewType.MAP)

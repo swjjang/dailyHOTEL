@@ -65,9 +65,9 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     JSONArray gourmetJSONArray = null;
 
-                    if (dataJSONObject.has("sales") == true)
+                    if (dataJSONObject.has("gourmetSales") == true)
                     {
-                        gourmetJSONArray = dataJSONObject.getJSONArray("sales");
+                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                     }
 
                     int totalCount = dataJSONObject.getInt("searchCount");
