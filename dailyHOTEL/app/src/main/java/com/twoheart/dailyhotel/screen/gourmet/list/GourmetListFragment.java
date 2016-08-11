@@ -517,10 +517,17 @@ public class GourmetListFragment extends PlaceListFragment
 
                         ArrayList<PlaceViewItem> placeViewItemList = curationList(gourmetList, gourmetCurationOption);
 
-                        PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
-                        placeViewItemList.add(placeViewItemList.size(), placeViewFooterItem);
+                        // 필터를 걸었으나 내용이 없는 경우
+                        if (placeViewItemList == null || placeViewItemList.size() == 0)
+                        {
+                            mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
+                        } else
+                        {
+                            PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
+                            placeViewItemList.add(placeViewItemList.size(), placeViewFooterItem);
 
-                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
+                            mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
+                        }
                     }
                 } else
                 {

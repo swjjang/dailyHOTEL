@@ -43,7 +43,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -383,13 +383,10 @@ public class Util implements Constants
 
     public static boolean isGooglePlayServicesAvailable(Context context)
     {
-        try
-        {
-            return (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
-        } catch (Exception e)
-        {
-            return false;
-        }
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int result = googleApiAvailability.isGooglePlayServicesAvailable(context);
+
+        return result == ConnectionResult.SUCCESS;
     }
 
     public static boolean isInstallGooglePlayService(Activity activity)
