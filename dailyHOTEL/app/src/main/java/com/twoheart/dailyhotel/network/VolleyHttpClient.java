@@ -17,11 +17,14 @@ import java.net.URL;
 import java.security.KeyStore;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import okhttp3.OkHttpClient;
-import okhttp3.OkUrlFactory;
+import okhttp3.internal.huc.OkHttpURLConnection;
+import okhttp3.internal.huc.OkHttpsURLConnection;
+import okhttp3.internal.platform.Platform;
 
 public class VolleyHttpClient implements Constants
 {
@@ -86,7 +89,6 @@ public class VolleyHttpClient implements Constants
 
     private static class OkHttpStack extends HurlStack
     {
-        private OkUrlFactory mOkUrlFactory;
         private OkHttpClient mOkHttpClient;
 
         public OkHttpStack(Context context)
@@ -96,7 +98,6 @@ public class VolleyHttpClient implements Constants
 
             try
             {
-                //                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
                 TrustManager[] trustManagers = newTrustManager(context);
 
                 sslContext = SSLContext.getInstance("TLS");
@@ -106,25 +107,35 @@ public class VolleyHttpClient implements Constants
                 throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
             }
 
-            mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslContext.getSocketFactory()).build();
-
-            setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
-        }
-
-        public void setOkUrlFactory(OkUrlFactory okUrlFactory)
-        {
-            if (okUrlFactory == null)
-            {
-                throw new NullPointerException("Client must not be null.");
-            }
-
-            mOkUrlFactory = okUrlFactory;
+            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslSocketFactory, Platform.get().trustManager(sslSocketFactory)).build();
         }
 
         @Override
         protected HttpURLConnection createConnection(URL url) throws IOException
         {
-            return mOkUrlFactory.open(url);
+            return open(mOkHttpClient, url);
+        }
+
+        private HttpURLConnection open(OkHttpClient client, URL url)
+        {
+            if (client == null || url == null)
+            {
+                throw new NullPointerException("client == null || url == null");
+            }
+
+            String protocol = url.getProtocol();
+            OkHttpClient copy = client.newBuilder().proxy(client.proxy()).build();
+
+            if (protocol.equals("http"))
+            {
+                return new OkHttpURLConnection(url, copy, null);
+            }
+            if (protocol.equals("https"))
+            {
+                return new OkHttpsURLConnection(url, copy, null);
+            }
+            throw new IllegalArgumentException("Unexpected protocol: " + protocol);
         }
 
         private TrustManager[] newTrustManager(Context context)
