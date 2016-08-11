@@ -596,25 +596,22 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
 
         Province province = mStayCuration.getProvince();
-
-        if (province == null)
-        {
-            return;
-        }
-
         Map<String, String> eventParams = new HashMap<>();
 
-        if (province instanceof Area)
+        if (province != null)
         {
-            Area area = (Area) province;
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else
-        {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else
+            {
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
@@ -682,27 +679,24 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         hideAnimation();
 
         Province province = mStayCuration.getProvince();
-
-        if (province == null)
-        {
-            return;
-        }
-
         Map<String, String> eventParams = new HashMap<>();
 
         eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
 
-        if (province instanceof Area)
+        if (province != null)
         {
-            Area area = (Area) province;
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else
-        {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else
+            {
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
@@ -765,33 +759,28 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         stayCurationOption.setSortType(SortType.DISTANCE);
 
         Province province = mStayCuration.getProvince();
-
-        if (province == null)
-        {
-            return;
-        }
-
+        Map<String, String> eventParams = new HashMap<>();
         String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
-        Map<String, String> eventParams = new HashMap<>();
-
-        if (province instanceof Area)
+        if (province != null)
         {
-            Area area = (Area) province;
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else
-        {
-            eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else
+            {
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
-
 
     private StayCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCurationNetworkController.OnNetworkControllerListener()
     {

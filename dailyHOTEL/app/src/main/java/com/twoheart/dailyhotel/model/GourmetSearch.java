@@ -15,22 +15,24 @@ public class GourmetSearch extends Gourmet
     {
         try
         {
-            index = jsonObject.getInt("restaurant_idx");
-            name = jsonObject.getString("restaurant_name");
-
+            index = jsonObject.getInt("restaurantIdx");
+            name = jsonObject.getString("name");
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discount");
-            addressSummary = jsonObject.getString("addr_summary");
+            addressSummary = jsonObject.getString("addrSummary");
             grade = Grade.gourmet;
-            districtName = jsonObject.getString("district_name");
+            districtName = jsonObject.getString("districtName");
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");
-            isDailyChoice = jsonObject.getInt("is_dailychoice") == 1 ? true : false;
+            isDailyChoice = jsonObject.getBoolean("isDailychoice");
             persons = jsonObject.getInt("persons");
             category = jsonObject.getString("category");
-            isSoldOut = jsonObject.getBoolean("is_sold_out");
+            categoryCode = jsonObject.getInt("categoryCode");
+            categorySequence = jsonObject.getInt("categorySeq");
+            isSoldOut = jsonObject.getBoolean("isSoldOut");
+            distance = jsonObject.getDouble("distance");
 
-            JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
+            JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
             Iterator<String> iterator = imageJSONObject.keys();
             while (iterator.hasNext())

@@ -498,7 +498,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onFilterClick()
         {
-
             if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;

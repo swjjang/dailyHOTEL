@@ -13,19 +13,9 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 
 public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 {
-    private double mRadius;
-
     public GourmetSearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
-    }
-
-    @Override
-    protected void initLayout(View view)
-    {
-        super.initLayout(view);
-
-        setMenuBarLayoutVisible(false);
     }
 
     public void setCalendarText(SaleTime saleTime)

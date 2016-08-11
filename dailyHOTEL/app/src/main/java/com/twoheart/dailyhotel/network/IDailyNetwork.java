@@ -292,11 +292,7 @@ interface IDailyNetwork
 
     void requestGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
 
-    void requestGourmetSearchList(Object tag, SaleTime saleTime, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    void requestGourmetSearchList(Object tag, SaleTime saleTime, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonResponseListener listener);
 
     void requestGourmetSearchList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
 

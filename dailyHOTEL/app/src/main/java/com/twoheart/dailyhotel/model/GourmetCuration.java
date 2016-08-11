@@ -42,7 +42,7 @@ public class GourmetCuration extends PlaceCuration
     @Override
     public PlaceParams toPlaceParams(int page, int limit, boolean isDetails)
     {
-        GourmetSearchParams gourmetParams = new GourmetSearchParams(this);
+        GourmetParams gourmetParams = new GourmetParams(this);
         gourmetParams.setPageInformation(page, limit, isDetails);
 
         return gourmetParams;

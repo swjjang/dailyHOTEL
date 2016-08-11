@@ -17,16 +17,15 @@ import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GourmetSearchResultListFragment extends PlaceListFragment
@@ -46,6 +45,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     public interface OnGourmetSearchResultListFragmentListener extends OnPlaceListFragmentListener
     {
         void onGourmetClick(PlaceViewItem placeViewItem);
+
+        void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
     }
 
     @Override
@@ -131,14 +132,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         }
 
         SaleTime saleTime = mGourmetCuration.getSaleTime();
-        Province province = mGourmetCuration.getProvince();
-
-        if (province == null || saleTime == null)
-        {
-            unLockUI();
-            Util.restartApp(mBaseActivity);
-            return;
-        }
 
         if (mGourmetCuration == null || mGourmetCuration.getCurationOption() == null//
             || mGourmetCuration.getCurationOption().getSortType() == null//
@@ -181,27 +174,19 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
     protected ArrayList<PlaceViewItem> makeSectionGourmetList(List<Gourmet> gourmetList, SortType sortType)
     {
-        ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
+        ArrayList<PlaceViewItem> gourmetViewItemList = new ArrayList<>();
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
-            return stayViewItemList;
+            return gourmetViewItemList;
         }
 
         for (Gourmet gourmet : gourmetList)
         {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+            gourmetViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
         }
 
-        if (Constants.PAGENATION_LIST_SIZE > gourmetList.size())
-        {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-        } else
-        {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
-        }
-
-        return stayViewItemList;
+        return gourmetViewItemList;
     }
 
     @Override
@@ -252,6 +237,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
             SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
+            setFilterInformation(page, list);
+
             ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
 
             switch (mViewType)
@@ -262,7 +249,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
                     int size = mGourmetSearchResultListLayout.getItemCount();
 
-                    if (size == 0 && mGourmetCuration.getCurationOption().isDefaultFilter() == false)
+                    if (size == 0)
                     {
                         setVisibility(ViewType.GONE, true);
                     }
@@ -327,6 +314,21 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         {
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("message : " + message);
+        }
+
+        private void setFilterInformation(int page, ArrayList<Gourmet> gourmetList)
+        {
+            HashMap<String, Integer> categoryCodeMap = new HashMap<>(12);
+            HashMap<String, Integer> categorySequenceMap = new HashMap<>(12);
+
+            // 필터 정보 넣기
+            for (Gourmet gourmet : gourmetList)
+            {
+                categoryCodeMap.put(gourmet.category, gourmet.categoryCode);
+                categorySequenceMap.put(gourmet.category, gourmet.categorySequence);
+            }
+
+            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetCategoryFilter(page, categoryCodeMap, categorySequenceMap);
         }
     };
 

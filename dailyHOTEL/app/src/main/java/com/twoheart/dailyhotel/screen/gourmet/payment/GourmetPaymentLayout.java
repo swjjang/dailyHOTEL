@@ -244,16 +244,16 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         if (isSimpleCardPaymentEnabled == true)
         {
-            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
         } else if (isCardPaymentEnabled == true)
         {
-            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
+            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
         } else if (isPhonePaymentEnabled == true)
         {
-            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else if (isVirtualPaymentEnabled == true)
         {
-            ((OnEventListener)mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
+            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
         }
     }
 

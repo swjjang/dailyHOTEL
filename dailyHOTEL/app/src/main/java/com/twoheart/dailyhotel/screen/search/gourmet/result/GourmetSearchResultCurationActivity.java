@@ -11,21 +11,11 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
-import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
@@ -36,9 +26,9 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     protected GourmetSearchParams mLastParams;
     protected BaseNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetCuration gourmetCuration, boolean isFixedLocation)
+    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
     {
-        Intent intent = new Intent(context, GourmetCurationActivity.class);
+        Intent intent = new Intent(context, GourmetSearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
@@ -64,14 +54,18 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
         RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton emptyCheckView = (RadioButton) mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
         if (mSearchType == SearchType.LOCATION)
         {
             radioButton.setVisibility(View.GONE);
+            emptyCheckView.setVisibility(View.INVISIBLE);
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
             radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
+
+            emptyCheckView.setVisibility(View.GONE);
         }
 
         if (viewType == ViewType.MAP)
@@ -159,42 +153,6 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         setLastGourmetParams(mGourmetCuration);
 
         super.requestUpdateResultDelayed();
-    }
-
-    @Override
-    protected void onComplete()
-    {
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
-
-        Map<String, String> eventParams = new HashMap<>();
-        eventParams.put(AnalyticsManager.KeyType.SORTING, gourmetCurationOption.getSortType().name());
-
-//        if (province instanceof Area)
-//        {
-//            Area area = (Area) province;
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//        } else
-//        {
-//            eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
-//            eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-//            eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//        }
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, gourmetCurationOption.toString(), eventParams);
-
-        if (Constants.DEBUG == true)
-        {
-            ExLog.d(gourmetCurationOption.toString());
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mGourmetCuration);
-
-        setResult(RESULT_OK, intent);
-        hideAnimation();
     }
 
     @Override
@@ -301,80 +259,4 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             GourmetSearchResultCurationActivity.this.onErrorToastMessage(message);
         }
     };
-
-
-    //    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onErrorResponse(VolleyError volleyError)
-    //        {
-    //            onGourmetCount(null, -1);
-    //        }
-    //
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            int gourmetSaleCount;
-    //
-    //            try
-    //            {
-    //                int msgCode = response.getInt("msgCode");
-    //                if (msgCode == 100)
-    //                {
-    //                    JSONObject dataJSONObject = response.getJSONObject("data");
-    //                    gourmetSaleCount = dataJSONObject.getInt("gourmetSalesCount");
-    //
-    //                } else
-    //                {
-    //                    gourmetSaleCount = 0;
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                gourmetSaleCount = 0;
-    //            }
-    //
-    //            onGourmetCount(url, gourmetSaleCount);
-    //        }
-    //
-    //        private void onGourmetCount(String url, int gourmetSaleCount)
-    //        {
-    //            if (Util.isTextEmpty(url) == true && gourmetSaleCount == -1)
-    //            {
-    //                // OnNetworkControllerListener onErrorResponse
-    //                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
-    //
-    //                setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
-    //                setConfirmEnable(false);
-    //                return;
-    //            }
-    //
-    //            String requestParams = null;
-    //            try
-    //            {
-    //                Uri requestUrl = Uri.parse(url);
-    //                requestParams = requestUrl.getQuery();
-    //            } catch (Exception e)
-    //            {
-    //                // do nothing!
-    //            }
-    //
-    //            String lastParams = mLastParams.toParamsString();
-    //            if (lastParams.equalsIgnoreCase(requestParams) == false)
-    //            {
-    //                // already running another request!
-    //                return;
-    //            }
-    //
-    //            if (gourmetSaleCount <= 0)
-    //            {
-    //                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
-    //            } else
-    //            {
-    //                setResultMessage(getString(R.string.label_gourmet_filter_result_count, gourmetSaleCount));
-    //            }
-    //
-    //            setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
-    //            setConfirmEnable(gourmetSaleCount == 0 ? false : true);
-    //        }
-    //    };
 }

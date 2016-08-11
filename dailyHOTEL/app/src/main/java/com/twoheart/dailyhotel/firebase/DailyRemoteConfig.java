@@ -178,7 +178,8 @@ public class DailyRemoteConfig
             JSONObject updateTimeJSONObject = new JSONObject(updateTime);
             JSONObject imageUrlJSONObject = new JSONObject(imageUrl);
 
-            String url = imageUrlJSONObject.getString(dpi);
+            String defaultType = imageUrlJSONObject.getString("default");
+            String url = imageUrlJSONObject.getJSONObject(defaultType).getString(dpi);
             String currentVersion = DailyPreference.getInstance(context).getIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");
 

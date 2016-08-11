@@ -373,7 +373,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             mViewPager.clearOnPageChangeListeners();
         } else
         {
-            setCategoryTabLayoutVisibility(View.INVISIBLE);
+            setCategoryTabLayoutVisibility(View.VISIBLE);
 
             Category category;
             TabLayout.Tab tab;

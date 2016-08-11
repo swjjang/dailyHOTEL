@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -58,7 +57,7 @@ public class GourmetSearchResultCurationNetworkController extends BaseNetworkCon
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    totalCount = dataJSONObject.getInt("gourmetSalesCount");
+                    totalCount = dataJSONObject.getInt("searchCount");
                     maxCount = dataJSONObject.getInt("searchMaxCount");
                 }
             } catch (Exception e)
