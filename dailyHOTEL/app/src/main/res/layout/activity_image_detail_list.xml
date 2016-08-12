@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <View
         android:id="@+id/alphaView"
@@ -9,10 +9,13 @@
         android:layout_height="match_parent"
         android:background="@color/black"/>
 
+    <include layout="@layout/toolbar_default_close"/>
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:divider="@color/white"
         android:dividerHeight="10dp"
         android:fadingEdge="none"/>
@@ -20,6 +23,7 @@
     <View
         android:id="@+id/translationView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"/>
 
-</FrameLayout>
+</RelativeLayout>

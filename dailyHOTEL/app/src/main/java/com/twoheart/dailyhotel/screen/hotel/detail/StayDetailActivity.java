@@ -510,9 +510,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = new Intent(StayDetailActivity.this, ImageDetailListActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, placeDetail.getImageInformationList());
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, placeDetail.name, placeDetail.getImageInformationList(), mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
         }
 

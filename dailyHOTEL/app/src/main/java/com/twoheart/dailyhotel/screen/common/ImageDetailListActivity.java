@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,36 +29,55 @@ import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {
+    private static final String INTENT_EXTRA_DATA_TITLE = "title";
+
     private ListView mListView;
     private View mTranslationView, mAlphaView;
     private float mY;
     private boolean mIsMoved, mIsTop, mIsBottom;
     private VelocityTracker mVelocityTracker;
+    private View mToolbarView;
+
+    public static Intent newInstance(Context context, String title, ArrayList<ImageInformation> arrayList, int position)
+    {
+        Intent intent = new Intent(context, ImageDetailListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, arrayList);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, position);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail_list);
 
-        final int position;
-
-        Bundle bundle = getIntent().getExtras();
+        int position;
         ArrayList<ImageInformation> arrayList;
+        String title;
 
-        if (bundle != null)
-        {
-            arrayList = bundle.getParcelableArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
-            position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
-        } else
+        Intent intent = getIntent();
+
+        if (intent == null)
         {
             return;
+
+        } else
+        {
+            title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
+            arrayList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
+            position = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, 0);
         }
 
         if (arrayList == null)
@@ -66,6 +86,26 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             return;
         }
 
+        initToolbar(title);
+        initLayout(arrayList, position);
+    }
+
+    private void initToolbar(String title)
+    {
+        mToolbarView = findViewById(R.id.toolbar);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, mToolbarView);
+        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+    }
+
+    private void initLayout(ArrayList<ImageInformation> arrayList, final int position)
+    {
         mListView = (ListView) findViewById(R.id.listView);
         mTranslationView = findViewById(R.id.translationView);
         mTranslationView.setClickable(true);
@@ -105,8 +145,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
                         final int firstChildIndex = 0;
                         final int lastChildIndex = mListView.getChildCount() - 1;
+                        final int TITLE_BAR_SIZE = mListView.getTop();
 
-                        if (mListView.getChildAt(firstChildIndex).getTop() == mListView.getTop())
+                        if (mListView.getChildAt(firstChildIndex).getTop() == mListView.getTop() - TITLE_BAR_SIZE)
                         {
                             Integer topPosition = (Integer) mListView.getChildAt(firstChildIndex).getTag();
 
@@ -114,7 +155,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                             {
                                 mIsTop = true;
                             }
-                        } else if (mListView.getChildAt(lastChildIndex).getBottom() == mListView.getBottom())
+                        } else if (mListView.getChildAt(lastChildIndex).getBottom() == mListView.getBottom() - TITLE_BAR_SIZE)
                         {
                             Integer bottomPosition = (Integer) mListView.getChildAt(lastChildIndex).getTag();
 
@@ -136,10 +177,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                                 mIsMoved = false;
                             } else
                             {
-                                mListView.setTranslationY(y);
-
-                                float alpha = 1.0f - Math.abs(y) / Util.getLCDHeight(ImageDetailListActivity.this);
-                                mAlphaView.setAlpha(alpha);
+                                scrollListEffect(y);
                             }
                         } else
                         {
@@ -155,10 +193,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                                     event.setAction(MotionEvent.ACTION_UP);
                                     mListView.onTouchEvent(event);
 
-                                    mListView.setTranslationY(y);
-
-                                    float alpha = 1.0f - Math.abs(y) / Util.getLCDHeight(ImageDetailListActivity.this);
-                                    mAlphaView.setAlpha(alpha);
+                                    scrollListEffect(y);
                                 }
                             }
                         }
@@ -183,7 +218,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                         }
 
                         mListView.setTranslationY(0);
+                        mToolbarView.setTranslationY(0);
                         mAlphaView.setAlpha(1.0f);
+                        mToolbarView.setAlpha(1.0f);
 
                         if (mVelocityTracker != null)
                         {
@@ -206,6 +243,15 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 return false;
             }
         });
+    }
+
+    private void scrollListEffect(float y)
+    {
+        mListView.setTranslationY(y);
+        mToolbarView.setTranslationY(y);
+
+        mAlphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / Util.getLCDHeight(ImageDetailListActivity.this));
+        mToolbarView.setAlpha(1.0f - Math.abs(y * 20) / Util.getLCDHeight(ImageDetailListActivity.this));
     }
 
     @Override
