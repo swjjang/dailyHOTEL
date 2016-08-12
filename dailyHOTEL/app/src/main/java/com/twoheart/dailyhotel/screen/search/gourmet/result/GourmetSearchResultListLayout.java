@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
@@ -302,7 +302,7 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
         for (PlaceViewItem placeViewItem : list)
         {
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
-                && placeViewItem.<Stay>getItem().isSoldOut == false)
+                && placeViewItem.<Gourmet>getItem().isSoldOut == false)
             {
                 hasPlace = true;
                 break;
