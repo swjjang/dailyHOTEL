@@ -259,7 +259,13 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.fade_out);
+        if (mIsMoved == true)
+        {
+            overridePendingTransition(R.anim.hold, R.anim.fade_out);
+        } else
+        {
+            overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        }
     }
 
     private class ImageDetailListAdapter extends ArrayAdapter<ImageInformation>
