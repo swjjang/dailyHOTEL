@@ -113,7 +113,8 @@
         <activity
             android:name=".screen.common.ImageDetailListActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".screen.common.ZoomMapActivity"
             android:launchMode="singleTop"

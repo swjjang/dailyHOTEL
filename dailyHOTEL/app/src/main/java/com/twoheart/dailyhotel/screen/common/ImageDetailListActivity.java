@@ -5,6 +5,8 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -33,6 +35,10 @@ import java.util.List;
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {
     private ListView mListView;
+    private View mTranslationView, mAlphaView;
+    private float mY;
+    private boolean mIsMoved, mIsTop, mIsBottom;
+    private VelocityTracker mVelocityTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,6 +67,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         }
 
         mListView = (ListView) findViewById(R.id.listView);
+        mTranslationView = findViewById(R.id.translationView);
+        mTranslationView.setClickable(true);
+        mAlphaView = findViewById(R.id.alphaView);
 
         ImageDetailListAdapter adapter = new ImageDetailListAdapter(this, 0, arrayList);
         mListView.setAdapter(adapter);
@@ -72,6 +81,139 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 mListView.setSelection(position);
             }
         });
+        mListView.setClickable(false);
+
+        mTranslationView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                int action = event.getAction() & MotionEvent.ACTION_MASK;
+
+                if (mVelocityTracker == null)
+                {
+                    mVelocityTracker = VelocityTracker.obtain();
+                }
+
+                mVelocityTracker.addMovement(event);
+
+                switch (action)
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        mY = event.getY();
+                        mAlphaView.setAlpha(1.0f);
+
+                        final int firstChildIndex = 0;
+                        final int lastChildIndex = mListView.getChildCount() - 1;
+
+                        if (mListView.getChildAt(firstChildIndex).getTop() == mListView.getTop())
+                        {
+                            Integer topPosition = (Integer) mListView.getChildAt(firstChildIndex).getTag();
+
+                            if (topPosition != null && topPosition == 0)
+                            {
+                                mIsTop = true;
+                            }
+                        } else if (mListView.getChildAt(lastChildIndex).getBottom() == mListView.getBottom())
+                        {
+                            Integer bottomPosition = (Integer) mListView.getChildAt(lastChildIndex).getTag();
+
+                            if (bottomPosition != null && bottomPosition == mListView.getCount() - 1)
+                            {
+                                mIsBottom = true;
+                            }
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                    {
+                        float y = event.getY() - mY;
+
+                        if (mIsMoved == true)
+                        {
+                            if ((mIsTop == true && y < 0) || (mIsBottom == true && y > 0))
+                            {
+                                mIsMoved = false;
+                            } else
+                            {
+                                mListView.setTranslationY(y);
+
+                                float alpha = 1.0f - Math.abs(y) / Util.getLCDHeight(ImageDetailListActivity.this);
+                                mAlphaView.setAlpha(alpha);
+                            }
+                        } else
+                        {
+                            if (mIsMoved == false)
+                            {
+                                if ((mIsTop == true && y > 0) || (mIsBottom == true && y < 0))
+                                {
+                                    mIsMoved = true;
+                                }
+
+                                if (mIsMoved == true)
+                                {
+                                    event.setAction(MotionEvent.ACTION_UP);
+                                    mListView.onTouchEvent(event);
+
+                                    mListView.setTranslationY(y);
+
+                                    float alpha = 1.0f - Math.abs(y) / Util.getLCDHeight(ImageDetailListActivity.this);
+                                    mAlphaView.setAlpha(alpha);
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                    {
+                        mY = 0;
+
+                        if (mIsMoved == true || mListView.getTranslationY() != 0.0f)
+                        {
+                            mVelocityTracker.computeCurrentVelocity(1);
+                            float yVelocity = Math.abs(mVelocityTracker.getYVelocity());
+
+                            if (yVelocity > 5.0f || Math.abs(mListView.getTranslationY()) > (Util.getLCDHeight(ImageDetailListActivity.this) / 4))
+                            {
+                                finish();
+                                return false;
+                            }
+                        }
+
+                        mListView.setTranslationY(0);
+                        mAlphaView.setAlpha(1.0f);
+
+                        if (mVelocityTracker != null)
+                        {
+                            mVelocityTracker.recycle();
+                            mVelocityTracker = null;
+                        }
+
+                        mIsTop = false;
+                        mIsBottom = false;
+                        mIsMoved = false;
+                        break;
+                    }
+                }
+
+                if (mIsMoved == false)
+                {
+                    mListView.onTouchEvent(event);
+                }
+
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.fade_out);
     }
 
     private class ImageDetailListAdapter extends ArrayAdapter<ImageInformation>
@@ -97,6 +239,8 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             {
                 view = convertView;
             }
+
+            view.setTag(position);
 
             TextView textView = (TextView) view.findViewById(R.id.descriptionTextView);
             final com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
