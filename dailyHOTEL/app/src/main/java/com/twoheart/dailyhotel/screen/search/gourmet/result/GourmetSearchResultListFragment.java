@@ -212,7 +212,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
     private GourmetSearchResultListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetSearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount)
+        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
         {
             if (isFinishing() == true)
             {
@@ -225,6 +225,11 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             {
                 mGourmetCount = 0;
                 mGourmetSearchResultListLayout.clearList();
+
+                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true)
+                {
+                    ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetCategoryFilter(page, categoryCodeMap, categorySequenceMap);
+                }
             }
 
             int listSize = list == null ? 0 : list.size();
@@ -236,8 +241,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
             mGourmetCount += listSize;
 
             SortType sortType = mGourmetCuration.getCurationOption().getSortType();
-
-            setFilterInformation(page, list);
 
             ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
 
@@ -314,21 +317,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         {
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("message : " + message);
-        }
-
-        private void setFilterInformation(int page, ArrayList<Gourmet> gourmetList)
-        {
-            HashMap<String, Integer> categoryCodeMap = new HashMap<>(12);
-            HashMap<String, Integer> categorySequenceMap = new HashMap<>(12);
-
-            // 필터 정보 넣기
-            for (Gourmet gourmet : gourmetList)
-            {
-                categoryCodeMap.put(gourmet.category, gourmet.categoryCode);
-                categorySequenceMap.put(gourmet.category, gourmet.categorySequence);
-            }
-
-            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetCategoryFilter(page, categoryCodeMap, categorySequenceMap);
         }
     };
 

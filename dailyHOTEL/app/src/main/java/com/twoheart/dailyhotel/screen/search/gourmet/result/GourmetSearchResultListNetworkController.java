@@ -19,12 +19,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GourmetSearchResultListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount);
+        void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
     }
 
     public GourmetSearchResultListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -83,6 +84,25 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
                     }
 
+                    JSONArray categoryJSONArray = dataJSONObject.getJSONObject("filter").getJSONArray("categories");
+                    HashMap<String, Integer> categoryCodeMap = new HashMap<>(12);
+                    HashMap<String, Integer> categorySequenceMap = new HashMap<>(12);
+
+                    int categoryCount = categoryJSONArray.length();
+
+                    // 필터 정보 넣기
+                    for (int i = 0; i < categoryCount; i++)
+                    {
+                        JSONObject categoryJSONObject = categoryJSONArray.getJSONObject(i);
+
+                        int categoryCode = categoryJSONObject.getInt("code");
+                        int categorySeq = categoryJSONObject.getInt("sequence");
+                        String categoryName = categoryJSONObject.getString("name");
+
+                        categoryCodeMap.put(categoryName, categoryCode);
+                        categorySequenceMap.put(categoryName, categorySeq);
+                    }
+
                     try
                     {
                         Uri uri = Uri.parse(url);
@@ -93,7 +113,8 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                         page = 0;
                     }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page, totalCount, maxCount);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetList(gourmetList, page,//
+                        totalCount, maxCount, categoryCodeMap, categorySequenceMap);
                 } else
                 {
                     String message = response.getString("msg");
