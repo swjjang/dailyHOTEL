@@ -169,6 +169,38 @@ public class GourmetSearchParams extends GourmetParams
         return stringBuilder.toString();
     }
 
+    @Override
+    public void setSortType(Constants.SortType sortType)
+    {
+        switch (sortType)
+        {
+            case DEFAULT:
+                sortProperty = null;
+                sortDirection = null;
+                break;
+
+            case DISTANCE:
+                sortProperty = "Distance";
+                sortDirection = "Asc";
+                break;
+
+            case LOW_PRICE:
+                sortProperty = "PricePerPerson";
+                sortDirection = "Asc";
+                break;
+
+            case HIGH_PRICE:
+                sortProperty = "PricePerPerson";
+                sortDirection = "Desc";
+                break;
+
+            case SATISFACTION:
+                sortProperty = "Rating";
+                sortDirection = null;
+                break;
+        }
+    }
+
     private String toParamStringByCategory(HashMap<String, Integer> map)
     {
         if (map == null || map.size() == 0)

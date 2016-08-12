@@ -118,6 +118,8 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             mSortRadioGroup.setOnCheckedChangeListener(this);
         }
 
+        requestUpdateResultDelayed();
+
         resetLayout(mGridLayout);
         resetLayout(mAmenitiesLayout);
         resetLayout(mTimeRangeLayout);
