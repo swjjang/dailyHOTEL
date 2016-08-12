@@ -128,6 +128,11 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
                 }
             } catch (Exception e)
             {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log(url);
+                }
+
                 mOnNetworkControllerListener.onError(e);
             }
         }

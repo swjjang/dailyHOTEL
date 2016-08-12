@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -21,7 +20,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -296,27 +294,19 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         @Override
         public void onError(Exception e)
         {
-            if (DEBUG == false && e != null)
-            {
-                Crashlytics.logException(e);
-            }
-
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onError(e);
+            GourmetSearchResultListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
+            GourmetSearchResultListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("message : " + message);
+            GourmetSearchResultListFragment.this.onErrorToastMessage(message);
         }
     };
 
