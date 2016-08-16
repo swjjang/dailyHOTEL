@@ -18,12 +18,7 @@ import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
@@ -162,6 +157,12 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
     protected void updateResultMessage()
     {
         setConfirmOnClickListener(null);
+
+        if (mLastParams != null && Constants.SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
+        {
+            onSearchLoacationResult(null);
+            return;
+        }
 
         ((StaySearchResultCurationNetworkController) mNetworkController).requestStaySearchList(mLastParams);
     }

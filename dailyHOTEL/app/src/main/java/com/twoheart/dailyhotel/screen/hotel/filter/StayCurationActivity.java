@@ -418,6 +418,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setConfirmOnClickListener(null);
 
+        if (mLastParams != null && Constants.SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
+        {
+            onSearchLoacationResult(null);
+            return;
+        }
+
         ((StayCurationNetworkController) mNetworkController).requestStayList(mLastParams);
     }
 

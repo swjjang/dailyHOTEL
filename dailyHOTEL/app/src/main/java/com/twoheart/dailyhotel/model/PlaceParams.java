@@ -76,7 +76,11 @@ public abstract class PlaceParams implements Parcelable
         }
     }
 
-    protected boolean hasLocation()
+    public Constants.SortType getSortType() {
+        return mSort;
+    }
+
+    public boolean hasLocation()
     {
         return (latitude == 0d || longitude == 0d) ? false : true;
     }
