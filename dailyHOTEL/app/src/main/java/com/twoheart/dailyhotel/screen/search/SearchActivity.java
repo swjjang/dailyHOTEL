@@ -352,6 +352,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+
+        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.CLOSED, null);
     }
 
     @Override

@@ -328,9 +328,6 @@ public class StaySearchFragment extends PlaceSearchFragment
         public void finish()
         {
             mBaseActivity.finish();
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
-                , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.CLOSED, null);
         }
     };
 
