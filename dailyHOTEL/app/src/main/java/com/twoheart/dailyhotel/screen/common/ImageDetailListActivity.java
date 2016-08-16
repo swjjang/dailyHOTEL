@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,6 +28,7 @@ import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 {
     private static final String INTENT_EXTRA_DATA_TITLE = "title";
 
-    private ListView mListView;
+    private DailyPlaceDetailListView mListView;
     private View mTranslationView, mAlphaView;
     private float mY;
     private boolean mIsMoved, mIsTop, mIsBottom;
@@ -106,7 +106,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
     private void initLayout(ArrayList<ImageInformation> arrayList, final int position)
     {
-        mListView = (ListView) findViewById(R.id.listView);
+        mListView = (DailyPlaceDetailListView) findViewById(R.id.listView);
         mTranslationView = findViewById(R.id.translationView);
         mTranslationView.setClickable(true);
         mAlphaView = findViewById(R.id.alphaView);
@@ -183,7 +183,13 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                         {
                             if (mIsMoved == false)
                             {
-                                if ((mIsTop == true && y > 0) || (mIsBottom == true && y < 0))
+                                if ((mIsTop == true && y > 0))
+                                {
+                                    if (mListView.getGlowTopScaleY() == 0.0f)
+                                    {
+                                        mIsMoved = true;
+                                    }
+                                } else if (mIsBottom == true && y < 0)
                                 {
                                     mIsMoved = true;
                                 }
@@ -194,6 +200,13 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                                     mListView.onTouchEvent(event);
 
                                     scrollListEffect(y);
+                                } else
+                                {
+                                    if (y != 0)
+                                    {
+                                        mIsTop = false;
+                                        mIsBottom = false;
+                                    }
                                 }
                             }
                         }
@@ -251,7 +264,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         mToolbarView.setTranslationY(y);
 
         mAlphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / Util.getLCDHeight(ImageDetailListActivity.this));
-        mToolbarView.setAlpha(1.0f - Math.abs(y * 20) / Util.getLCDHeight(ImageDetailListActivity.this));
+        //        mToolbarView.setAlpha(1.0f - Math.abs(y * 20) / Util.getLCDHeight(ImageDetailListActivity.this));
     }
 
     @Override

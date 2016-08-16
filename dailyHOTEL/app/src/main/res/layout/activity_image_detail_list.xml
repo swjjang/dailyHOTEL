@@ -11,7 +11,7 @@
 
     <include layout="@layout/toolbar_default_close"/>
 
-    <ListView
+    <com.twoheart.dailyhotel.widget.DailyPlaceDetailListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
