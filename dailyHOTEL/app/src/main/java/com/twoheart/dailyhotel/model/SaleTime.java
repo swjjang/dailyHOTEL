@@ -146,15 +146,15 @@ public class SaleTime implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeValue(mCurrentTime);
-        dest.writeValue(mDailyTime);
+        dest.writeSerializable(mCurrentTime);
+        dest.writeSerializable(mDailyTime);
         dest.writeInt(mDayOfDays);
     }
 
     private void readFromParcel(Parcel in)
     {
-        mCurrentTime = (Date) in.readValue(Date.class.getClassLoader());
-        mDailyTime = (Date) in.readValue(Date.class.getClassLoader());
+        mCurrentTime = (Date) in.readSerializable();
+        mDailyTime = (Date) in.readSerializable();
         mDayOfDays = in.readInt();
     }
 
