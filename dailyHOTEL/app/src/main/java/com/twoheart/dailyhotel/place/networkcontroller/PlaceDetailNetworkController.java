@@ -3,11 +3,14 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
@@ -97,6 +100,20 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
                 }
             } catch (Exception e)
             {
+                if (Constants.DEBUG == false)
+                {
+                    String logString = url + " | " + DailyHotel.AUTHORIZATION;
+                    if (response == null)
+                    {
+                        logString += " | empty response";
+                    } else if (response.has("data") == false)
+                    {
+                        logString += " | empty data";
+                    }
+
+                    Crashlytics.log(logString);
+                }
+
                 mOnNetworkControllerListener.onError(e);
             }
         }
