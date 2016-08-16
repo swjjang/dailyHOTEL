@@ -6,6 +6,7 @@ import android.os.Parcel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -129,7 +130,7 @@ public class GourmetSearchParams extends GourmetParams
 
         if (Util.isTextEmpty(term) == false)
         {
-            stringBuilder.append(getParamString("term", term)).append("&");
+            stringBuilder.append(getParamString("term", URLEncoder.encode(term))).append("&");
         }
 
         boolean isNeedLocation = false;

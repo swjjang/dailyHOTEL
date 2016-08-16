@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.net.URLEncoder;
+
 /**
  * Created by android_sam on 2016. 7. 28..
  */
@@ -118,8 +120,7 @@ public class StaySearchParams extends StayParams
 
         if (Util.isTextEmpty(term) == false)
         {
-            //            sb.append(getParamString("term", URLEncoder.encode(term))).append("&");
-            sb.append(getParamString("term", term)).append("&");
+            sb.append(getParamString("term", URLEncoder.encode(term))).append("&");
         }
 
         boolean isNeedLocation = false;

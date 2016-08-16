@@ -335,7 +335,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/search/auto_complete" : "";
 
-        String params = String.format("?dateCheckIn=%s&stays=%d&term=%s", date, stays, text);
+        String params = String.format("?dateCheckIn=%s&stays=%d&term=%s", date, stays, URLEncoder.encode(text));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -536,7 +536,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales/search/auto_complete" : "";
 
-        String params = String.format("?reserveDate=%s&term=%s", date, text);
+        String params = String.format("?reserveDate=%s&term=%s", date,  URLEncoder.encode(text));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
 
