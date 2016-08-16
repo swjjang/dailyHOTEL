@@ -4,6 +4,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -49,7 +50,10 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
         try
         {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-        } catch (UnsupportedEncodingException e)
+        } catch (OutOfMemoryError e)
+        {
+            return Response.error(new VolleyError(getUrl() + ":" + e.toString()));
+        } catch (UnsupportedEncodingException ue)
         {
             parsed = new String(response.data);
         }
@@ -59,7 +63,6 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
             return Response.success(new JSONObject(parsed), HttpHeaderParser.parseCacheHeaders(response));
         } catch (JSONException je)
         {
-            ExLog.e(parsed);
             return Response.error(new ParseError(je));
         }
     }
