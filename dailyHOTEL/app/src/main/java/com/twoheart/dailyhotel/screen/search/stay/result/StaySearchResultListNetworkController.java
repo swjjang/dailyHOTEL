@@ -146,7 +146,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                 {
                     Crashlytics.log(url);
                 }
-                
+
                 mOnNetworkControllerListener.onError(e);
             }
         }

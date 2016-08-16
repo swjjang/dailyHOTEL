@@ -193,9 +193,29 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                 return;
             }
 
-            Uri uri = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            try
+            {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e)
+            {
+                final String SEARCH_WORD = "details?id=";
+                int startIndex = url.indexOf(SEARCH_WORD);
+                String packageName = url.substring(startIndex + SEARCH_WORD.length());
+
+                Intent intentWeb = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+                intentWeb.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                try
+                {
+                    startActivity(intentWeb);
+                } catch (Exception e1)
+                {
+                    DailyToast.showToast(WebViewActivity.this, R.string.toast_msg_dont_support_googleplay, Toast.LENGTH_LONG);
+                }
+            }
         }
 
         @JavascriptInterface
