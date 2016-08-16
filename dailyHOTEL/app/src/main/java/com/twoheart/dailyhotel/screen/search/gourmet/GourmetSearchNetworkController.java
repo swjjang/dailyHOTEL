@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
                 ExLog.d(e.toString());
             }
 
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(url.substring(startIndex + 1), keywordList);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(URLDecoder.decode(url.substring(startIndex + 1)), keywordList);
         }
 
         @Override
