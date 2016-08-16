@@ -37,7 +37,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        if (mImageInformationList == null || position < 0)
+        if (mImageInformationList == null || mImageInformationList.size() == 0 || position < 0)
         {
             return null;
         }
