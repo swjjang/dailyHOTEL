@@ -13,9 +13,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -23,6 +25,8 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
+import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -223,6 +227,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             {
                 setResult(resultCode);
 
@@ -265,22 +270,20 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             DailyDeepLink.getInstance().clear();
 
-            SaleTime changedSaleTime = saleTime.getClone(0);
-
             if (Util.isTextEmpty(date) == false)
             {
-                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
+                saleTime = SaleTime.changeDateSaleTime(saleTime, date);
             } else if (datePlus >= 0)
             {
-                changedSaleTime.setOffsetDailyDay(datePlus);
+                saleTime.setOffsetDailyDay(datePlus);
             }
 
-            if (changedSaleTime == null)
+            if (saleTime == null)
             {
                 return false;
             }
 
-            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, changedSaleTime, nights, hotelIndex, isShowCalendar);
+            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
@@ -313,24 +316,22 @@ public class EventWebActivity extends WebViewActivity implements Constants
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
 
-            SaleTime changedSaleTime = saleTime.getClone(0);
-
             // date가 비어 있는 경우
             if (Util.isTextEmpty(date) == false)
             {
-                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
+                saleTime = SaleTime.changeDateSaleTime(saleTime, date);
             } else if (datePlus >= 0)
             {
-                changedSaleTime.setOffsetDailyDay(datePlus);
+                saleTime.setOffsetDailyDay(datePlus);
             }
 
-            if (changedSaleTime == null)
+            if (saleTime == null)
             {
                 return false;
             }
 
             Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                changedSaleTime, gourmetIndex, isShowCalendar);
+                saleTime, gourmetIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
@@ -349,6 +350,187 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         return result;
+    }
+
+    private boolean moveDeepLinkStaySearchResult(Context context, SaleTime saleTime)
+    {
+        String word = DailyDeepLink.getInstance().getSearchWord();
+        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
+        LatLng latLng = DailyDeepLink.getInstance().getLatLng();
+        double radius = DailyDeepLink.getInstance().getRadius();
+
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        int nights = 1;
+
+        try
+        {
+            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        } finally
+        {
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
+        }
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        switch (searchType)
+        {
+            case MY_LOCATION:
+                break;
+
+            case LOCATION:
+            {
+                if (latLng != null)
+                {
+                    Intent intent = StaySearchResultActivity.newInstance(context, checkInSaleTime, nights, latLng, radius);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                } else
+                {
+                    return false;
+                }
+                break;
+            }
+
+            default:
+                if (Util.isTextEmpty(word) == false)
+                {
+                    Intent intent = StaySearchResultActivity.newInstance(context, checkInSaleTime, nights, new Keyword(0, word), SearchType.SEARCHES);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                } else
+                {
+                    return false;
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    private boolean moveDeepLinkGourmetSearchResult(Context context, SaleTime saleTime)
+    {
+        String word = DailyDeepLink.getInstance().getSearchWord();
+        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
+        LatLng latLng = DailyDeepLink.getInstance().getLatLng();
+        double radius = DailyDeepLink.getInstance().getRadius();
+
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        switch (searchType)
+        {
+            case MY_LOCATION:
+                break;
+
+            case LOCATION:
+            {
+                if (latLng != null)
+                {
+                    Intent intent = GourmetSearchResultActivity.newInstance(context, checkInSaleTime, latLng, radius);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                } else
+                {
+                    return false;
+                }
+                break;
+            }
+
+            default:
+                if (Util.isTextEmpty(word) == false)
+                {
+                    Intent intent = GourmetSearchResultActivity.newInstance(context, checkInSaleTime, new Keyword(0, word), SearchType.SEARCHES);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                } else
+                {
+                    return false;
+                }
+                break;
+        }
+
+        return true;
     }
 
     private void startLogin()
@@ -436,13 +618,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                                 if (dailyDeepLink.isHotelDetailView() == true)
                                 {
-                                    if (deepLinkHotelDetail(mSaleTime) == true)
+                                    if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
                                     {
                                         return;
                                     }
                                 } else if (dailyDeepLink.isGourmetDetailView() == true)
                                 {
-                                    if (deepLinkGourmetDetail(mSaleTime) == true)
+                                    if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
                                     {
                                         return;
                                     }
@@ -524,6 +706,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         break;
                     }
 
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=hsr&dp=2&n=1&w=라마다";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=hsr&d=20160825&n=1&w=라마다";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=gsr&dp=2&w=뷔페";
+                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=gsr&d=20160825&w=뷔페";
+
                     DailyDeepLink.getInstance().setDeepLink(Uri.parse(uri));
 
                     if (DailyDeepLink.getInstance().isValidateLink() == true)
@@ -532,13 +719,25 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                         if (DailyDeepLink.getInstance().isHotelDetailView() == true)
                         {
-                            if (deepLinkHotelDetail(mSaleTime) == true)
+                            if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
                             {
                                 return;
                             }
                         } else if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
                         {
-                            if (deepLinkGourmetDetail(mSaleTime) == true)
+                            if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
+                            {
+                                return;
+                            }
+                        } else if (DailyDeepLink.getInstance().isHotelSearchResultView() == true)
+                        {
+                            if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                            {
+                                return;
+                            }
+                        } else if (DailyDeepLink.getInstance().isGourmetSearchResultView() == true)
+                        {
+                            if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
                             {
                                 return;
                             }
