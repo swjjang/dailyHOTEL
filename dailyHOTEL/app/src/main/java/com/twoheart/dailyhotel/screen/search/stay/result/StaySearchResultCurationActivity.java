@@ -20,6 +20,8 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.net.URLDecoder;
+
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
@@ -202,14 +204,14 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             String requestParams = null;
             try
             {
-                Uri requestUrl = Uri.parse(url);
+                Uri requestUrl = Uri.parse(URLDecoder.decode(url));
                 requestParams = requestUrl.getQuery();
             } catch (Exception e)
             {
                 // do nothing!
             }
 
-            String lastParams = mLastParams.toParamsString();
+            String lastParams = ((StaySearchParams)mLastParams).toParamsString(false);
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

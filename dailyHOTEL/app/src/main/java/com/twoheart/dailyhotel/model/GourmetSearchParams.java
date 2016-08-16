@@ -88,6 +88,11 @@ public class GourmetSearchParams extends GourmetParams
     @Override
     public String toParamsString()
     {
+        return toParamsString(true);
+    }
+
+    public String toParamsString(boolean isTermEncode)
+    {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(getParamString("reserveDate", date)).append("&");
@@ -130,7 +135,7 @@ public class GourmetSearchParams extends GourmetParams
 
         if (Util.isTextEmpty(term) == false)
         {
-            stringBuilder.append(getParamString("term", URLEncoder.encode(term))).append("&");
+            stringBuilder.append(getParamString("term", isTermEncode == true ? URLEncoder.encode(term) : term)).append("&");
         }
 
         boolean isNeedLocation = false;
