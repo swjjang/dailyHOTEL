@@ -1011,12 +1011,18 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-            if (viewType == ViewType.MAP)
+            try
             {
-                recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
-            } else
+                if (viewType == ViewType.MAP)
+                {
+                    recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+                } else
+                {
+                    recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+                }
+            } catch (Exception e)
             {
-                recordAnalyticsStayList(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+                // GA 수집시에 메모리 해지 에러는 버린다.
             }
         }
     };
