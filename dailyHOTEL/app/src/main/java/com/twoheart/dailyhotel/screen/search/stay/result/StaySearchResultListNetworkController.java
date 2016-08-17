@@ -81,30 +81,33 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                     ArrayList<Category> categoryList = new ArrayList<>();
                     JSONArray categoryJSONArray = null;
 
-                    if (dataJSONObject.isNull("categories") == false)
+                    if (hotelJSONArray != null && hotelJSONArray.length() > 0)
                     {
-                        categoryJSONArray = dataJSONObject.getJSONArray("categories");
-                    }
-
-                    if (categoryJSONArray != null && categoryJSONArray.length() != 0)
-                    {
-                        int length = categoryJSONArray.length();
-                        JSONObject categoryJSONObject;
-
-                        for (int i = 0; i < length; i++)
+                        if (dataJSONObject.isNull("categories") == false)
                         {
-                            categoryJSONObject = categoryJSONArray.getJSONObject(i);
+                            categoryJSONArray = dataJSONObject.getJSONArray("categories");
+                        }
 
-                            String name = categoryJSONObject.getString("name");
-                            String code = categoryJSONObject.getString("alias");
-                            int count = categoryJSONObject.getInt("count");
+                        if (categoryJSONArray != null && categoryJSONArray.length() != 0)
+                        {
+                            int length = categoryJSONArray.length();
+                            JSONObject categoryJSONObject;
 
-                            if (count > 0 && Util.isTextEmpty(name, code) == false)
+                            for (int i = 0; i < length; i++)
                             {
-                                categoryList.add(new Category(name, code));
-                            }
+                                categoryJSONObject = categoryJSONArray.getJSONObject(i);
 
-                            totalCount += count;
+                                String name = categoryJSONObject.getString("name");
+                                String code = categoryJSONObject.getString("alias");
+                                int count = categoryJSONObject.getInt("count");
+
+                                if (count > 0 && Util.isTextEmpty(name, code) == false)
+                                {
+                                    categoryList.add(new Category(name, code));
+                                }
+
+                                totalCount += count;
+                            }
                         }
                     }
 
@@ -126,7 +129,6 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         Uri uri = Uri.parse(url);
                         String pageString = uri.getQueryParameter("page");
                         page = Integer.parseInt(pageString);
-
                     } catch (Exception e)
                     {
                         page = 0;
