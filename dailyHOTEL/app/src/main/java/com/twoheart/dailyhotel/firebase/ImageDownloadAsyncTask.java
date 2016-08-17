@@ -50,12 +50,14 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
             Request request = new Request.Builder().url(url).build();
             Response response = okHttpClient.newCall(request).execute();
 
-            downloadedFile = new File(mContext.getCacheDir(), fileName);
+            if (response.isSuccessful() == true)
+            {
+                downloadedFile = new File(mContext.getCacheDir(), fileName);
 
-            bufferedSink = Okio.buffer(Okio.sink(downloadedFile));
-            bufferedSink.writeAll(response.body().source());
-            bufferedSink.close();
-
+                bufferedSink = Okio.buffer(Okio.sink(downloadedFile));
+                bufferedSink.writeAll(response.body().source());
+                bufferedSink.close();
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
