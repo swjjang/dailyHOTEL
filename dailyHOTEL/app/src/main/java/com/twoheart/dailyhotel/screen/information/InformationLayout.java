@@ -121,10 +121,11 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         mNewEventIconView = eventLayout.findViewById(R.id.newIconView);
 
-        mPushTextView = (TextView) view.findViewById(R.id.pushTextView);
-        mPushTextView.setOnClickListener(this);
+        View pushBenefitLayout = view.findViewById(R.id.pushBenefitLayout);
+        pushBenefitLayout.setOnClickListener(this);
 
-        mPushBenefitTextView = (TextView) view.findViewById(R.id.pushBenefitTextView);
+        mPushTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushTextView);
+        mPushBenefitTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushBenefitTextView);
 
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
@@ -513,7 +514,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
             }
 
-            case R.id.pushTextView:
+            case R.id.pushBenefitLayout:
             {
                 ((OnEventListener) mOnEventListener).onPushClick();
                 break;
