@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -30,12 +31,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onResponseAddress(String address, boolean isAnalytics);
-    }
-
-    private interface PlaceSearchResultJsonResponseListener  extends com.android.volley.Response.ErrorListener
-    {
-        void onResponse(String url, boolean isAnalytics, JSONObject response);
+        void onResponseAddress(String address);
     }
 
     public PlaceSearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -43,38 +39,38 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestAddress(Location location, boolean isAnalytics)
+    public void requestAddress(Location location)
     {
         if (location == null)
         {
             return;
         }
 
-        requestAddress(location.getLatitude(), location.getLongitude(), isAnalytics);
+        requestAddress(location.getLatitude(), location.getLongitude());
     }
 
-    public void requestAddress(double latitude, double longitude, boolean isAnalytics)
+    public void requestAddress(double latitude, double longitude)
     {
         final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
             , Double.toString(latitude)//
             , Double.toString(longitude)//
             , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-        new SearchAddressAsyncTask(url, isAnalytics, mLocationToAddressListener).execute();
+        new SearchAddressAsyncTask(url, mLocationToAddressListener).execute();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceSearchResultJsonResponseListener mLocationToAddressListener = new PlaceSearchResultJsonResponseListener()
+    private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, boolean isAnalytics, JSONObject response)
+        public void onResponse(String url, JSONObject response)
         {
             if (response == null)
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address), isAnalytics);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
                 return;
             }
 
@@ -85,19 +81,19 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
                 if (searchJSONObject == null)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address), isAnalytics);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
                 } else
                 {
                     String shortName = searchJSONObject.getString("short_name");
                     String searchKeyword = "KR".equalsIgnoreCase(shortName) ? "sublocality_level_2" : "administrative_area_level_1";
 
                     String address = getSearchTypes(jsonArray, searchKeyword, "long_name");
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address, isAnalytics);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
                 }
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address), isAnalytics);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
             }
         }
 
@@ -235,13 +231,11 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
     private class SearchAddressAsyncTask extends AsyncTask<Void, Void, JSONObject>
     {
         private String mUrl;
-        private boolean mIsAnalytics;
-        private PlaceSearchResultJsonResponseListener mListener;
+        private DailyHotelJsonResponseListener mListener;
 
-        public SearchAddressAsyncTask(String url, boolean isAnalytics, PlaceSearchResultJsonResponseListener listener)
+        public SearchAddressAsyncTask(String url, DailyHotelJsonResponseListener listener)
         {
             mUrl = url;
-            mIsAnalytics = isAnalytics;
             mListener = listener;
         }
 
@@ -280,7 +274,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
         {
             if (mListener != null)
             {
-                mListener.onResponse(mUrl, mIsAnalytics, jsonObject);
+                mListener.onResponse(mUrl, jsonObject);
             }
         }
     }

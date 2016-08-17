@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -51,6 +50,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
     private static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
     private static final String INTENT_EXTRA_DATA_RADIUS = "radius";
+
+    private boolean mIsReceiveData;
 
     private String mInputText;
     private String mAddress;
@@ -116,7 +117,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(true);
 
-            mNetworkController.requestAddress(mStaySearchCuration.getLocation(), false);
+            mNetworkController.requestAddress(mStaySearchCuration.getLocation());
         } else
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(false);
@@ -557,20 +558,29 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private PlaceSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceSearchResultNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onResponseAddress(String address, boolean isAnalytics)
+        public void onResponseAddress(String address)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            if (isAnalytics == true)
+            if (SearchType.LOCATION == mSearchType)
             {
-                ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
-                if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                synchronized (StaySearchResultActivity.this)
                 {
-                    int placeCount = placeListFragmentList.get(0).getPlaceCount();
-                    recordEventSearchResultByLocation(address, placeCount == 0);
+                    if (mIsReceiveData == false)
+                    {
+                        mIsReceiveData = true;
+                    } else
+                    {
+                        ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
+                        if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                        {
+                            int placeCount = placeListFragmentList.get(0).getPlaceCount();
+                            recordEventSearchResultByLocation(address, placeCount == 0);
+                        }
+                    }
                 }
             }
 
@@ -763,12 +773,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (mSearchType == SearchType.LOCATION)
             {
-                if (Util.isTextEmpty(mAddress) == true)
+                synchronized (StaySearchResultActivity.this)
                 {
-                    mNetworkController.requestAddress(mStaySearchCuration.getLocation(), true);
-                } else
-                {
-                    recordEventSearchResultByLocation(mAddress, isShow);
+                    if (mIsReceiveData == false)
+                    {
+                        mIsReceiveData = true;
+                    } else
+                    {
+                        recordEventSearchResultByLocation(mAddress, isShow);
+                    }
                 }
             } else if (mSearchType == SearchType.RECENT)
             {
