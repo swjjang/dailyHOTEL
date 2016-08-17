@@ -109,6 +109,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected abstract View getGradeTextView();
 
+    protected abstract View getNameTextView();
+
     protected abstract View getMagicToolbarView();
 
     public abstract void setBookingStatus(int status);
@@ -648,15 +650,15 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 return;
             }
 
-            View titleLaoyout = getTitleLayout();
+            View titleLayout = getTitleLayout();
 
-            if (titleLaoyout == null)
+            if (titleLayout == null)
             {
                 return;
             }
 
             Rect rect = new Rect();
-            titleLaoyout.getGlobalVisibleRect(rect);
+            titleLayout.getGlobalVisibleRect(rect);
 
             if (rect.top == rect.right)
             {
@@ -704,7 +706,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 }
             }
 
-            View nameTextView = getGradeTextView();
+            View nameTextView = getNameTextView();
             Rect firstRect = (Rect) nameTextView.getTag();
             Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
 
