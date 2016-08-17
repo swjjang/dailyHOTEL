@@ -371,6 +371,11 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void recordEventSearchResultByLocation(String address, boolean isEmpty)
     {
+        if (Util.isTextEmpty(address))
+        {
+            return;
+        }
+
         String action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
 
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//

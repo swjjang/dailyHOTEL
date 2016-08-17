@@ -28,10 +28,12 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -55,7 +57,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private SearchType mSearchType;
     private GourmetSearchCuration mGourmetSearchCuration;
 
-    private GourmetSearchResultNetworkController mNetworkController;
+    private PlaceSearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, String inputText, Keyword keyword, SearchType searchType)
     {
@@ -110,7 +112,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(true);
 
-            mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
+            mNetworkController.requestAddress(mGourmetSearchCuration.getLocation(), false);
         } else
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(false);
@@ -304,7 +306,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getSaleTime());
 
-        mNetworkController = new GourmetSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
     }
@@ -358,8 +360,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true)
         {
-            PlaceListFragment gourmetSearchResultListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-            int placeCount = gourmetSearchResultListFragment.getPlaceCount();
+            PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
+            int placeCount = placeListFragment != null ? placeListFragment.getPlaceCount() : 0;
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
         }
 
@@ -529,14 +531,24 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private GourmetSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetSearchResultNetworkController.OnNetworkControllerListener()
+    private PlaceSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceSearchResultNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onResponseAddress(String address)
+        public void onResponseAddress(String address, boolean isAnalytics)
         {
             if (isFinishing() == true)
             {
                 return;
+            }
+
+            if (isAnalytics == true)
+            {
+                ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
+                if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                {
+                    int placeCount = placeListFragmentList.get(0).getPlaceCount();
+                    recordEventSearchResultByLocation(address, placeCount == 0);
+                }
             }
 
             mAddress = address;
@@ -718,7 +730,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (mSearchType == SearchType.LOCATION)
             {
-                recordEventSearchResultByLocation(mAddress, isShow);
+                if (Util.isTextEmpty(mAddress) == true)
+                {
+                    mNetworkController.requestAddress(mGourmetSearchCuration.getLocation(), true);
+                } else
+                {
+                    recordEventSearchResultByLocation(mAddress, isShow);
+                }
+
             } else if (mSearchType == SearchType.RECENT)
             {
                 recordEventSearchResultByRecentKeyword(keyword, isShow);

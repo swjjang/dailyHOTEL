@@ -28,13 +28,16 @@ import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +58,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private SearchType mSearchType;
     private StaySearchCuration mStaySearchCuration;
 
-    private StaySearchResultNetworkController mNetworkController;
+    private PlaceSearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, SearchType searchType)
     {
@@ -113,7 +116,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(true);
 
-            mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+            mNetworkController.requestAddress(mStaySearchCuration.getLocation(), false);
         } else
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(false);
@@ -319,7 +322,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         mPlaceSearchResultLayout.setCalendarText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStaySearchCuration.getNights()));
 
-        mNetworkController = new StaySearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -374,7 +377,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true)
         {
             PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-            int placeCount = placeListFragment.getPlaceCount();
+            int placeCount = placeListFragment != null ? placeListFragment.getPlaceCount() : 0;
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
         }
 
@@ -551,14 +554,24 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private StaySearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchResultNetworkController.OnNetworkControllerListener()
+    private PlaceSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceSearchResultNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onResponseAddress(String address)
+        public void onResponseAddress(String address, boolean isAnalytics)
         {
             if (isFinishing() == true)
             {
                 return;
+            }
+
+            if (isAnalytics == true)
+            {
+                ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
+                if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                {
+                    int placeCount = placeListFragmentList.get(0).getPlaceCount();
+                    recordEventSearchResultByLocation(address, placeCount == 0);
+                }
             }
 
             mAddress = address;
@@ -750,7 +763,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (mSearchType == SearchType.LOCATION)
             {
-                recordEventSearchResultByLocation(mAddress, isShow);
+                if (Util.isTextEmpty(mAddress) == true)
+                {
+                    mNetworkController.requestAddress(mStaySearchCuration.getLocation(), true);
+                } else
+                {
+                    recordEventSearchResultByLocation(mAddress, isShow);
+                }
             } else if (mSearchType == SearchType.RECENT)
             {
                 recordEventSearchResultByRecentKeyword(keyword, isShow);
