@@ -200,7 +200,7 @@ public class GourmetParams extends PlaceParams
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
         {
-            stringBuilder.append(prefix).append("6_11").append("&");
+            stringBuilder.append(prefix).append("06_11").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
@@ -220,7 +220,7 @@ public class GourmetParams extends PlaceParams
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
         {
-            stringBuilder.append(prefix).append("21_6").append("&");
+            stringBuilder.append(prefix).append("21_06").append("&");
         }
 
         int length = stringBuilder.length();
