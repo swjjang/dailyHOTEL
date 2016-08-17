@@ -521,9 +521,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
+            ArrayList<ImageInformation> imageInformationArrayList = placeDetail.getImageInformationList();
+            if (imageInformationArrayList.size() == 0)
+            {
+                return;
+            }
+
             lockUiComponent();
 
-            Intent intent = ImageDetailListActivity.newInstance(GourmetDetailActivity.this, placeDetail.name, placeDetail.getImageInformationList(), mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(GourmetDetailActivity.this, placeDetail.name, imageInformationArrayList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
         }
 

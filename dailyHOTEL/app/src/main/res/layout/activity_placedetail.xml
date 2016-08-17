@@ -48,7 +48,7 @@
             android:layout_marginRight="15dp">
 
             <View
-                android:id="@+id/imageView"
+                android:id="@+id/moreIconView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentBottom="true"

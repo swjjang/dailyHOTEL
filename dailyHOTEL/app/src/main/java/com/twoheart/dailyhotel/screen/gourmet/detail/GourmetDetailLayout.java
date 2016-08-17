@@ -78,6 +78,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         if (gourmetDetail == null)
         {
+            setLineIndicatorVisible(false);
             return;
         }
 
@@ -93,6 +94,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         mViewPager.setAdapter(mImageAdapter);
 
         mDailyLineIndicator.setViewPager(mViewPager);
+        setLineIndicatorVisible(imageInformationList.size() > 0);
         setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
 
         if (mListAdapter == null)

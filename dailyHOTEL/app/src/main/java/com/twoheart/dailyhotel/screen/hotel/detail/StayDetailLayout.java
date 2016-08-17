@@ -83,6 +83,7 @@ public class StayDetailLayout extends PlaceDetailLayout
     {
         if (stayDetail == null)
         {
+            setLineIndicatorVisible(false);
             return;
         }
 
@@ -98,6 +99,7 @@ public class StayDetailLayout extends PlaceDetailLayout
         mViewPager.setAdapter(mImageAdapter);
 
         mDailyLineIndicator.setViewPager(mViewPager);
+        setLineIndicatorVisible(imageInformationList.size() > 0);
         setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
 
         if (mListAdapter == null)

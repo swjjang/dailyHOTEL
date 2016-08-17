@@ -52,6 +52,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
+    protected View mMoreIconView;
 
     protected DailyPlaceDetailListView mListView;
     protected PlaceDetailImageViewPagerAdapter mImageAdapter;
@@ -140,6 +141,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
+        mMoreIconView = view.findViewById(R.id.moreIconView);
+
         mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
 
         mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
@@ -176,8 +179,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         if (Util.isTextEmpty(url) == true)
         {
+            setLineIndicatorVisible(false);
             return;
         }
+
+        setLineIndicatorVisible(true);
 
         if (mImageAdapter == null)
         {
@@ -562,6 +568,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
         {
             mDescriptionTextView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setLineIndicatorVisible(boolean isShow)
+    {
+        mMoreIconView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+        mDailyLineIndicator.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()

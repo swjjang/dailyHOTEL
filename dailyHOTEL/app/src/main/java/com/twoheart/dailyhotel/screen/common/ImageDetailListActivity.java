@@ -80,7 +80,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             position = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, 0);
         }
 
-        if (arrayList == null)
+        if (arrayList == null || arrayList.size() == 0)
         {
             finish();
             return;
