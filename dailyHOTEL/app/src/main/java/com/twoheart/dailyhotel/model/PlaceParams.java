@@ -76,13 +76,14 @@ public abstract class PlaceParams implements Parcelable
         }
     }
 
-    public Constants.SortType getSortType() {
+    public Constants.SortType getSortType()
+    {
         return mSort;
     }
 
     public boolean hasLocation()
     {
-        return (latitude == 0d || longitude == 0d) ? false : true;
+        return (latitude != 0d && longitude != 0d);
     }
 
     protected String getParamString(String key, Object value)
@@ -121,7 +122,7 @@ public abstract class PlaceParams implements Parcelable
         limit = in.readInt();
         sortProperty = in.readString();
         sortDirection = in.readString();
-        details = in.readInt() == 1 ? true : false;
+        details = in.readInt() == 1;
     }
 
     @Override

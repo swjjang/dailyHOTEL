@@ -860,7 +860,7 @@ public class DailyDeepLink
                 {
                     try
                     {
-                        return Integer.parseInt(value) == 1 ? true : false;
+                        return Integer.parseInt(value) == 1;
                     } catch (NumberFormatException e)
                     {
                         return false;

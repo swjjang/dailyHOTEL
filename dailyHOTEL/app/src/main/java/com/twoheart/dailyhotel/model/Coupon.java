@@ -73,7 +73,7 @@ public class Coupon implements Parcelable
         validFrom = in.readString();
         validTo = in.readString();
         amountMinimum = in.readInt();
-        isDownloaded = in.readInt() == 1 ? true : false;
+        isDownloaded = in.readInt() == 1;
         availableItem = in.readString();
         serverDate = in.readString();
         couponCode = in.readString();

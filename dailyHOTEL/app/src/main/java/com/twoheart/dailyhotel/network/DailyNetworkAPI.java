@@ -13,7 +13,6 @@
 package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,10 +20,8 @@ import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -536,7 +533,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales/search/auto_complete" : "OTckNTYkOSQ5NiQ2MCQ=$MDNGQUMwMIzZBNjkyMjVEOTBEQUIwNjQ0QUUwMkM1OTlEOUQ5RjU5RDRGGRjIVGMTQxRkUzNkVBM0Y3OUNBMUQ2QkMzQUI2OTKA1NGDUyMjgzNDkzRDY2NjA2Q0Q0ODY3Qjc3$";
 
-        String params = String.format("?reserveDate=%s&term=%s", date,  URLEncoder.encode(text));
+        String params = String.format("?reserveDate=%s&term=%s", date, URLEncoder.encode(text));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
 

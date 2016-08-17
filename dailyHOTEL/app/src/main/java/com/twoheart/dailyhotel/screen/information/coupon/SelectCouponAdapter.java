@@ -209,7 +209,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_default);
         holder.iconImageView.setImageResource(R.drawable.selector_radio_button);
         holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cd0d0d0));
-        holder.iconImageView.setSelected((mSelectPosition == position) ? true : false);
+        holder.iconImageView.setSelected((mSelectPosition == position));
         holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
         holder.downloadTextView.setVisibility(View.GONE);
         holder.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.black));

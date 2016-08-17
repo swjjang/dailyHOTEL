@@ -1,11 +1,8 @@
 package com.twoheart.dailyhotel.network;
 
-import android.location.Location;
-
 import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 

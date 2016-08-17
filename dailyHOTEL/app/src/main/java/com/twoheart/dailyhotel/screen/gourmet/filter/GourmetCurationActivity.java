@@ -215,7 +215,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         HashMap<String, Integer> categroyCodeMap = gourmetCurationOption.getCategoryCoderMap();
         HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
 
-        boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN ? true : false;
+        boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN;
 
         for (String key : keyList)
         {
@@ -445,7 +445,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 setResultMessage(resultMessage);
 
                 setConfirmOnClickListener(GourmetCurationActivity.this);
-                setConfirmEnable(count == 0 ? false : true);
+                setConfirmEnable(count != 0);
             }
         }.execute();
     }
@@ -699,7 +699,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         Map<String, String> eventParams = new HashMap<>();
         eventParams.put(AnalyticsManager.KeyType.SORTING, gourmetCurationOption.getSortType().name());
 
-        if(province != null)
+        if (province != null)
         {
             if (province instanceof Area)
             {

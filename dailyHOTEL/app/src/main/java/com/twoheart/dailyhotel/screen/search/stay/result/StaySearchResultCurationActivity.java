@@ -211,7 +211,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
                 // do nothing!
             }
 
-            String lastParams = ((StaySearchParams)mLastParams).toParamsString(false);
+            String lastParams = ((StaySearchParams) mLastParams).toParamsString(false);
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!
@@ -233,7 +233,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             }
 
             setConfirmOnClickListener(StaySearchResultCurationActivity.this);
-            setConfirmEnable(totalCount == 0 ? false : true);
+            setConfirmEnable(totalCount != 0);
         }
 
         @Override

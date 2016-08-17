@@ -161,7 +161,7 @@ public class GourmetCurationOption extends PlaceCurationOption
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            ArrayList<String> categoryArrayList = new ArrayList(mCategoryCodeMap.keySet());
+            ArrayList<String> categoryArrayList = new ArrayList<>(mCategoryCodeMap.keySet());
 
             int size = categoryArrayList.size();
 

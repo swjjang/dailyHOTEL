@@ -19,12 +19,6 @@ public class StayMainLayout extends PlaceMainLayout
     }
 
     @Override
-    public void onClick(View v)
-    {
-        super.onClick(v);
-    }
-
-    @Override
     protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         return new StayListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);

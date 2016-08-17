@@ -46,8 +46,8 @@ public class CouponHistory extends Coupon
     {
         super.readFromParcel(in);
 
-        isExpired = in.readInt() == 1 ? true : false;
-        isRedeemed = in.readInt() == 1 ? true : false;
+        isExpired = in.readInt() == 1;
+        isRedeemed = in.readInt() == 1;
         disabledAt = in.readString();
     }
 

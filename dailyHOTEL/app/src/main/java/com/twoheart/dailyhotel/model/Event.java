@@ -25,7 +25,7 @@ public class Event implements Parcelable
         {
             index = jsonObject.getInt("idx");
             imageUrl = jsonObject.getString("img_url");
-            isJoin = jsonObject.getInt("is_event_join") == 0 ? false : true;
+            isJoin = jsonObject.getInt("is_event_join") != 0;
             name = jsonObject.getString("name");
 
         } catch (Exception e)
@@ -46,7 +46,7 @@ public class Event implements Parcelable
     {
         index = in.readInt();
         imageUrl = in.readString();
-        isJoin = in.readInt() == 0 ? false : true;
+        isJoin = in.readInt() != 0;
     }
 
     @Override

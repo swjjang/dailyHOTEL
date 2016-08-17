@@ -77,7 +77,7 @@ public class RoomInformation implements Parcelable
         option = in.readString();
         amenities = in.readString();
         roomBenefit = in.readString();
-        isOverseas = in.readInt() == 1 ? true : false;
+        isOverseas = in.readInt() == 1;
         hotelName = in.readString();
         nights = in.readInt();
 

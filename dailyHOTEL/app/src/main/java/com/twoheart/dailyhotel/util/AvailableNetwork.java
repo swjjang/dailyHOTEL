@@ -45,12 +45,8 @@ public class AvailableNetwork
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if (networkInfo != null && networkInfo.isConnected())
-        {
-            return true;
-        }
+        return (networkInfo != null && networkInfo.isConnected());
 
-        return false;
     }
 
     public int getNetType(Context context)

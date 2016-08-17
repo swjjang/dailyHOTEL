@@ -7,8 +7,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class GourmetSearchParams extends GourmetParams
 {
@@ -205,100 +203,6 @@ public class GourmetSearchParams extends GourmetParams
                 sortDirection = null;
                 break;
         }
-    }
-
-    private String toParamStringByCategory(HashMap<String, Integer> map)
-    {
-        if (map == null || map.size() == 0)
-        {
-            return null;
-        }
-
-        String prefix = "category=";
-        StringBuilder stringBuilder = new StringBuilder();
-
-        ArrayList<Integer> categoryCodeList = new ArrayList(map.values());
-
-        for (int categoryCode : categoryCodeList)
-        {
-            stringBuilder.append(prefix).append(categoryCode).append("&");
-        }
-
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        return stringBuilder.toString();
-    }
-
-    private String toParamStringByTime(int flagTimeFilter)
-    {
-        if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
-        {
-            return null;
-        }
-
-        String prefix = "timeFrame=";
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
-        {
-            stringBuilder.append(prefix).append("6_11").append("&");
-        }
-
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
-        {
-            stringBuilder.append(prefix).append("11_15").append("&");
-        }
-
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
-        {
-            stringBuilder.append(prefix).append("15_17").append("&");
-        }
-
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
-        {
-            stringBuilder.append(prefix).append("17_21").append("&");
-        }
-
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
-        {
-            stringBuilder.append(prefix).append("21_6").append("&");
-        }
-
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        return stringBuilder.toString();
-    }
-
-    private String toParamStingByAmenities(int flagAmenitiesFilters)
-    {
-        if (flagAmenitiesFilters == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
-        {
-            return null;
-        }
-
-        String prefix = "luxury=";
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if ((flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
-        {
-            stringBuilder.append(prefix).append("Parking").append("&");
-        }
-
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        return stringBuilder.toString();
     }
 
     @Override

@@ -236,7 +236,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             }
 
             setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
-            setConfirmEnable(totalCount == 0 ? false : true);
+            setConfirmEnable(totalCount != 0);
         }
 
         @Override
