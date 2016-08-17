@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.net.URLEncoder;
+
 /**
  * Created by android_sam on 2016. 7. 28..
  */
@@ -74,67 +76,71 @@ public class StaySearchParams extends StayParams
     @Override
     public String toParamsString()
     {
-        StringBuilder sb = new StringBuilder();
+        return toParamsString(true);
+    }
 
-        sb.append(getParamString("dateCheckIn", dateCheckIn)).append("&");
-        sb.append(getParamString("stays", stays)).append("&");
+    public String toParamsString(boolean isTermEncode)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(getParamString("dateCheckIn", dateCheckIn)).append("&");
+        stringBuilder.append(getParamString("stays", stays)).append("&");
 
         if (provinceIdx != 0)
         {
-            sb.append(getParamString("provinceIdx", provinceIdx)).append("&");
+            stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
         }
 
         if (areaIdx != 0)
         {
-            sb.append(getParamString("areaIdx", areaIdx)).append("&");
+            stringBuilder.append(getParamString("areaIdx", areaIdx)).append("&");
         }
 
         if (persons != 0)
         {
-            sb.append(getParamString("persons", persons)).append("&");
+            stringBuilder.append(getParamString("persons", persons)).append("&");
         }
 
         String categoryString = getCategoryString();
         if (Util.isTextEmpty(categoryString) == false)
         {
-            sb.append(categoryString).append("&");
+            stringBuilder.append(categoryString).append("&");
         }
 
         if (Util.isTextEmpty(bedType) == false)
         {
-            sb.append(bedType).append("&");
+            stringBuilder.append(bedType).append("&");
         }
 
         if (Util.isTextEmpty(luxury) == false)
         {
-            sb.append(luxury).append("&");
+            stringBuilder.append(luxury).append("&");
         }
 
         if (page > 0)
         {
-            sb.append(getParamString("page", page)).append("&");
-            sb.append(getParamString("limit", limit)).append("&");
+            stringBuilder.append(getParamString("page", page)).append("&");
+            stringBuilder.append(getParamString("limit", limit)).append("&");
         }
 
         if (Util.isTextEmpty(term) == false)
         {
-            //            sb.append(getParamString("term", URLEncoder.encode(term))).append("&");
-            sb.append(getParamString("term", term)).append("&");
+            stringBuilder.append(getParamString("term", isTermEncode == true ? URLEncoder.encode(term) : term)).append("&");
         }
 
         boolean isNeedLocation = false;
 
         if (radius != 0d)
         {
-            sb.append(getParamString("radius", radius)).append("&");
+            stringBuilder.append(getParamString("radius", radius)).append("&");
 
             isNeedLocation = true;
         }
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            sb.append(getParamString("sortProperty", sortProperty)).append("&");
-            sb.append(getParamString("sortDirection", sortDirection)).append("&");
+            stringBuilder.append(getParamString("sortProperty", sortProperty)).append("&");
+            stringBuilder.append(getParamString("sortDirection", sortDirection)).append("&");
 
             if (Constants.SortType.DISTANCE == mSort)
             {
@@ -144,20 +150,20 @@ public class StaySearchParams extends StayParams
 
         if (hasLocation() == true && isNeedLocation == true)
         {
-            sb.append(getParamString("latitude", latitude)).append("&");
-            sb.append(getParamString("longitude", longitude)).append("&");
+            stringBuilder.append(getParamString("latitude", latitude)).append("&");
+            stringBuilder.append(getParamString("longitude", longitude)).append("&");
         }
 
-        sb.append(getParamString("details", details)).append("&");
+        stringBuilder.append(getParamString("details", details)).append("&");
 
-        int length = sb.length();
+        int length = stringBuilder.length();
         if (length > 0)
         {
-            sb.setLength(length - 1);
+            stringBuilder.setLength(length - 1);
         }
 
         //        ExLog.d(" params : " + sb.toString());
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     @Override

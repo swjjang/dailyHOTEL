@@ -466,7 +466,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
             {
-                boolean isCurrentFragment = (placeListFragment == currentFragment) ? true : false;
+                boolean isCurrentFragment = (placeListFragment == currentFragment);
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 

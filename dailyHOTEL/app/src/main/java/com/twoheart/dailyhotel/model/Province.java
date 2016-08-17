@@ -124,7 +124,7 @@ public class Province implements Parcelable
         name = in.readString();
         englishName = in.readString();
         sequence = in.readInt();
-        isOverseas = in.readInt() == 1 ? true : false;
+        isOverseas = in.readInt() == 1;
         imageUrl = in.readString();
         mCategoryList = in.readArrayList(Category.class.getClassLoader());
     }

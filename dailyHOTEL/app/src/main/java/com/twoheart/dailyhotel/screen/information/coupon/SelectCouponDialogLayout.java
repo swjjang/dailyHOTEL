@@ -85,7 +85,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private boolean isEmpty(List<Coupon> list)
     {
-        return (list != null && list.size() != 0) ? false : true;
+        return (list == null || list.size() == 0);
     }
 
     private void updateDialogLayout(boolean isShow)

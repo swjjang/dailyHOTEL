@@ -105,7 +105,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
     private boolean isEmpty(List<Coupon> list)
     {
-        return (list != null && list.size() != 0) ? false : true;
+        return (list == null || list.size() == 0);
     }
 
     @Override

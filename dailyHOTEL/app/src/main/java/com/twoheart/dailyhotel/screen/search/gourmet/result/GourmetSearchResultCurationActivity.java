@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.net.URLDecoder;
+
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
@@ -205,14 +207,14 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             String requestParams = null;
             try
             {
-                Uri requestUrl = Uri.parse(url);
+                Uri requestUrl = Uri.parse(URLDecoder.decode(url));
                 requestParams = requestUrl.getQuery();
             } catch (Exception e)
             {
                 // do nothing!
             }
 
-            String lastParams = mLastParams.toParamsString();
+            String lastParams = mLastParams.toParamsString(false);
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!
@@ -234,7 +236,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             }
 
             setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
-            setConfirmEnable(totalCount == 0 ? false : true);
+            setConfirmEnable(totalCount != 0);
         }
 
         @Override

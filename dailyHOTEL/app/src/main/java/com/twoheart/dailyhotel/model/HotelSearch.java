@@ -34,7 +34,7 @@ public class HotelSearch extends Stay
             categoryCode = jsonObject.getString("category");
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");
-            isDailyChoice = jsonObject.getInt("is_dailychoice") == 1 ? true : false;
+            isDailyChoice = jsonObject.getInt("is_dailychoice") == 1;
             satisfaction = jsonObject.getInt("rating_value");
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");

@@ -96,12 +96,6 @@ public abstract class PlaceMainFragment extends BaseFragment
     }
 
     @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (isFinishing() == true)

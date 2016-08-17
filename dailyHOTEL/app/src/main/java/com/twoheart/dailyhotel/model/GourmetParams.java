@@ -162,7 +162,7 @@ public class GourmetParams extends PlaceParams
         return stringBuilder.toString();
     }
 
-    private String toParamStringByCategory(HashMap<String, Integer> map)
+    protected String toParamStringByCategory(HashMap<String, Integer> map)
     {
         if (map == null || map.size() == 0)
         {
@@ -172,9 +172,9 @@ public class GourmetParams extends PlaceParams
         String prefix = "category=";
         StringBuilder stringBuilder = new StringBuilder();
 
-        ArrayList<String> categoryCodeList = new ArrayList(map.values());
+        ArrayList<Integer> categoryCodeList = new ArrayList<>(map.values());
 
-        for (String categoryCode : categoryCodeList)
+        for (int categoryCode : categoryCodeList)
         {
             stringBuilder.append(prefix).append(categoryCode).append("&");
         }
@@ -188,7 +188,7 @@ public class GourmetParams extends PlaceParams
         return stringBuilder.toString();
     }
 
-    private String toParamStringByTime(int flagTimeFilter)
+    protected String toParamStringByTime(int flagTimeFilter)
     {
         if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
         {
@@ -200,27 +200,27 @@ public class GourmetParams extends PlaceParams
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
         {
-            stringBuilder.append(prefix).append("T6-11").append("&");
+            stringBuilder.append(prefix).append("6_11").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
         {
-            stringBuilder.append(prefix).append("T11-15").append("&");
+            stringBuilder.append(prefix).append("11_15").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
         {
-            stringBuilder.append(prefix).append("T15-17").append("&");
+            stringBuilder.append(prefix).append("15_17").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
         {
-            stringBuilder.append(prefix).append("T17-21").append("&");
+            stringBuilder.append(prefix).append("17_21").append("&");
         }
 
         if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
         {
-            stringBuilder.append(prefix).append("T21-24").append("&");
+            stringBuilder.append(prefix).append("21_6").append("&");
         }
 
         int length = stringBuilder.length();
@@ -232,7 +232,7 @@ public class GourmetParams extends PlaceParams
         return stringBuilder.toString();
     }
 
-    private String toParamStingByAmenities(int flagAmenitiesFilters)
+    protected String toParamStingByAmenities(int flagAmenitiesFilters)
     {
         if (flagAmenitiesFilters == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
         {

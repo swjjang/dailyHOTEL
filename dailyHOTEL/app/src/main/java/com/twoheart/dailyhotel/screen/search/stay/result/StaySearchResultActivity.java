@@ -489,7 +489,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
             {
-                boolean isCurrentFragment = (placeListFragment == currentFragment) ? true : false;
+                boolean isCurrentFragment = (placeListFragment == currentFragment);
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 

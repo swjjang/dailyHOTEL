@@ -46,13 +46,7 @@ public class PhoneNumberKoreaFormattingTextWatcher implements TextWatcher
             mIsNotDigit = true;
         }
 
-        if (mChangedLength > s.length())
-        {
-            mIsDeleteNumber = true;
-        } else
-        {
-            mIsDeleteNumber = false;
-        }
+        mIsDeleteNumber = mChangedLength > s.length();
     }
 
     @Override

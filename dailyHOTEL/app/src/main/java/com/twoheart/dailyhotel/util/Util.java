@@ -407,13 +407,7 @@ public class Util implements Constants
 
             int version = activity.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
 
-            if (packageInfo.versionCode < version)
-            {
-                isInstalled = false;
-            } else
-            {
-                isInstalled = true;
-            }
+            isInstalled = packageInfo.versionCode >= version;
         } catch (PackageManager.NameNotFoundException e)
         {
             isInstalled = false;
@@ -1240,22 +1234,6 @@ public class Util implements Constants
         {
             return true;
         } else if ("Y".equalsIgnoreCase(value))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * int value 값을 true로 바꿔 주는 메소드
-     *
-     * @param value int value
-     * @return boolean value
-     */
-    public static boolean parseBoolean(int value)
-    {
-        if (1 == value)
         {
             return true;
         }

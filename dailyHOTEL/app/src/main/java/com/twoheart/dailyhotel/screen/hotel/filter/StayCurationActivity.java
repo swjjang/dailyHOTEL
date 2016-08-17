@@ -829,7 +829,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
 
             setConfirmOnClickListener(StayCurationActivity.this);
-            setConfirmEnable(hotelSaleCount == 0 ? false : true);
+            setConfirmEnable(hotelSaleCount != 0);
         }
 
         @Override

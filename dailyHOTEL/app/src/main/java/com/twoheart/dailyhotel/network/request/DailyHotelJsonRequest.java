@@ -7,7 +7,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;

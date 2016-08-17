@@ -13,7 +13,6 @@
 package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,10 +20,8 @@ import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -333,9 +330,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelSearchAutoCompleteList(Object tag, String date, int stays, String text, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/search/auto_complete" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/search/auto_complete" : "NDAkNCQzOCQ1NCQxOSQ=$NkVDJRDYxMzMzNzkyNTOU3NEUxNEY2RDg2RTA2RGEJGRRDVFMDk5MkFWBM0ZGNzAzRDU1Q0VCRTFFRTY0ODgwREY2OEQ5Nzk1NTk0OUUwRDkyNzkwQTJCRUM2OEQ4MkZDRTJG$";
 
-        String params = String.format("?dateCheckIn=%s&stays=%d&term=%s", date, stays, text);
+        String params = String.format("?dateCheckIn=%s&stays=%d&term=%s", date, stays, URLEncoder.encode(text));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -514,7 +511,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "MTQkMSQ3MCQzOSQ1NSQ=$RPTk0MDk5MzA0RkHZGOTVGQzUzODE0MDVCMTY2NDUZGMUYzMjhBRUE3JRkQxNjBFNjg1N0FGPN0ZGMUU0ODcwNDlGNw==$";
 
         String params;
 
@@ -534,9 +531,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales/search/auto_complete" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales/search/auto_complete" : "OTckNTYkOSQ5NiQ2MCQ=$MDNGQUMwMIzZBNjkyMjVEOTBEQUIwNjQ0QUUwMkM1OTlEOUQ5RjU5RDRGGRjIVGMTQxRkUzNkVBM0Y3OUNBMUQ2QkMzQUI2OTKA1NGDUyMjgzNDkzRDY2NjA2Q0Q0ODY3Qjc3$";
 
-        String params = String.format("?reserveDate=%s&term=%s", date, text);
+        String params = String.format("?reserveDate=%s&term=%s", date, URLEncoder.encode(text));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
 
@@ -546,7 +543,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetSearchList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "MTQkMSQ3MCQzOSQ1NSQ=$RPTk0MDk5MzA0RkHZGOTVGQzUzODE0MDVCMTY2NDUZGMUYzMjhBRUE3JRkQxNjBFNjg1N0FGPN0ZGMUU0ODcwNDlGNw==$";
 
         String params;
 

@@ -59,8 +59,8 @@ public abstract class Place implements Parcelable
         index = in.readInt();
         latitude = in.readDouble();
         longitude = in.readDouble();
-        isDailyChoice = in.readInt() == 1 ? true : false;
-        isSoldOut = in.readInt() == 1 ? true : false;
+        isDailyChoice = in.readInt() == 1;
+        isSoldOut = in.readInt() == 1;
         satisfaction = in.readInt();
         districtName = in.readString();
         entryPosition = in.readInt();
