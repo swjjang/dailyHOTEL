@@ -64,6 +64,17 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     }
 
     @Override
+    protected View getNameTextView()
+    {
+        if (mListAdapter == null)
+        {
+            return null;
+        }
+
+        return mListAdapter.getNameTextView();
+    }
+
+    @Override
     protected View getMagicToolbarView()
     {
         if (mListAdapter == null)
