@@ -79,10 +79,11 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
 
                     // 카테고리 목록을 만든다
                     ArrayList<Category> categoryList = new ArrayList<>();
-                    JSONArray categoryJSONArray = null;
 
                     if (hotelJSONArray != null && hotelJSONArray.length() > 0)
                     {
+                        JSONArray categoryJSONArray = null;
+
                         if (dataJSONObject.isNull("categories") == false)
                         {
                             categoryJSONArray = dataJSONObject.getJSONArray("categories");
