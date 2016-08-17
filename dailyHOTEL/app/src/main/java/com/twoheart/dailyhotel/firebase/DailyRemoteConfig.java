@@ -183,10 +183,19 @@ public class DailyRemoteConfig
             String currentVersion = DailyPreference.getInstance(context).getIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");
 
-            // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
-            if (Util.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
+            if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
-                new ImageDownloadAsyncTask(context).execute(url, newVersion);
+                DailyPreference.getInstance(context).setIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+            } else if (Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(newVersion) == true)
+            {
+                DailyPreference.getInstance(context).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+            } else
+            {
+                // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
+                if (Util.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
+                {
+                    new ImageDownloadAsyncTask(context).execute(url, newVersion);
+                }
             }
         } catch (JSONException e)
         {
