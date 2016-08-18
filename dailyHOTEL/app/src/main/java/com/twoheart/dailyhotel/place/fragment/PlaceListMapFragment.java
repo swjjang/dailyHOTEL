@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ import java.util.List;
 public abstract class PlaceListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
     private static final int ANIMATION_DEALY = 200;
-    private static final int VIEWPAGER_HEIGHT_DP = 100;
+    private static final int VIEWPAGER_HEIGHT_DP = 110;
 
     private GoogleMap mGoogleMap;
     protected List<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
@@ -185,8 +184,13 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
+        int padding = Util.dpToPx(baseActivity, 15d);
+
         mViewPager = new DailyViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setClipToPadding(false);
+        mViewPager.setPageMargin(Util.dpToPx(baseActivity, 5d));
+        mViewPager.setPadding(padding, 0, padding, Util.dpToPx(baseActivity, 10d));
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
@@ -315,6 +319,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         // Find myLocationButton view
+        //noinspection ResourceType
         View zoomControl = getView().findViewById(0x1);
 
         if (zoomControl != null && zoomControl.getLayoutParams() instanceof RelativeLayout.LayoutParams)
@@ -338,6 +343,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
+        //noinspection ConstantConditions,ResourceType
         mMyLocationView = getView().findViewById(0x2);
 
         if (mMyLocationView != null)
