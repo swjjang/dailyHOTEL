@@ -237,6 +237,44 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         boolean isPhonePaymentEnabled = DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled();
         boolean isVirtualPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled();
 
+        TextView guidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
+        StringBuilder guideMemo = new StringBuilder();
+
+        if (isSimpleCardPaymentEnabled == false)
+        {
+            guideMemo.append(mContext.getString(R.string.label_simple_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isCardPaymentEnabled == false)
+        {
+            guideMemo.append(mContext.getString(R.string.label_card_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isPhonePaymentEnabled == false)
+        {
+            guideMemo.append(mContext.getString(R.string.act_booking_pay_mobile));
+            guideMemo.append(", ");
+        }
+
+        if (isVirtualPaymentEnabled == false)
+        {
+            guideMemo.append(mContext.getString(R.string.act_booking_pay_account));
+            guideMemo.append(", ");
+        }
+
+        if (guideMemo.length() > 0)
+        {
+            guideMemo.setLength(guideMemo.length() - 2);
+
+            guidePaymentMemoView.setText(mContext.getString(R.string.message_dont_support_payment_type, guideMemo.toString()));
+            guidePaymentMemoView.setVisibility(View.VISIBLE);
+        } else
+        {
+            guidePaymentMemoView.setVisibility(View.GONE);
+        }
+
         setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled());
         setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled());
         setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled());
