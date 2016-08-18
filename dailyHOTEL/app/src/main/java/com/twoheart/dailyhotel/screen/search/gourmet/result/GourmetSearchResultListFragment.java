@@ -256,6 +256,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 case MAP:
                 {
                     mGourmetSearchResultListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                    mGourmetSearchResultListLayout.setMapMyLocation(mGourmetCuration.getLocation(), mIsDeepLink == false);
 
                     int mapSize = mGourmetSearchResultListLayout.getMapItemSize();
                     if (mapSize == 0)
@@ -264,8 +265,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     }
 
                     mEventListener.onShowActivityEmptyView(mapSize == 0);
-
-                    mGourmetSearchResultListLayout.setMapMyLocation(mGourmetCuration.getLocation(), mIsDeepLink == false);
                     break;
                 }
             }
