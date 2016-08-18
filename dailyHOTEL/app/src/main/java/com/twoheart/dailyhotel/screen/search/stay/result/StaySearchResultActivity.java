@@ -43,13 +43,7 @@ import java.util.Map;
 
 public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
-    private static final String INTENT_EXTRA_DATA_LOCATION = "location";
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
-    private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
-    private static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
-    private static final String INTENT_EXTRA_DATA_RADIUS = "radius";
 
     private boolean mIsReceiveData;
 
@@ -73,7 +67,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, LatLng latLng, double radius)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, LatLng latLng, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
@@ -81,6 +75,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
 
         return intent;
     }
@@ -264,6 +259,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
             }
+
+            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
 
             location = new Location((String) null);
             location.setLatitude(latLng.latitude);
@@ -492,6 +489,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 boolean isCurrentFragment = (placeListFragment == currentFragment);
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
+
+                ((StaySearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
             }
 
             refreshCurrentFragment(false);

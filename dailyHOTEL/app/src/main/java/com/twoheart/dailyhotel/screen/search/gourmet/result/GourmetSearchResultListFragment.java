@@ -30,8 +30,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 {
     private int mLoadMorePageIndex;
     private GourmetCuration mGourmetCuration;
-    private int mResultTotalCount;
-    private int mResultMaxCount;
+    private boolean mIsDeepLink;
 
     protected BaseActivity mBaseActivity;
 
@@ -193,14 +192,9 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         return mGourmetCount;
     }
 
-    public int getResultTotalCount()
+    public void setIsDeepLink(boolean isDeepLink)
     {
-        return mResultTotalCount;
-    }
-
-    public int getResultMaxCount()
-    {
-        return mResultMaxCount;
+        mIsDeepLink = isDeepLink;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,15 +265,13 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
                     mEventListener.onShowActivityEmptyView(mapSize == 0);
 
-                    mGourmetSearchResultListLayout.setMapMyLocation(mGourmetCuration.getLocation(), true);
+                    mGourmetSearchResultListLayout.setMapMyLocation(mGourmetCuration.getLocation(), mIsDeepLink == false);
                     break;
                 }
             }
 
             if (page <= 1)
             {
-                mResultTotalCount = totalCount;
-                mResultMaxCount = maxCount;
                 mGourmetSearchResultListLayout.updateResultCount(mViewType, totalCount, maxCount);
             }
 

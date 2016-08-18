@@ -43,13 +43,6 @@ import java.util.Map;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-    private static final String INTENT_EXTRA_DATA_LOCATION = "location";
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
-    private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
-    private static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
-    private static final String INTENT_EXTRA_DATA_RADIUS = "radius";
-
     private boolean mIsReceiveData;
 
     private String mInputText;
@@ -71,13 +64,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, LatLng latLng, double radius)
+    public static Intent newInstance(Context context, SaleTime saleTime, LatLng latLng, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
 
         return intent;
     }
@@ -252,6 +246,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
             }
+
+            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
 
             location = new Location((String) null);
             location.setLatitude(latLng.latitude);
@@ -469,6 +465,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 boolean isCurrentFragment = (placeListFragment == currentFragment);
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
+
+                ((GourmetSearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
             }
 
             refreshCurrentFragment(false);

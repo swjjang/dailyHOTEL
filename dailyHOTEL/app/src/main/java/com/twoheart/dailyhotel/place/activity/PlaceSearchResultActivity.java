@@ -30,12 +30,20 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 public abstract class PlaceSearchResultActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    public static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
+    public static final String INTENT_EXTRA_DATA_LOCATION = "location";
+    public static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
+    public static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
+    public static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
+    public static final String INTENT_EXTRA_DATA_RADIUS = "radius";
+    public static final String INTENT_EXTRA_DATA_IS_DEEPLINK = "isDeepLink";
 
     protected static final double DEFAULT_SEARCH_RADIUS = 10d;
 
     protected ViewType mViewType = ViewType.LIST;
 
     protected boolean mIsFixedLocation;
+    protected boolean mIsDeepLink;
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
 
