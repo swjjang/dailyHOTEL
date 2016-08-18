@@ -153,6 +153,11 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 addViewPager(mBaseActivity, container);
 
                 makeMarker(true);
+
+                if (mMyLocationMarkerOptions != null)
+                {
+                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+                }
             }
         });
 
@@ -302,6 +307,36 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         if (mIsCreateView == true)
         {
             makeMarker(isRefreshAll);
+        }
+    }
+
+    public void setMyLocation(Location location, boolean isVisibleMarker)
+    {
+        if (location == null)
+        {
+            return;
+        }
+
+        if (mMyLocationMarkerOptions == null)
+        {
+            mMyLocationMarkerOptions = new MarkerOptions();
+            mMyLocationMarkerOptions.icon(new MyLocationMarker(mBaseActivity).makeIcon());
+            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+            mMyLocationMarkerOptions.zIndex(1.0f);
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+            mMyLocationMarker = null;
+        }
+
+        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+        mMyLocationMarkerOptions.visible(isVisibleMarker);
+
+        if (mGoogleMap != null)
+        {
+            mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
         }
     }
 
@@ -473,6 +508,11 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         {
             try
             {
+                if (mMyLocationMarker != null)
+                {
+                    builder.include(mMyLocationMarker.getPosition());
+                }
+
                 cameraSetting(builder.build(), count);
             } catch (Exception e)
             {
@@ -585,7 +625,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         mGoogleMap.setOnCameraIdleListener(mClusterManager);
                     }
                 });
-                mGoogleMap.setOnCameraIdleListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -840,7 +879,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         mGoogleMap.setOnCameraIdleListener(mClusterManager);
                     }
                 });
-                mGoogleMap.setOnCameraIdleListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -1080,41 +1118,28 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
 
-                if (mMyLocationMarkerOptions == null)
-                {
-                    mMyLocationMarkerOptions = new MarkerOptions();
-                    mMyLocationMarkerOptions.icon(new MyLocationMarker(mBaseActivity).makeIcon());
-                    mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                }
-
-                if (mMyLocationMarker != null)
-                {
-                    mMyLocationMarker.remove();
-                }
-
-                mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-
-                if (Util.isOverAPI21() == true)
-                {
-                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
-                    {
-                        @Override
-                        public void onCameraIdle()
-                        {
-                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
-                        }
-                    });
-                    mGoogleMap.setOnCameraIdleListener(null);
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                } else
-                {
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+                setMyLocation(location, true);
+                moveCameraPosition(mMyLocationMarkerOptions.getPosition());
             }
         });
+    }
+
+    private void moveCameraPosition(LatLng latLng)
+    {
+        if (latLng == null)
+        {
+            return;
+        }
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).build();
+
+        if (Util.isOverAPI21() == true)
+        {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     private class MapWindowAdapter implements GoogleMap.InfoWindowAdapter

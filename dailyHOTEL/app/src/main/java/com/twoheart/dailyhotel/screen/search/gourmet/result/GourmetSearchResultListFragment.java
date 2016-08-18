@@ -30,8 +30,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 {
     private int mLoadMorePageIndex;
     private GourmetCuration mGourmetCuration;
-    private int mResultTotalCount;
-    private int mResultMaxCount;
+    private boolean mIsDeepLink;
 
     protected BaseActivity mBaseActivity;
 
@@ -193,14 +192,9 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         return mGourmetCount;
     }
 
-    public int getResultTotalCount()
+    public void setIsDeepLink(boolean isDeepLink)
     {
-        return mResultTotalCount;
-    }
-
-    public int getResultMaxCount()
-    {
-        return mResultMaxCount;
+        mIsDeepLink = isDeepLink;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -262,6 +256,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 case MAP:
                 {
                     mGourmetSearchResultListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                    mGourmetSearchResultListLayout.setMapMyLocation(mGourmetCuration.getLocation(), mIsDeepLink == false);
 
                     int mapSize = mGourmetSearchResultListLayout.getMapItemSize();
                     if (mapSize == 0)
@@ -276,8 +271,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
             if (page <= 1)
             {
-                mResultTotalCount = totalCount;
-                mResultMaxCount = maxCount;
                 mGourmetSearchResultListLayout.updateResultCount(mViewType, totalCount, maxCount);
             }
 

@@ -1219,7 +1219,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 if (latLng != null)
                 {
-                    Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, latLng, radius);
+                    Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, latLng, radius, true);
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {

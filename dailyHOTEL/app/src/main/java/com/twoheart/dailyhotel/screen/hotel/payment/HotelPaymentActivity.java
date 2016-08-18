@@ -331,7 +331,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mPhoneLayout = findViewById(R.id.phoneLayout);
         mDisablePhoneView = mPhoneLayout.findViewById(R.id.disablePhoneView);
         mTransferLayout = findViewById(R.id.transferLayout);
-        mDisableTransferView = mPhoneLayout.findViewById(R.id.disableTransferView);
+        mDisableTransferView = mTransferLayout.findViewById(R.id.disableTransferView);
 
         mCardManagerLayout.setOnClickListener(this);
         mSimpleCardLayout.setOnClickListener(this);
@@ -343,6 +343,44 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isStayCardPaymentEnabled();
         boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isStayPhonePaymentEnabled();
         boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isStayVirtualPaymentEnabled();
+
+        TextView guidePaymentMemoView = (TextView) findViewById(R.id.guidePaymentMemoView);
+        StringBuilder guideMemo = new StringBuilder();
+
+        if (isSimpleCardPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.label_simple_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isCardPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.label_card_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isPhonePaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.act_booking_pay_mobile));
+            guideMemo.append(", ");
+        }
+
+        if (isVirtualPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.act_booking_pay_account));
+            guideMemo.append(", ");
+        }
+
+        if (guideMemo.length() > 0)
+        {
+            guideMemo.setLength(guideMemo.length() - 2);
+
+            guidePaymentMemoView.setText(getString(R.string.message_dont_support_payment_type, guideMemo.toString()));
+            guidePaymentMemoView.setVisibility(View.VISIBLE);
+        } else
+        {
+            guidePaymentMemoView.setVisibility(View.GONE);
+        }
 
         setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled());
         setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(this).isStayCardPaymentEnabled());

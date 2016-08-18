@@ -1342,7 +1342,7 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 if (latLng != null)
                 {
-                    Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, latLng, radius);
+                    Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, latLng, radius, true);
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {

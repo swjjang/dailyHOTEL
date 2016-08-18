@@ -52,6 +52,8 @@
     <string name="label_visit_day">방문일</string>
     <string name="label_call_service">문의하기</string>
     <string name="label_alarm_update">업데이트 알림</string>
+    <string name="label_simple_payment">간편결제</string>
+    <string name="label_card_payment">일반 카드결제</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -486,6 +488,7 @@
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
     <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
     <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
+    <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>

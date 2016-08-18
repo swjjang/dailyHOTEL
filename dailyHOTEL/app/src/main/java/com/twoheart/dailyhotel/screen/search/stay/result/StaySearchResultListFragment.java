@@ -18,8 +18,7 @@ import java.util.List;
 public class StaySearchResultListFragment extends StayListFragment
 {
     private boolean mIsOptimizeCategory;
-    private int mResultTotalCount;
-    private int mResultMaxCount;
+    private boolean mIsDeepLink;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
@@ -98,14 +97,9 @@ public class StaySearchResultListFragment extends StayListFragment
         return stayViewItemList;
     }
 
-    public int getResultTotalCount()
+    public void setIsDeepLink(boolean isDeepLink)
     {
-        return mResultTotalCount;
-    }
-
-    public int getResultMaxCount()
-    {
-        return mResultMaxCount;
+        mIsDeepLink = isDeepLink;
     }
 
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
@@ -126,10 +120,13 @@ public class StaySearchResultListFragment extends StayListFragment
 
             StaySearchResultListFragment.this.onStayList(list, page);
 
+            if (mViewType == ViewType.MAP)
+            {
+                ((StaySearchResultListLayout) mStayListLayout).setMapMyLocation(mStayCuration.getLocation(), mIsDeepLink == false);
+            }
+
             if (page <= 1)
             {
-                mResultTotalCount = totalCount;
-                mResultMaxCount = maxCount;
                 ((StaySearchResultListLayout) mStayListLayout).updateResultCount(mViewType, totalCount, maxCount);
             }
         }

@@ -130,7 +130,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         mIsChangedTime = false;
 
         mGourmetPaymentLayout.setToolbarTitle(gourmetPaymentInformation.getTicketInformation().placeName);
-        changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
     }
 
     @Override

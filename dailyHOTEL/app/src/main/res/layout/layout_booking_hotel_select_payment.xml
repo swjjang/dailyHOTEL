@@ -8,7 +8,8 @@
     <!-- 결제 -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp">
+        android:layout_height="25dp"
+        android:layout_marginBottom="10dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
@@ -32,20 +33,40 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/guidePaymentMemoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_payment_name"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:minHeight="25dp"
+        android:text="@string/message_dont_support_payment_type"
+        android:textColor="@color/default_text_c929292"
+        android:textSize="11dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/shape_rect_cd0d0d0"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:background="@drawable/selector_select_paymnettype_top_background"
             android:layout_marginLeft="1px"
+            android:layout_marginRight="1px"
             android:layout_marginTop="1px"
-            android:layout_marginRight="1px">
+            android:background="@drawable/selector_select_paymnettype_top_background">
 
             <RelativeLayout
                 android:id="@+id/simpleCardLayout"
@@ -126,9 +147,9 @@
             android:id="@+id/cardLayout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:background="@drawable/selector_select_paymnettype_background"
             android:layout_marginLeft="1px"
-            android:layout_marginRight="1px">
+            android:layout_marginRight="1px"
+            android:background="@drawable/selector_select_paymnettype_background">
 
             <ImageView
                 android:layout_width="41dp"
@@ -165,9 +186,9 @@
             android:id="@+id/phoneLayout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:background="@drawable/selector_select_paymnettype_background"
             android:layout_marginLeft="1px"
-            android:layout_marginRight="1px">
+            android:layout_marginRight="1px"
+            android:background="@drawable/selector_select_paymnettype_background">
 
             <ImageView
                 android:layout_width="41dp"
@@ -204,10 +225,10 @@
             android:id="@+id/transferLayout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:background="@drawable/selector_select_paymnettype_bottom_background"
+            android:layout_marginBottom="1px"
             android:layout_marginLeft="1px"
             android:layout_marginRight="1px"
-            android:layout_marginBottom="1px">
+            android:background="@drawable/selector_select_paymnettype_bottom_background">
 
             <ImageView
                 android:layout_width="41dp"

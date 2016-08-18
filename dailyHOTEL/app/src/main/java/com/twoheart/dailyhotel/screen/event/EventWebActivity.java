@@ -426,7 +426,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 if (latLng != null)
                 {
-                    Intent intent = StaySearchResultActivity.newInstance(context, checkInSaleTime, nights, latLng, radius);
+                    Intent intent = StaySearchResultActivity.newInstance(context, checkInSaleTime, nights, latLng, radius, true);
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
@@ -509,7 +509,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 if (latLng != null)
                 {
-                    Intent intent = GourmetSearchResultActivity.newInstance(context, checkInSaleTime, latLng, radius);
+                    Intent intent = GourmetSearchResultActivity.newInstance(context, checkInSaleTime, latLng, radius, true);
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
