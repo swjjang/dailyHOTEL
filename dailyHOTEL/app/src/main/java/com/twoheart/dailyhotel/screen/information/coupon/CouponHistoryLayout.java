@@ -59,7 +59,6 @@ public class CouponHistoryLayout extends BaseLayout
     private void initListView(View view)
     {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.couponHistoryRecyclerView);
-        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
 
         mEmptyView = view.findViewById(R.id.emptyView);
 
@@ -68,6 +67,7 @@ public class CouponHistoryLayout extends BaseLayout
         layoutManager.scrollToPosition(0);
         mRecyclerView.setLayoutManager(layoutManager);
 
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     public void setData(List<CouponHistory> list)

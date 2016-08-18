@@ -70,7 +70,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     private void initListView(View view)
     {
         mListView = (ListView) view.findViewById(R.id.list);
-        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     private void updateLayout(List<Coupon> list)

@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.EdgeEffectCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +42,10 @@ public class EdgeEffectColor
     private static final Class<AbsListView> CLASS_LIST_VIEW = AbsListView.class;
     private static final Field LIST_VIEW_FIELD_EDGE_GLOW_TOP;
     private static final Field LIST_VIEW_FIELD_EDGE_GLOW_BOTTOM;
+
+    private static final Class<ViewPager> CLASS_VIEW_PAGER = ViewPager.class;
+    private static final Field VIEW_PAGER_FIELD_EDGE_GLOW_LEFT;
+    private static final Field VIEW_PAGER_FIELD_EDGE_GLOW_RIGHT;
 
     private static final Field EDGE_GLOW_FIELD_EDGE;
     private static final Field EDGE_GLOW_FIELD_GLOW;
@@ -170,6 +176,26 @@ public class EdgeEffectColor
                     f.setAccessible(true);
                     edgeGlowBottom = f;
                     edgeGlowBottom.setAccessible(true);
+                    break;
+            }
+        }
+
+        VIEW_PAGER_FIELD_EDGE_GLOW_LEFT = edgeGlowLeft;
+        VIEW_PAGER_FIELD_EDGE_GLOW_RIGHT = edgeGlowRight;
+
+        for (Field f : CLASS_VIEW_PAGER.getDeclaredFields())
+        {
+            switch (f.getName())
+            {
+                case "mLeftEdge":
+                    f.setAccessible(true);
+                    edgeGlowLeft = f;
+                    edgeGlowLeft.setAccessible(true);
+                    break;
+                case "mRightEdge":
+                    f.setAccessible(true);
+                    edgeGlowRight = f;
+                    edgeGlowRight.setAccessible(true);
                     break;
             }
         }
@@ -325,6 +351,21 @@ public class EdgeEffectColor
             object = RECYCLER_VIEW_FIELD_EDGE_GLOW_LEFT.get(recyclerView);
             setEdgeGlowColor(object, color);
             object = RECYCLER_VIEW_FIELD_EDGE_GLOW_RIGHT.get(recyclerView);
+            setEdgeGlowColor(object, color);
+        } catch (Exception | NoClassDefFoundError e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    public static void setEdgeGlowColor(@NonNull ViewPager pager, @ColorInt int color)
+    {
+        try
+        {
+            Object object;
+            object = VIEW_PAGER_FIELD_EDGE_GLOW_LEFT.get(pager);
+            setEdgeGlowColor(object, color);
+            object = VIEW_PAGER_FIELD_EDGE_GLOW_RIGHT.get(pager);
             setEdgeGlowColor(object, color);
         } catch (Exception | NoClassDefFoundError e)
         {

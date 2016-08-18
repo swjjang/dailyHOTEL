@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
@@ -53,7 +54,10 @@ import java.util.List;
 public abstract class PlaceListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
     private static final int ANIMATION_DEALY = 200;
-    private static final int VIEWPAGER_HEIGHT_DP = 110;
+    private static final int VIEWPAGER_HEIGHT_DP = 120;
+    private static final int VIEWPAGER_TOP_N_BOTTOM_PADDING_DP = 10;
+    private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
+    private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
     private GoogleMap mGoogleMap;
     protected List<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
@@ -184,13 +188,14 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        int padding = Util.dpToPx(baseActivity, 15d);
+        int paddingLeftRight = Util.dpToPx(baseActivity, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
+        int paddingTopBottom = Util.dpToPx(baseActivity, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
 
         mViewPager = new DailyViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setClipToPadding(false);
-        mViewPager.setPageMargin(Util.dpToPx(baseActivity, 5d));
-        mViewPager.setPadding(padding, 0, padding, Util.dpToPx(baseActivity, 10d));
+        mViewPager.setPageMargin(Util.dpToPx(baseActivity, VIEWPAGER_PAGE_MARGIN_DP));
+        mViewPager.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
@@ -198,6 +203,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         mViewPager.setLayoutParams(layoutParams);
         mViewPager.setVisibility(View.INVISIBLE);
+
+        EdgeEffectColor.setEdgeGlowColor(mViewPager, baseActivity.getResources().getColor(R.color.default_over_scroll_edge));
 
         viewGroup.addView(mViewPager);
     }
@@ -599,7 +606,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mBottomOptionLayout.setTranslationY(dy - Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP));
+        mBottomOptionLayout.setTranslationY(dy - Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
         mViewPager.setTranslationY(dy);
     }
 
@@ -647,7 +654,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP);
+                int height = Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height - height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -662,7 +669,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 //                setMenuBarLayoutEnabled(false);
 
                 mViewPager.setVisibility(View.VISIBLE);
-                mViewPager.setTranslationY(Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP));
+                mViewPager.setTranslationY(Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
 
                 mAnimationState = Constants.ANIMATION_STATE.START;
                 mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
@@ -729,7 +736,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = Util.dpToPx(mBaseActivity, VIEWPAGER_HEIGHT_DP);
+                int height = Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);

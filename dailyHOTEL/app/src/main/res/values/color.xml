@@ -278,8 +278,6 @@
     <color name="default_line_cdedee0">#dedee0</color>
     <color name="default_line_ceeeef0">#eeeef0</color>
 
-    <color name="over_scroll_edge">#dcdcdc</color>
-
     <!-- Coupon -->
     <color name="coupon_expire_text">#929292</color>
     <color name="coupon_red_wine_text">#900034</color>
