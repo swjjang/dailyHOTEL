@@ -293,6 +293,55 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     }
 
+    public void setMyLocation(Location location, boolean isVisibleMarker)
+    {
+        if (location == null)
+        {
+            return;
+        }
+
+        if (mMyLocationMarkerOptions == null)
+        {
+            mMyLocationMarkerOptions = new MarkerOptions();
+            mMyLocationMarkerOptions.icon(new MyLocationMarker(mBaseActivity).makeIcon());
+            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+            mMyLocationMarkerOptions.zIndex(1.0f);
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+            mMyLocationMarker = null;
+        }
+
+        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+
+        if (isVisibleMarker == true)
+        {
+            mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+        }
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(15f).build();
+
+        mClusterManager.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+        {
+            @Override
+            public void onCameraIdle()
+            {
+                mClusterManager.setOnCameraIdleListener(null);
+            }
+        });
+
+        if (Util.isOverAPI21() == true)
+        {
+            mGoogleMap.setOnCameraIdleListener(mClusterManager);
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
     public void setOnPlaceListMapFragment(OnPlaceListMapFragmentListener listener)
     {
         mOnPlaceListMapFragmentListener = listener;
@@ -571,7 +620,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         mGoogleMap.setOnCameraIdleListener(mClusterManager);
                     }
                 });
-                mGoogleMap.setOnCameraIdleListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -826,7 +874,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         mGoogleMap.setOnCameraIdleListener(mClusterManager);
                     }
                 });
-                mGoogleMap.setOnCameraIdleListener(null);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             } else
             {
@@ -1066,39 +1113,40 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
 
-                if (mMyLocationMarkerOptions == null)
-                {
-                    mMyLocationMarkerOptions = new MarkerOptions();
-                    mMyLocationMarkerOptions.icon(new MyLocationMarker(mBaseActivity).makeIcon());
-                    mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                }
+                setMyLocation(location, true);
 
-                if (mMyLocationMarker != null)
-                {
-                    mMyLocationMarker.remove();
-                }
-
-                mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-
-                if (Util.isOverAPI21() == true)
-                {
-                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
-                    {
-                        @Override
-                        public void onCameraIdle()
-                        {
-                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
-                        }
-                    });
-                    mGoogleMap.setOnCameraIdleListener(null);
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                } else
-                {
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+                //                if (mMyLocationMarkerOptions == null)
+                //                {
+                //                    mMyLocationMarkerOptions = new MarkerOptions();
+                //                    mMyLocationMarkerOptions.icon(new MyLocationMarker(mBaseActivity).makeIcon());
+                //                    mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                //                }
+                //
+                //                if (mMyLocationMarker != null)
+                //                {
+                //                    mMyLocationMarker.remove();
+                //                }
+                //
+                //                mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                //                mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+                //
+                //                CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
+                //
+                //                if (Util.isOverAPI21() == true)
+                //                {
+                //                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+                //                    {
+                //                        @Override
+                //                        public void onCameraIdle()
+                //                        {
+                //                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                //                        }
+                //                    });
+                //                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                //                } else
+                //                {
+                //                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                //                }
             }
         });
     }

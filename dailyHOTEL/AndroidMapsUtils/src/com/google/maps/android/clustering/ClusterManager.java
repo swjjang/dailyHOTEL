@@ -63,6 +63,7 @@ public class ClusterManager<T extends ClusterItem> implements
     private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
     private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
+    private GoogleMap.OnCameraIdleListener mOnCameraIdleListener;
 
     public ClusterManager(Context context, GoogleMap map) {
         this(context, map, new MarkerManager(map));
@@ -200,6 +201,10 @@ public class ClusterManager<T extends ClusterItem> implements
         mPreviousCameraPosition = mMap.getCameraPosition();
 
         cluster();
+
+        if (mOnCameraIdleListener != null) {
+            mOnCameraIdleListener.onCameraIdle();
+        }
     }
 
     @Override
@@ -266,6 +271,11 @@ public class ClusterManager<T extends ClusterItem> implements
     public void setOnClusterItemInfoWindowClickListener(OnClusterItemInfoWindowClickListener<T> listener) {
         mOnClusterItemInfoWindowClickListener = listener;
         mRenderer.setOnClusterItemInfoWindowClickListener(listener);
+    }
+
+    public void setOnCameraIdleListener(GoogleMap.OnCameraIdleListener listener)
+    {
+        mOnCameraIdleListener = listener;
     }
 
     /**

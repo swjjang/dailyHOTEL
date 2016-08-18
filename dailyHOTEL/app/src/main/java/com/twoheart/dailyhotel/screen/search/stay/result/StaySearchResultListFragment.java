@@ -126,6 +126,11 @@ public class StaySearchResultListFragment extends StayListFragment
 
             StaySearchResultListFragment.this.onStayList(list, page);
 
+            if (mViewType == ViewType.MAP)
+            {
+                ((StaySearchResultListLayout) mStayListLayout).setMapMyLocation(mStayCuration.getLocation(), true);
+            }
+
             if (page <= 1)
             {
                 mResultTotalCount = totalCount;

@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.TextView;
@@ -108,6 +109,16 @@ public class GourmetSearchResultListLayout extends PlaceListLayout
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
         }
+    }
+
+    public void setMapMyLocation(Location location, boolean isVisible)
+    {
+        if (mGourmetListMapFragment == null || location == null)
+        {
+            return;
+        }
+
+        mGourmetListMapFragment.setMyLocation(location, isVisible);
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)

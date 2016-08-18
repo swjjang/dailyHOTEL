@@ -270,6 +270,8 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                     }
 
                     mEventListener.onShowActivityEmptyView(mapSize == 0);
+
+                    mGourmetSearchResultListLayout.setMapMyLocation(mGourmetCuration.getLocation(), true);
                     break;
                 }
             }

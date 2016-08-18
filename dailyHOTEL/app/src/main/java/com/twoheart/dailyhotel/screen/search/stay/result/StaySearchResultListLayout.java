@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.TextView;
@@ -89,6 +90,16 @@ public class StaySearchResultListLayout extends StayListLayout
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
         }
+    }
+
+    public void setMapMyLocation(Location location, boolean isVisible)
+    {
+        if (mStayListMapFragment == null || location == null)
+        {
+            return;
+        }
+
+        mStayListMapFragment.setMyLocation(location, isVisible);
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
