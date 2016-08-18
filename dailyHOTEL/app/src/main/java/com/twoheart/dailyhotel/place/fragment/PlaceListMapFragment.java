@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyViewPager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +74,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     private PlaceClusterRenderer mPlaceClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private DailyLoopViewPager mViewPager;
+    private DailyViewPager mViewPager;
 
     protected BaseActivity mBaseActivity;
     protected OnPlaceListMapFragmentListener mOnPlaceListMapFragmentListener;
@@ -184,7 +185,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mViewPager = new DailyLoopViewPager(baseActivity);
+        mViewPager = new DailyViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
