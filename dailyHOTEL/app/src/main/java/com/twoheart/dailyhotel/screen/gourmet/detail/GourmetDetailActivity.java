@@ -47,6 +47,7 @@ import java.util.TimeZone;
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
     private TicketInformation mSelectedTicketInformation;
+    private boolean mCheckPrice;
 
     /**
      * 리스트에서 호출
@@ -766,7 +767,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
                 }
 
-                checkGourmetTicket(mIsDeepLink, (GourmetDetail) mPlaceDetail, mViewPrice);
+                if (mCheckPrice == false)
+                {
+                    mCheckPrice = true;
+                    checkGourmetTicket(mIsDeepLink, (GourmetDetail) mPlaceDetail, mViewPrice);
+                }
 
                 mIsDeepLink = false;
 
