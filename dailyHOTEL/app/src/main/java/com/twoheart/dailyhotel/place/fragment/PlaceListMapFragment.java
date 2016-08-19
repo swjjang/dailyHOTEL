@@ -41,10 +41,9 @@ import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
+import com.twoheart.dailyhotel.widget.DailyTensionViewPager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,7 +76,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     private PlaceClusterRenderer mPlaceClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private DailyViewPager mViewPager;
+    private DailyTensionViewPager mViewPager;
 
     protected BaseActivity mBaseActivity;
     protected OnPlaceListMapFragmentListener mOnPlaceListMapFragmentListener;
@@ -196,20 +195,20 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         int paddingLeftRight = Util.dpToPx(baseActivity, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
         int paddingTopBottom = Util.dpToPx(baseActivity, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
 
-        mViewPager = new DailyViewPager(baseActivity);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager = new DailyTensionViewPager(baseActivity);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setClipToPadding(false);
         mViewPager.setPageMargin(Util.dpToPx(baseActivity, VIEWPAGER_PAGE_MARGIN_DP));
         mViewPager.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
-        mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
+        mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+
         layoutParams.gravity = Gravity.BOTTOM;
 
         mViewPager.setLayoutParams(layoutParams);
         mViewPager.setVisibility(View.INVISIBLE);
-
-        EdgeEffectColor.setEdgeGlowColor(mViewPager, baseActivity.getResources().getColor(R.color.default_over_scroll_edge));
 
         viewGroup.addView(mViewPager);
     }
