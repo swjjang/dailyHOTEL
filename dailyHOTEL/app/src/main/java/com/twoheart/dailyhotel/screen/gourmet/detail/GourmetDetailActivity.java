@@ -55,9 +55,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param saleTime
      * @param province
      * @param gourmet
+     * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Gourmet gourmet)
+    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Gourmet gourmet, int listCount)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -71,6 +72,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
 
         String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
@@ -107,6 +109,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
 
         return intent;
     }
@@ -117,9 +120,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param context
      * @param saleTime
      * @param gourmet
+     * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet)
+    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, int listCount)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -132,6 +136,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
 
         String isShowOriginalPrice;
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
@@ -244,8 +249,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
         int entryIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
 
-        return new GourmetDetail(index, entryIndex, isShowOriginalPrice);
+        return new GourmetDetail(index, entryIndex, isShowOriginalPrice, listCount);
     }
 
     @Override
@@ -311,7 +317,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             mSaleTime = checkInSaleTime;
-            mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, mPlaceDetail.isShowOriginalPrice);
+            mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
+                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount);
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyMMdd"), mPlaceDetail.index);
         }
@@ -407,6 +414,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(gourmetDetail.entryPosition);
 
             params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+
+            String placeCount = gourmetDetail.listCount == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(gourmetDetail.listCount);
+
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
+
             params.put(AnalyticsManager.KeyType.RATING, gourmetDetail.satisfaction);
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
 

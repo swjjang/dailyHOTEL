@@ -355,13 +355,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
 
-        if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true)
-        {
-            PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-            int placeCount = placeListFragment != null ? placeListFragment.getPlaceCount() : 0;
-            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
-        }
-
         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);
     }
 
@@ -595,7 +588,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem)
+        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -605,7 +598,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Gourmet gourmet = placeViewItem.getItem();
 
             Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-                mGourmetSearchCuration.getSaleTime(), gourmet);
+                mGourmetSearchCuration.getSaleTime(), gourmet, listCount);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }

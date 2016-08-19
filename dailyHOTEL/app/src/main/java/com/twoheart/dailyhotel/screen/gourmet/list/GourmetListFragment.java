@@ -53,7 +53,7 @@ public class GourmetListFragment extends PlaceListFragment
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onGourmetClick(PlaceViewItem placeViewItem);
+        void onGourmetClick(PlaceViewItem placeViewItem, int listCount);
     }
 
     @Override
@@ -389,7 +389,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem);
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, getPlaceCount());
         }
 
         @Override

@@ -333,13 +333,6 @@ public class StayMainFragment extends PlaceMainFragment
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
 
-        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen))
-        {
-            PlaceListFragment placeListFragment = mPlaceMainLayout.getPlaceListFragment().get(0);
-            int placeCount = placeListFragment.getPlaceCount();
-            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
-        }
-
         AnalyticsManager.getInstance(mBaseActivity).recordScreen(screen, params);
     }
 
@@ -822,7 +815,7 @@ public class StayMainFragment extends PlaceMainFragment
     private StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem)
+        public void onStayClick(PlaceViewItem placeViewItem, int listCount)
         {
             if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -839,7 +832,8 @@ public class StayMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setGASelectedRegion(region);
                     DailyPreference.getInstance(mBaseActivity).setGAHotelName(stay.name);
 
-                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, mStayCuration.getCheckInSaleTime(), mStayCuration.getProvince(), stay);
+                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
+                        mStayCuration.getCheckInSaleTime(), mStayCuration.getProvince(), stay, listCount);
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 

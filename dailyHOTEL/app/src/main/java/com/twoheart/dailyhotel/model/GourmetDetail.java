@@ -16,11 +16,12 @@ public class GourmetDetail extends PlaceDetail
 
     protected ArrayList<TicketInformation> mTicketInformationList;
 
-    public GourmetDetail(int index, int entryPosition, String isShowOriginalPrice)
+    public GourmetDetail(int index, int entryPosition, String isShowOriginalPrice, int listCount)
     {
         this.index = index;
         this.entryPosition = entryPosition;
         this.isShowOriginalPrice = isShowOriginalPrice;
+        this.listCount = listCount;
     }
 
     @Override

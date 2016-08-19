@@ -301,13 +301,6 @@ public class GourmetMainFragment extends PlaceMainFragment
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
 
-        if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen))
-        {
-            PlaceListFragment placeListFragment = mPlaceMainLayout.getPlaceListFragment().get(0);
-            int placeCount = placeListFragment.getPlaceCount();
-            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(placeCount));
-        }
-
         AnalyticsManager.getInstance(mBaseActivity).recordScreen(screen, params);
     }
 
@@ -754,7 +747,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     private GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem)
+        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
         {
             if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -771,7 +764,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceRegion(region);
                     DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceName(gourmet.name);
 
-                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mGourmetCuration.getSaleTime(), mGourmetCuration.getProvince(), gourmet);
+                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
+                        mGourmetCuration.getSaleTime(), mGourmetCuration.getProvince(), gourmet, listCount);
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 

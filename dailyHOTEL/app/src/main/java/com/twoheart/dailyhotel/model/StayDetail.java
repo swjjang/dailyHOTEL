@@ -15,12 +15,13 @@ public class StayDetail extends PlaceDetail
     //
     public String categoryCode;
 
-    public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice)
+    public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount)
     {
         this.index = hotelIndex;
         this.nights = nights;
         this.entryPosition = entryIndex;
         this.isShowOriginalPrice = isShowOriginalPrice;
+        this.listCount = listCount;
     }
 
     public void setData(JSONObject jsonObject) throws Exception

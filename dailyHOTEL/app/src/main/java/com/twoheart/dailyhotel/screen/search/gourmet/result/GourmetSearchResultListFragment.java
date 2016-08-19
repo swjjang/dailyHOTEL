@@ -41,7 +41,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
 
     public interface OnGourmetSearchResultListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onGourmetClick(PlaceViewItem placeViewItem);
+        void onGourmetClick(PlaceViewItem placeViewItem, int listCount);
 
         void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
     }
@@ -312,7 +312,7 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem);
+            ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, getPlaceCount());
         }
 
         @Override

@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public abstract class PlaceDetail
 {
-    public int index;
+    public int index = -1; // -1 값 일 경우 Deeplink 로 진입 된 경우이며, index는 1부터 시작함 GA 용
+    public int listCount = -1; //  -1 값 일 경우 Deeplink 로 진입 된 경우이며, 상세 진입시 진입 전 list의 노출 갯수 GA 용
     public String name;
     public String address;
     public boolean isOverseas; // 0 : 국내 , 1 : 해외

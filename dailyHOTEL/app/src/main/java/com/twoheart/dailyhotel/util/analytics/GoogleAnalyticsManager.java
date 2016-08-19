@@ -128,12 +128,6 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
                 screenViewBuilder.setCustomDimension(13, category);
             }
 
-            if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true //
-                || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
-            {
-                screenViewBuilder.setCustomDimension(20, params.get(AnalyticsManager.KeyType.PLACE_COUNT));
-            }
-
             mGoogleAnalyticsTracker.setScreenName(screen);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
 
@@ -535,6 +529,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX);
         String rating = params.get(AnalyticsManager.KeyType.RATING);
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE);
+        String placeCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
 
         if (Util.isTextEmpty(checkIn) == false)
         {
@@ -581,7 +576,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenViewBuilder.setCustomDimension(15, placeIndex);
         }
 
-        if (Util.isTextEmpty(listIndex) == false || "-1".equalsIgnoreCase(listIndex) == false)
+        if (Util.isTextEmpty(listIndex) == false && "-1".equalsIgnoreCase(listIndex) == false)
         {
             screenViewBuilder.setCustomDimension(16, listIndex);
         }
@@ -595,6 +590,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         if (Util.isTextEmpty(isShowOriginalPrice) == false)
         {
             screenViewBuilder.setCustomDimension(18, isShowOriginalPrice.toLowerCase());
+        }
+
+        if (Util.isTextEmpty(placeCount) == false && "-1".equalsIgnoreCase(placeCount) == false)
+        {
+            screenViewBuilder.setCustomDimension(20, placeCount.toLowerCase());
         }
 
         return screenViewBuilder;
@@ -699,9 +699,6 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
-        screenViewBuilder.setCustomDimension(20, params.get(AnalyticsManager.KeyType.PLACE_COUNT));
-
-        // SEARCH_RESULT_EMPTY + CD20
         mGoogleAnalyticsTracker.setScreenName(screen);
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
     }

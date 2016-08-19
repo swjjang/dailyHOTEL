@@ -57,9 +57,10 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param saleTime
      * @param province
      * @param stay
+     * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Stay stay)
+    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Stay stay, int listCount)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -73,6 +74,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
 
         String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -113,6 +115,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
 
         return intent;
     }
@@ -123,9 +126,10 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param context
      * @param saleTime
      * @param stay
+     * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay)
+    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, int listCount)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -137,6 +141,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
 
         String isShowOriginalPrice;
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
@@ -250,8 +255,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
         int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
 
-        return new StayDetail(stayIndex, nights, entryPosition, isShowOriginalPrice);
+        return new StayDetail(stayIndex, nights, entryPosition, isShowOriginalPrice, listCount);
     }
 
     @Override
@@ -325,7 +331,8 @@ public class StayDetailActivity extends PlaceDetailActivity
             mSaleTime = checkInSaleTime;
 
             int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-            mPlaceDetail = new StayDetail(mPlaceDetail.index, nights, mPlaceDetail.entryPosition, mPlaceDetail.isShowOriginalPrice);
+            mPlaceDetail = new StayDetail(mPlaceDetail.index, nights, mPlaceDetail.entryPosition, //
+                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount);
 
             ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), nights, mPlaceDetail.index);
         }
@@ -428,6 +435,12 @@ public class StayDetailActivity extends PlaceDetailActivity
                 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(stayDetail.entryPosition);
 
             params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+
+            String placeCount = stayDetail.listCount == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(stayDetail.listCount);
+
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
+
             params.put(AnalyticsManager.KeyType.RATING, stayDetail.satisfaction);
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayDetail.isShowOriginalPrice);
 
