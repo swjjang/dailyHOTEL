@@ -25,10 +25,8 @@ public class DailyTensionViewPager extends ViewPager
     /**
      * 최대 X 이동 가능 값
      */
-    final static int DEFAULT_OVER_SCROLL_TRANSLATION = 200;
-
-    final private static int DEFAULT_OVER_SCROLL_ANIMATION_DURATION = 300;
-
+    private final static int DEFAULT_OVER_SCROLL_TRANSLATION = 200;
+    private final static int DEFAULT_OVER_SCROLL_ANIMATION_DURATION = 300;
 
     private final static int INVALID_POINTER_ID = -1;
 
@@ -160,7 +158,6 @@ public class DailyTensionViewPager extends ViewPager
 
     private class ViewPageChangeListener implements OnPageChangeListener
     {
-
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {
@@ -226,7 +223,7 @@ public class DailyTensionViewPager extends ViewPager
     {
         boolean callSuper = false;
 
-        final int action = ev.getAction();
+        final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
         switch (action)
         {
             case MotionEvent.ACTION_DOWN:

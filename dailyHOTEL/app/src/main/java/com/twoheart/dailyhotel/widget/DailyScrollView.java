@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
@@ -54,7 +55,7 @@ public class DailyScrollView extends ScrollView
     @Override
     public boolean onTouchEvent(MotionEvent ev)
     {
-        switch (ev.getAction())
+        switch (ev.getAction() & MotionEventCompat.ACTION_MASK)
         {
             case MotionEvent.ACTION_DOWN:
                 // if we can scroll pass the event to the superclass

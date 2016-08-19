@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -165,7 +166,7 @@ public class DailySignatureView extends View
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        switch (event.getAction())
+        switch (event.getAction() & MotionEventCompat.ACTION_MASK)
         {
             case MotionEvent.ACTION_DOWN:
             {

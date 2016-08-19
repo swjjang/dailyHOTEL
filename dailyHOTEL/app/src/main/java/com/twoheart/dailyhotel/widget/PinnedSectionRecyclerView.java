@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Parcelable;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -504,7 +505,7 @@ public class PinnedSectionRecyclerView extends RecyclerView
     {
         final float x = ev.getX();
         final float y = ev.getY();
-        final int action = ev.getAction();
+        final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
         if (action == MotionEvent.ACTION_DOWN && mTouchTarget == null && mPinnedSection != null && isPinnedViewTouched(mPinnedSection.viewHolder.itemView, x, y))
         { // create touch target

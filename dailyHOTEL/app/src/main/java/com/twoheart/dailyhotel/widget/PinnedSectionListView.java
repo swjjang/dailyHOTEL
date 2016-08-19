@@ -25,6 +25,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Parcelable;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
@@ -531,7 +532,7 @@ public class PinnedSectionListView extends ListView
     {
         final float x = ev.getX();
         final float y = ev.getY();
-        final int action = ev.getAction();
+        final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
         if (action == MotionEvent.ACTION_DOWN && mTouchTarget == null && mPinnedSection != null && isPinnedViewTouched(mPinnedSection.view, x, y))
         { // create touch target

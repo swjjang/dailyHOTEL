@@ -16,12 +16,25 @@
         android:layout_height="1px"
         android:background="@color/default_line_cf0f0f0"/>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/mapImageView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:adjustViewBounds="true"
-        fresco:actualImageScaleType="centerCrop"/>
+        android:layout_height="200dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/mapImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            fresco:actualImageScaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/ic_map_expand"/>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
