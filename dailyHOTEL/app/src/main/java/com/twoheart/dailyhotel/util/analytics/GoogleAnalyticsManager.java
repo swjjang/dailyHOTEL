@@ -581,7 +581,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenViewBuilder.setCustomDimension(15, placeIndex);
         }
 
-        if (Util.isTextEmpty(listIndex) == false)
+        if (Util.isTextEmpty(listIndex) == false || "-1".equalsIgnoreCase(listIndex) == false)
         {
             screenViewBuilder.setCustomDimension(16, listIndex);
         }

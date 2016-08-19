@@ -423,7 +423,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayDetail.entryPosition));
+
+            String listIndex = stayDetail.entryPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(stayDetail.entryPosition);
+
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
             params.put(AnalyticsManager.KeyType.RATING, stayDetail.satisfaction);
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayDetail.isShowOriginalPrice);
 

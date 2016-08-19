@@ -402,7 +402,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
             params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetDetail.entryPosition));
+
+            String listIndex = gourmetDetail.entryPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(gourmetDetail.entryPosition);
+
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
             params.put(AnalyticsManager.KeyType.RATING, gourmetDetail.satisfaction);
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
 
