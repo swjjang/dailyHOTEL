@@ -27,7 +27,7 @@ import org.json.JSONObject;
 
 public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener
 {
-    private EditText forgotEditText;
+    private EditText mEmailEditText;
     private String mEmail;
 
     @Override
@@ -41,14 +41,17 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         initToolbar();
 
-        forgotEditText = (EditText) findViewById(R.id.et_forgot_pwd);
+        View emailView = findViewById(R.id.emailView);
+        emailView.setSelected(true);
+
+        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+
         final View forgotView = findViewById(R.id.btn_forgot_pwd);
         forgotView.setOnClickListener(this);
 
-        forgotEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        forgotEditText.setOnEditorActionListener(new OnEditorActionListener()
+        mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
-
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {
@@ -95,7 +98,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         lockUiComponent();
 
-        mEmail = forgotEditText.getText().toString().trim();
+        mEmail = mEmailEditText.getText().toString().trim();
 
         if (Util.isTextEmpty(mEmail) == true)
         {
@@ -149,7 +152,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    forgotEditText.setText(null);
+                    mEmailEditText.setText(null);
 
                     showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
