@@ -30,7 +30,7 @@
         <com.twoheart.dailyhotel.widget.DailyLineIndicator
             android:id="@+id/viewpagerIndicator"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:layout_above="@id/viewPagerBottomLine"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="15dp"
