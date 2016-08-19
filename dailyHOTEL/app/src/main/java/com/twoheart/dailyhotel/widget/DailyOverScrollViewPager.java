@@ -256,7 +256,18 @@ public class DailyOverScrollViewPager extends ViewPager
                     final float leftBound = Math.max(0, (currentItemIndex - 1) * widthWithMargin);
                     final float rightBound = Math.min(currentItemIndex + 1, lastItemIndex) * widthWithMargin;
 
-                    if (currentItemIndex == 0)
+                    if (getAdapter().getCount() == 1)
+                    {
+                        if (deltaX < 0 - mTouchSlop)
+                        {
+                            final float over = deltaX + mTouchSlop;
+                            mOverScrollEffect.setPull(over / width);
+                        } else if (deltaX > mTouchSlop)
+                        {
+                            final float over = deltaX - mTouchSlop;
+                            mOverScrollEffect.setPull(over / width);
+                        }
+                    } else if (currentItemIndex == 0)
                     {
                         if (leftBound == 0)
                         {
@@ -325,21 +336,10 @@ public class DailyOverScrollViewPager extends ViewPager
             return false;
         }
 
-        final boolean isFirst = isFirst();
-        final boolean isLast = isLast();
-
-        if (mOverScrollEffect.isOverScrolling() && (isFirst || isLast))
+        if (mOverScrollEffect.isOverScrolling() && (isFirst() || isLast()))
         {
-            final float translateX = (float) (mOverScrollTranslation * Math.sin(Math.PI * Math.abs(mOverScrollEffect.mOverScroll)));
-
-            if (isFirst)
-            {
-                this.setTranslationX(translateX);
-
-            } else if (isLast)
-            {
-                this.setTranslationX(-translateX);
-            }
+            final float translateX = (float) (mOverScrollTranslation * Math.sin(Math.PI * mOverScrollEffect.mOverScroll) * (-1));
+            this.setTranslationX(translateX);
 
             return true;
         } else if (mScrollPositionOffset > 0)
