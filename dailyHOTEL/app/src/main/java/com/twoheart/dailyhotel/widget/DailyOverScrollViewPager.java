@@ -19,7 +19,7 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-public class DailyTensionViewPager extends ViewPager
+public class DailyOverScrollViewPager extends ViewPager
 {
 
     /**
@@ -119,7 +119,7 @@ public class DailyTensionViewPager extends ViewPager
         }
     }
 
-    public DailyTensionViewPager(Context context)
+    public DailyOverScrollViewPager(Context context)
     {
         super(context);
 

@@ -43,7 +43,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTensionViewPager;
+import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +76,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     private PlaceClusterRenderer mPlaceClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private DailyTensionViewPager mViewPager;
+    private DailyOverScrollViewPager mViewPager;
 
     protected BaseActivity mBaseActivity;
     protected OnPlaceListMapFragmentListener mOnPlaceListMapFragmentListener;
@@ -195,7 +195,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         int paddingLeftRight = Util.dpToPx(baseActivity, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
         int paddingTopBottom = Util.dpToPx(baseActivity, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
 
-        mViewPager = new DailyTensionViewPager(baseActivity);
+        mViewPager = new DailyOverScrollViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setClipToPadding(false);
         mViewPager.setPageMargin(Util.dpToPx(baseActivity, VIEWPAGER_PAGE_MARGIN_DP));
