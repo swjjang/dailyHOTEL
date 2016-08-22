@@ -564,6 +564,12 @@ public class AnalyticsManager
         public static final String AROUND_SEARCH_CLICKED = "AroundSearchClicked";
         public static final String RECENT_KEYWORD_NOT_FOUND = "RecentKeywordNotFound";
         public static final String RECENT_KEYWORD = "RecentKeyword";
+        //
+        public static final String LOGIN_COMPLETE = "LoginComplete";
+        public static final String SIGN_UP = "SignUp";
+        public static final String START_PAYMENT = "StartPayment";
+        public static final String END_PAYMENT = "EndPayment";
+        public static final String PAYMENT_USED = "PaymentUsed";
     }
 
     public static class Category
@@ -681,6 +687,10 @@ public class AnalyticsManager
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String EVENT = "event";
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
+        //
+        public static final String FULL_PAYMENT = "FullPayment";
+        public static final String PAYMENTWITH_COUPON = "PaymentwithCoupon";
+        public static final String PAYMENTWITH_CREDIT = "PaymentwithCredit";
     }
 
     public static class UserType

@@ -26,6 +26,7 @@ import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.response.model.User;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -757,9 +758,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
                             DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
                         } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
                             DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                         }
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
@@ -825,6 +828,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
+                        AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
                         return;
                     }
                 }
@@ -885,6 +889,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     } else
                     {
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
+
+                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                        {
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
+                        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+                        {
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
+                        }
                     }
                 } else
                 {

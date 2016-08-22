@@ -292,7 +292,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date, paymentInformation.paymentType.getName());
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -713,6 +713,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
             , getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
+    }
+
+    @Override
+    protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
+    {
+        super.processPayment(paymentInformation, saleTime);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            , AnalyticsManager.Action.START_PAYMENT, paymentInformation.paymentType.getName(), null);
     }
 
     @Override

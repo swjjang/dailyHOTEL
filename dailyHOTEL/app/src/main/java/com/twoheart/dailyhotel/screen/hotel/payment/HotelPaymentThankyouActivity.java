@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.hotel.payment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View.OnClickListener;
 
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
@@ -9,7 +10,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
-    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date)
+    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date, String paymentType, String discountType)
     {
         Intent intent = new Intent(context, HotelPaymentThankyouActivity.class);
 
@@ -17,6 +18,8 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         intent.putExtra(INTENT_EXTRA_DATA_PLACE, place);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
         intent.putExtra(INTENT_EXTRA_DATA_DATEL, date);
+        intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
+        intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, discountType);
 
         return intent;
     }

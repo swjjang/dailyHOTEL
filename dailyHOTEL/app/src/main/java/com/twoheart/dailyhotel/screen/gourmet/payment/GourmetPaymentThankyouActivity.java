@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
-    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date)
+    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date, String paymentType)
     {
         Intent intent = new Intent(context, GourmetPaymentThankyouActivity.class);
 
@@ -17,6 +17,8 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         intent.putExtra(INTENT_EXTRA_DATA_PLACE, place);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
         intent.putExtra(INTENT_EXTRA_DATA_DATEL, date);
+        intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
+        intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, AnalyticsManager.Label.FULL_PAYMENT);
 
         return intent;
     }

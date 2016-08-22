@@ -233,6 +233,7 @@ public class SignupStep2Activity extends BaseActivity
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
 
             showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
