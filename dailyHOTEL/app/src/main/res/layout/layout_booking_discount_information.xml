@@ -17,6 +17,11 @@
         android:textSize="14dp"
         dailyFont:style="Medium"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
     <!-- 예약자 정보 -->
     <RelativeLayout
         android:layout_width="match_parent"
