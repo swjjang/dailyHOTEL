@@ -419,9 +419,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         switch (searchType)
         {
-            case MY_LOCATION:
-                break;
-
             case LOCATION:
             {
                 if (latLng != null)
@@ -502,9 +499,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         switch (searchType)
         {
-            case MY_LOCATION:
-                break;
-
             case LOCATION:
             {
                 if (latLng != null)

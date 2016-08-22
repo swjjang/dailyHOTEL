@@ -1206,9 +1206,6 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         switch (searchType)
         {
-            case MY_LOCATION:
-                break;
-
             case LOCATION:
             {
                 if (latLng != null)
