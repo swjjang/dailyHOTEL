@@ -7,6 +7,7 @@ package com.twoheart.dailyhotel.widget;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
@@ -108,6 +109,7 @@ public class DailyOverScrollViewPager extends ViewPager
             {
                 return true;
             }
+
             if (getAdapter() != null)
             {
                 if (isLast() && mOverScroll > 0)
@@ -131,6 +133,18 @@ public class DailyOverScrollViewPager extends ViewPager
 
         mOverScrollTranslation = DEFAULT_OVER_SCROLL_TRANSLATION;
         mOverScrollAnimationDuration = DEFAULT_OVER_SCROLL_ANIMATION_DURATION;
+
+        mScrollPosition = 0;
+        mScrollPositionOffset = 0;
+    }
+
+    @Override
+    public void setAdapter(PagerAdapter adapter)
+    {
+        super.setAdapter(adapter);
+
+        mScrollPosition = 0;
+        mScrollPositionOffset = 0;
     }
 
     @Override
