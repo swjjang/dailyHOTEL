@@ -12,7 +12,6 @@ public class DailyDeepLink
     public enum SearchType
     {
         NONE,
-        MY_LOCATION,
         LOCATION
     }
 
@@ -48,7 +47,6 @@ public class DailyDeepLink
     private static final String PARAM_V5_CALENDAR_FLAG = "cal"; // 0: 달력을 띄우지 않는다.(디폴트), 1 : 달력 띄운다.
 
     private static final String PARAM_V6_WORD = "w"; // 검색어
-    private static final String PARAM_V6_LOCATION = "loc"; //
     private static final String PARAM_V6_LATITUDE = "lat"; //
     private static final String PARAM_V6_LONGITUDE = "lng";
     private static final String PARAM_V6_RADIUS = "rd"; // km
@@ -900,30 +898,12 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 6:
-                String value = mParams.get(PARAM_V6_LOCATION);
+                String lat = mParams.get(PARAM_V6_LATITUDE);
+                String lng = mParams.get(PARAM_V6_LONGITUDE);
 
-                if (Util.isTextEmpty(value) == false)
+                if (Util.isTextEmpty(lat, lng) == false)
                 {
-                    try
-                    {
-                        switch (Integer.parseInt(value))
-                        {
-                            case 1:
-                                type = SearchType.MY_LOCATION;
-                                break;
-
-                            case 2:
-                                type = SearchType.LOCATION;
-                                break;
-
-                            default:
-                                type = SearchType.NONE;
-                                break;
-                        }
-                    } catch (NumberFormatException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
+                    type = SearchType.LOCATION;
                 }
                 break;
 
@@ -959,7 +939,8 @@ public class DailyDeepLink
 
     public double getRadius()
     {
-        double radius = 0d;
+        // 기본값 10.0km
+        double radius = 10.0d;
 
         switch (mVersionCode)
         {
@@ -992,7 +973,6 @@ public class DailyDeepLink
         }
 
         putParams(uri, PARAM_V6_WORD);
-        putParams(uri, PARAM_V6_LOCATION);
         putParams(uri, PARAM_V6_LATITUDE);
         putParams(uri, PARAM_V6_LONGITUDE);
         putParams(uri, PARAM_V6_RADIUS);
