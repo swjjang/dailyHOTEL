@@ -412,6 +412,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
+
+                            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                                , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                         }
                     }
                 });
@@ -539,6 +542,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
+
+                    AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                        , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                 }
             }
         };
@@ -713,15 +719,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
             , getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
-    }
-
-    @Override
-    protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
-    {
-        super.processPayment(paymentInformation, saleTime);
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.START_PAYMENT, paymentInformation.paymentType.getName(), null);
     }
 
     @Override

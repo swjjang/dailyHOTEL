@@ -1073,6 +1073,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+
+                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                                , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                         }
                     }
                 });
@@ -1209,6 +1212,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                        , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                 }
             }
         };
@@ -1755,15 +1761,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         String label = String.format("%s-%s", hotelPaymentInformation.getSaleRoomInformation().hotelName, hotelPaymentInformation.getSaleRoomInformation().roomName);
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
-    }
-
-    @Override
-    protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
-    {
-        super.processPayment(paymentInformation, saleTime);
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , Action.START_PAYMENT, paymentInformation.paymentType.getName(), null);
     }
 
     @Override
