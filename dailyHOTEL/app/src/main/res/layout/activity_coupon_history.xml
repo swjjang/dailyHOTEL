@@ -54,7 +54,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/couponHistoryLayout"
         android:background="@color/information_background"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"
