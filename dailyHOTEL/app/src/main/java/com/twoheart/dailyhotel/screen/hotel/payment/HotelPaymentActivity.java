@@ -932,8 +932,24 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
+        String discountType = Label.FULL_PAYMENT;
+
+        if (paymentInformation.bonus != 0)
+        {
+            switch (paymentInformation.discountType)
+            {
+                case BONUS:
+                    discountType = Label.PAYMENTWITH_CREDIT;
+                    break;
+
+                case COUPON:
+                    discountType = Label.PAYMENTWITH_COUPON;
+                    break;
+            }
+        }
+
         Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.hotelName//
-            , roomInformation.roomName, hotelPaymentInformation.checkInOutDate);
+            , roomInformation.roomName, hotelPaymentInformation.checkInOutDate, paymentInformation.paymentType.getName(), discountType);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -1057,6 +1073,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+
+                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                                , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                         }
                     }
                 });
@@ -1193,6 +1212,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                        , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                 }
             }
         };

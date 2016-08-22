@@ -17,6 +17,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     protected static final String INTENT_EXTRA_DATA_PLACE = "place";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
     protected static final String INTENT_EXTRA_DATA_DATEL = "date";
+    protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";
+    protected static final String INTENT_EXTRA_DATA_DISCOUNT_TYPE = "discountType";
 
     protected abstract void recordEvent(String action, String label);
 
@@ -41,9 +43,14 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         String place = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE);
         String placeType = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_TYPE);
         String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATEL);
+        String paymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
+        String discountType = intent.getStringExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE);
 
         initToolbar();
         initLayout(imageUrl, place, placeType, date);
+
+        recordEvent(AnalyticsManager.Action.END_PAYMENT, paymentType);
+        recordEvent(AnalyticsManager.Action.PAYMENT_USED, discountType);
     }
 
     private void initToolbar()

@@ -292,7 +292,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date, paymentInformation.paymentType.getName());
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -412,6 +412,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
+
+                            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                                , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                         }
                     }
                 });
@@ -539,6 +542,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
+
+                    AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                        , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                 }
             }
         };
