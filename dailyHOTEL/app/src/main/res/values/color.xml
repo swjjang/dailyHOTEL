@@ -240,6 +240,7 @@
     <color name="default_text_cc2c2c2">#c2c2c2</color>
     <color name="default_text_cd0d0d0">#d0d0d0</color>
     <color name="default_text_cd1d1d1">#d1d1d1</color>
+    <color name="default_text_c666666">#666666</color>
     <color name="default_text_c66323232">#66323232</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>

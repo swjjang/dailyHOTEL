@@ -442,7 +442,7 @@
     <string name="act_booking_chkin_info">체크인 정보</string>
     <string name="act_booking_chkin">체크인</string>
     <string name="act_booking_chkout">체크아웃</string>
-    <string name="act_booking_reserver_info">투숙자 정보</string>
+    <string name="act_booking_reserver_info">투숙객 정보</string>
     <string name="act_booking_reserver">투숙자</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
@@ -468,6 +468,7 @@
     <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
     <string name="label_booking_confirm_signature">고객님, 확인하셨나요?</string>
     <string name="label_booking_room_info">객실 정보</string>
+    <string name="label_booking_place_name">예약 장소</string>
     <string name="label_booking_room_type">객실 타입</string>
     <string name="message_booking_easypayment">결제 완료 후 취소 및 환불 불가합니다.\n</string>
     <string name="label_booking_ticket_info">상품 정보</string>

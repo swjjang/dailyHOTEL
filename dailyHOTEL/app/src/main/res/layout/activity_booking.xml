@@ -20,20 +20,9 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
+            <!-- 1. 예약정보 확인 -->
             <include
                 layout="@layout/layout_booking_hotel_check_information"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- 객실 정보 -->
-            <include
-                layout="@layout/layout_booking_hotel_ticket_information"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- 예약자 정보 -->
-            <include
-                layout="@layout/layout_booking_hotel_user_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
