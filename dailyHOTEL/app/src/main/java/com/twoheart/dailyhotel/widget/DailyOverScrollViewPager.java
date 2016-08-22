@@ -4,6 +4,8 @@ package com.twoheart.dailyhotel.widget;
  * Created by android_sam on 2016. 8. 19..
  */
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
@@ -15,10 +17,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
-
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.nineoldandroids.animation.ObjectAnimator;
 
 public class DailyOverScrollViewPager extends ViewPager
 {
@@ -62,7 +60,7 @@ public class DailyOverScrollViewPager extends ViewPager
         {
             if (mAnimator != null && mAnimator.isRunning())
             {
-                mAnimator.addListener(new AnimatorListener()
+                mAnimator.addListener(new Animator.AnimatorListener()
                 {
 
                     @Override
