@@ -510,6 +510,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 if (mMyLocationMarker != null)
                 {
                     builder.include(mMyLocationMarker.getPosition());
+                    count++;
                 }
 
                 cameraSetting(builder.build(), count);
@@ -893,12 +894,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     //
     ////////////////////////////////////////////////////////////////////////////////
 
-    private void cameraSetting(final LatLngBounds bounds, int hotelCount)
+    private void cameraSetting(final LatLngBounds bounds, int placeCount)
     {
-        if (hotelCount <= 0)
+        if (placeCount <= 0)
         {
             return;
-        } else if (hotelCount == 1)
+        } else if (placeCount == 1)
         {
             mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
             {
