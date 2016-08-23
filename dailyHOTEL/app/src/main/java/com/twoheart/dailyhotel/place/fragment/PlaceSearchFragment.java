@@ -136,6 +136,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout.setSearchKeyword(word);
     }
 
+    public void updateTermsOfLocationLayout()
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.updateTermsOfLocationLayout();
+    }
+
     public void onScrollingFragment(boolean scrolling)
     {
         mIsScrolling = scrolling;

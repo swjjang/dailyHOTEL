@@ -275,6 +275,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     {
                         mGourmetSearchFragment.resetSearchKeyword();
                         mGourmetSearchFragment.showSearchKeyboard();
+                        mGourmetSearchFragment.updateTermsOfLocationLayout();
                     }
                 } else
                 {
@@ -289,6 +290,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     {
                         mStaySearchFragment.resetSearchKeyword();
                         mStaySearchFragment.showSearchKeyboard();
+                        mStaySearchFragment.updateTermsOfLocationLayout();
                     }
                 }
 
