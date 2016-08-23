@@ -1,19 +1,12 @@
 package com.twoheart.dailyhotel.screen.gourmet.payment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Layout;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
@@ -27,21 +20,21 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.TimeZone;
 
-public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener
+public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
 {
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
+    private TextView mPlaceNameTextView;
     private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
     private EditText mMemoEditText;
-    private Drawable[] mEditTextBackgrounds;
     private View mFakeMobileEditView;
     private ScrollView mScrollLayout;
+    private View mBookingLayout;
 
     private TextView mPriceTextView, mFinalPaymentTextView;
     private View mTicketCountMinusButton, mTicketCountPlusButton;
@@ -68,11 +61,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     {
         void selectTicketTime(String selectedTime);
 
+        void editUserInformation();
+
         void plusTicketCount();
 
         void minusTicketCount();
-
-        void editUserInformation();
 
         void startCreditCardManager();
 
@@ -98,8 +91,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mScrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(mScrollLayout, view.getResources().getColor(R.color.default_over_scroll_edge));
 
-        initTicketInformationLayout(view);
-        initUserInformationLayout(view);
+        mBookingLayout = mScrollLayout.findViewById(R.id.bookingLayout);
+
+        initReservationInformation(view);
         initBookingMemo(view);
         initPaymentInformation(view);
         initPaymentTypeInformation(view);
@@ -137,18 +131,19 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mDailyToolbarLayout.setToolbarText(title);
     }
 
-    private void initTicketInformationLayout(View view)
+    private void initReservationInformation(View view)
     {
         mTicketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
         mTicketDateTextView = (TextView) view.findViewById(R.id.ticketDateTextView);
 
         // 방문 시간
         mTicketTimeTextView = (TextView) view.findViewById(R.id.ticketTimeTextView);
-        mTicketTimeTextView.setText(R.string.label_booking_select);
         mTicketTimeTextView.setOnClickListener(this);
 
-        View ticketTimeTab = view.findViewById(R.id.ticketTimeTab);
-        ticketTimeTab.setOnClickListener(this);
+        View ticketTimeLayout = view.findViewById(R.id.ticketTimeLayout);
+        ticketTimeLayout.setOnClickListener(this);
+
+        mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
 
         // 수량
         mTicketCountTextView = (TextView) view.findViewById(R.id.ticketCountTextView);
@@ -161,6 +156,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         mTicketCountMinusButton.setOnClickListener(this);
         mTicketCountPlusButton.setOnClickListener(this);
+
+        // 예약자 정보
+        initUserInformationLayout(view);
     }
 
     private void initUserInformationLayout(View view)
@@ -176,24 +174,14 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         // 이메일
         mUserEmailEditText = (EditText) view.findViewById(R.id.userEmailEditText);
 
-        mEditTextBackgrounds = new Drawable[3];
-        mEditTextBackgrounds[0] = mUserNameEditText.getBackground();
-        mEditTextBackgrounds[1] = mUserPhoneEditText.getBackground();
-        mEditTextBackgrounds[2] = mUserEmailEditText.getBackground();
-
-        mUserNameEditText.setBackgroundResource(0);
-        mUserPhoneEditText.setBackgroundResource(0);
-        mUserEmailEditText.setBackgroundResource(0);
-
-        mUserNameEditText.setEnabled(false);
-        mUserPhoneEditText.setEnabled(false);
-        mUserEmailEditText.setEnabled(false);
-
         mUserPhoneEditText.setCursorVisible(false);
 
-        // 수정
-        View editLayout = view.findViewById(R.id.editLinearLayout);
-        editLayout.setOnClickListener(this);
+        mUserNameEditText.setOnFocusChangeListener(this);
+        mUserPhoneEditText.setOnFocusChangeListener(this);
+        mUserEmailEditText.setOnFocusChangeListener(this);
+
+        mFakeMobileEditView.setFocusable(true);
+        mFakeMobileEditView.setOnClickListener(this);
     }
 
     private void initBookingMemo(View view)
@@ -339,6 +327,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         // 날짜
         mTicketDateTextView.setText(gourmetPaymentInformation.checkInTime);
+
+        //
+        mPlaceNameTextView.setText(gourmetPaymentInformation.getTicketInformation().placeName);
 
         if (gourmetPaymentInformation.ticketTime != 0)
         {
@@ -545,92 +536,14 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    public void enabledEditUserInformation()
+    public void clearFocus()
     {
-        if (mUserNameEditText != null && mUserNameEditText.isEnabled() == false)
+        if (mBookingLayout == null)
         {
-            mUserNameEditText.setEnabled(true);
-
-            // 회원 가입시 이름 필터 적용.
-            StringFilter stringFilter = new StringFilter(mContext);
-            InputFilter[] allowAlphanumericHangul = new InputFilter[2];
-            allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-            allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
-
-            mUserNameEditText.setFilters(allowAlphanumericHangul);
-            mUserNameEditText.setInputType(InputType.TYPE_CLASS_TEXT);
-
-            if (Util.isOverAPI16() == true)
-            {
-                mUserNameEditText.setBackground(mEditTextBackgrounds[0]);
-            } else
-            {
-                mUserNameEditText.setBackgroundDrawable(mEditTextBackgrounds[0]);
-            }
+            return;
         }
 
-        if (mUserPhoneEditText != null && mUserPhoneEditText.isEnabled() == false)
-        {
-            mUserPhoneEditText.setEnabled(true);
-
-            if (Util.isOverAPI16() == true)
-            {
-                mUserPhoneEditText.setBackground(mEditTextBackgrounds[1]);
-            } else
-            {
-                mUserPhoneEditText.setBackgroundDrawable(mEditTextBackgrounds[1]);
-            }
-
-            mUserPhoneEditText.setOnFocusChangeListener(new View.OnFocusChangeListener()
-            {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus)
-                {
-                    if (hasFocus == true)
-                    {
-                        ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
-                    } else
-                    {
-                        mUserPhoneEditText.setSelected(false);
-                    }
-                }
-            });
-
-            mFakeMobileEditView.setFocusable(true);
-            mFakeMobileEditView.setOnClickListener(this);
-        }
-
-        if (mUserEmailEditText != null && mUserEmailEditText.isEnabled() == false)
-        {
-            mUserEmailEditText.setEnabled(true);
-
-            if (Util.isOverAPI16() == true)
-            {
-                mUserEmailEditText.setBackground(mEditTextBackgrounds[2]);
-            } else
-            {
-                mUserEmailEditText.setBackgroundDrawable(mEditTextBackgrounds[2]);
-            }
-
-            mUserEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
-            {
-                @Override
-                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-                {
-                    if (actionId == EditorInfo.IME_ACTION_DONE)
-                    {
-                        textView.clearFocus();
-
-                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                        return true;
-                    } else
-                    {
-                        return false;
-                    }
-                }
-            });
-        }
+        mBookingLayout.requestFocus();
     }
 
     public void checkPaymentType(PlacePaymentInformation.PaymentType paymentType)
@@ -693,6 +606,25 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     }
 
     @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        ((OnEventListener) mOnEventListener).editUserInformation();
+
+        switch (v.getId())
+        {
+            case R.id.userPhoneEditText:
+                if (hasFocus == true)
+                {
+                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
+                } else
+                {
+                    mUserPhoneEditText.setSelected(false);
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -710,10 +642,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 break;
             }
 
-            case R.id.editLinearLayout:
-                ((OnEventListener) mOnEventListener).editUserInformation();
-                break;
-
             case R.id.ticketCountMinus:
                 ((OnEventListener) mOnEventListener).minusTicketCount();
                 break;
@@ -722,7 +650,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 ((OnEventListener) mOnEventListener).plusTicketCount();
                 break;
 
-            case R.id.ticketTimeTab:
+            case R.id.ticketTimeLayout:
                 mTicketTimeTextView.performClick();
                 break;
 

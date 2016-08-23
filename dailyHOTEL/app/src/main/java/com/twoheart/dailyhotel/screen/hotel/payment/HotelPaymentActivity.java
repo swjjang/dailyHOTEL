@@ -6,9 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.text.InputFilter;
@@ -18,7 +17,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,14 +26,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -80,15 +76,15 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
-public class HotelPaymentActivity extends PlacePaymentActivity implements OnClickListener
+public class HotelPaymentActivity extends PlacePaymentActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
-    private TextView mCheckinDayTextView, mCheckoutDayTextView;
+    private View mBookingLayout;
+    private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private EditText mReservationName, mReservationPhone, mReservationEmail;
     private EditText mMemoEditText;
-    private Drawable[] mEditTextBackground;
 
     // 할인 정보
     private ImageView mBonusRadioButton;
@@ -121,8 +117,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     //
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
-    private boolean mIsEditMode;
     private boolean mIsUnderPrice;
+    private boolean mIsEditMode;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
@@ -184,8 +180,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mIsChangedPrice = false;
         mWarningDialogMessage = null;
 
-        initToolbar(hotelPaymentInformation.getSaleRoomInformation().hotelName);
-        initLayout();
+        initToolbar(getString(R.string.actionbar_title_payment_activity));
+        initLayout(hotelPaymentInformation);
     }
 
     private void initToolbar(String title)
@@ -217,16 +213,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         });
     }
 
-    private void initLayout()
+    private void initLayout(HotelPaymentInformation hotelPaymentInformation)
     {
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
-        initHotelInformation();
-        initGuestInformation();
+        mBookingLayout = scrollView.findViewById(R.id.bookingLayout);
+
+        initReservationInformation(hotelPaymentInformation);
         initBookingMemo();
         initDiscountInformation();
-        initPaymentInformation();
         initPaymentTypeInformation();
 
         // 결제하기
@@ -234,39 +230,47 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         doPaymentView.setOnClickListener(this);
     }
 
-    private void initHotelInformation()
+    private void initReservationInformation(HotelPaymentInformation hotelPaymentInformation)
     {
-        mCheckinDayTextView = (TextView) findViewById(R.id.checkinDayTextView);
-        mCheckoutDayTextView = (TextView) findViewById(R.id.checkoutDayTextView);
+        View dateInformationLayout = findViewById(R.id.dateInformationLayout);
+
+        mCheckinDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkinDayTextView);
+        mCheckoutDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkoutDayTextView);
+        mNightsTextView = (TextView) dateInformationLayout.findViewById(R.id.nightsTextView);
+
+        // 예약 장소
+        TextView placeNameTextView = (TextView) findViewById(R.id.placeNameTextView);
+        placeNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName + hotelPaymentInformation.getSaleRoomInformation().hotelName);
 
         // 객실 타입
         TextView roomTypeTextView = (TextView) findViewById(R.id.roomTypeTextView);
-        roomTypeTextView.setText(((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().roomName);
+        roomTypeTextView.setText(hotelPaymentInformation.getSaleRoomInformation().roomName);
+
+        // 투숙객 정보
+        initGuestInformation(hotelPaymentInformation);
     }
 
-    private void initGuestInformation()
+    private void initGuestInformation(HotelPaymentInformation hotelPaymentInformation)
     {
-        mReservationName = (EditText) findViewById(R.id.et_hotel_payment_reserver_name);
-        mReservationPhone = (EditText) findViewById(R.id.et_hotel_payment_reserver_number);
-        mReservationEmail = (EditText) findViewById(R.id.et_hotel_payment_reserver_email);
+        mReservationName = (EditText) findViewById(R.id.guestNameEditText);
+        mReservationPhone = (EditText) findViewById(R.id.guestPhoneEditText);
+        mReservationEmail = (EditText) findViewById(R.id.guestEmailEditText);
 
-        mEditTextBackground = new Drawable[3];
-        mEditTextBackground[0] = mReservationName.getBackground();
-        mEditTextBackground[1] = mReservationPhone.getBackground();
-        mEditTextBackground[2] = mReservationEmail.getBackground();
+        mReservationName.setOnFocusChangeListener(this);
+        mReservationPhone.setOnFocusChangeListener(this);
+        mReservationEmail.setOnFocusChangeListener(this);
 
-        mReservationName.setBackgroundResource(0);
-        mReservationPhone.setBackgroundResource(0);
-        mReservationEmail.setBackgroundResource(0);
+        // 전화번호.
+        mReservationPhone.setCursorVisible(false);
 
-        mReservationName.setEnabled(false);
-        mReservationPhone.setEnabled(false);
-        mReservationEmail.setEnabled(false);
+        View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+        fakeMobileEditView.setOnClickListener(this);
 
         TextView guideNameMemo = (TextView) findViewById(R.id.guideNameMemoView);
 
-        if (((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().isOverseas == true)
+        if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
         {
+            mReservationName.setHint(R.string.message_guide_name_hint);
             guideNameMemo.setVisibility(View.VISIBLE);
 
             if (Util.getLCDWidth(this) > 480)
@@ -278,10 +282,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         {
             guideNameMemo.setVisibility(View.GONE);
         }
-
-        // 수정.
-        View editLinearLayout = findViewById(R.id.editLinearLayout);
-        editLinearLayout.setOnClickListener(mOnEditInfoOnClickListener);
     }
 
     private void initBookingMemo()
@@ -305,6 +305,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mUsedCouponTextView = (TextView) findViewById(R.id.usedCouponTextView);
 
         mDiscountCouponLayout.setOnClickListener(this);
+
+        // 결제 정보
+        initPaymentInformation();
     }
 
     private void initPaymentInformation()
@@ -1447,6 +1450,53 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
+        {
+            View view = getCurrentFocus();
+            if (view instanceof EditText)
+            {
+                Rect outRect = new Rect();
+                view.getGlobalVisibleRect(outRect);
+
+                if (outRect.contains((int) event.getRawX(), (int) event.getRawY()) == false)
+                {
+                    mBookingLayout.requestFocus();
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        mIsEditMode = true;
+
+        switch (v.getId())
+        {
+            case R.id.guestPhoneEditText:
+                if (hasFocus == true)
+                {
+                    startInputMobileNumberDialog(mReservationPhone.getText().toString());
+                } else
+                {
+                    mReservationPhone.setSelected(false);
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onClick(final View v)
     {
         Guest guest = mPaymentInformation.getGuest();
@@ -1459,6 +1509,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         switch (v.getId())
         {
+            case R.id.fakeMobileEditView:
+            {
+                if (mReservationPhone.isSelected() == true)
+                {
+                    startInputMobileNumberDialog(mReservationPhone.getText().toString());
+                } else
+                {
+                    mReservationPhone.requestFocus();
+                    mReservationPhone.setSelected(true);
+                }
+                break;
+            }
+
             case R.id.usedBonusLayout:
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
@@ -2070,142 +2133,116 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     // UI Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OnClickListener mOnEditInfoOnClickListener = new OnClickListener()
-    {
-        @Override
-        public void onClick(View view)
-        {
-            mIsEditMode = true;
-            view.setVisibility(View.INVISIBLE);
-
-            // 이름.
-            if (mReservationName.isEnabled() == false)
-            {
-                mReservationName.setEnabled(true);
-
-                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
-                {
-                    // 회원 가입시 이름 필터 적용.
-                    StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-                    InputFilter[] allowAlphanumericName = new InputFilter[2];
-                    allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
-                    allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
-
-                    mReservationName.setFilters(allowAlphanumericName);
-                    mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
-                } else
-                {
-                    mReservationName.setEnabled(true);
-
-                    // 회원 가입시 이름 필터 적용.
-                    StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-                    InputFilter[] allowAlphanumericHangul = new InputFilter[2];
-                    allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-                    allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
-
-                    mReservationName.setFilters(allowAlphanumericHangul);
-                    mReservationName.setInputType(InputType.TYPE_CLASS_TEXT);
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                {
-                    mReservationName.setBackground(mEditTextBackground[0]);
-                } else
-                {
-                    mReservationName.setBackgroundDrawable(mEditTextBackground[0]);
-                }
-            }
-
-            // 전화번호.
-            mReservationPhone.setEnabled(true);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            {
-                mReservationPhone.setBackground(mEditTextBackground[1]);
-            } else
-            {
-                mReservationPhone.setBackgroundDrawable(mEditTextBackground[1]);
-            }
-
-            mReservationPhone.setCursorVisible(false);
-            mReservationPhone.setOnFocusChangeListener(new View.OnFocusChangeListener()
-            {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus)
-                {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    if (hasFocus == true)
-                    {
-                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
-                    } else
-                    {
-                        mReservationPhone.setSelected(false);
-                    }
-                }
-            });
-
-            View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
-
-            fakeMobileEditView.setFocusable(true);
-            fakeMobileEditView.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mReservationPhone.isSelected() == true)
-                    {
-                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
-                    } else
-                    {
-                        mReservationPhone.requestFocus();
-                        mReservationPhone.setSelected(true);
-                    }
-                }
-            });
-
-            // 이메일.
-
-            mReservationEmail.setEnabled(true);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            {
-                mReservationEmail.setBackground(mEditTextBackground[2]);
-            } else
-            {
-                mReservationEmail.setBackgroundDrawable(mEditTextBackground[2]);
-            }
-
-            mReservationEmail.setOnEditorActionListener(new OnEditorActionListener()
-            {
-                @Override
-                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-                {
-                    if (actionId == EditorInfo.IME_ACTION_DONE)
-                    {
-                        textView.clearFocus();
-
-                        if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
-                        {
-                            return false;
-                        }
-
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                        return true;
-                    } else
-                    {
-                        return false;
-                    }
-                }
-            });
-        }
-    };
+    //    private OnClickListener mOnEditInfoOnClickListener = new OnClickListener()
+    //    {
+    //        @Override
+    //        public void onClick(View view)
+    //        {
+    //            mIsEditMode = true;
+    //            view.setVisibility(View.INVISIBLE);
+    //
+    //            // 이름.
+    //            if (mReservationName.isEnabled() == false)
+    //            {
+    //                mReservationName.setEnabled(true);
+    //
+    //                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+    //
+    //                if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
+    //                {
+    //                    // 회원 가입시 이름 필터 적용.
+    //                    StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
+    //                    InputFilter[] allowAlphanumericName = new InputFilter[2];
+    //                    allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+    //                    allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
+    //
+    //                    mReservationName.setFilters(allowAlphanumericName);
+    //                    mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
+    //                } else
+    //                {
+    //                    mReservationName.setEnabled(true);
+    //
+    //                    // 회원 가입시 이름 필터 적용.
+    //                    StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
+    //                    InputFilter[] allowAlphanumericHangul = new InputFilter[2];
+    //                    allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+    //                    allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
+    //
+    //                    mReservationName.setFilters(allowAlphanumericHangul);
+    //                    mReservationName.setInputType(InputType.TYPE_CLASS_TEXT);
+    //                }
+    //            }
+    //
+    //            // 전화번호.
+    //            mReservationPhone.setEnabled(true);
+    //            mReservationPhone.setCursorVisible(false);
+    //            mReservationPhone.setOnFocusChangeListener(new View.OnFocusChangeListener()
+    //            {
+    //                @Override
+    //                public void onFocusChange(View v, boolean hasFocus)
+    //                {
+    //                    if (isFinishing() == true)
+    //                    {
+    //                        return;
+    //                    }
+    //
+    //                    if (hasFocus == true)
+    //                    {
+    //                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
+    //                    } else
+    //                    {
+    //                        mReservationPhone.setSelected(false);
+    //                    }
+    //                }
+    //            });
+    //
+    //            View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+    //
+    //            fakeMobileEditView.setFocusable(true);
+    //            fakeMobileEditView.setOnClickListener(new OnClickListener()
+    //            {
+    //                @Override
+    //                public void onClick(View v)
+    //                {
+    //                    if (mReservationPhone.isSelected() == true)
+    //                    {
+    //                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
+    //                    } else
+    //                    {
+    //                        mReservationPhone.requestFocus();
+    //                        mReservationPhone.setSelected(true);
+    //                    }
+    //                }
+    //            });
+    //
+    //            // 이메일.
+    //
+    //            mReservationEmail.setEnabled(true);
+    //            mReservationEmail.setOnEditorActionListener(new OnEditorActionListener()
+    //            {
+    //                @Override
+    //                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
+    //                {
+    //                    if (actionId == EditorInfo.IME_ACTION_DONE)
+    //                    {
+    //                        textView.clearFocus();
+    //
+    //                        if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
+    //                        {
+    //                            return false;
+    //                        }
+    //
+    //                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    //                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+    //                        return true;
+    //                    } else
+    //                    {
+    //                        return false;
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
@@ -2313,14 +2350,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                             mReservationName.setFilters(allowAlphanumericName);
                             mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                            {
-                                mReservationName.setBackground(mEditTextBackground[0]);
-                            } else
-                            {
-                                mReservationName.setBackgroundDrawable(mEditTextBackground[0]);
-                            }
                         } else
                         {
                             mReservationName.setText(overseasName);
@@ -2412,6 +2441,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckout.setTimeInMillis(checkOutDate);
                         mCheckoutDayTextView.setText(DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
+
+                        mNightsTextView.setText(getString(R.string.label_nights, roomInformation.nights));
 
                         if (Util.getLCDWidth(HotelPaymentActivity.this) >= 720)
                         {

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
@@ -20,6 +21,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -129,7 +132,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         mIsChangedPrice = false;
         mIsChangedTime = false;
 
-        mGourmetPaymentLayout.setToolbarTitle(gourmetPaymentInformation.getTicketInformation().placeName);
+        mGourmetPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
     }
 
     @Override
@@ -148,6 +151,29 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             mTimeDialog.cancel();
             mTimeDialog = null;
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
+        {
+            View view = getCurrentFocus();
+            if (view instanceof EditText)
+            {
+                Rect outRect = new Rect();
+                view.getGlobalVisibleRect(outRect);
+
+                if (outRect.contains((int) event.getRawX(), (int) event.getRawY()) == false)
+                {
+                    mGourmetPaymentLayout.clearFocus();
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
@@ -999,7 +1025,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
 
             mIsEditMode = true;
-            mGourmetPaymentLayout.enabledEditUserInformation();
         }
 
         @Override

@@ -11,31 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:background="@color/white"
         android:fadingEdge="none">
 
         <LinearLayout
+            android:id="@+id/bookingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
+            <!-- 1. 예약정보 확인 -->
             <include
                 layout="@layout/layout_booking_hotel_check_information"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- 객실 정보 -->
-            <include
-                layout="@layout/layout_booking_hotel_ticket_information"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- 예약자 정보 -->
-            <include
-                layout="@layout/layout_booking_hotel_user_information"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="visible"/>
 
             <!-- 예약 메모 -->
             <include
@@ -44,19 +36,13 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"/>
 
-            <!-- 할인 정보 -->
+            <!-- 2. 할인수단 선택 및 결제금액 -->
             <include
                 layout="@layout/layout_booking_discount_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 결제 정보 -->
-            <include
-                layout="@layout/layout_booking_hotel_payment_information"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- 결제 수단 선택 -->
+            <!-- 3. 결제 수단 -->
             <include
                 layout="@layout/layout_booking_hotel_select_payment"
                 android:layout_width="match_parent"
