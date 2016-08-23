@@ -40,7 +40,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsString(), mGourmetListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, params.toParamsString(), mGourmetListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.gourmet.filter;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +12,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
+import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
@@ -43,7 +45,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     private static final int GOURMET_CATEGORY_COLUMN = 5;
 
     protected GourmetCuration mGourmetCuration;
+    protected GourmetParams mLastParams;
     protected ViewType mViewType;
+
+    protected BaseNetworkController mNetworkController;
 
     protected RadioGroup mSortRadioGroup;
     protected android.support.v7.widget.GridLayout mGridLayout;
@@ -74,7 +79,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         initIntent(intent);
+
+        mNetworkController = getNetworkController(this);
+
         initLayout();
+
 
         mAnimationLayout.setVisibility(View.INVISIBLE);
         mAnimationLayout.postDelayed(new Runnable()
@@ -106,9 +115,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_gourmet_filter, null);
         initFilterLayout(filterLayout, gourmetCurationOption);
 
-        contentLayout.addView(filterLayout);
+        initAmenitiesLayout(filterLayout, gourmetCurationOption);
+        initTimeRangeFilterLayout(filterLayout, gourmetCurationOption);
 
-        requestUpdateResultDelayed();
+        contentLayout.addView(filterLayout);
     }
 
     protected void initSortLayout(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
@@ -129,6 +139,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
             case DISTANCE:
                 mSortRadioGroup.check(R.id.distanceCheckView);
+
+                searchMyLocation();
                 break;
 
             case LOW_PRICE:
@@ -145,6 +157,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private void initFilterLayout(View view, GourmetCurationOption gourmetCurationOption)
     {
+        // 음식 종류
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
 
         final HashMap<String, Integer> categroySequenceMap = gourmetCurationOption.getCategorySequenceMap();
@@ -180,37 +193,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         categoryMap.putAll(categroySequenceMap);
 
-        View.OnClickListener onClickListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
-
-                HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
-                DailyTextView dailyTextView = (DailyTextView) v;
-                String key = dailyTextView.getText().toString();
-
-                if (dailyTextView.isSelected() == true)
-                {
-                    dailyTextView.setSelected(false);
-                    filterMap.remove(key);
-
-                    AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, key, null);
-                } else
-                {
-                    dailyTextView.setSelected(true);
-                    filterMap.put(key, gourmetCurationOption.getCategoryCoderMap().get(key));
-
-                    AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
-                }
-
-                requestUpdateResultDelayed();
-            }
-        };
-
         List<String> keyList = new ArrayList<>(categoryMap.keySet());
         HashMap<String, Integer> categroyCodeMap = gourmetCurationOption.getCategoryCoderMap();
         HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
@@ -220,7 +202,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         for (String key : keyList)
         {
             DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key)), isSingleLine);
-            categoryView.setOnClickListener(onClickListener);
+            categoryView.setOnClickListener(mOnCategoryClickListener);
 
             if (filterMap.containsKey(key) == true)
             {
@@ -247,9 +229,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
         }
-
-        initAmenitiesLayout(view, gourmetCurationOption);
-        initTimeRangeFilterLayout(view, gourmetCurationOption);
 
         requestUpdateResultDelayed();
     }
@@ -397,57 +376,65 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     }
 
     @Override
+    protected void requestUpdateResult()
+    {
+        setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        {
+            Util.restartApp(GourmetCurationActivity.this);
+            return;
+        }
+
+        setLastStayParams(mGourmetCuration);
+
+        super.requestUpdateResult();
+    }
+
+    @Override
+    protected void requestUpdateResultDelayed()
+    {
+        setResultMessage(getResources().getString(R.string.label_searching));
+
+        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        {
+            Util.restartApp(GourmetCurationActivity.this);
+            return;
+        }
+
+        setLastStayParams(mGourmetCuration);
+
+        super.requestUpdateResultDelayed();
+    }
+
+    @Override
     protected void updateResultMessage()
     {
         setConfirmOnClickListener(null);
 
-        new AsyncTask<Void, Void, Integer>()
+        if (mLastParams != null && SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
         {
-            @Override
-            protected Integer doInBackground(Void... params)
-            {
-                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+            onSearchLoacationResult(null);
+            return;
+        }
 
-                int count = 0;
-                HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
-                ArrayList<GourmetFilters> gourmetFiltersList = gourmetCurationOption.getFiltersList();
+        ((GourmetCurationNetworkController) mNetworkController).requestGourmetList(mLastParams);
+    }
 
-                if (filterMap == null || filterMap.size() == 0)
-                {
-                    for (GourmetFilters gourmetFilters : gourmetFiltersList)
-                    {
-                        if (gourmetFilters.isFiltered(gourmetCurationOption) == true)
-                        {
-                            count++;
-                        }
-                    }
-                } else
-                {
-                    for (GourmetFilters gourmetFilters : gourmetFiltersList)
-                    {
-                        if (filterMap.containsKey(gourmetFilters.category) == true//
-                            && gourmetFilters.isFiltered(gourmetCurationOption) == true)
-                        {
-                            count++;
-                        }
-                    }
-                }
+    protected void setLastStayParams(GourmetCuration gourmetCuration)
+    {
+        if (gourmetCuration == null)
+        {
+            return;
+        }
 
-                return count;
-            }
-
-            @Override
-            protected void onPostExecute(Integer count)
-            {
-                String resultMessage = count == 0 //
-                    ? getString(R.string.label_gourmet_filter_result_empty) //
-                    : getString(R.string.label_gourmet_filter_result_count, count);
-                setResultMessage(resultMessage);
-
-                setConfirmOnClickListener(GourmetCurationActivity.this);
-                setConfirmEnable(count != 0);
-            }
-        }.execute();
+        if (mLastParams == null)
+        {
+            mLastParams = new GourmetParams(gourmetCuration);
+        } else
+        {
+            mLastParams.setPlaceParams(gourmetCuration);
+        }
     }
 
     private int getCategoryResourceId(int index)
@@ -694,6 +681,13 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected void onComplete()
     {
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mGourmetCuration);
+
+        setResult(RESULT_OK, intent);
+        hideAnimation();
+
         Province province = mGourmetCuration.getProvince();
 
         Map<String, String> eventParams = new HashMap<>();
@@ -722,12 +716,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             ExLog.d(gourmetCurationOption.toString());
         }
-
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mGourmetCuration);
-
-        setResult(RESULT_OK, intent);
-        hideAnimation();
     }
 
     @Override
@@ -766,7 +754,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     @Override
     protected BaseNetworkController getNetworkController(Context context)
     {
-        return null;
+        return new GourmetCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);
     }
 
     @Override
@@ -778,12 +766,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected void checkedChangedDistance()
     {
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
-        Province province = mGourmetCuration.getProvince();
-
         gourmetCurationOption.setSortType(SortType.DISTANCE);
-        String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
+        Province province = mGourmetCuration.getProvince();
         Map<String, String> eventParams = new HashMap<>();
+        String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
 
         if (province != null)
         {
@@ -804,4 +791,106 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
+
+
+    private View.OnClickListener mOnCategoryClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+
+            HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
+            DailyTextView dailyTextView = (DailyTextView) v;
+            String key = dailyTextView.getText().toString();
+
+            if (dailyTextView.isSelected() == true)
+            {
+                dailyTextView.setSelected(false);
+                filterMap.remove(key);
+
+                AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, key, null);
+            } else
+            {
+                dailyTextView.setSelected(true);
+                filterMap.put(key, gourmetCurationOption.getCategoryCoderMap().get(key));
+
+                AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
+            }
+
+            requestUpdateResultDelayed();
+        }
+    };
+
+
+    private GourmetCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetCurationNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onGourmetCount(String url, int totalCount)
+        {
+            if (Util.isTextEmpty(url) == true && totalCount == -1)
+            {
+                // OnNetworkControllerListener onErrorResponse
+                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
+
+                setConfirmOnClickListener(GourmetCurationActivity.this);
+                setConfirmEnable(false);
+                return;
+            }
+
+            String requestParams = null;
+            try
+            {
+                Uri requestUrl = Uri.parse(url);
+                requestParams = requestUrl.getQuery();
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+
+            String lastParams = mLastParams.toParamsString();
+            if (lastParams.equalsIgnoreCase(requestParams) == false)
+            {
+                // already running another request!
+                return;
+            }
+
+            if (totalCount <= 0)
+            {
+                setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
+            } else
+            {
+                setResultMessage(getString(R.string.label_gourmet_filter_result_count, totalCount));
+            }
+
+            setConfirmOnClickListener(GourmetCurationActivity.this);
+            setConfirmEnable(totalCount != 0);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetCurationActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            GourmetCurationActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            GourmetCurationActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            GourmetCurationActivity.this.onErrorToastMessage(message);
+        }
+    };
 }

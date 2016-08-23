@@ -52,10 +52,9 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
     @Override
     protected void initContentLayout(ViewGroup contentLayout)
     {
-        View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
-
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
 
+        View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
         initSortLayout(sortLayout, mViewType, stayCurationOption);
 
         contentLayout.addView(sortLayout);

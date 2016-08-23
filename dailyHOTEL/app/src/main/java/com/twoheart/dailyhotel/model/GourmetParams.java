@@ -104,8 +104,12 @@ public class GourmetParams extends PlaceParams
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(getParamString("date", date)).append("&");
-        stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
+        stringBuilder.append(getParamString("reserveDate", date)).append("&");
+
+        if (provinceIdx != 0)
+        {
+            stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
+        }
 
         if (areaIdx != 0)
         {
