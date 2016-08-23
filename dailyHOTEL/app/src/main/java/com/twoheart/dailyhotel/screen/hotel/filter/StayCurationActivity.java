@@ -99,10 +99,9 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     @Override
     protected void initContentLayout(ViewGroup contentLayout)
     {
-        View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
-
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
 
+        View sortLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_sort, null);
         initSortLayout(sortLayout, mViewType, stayCurationOption);
 
         contentLayout.addView(sortLayout);
@@ -112,9 +111,9 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
             initFilterLayout(filterLayout, stayCurationOption);
 
-            contentLayout.addView(filterLayout);
-
             initAmenitiesLayout(filterLayout, stayCurationOption);
+
+            contentLayout.addView(filterLayout);
         } else
         {
             requestUpdateResult();
