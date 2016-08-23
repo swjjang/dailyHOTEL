@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:background="@color/white"
         android:fadingEdge="none">
 
         <LinearLayout
@@ -21,15 +22,9 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <!-- 상품 정보 넣기 -->
+            <!-- 1. 예약 정보 확인 -->
             <include
                 layout="@layout/layout_booking_gourmet_ticket_information"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- 예약자 정보 -->
-            <include
-                layout="@layout/layout_booking_gourmet_user_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -40,13 +35,13 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"/>
 
-            <!-- 결제 정보 -->
+            <!-- 2. 결제금액 -->
             <include
                 layout="@layout/layout_booking_gourmet_payment_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 결제 수단 선택 -->
+            <!-- 3. 결제수단 -->
             <include
                 layout="@layout/layout_booking_gourmet_select_payment"
                 android:layout_width="match_parent"

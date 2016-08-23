@@ -198,7 +198,6 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:gravity="center_vertical"
-
             android:text="@string/act_booking_reserver_info"
             android:textColor="@color/default_text_c666666"
             android:textSize="13dp"/>

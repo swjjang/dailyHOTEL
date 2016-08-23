@@ -475,7 +475,7 @@
     <string name="label_booking_ticket_info">상품 정보</string>
     <string name="label_booking_ticket_type">상품 타입</string>
     <string name="label_booking_select_ticket_count">수량 선택</string>
-    <string name="label_booking_select_ticket_time">방문 시간</string>
+    <string name="label_booking_select_ticket_time">방문시간</string>
     <string name="label_booking_user_info">예약자 정보</string>
     <string name="label_booking_user">예약자</string>
     <string name="label_booking_count">%1$d개</string>
@@ -488,9 +488,11 @@
     <string name="label_booking_memo">예약시 요청사항</string>
     <string name="label_booking_discount_information">할인 정보</string>
     <string name="label_booking_step1">1. 예약 정보 확인</string>
-    <string name="label_booking_step2">2. 할인수단 선택 및 결제금액</string>
+    <string name="label_booking_stay_step2">2. 할인수단 선택 및 결제금액</string>
+    <string name="label_booking_gourmet_step2">2. 결제금액</string>
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
+    <string name="message_booking_selected_time">시간을 선택해주세요.</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
     <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요.</string>
     <string name="message_discount_memo">적립금, 할인 쿠폰은 중복 사용 할 수 없습니다.</string>

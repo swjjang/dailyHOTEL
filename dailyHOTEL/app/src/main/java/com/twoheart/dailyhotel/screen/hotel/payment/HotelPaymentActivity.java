@@ -80,7 +80,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
-    private View mLinearLayout;
+    private View mBookingLayout;
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private EditText mReservationName, mReservationPhone, mReservationEmail;
@@ -218,7 +218,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
-        mLinearLayout = scrollView.findViewById(R.id.linearLayout);
+        mBookingLayout = scrollView.findViewById(R.id.bookingLayout);
 
         initReservationInformation(hotelPaymentInformation);
         initBookingMemo();
@@ -240,7 +240,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         // 예약 장소
         TextView placeNameTextView = (TextView) findViewById(R.id.placeNameTextView);
-        placeNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName);
+        placeNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName + hotelPaymentInformation.getSaleRoomInformation().hotelName);
 
         // 객실 타입
         TextView roomTypeTextView = (TextView) findViewById(R.id.roomTypeTextView);
@@ -264,21 +264,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mReservationPhone.setCursorVisible(false);
 
         View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
-        fakeMobileEditView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mReservationPhone.isSelected() == true)
-                {
-                    startInputMobileNumberDialog(mReservationPhone.getText().toString());
-                } else
-                {
-                    mReservationPhone.requestFocus();
-                    mReservationPhone.setSelected(true);
-                }
-            }
-        });
+        fakeMobileEditView.setOnClickListener(this);
 
         TextView guideNameMemo = (TextView) findViewById(R.id.guideNameMemoView);
 
@@ -1476,7 +1462,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 if (outRect.contains((int) event.getRawX(), (int) event.getRawY()) == false)
                 {
-                    mLinearLayout.requestFocus();
+                    mBookingLayout.requestFocus();
 
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -1523,6 +1509,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         switch (v.getId())
         {
+            case R.id.fakeMobileEditView:
+            {
+                if (mReservationPhone.isSelected() == true)
+                {
+                    startInputMobileNumberDialog(mReservationPhone.getText().toString());
+                } else
+                {
+                    mReservationPhone.requestFocus();
+                    mReservationPhone.setSelected(true);
+                }
+                break;
+            }
+
             case R.id.usedBonusLayout:
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)

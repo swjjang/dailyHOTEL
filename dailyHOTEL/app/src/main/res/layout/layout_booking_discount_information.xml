@@ -17,7 +17,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="25dp"
-        android:text="@string/label_booking_step2"
+        android:text="@string/label_booking_stay_step2"
         android:textColor="@color/default_text_c323232"
         android:textSize="14dp"
         dailyFont:style="Medium"/>
