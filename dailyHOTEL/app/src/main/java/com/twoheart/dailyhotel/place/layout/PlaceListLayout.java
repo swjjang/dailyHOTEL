@@ -61,7 +61,7 @@ public abstract class PlaceListLayout extends BaseLayout
         void onRecordAnalytics(Constants.ViewType viewType);
     }
 
-    protected abstract PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
+    protected abstract PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
 
     protected abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
 
@@ -87,7 +87,7 @@ public abstract class PlaceListLayout extends BaseLayout
         mPlaceRecyclerView.setLayoutManager(mLayoutManager);
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mPlaceListAdapter = getPlacetListAdapter(mContext, new ArrayList<PlaceViewItem>());
+        mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<PlaceViewItem>());
         mPlaceRecyclerView.setAdapter(mPlaceListAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);

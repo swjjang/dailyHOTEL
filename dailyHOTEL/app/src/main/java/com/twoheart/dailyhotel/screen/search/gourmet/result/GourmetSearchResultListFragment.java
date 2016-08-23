@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
@@ -127,8 +126,6 @@ public class GourmetSearchResultListFragment extends PlaceListFragment
                 mGourmetSearchResultListLayout.updateResultCount(mViewType, -1, -1);
             }
         }
-
-        SaleTime saleTime = mGourmetCuration.getSaleTime();
 
         if (mGourmetCuration == null || mGourmetCuration.getCurationOption() == null//
             || mGourmetCuration.getCurationOption().getSortType() == null//
