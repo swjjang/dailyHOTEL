@@ -12,11 +12,12 @@
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="@color/default_background"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="25dp"
-        android:text="2. 할인수단 선택 및 결제금액"
+        android:text="@string/label_booking_step2"
         android:textColor="@color/default_text_c323232"
         android:textSize="14dp"
         dailyFont:style="Medium"/>
@@ -191,14 +192,14 @@
         android:id="@+id/paymentInformationLayout"
         android:layout_width="match_parent"
         android:layout_height="147dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
         android:orientation="vertical"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="15dp">
+        android:paddingRight="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -15,6 +15,7 @@
         android:fadingEdge="none">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
@@ -26,7 +27,7 @@
                 layout="@layout/layout_booking_hotel_check_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <!-- 예약 메모 -->
             <include

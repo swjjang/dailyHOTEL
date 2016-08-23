@@ -101,7 +101,7 @@
 
     <style name="EditTextTheme">
         <item name="colorControlNormal">@color/default_line_cdcdcdd</item>
-        <item name="colorControlActivated">@color/default_line_c323232</item>
+        <item name="colorControlActivated">@color/black</item>
     </style>
 
     <style name="CheckBoxTheme">

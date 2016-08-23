@@ -102,7 +102,7 @@
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_booking_corporate_card"
+                        android:text="@string/label_booking_simplecard_description"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="12dp"/>
                 </LinearLayout>
