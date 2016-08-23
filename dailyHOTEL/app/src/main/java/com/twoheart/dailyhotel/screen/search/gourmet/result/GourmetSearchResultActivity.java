@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -73,6 +74,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
         intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
 
+
         return intent;
     }
 
@@ -86,12 +88,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         return newInstance(context, saleTime, null, new Keyword(0, text), SearchType.SEARCHES);
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, Location location)
+    public static Intent newInstance(Context context, SaleTime saleTime, Location location, String callByScreen)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
@@ -249,6 +252,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
 
+            if(intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+            {
+                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+            }
+
             location = new Location((String) null);
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
@@ -356,6 +364,30 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);
+    }
+
+    private void recordEventSearchResultByLocation(String address, boolean isEmpty)
+    {
+        if (Util.isTextEmpty(address))
+        {
+            return;
+        }
+
+        String action = null;
+
+        if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
+        }
+
+        if (Util.isTextEmpty(action) == false)
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+                , action, address, null);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

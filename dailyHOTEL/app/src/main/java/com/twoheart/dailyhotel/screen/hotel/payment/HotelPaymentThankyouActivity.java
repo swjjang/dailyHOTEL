@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotel.payment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View.OnClickListener;
 
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;

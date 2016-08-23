@@ -179,7 +179,7 @@ public class DailyRemoteConfig
             JSONObject imageUrlJSONObject = new JSONObject(imageUrl);
 
             // 아직은 고려하지 않도록 한다."default"
-//            String defaultType = imageUrlJSONObject.getString("default");
+            //            String defaultType = imageUrlJSONObject.getString("default");
             String url = imageUrlJSONObject.getJSONObject("image").getString(dpi);
             String currentVersion = DailyPreference.getInstance(context).getIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");

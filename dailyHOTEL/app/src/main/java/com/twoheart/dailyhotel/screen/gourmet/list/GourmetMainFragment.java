@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
@@ -103,7 +104,18 @@ public class GourmetMainFragment extends PlaceMainFragment
                 Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
                 mGourmetCuration.setLocation(location);
 
-                startAroundSearchResult();
+                String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+
+                if(PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
+                {
+                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+                } else if(PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
+                {
+                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
+                }
+
+                startAroundSearchResult(mBaseActivity, mGourmetCuration.getSaleTime(), location, callByScreen);
             }
         }
     }
@@ -220,7 +232,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
-    private void startAroundSearchResult()
+    private void startAroundSearchResult(Context context, SaleTime saleTime, Location location, String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -229,8 +241,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         lockUI();
 
-        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, //
-            mGourmetCuration.getSaleTime(), mGourmetCuration.getLocation());
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, saleTime, location, callByScreen);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 

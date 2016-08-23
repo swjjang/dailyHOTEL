@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
@@ -144,7 +145,18 @@ public class StayMainFragment extends PlaceMainFragment
                 Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
                 mStayCuration.setLocation(location);
 
-                startAroundSearchResult(mBaseActivity, mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), location);
+                String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+
+                if(PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
+                {
+                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+                } else if(PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
+                {
+                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
+                }
+
+                startAroundSearchResult(mBaseActivity, mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), location, callByScreen);
             }
         }
     }
@@ -268,7 +280,7 @@ public class StayMainFragment extends PlaceMainFragment
             , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
-    private void startAroundSearchResult(Context context, SaleTime saleTime, int nights, Location location)
+    private void startAroundSearchResult(Context context, SaleTime saleTime, int nights, Location location, String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -277,7 +289,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         lockUI();
 
-        Intent intent = StaySearchResultActivity.newInstance(context, saleTime, nights, location);
+        Intent intent = StaySearchResultActivity.newInstance(context, saleTime, nights, location, callByScreen);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 

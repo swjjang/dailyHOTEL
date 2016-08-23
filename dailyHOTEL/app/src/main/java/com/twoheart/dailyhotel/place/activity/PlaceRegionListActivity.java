@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
@@ -32,6 +34,8 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     protected abstract void requestRegionList();
 
     protected abstract void updateTermsOfLocationLayout();
+
+    protected abstract PlaceRegionListFragment getCurrentFragment();
 
     public enum Region
     {
@@ -212,6 +216,16 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                     // Location
                     Intent intent = new Intent();
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
+
+                    try
+                    {
+                        PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+
                     setResult(RESULT_ARROUND_SEARCH_LIST, intent);
                     finish();
                 }

@@ -164,6 +164,17 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
     }
 
+    @Override
+    protected PlaceRegionListFragment getCurrentFragment()
+    {
+        if (mFragmentPagerAdapter == null)
+        {
+            return null;
+        }
+
+        return (PlaceRegionListFragment) mFragmentPagerAdapter.getItem(0);
+    }
+
     private PlaceRegionListFragment.OnPlaceRegionListFragment mOnPlaceListFragmentListener = new PlaceRegionListFragment.OnPlaceRegionListFragment()
     {
         private void recordEvent(Province province)
@@ -234,6 +245,9 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 
             Intent intent = PermissionManagerActivity.newInstance(GourmetRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+
+            AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_gourmet), null);
         }
     };
 

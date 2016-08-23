@@ -37,6 +37,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
     public static final String INTENT_EXTRA_DATA_RADIUS = "radius";
     public static final String INTENT_EXTRA_DATA_IS_DEEPLINK = "isDeepLink";
+    public static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
 
     protected static final double DEFAULT_SEARCH_RADIUS = 10d;
 
@@ -44,6 +45,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected boolean mIsFixedLocation;
     protected boolean mIsDeepLink;
+    protected String mCallByScreen;
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
 
@@ -375,19 +377,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                     releaseUiComponent();
                 }
             }, true);
-    }
-
-    protected void recordEventSearchResultByLocation(String address, boolean isEmpty)
-    {
-        if (Util.isTextEmpty(address))
-        {
-            return;
-        }
-
-        String action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
-
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-            , action, address, null);
     }
 
     protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty)
