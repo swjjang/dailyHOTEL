@@ -24,12 +24,11 @@ import java.util.List;
 public class GourmetListLayout extends PlaceListLayout
 {
     private GourmetListMapFragment mGourmetListMapFragment;
-
     private GourmetCuration mGourmetCuration;
 
-    public GourmetListLayout(Context context, OnEventListener mOnEventListener)
+    public GourmetListLayout(Context context, OnEventListener eventListener)
     {
-        super(context, mOnEventListener);
+        super(context, eventListener);
     }
 
     @Override
@@ -141,7 +140,7 @@ public class GourmetListLayout extends PlaceListLayout
             // 리스트의 경우 Pagination 상황 고려
             List<PlaceViewItem> oldList = getList();
 
-            int oldListSize = oldList.size();
+            int oldListSize = oldList == null ? 0 : oldList.size();
             if (oldListSize > 0)
             {
                 PlaceViewItem placeViewItem = oldList.get(oldListSize - 1);
@@ -159,7 +158,7 @@ public class GourmetListLayout extends PlaceListLayout
 
             String districtName = null;
 
-            // 지역순(GourmetList의 경우 기본이 지역순) 일때 상위 섹션명을 가지고 가기위한 처리
+            // 지역순일때 상위 섹션명을 가지고 가기위한 처리
             if (Constants.SortType.DEFAULT == sortType)
             {
                 // 삭제 이벤트가 발생하였을수 있어서 재 검사
@@ -301,7 +300,7 @@ public class GourmetListLayout extends PlaceListLayout
         return hasSalesPlace(mPlaceListAdapter.getAll());
     }
 
-    private boolean hasSalesPlace(List<PlaceViewItem> list)
+    protected boolean hasSalesPlace(List<PlaceViewItem> list)
     {
         if (list == null || list.size() == 0)
         {
@@ -333,9 +332,9 @@ public class GourmetListLayout extends PlaceListLayout
         mGourmetCuration = curation;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                 Listener
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {
@@ -343,18 +342,17 @@ public class GourmetListLayout extends PlaceListLayout
         public void onClick(View view)
         {
             int position = mPlaceRecyclerView.getChildAdapterPosition(view);
-
             if (position < 0)
             {
                 ((OnEventListener) mOnEventListener).onPlaceClick(null);
                 return;
             }
 
-            PlaceViewItem gourmetViewItem = mPlaceListAdapter.getItem(position);
+            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
 
-            if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(gourmetViewItem);
+                ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
             }
         }
     };
@@ -364,12 +362,11 @@ public class GourmetListLayout extends PlaceListLayout
         @Override
         public void onClick(View view)
         {
-
             Integer index = (Integer) view.getTag(view.getId());
-
             if (index != null)
             {
                 EventBanner eventBanner = GourmetEventBannerManager.getInstance().getEventBanner(index);
+
                 ((OnEventListener) mOnEventListener).onEventBannerClick(eventBanner);
             }
         }

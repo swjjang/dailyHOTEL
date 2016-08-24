@@ -157,7 +157,7 @@ public class StayListLayout extends PlaceListLayout
 
             String districtName = null;
 
-            // 지역순(StayList의 경우 기본이 지역순) 일때 상위 섹션명을 가지고 가기위한 처리
+            // 지역순일때 상위 섹션명을 가지고 가기위한 처리
             if (Constants.SortType.DEFAULT == sortType)
             {
                 // 삭제 이벤트가 발생하였을수 있어서 재 검사
