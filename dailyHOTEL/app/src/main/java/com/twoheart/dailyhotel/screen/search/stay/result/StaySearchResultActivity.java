@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -90,13 +91,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         return newInstance(context, saleTime, nights, null, new Keyword(0, text), SearchType.SEARCHES);
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location, String callByScreen)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
@@ -250,6 +252,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
 
+            if(intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+            {
+                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+            }
+
             mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
         {
@@ -373,6 +380,33 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(screen, params);
+    }
+
+    private void recordEventSearchResultByLocation(String address, boolean isEmpty)
+    {
+        if (Util.isTextEmpty(address))
+        {
+            return;
+        }
+
+        String action = null;
+
+        if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
+        }
+
+        if (Util.isTextEmpty(action) == false)
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+                , action, address, null);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

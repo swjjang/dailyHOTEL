@@ -145,6 +145,11 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         mOnPlaceRegionListFragment = listener;
     }
 
+    public PlaceRegionListActivity.Region getRegion()
+    {
+        return mRegion;
+    }
+
     private View getGroupView(int groupPosition)
     {
         int count = mListView.getChildCount();

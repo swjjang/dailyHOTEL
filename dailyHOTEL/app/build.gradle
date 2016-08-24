@@ -76,10 +76,10 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.13.0'
     compile 'com.kakao.sdk:kakaolink:1.1.20'
     compile 'com.kakao.sdk:kakaotalk:1.1.20'
-    compile 'com.appboy:android-sdk-ui:1.13.+'
+    compile 'com.appboy:android-sdk-ui:1.14.+'
     compile 'com.android.support:multidex:1.0.1'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
         transitive = true;
     }
 

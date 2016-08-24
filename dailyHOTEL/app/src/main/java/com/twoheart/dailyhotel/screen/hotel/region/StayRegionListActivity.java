@@ -399,6 +399,9 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
             Intent intent = PermissionManagerActivity.newInstance(StayRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+
+            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_hotel), null);
         }
     };
 
@@ -424,6 +427,19 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                 fragment.updateTermsOfLocationView();
             }
         }
+    }
+
+    @Override
+    protected PlaceRegionListFragment getCurrentFragment()
+    {
+        if (mViewPager == null || mFragmentPagerAdapter == null)
+        {
+            return null;
+        }
+
+        int position = mViewPager.getCurrentItem();
+
+        return (PlaceRegionListFragment) mFragmentPagerAdapter.getItem(position);
     }
 
     private void showTabLayout()

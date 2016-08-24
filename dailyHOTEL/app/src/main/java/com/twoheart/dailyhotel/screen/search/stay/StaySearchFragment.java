@@ -123,7 +123,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, location);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, location, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 

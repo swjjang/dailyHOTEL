@@ -561,7 +561,9 @@ public class AnalyticsManager
         public static final String SOLDOUT_DEEPLINK = "Soldout_Deeplink";
         public static final String SOLDOUT = "Soldout";
         public static final String AROUND_SEARCH_NOT_FOUND = "AroundSearchNotFound";
+        public static final String AROUND_SEARCH_NOT_FOUND_LOCATIONLIST = "AroundSearchNotFound_LocationList";
         public static final String AROUND_SEARCH_CLICKED = "AroundSearchClicked";
+        public static final String AROUND_SEARCH_CLICKED_LOCATIONLIST = "AroundSearchClicked_LocationList";
         public static final String RECENT_KEYWORD_NOT_FOUND = "RecentKeywordNotFound";
         public static final String RECENT_KEYWORD = "RecentKeyword";
         //
