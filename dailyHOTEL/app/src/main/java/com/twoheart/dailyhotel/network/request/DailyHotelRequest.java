@@ -33,26 +33,34 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     public DailyHotelRequest(Object tag, int method, String url, Map<String, String> urlparameters, String parameters, ErrorListener errorListener)
     {
-        this(tag, method, getUrlDecoderEx(url, urlparameters) + parameters, errorListener);
+        this(method, getUrlDecoderEx(url, urlparameters) + parameters, errorListener);
+
+        setTag(tag);
     }
 
     public DailyHotelRequest(Object tag, int method, String url, String parameters, ErrorListener errorListener)
     {
-        this(tag, method, getUrlDecoderEx(url) + parameters, errorListener);
+        this(method, getUrlDecoderEx(url) + parameters, errorListener);
+
+        setTag(tag);
     }
 
     public DailyHotelRequest(Object tag, int method, String url, Map<String, String> urlparameters, Map<String, String> parameters, ErrorListener errorListener)
     {
-        this(tag, method, getUrlDecoderEx(url, urlparameters), errorListener);
+        this(method, getUrlDecoderEx(url, urlparameters), errorListener);
 
         mParameters = parameters;
+
+        setTag(tag);
     }
 
     public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
     {
-        this(tag, method, getUrlDecoderEx(url), errorListener);
+        this(method, getUrlDecoderEx(url), errorListener);
 
         mParameters = parameters;
+
+        setTag(tag);
     }
 
     public DailyHotelRequest(Object tag, int method, String url, ErrorListener listener)

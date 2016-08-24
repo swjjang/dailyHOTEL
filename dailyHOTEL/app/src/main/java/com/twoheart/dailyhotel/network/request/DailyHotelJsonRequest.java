@@ -33,7 +33,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 
     public DailyHotelJsonRequest(Object tag, int method, String url, String parameters, DailyHotelJsonResponseListener listener)
     {
-        super(tag, method, url, parameters + parameters, listener);
+        super(tag, method, url, parameters, listener);
 
         mListener = listener;
     }
