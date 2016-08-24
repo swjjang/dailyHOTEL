@@ -31,7 +31,7 @@ public class StayListLayout extends PlaceListLayout
     }
 
     @Override
-    protected PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
+    protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
         return new StayListAdapter(context, arrayList, mOnItemClickListener, mOnEventBannerItemClickListener);
     }
@@ -136,7 +136,7 @@ public class StayListLayout extends PlaceListLayout
         {
             setVisibility(fragmentManager, viewType, true);
 
-            // 리스트의 경우 Pagenation 상황 고려
+            // 리스트의 경우 Pagination 상황 고려
             List<PlaceViewItem> oldList = getList();
 
             int oldListSize = oldList == null ? 0 : oldList.size();
@@ -157,7 +157,7 @@ public class StayListLayout extends PlaceListLayout
 
             String districtName = null;
 
-            // 지역순(StayList의 경우 기본이 지역순) 일때 상위 섹션명을 가지고 가기위한 처리
+            // 지역순일때 상위 섹션명을 가지고 가기위한 처리
             if (Constants.SortType.DEFAULT == sortType)
             {
                 // 삭제 이벤트가 발생하였을수 있어서 재 검사
@@ -189,8 +189,8 @@ public class StayListLayout extends PlaceListLayout
                     PlaceViewItem firstItem = list.get(0);
                     if (firstItem.mType == PlaceViewItem.TYPE_SECTION)
                     {
-                        String firstDistricName = firstItem.getItem();
-                        if (districtName.equalsIgnoreCase(firstDistricName))
+                        String firstDistrictName = firstItem.getItem();
+                        if (districtName.equalsIgnoreCase(firstDistrictName))
                         {
                             list.remove(0);
                         }

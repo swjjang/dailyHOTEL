@@ -173,7 +173,8 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         ((GourmetSearchResultCurationNetworkController) mNetworkController).requestGourmetSearchList(mLastParams);
     }
 
-    private void setLastGourmetParams(GourmetCuration gourmetCuration)
+    @Override
+    protected void setLastGourmetParams(GourmetCuration gourmetCuration)
     {
         if (gourmetCuration == null)
         {

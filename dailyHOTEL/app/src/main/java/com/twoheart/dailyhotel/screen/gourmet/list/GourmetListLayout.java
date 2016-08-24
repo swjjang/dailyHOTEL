@@ -24,17 +24,15 @@ import java.util.List;
 public class GourmetListLayout extends PlaceListLayout
 {
     private GourmetListMapFragment mGourmetListMapFragment;
-
     private GourmetCuration mGourmetCuration;
 
-
-    public GourmetListLayout(Context context, OnEventListener mOnEventListener)
+    public GourmetListLayout(Context context, OnEventListener eventListener)
     {
-        super(context, mOnEventListener);
+        super(context, eventListener);
     }
 
     @Override
-    protected PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
+    protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
         return new GourmetListAdapter(context, arrayList, mOnItemClickListener, mOnEventBannerItemClickListener);
     }
@@ -124,69 +122,176 @@ public class GourmetListLayout extends PlaceListLayout
         return mPlaceListAdapter.getAll();
     }
 
-    @Override
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
+                              ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
+        mIsLoading = false;
+
         if (mPlaceListAdapter == null)
         {
             Util.restartApp(mContext);
             return;
         }
 
-        mPlaceListAdapter.clear();
-
-        if (list == null || list.size() == 0)
-        {
-            mPlaceListAdapter.notifyDataSetChanged();
-
-            setVisibility(fragmentManager, Constants.ViewType.GONE, true);
-        } else
+        if (viewType == Constants.ViewType.LIST)
         {
             setVisibility(fragmentManager, viewType, true);
 
-            switch (viewType)
+            // 리스트의 경우 Pagination 상황 고려
+            List<PlaceViewItem> oldList = getList();
+
+            int oldListSize = oldList == null ? 0 : oldList.size();
+            if (oldListSize > 0)
             {
-                case LIST:
-                {
-                    mPlaceRecyclerView.scrollToPosition(0);
+                PlaceViewItem placeViewItem = oldList.get(oldListSize - 1);
 
-                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
-                    break;
+                // 기존 리스트가 존재 할 때 마지막 아이템이 footer 일 경우 아이템 제거
+                switch (placeViewItem.mType)
+                {
+                    case PlaceViewItem.TYPE_FOOTER_VIEW:
+                    case PlaceViewItem.TYPE_LOADING_VIEW:
+                        getList().remove(placeViewItem); // 실제 삭제
+                        oldList.remove(placeViewItem); // 비교 리스트 삭제
+                        break;
                 }
+            }
 
-                case MAP:
+            String districtName = null;
+
+            // 지역순일때 상위 섹션명을 가지고 가기위한 처리
+            if (Constants.SortType.DEFAULT == sortType)
+            {
+                // 삭제 이벤트가 발생하였을수 있어서 재 검사
+                int start = oldList == null ? 0 : oldList.size() - 1;
+                int end = oldList == null ? 0 : oldList.size() - 5;
+                end = end < 0 ? 0 : end;
+
+                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
+                for (int i = start; i >= end; i--)
                 {
-                    mGourmetListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+                    PlaceViewItem item = oldList.get(i);
+                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
                     {
-                        @Override
-                        public void onInformationClick(PlaceViewItem placeViewItem)
-                        {
-                            ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
-
-                            AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
-                        }
-                    });
-
-                    mGourmetListMapFragment.setPlaceViewItemList(list, true);
-
-                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
-                    break;
+                        Gourmet gourmet = item.getItem();
+                        districtName = gourmet.districtName;
+                        break;
+                    } else if (item.mType == PlaceViewItem.TYPE_SECTION)
+                    {
+                        districtName = item.getItem();
+                        break;
+                    }
                 }
             }
 
-            if (sortType == Constants.SortType.DEFAULT)
+            if (list != null && list.size() > 0)
             {
-                if (GourmetEventBannerManager.getInstance().getCount() > 0)
+                if (Util.isTextEmpty(districtName) == false)
                 {
-                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER//
-                        , GourmetEventBannerManager.getInstance().getList());
-                    list.add(0, placeViewItem);
+                    PlaceViewItem firstItem = list.get(0);
+                    if (firstItem.mType == PlaceViewItem.TYPE_SECTION)
+                    {
+                        String firstDistrictName = firstItem.getItem();
+                        if (districtName.equalsIgnoreCase(firstDistrictName))
+                        {
+                            list.remove(0);
+                        }
+                    }
+                }
+
+                mPlaceListAdapter.setSortType(sortType);
+                mPlaceListAdapter.addAll(list);
+
+                if (list.size() < Constants.PAGENATION_LIST_SIZE)
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
+                } else
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
+                }
+            } else
+            {
+                // 요청 온 데이터가 empty 일때 기존 리스트가 있으면 라스트 footer 재 생성
+                if (oldListSize > 0)
+                {
+                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
                 }
             }
 
-            ((GourmetListAdapter) mPlaceListAdapter).addAll(list, sortType);
-            mPlaceListAdapter.notifyDataSetChanged();
+            int size = getItemCount();
+            if (size == 0)
+            {
+                mPlaceListAdapter.notifyDataSetChanged();
+                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+            } else
+            {
+                // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
+                if (oldListSize == 0)
+                {
+                    ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
+
+                    if (sortType == Constants.SortType.DEFAULT && isBannerVisibility() == true)
+                    {
+                        if (GourmetEventBannerManager.getInstance().getCount() > 0)
+                        {
+                            PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
+                                GourmetEventBannerManager.getInstance().getList());
+                            mPlaceListAdapter.add(0, placeViewItem);
+                        }
+                    }
+                }
+
+                mPlaceListAdapter.setSortType(sortType);
+                mPlaceListAdapter.notifyDataSetChanged();
+            }
+        } else
+        {
+
+        }
+    }
+
+    @Override
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    {
+        mIsLoading = false;
+
+        if (mPlaceListAdapter == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        // 지도의 경우 무조건 전체 데이터를 가져옴으로 clear 후 진행되야 함
+        if (viewType == Constants.ViewType.MAP)
+        {
+            clearList();
+
+            if (list == null || list.size() == 0)
+            {
+                mPlaceListAdapter.notifyDataSetChanged();
+                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+
+            } else
+            {
+                setVisibility(fragmentManager, viewType, true);
+
+                mGourmetListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+                {
+                    @Override
+                    public void onInformationClick(PlaceViewItem placeViewItem)
+                    {
+                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+
+                        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
+                    }
+                });
+
+                mGourmetListMapFragment.setPlaceViewItemList(list, true);
+
+                ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
+            }
+        } else
+        {
         }
     }
 
@@ -195,7 +300,7 @@ public class GourmetListLayout extends PlaceListLayout
         return hasSalesPlace(mPlaceListAdapter.getAll());
     }
 
-    private boolean hasSalesPlace(List<PlaceViewItem> list)
+    protected boolean hasSalesPlace(List<PlaceViewItem> list)
     {
         if (list == null || list.size() == 0)
         {
@@ -217,14 +322,19 @@ public class GourmetListLayout extends PlaceListLayout
         return hasPlace;
     }
 
+    public int getMapItemSize()
+    {
+        return mGourmetListMapFragment != null ? mGourmetListMapFragment.getPlaceViewItemListSize() : 0;
+    }
+
     public void setGourmetCuration(GourmetCuration curation)
     {
         mGourmetCuration = curation;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                 Listener
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {
@@ -232,18 +342,17 @@ public class GourmetListLayout extends PlaceListLayout
         public void onClick(View view)
         {
             int position = mPlaceRecyclerView.getChildAdapterPosition(view);
-
             if (position < 0)
             {
                 ((OnEventListener) mOnEventListener).onPlaceClick(null);
                 return;
             }
 
-            PlaceViewItem gourmetViewItem = mPlaceListAdapter.getItem(position);
+            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
 
-            if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(gourmetViewItem);
+                ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
             }
         }
     };
@@ -253,12 +362,11 @@ public class GourmetListLayout extends PlaceListLayout
         @Override
         public void onClick(View view)
         {
-
             Integer index = (Integer) view.getTag(view.getId());
-
             if (index != null)
             {
                 EventBanner eventBanner = GourmetEventBannerManager.getInstance().getEventBanner(index);
+
                 ((OnEventListener) mOnEventListener).onEventBannerClick(eventBanner);
             }
         }

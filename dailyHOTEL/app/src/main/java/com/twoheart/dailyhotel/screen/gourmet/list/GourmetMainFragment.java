@@ -161,7 +161,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 searchMyLocation();
             } else
             {
-                curationCurrentFragment();
+                refreshCurrentFragment(true);
             }
         }
     }
@@ -199,18 +199,18 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 if (mGourmetCuration.getLocation() != null)
                 {
-                    refreshCurrentFragment(false);
+                    refreshCurrentFragment(true);
                 } else
                 {
                     DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
 
                     gourmetCurationOption.setSortType(SortType.DEFAULT);
-                    refreshCurrentFragment(false);
+                    refreshCurrentFragment(true);
                 }
             } else
             {
                 mGourmetCuration.setLocation(location);
-                refreshCurrentFragment(false);
+                refreshCurrentFragment(true);
             }
         }
     }
@@ -240,23 +240,6 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, saleTime, location, callByScreen);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-    }
-
-    private void curationCurrentFragment()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        GourmetListFragment gourmetListFragment = (GourmetListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-
-        if (gourmetListFragment != null)
-        {
-            GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
-
-            gourmetListFragment.curationList(mViewType, gourmetCurationOption);
-        }
     }
 
     @Override
@@ -321,7 +304,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
-            // stay는 현재 카테고리 상태를 저장한다.
+            // Gourmet은 카테고리가 없음.
         }
 
         @Override
@@ -443,7 +426,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 
-            curationCurrentFragment();
+            refreshCurrentFragment(false);
 
             unLockUI();
         }
@@ -620,7 +603,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 // 리스트 요청하면 됨.
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-                mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), new ArrayList<Category>(), null, mOnPlaceListFragmentListener);
+                mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), new ArrayList<Category>(), //
+                    null, mOnPlaceListFragmentListener);
             }
         }
 
@@ -702,7 +686,9 @@ public class GourmetMainFragment extends PlaceMainFragment
             return false;
         }
 
-        private Province searchLastRegion(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList)
+        private Province searchLastRegion(BaseActivity baseActivity, //
+                                          List<Province> provinceList, //
+                                          List<Area> areaList)
         {
             Province selectedProvince = null;
 
@@ -792,6 +778,16 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
+        public void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
+        {
+            if (page <= 1 && mGourmetCuration.getCurationOption().isDefaultFilter() == true)
+            {
+                ((GourmetCurationOption) mGourmetCuration.getCurationOption()).setCategoryCoderMap(categoryCodeMap);
+                ((GourmetCurationOption) mGourmetCuration.getCurationOption()).setCategorySequenceMap(categorySequenceMap);
+            }
+        }
+
+        @Override
         public void onEventBannerClick(EventBanner eventBanner)
         {
             if (isFinishing())
@@ -849,7 +845,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                 //                }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name, saleTime);
+                Intent intent = EventWebActivity.newInstance(mBaseActivity, //
+                    EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name, saleTime);
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
@@ -868,7 +865,10 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.setPlaceCuration(mGourmetCuration);
-                currentPlaceListFragment.refreshList(false);
+                currentPlaceListFragment.refreshList(true);
+            } else
+            {
+                placeListFragment.setVisibility(mViewType, false);
             }
         }
 
@@ -940,12 +940,18 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-            if (viewType == ViewType.MAP)
+            try
             {
-                recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
-            } else
+                if (viewType == ViewType.MAP)
+                {
+                    recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
+                } else
+                {
+                    recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST);
+                }
+            } catch (Exception e)
             {
-                recordAnalyticsGourmetList(AnalyticsManager.Screen.DAILYGOURMET_LIST);
+                // GA 수집시에 메모리 해지 에러는 버린다.
             }
         }
     };

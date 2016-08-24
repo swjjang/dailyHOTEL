@@ -386,7 +386,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        setLastStayParams(mGourmetCuration);
+        setLastGourmetParams(mGourmetCuration);
 
         super.requestUpdateResult();
     }
@@ -402,7 +402,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        setLastStayParams(mGourmetCuration);
+        setLastGourmetParams(mGourmetCuration);
 
         super.requestUpdateResultDelayed();
     }
@@ -421,7 +421,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         ((GourmetCurationNetworkController) mNetworkController).requestGourmetList(mLastParams);
     }
 
-    protected void setLastStayParams(GourmetCuration gourmetCuration)
+    protected void setLastGourmetParams(GourmetCuration gourmetCuration)
     {
         if (gourmetCuration == null)
         {
