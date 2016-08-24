@@ -67,7 +67,7 @@ public class StayListFragment extends PlaceListFragment
 
     protected BaseNetworkController getStayListNetworkController()
     {
-        return new StayListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        return new StayListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
     }
 
     protected int getLayoutResourceId()
@@ -205,11 +205,11 @@ public class StayListFragment extends PlaceListFragment
 
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
     {
-        ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         if (stayList == null || stayList.size() == 0)
         {
-            return stayViewItemList;
+            return placeViewItemList;
         }
 
         String previousRegion = null;
@@ -261,7 +261,7 @@ public class StayListFragment extends PlaceListFragment
                         hasDailyChoice = true;
 
                         PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                        stayViewItemList.add(section);
+                        placeViewItemList.add(section);
                     }
                 } else
                 {
@@ -270,17 +270,17 @@ public class StayListFragment extends PlaceListFragment
                         previousRegion = region;
 
                         PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                        stayViewItemList.add(section);
+                        placeViewItemList.add(section);
                     }
                 }
             }
 
             stay.entryPosition = entryPosition;
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
             entryPosition++;
         }
 
-        return stayViewItemList;
+        return placeViewItemList;
     }
 
     protected void onStayList(ArrayList<Stay> list, int page)
@@ -434,7 +434,7 @@ public class StayListFragment extends PlaceListFragment
         }
     };
 
-    private StayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
+    private StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onStayList(ArrayList<Stay> list, int page)

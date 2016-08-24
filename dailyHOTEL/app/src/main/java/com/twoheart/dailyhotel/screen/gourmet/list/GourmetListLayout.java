@@ -27,7 +27,6 @@ public class GourmetListLayout extends PlaceListLayout
 
     private GourmetCuration mGourmetCuration;
 
-
     public GourmetListLayout(Context context, OnEventListener mOnEventListener)
     {
         super(context, mOnEventListener);

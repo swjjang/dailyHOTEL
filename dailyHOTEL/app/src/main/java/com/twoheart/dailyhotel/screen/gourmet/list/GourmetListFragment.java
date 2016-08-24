@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -16,9 +17,13 @@ import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -29,14 +34,14 @@ import java.util.List;
 public class GourmetListFragment extends PlaceListFragment
 {
     private int mLoadMorePageIndex;
+    private int mGourmetCount;
+
     private GourmetCuration mGourmetCuration;
 
-    protected BaseActivity mBaseActivity;
-
     private GourmetListLayout mGourmetListLayout;
-    protected GourmetListNetworkController mNetworkController;
+    protected BaseNetworkController mNetworkController;
 
-    private int mGourmetCount;
+    protected BaseActivity mBaseActivity;
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -50,16 +55,31 @@ public class GourmetListFragment extends PlaceListFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
 
-        mGourmetListLayout = new GourmetListLayout(mBaseActivity, mEventListener);
+        mGourmetListLayout = getGourmetListLayout();
         mGourmetListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
-        mNetworkController = new GourmetListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
+        mNetworkController = getGourmetListNetworkController();
 
         mViewType = ViewType.LIST;
 
         mLoadMorePageIndex = 1;
 
-        return mGourmetListLayout.onCreateView(R.layout.fragment_gourmet_list, container);
+        return mGourmetListLayout.onCreateView(getLayoutResourceId(), container);
+    }
+
+    protected BaseNetworkController getGourmetListNetworkController()
+    {
+        return new GourmetListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
+    }
+
+    protected int getLayoutResourceId()
+    {
+        return R.layout.fragment_gourmet_list;
+    }
+
+    protected GourmetListLayout getGourmetListLayout()
+    {
+        return new GourmetListLayout(mBaseActivity, mEventListener);
     }
 
     @Override
@@ -86,12 +106,18 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void clearList()
     {
+        mGourmetCount = 0;
         mGourmetListLayout.clearList();
     }
 
     @Override
     public void refreshList(boolean isShowProgress)
     {
+        if (mViewType == null)
+        {
+            return;
+        }
+
         switch (mViewType)
         {
             case LIST:
@@ -105,9 +131,10 @@ public class GourmetListFragment extends PlaceListFragment
             case MAP:
                 refreshList(isShowProgress, 0);
                 break;
+
+            default:
+                break;
         }
-
-
     }
 
     public void addList(boolean isShowProgress)
@@ -115,12 +142,22 @@ public class GourmetListFragment extends PlaceListFragment
         refreshList(isShowProgress, mLoadMorePageIndex + 1);
     }
 
-    private void refreshList(boolean isShowProgress, int page)
+    protected void refreshList(boolean isShowProgress, int page)
     {
         // 더보기 시 uilock 걸지않음
         if (page <= 1)
         {
             lockUI(isShowProgress);
+        }
+
+        SaleTime saleTime = mGourmetCuration.getSaleTime();
+        Province province = mGourmetCuration.getProvince();
+
+        if (province == null || saleTime == null)
+        {
+            unLockUI();
+            Util.restartApp(mBaseActivity);
+            return;
         }
 
         if (mGourmetCuration == null || mGourmetCuration.getCurationOption() == null//
@@ -133,7 +170,7 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         GourmetParams params = (GourmetParams) mGourmetCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        mNetworkController.requestGourmetList(params);
+        ((GourmetListNetworkController) mNetworkController).requestGourmetList(params);
     }
 
     public boolean hasSalesPlace()
@@ -141,6 +178,7 @@ public class GourmetListFragment extends PlaceListFragment
         return mGourmetListLayout.hasSalesPlace();
     }
 
+    @Override
     public void setVisibility(ViewType viewType, boolean isCurrentPage)
     {
         mViewType = viewType;
@@ -201,6 +239,7 @@ public class GourmetListFragment extends PlaceListFragment
 
         for (Gourmet gourmet : gourmetList)
         {
+            // 지역순에만 section 존재함
             if (SortType.DEFAULT == sortType)
             {
                 String region = gourmet.districtName;
@@ -216,7 +255,7 @@ public class GourmetListFragment extends PlaceListFragment
                     {
                         hasDailyChoice = true;
 
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getString(R.string.label_dailychoice));
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
                         placeViewItemList.add(section);
                     }
                 } else
@@ -239,117 +278,87 @@ public class GourmetListFragment extends PlaceListFragment
         return placeViewItemList;
     }
 
+    protected void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, //
+                                 HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
+    {
+        if (isFinishing() == true)
+        {
+            unLockUI();
+            return;
+        }
+
+        // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
+        if (page <= 1)
+        {
+            mGourmetCount = 0;
+            mGourmetListLayout.clearList();
+
+            if (mGourmetCuration.getCurationOption().isDefaultFilter() == true)
+            {
+                ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetCategoryFilter(page, categoryCodeMap, categorySequenceMap);
+            }
+        }
+
+        int listSize = list == null ? 0 : list.size();
+        if (listSize > 0)
+        {
+            mLoadMorePageIndex = page;
+        }
+
+        mGourmetCount += listSize;
+
+        SortType sortType = mGourmetCuration.getCurationOption().getSortType();
+
+        ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
+
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                mGourmetListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+
+                int size = mGourmetListLayout.getItemCount();
+
+                if (size == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+
+                mEventListener.onShowActivityEmptyView(size == 0);
+                break;
+            }
+
+            case MAP:
+            {
+                mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+
+                int mapSize = mGourmetListLayout.getMapItemSize();
+                if (mapSize == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+
+                mEventListener.onShowActivityEmptyView(mapSize == 0);
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        unLockUI();
+        mGourmetListLayout.setSwipeRefreshing(false);
+    }
+
     @Override
     public int getPlaceCount()
     {
         return mGourmetCount;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private GourmetListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetListNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
-        {
-            String value = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyyMMdd");
-            DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(value);
-
-            if (isFinishing() == true)
-            {
-                unLockUI();
-                return;
-            }
-
-            // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
-            if (page <= 1)
-            {
-                mGourmetCount = 0;
-                mGourmetListLayout.clearList();
-
-                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true)
-                {
-                    ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetCategoryFilter(page, categoryCodeMap, categorySequenceMap);
-                }
-            }
-
-            int listSize = list == null ? 0 : list.size();
-            if (listSize > 0)
-            {
-                mLoadMorePageIndex = page;
-            }
-
-            mGourmetCount += listSize;
-
-            SortType sortType = mGourmetCuration.getCurationOption().getSortType();
-
-            ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
-
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    mGourmetListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
-
-                    int size = mGourmetListLayout.getItemCount();
-
-                    if (size == 0)
-                    {
-                        setVisibility(ViewType.GONE, true);
-                    }
-
-                    mEventListener.onShowActivityEmptyView(size == 0);
-                    break;
-                }
-
-                case MAP:
-                {
-                    mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
-
-                    int mapSize = mGourmetListLayout.getMapItemSize();
-                    if (mapSize == 0)
-                    {
-                        setVisibility(ViewType.GONE, true);
-                    }
-
-                    mEventListener.onShowActivityEmptyView(mapSize == 0);
-                    break;
-                }
-
-                default:
-                    break;
-            }
-
-            unLockUI();
-            mGourmetListLayout.setSwipeRefreshing(false);
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
-        {
-            GourmetListFragment.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            GourmetListFragment.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            GourmetListFragment.this.onErrorToastMessage(message);
-        }
-    };
+    /////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////   Listener   //////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
 
     private GourmetListLayout.OnEventListener mEventListener = new GourmetListLayout.OnEventListener()
     {
@@ -412,7 +421,54 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void finish()
         {
-            mBaseActivity.finish();
+            if (mBaseActivity != null)
+            {
+                mBaseActivity.finish();
+            }
+        }
+    };
+
+    private GourmetListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new GourmetListNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
+        {
+            String value = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyyMMdd");
+            DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(value);
+
+            GourmetListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetListFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            if (DEBUG == false && e != null)
+            {
+                Crashlytics.logException(e);
+            }
+
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.onRuntimeError("message : " + message);
         }
     };
 }
