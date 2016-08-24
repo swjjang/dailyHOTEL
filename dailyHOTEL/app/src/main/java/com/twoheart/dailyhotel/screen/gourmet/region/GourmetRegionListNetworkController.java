@@ -19,7 +19,7 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
 {
     private BaseActivity mBaseActivity;
 
-    private OnNetworkControllerListener mListener;
+    private OnNetworkControllerListener mOnNetworkControllerListener;
 
     public GourmetRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
     {
@@ -29,13 +29,13 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
         }
 
         mBaseActivity = baseActivity;
-        mListener = listener;
+        mOnNetworkControllerListener = listener;
     }
 
     @Override
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetRegionList(mBaseActivity.getNetworkTag(), mGourmetRegionListJsonResponseListener, mBaseActivity);
+        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetRegionList(mBaseActivity.getNetworkTag(), mGourmetRegionListJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -43,7 +43,7 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         @Override
@@ -73,16 +73,16 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
 
                     makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
 
-                    mListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
+                    mOnNetworkControllerListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
                 } else
                 {
                     String message = response.getString("msg");
 
-                    mListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
-                mListener.onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };

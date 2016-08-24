@@ -17,7 +17,8 @@ import org.json.JSONObject;
  */
 public class GourmetCurationNetworkController extends BaseNetworkController
 {
-    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener {
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
+    {
         void onGourmetCount(String url, int gourmetCount);
     }
 

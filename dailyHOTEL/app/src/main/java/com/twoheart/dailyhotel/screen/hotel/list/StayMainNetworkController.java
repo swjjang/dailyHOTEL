@@ -34,7 +34,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
 
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, mRegionListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener);
     }
 
 

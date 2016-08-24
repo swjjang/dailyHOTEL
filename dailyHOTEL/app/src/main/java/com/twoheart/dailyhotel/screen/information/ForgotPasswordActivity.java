@@ -115,7 +115,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
 
         lockUI();
-        DailyNetworkAPI.getInstance(this).requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener);
     }
 
     @Override
@@ -132,12 +132,6 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
     private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -181,18 +175,17 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
             {
                 unLockUI();
             }
+        }
 
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            ForgotPasswordActivity.this.onErrorResponse(volleyError);
         }
     };
 
     private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -207,7 +200,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                         DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     } else
                     {
-                        DailyNetworkAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);
+                        DailyNetworkAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener);
                     }
                 } else
                 {
@@ -226,6 +219,12 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                 onError(e);
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            ForgotPasswordActivity.this.onErrorResponse(volleyError);
         }
     };
 }

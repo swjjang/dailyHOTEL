@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -29,25 +31,55 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     private Map<String, String> mParameters;
     private boolean mIsUsedAccept;
 
-    public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
+    public DailyHotelRequest(Object tag, int method, String url, Map<String, String> urlparameters, String parameters, ErrorListener errorListener)
     {
-        this(tag, method, url, errorListener);
+        this(method, getUrlDecoderEx(url, urlparameters) + parameters, errorListener);
+
+        setTag(tag);
+    }
+
+    public DailyHotelRequest(Object tag, int method, String url, String parameters, ErrorListener errorListener)
+    {
+        this(method, getUrlDecoderEx(url) + parameters, errorListener);
+
+        setTag(tag);
+    }
+
+    public DailyHotelRequest(Object tag, int method, String url, Map<String, String> urlparameters, Map<String, String> parameters, ErrorListener errorListener)
+    {
+        this(method, getUrlDecoderEx(url, urlparameters), errorListener);
 
         mParameters = parameters;
 
-        mIsUsedAccept = false;
+        setTag(tag);
     }
 
-    private DailyHotelRequest(Object tag, int method, String url, ErrorListener listener)
+    public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
     {
-        super(method, getUrlDecoderEx(url), listener);
+        this(method, getUrlDecoderEx(url), errorListener);
+
+        mParameters = parameters;
+
+        setTag(tag);
+    }
+
+    public DailyHotelRequest(Object tag, int method, String url, ErrorListener listener)
+    {
+        this(method, getUrlDecoderEx(url), listener);
+
+        setTag(tag);
+    }
+
+    private DailyHotelRequest(int method, String url, ErrorListener listener)
+    {
+        super(method, url, listener);
 
         //        if (DEBUG == true)
         //        {
         //            ExLog.d("Request Url : " + getUrl());
         //        }
 
-        setTag(tag);
+        mIsUsedAccept = false;
 
         setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
@@ -93,6 +125,40 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         }
 
         return encodeUrl.toString();
+    }
+
+    public static String getUrlDecoderEx(String url, Map<String, String> urlparameters)
+    {
+        if (Constants.UNENCRYPTED_URL == true)
+        {
+            return url;
+        }
+
+        if (urlparameters == null || urlparameters.size() == 0)
+        {
+            return getUrlDecoderEx(url);
+        } else
+        {
+            StringBuilder decodeUrl = new StringBuilder(getUrlDecoderEx(url));
+
+            ArrayList<String> keyArrayList = new ArrayList<>(urlparameters.keySet());
+
+            for (String key : keyArrayList)
+            {
+                String value = urlparameters.get(key);
+
+                if (Util.isTextEmpty(key, value) == false)
+                {
+                    int startIndex = decodeUrl.indexOf(key);
+                    decodeUrl.replace(startIndex, startIndex + key.length(), value);
+                } else
+                {
+                    throw new InvalidParameterException("Invalid url parameter : key : " + key + ", value : " + value);
+                }
+            }
+
+            return decodeUrl.toString();
+        }
     }
 
     public static String getUrlDecoderEx(String url)

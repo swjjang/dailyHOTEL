@@ -264,6 +264,7 @@
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_btn_text_input_other_phonenumber">다른 번호 입력</string>
     <string name="dialog_btn_text_continue">계속 진행</string>
+    <string name="dialog_btn_login_for_benefit">로그인하고 혜택받기</string>
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소할까요?</string>
     <string name="dialog_msg_delete_register_creditcard">등록하신 결제카드를 삭제할까요?</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 다시 시작합니다.</string>
@@ -873,4 +874,6 @@
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 숙소를 확인해주세요.</string>
     <string name="message_gourmet_detail_changed_price">업체 사정으로 해당 상품의 요금이 변동되었습니다.\n상품 금액을 한번 더 확인해주세요.</string>
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
+
+    <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
 </resources>

@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.network.request;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -18,16 +17,37 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 {
     private DailyHotelJsonResponseListener mListener;
 
-    public DailyHotelJsonRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener, ErrorListener errorListener)
+    public DailyHotelJsonRequest(Object tag, int method, String url, Map<String, String> urlparameters, String parameters, DailyHotelJsonResponseListener listener)
     {
-        super(object, method, url, parameters, errorListener);
+        super(tag, method, url, urlparameters, parameters, listener);
 
         mListener = listener;
     }
 
-    public DailyHotelJsonRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener)
+    public DailyHotelJsonRequest(Object tag, int method, String url, Map<String, String> urlparameters, Map<String, String> parameters, DailyHotelJsonResponseListener listener)
     {
-        super(object, method, url, parameters, listener);
+        super(tag, method, url, urlparameters, listener);
+
+        mListener = listener;
+    }
+
+    public DailyHotelJsonRequest(Object tag, int method, String url, String parameters, DailyHotelJsonResponseListener listener)
+    {
+        super(tag, method, url, parameters, listener);
+
+        mListener = listener;
+    }
+
+    public DailyHotelJsonRequest(Object tag, int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener)
+    {
+        super(tag, method, url, parameters, listener);
+
+        mListener = listener;
+    }
+
+    public DailyHotelJsonRequest(Object tag, int method, String url, DailyHotelJsonResponseListener listener)
+    {
+        super(tag, method, url, listener);
 
         mListener = listener;
     }

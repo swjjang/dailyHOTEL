@@ -337,6 +337,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.doBooking();
     }
 
+    @Override
+    protected void downloadCoupon()
+    {
+
+    }
+
     private void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
@@ -501,7 +507,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == false)
             {
-                startLoginActivity();
+                startLoginActivity(CODE_REQUEST_ACTIVITY_LOGIN);
             } else
             {
                 lockUI();
@@ -517,6 +523,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         public void doBooking()
         {
             doBooking(mSelectedTicketInformation);
+        }
+
+        @Override
+        public void downloadCoupon()
+        {
+
         }
 
         @Override

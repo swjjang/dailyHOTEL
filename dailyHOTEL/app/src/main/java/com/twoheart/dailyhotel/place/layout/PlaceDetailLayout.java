@@ -101,6 +101,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void onCalendarClick();
 
         void doBooking();
+
+        void downloadCoupon();
     }
 
     protected abstract String getProductTypeTitle();

@@ -51,7 +51,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
             params.put("recommendation_code", recommender);
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener, mUserUpdateFacebookJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

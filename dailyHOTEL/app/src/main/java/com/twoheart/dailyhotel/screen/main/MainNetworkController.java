@@ -90,7 +90,7 @@ public class MainNetworkController extends BaseNetworkController
                     ExLog.d(e.toString());
                 }
             }
-        }, null);
+        });
     }
 
     protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime)
@@ -110,7 +110,7 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestGourmetIsExistRating()
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetIsExistRating(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener, null);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetIsExistRating(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener);
     }
 
     public void registerNotificationId(final String registrationId, String userIndex)
@@ -148,12 +148,12 @@ public class MainNetworkController extends BaseNetworkController
         int uid = DailyPreference.getInstance(mContext).getNotificationUid();
         if (uid < 0)
         {
-            DailyNetworkAPI.getInstance(mContext).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener, null);
+            DailyNetworkAPI.getInstance(mContext).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener);
         } else
         {
             if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(mContext).getGCMRegistrationId()) == false)
             {
-                DailyNetworkAPI.getInstance(mContext).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, null);
+                DailyNetworkAPI.getInstance(mContext).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener);
             }
         }
     }
@@ -323,12 +323,6 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -354,16 +348,17 @@ public class MainNetworkController extends BaseNetworkController
                 ExLog.d(e.toString());
             }
         }
-    };
 
-    private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
 
         }
 
+    };
+
+    private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -391,6 +386,12 @@ public class MainNetworkController extends BaseNetworkController
             {
                 ExLog.d(e.toString());
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
         }
     };
 
@@ -428,7 +429,7 @@ public class MainNetworkController extends BaseNetworkController
                     DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
 
                     // 호텔 평가요청
-                    DailyNetworkAPI.getInstance(mContext).requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
+                    DailyNetworkAPI.getInstance(mContext).requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener);
                 } else
                 {
                     mOnNetworkControllerListener.onError(null);

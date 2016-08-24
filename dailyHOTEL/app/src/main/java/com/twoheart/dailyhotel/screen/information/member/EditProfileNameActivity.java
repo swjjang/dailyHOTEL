@@ -174,14 +174,14 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileNameActivity.this).getUserType()) == true)
                 {
                     Map<String, String> params = Collections.singletonMap("name", name);
-                    DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener);
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
                     params.put("user_idx", mUserIndex);
                     params.put("user_name", name);
 
-                    DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
                 }
                 break;
         }
@@ -201,12 +201,6 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
     private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -264,6 +258,12 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            EditProfileNameActivity.this.onErrorResponse(volleyError);
         }
     };
 

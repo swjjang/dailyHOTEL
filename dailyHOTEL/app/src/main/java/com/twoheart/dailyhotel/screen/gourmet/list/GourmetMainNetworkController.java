@@ -36,7 +36,7 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
     @Override
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, mRegionListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

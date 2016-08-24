@@ -27,7 +27,17 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
     public void requestStayDetailInformation(String day, int nights, int index)
     {
         DailyNetworkAPI.getInstance(mContext).requestHotelDetailInformation(mNetworkTag, index, //
-            day, nights, mHotelDetailInformationJsonResponseListener, mHotelDetailInformationJsonResponseListener);
+            day, nights, mHotelDetailInformationJsonResponseListener);
+    }
+
+    public void requestHasCoupon()
+    {
+
+    }
+
+    public void requestDownloadCoupon(String day, int nights, int index)
+    {
+        //        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon();
     }
 
     private DailyHotelJsonResponseListener mHotelDetailInformationJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -94,6 +104,36 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                     Crashlytics.log(url);
                 }
 
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDownloadCouponJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
+            } catch (Exception e)
+            {
                 mOnNetworkControllerListener.onError(e);
             }
         }

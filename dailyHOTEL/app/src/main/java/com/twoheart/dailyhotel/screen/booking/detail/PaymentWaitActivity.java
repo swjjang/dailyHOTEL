@@ -178,7 +178,7 @@ public class PaymentWaitActivity extends BaseActivity
                 placeInformationView.setText(R.string.actionbar_title_hoteldetailinfo_activity);
                 placeNameView.setText(R.string.label_receipt_hotelname);
 
-                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationJsonResponseListener);
                 break;
             }
 
@@ -187,7 +187,7 @@ public class PaymentWaitActivity extends BaseActivity
                 placeInformationView.setText(R.string.label_restaurant_information);
                 placeNameView.setText(R.string.label_receipt_restaurantname);
 
-                DailyNetworkAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener);
                 break;
             }
         }
@@ -343,12 +343,6 @@ public class PaymentWaitActivity extends BaseActivity
     private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -376,16 +370,16 @@ public class PaymentWaitActivity extends BaseActivity
                 unLockUI();
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            PaymentWaitActivity.this.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -413,6 +407,12 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            PaymentWaitActivity.this.onErrorResponse(volleyError);
         }
     };
 }

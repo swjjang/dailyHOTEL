@@ -28,7 +28,7 @@ public class CouponHistoryNetworkController extends BaseNetworkController
 
     public void requestCouponHistoryList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryJsonResponseListener, mCouponHistoryJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryJsonResponseListener);
     }
 
     public CouponHistoryNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)

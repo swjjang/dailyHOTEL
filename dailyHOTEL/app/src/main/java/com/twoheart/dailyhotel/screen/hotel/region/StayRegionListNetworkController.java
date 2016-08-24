@@ -34,17 +34,11 @@ public class StayRegionListNetworkController extends PlaceRegionListNetworkContr
 
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance(mBaseActivity).requestHotelRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListJsonResponseListener, mBaseActivity);
+        DailyNetworkAPI.getInstance(mBaseActivity).requestHotelRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -82,6 +76,12 @@ public class StayRegionListNetworkController extends PlaceRegionListNetworkContr
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }
