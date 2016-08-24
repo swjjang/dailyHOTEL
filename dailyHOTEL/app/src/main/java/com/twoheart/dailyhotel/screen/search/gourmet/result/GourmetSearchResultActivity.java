@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -659,7 +660,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                     if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
-                        GourmetSearchResultListAdapter gourmetListAdapter = (GourmetSearchResultListAdapter) recyclerView.getAdapter();
+                        GourmetListAdapter gourmetListAdapter = (GourmetListAdapter) recyclerView.getAdapter();
 
                         if (gourmetListAdapter != null)
                         {

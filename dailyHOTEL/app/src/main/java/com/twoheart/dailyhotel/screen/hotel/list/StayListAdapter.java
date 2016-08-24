@@ -74,7 +74,7 @@ public class StayListAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
-                return new HoltelViewHolder(view);
+                return new HotelViewHolder(view);
             }
 
             case PlaceViewItem.TYPE_EVENT_BANNER:
@@ -115,7 +115,7 @@ public class StayListAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((HoltelViewHolder) holder, item);
+                onBindViewHolder((HotelViewHolder) holder, item);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -184,7 +184,7 @@ public class StayListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Stay stay = placeViewItem.getItem();
 
@@ -279,7 +279,7 @@ public class StayListAdapter extends PlaceListAdapter
         }
     }
 
-    private class HoltelViewHolder extends RecyclerView.ViewHolder
+    private class HotelViewHolder extends RecyclerView.ViewHolder
     {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView hotelImageView;
@@ -295,7 +295,7 @@ public class StayListAdapter extends PlaceListAdapter
         TextView distanceTextView;
         View dBenefitLayout;
 
-        public HoltelViewHolder(View itemView)
+        public HotelViewHolder(View itemView)
         {
             super(itemView);
 

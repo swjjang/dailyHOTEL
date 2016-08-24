@@ -23,8 +23,8 @@ import java.util.List;
 
 public class GourmetListLayout extends PlaceListLayout
 {
-    private GourmetListMapFragment mGourmetListMapFragment;
-    private GourmetCuration mGourmetCuration;
+    protected GourmetListMapFragment mGourmetListMapFragment;
+    protected GourmetCuration mGourmetCuration;
 
     public GourmetListLayout(Context context, OnEventListener eventListener)
     {

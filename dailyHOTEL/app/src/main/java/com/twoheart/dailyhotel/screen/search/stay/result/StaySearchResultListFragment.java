@@ -26,6 +26,12 @@ public class StaySearchResultListFragment extends StayListFragment
     }
 
     @Override
+    protected BaseNetworkController getStayListNetworkController()
+    {
+        return new StaySearchResultListNetworkController(mBaseActivity, mNetworkTag, onNetworkControllerListener);
+    }
+
+    @Override
     protected int getLayoutResourceId()
     {
         return R.layout.fragment_stay_search_result_list;
@@ -35,12 +41,6 @@ public class StaySearchResultListFragment extends StayListFragment
     protected StayListLayout getStayListLayout()
     {
         return new StaySearchResultListLayout(mBaseActivity, mEventListener);
-    }
-
-    @Override
-    protected BaseNetworkController getStayListNetworkController()
-    {
-        return new StaySearchResultListNetworkController(mBaseActivity, mNetworkTag, onNetworkControllerListener);
     }
 
     @Override
@@ -82,19 +82,19 @@ public class StaySearchResultListFragment extends StayListFragment
     @Override
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
     {
-        ArrayList<PlaceViewItem> stayViewItemList = new ArrayList<>();
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         if (stayList == null || stayList.size() == 0)
         {
-            return stayViewItemList;
+            return placeViewItemList;
         }
 
         for (Stay stay : stayList)
         {
-            stayViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
         }
 
-        return stayViewItemList;
+        return placeViewItemList;
     }
 
     public void setIsDeepLink(boolean isDeepLink)

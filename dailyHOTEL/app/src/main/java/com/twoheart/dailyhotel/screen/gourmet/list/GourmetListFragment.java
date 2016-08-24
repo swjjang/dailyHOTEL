@@ -33,12 +33,12 @@ import java.util.List;
 
 public class GourmetListFragment extends PlaceListFragment
 {
-    private int mLoadMorePageIndex;
-    private int mGourmetCount;
+    protected int mLoadMorePageIndex;
+    protected int mGourmetCount;
 
-    private GourmetCuration mGourmetCuration;
+    protected GourmetCuration mGourmetCuration;
 
-    private GourmetListLayout mGourmetListLayout;
+    protected GourmetListLayout mGourmetListLayout;
     protected BaseNetworkController mNetworkController;
 
     protected BaseActivity mBaseActivity;
@@ -198,7 +198,7 @@ public class GourmetListFragment extends PlaceListFragment
         mGourmetListLayout.setScrollListTop();
     }
 
-    private ArrayList<PlaceViewItem> makeSectionGourmetList(List<Gourmet> gourmetList, SortType sortType)
+    protected ArrayList<PlaceViewItem> makeSectionGourmetList(List<Gourmet> gourmetList, SortType sortType)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
@@ -360,7 +360,7 @@ public class GourmetListFragment extends PlaceListFragment
     /////////////////////////////   Listener   //////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
 
-    private GourmetListLayout.OnEventListener mEventListener = new GourmetListLayout.OnEventListener()
+    protected GourmetListLayout.OnEventListener mEventListener = new GourmetListLayout.OnEventListener()
     {
         @Override
         public void onPlaceClick(PlaceViewItem placeViewItem)
