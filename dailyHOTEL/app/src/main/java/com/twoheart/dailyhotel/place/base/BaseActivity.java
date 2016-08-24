@@ -336,16 +336,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // MainActivity에서 종료시 이슈가 있어 MainActivity에서는 작동하지 않도록 수정
-        if (this instanceof MainActivity == false)
-        {
-            try
-            {
-                recursiveRecycle(getWindow().getDecorView());
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
+        // 이제는 사용하지 않아도 될까해서 삭제함
+//        if (this instanceof MainActivity == false)
+//        {
+//            try
+//            {
+//                recursiveRecycle(getWindow().getDecorView());
+//            } catch (Exception e)
+//            {
+//                ExLog.e(e.toString());
+//            }
+//        }
 
         super.onDestroy();
     }
