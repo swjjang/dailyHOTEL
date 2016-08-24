@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailySwitchCompat;
@@ -400,29 +401,36 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     private void recordAnalyticsSearch(SaleTime saleTime, int nights, PlaceType placeType)
     {
-        SaleTime checkInSaleTime = saleTime;
-        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
-
-        String placeValueType = null;
-
-        Map<String, String> params = new HashMap<>();
-
-        switch (placeType)
+        try
         {
-            case HOTEL:
-                params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                placeValueType = AnalyticsManager.ValueType.HOTEL;
-                break;
+            SaleTime checkInSaleTime = saleTime;
+            SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
 
-            case FNB:
-                params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                placeValueType = AnalyticsManager.ValueType.GOURMET;
-                break;
+            String placeValueType = null;
+
+            Map<String, String> params = new HashMap<>();
+
+            switch (placeType)
+            {
+                case HOTEL:
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    placeValueType = AnalyticsManager.ValueType.HOTEL;
+                    break;
+
+                case FNB:
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    placeValueType = AnalyticsManager.ValueType.GOURMET;
+                    break;
+            }
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeValueType);
+            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeValueType);
+
+            AnalyticsManager.getInstance(SearchActivity.this).recordScreen(AnalyticsManager.Screen.SEARCH_MAIN, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeValueType);
-        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeValueType);
 
-        AnalyticsManager.getInstance(SearchActivity.this).recordScreen(AnalyticsManager.Screen.SEARCH_MAIN, params);
     }
 }
