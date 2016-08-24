@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class GourmetListAdapter extends PlaceListAdapter
 {
@@ -46,12 +45,6 @@ public class GourmetListAdapter extends PlaceListAdapter
         mEventBannerHandler = new EventBannerHandler(this);
 
         setSortType(Constants.SortType.DEFAULT);
-    }
-
-    public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
-    {
-        setAll(collection);
-        setSortType(sortType);
     }
 
     @Override
@@ -104,6 +97,12 @@ public class GourmetListAdapter extends PlaceListAdapter
                 return new FooterViewHolder(view);
             }
 
+            case PlaceViewItem.TYPE_LOADING_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
+
+                return new FooterViewHolder(view);
+            }
         }
 
         return null;
@@ -195,14 +194,13 @@ public class GourmetListAdapter extends PlaceListAdapter
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-
-        String strPrice = comma.format(gourmet.price);
-        String strDiscount = comma.format(gourmet.discountPrice);
+        String strPrice = Util.getPriceFormat(mContext, gourmet.price, false);
+        String strDiscount = Util.getPriceFormat(mContext, gourmet.discountPrice, false);
 
         String address = gourmet.addressSummary;
 
-        if (address.indexOf('|') >= 0)
+        int barIndex = address.indexOf('|');
+        if (barIndex >= 0)
         {
             address = address.replace(" | ", "ㅣ");
         } else if (address.indexOf('l') >= 0)

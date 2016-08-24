@@ -33,7 +33,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
         super(context, networkTag, listener);
     }
 
-    public void requestGourmetList(GourmetSearchParams params)
+    public void requestGourmetSearchList(GourmetSearchParams params)
     {
         if (params == null)
         {
