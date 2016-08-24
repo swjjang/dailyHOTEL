@@ -55,6 +55,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void doBooking();
 
+    protected abstract void downloadCoupon();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -208,6 +210,17 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     if (resultCode == RESULT_OK)
                     {
                         doBooking();
+                    }
+                    break;
+                }
+
+                case CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON:
+                {
+                    mDontReloadAtOnResume = true;
+
+                    if (resultCode == RESULT_OK)
+                    {
+                        downloadCoupon();
                     }
                     break;
                 }

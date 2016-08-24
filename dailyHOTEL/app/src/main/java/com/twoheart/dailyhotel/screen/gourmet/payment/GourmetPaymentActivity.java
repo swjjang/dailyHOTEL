@@ -179,7 +179,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void requestUserInformationForPayment()
     {
-        DailyNetworkAPI.getInstance(this).requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance(this).requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         DailyNetworkAPI.getInstance(this).requestGourmetPaymentInformation(mNetworkTag, //
             ((GourmetPaymentInformation) paymentInformation).getTicketInformation().index, //
-            mGourmetPaymentInformationJsonResponseListener, this);
+            mGourmetPaymentInformationJsonResponseListener);
     }
 
     @Override
@@ -434,7 +434,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                             lockUI();
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
+                            DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -564,7 +564,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     lockUI();
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
+                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
 
                     AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -771,7 +771,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             , gourmetPaymentInformation.getTicketInformation().index//
             , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
             , gourmetPaymentInformation.ticketCount//
-            , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketJsonResponseListener, this);
+            , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketJsonResponseListener);
     }
 
     private void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
@@ -1266,7 +1266,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 // 2. 화면 정보 얻기
                 DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag//
                     , gourmetPaymentInformation.getTicketInformation().index//
-                    , mGourmetPaymentInformationJsonResponseListener, GourmetPaymentActivity.this);
+                    , mGourmetPaymentInformationJsonResponseListener);
             } catch (Exception e)
             {
                 onError(e);
@@ -1276,12 +1276,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private DailyHotelJsonResponseListener mGourmetPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1351,7 +1345,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     if (gourmetPaymentInformation.ticketTime == 0)
                     {
                         // 방문시간을 선택하지 않은 경우
-                        DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
+                        DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
                     } else
                     {
                         requestValidateTicketPayment(gourmetPaymentInformation, mCheckInSaleTime);
@@ -1371,16 +1365,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetPaymentActivity.this.onErrorResponse(volleyError);
+        }
     };
 
     protected DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1410,7 +1404,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag, //
                         ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().index, //
-                        mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
+                        mFinalCheckPayJsonResponseListener);
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"));
@@ -1419,6 +1413,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetPaymentActivity.this.onErrorResponse(volleyError);
         }
     };
 
@@ -1538,12 +1538,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mCheckAvailableTicketJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -1556,7 +1550,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 if (isOnSale == true && msgCode == 0)
                 {
-                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
+                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"));
@@ -1566,16 +1560,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetPaymentActivity.this.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1631,6 +1625,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetPaymentActivity.this.onErrorResponse(volleyError);
         }
     };
 }

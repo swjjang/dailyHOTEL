@@ -169,7 +169,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 }
 
                 Map<String, String> params = Collections.singletonMap("pw", password);
-                DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener);
                 break;
         }
     }
@@ -216,12 +216,6 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
 
     private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -281,6 +275,12 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            EditProfilePasswordActivity.this.onErrorResponse(volleyError);
         }
     };
 }

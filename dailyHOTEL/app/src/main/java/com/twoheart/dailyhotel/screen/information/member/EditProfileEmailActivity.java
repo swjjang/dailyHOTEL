@@ -170,7 +170,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 params.put("user_idx", mUserIndex);
                 params.put("user_email", email);
 
-                DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
                 break;
         }
     }
@@ -189,12 +189,6 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
     private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -252,6 +246,12 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            EditProfileEmailActivity.this.onErrorResponse(volleyError);
         }
     };
 }

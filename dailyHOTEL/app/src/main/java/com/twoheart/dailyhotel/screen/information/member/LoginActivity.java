@@ -56,7 +56,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener, View.OnFocusChangeListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
     private EditText mEmailEditText, mPasswordEditText;
@@ -252,7 +252,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
     }
 
     private void registerKakaokUser(long id)
@@ -285,7 +285,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
     }
 
     @Override
@@ -401,7 +401,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         mStoreParams.putAll(params);
 
-        DailyNetworkAPI.getInstance(this).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener);
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
@@ -494,23 +494,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerNotificationId(final String registrationId, String userIndex)
     {
-        ErrorListener errorListener = new ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError arg0)
-            {
-                loginAndFinish();
-            }
-        };
-
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-
-            }
-
             @Override
             public void onResponse(String url, JSONObject response)
             {
@@ -534,15 +519,21 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     loginAndFinish();
                 }
             }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                loginAndFinish();
+            }
         };
 
         int uid = DailyPreference.getInstance(LoginActivity.this).getNotificationUid();
         if (uid < 0)
         {
-            DailyNetworkAPI.getInstance(this).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener, errorListener);
+            DailyNetworkAPI.getInstance(this).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener);
         } else
         {
-            DailyNetworkAPI.getInstance(this).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, errorListener);
+            DailyNetworkAPI.getInstance(this).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener);
         }
     }
 
@@ -756,11 +747,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
                         } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                         }
 
@@ -798,12 +789,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -849,16 +834,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 ExLog.d(e.toString());
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            LoginActivity.this.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mSocialUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -915,6 +900,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 unLockUI();
                 ExLog.d(e.toString());
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            LoginActivity.this.onErrorResponse(volleyError);
         }
     };
 

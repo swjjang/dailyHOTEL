@@ -237,7 +237,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         lockUI();
 
         // 호텔 정보를 가져온다.
-        DailyNetworkAPI.getInstance(this).requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,12 +246,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -277,6 +271,12 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelBookingDetailTabActivity.this.onErrorResponse(volleyError);
         }
     };
 }

@@ -237,6 +237,28 @@ public class StayDetailListAdapter extends BaseAdapter
             });
         }
 
+        View couponLayout = view.findViewById(R.id.couponLayout);
+
+        if (stayDetail.hasCoupon == false)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+
+            View downloadCouponView = couponLayout.findViewById(R.id.downloadCouponView);
+
+            downloadCouponView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.downloadCoupon();
+                }
+            });
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
         // 만족도

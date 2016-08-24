@@ -86,7 +86,7 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance(this).requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
+            DailyNetworkAPI.getInstance(this).requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener);
         }
     }
 
@@ -306,12 +306,6 @@ public class IssuingReceiptActivity extends BaseActivity
     private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             if (isFinishing() == true)
@@ -372,6 +366,12 @@ public class IssuingReceiptActivity extends BaseActivity
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            IssuingReceiptActivity.this.onErrorResponse(volleyError);
         }
     };
 }

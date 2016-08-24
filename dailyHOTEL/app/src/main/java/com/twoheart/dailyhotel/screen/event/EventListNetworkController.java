@@ -33,7 +33,7 @@ public class EventListNetworkController extends BaseNetworkController
 
     public void requestEventList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, mDailyEventListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListJsonResponseListener);
     }
 
     public void requestEventPageUrl(Event event)
@@ -48,7 +48,7 @@ public class EventListNetworkController extends BaseNetworkController
             store = "skt";
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener, mDailyEventListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

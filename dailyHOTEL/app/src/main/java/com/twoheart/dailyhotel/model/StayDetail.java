@@ -14,6 +14,7 @@ public class StayDetail extends PlaceDetail
     private ArrayList<RoomInformation> mSaleRoomList;
     //
     public String categoryCode;
+    public boolean hasCoupon;
 
     public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount)
     {
