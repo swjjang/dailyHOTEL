@@ -17,6 +17,8 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
     public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
     {
         void onStaytDetailInformation(JSONObject dataJSONObject);
+
+        void onHasCoupon(boolean hasCoupon);
     }
 
     public StayDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -24,20 +26,15 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestStayDetailInformation(String day, int nights, int index)
+    public void requestStayDetailInformation(int placeIndex, String day, int nights)
     {
-        DailyNetworkAPI.getInstance(mContext).requestHotelDetailInformation(mNetworkTag, index, //
+        DailyNetworkAPI.getInstance(mContext).requestHotelDetailInformation(mNetworkTag, placeIndex, //
             day, nights, mHotelDetailInformationJsonResponseListener);
     }
 
-    public void requestHasCoupon()
+    public void requestHasCoupon(int placeIndex, String date, int nights)
     {
-
-    }
-
-    public void requestDownloadCoupon(String day, int nights, int index)
-    {
-        //        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon();
+        DailyNetworkAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, nights, mHasCouponJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mHotelDetailInformationJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -115,7 +112,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mDownloadCouponJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHasCouponJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -126,7 +123,10 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
 
                 if (msgCode == 100)
                 {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    boolean hasCoupon = dataJSONObject.getBoolean("existCoupons");
 
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(hasCoupon);
                 } else
                 {
                     String message = response.getString("msg");
@@ -134,14 +134,14 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                 }
             } catch (Exception e)
             {
-                mOnNetworkControllerListener.onError(e);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
             }
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
         }
     };
 }

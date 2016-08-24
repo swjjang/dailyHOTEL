@@ -219,6 +219,17 @@ public class EventWebActivity extends WebViewActivity implements Constants
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mSaleTime == null)
+        {
+            Util.restartApp(this);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
