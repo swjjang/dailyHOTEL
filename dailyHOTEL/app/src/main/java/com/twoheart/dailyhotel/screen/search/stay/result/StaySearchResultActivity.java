@@ -252,6 +252,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
 
+            if(intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+            {
+                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+            }
+
             mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
         {
@@ -263,11 +268,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
-
-            if(intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
-            {
-                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
-            }
 
             location = new Location((String) null);
             location.setLatitude(latLng.latitude);

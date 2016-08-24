@@ -109,10 +109,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                 if(PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
                 {
-                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-                } else if(PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
-                {
-                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
+                    callByScreen = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
                 }
 
                 startAroundSearchResult(mBaseActivity, mGourmetCuration.getSaleTime(), location, callByScreen);
