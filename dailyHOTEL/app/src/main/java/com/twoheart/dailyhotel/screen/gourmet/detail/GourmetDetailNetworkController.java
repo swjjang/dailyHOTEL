@@ -28,7 +28,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
     public void requestGourmetDetailInformation(String day, int index)
     {
         DailyNetworkAPI.getInstance(mContext).requestGourmetDetailInformation(mNetworkTag, //
-            index, day, mGourmetDetailJsonResponseListener, mGourmetDetailJsonResponseListener);
+            index, day, mGourmetDetailJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()

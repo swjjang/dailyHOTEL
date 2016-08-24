@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.information.bonus;
 
 import android.content.Context;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -38,7 +37,7 @@ public class BonusNetworkController extends BaseNetworkController
 
     public void requestBonus()
     {
-        DailyNetworkAPI.getInstance(mContext).requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, mErrorListener);
+        DailyNetworkAPI.getInstance(mContext).requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,12 +46,6 @@ public class BonusNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mUserBonusListResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -80,6 +73,12 @@ public class BonusNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 
@@ -109,7 +108,7 @@ public class BonusNetworkController extends BaseNetworkController
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
 
                     // 적립금 목록 요청.
-                    DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListResponseListener, mErrorListener);
+                    DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListResponseListener);
                 } else
                 {
 
@@ -190,10 +189,7 @@ public class BonusNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
-    };
 
-    private Response.ErrorListener mErrorListener = new Response.ErrorListener()
-    {
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {

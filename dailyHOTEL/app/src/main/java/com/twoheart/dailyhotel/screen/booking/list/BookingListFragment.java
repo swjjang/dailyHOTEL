@@ -187,7 +187,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener);
         }
     }
 
@@ -344,11 +344,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     switch (booking.placeType)
                     {
                         case HOTEL:
-                            DailyNetworkAPI.getInstance(baseActivity).requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener);
                             break;
 
                         case FNB:
-                            DailyNetworkAPI.getInstance(baseActivity).requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener);
                             break;
                     }
 
@@ -365,12 +365,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
     private DailyHotelJsonResponseListener mReservationListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -432,6 +426,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            baseActivity.onErrorResponse(volleyError);
         }
 
         private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws JSONException
@@ -508,12 +515,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -527,23 +528,30 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 mCurrentTime = response.getLong("currentDateTime");
 
-                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
             } catch (Exception e)
             {
                 onError(e);
                 unLockUI();
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            baseActivity.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mReservationHiddenJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -592,7 +600,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             }
 
                             lockUI();
-                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
                         }
                     };
                 } else
@@ -610,7 +618,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             }
 
                             lockUI();
-                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
                         }
                     };
                 }
@@ -622,7 +630,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                         message = response.getString("msg");
                         DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
 
-                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
                         break;
                     }
 
@@ -636,7 +644,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                         }
 
-                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
                         break;
                     }
 
@@ -657,7 +665,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
                         } else
                         {
-                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
                         }
                         break;
                     }
@@ -667,8 +675,21 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 onError(e);
 
                 // credit card 요청
-                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            baseActivity.onErrorResponse(volleyError);
         }
     };
 

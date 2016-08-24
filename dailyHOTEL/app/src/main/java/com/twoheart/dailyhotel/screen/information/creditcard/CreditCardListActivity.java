@@ -101,7 +101,7 @@ public class CreditCardListActivity extends BaseActivity
             lockUI();
 
             mCreditCardLayout.setViewLoginLayout(true);
-            DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, this);
+            DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener);
         }
     }
 
@@ -219,7 +219,7 @@ public class CreditCardListActivity extends BaseActivity
                     lockUI();
 
                     // 등록된 카드 삭제.
-                    DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mDeleteCreditCardJsonResponseListener, CreditCardListActivity.this);
+                    DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mDeleteCreditCardJsonResponseListener);
 
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.OK, null);
@@ -279,12 +279,6 @@ public class CreditCardListActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -374,16 +368,16 @@ public class CreditCardListActivity extends BaseActivity
                 unLockUI();
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            CreditCardListActivity.this.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mDeleteCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -405,7 +399,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     // 성공
                     // credit card 요청
-                    DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+                    DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener);
                 } else
                 {
                     unLockUI();
@@ -424,7 +418,7 @@ public class CreditCardListActivity extends BaseActivity
                             lockUI();
 
                             // credit card 요청
-                            DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+                            DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener);
                         }
 
                     });
@@ -436,8 +430,14 @@ public class CreditCardListActivity extends BaseActivity
                 lockUI();
 
                 // credit card 요청
-                DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+                DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            CreditCardListActivity.this.onErrorResponse(volleyError);
         }
     };
 }

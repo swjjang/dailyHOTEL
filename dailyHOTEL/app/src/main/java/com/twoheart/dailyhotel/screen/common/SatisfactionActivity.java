@@ -25,7 +25,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -554,14 +553,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     case HOTEL:
                     {
                         params.put("reserv_idx", String.valueOf(mReservationIndex));
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError arg0)
-                            {
-                                finish();
-                            }
-                        });
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
 
                         if (Util.isTextEmpty(ratingName) == true)
                         {
@@ -579,14 +571,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     {
                         params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError arg0)
-                            {
-                                finish();
-                            }
-                        });
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
 
                         if (Util.isTextEmpty(ratingName) == true)
                         {
@@ -637,42 +622,20 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
         mSatisfaction = result;
 
-        DailyHotelJsonResponseListener listener = mReserveReviewJsonResponseListener;
-
         switch (placeType)
         {
             case HOTEL:
-                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError arg0)
-                    {
-                        finish();
-                    }
-                });
+                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
 
             case FNB:
-                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError arg0)
-                    {
-                        finish();
-                    }
-                });
+                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
         }
     }
 
     private DailyHotelJsonResponseListener mReserveReviewJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -728,14 +691,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 break;
                         }
 
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener, new ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError arg0)
-                            {
-                                finish();
-                            }
-                        });
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener);
                     }
                 } else
                 {
@@ -748,16 +704,16 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 finish();
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            finish();
+        }
     };
 
     private DailyHotelJsonResponseListener mRequestServicesJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -803,17 +759,17 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 finish();
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            finish();
+        }
     };
 
 
     private DailyHotelJsonResponseListener mReservSatisfactionUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -836,6 +792,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             {
                 finish();
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            finish();
         }
     };
 }

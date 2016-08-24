@@ -148,10 +148,10 @@ public class StayMainFragment extends PlaceMainFragment
                 String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
                 String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
 
-                if(PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
+                if (PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
                 {
                     callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-                } else if(PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
+                } else if (PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
                 {
                     callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
                 }

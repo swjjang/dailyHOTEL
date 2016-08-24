@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -350,6 +351,39 @@ public class StayDetailActivity extends PlaceDetailActivity
         mOnEventListener.doBooking();
     }
 
+    @Override
+    protected void downloadCoupon()
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        if (DailyHotel.isLogin() == false)
+        {
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login), //
+                getString(R.string.dialog_btn_login_for_benefit), getString(R.string.dialog_btn_text_close), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        startLoginActivity(CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
+                    }
+                }, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                }, true);
+        } else
+        {
+            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestDownloadCoupon(mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index);
+        }
+    }
+
     private void startCalendar(SaleTime saleTime, int nights, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
@@ -675,6 +709,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void downloadCoupon()
+        {
+            StayDetailActivity.this.downloadCoupon();
+        }
+
+        @Override
         public void doBooking(RoomInformation roomInformation)
         {
             if (roomInformation == null)
@@ -692,7 +732,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == false)
             {
-                startLoginActivity();
+                startLoginActivity(CODE_REQUEST_ACTIVITY_LOGIN);
             } else
             {
                 lockUI();

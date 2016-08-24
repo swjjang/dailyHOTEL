@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
@@ -63,7 +62,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
 
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, mDailyUserLoginJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -80,7 +79,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         @Override
                         public void onErrorResponse(VolleyError volleyError)
                         {
-
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null);
                         }
 
                         @Override
@@ -104,13 +103,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
                             }
 
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(uid, registrationId);
-                        }
-                    }, new ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError arg0)
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null);
                         }
                     });
                 } else

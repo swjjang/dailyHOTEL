@@ -70,9 +70,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
         lockUI();
 
-        DailyNetworkAPI.getInstance(this) //
-            .requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyMMdd"), //
-                mJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyMMdd"), mJsonResponseListener);
     }
 
     private void setSaleTicketResult(int count)
@@ -132,12 +130,6 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     private DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            showEmptyDialog();
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             int saleTicketCount = 0;
@@ -175,6 +167,12 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
                 unLockUI();
                 GourmetDetailCalendarActivity.this.setSaleTicketResult(saleTicketCount);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            showEmptyDialog();
         }
     };
 }

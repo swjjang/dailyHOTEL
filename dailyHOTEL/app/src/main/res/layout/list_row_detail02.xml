@@ -81,6 +81,38 @@
         android:layout_marginBottom="10dp"
         android:background="@color/selectarea_underline"/>
 
+    <RelativeLayout
+        android:id="@+id/couponLayout"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="특별 할인 혜택"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="14dp"
+            android:layout_centerVertical="true"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/downloadCouponView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="할인쿠폰 다운받기"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_dialog_button01"
+            android:textSize="14dp"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/satisfactionView"
         android:layout_width="wrap_content"
@@ -114,16 +146,16 @@
             android:id="@+id/changeDateLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/changeDateView"
                 android:layout_width="wrap_content"
                 android:layout_height="21dp"
-                android:layout_marginTop="7dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/more_btn_padding"
                 android:freezesText="true"
                 android:gravity="center"
@@ -131,6 +163,7 @@
                 android:textColor="@color/hoteldetail_title_text"
                 android:textSize="11dp"
                 />
+
             <View
                 android:layout_width="58dp"
                 android:layout_height="7dp"/>

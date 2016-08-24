@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.network.request;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 
@@ -13,10 +12,18 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String>
 {
     private DailyHotelStringResponseListener mListener;
 
-    public DailyHotelStringRequest(Object tag, int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener, ErrorListener errorListener)
+    public DailyHotelStringRequest(Object tag, int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener)
     {
-        super(tag, method, url, parameters, errorListener);
-        this.mListener = listener;
+        super(tag, method, url, parameters, listener);
+
+        mListener = listener;
+    }
+
+    public DailyHotelStringRequest(Object tag, int method, String url, DailyHotelStringResponseListener listener)
+    {
+        super(tag, method, url, listener);
+
+        mListener = listener;
     }
 
     @Override
