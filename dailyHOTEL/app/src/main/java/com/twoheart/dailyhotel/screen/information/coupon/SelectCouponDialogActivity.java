@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -29,9 +31,11 @@ public class SelectCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
     public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
     public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
+    public static final String INTENT_EXTRA_NIGHTS = "ngihts";
     public static final String INTENT_EXTRA_CATEGORY_CODE = "categoryCode";
     public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
+    public static final String INTENT_EXTRA_CALL_BY_SCREEN = "callByScreen";
 
 
     private SelectCouponDialogLayout mLayout;
@@ -47,6 +51,9 @@ public class SelectCouponDialogActivity extends BaseActivity
     private String mCheckOutDate;
     private String mCategoryCode;
     private String mHotelName;
+    private int mNights;
+
+    private String mCallByScreen;
 
     public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, //
                                      String checkOutDate, String categoryCode, String hotelName, String roomPrice)
@@ -59,6 +66,21 @@ public class SelectCouponDialogActivity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
+        intent.putExtra(INTENT_EXTRA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, int hotelIdx, String checkInDate, //
+                                     int nights, String categoryCode, String hotelName)
+    {
+        Intent intent = new Intent(context, SelectCouponDialogActivity.class);
+        intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
+        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_NIGHTS, nights);
+        intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
+        intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
+        intent.putExtra(INTENT_EXTRA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
 
         return intent;
     }
@@ -76,14 +98,34 @@ public class SelectCouponDialogActivity extends BaseActivity
             return;
         }
 
-        mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
-        mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
-        mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
+        mCallByScreen = intent.getStringExtra(INTENT_EXTRA_CALL_BY_SCREEN);
 
-        mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
-        mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
-        mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
-        mRoomPrice = intent.getStringExtra(INTENT_EXTRA_ROOM_PRICE);
+        switch (mCallByScreen)
+        {
+            case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+            {
+                mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
+                mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
+                mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
+
+                mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
+                mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
+                mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
+                mRoomPrice = intent.getStringExtra(INTENT_EXTRA_ROOM_PRICE);
+                break;
+            }
+
+            case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+            {
+                mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
+                mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
+                mNights = intent.getIntExtra(INTENT_EXTRA_NIGHTS, 1);
+
+                mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
+                mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
+                break;
+            }
+        }
 
         mLayout = new SelectCouponDialogLayout(this, mOnEventListener);
         mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
@@ -104,7 +146,20 @@ public class SelectCouponDialogActivity extends BaseActivity
 
         lockUI();
 
-        mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
+        switch (mCallByScreen)
+        {
+            case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+            {
+                mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
+                break;
+            }
+
+            case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+            {
+                mNetworkController.requestCouponList(mHotelIdx, mCheckInDate, mNights);
+                break;
+            }
+        }
     }
 
     @Override
@@ -122,17 +177,38 @@ public class SelectCouponDialogActivity extends BaseActivity
 
     private void recordCancelAnalytics()
     {
-        if (mLayout.getCouponCount() == 0)
+        try
         {
-            // empty list
-            String label = mCategoryCode + "-" + mHotelName + "-" + mRoomPrice;
+            switch (mCallByScreen)
+            {
+                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                {
+                    if (mLayout.getCouponCount() == 0)
+                    {
+                        // empty list
+                        String label = mCategoryCode + "-" + mHotelName + "-" + mRoomPrice;
 
-            AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
-                AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
-        } else
+                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                            AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                            AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
+                    }
+                    break;
+                }
+
+                case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                {
+                    break;
+                }
+            }
+        } catch (Exception e)
         {
-            AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
-                AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.logException(e);
+            }
         }
     }
 
@@ -172,6 +248,7 @@ public class SelectCouponDialogActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     // NetworkController
     // ///////////////////////////////////////////////////
+
     private SelectCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
@@ -235,19 +312,32 @@ public class SelectCouponDialogActivity extends BaseActivity
         {
             try
             {
-                Map<String, String> paramsMap = new HashMap<>();
-                paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
-                paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
-                paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
-                //                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
-                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, DailyCalendar.format(new Date(), "yyyyMMddHHmm"));
-                //                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
-                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
-                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "booking");
-                paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
+                switch (mCallByScreen)
+                {
+                    case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                    {
+                        Map<String, String> paramsMap = new HashMap<>();
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                        paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+                        //                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                        paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, DailyCalendar.format(new Date(), "yyyyMMddHHmm"));
+                        //                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
+                        paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
+                        paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "booking");
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
 
-                AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking-" + coupon.title, paramsMap);
+                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
+                            , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking-" + coupon.title, paramsMap);
+
+                        break;
+                    }
+
+                    case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                    {
+                        break;
+                    }
+                }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
