@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -45,7 +46,7 @@ import java.util.Map;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
-    private boolean mIsReceiveData;
+    private int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
 
     private String mInputText;
     private String mAddress;
@@ -241,7 +242,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
 
-            if(intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+            if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
             {
                 mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
             }
@@ -570,16 +571,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 synchronized (GourmetSearchResultActivity.this)
                 {
-                    if (mIsReceiveData == false)
+                    if (mReceiveDataFlag == 0)
                     {
-                        mIsReceiveData = true;
-                    } else
+                        mReceiveDataFlag = 1;
+                    } else if (mReceiveDataFlag == 1)
                     {
                         ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
                         if (placeListFragmentList != null || placeListFragmentList.size() > 0)
                         {
                             int placeCount = placeListFragmentList.get(0).getPlaceCount();
                             recordEventSearchResultByLocation(address, placeCount == 0);
+                            mReceiveDataFlag = 2;
                         }
                     }
                 }
@@ -766,12 +768,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 synchronized (GourmetSearchResultActivity.this)
                 {
-                    if (mIsReceiveData == false)
+                    if (mReceiveDataFlag == 0)
                     {
-                        mIsReceiveData = true;
-                    } else
+                        mReceiveDataFlag = 1;
+                    } else if (mReceiveDataFlag == 1)
                     {
                         recordEventSearchResultByLocation(mAddress, isShow);
+                        mReceiveDataFlag = 2;
                     }
                 }
             } else if (mSearchType == SearchType.RECENT)
@@ -804,9 +807,15 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-            if (viewType == ViewType.LIST)
+            try
             {
-                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                if (viewType == ViewType.LIST)
+                {
+                    recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
             }
         }
 
