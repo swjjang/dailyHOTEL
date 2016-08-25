@@ -86,7 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
+        android:layout_marginRight="15dp"
+        android:visibility="gone">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"
