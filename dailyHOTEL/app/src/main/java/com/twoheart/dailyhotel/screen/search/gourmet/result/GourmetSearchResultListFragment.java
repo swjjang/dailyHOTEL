@@ -8,8 +8,8 @@ import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListLayout;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
     }
 
     @Override
-    protected GourmetListLayout getGourmetListLayout()
+    protected PlaceListLayout getPlaceListLayout()
     {
         return new GourmetSearchResultListLayout(mBaseActivity, mEventListener);
     }
@@ -56,7 +56,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
             if (isShowProgress == true)
             {
                 // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
-                ((GourmetSearchResultListLayout) mGourmetListLayout).updateResultCount(mViewType, -1, -1);
+                ((GourmetSearchResultListLayout) mPlaceListLayout).updateResultCount(mViewType, -1, -1);
             }
         }
 
@@ -86,9 +86,9 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
         int entryPosition = 1;
 
-        if (mGourmetListLayout != null)
+        if (mPlaceListLayout != null)
         {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mGourmetListLayout.getList());
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
 
             int oldListSize = oldList == null ? 0 : oldList.size();
             if (oldListSize > 0)
@@ -135,12 +135,12 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
             if (mViewType == ViewType.MAP)
             {
-                ((GourmetSearchResultListLayout) mGourmetListLayout).setMapMyLocation(mGourmetCuration.getLocation(), mIsDeepLink == false);
+                ((GourmetSearchResultListLayout) mPlaceListLayout).setMapMyLocation(mGourmetCuration.getLocation(), mIsDeepLink == false);
             }
 
             if (page <= 1)
             {
-                ((GourmetSearchResultListLayout) mGourmetListLayout).updateResultCount(mViewType, totalCount, maxCount);
+                ((GourmetSearchResultListLayout) mPlaceListLayout).updateResultCount(mViewType, totalCount, maxCount);
             }
         }
 

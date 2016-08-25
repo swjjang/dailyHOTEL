@@ -1,11 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
@@ -19,10 +14,9 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -33,11 +27,7 @@ import java.util.List;
 
 public class GourmetListFragment extends PlaceListFragment
 {
-    protected int mGourmetCount;
-
     protected GourmetCuration mGourmetCuration;
-
-    protected GourmetListLayout mGourmetListLayout;
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -47,24 +37,15 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        mBaseActivity = (BaseActivity) getActivity();
-        mViewType = ViewType.LIST;
-        mLoadMorePageIndex = 1;
-
-        mGourmetListLayout = getGourmetListLayout();
-        mGourmetListLayout.setBottomOptionLayout(mBottomOptionLayout);
-
-        mNetworkController = getNetworkController();
-
-        return mGourmetListLayout.onCreateView(getLayoutResourceId(), container);
-    }
-
-    @Override
     protected BaseNetworkController getNetworkController()
     {
         return new GourmetListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
+    }
+
+    @Override
+    protected PlaceListLayout getPlaceListLayout()
+    {
+        return new GourmetListLayout(mBaseActivity, mEventListener);
     }
 
     @Override
@@ -73,71 +54,14 @@ public class GourmetListFragment extends PlaceListFragment
         return R.layout.fragment_gourmet_list;
     }
 
-    protected GourmetListLayout getGourmetListLayout()
-    {
-        return new GourmetListLayout(mBaseActivity, mEventListener);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (mViewType == ViewType.MAP)
-        {
-            PlaceListMapFragment placeListMapFragment = mGourmetListLayout.getListMapFragment();
-
-            if (placeListMapFragment != null)
-            {
-                placeListMapFragment.onActivityResult(requestCode, resultCode, data);
-            }
-        }
-    }
-
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
         mGourmetCuration = (GourmetCuration) curation;
-        mGourmetListLayout.setGourmetCuration(mGourmetCuration);
+        ((GourmetListLayout) mPlaceListLayout).setGourmetCuration(mGourmetCuration);
     }
 
     @Override
-    public void clearList()
-    {
-        mGourmetCount = 0;
-        mGourmetListLayout.clearList();
-    }
-
-    @Override
-    public void refreshList(boolean isShowProgress)
-    {
-        if (mViewType == null)
-        {
-            return;
-        }
-
-        switch (mViewType)
-        {
-            case LIST:
-                int size = mGourmetListLayout.getItemCount();
-                if (size == 0)
-                {
-                    refreshList(isShowProgress, 1);
-                }
-                break;
-
-            case MAP:
-                refreshList(isShowProgress, 0);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    public void addList(boolean isShowProgress)
-    {
-        refreshList(isShowProgress, mLoadMorePageIndex + 1);
-    }
-
     protected void refreshList(boolean isShowProgress, int page)
     {
         // 더보기 시 uilock 걸지않음
@@ -169,31 +93,6 @@ public class GourmetListFragment extends PlaceListFragment
         ((GourmetListNetworkController) mNetworkController).requestGourmetList(params);
     }
 
-    public boolean hasSalesPlace()
-    {
-        return mGourmetListLayout.hasSalesPlace();
-    }
-
-    @Override
-    public void setVisibility(ViewType viewType, boolean isCurrentPage)
-    {
-        mViewType = viewType;
-        mGourmetListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
-
-        mOnPlaceListFragmentListener.onShowMenuBar();
-    }
-
-    @Override
-    public void setScrollListTop()
-    {
-        if (mGourmetListLayout == null)
-        {
-            return;
-        }
-
-        mGourmetListLayout.setScrollListTop();
-    }
-
     protected ArrayList<PlaceViewItem> makeSectionGourmetList(List<Gourmet> gourmetList, SortType sortType)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
@@ -208,9 +107,9 @@ public class GourmetListFragment extends PlaceListFragment
 
         int entryPosition = 1;
 
-        if (mGourmetListLayout != null)
+        if (mPlaceListLayout != null)
         {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mGourmetListLayout.getList());
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
 
             int oldListSize = oldList == null ? 0 : oldList.size();
             if (oldListSize > 0)
@@ -286,8 +185,8 @@ public class GourmetListFragment extends PlaceListFragment
         // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
         if (page <= 1)
         {
-            mGourmetCount = 0;
-            mGourmetListLayout.clearList();
+            mPlaceCount = 0;
+            mPlaceListLayout.clearList();
 
             if (mGourmetCuration.getCurationOption().isDefaultFilter() == true)
             {
@@ -301,7 +200,7 @@ public class GourmetListFragment extends PlaceListFragment
             mLoadMorePageIndex = page;
         }
 
-        mGourmetCount += listSize;
+        mPlaceCount += listSize;
 
         SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
@@ -311,9 +210,9 @@ public class GourmetListFragment extends PlaceListFragment
         {
             case LIST:
             {
-                mGourmetListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
-                int size = mGourmetListLayout.getItemCount();
+                int size = mPlaceListLayout.getItemCount();
 
                 if (size == 0)
                 {
@@ -326,9 +225,9 @@ public class GourmetListFragment extends PlaceListFragment
 
             case MAP:
             {
-                mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
-                int mapSize = mGourmetListLayout.getMapItemSize();
+                int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
                     setVisibility(ViewType.GONE, true);
@@ -343,13 +242,7 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         unLockUI();
-        mGourmetListLayout.setSwipeRefreshing(false);
-    }
-
-    @Override
-    public int getPlaceCount()
-    {
-        return mGourmetCount;
+        mPlaceListLayout.setSwipeRefreshing(false);
     }
 
     /////////////////////////////////////////////////////////////////////////////////

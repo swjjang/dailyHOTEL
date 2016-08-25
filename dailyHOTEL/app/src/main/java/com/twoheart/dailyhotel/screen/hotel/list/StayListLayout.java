@@ -59,6 +59,7 @@ public class StayListLayout extends PlaceListLayout
             , AnalyticsManager.Action.HOTEL_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
     }
 
+    @Override
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
         switch (viewType)

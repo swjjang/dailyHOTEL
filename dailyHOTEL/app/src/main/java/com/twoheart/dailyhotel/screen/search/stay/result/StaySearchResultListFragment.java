@@ -39,7 +39,7 @@ public class StaySearchResultListFragment extends StayListFragment
     }
 
     @Override
-    protected StayListLayout getStayListLayout()
+    protected StayListLayout getPlaceListLayout()
     {
         return new StaySearchResultListLayout(mBaseActivity, mEventListener);
     }
@@ -55,7 +55,7 @@ public class StaySearchResultListFragment extends StayListFragment
             if (isShowProgress == true)
             {
                 // 새로 검색이 될경우에는 결과개수를 보여주는 부분은 안보이게 한다.
-                ((StaySearchResultListLayout) mStayListLayout).updateResultCount(mViewType, -1, -1);
+                ((StaySearchResultListLayout) mPlaceListLayout).updateResultCount(mViewType, -1, -1);
             }
         }
 
@@ -92,9 +92,9 @@ public class StaySearchResultListFragment extends StayListFragment
 
         int entryPosition = 1;
 
-        if (mStayListLayout != null)
+        if (mPlaceListLayout != null)
         {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mStayListLayout.getList());
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
 
             int oldListSize = oldList == null ? 0 : oldList.size();
             if (oldListSize > 0)
@@ -152,12 +152,12 @@ public class StaySearchResultListFragment extends StayListFragment
 
             if (mViewType == ViewType.MAP)
             {
-                ((StaySearchResultListLayout) mStayListLayout).setMapMyLocation(mStayCuration.getLocation(), mIsDeepLink == false);
+                ((StaySearchResultListLayout) mPlaceListLayout).setMapMyLocation(mStayCuration.getLocation(), mIsDeepLink == false);
             }
 
             if (page <= 1)
             {
-                ((StaySearchResultListLayout) mStayListLayout).updateResultCount(mViewType, totalCount, maxCount);
+                ((StaySearchResultListLayout) mPlaceListLayout).updateResultCount(mViewType, totalCount, maxCount);
             }
         }
 

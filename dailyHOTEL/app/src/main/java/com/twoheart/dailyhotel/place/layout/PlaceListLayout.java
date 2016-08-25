@@ -71,7 +71,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected abstract PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
 
-    protected abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
+    public abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
 
     protected abstract EventBanner getEventBanner(int index);
 

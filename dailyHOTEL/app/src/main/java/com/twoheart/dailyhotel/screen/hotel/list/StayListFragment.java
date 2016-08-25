@@ -1,11 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
@@ -20,10 +15,9 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayParams;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -33,30 +27,11 @@ import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
-    protected int mStayCount;
-
     protected StayCuration mStayCuration;
-
-    protected StayListLayout mStayListLayout;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
         void onStayClick(PlaceViewItem placeViewItem, int listCount);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        mBaseActivity = (BaseActivity) getActivity();
-        mViewType = ViewType.LIST;
-        mLoadMorePageIndex = 1;
-
-        mStayListLayout = getStayListLayout();
-        mStayListLayout.setBottomOptionLayout(mBottomOptionLayout);
-
-        mNetworkController = getNetworkController();
-
-        return mStayListLayout.onCreateView(getLayoutResourceId(), container);
     }
 
     @Override
@@ -66,76 +41,25 @@ public class StayListFragment extends PlaceListFragment
     }
 
     @Override
-    protected int getLayoutResourceId()
-    {
-        return R.layout.fragment_hotel_list;
-    }
-
-    protected StayListLayout getStayListLayout()
+    protected PlaceListLayout getPlaceListLayout()
     {
         return new StayListLayout(mBaseActivity, mEventListener);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    protected int getLayoutResourceId()
     {
-        if (mViewType == ViewType.MAP)
-        {
-            PlaceListMapFragment placeListMapFragment = mStayListLayout.getListMapFragment();
-
-            if (placeListMapFragment != null)
-            {
-                placeListMapFragment.onActivityResult(requestCode, resultCode, data);
-            }
-        }
+        return R.layout.fragment_hotel_list;
     }
 
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
         mStayCuration = (StayCuration) curation;
-        mStayListLayout.setStayCuration(mStayCuration);
+        ((StayListLayout) mPlaceListLayout).setStayCuration(mStayCuration);
     }
 
     @Override
-    public void clearList()
-    {
-        mStayCount = 0;
-        mStayListLayout.clearList();
-    }
-
-    @Override
-    public void refreshList(boolean isShowProgress)
-    {
-        if (mViewType == null)
-        {
-            return;
-        }
-
-        switch (mViewType)
-        {
-            case LIST:
-                int size = mStayListLayout.getItemCount();
-                if (size == 0)
-                {
-                    refreshList(isShowProgress, 1);
-                }
-                break;
-
-            case MAP:
-                refreshList(isShowProgress, 0);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    public void addList(boolean isShowProgress)
-    {
-        refreshList(isShowProgress, mLoadMorePageIndex + 1);
-    }
-
     protected void refreshList(boolean isShowProgress, int page)
     {
         // 더보기 시 uilock 걸지않음
@@ -174,31 +98,6 @@ public class StayListFragment extends PlaceListFragment
         ((StayListNetworkController) mNetworkController).requestStayList(params);
     }
 
-    public boolean hasSalesPlace()
-    {
-        return mStayListLayout.hasSalesPlace();
-    }
-
-    @Override
-    public void setVisibility(ViewType viewType, boolean isCurrentPage)
-    {
-        mViewType = viewType;
-        mStayListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
-
-        mOnPlaceListFragmentListener.onShowMenuBar();
-    }
-
-    @Override
-    public void setScrollListTop()
-    {
-        if (mStayListLayout == null)
-        {
-            return;
-        }
-
-        mStayListLayout.setScrollListTop();
-    }
-
     protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
@@ -213,9 +112,9 @@ public class StayListFragment extends PlaceListFragment
 
         int entryPosition = 1;
 
-        if (mStayListLayout != null)
+        if (mPlaceListLayout != null)
         {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mStayListLayout.getList());
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
 
             int oldListSize = oldList == null ? 0 : oldList.size();
             if (oldListSize > 0)
@@ -290,8 +189,8 @@ public class StayListFragment extends PlaceListFragment
         // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
         if (page <= 1)
         {
-            mStayCount = 0;
-            mStayListLayout.clearList();
+            mPlaceCount = 0;
+            mPlaceListLayout.clearList();
         }
 
         int listSize = list == null ? 0 : list.size();
@@ -300,7 +199,7 @@ public class StayListFragment extends PlaceListFragment
             mLoadMorePageIndex = page;
         }
 
-        mStayCount += listSize;
+        mPlaceCount += listSize;
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
 
@@ -310,9 +209,9 @@ public class StayListFragment extends PlaceListFragment
         {
             case LIST:
             {
-                mStayListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
-                int size = mStayListLayout.getItemCount();
+                int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
                 {
                     setVisibility(ViewType.GONE, true);
@@ -328,9 +227,9 @@ public class StayListFragment extends PlaceListFragment
 
             case MAP:
             {
-                mStayListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
 
-                int mapSize = mStayListLayout.getMapItemSize();
+                int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
                     setVisibility(ViewType.GONE, true);
@@ -349,13 +248,7 @@ public class StayListFragment extends PlaceListFragment
         }
 
         unLockUI();
-        mStayListLayout.setSwipeRefreshing(false);
-    }
-
-    @Override
-    public int getPlaceCount()
-    {
-        return mStayCount;
+        mPlaceListLayout.setSwipeRefreshing(false);
     }
 
     /////////////////////////////////////////////////////////////////////////////////

@@ -60,6 +60,7 @@ public class GourmetListLayout extends PlaceListLayout
             , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
     }
 
+    @Override
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
         switch (viewType)
