@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -226,6 +227,42 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
                 }
             });
+        }
+    }
+
+
+    protected void setDisabledSortLayout(View view, RadioGroup sortLayout)
+    {
+        if (sortLayout == null)
+        {
+            return;
+        }
+
+        sortLayout.setEnabled(false);
+
+        int childCount = sortLayout.getChildCount();
+
+        for (int i = 0; i < childCount; i++)
+        {
+            sortLayout.getChildAt(i).setEnabled(false);
+        }
+
+        View dimView = view.findViewById(R.id.dimView);
+        dimView.setVisibility(View.VISIBLE);
+    }
+
+    protected void resetLayout(ViewGroup viewGroup)
+    {
+        if (viewGroup == null)
+        {
+            return;
+        }
+
+        int childCount = viewGroup.getChildCount();
+
+        for (int i = 0; i < childCount; i++)
+        {
+            viewGroup.getChildAt(i).setSelected(false);
         }
     }
 

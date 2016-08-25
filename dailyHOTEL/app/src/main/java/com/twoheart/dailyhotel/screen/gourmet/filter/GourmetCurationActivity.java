@@ -84,7 +84,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         initLayout();
 
-
         mAnimationLayout.setVisibility(View.INVISIBLE);
         mAnimationLayout.postDelayed(new Runnable()
         {
@@ -462,42 +461,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         return resourceIndex[index];
     }
-
-    protected void setDisabledSortLayout(View view, RadioGroup sortLayout)
-    {
-        if (sortLayout == null)
-        {
-            return;
-        }
-
-        sortLayout.setEnabled(false);
-
-        int childCount = sortLayout.getChildCount();
-
-        for (int i = 0; i < childCount; i++)
-        {
-            sortLayout.getChildAt(i).setEnabled(false);
-        }
-
-        View dimView = view.findViewById(R.id.dimView);
-        dimView.setVisibility(View.VISIBLE);
-    }
-
-    protected void resetLayout(ViewGroup viewGroup)
-    {
-        if (viewGroup == null)
-        {
-            return;
-        }
-
-        int childCount = viewGroup.getChildCount();
-
-        for (int i = 0; i < childCount; i++)
-        {
-            viewGroup.getChildAt(i).setSelected(false);
-        }
-    }
-
 
     @Override
     protected void onStart()
