@@ -57,8 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"
-                    dailyFont:style="Medium"/>
+                    android:textSize="13dp"/>
             </LinearLayout>
 
             <View
@@ -86,8 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"
-                    dailyFont:style="Medium"/>
+                    android:textSize="13dp"/>
             </LinearLayout>
         </LinearLayout>
 

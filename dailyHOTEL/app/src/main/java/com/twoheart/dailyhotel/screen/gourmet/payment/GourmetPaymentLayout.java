@@ -396,12 +396,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         if (selectedCreditCard == null)
         {
             mCardManagerTextView.setText(R.string.label_register_card);
-            mSimpleCardImageView.setImageResource(R.drawable.selector_simplecard_plus_button);
             mSimpleCardTextView.setText(R.string.label_booking_easypayment);
         } else
         {
             mCardManagerTextView.setText(R.string.label_manager);
-            mSimpleCardImageView.setImageResource(R.drawable.selector_simplecard_button);
 
             final String cardName = selectedCreditCard.name.replace("카드", "");
             final String cardNumber = selectedCreditCard.number;
