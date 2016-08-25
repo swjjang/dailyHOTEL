@@ -28,6 +28,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     private Event mSelectedEvent;
     private EventListAdapter mEventListAdapter;
     private EventListNetworkController mEventListNetworkController;
+    private boolean mDontReload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -94,8 +95,14 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     {
         super.onResume();
 
-        lockUI();
-        mEventListNetworkController.requestEventList();
+        if (mDontReload == true)
+        {
+            mDontReload = false;
+        } else
+        {
+            lockUI();
+            mEventListNetworkController.requestEventList();
+        }
     }
 
     @Override
@@ -120,6 +127,19 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEventListNetworkController.requestEventPageUrl(mSelectedEvent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_EVENTWEB:
+                mDontReload = true;
+                break;
+        }
+    }
+
     private void startEventWeb(String url, String eventName)
     {
         if (Util.isTextEmpty(url) == true)
@@ -128,7 +148,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName, null);
-        startActivity(intent);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

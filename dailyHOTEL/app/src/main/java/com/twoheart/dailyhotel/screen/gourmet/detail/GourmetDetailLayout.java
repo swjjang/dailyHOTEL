@@ -85,6 +85,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         return mListAdapter.getMagicToolbarView();
     }
 
+    @Override
+    protected View getMagicTitleTextView()
+    {
+        return null;
+    }
+
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
     {
         if (gourmetDetail == null)

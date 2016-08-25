@@ -31,7 +31,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private Context mContext;
     private View[] mDeatilViews;
     private int mImageHeight;
-    protected View mTitleLayout;
+    protected View mGourmetTitleLayout, mTitleLayout;
     protected TextView mGradeTextView;
     protected TextView mNameTextView;
     protected View mMagicToolbar;
@@ -129,7 +129,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 호텔 등급과 이름.
         if (mDeatilViews[1] == null)
         {
-            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
+            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_gourmet_detail02, parent, false);
         }
 
         getTitleView(mDeatilViews[1], mGourmetDetail);
@@ -204,8 +204,10 @@ public class GourmetDetailListAdapter extends BaseAdapter
     {
         GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
 
-        mTitleLayout = view.findViewById(R.id.hotelTitleLayout);
-        mTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        mGourmetTitleLayout = view.findViewById(R.id.hotelTitleLayout);
+        mGourmetTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        mTitleLayout = mGourmetTitleLayout.findViewById(R.id.titleLayout);
 
         mMagicToolbar = view.findViewById(R.id.magicToolbar);
 
@@ -257,12 +259,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
             satisfactionView.setText(gourmetDetail.satisfaction);
         }
 
-        TextView dateView = (TextView) view.findViewById(R.id.dateView);
         // 날짜
-        dateView.setText(mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
+        TextView dayTextView = (TextView) view.findViewById(R.id.dayTextView);
 
-        View changeDateLayout = view.findViewById(R.id.changeDateLayout);
-        changeDateLayout.setOnClickListener(new View.OnClickListener()
+        dayTextView.setText(mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
+
+        View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
+        dateInformationLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

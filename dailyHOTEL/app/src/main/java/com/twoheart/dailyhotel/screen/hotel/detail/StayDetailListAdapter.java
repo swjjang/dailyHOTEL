@@ -31,9 +31,10 @@ public class StayDetailListAdapter extends BaseAdapter
     private Context mContext;
     private View[] mDeatilViews;
     private int mImageHeight;
-    private View mHotelTitleLayout;
+    private View mHotelTitleLayout, mTitleLayout;
     private TextView mHotelGradeTextView;
     private TextView mHotelNameTextView;
+    private TextView mMagicTitleTextView;
     protected View mMagicToolbar;
 
     private StayDetailLayout.OnEventListener mOnEventListener;
@@ -109,7 +110,7 @@ public class StayDetailListAdapter extends BaseAdapter
         // 호텔 등급과 이름.
         if (mDeatilViews[1] == null)
         {
-            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
+            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_stay_detail02, parent, false);
         }
 
         getTitleView(mDeatilViews[1], mStayDetail);
@@ -159,7 +160,12 @@ public class StayDetailListAdapter extends BaseAdapter
 
     public View getTitleLayout()
     {
-        return mHotelTitleLayout;
+        return mTitleLayout;
+    }
+
+    public View getMagicTitleTextView()
+    {
+        return mMagicTitleTextView;
     }
 
     public View getGradeTextView()
@@ -204,7 +210,12 @@ public class StayDetailListAdapter extends BaseAdapter
     private View getTitleView(View view, StayDetail stayDetail)
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
-        mHotelTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        mTitleLayout = mHotelTitleLayout.findViewById(R.id.titleLayout);
+
+        mMagicTitleTextView = (TextView)mHotelTitleLayout.findViewById(R.id.magicTitleTextView);
+        mMagicTitleTextView.setText(stayDetail.name);
+        mMagicTitleTextView.setVisibility(View.INVISIBLE);
 
         mMagicToolbar = view.findViewById(R.id.magicToolbar);
 
@@ -237,6 +248,19 @@ public class StayDetailListAdapter extends BaseAdapter
             });
         }
 
+        // 만족도
+        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+
+        if (Util.isTextEmpty(stayDetail.satisfaction) == true)
+        {
+            satisfactionView.setVisibility(View.GONE);
+        } else
+        {
+            satisfactionView.setVisibility(View.VISIBLE);
+            satisfactionView.setText(stayDetail.satisfaction);
+        }
+
+        // 할인 쿠폰
         View couponLayout = view.findViewById(R.id.couponLayout);
 
         if (stayDetail.hasCoupon == true)
@@ -258,30 +282,22 @@ public class StayDetailListAdapter extends BaseAdapter
             couponLayout.setVisibility(View.GONE);
         }
 
-
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-
-        // 만족도
-        if (Util.isTextEmpty(stayDetail.satisfaction) == true)
-        {
-            satisfactionView.setVisibility(View.GONE);
-        } else
-        {
-            satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(stayDetail.satisfaction);
-        }
-
-        TextView dateView = (TextView) view.findViewById(R.id.dateView);
+        // 날짜
+        View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
+        TextView checkinDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkinDayTextView);
+        TextView checkoutDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkoutDayTextView);
+        TextView nightsTextView = (TextView) dateInformationLayout.findViewById(R.id.nightsTextView);
 
         // 체크인체크아웃 날짜
         final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
         SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mStayDetail.nights);
         String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
-        dateView.setText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStayDetail.nights));
+        checkinDayTextView.setText(checkInDate);
+        checkoutDayTextView.setText(checkOutDate);
+        nightsTextView.setText(mContext.getString(R.string.label_nights, mStayDetail.nights));
 
-        View changeDateLayout = view.findViewById(R.id.changeDateLayout);
-        changeDateLayout.setOnClickListener(new View.OnClickListener()
+        dateInformationLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

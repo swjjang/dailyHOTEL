@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/hotelTitleLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/titleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="19dp"
+            android:paddingBottom="16dp">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/hotelGradeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@color/black"
+                android:gravity="center"
+                android:paddingBottom="2dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:paddingTop="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="11dp"
+                android:visibility="invisible"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/hotelNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="7dp"
+                android:ellipsize="marquee"
+                android:freezesText="true"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="@color/hoteldetail_title_text"
+                dailyFont:style="Medium"
+                android:textSize="18dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/satisfactionView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:freezesText="true"
+                android:gravity="center_vertical"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"
+                android:visibility="visible"
+                dailyFont:style="DemiLight"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/magicToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_alignParentBottom="false"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/navibar_ic_back_01_black"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/magicTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/imageView2"
+                android:layout_toRightOf="@+id/imageView1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/actionbar_title"
+                android:textSize="18dp"
+                android:visibility="invisible"
+                />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
+                android:scaleType="center"
+                android:src="@drawable/navibar_ic_share_01_black"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/couponLayout"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:visibility="gone"
+        android:background="@color/white"
+        >
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="특별 할인 혜택"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            android:layout_marginLeft="15dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/downloadCouponView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_rect_cdcdcdd"
+            android:drawablePadding="4dp"
+            android:drawableRight="@drawable/ic_detail_coupon_down"
+            android:text="할인쿠폰 다운받기"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_marginRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="11dp"
+        android:background="@color/default_background"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <RelativeLayout
+        android:id="@+id/dateInformationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="78dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/act_booking_chkin"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/checkinDayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawablePadding="4dp"
+                    android:drawableRight="@drawable/navibar_m_burg_ic_v"
+                    android:textColor="@color/default_text_c900034"
+                    android:textSize="15dp"
+                    android:paddingLeft="5dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="78dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/act_booking_chkout"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/checkoutDayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawablePadding="4dp"
+                    android:drawableRight="@drawable/navibar_m_burg_ic_v"
+                    android:textColor="@color/default_text_c900034"
+                    android:textSize="15dp"
+                    android:paddingLeft="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/nightsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/payment_overnight_ic_bg"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="11dp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="11dp"
+        android:background="@color/default_background"/>
+</LinearLayout>

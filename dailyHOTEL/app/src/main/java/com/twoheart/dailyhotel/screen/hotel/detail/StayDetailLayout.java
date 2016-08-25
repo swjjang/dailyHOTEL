@@ -90,6 +90,17 @@ public class StayDetailLayout extends PlaceDetailLayout
         return mListAdapter.getMagicToolbarView();
     }
 
+    @Override
+    protected View getMagicTitleTextView()
+    {
+        if (mListAdapter == null)
+        {
+            return null;
+        }
+
+        return mListAdapter.getMagicTitleTextView();
+    }
+
     public void setDetail(SaleTime saleTime, StayDetail stayDetail, int imagePosition)
     {
         if (stayDetail == null)

@@ -102,7 +102,6 @@
             android:paddingTop="5dp"
             android:textColor="@color/default_text_c666666"
             android:textSize="11dp"/>
-
     </RelativeLayout>
 
     <View

@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
@@ -114,6 +115,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected abstract View getNameTextView();
 
     protected abstract View getMagicToolbarView();
+
+    protected abstract View getMagicTitleTextView();
 
     public abstract void setBookingStatus(int status);
 
@@ -628,6 +631,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private OnScrollListener mOnScrollListener = new OnScrollListener()
     {
+        private Rect mTitleLayoutRect = new Rect();
+        private Rect mMagicTitleTextViewRect = new Rect();
+
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState)
         {
@@ -653,21 +659,26 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
 
             View titleLayout = getTitleLayout();
+            View magicTitleTextView = getMagicTitleTextView();
 
-            if (titleLayout == null)
+            if (titleLayout == null || magicTitleTextView == null)
             {
                 return;
             }
 
-            Rect rect = new Rect();
-            titleLayout.getGlobalVisibleRect(rect);
+            titleLayout.getGlobalVisibleRect(mTitleLayoutRect);
+            magicTitleTextView.getGlobalVisibleRect(mMagicTitleTextViewRect);
 
-            if (rect.top == rect.right)
+            final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+
+            ExLog.d("rect : " + mTitleLayoutRect.toString() + ", mStatusBarHeight : " + mStatusBarHeight + ", TOOLBAR_HEIGHT : "+ TOOLBAR_HEIGHT);
+
+            if (mTitleLayoutRect.top == mTitleLayoutRect.right)
             {
 
             } else
             {
-                if (rect.top <= mStatusBarHeight)
+                if (mMagicTitleTextViewRect.bottom >= mTitleLayoutRect.bottom)
                 {
                     ((OnEventListener) mOnEventListener).showActionBar();
                 } else
@@ -683,9 +694,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 return;
             }
 
-            final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
             float max = ((float) mImageHeight - TOOLBAR_HEIGHT) / 2;
-            float offset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
+            float offset = mTitleLayoutRect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
             float alphaFactor = offset / max;
 
             if (Util.isOverAPI11() == true)
@@ -716,7 +726,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             {
                 final int TOOLBAR_TEXT_X = Util.dpToPx(mContext, 60);
                 float gradeMax = ((float) mImageHeight - TOOLBAR_HEIGHT) / 3;
-                float gradeOffset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
+                float gradeOffset = mTitleLayoutRect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - TOOLBAR_TEXT_X;
 
@@ -779,7 +789,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                     magicToolbarView.setVisibility(View.VISIBLE);
                 }
 
-                magicToolbarView.setY(mStatusBarHeight - rect.top);
+                magicToolbarView.setY(mStatusBarHeight - (mTitleLayoutRect.bottom - titleLayout.getHeight()));
             }
         }
     };
