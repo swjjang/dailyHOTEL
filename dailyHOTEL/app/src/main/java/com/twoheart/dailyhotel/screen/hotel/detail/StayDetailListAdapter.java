@@ -239,7 +239,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         View couponLayout = view.findViewById(R.id.couponLayout);
 
-        if (stayDetail.hasCoupon == false)
+        if (stayDetail.hasCoupon == true)
         {
             couponLayout.setVisibility(View.VISIBLE);
 

@@ -967,14 +967,32 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHasCoupon(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons/exist" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons/exist" : "NzkkNDQkMjAkODUkODAk$MjkyNEI0Q0IyMUIzRjQ2NRkJGQkVFQjg4RThCNkQ0QjQ2DMUE3NzI1QkQ5NzlFQ0ExMUFFNTExQkI1M0DYPzNjMAxQjI1NEU5RjBGMUMzODgyRjREN0UyQzIxMjYzQjI4QTRD$";
+//        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons" : "NDckOCQ3OCQ2NCQ5MSQ=$MTQxMzY1MMEUyMUY4MDBFODg1MjI5QzdBRkM0RDVERDZFNDUL4ODQwMTQ4Q0E5RjRJFRUY2MTY1MzE1YQjJGRURCNw=A=$";
+//        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}" : "ODAkMzAkODEkNDAkNjIk$RkJEOEYxM0MxMjY0QTNDODYxM0VCNzSAxNTU3NDgV3MEMwRkIxMjVEQUFCNTQzMODNFM0RBMDdGNzFDQkREHQNUJCRA==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
 
         String params = String.format("?dateCheckIn=%s&stays=%d", date, nights);
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.PUT, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestCouponList(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons" : "NDckOCQ3OCQ2NCQ5MSQ=$MTQxMzY1MMEUyMUY4MDBFODg1MjI5QzdBRkM0RDVERDZFNDUL4ODQwMTQ4Q0E5RjRJFRUY2MTY1MzE1YQjJGRURCNw=A=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
+
+        String params = String.format("?dateCheckIn=%s&stays=%d", date, nights);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);

@@ -43,6 +43,17 @@ public class SelectCouponNetworkController extends BaseNetworkController
     }
 
     /**
+     * 상세화면의 쿠폰리스트
+     * @param placeIndex
+     * @param date
+     * @param nights
+     */
+    public void requestCouponList(int placeIndex, String date, int nights)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, placeIndex, date, nights, mCouponListJsonResponseListener);
+    }
+
+    /**
      * 쿠폰 다운로드 시도
      *
      * @param coupon

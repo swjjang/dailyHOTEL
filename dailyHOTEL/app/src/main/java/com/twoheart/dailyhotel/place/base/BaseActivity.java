@@ -890,7 +890,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
-    protected void startLoginActivity(int requestCode)
+    protected void startLoginActivity()
     {
         DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
 

@@ -564,6 +564,10 @@ interface IDailyNetwork
      */
     void requestDownloadCoupon(Object tag, String userCouponCode, DailyHotelJsonResponseListener listener);
 
+    void requestHasCoupon(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener);
+
+    void requestCouponList(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener);
+
     /**
      * @param tag
      * @param couponCode

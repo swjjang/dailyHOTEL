@@ -27,7 +27,9 @@ import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -329,13 +331,15 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
+            lockUI();
+
             mSaleTime = checkInSaleTime;
 
             int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
             mPlaceDetail = new StayDetail(mPlaceDetail.index, nights, mPlaceDetail.entryPosition, //
                 mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount);
 
-            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), nights, mPlaceDetail.index);
+            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights);
         }
     }
 
@@ -368,7 +372,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        startLoginActivity(CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
+                        Intent intent = new Intent(StayDetailActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
                     }
                 }, null, null, new DialogInterface.OnDismissListener()
                 {
@@ -380,7 +385,9 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestDownloadCoupon(mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index);
+            Intent intent = SelectCouponDialogActivity.newInstance(this, mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
+                ((StayDetail) mPlaceDetail).nights, ((StayDetail) mPlaceDetail).categoryCode, mPlaceDetail.name);
+            startActivity(intent);
         }
     }
 
@@ -732,7 +739,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == false)
             {
-                startLoginActivity(CODE_REQUEST_ACTIVITY_LOGIN);
+                startLoginActivity();
             } else
             {
                 lockUI();
@@ -770,8 +777,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                     }
                 }
 
-                ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"),//
-                    ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index);
+                ((StayDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                    mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), ((StayDetail) mPlaceDetail).nights);
             } catch (Exception e)
             {
                 onError(e);
@@ -860,6 +867,15 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 unLockUI();
             }
+        }
+
+        @Override
+        public void onHasCoupon(boolean hasCoupon)
+        {
+            ((StayDetail) mPlaceDetail).hasCoupon = hasCoupon;
+
+            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mPlaceDetail.index,//
+                mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), ((StayDetail) mPlaceDetail).nights);
         }
 
         @Override
