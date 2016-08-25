@@ -363,6 +363,8 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_COUPON_DOWNLOAD, mPlaceDetail.name, null);
+
         if (DailyHotel.isLogin() == false)
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login), //
@@ -372,10 +374,26 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
+                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
+
                         Intent intent = new Intent(StayDetailActivity.this, LoginActivity.class);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
                     }
-                }, null, null, new DialogInterface.OnDismissListener()
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                    }
+                }, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)

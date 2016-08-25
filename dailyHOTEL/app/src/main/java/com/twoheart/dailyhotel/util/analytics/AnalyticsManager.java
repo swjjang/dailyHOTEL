@@ -461,6 +461,7 @@ public class AnalyticsManager
         public static final String HOTEL_DETAIL_ADDRESS_COPY_CLICKED = "HotelDetailAddressCopyClicked";
         public static final String HOTEL_DETAIL_NAVIGATION_APP_CLICKED = "HotelDetailNavigationAppClicked";
         public static final String HOTEL_BOOKING_DATE_CLICKED = "HotelBookingDateClicked";
+        public static final String HOTEL_COUPON_DOWNLOAD = "HotelCouponDownload";
         //
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
         public static final String KAKAO_INQUIRY_CLICKED = "KakaoInquiryClicked";
@@ -572,6 +573,7 @@ public class AnalyticsManager
         public static final String START_PAYMENT = "StartPayment";
         public static final String END_PAYMENT = "EndPayment";
         public static final String PAYMENT_USED = "PaymentUsed";
+        public static final String COUPON_LOGIN = "CouponLogin";
     }
 
     public static class Category
@@ -686,6 +688,7 @@ public class AnalyticsManager
         public static final String SEARCH_AGAIN = "SearchAgain";
         public static final String BACK_BUTTON = "BackButton";
         public static final String CLOSED = "Closed";
+        public static final String LOGIN = "Login";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String EVENT = "event";
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
