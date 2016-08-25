@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -46,7 +47,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
-    private boolean mIsReceiveData;
+    private int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
 
     private String mInputText;
     private String mAddress;
@@ -595,16 +596,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 synchronized (StaySearchResultActivity.this)
                 {
-                    if (mIsReceiveData == false)
+                    if (mReceiveDataFlag == 0)
                     {
-                        mIsReceiveData = true;
-                    } else
+                        mReceiveDataFlag = 1;
+                    } else if (mReceiveDataFlag == 1)
                     {
                         ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
                         if (placeListFragmentList != null || placeListFragmentList.size() > 0)
                         {
                             int placeCount = placeListFragmentList.get(0).getPlaceCount();
                             recordEventSearchResultByLocation(address, placeCount == 0);
+                            mReceiveDataFlag = 2;
                         }
                     }
                 }
@@ -802,12 +804,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 synchronized (StaySearchResultActivity.this)
                 {
-                    if (mIsReceiveData == false)
+                    if (mReceiveDataFlag == 0)
                     {
-                        mIsReceiveData = true;
+                        mReceiveDataFlag = 1;
                     } else
                     {
                         recordEventSearchResultByLocation(mAddress, isShow);
+                        mReceiveDataFlag = 2;
                     }
                 }
             } else if (mSearchType == SearchType.RECENT)
@@ -825,9 +828,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-            if (viewType == ViewType.LIST)
+            try
             {
-                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                if (viewType == ViewType.LIST)
+                {
+                    recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
             }
         }
     };
