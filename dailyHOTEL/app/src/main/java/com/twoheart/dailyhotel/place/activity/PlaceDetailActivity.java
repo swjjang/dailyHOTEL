@@ -236,6 +236,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     mDontReloadAtOnResume = true;
                     onCalendarActivityResult(resultCode, data);
                     break;
+
+                case CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON:
+                    mDontReloadAtOnResume = true;
+                    break;
             }
 
             super.onActivityResult(requestCode, resultCode, data);
