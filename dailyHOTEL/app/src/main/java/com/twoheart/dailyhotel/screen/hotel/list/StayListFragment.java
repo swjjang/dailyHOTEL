@@ -33,15 +33,11 @@ import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
-    protected int mLoadMorePageIndex;
     protected int mStayCount;
 
     protected StayCuration mStayCuration;
 
     protected StayListLayout mStayListLayout;
-    protected BaseNetworkController mNetworkController;
-
-    protected BaseActivity mBaseActivity;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -52,24 +48,24 @@ public class StayListFragment extends PlaceListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         mBaseActivity = (BaseActivity) getActivity();
+        mViewType = ViewType.LIST;
+        mLoadMorePageIndex = 1;
 
         mStayListLayout = getStayListLayout();
         mStayListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
-        mNetworkController = getStayListNetworkController();
-
-        mViewType = ViewType.LIST;
-
-        mLoadMorePageIndex = 1;
+        mNetworkController = getNetworkController();
 
         return mStayListLayout.onCreateView(getLayoutResourceId(), container);
     }
 
-    protected BaseNetworkController getStayListNetworkController()
+    @Override
+    protected BaseNetworkController getNetworkController()
     {
         return new StayListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
     }
 
+    @Override
     protected int getLayoutResourceId()
     {
         return R.layout.fragment_hotel_list;

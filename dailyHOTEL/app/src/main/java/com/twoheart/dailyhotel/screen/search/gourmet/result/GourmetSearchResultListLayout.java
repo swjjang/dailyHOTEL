@@ -42,12 +42,12 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 mFilterEmptyView.setVisibility(View.GONE);
                 mResultTextView.setVisibility(View.VISIBLE);
 
-                if (mGourmetListMapFragment != null)
+                if (mPlaceListMapFragment != null)
                 {
-                    mGourmetListMapFragment.resetMenuBarLayoutranslation();
-                    fragmentManager.beginTransaction().remove(mGourmetListMapFragment).commitAllowingStateLoss();
+                    mPlaceListMapFragment.resetMenuBarLayoutranslation();
+                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
-                    mGourmetListMapFragment = null;
+                    mPlaceListMapFragment = null;
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -59,11 +59,11 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 mMapLayout.setVisibility(View.VISIBLE);
                 mFilterEmptyView.setVisibility(View.GONE);
 
-                if (isCurrentPage == true && mGourmetListMapFragment == null)
+                if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
-                    mGourmetListMapFragment = new GourmetListMapFragment();
-                    mGourmetListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mGourmetListMapFragment).commitAllowingStateLoss();
+                    mPlaceListMapFragment = new GourmetListMapFragment();
+                    mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
@@ -96,12 +96,12 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
     public void setMapMyLocation(Location location, boolean isVisible)
     {
-        if (mGourmetListMapFragment == null || location == null)
+        if (mPlaceListMapFragment == null || location == null)
         {
             return;
         }
 
-        mGourmetListMapFragment.setMyLocation(location, isVisible);
+        mPlaceListMapFragment.setMyLocation(location, isVisible);
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)

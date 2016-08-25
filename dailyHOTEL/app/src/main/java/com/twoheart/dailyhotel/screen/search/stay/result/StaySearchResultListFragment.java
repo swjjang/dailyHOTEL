@@ -27,7 +27,7 @@ public class StaySearchResultListFragment extends StayListFragment
     }
 
     @Override
-    protected BaseNetworkController getStayListNetworkController()
+    protected BaseNetworkController getNetworkController()
     {
         return new StaySearchResultListNetworkController(mBaseActivity, mNetworkTag, onNetworkControllerListener);
     }

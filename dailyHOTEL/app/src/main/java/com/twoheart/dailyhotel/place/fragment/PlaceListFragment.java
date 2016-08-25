@@ -7,14 +7,21 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 
 public abstract class PlaceListFragment extends BaseFragment implements Constants
 {
-    protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
-    protected View mBottomOptionLayout; // 애니매이션 때문에 어쩔수 없음.
     protected ViewType mViewType;
+    protected View mBottomOptionLayout; // 애니매이션 때문에 어쩔수 없음.
+    protected BaseActivity mBaseActivity;
+    protected BaseNetworkController mNetworkController;
+    protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
+
+    protected int mLoadMorePageIndex;
 
     // onPlaceClick 부분이 있는데 이부분은 고메와 호텔은 서로 상속받아서 사용한다.
     public interface OnPlaceListFragmentListener
@@ -35,6 +42,10 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
         void onRecordAnalytics(Constants.ViewType viewType);
     }
+
+    protected abstract int getLayoutResourceId();
+
+    protected abstract BaseNetworkController getNetworkController();
 
     public abstract void setPlaceCuration(PlaceCuration curation);
 

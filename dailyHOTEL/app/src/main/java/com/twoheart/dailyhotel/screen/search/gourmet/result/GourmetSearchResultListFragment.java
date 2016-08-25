@@ -28,7 +28,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
     }
 
     @Override
-    protected BaseNetworkController getGourmetListNetworkController()
+    protected BaseNetworkController getNetworkController()
     {
         return new GourmetSearchResultListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
     }

@@ -33,15 +33,11 @@ import java.util.List;
 
 public class GourmetListFragment extends PlaceListFragment
 {
-    protected int mLoadMorePageIndex;
     protected int mGourmetCount;
 
     protected GourmetCuration mGourmetCuration;
 
     protected GourmetListLayout mGourmetListLayout;
-    protected BaseNetworkController mNetworkController;
-
-    protected BaseActivity mBaseActivity;
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -54,24 +50,24 @@ public class GourmetListFragment extends PlaceListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         mBaseActivity = (BaseActivity) getActivity();
+        mViewType = ViewType.LIST;
+        mLoadMorePageIndex = 1;
 
         mGourmetListLayout = getGourmetListLayout();
         mGourmetListLayout.setBottomOptionLayout(mBottomOptionLayout);
 
-        mNetworkController = getGourmetListNetworkController();
-
-        mViewType = ViewType.LIST;
-
-        mLoadMorePageIndex = 1;
+        mNetworkController = getNetworkController();
 
         return mGourmetListLayout.onCreateView(getLayoutResourceId(), container);
     }
 
-    protected BaseNetworkController getGourmetListNetworkController()
+    @Override
+    protected BaseNetworkController getNetworkController()
     {
         return new GourmetListNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
     }
 
+    @Override
     protected int getLayoutResourceId()
     {
         return R.layout.fragment_gourmet_list;

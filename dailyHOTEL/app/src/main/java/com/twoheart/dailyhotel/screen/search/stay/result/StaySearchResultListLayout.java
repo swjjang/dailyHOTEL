@@ -42,12 +42,12 @@ public class StaySearchResultListLayout extends StayListLayout
                 mFilterEmptyView.setVisibility(View.GONE);
                 mResultTextView.setVisibility(View.VISIBLE);
 
-                if (mStayListMapFragment != null)
+                if (mPlaceListMapFragment != null)
                 {
-                    mStayListMapFragment.resetMenuBarLayoutranslation();
-                    fragmentManager.beginTransaction().remove(mStayListMapFragment).commitAllowingStateLoss();
+                    mPlaceListMapFragment.resetMenuBarLayoutranslation();
+                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
-                    mStayListMapFragment = null;
+                    mPlaceListMapFragment = null;
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -59,11 +59,11 @@ public class StaySearchResultListLayout extends StayListLayout
                 mMapLayout.setVisibility(View.VISIBLE);
                 mFilterEmptyView.setVisibility(View.GONE);
 
-                if (isCurrentPage == true && mStayListMapFragment == null)
+                if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
-                    mStayListMapFragment = new StayListMapFragment();
-                    mStayListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mStayListMapFragment).commitAllowingStateLoss();
+                    mPlaceListMapFragment = new StayListMapFragment();
+                    mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
@@ -94,12 +94,12 @@ public class StaySearchResultListLayout extends StayListLayout
 
     public void setMapMyLocation(Location location, boolean isVisible)
     {
-        if (mStayListMapFragment == null || location == null)
+        if (mPlaceListMapFragment == null || location == null)
         {
             return;
         }
 
-        mStayListMapFragment.setMyLocation(location, isVisible);
+        mPlaceListMapFragment.setMyLocation(location, isVisible);
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
