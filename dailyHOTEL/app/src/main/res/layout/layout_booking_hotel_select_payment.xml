@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:duplicateParentState="true"
-                    android:src="@drawable/selector_simplecard_plus_button"/>
+                    android:src="@drawable/selector_simplecard_button"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

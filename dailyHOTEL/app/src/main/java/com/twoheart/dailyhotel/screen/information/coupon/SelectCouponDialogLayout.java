@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -28,10 +29,11 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private View mDialogLayout;
     private DailyTextView mMessageTextView;
+    private TextView mTitleTextView;
     private View mListLayout;
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
-    private View mPositiveView;
+    private TextView mPositiveTextView, mNegativeTextView, mConfirmTextView;
     private ListView mListView;
     private SelectCouponAdapter mListAdapter;
 
@@ -49,22 +51,22 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
         mDialogLayout = view.findViewById(R.id.dialogLayout);
 
+        mTitleTextView = (TextView) view.findViewById(R.id.titleTextView);
         mMessageTextView = (DailyTextView) view.findViewById(R.id.messageTextView);
         mListLayout = view.findViewById(R.id.listLayout);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);
         mTwoButtonLayout = view.findViewById(R.id.twoButtonLayout);
-        View negativeView = view.findViewById(R.id.negativeTextView);
-        mPositiveView = view.findViewById(R.id.positiveTextView);
-        View confirmView = view.findViewById(R.id.confirmTextView);
+        mNegativeTextView = (TextView) mTwoButtonLayout.findViewById(R.id.negativeTextView);
+        mPositiveTextView = (TextView) mTwoButtonLayout.findViewById(R.id.positiveTextView);
+        mConfirmTextView = (TextView) mOneButtonLayout.findViewById(R.id.confirmTextView);
 
-        mPositiveView.setEnabled(false);
+        mPositiveTextView.setEnabled(false);
 
-        negativeView.setOnClickListener(this);
-        mPositiveView.setOnClickListener(this);
-        confirmView.setOnClickListener(this);
+        mNegativeTextView.setOnClickListener(this);
+        mPositiveTextView.setOnClickListener(this);
+        mConfirmTextView.setOnClickListener(this);
 
-        updateDialogLayout(false);
-        updateLayout(null);
+        setVisibility(false);
     }
 
     private void initListView(View view)
@@ -73,14 +75,9 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    private void updateLayout(List<Coupon> list)
+    public void setVisibility(boolean visibility)
     {
-        boolean isEmpty = isEmpty(list) == true;
-
-        updateMessageView(isEmpty);
-        updateButtonLayout(isEmpty);
-
-        mListLayout.setVisibility((isEmpty == true) ? View.GONE : View.VISIBLE);
+        mDialogLayout.setVisibility(visibility == true ? View.VISIBLE : View.GONE);
     }
 
     private boolean isEmpty(List<Coupon> list)
@@ -88,41 +85,60 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         return (list == null || list.size() == 0);
     }
 
-    private void updateDialogLayout(boolean isShow)
+    public void setOneButtonLayout(boolean visibility, int resId)
     {
-        mDialogLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        mConfirmTextView.setText(resId);
+
+        if (visibility == true)
+        {
+            mTwoButtonLayout.setVisibility(View.GONE);
+            mOneButtonLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            mOneButtonLayout.setVisibility(View.GONE);
+        }
     }
 
-    private void updateButtonLayout(boolean isEmpty)
+    public void setTwoButtonLayout(boolean visibility, int positiveResId, int negativeResId)
     {
-        if (isEmpty == false)
+        mPositiveTextView.setText(positiveResId);
+        mNegativeTextView.setText(negativeResId);
+
+        if (visibility == true)
         {
             mTwoButtonLayout.setVisibility(View.VISIBLE);
             mOneButtonLayout.setVisibility(View.GONE);
         } else
         {
             mTwoButtonLayout.setVisibility(View.GONE);
-            mOneButtonLayout.setVisibility(View.VISIBLE);
         }
     }
 
-    private void updateMessageView(boolean isEmpty)
+    public void setTitle(int resid)
     {
-        int messageResId;
-        if (isEmpty == false)
+        if (mTitleTextView == null)
         {
-            messageResId = R.string.message_select_coupon_selected;
-        } else
-        {
-            messageResId = R.string.message_select_coupon_empty;
+            return;
         }
+
+        mTitleTextView.setText(resid);
+    }
+
+    public void setMessage(int messageResId)
+    {
+        if(mMessageTextView == null)
+        {
+            return;
+        }
+
         mMessageTextView.setText(messageResId);
     }
 
     public void setData(List<Coupon> list)
     {
-        updateDialogLayout(true);
-        updateLayout(list);
+        boolean isEmpty = isEmpty(list) == true;
+
+        mListLayout.setVisibility((isEmpty == true) ? View.GONE : View.VISIBLE);
 
         if (mListAdapter == null)
         {
@@ -184,10 +200,10 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         {
             if (mListAdapter.getSelectPosition() != -1)
             {
-                mPositiveView.setEnabled(true);
+                mPositiveTextView.setEnabled(true);
             } else
             {
-                mPositiveView.setEnabled(false);
+                mPositiveTextView.setEnabled(false);
             }
         }
     };

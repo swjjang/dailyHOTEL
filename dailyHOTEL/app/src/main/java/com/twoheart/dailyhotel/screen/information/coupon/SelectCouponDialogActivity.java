@@ -254,17 +254,67 @@ public class SelectCouponDialogActivity extends BaseActivity
         @Override
         public void onCouponList(List<Coupon> list)
         {
-            mLayout.setData(list);
+            boolean isEmpty = (list == null || list.size() == 0);
 
-            if (list == null || list.size() == 0)
+            mLayout.setVisibility(true);
+
+            switch (mCallByScreen)
             {
-                AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
-                    .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
-            } else
-            {
-                AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
-                    .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                {
+                    mLayout.setTitle(R.string.label_select_coupon);
+
+                    if (isEmpty == true)
+                    {
+                        mLayout.setMessage(R.string.message_select_coupon_empty);
+                        mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_confirm);
+                    } else
+                    {
+                        mLayout.setMessage(R.string.message_select_coupon_selected);
+                        mLayout.setTwoButtonLayout(true, R.string.dialog_btn_text_select, R.string.dialog_btn_text_cancel);
+                    }
+
+                    if (isEmpty == true)
+                    {
+                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
+                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
+                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+                    }
+                    break;
+                }
+
+                case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                {
+                    mLayout.setTitle(R.string.coupon_download_coupon);
+
+                    boolean isDownloadedAll = true;
+
+                    for (Coupon coupon : list)
+                    {
+                        if (coupon.isDownloaded == false)
+                        {
+                            isDownloadedAll = false;
+                            break;
+                        }
+                    }
+
+                    if (isDownloadedAll == true)
+                    {
+                        mLayout.setMessage(R.string.message_downloaded_all_coupon);
+                    } else
+                    {
+                        mLayout.setMessage(R.string.message_please_download_coupon);
+                    }
+
+                    mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_close);
+                    break;
+                }
             }
+
+            mLayout.setData(list);
 
             unLockUI();
         }
@@ -277,7 +327,20 @@ public class SelectCouponDialogActivity extends BaseActivity
             Coupon coupon = mLayout.getCoupon(userCouponCode);
             recordAnalytics(coupon);
 
-            mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
+            switch (mCallByScreen)
+            {
+                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                {
+                    mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
+                    break;
+                }
+
+                case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                {
+                    mNetworkController.requestCouponList(mHotelIdx, mCheckInDate, mNights);
+                    break;
+                }
+            }
         }
 
         @Override
