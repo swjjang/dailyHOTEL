@@ -6,7 +6,6 @@ import android.net.Uri;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.GourmetSearch;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -153,7 +152,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                gourmet = new GourmetSearch();
+                gourmet = new Gourmet();
 
                 if (gourmet.setData(jsonObject, imageUrl) == true)
                 {

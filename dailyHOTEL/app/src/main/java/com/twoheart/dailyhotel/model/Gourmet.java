@@ -21,8 +21,6 @@ public class Gourmet extends Place
     public int categorySequence;
     public double distance;
 
-    private GourmetFilters mGourmetFilters;
-
     public Grade grade;
 
     public Gourmet()
@@ -63,7 +61,14 @@ public class Gourmet extends Place
         try
         {
             index = jsonObject.getInt("restaurantIdx");
-            name = jsonObject.getString("restaurantName");
+
+            if (jsonObject.has("restaurantName") == true)
+            {
+                name = jsonObject.getString("restaurantName");
+            } else if (jsonObject.has("name") == true)
+            {
+                name = jsonObject.getString("name");
+            }
 
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discount");
@@ -84,6 +89,11 @@ public class Gourmet extends Place
                 satisfaction = jsonObject.getInt("ratingValue");
             }
 
+            if (jsonObject.has("distance") == true)
+            {
+                distance = jsonObject.getDouble("distance");
+            }
+
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
             Iterator<String> iterator = imageJSONObject.keys();
@@ -100,8 +110,6 @@ public class Gourmet extends Place
                 {
                 }
             }
-
-            mGourmetFilters = makeGourmetFilters(category, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -110,67 +118,6 @@ public class Gourmet extends Place
         }
 
         return true;
-    }
-
-    public boolean isFiltered(GourmetCurationOption curationOption)
-    {
-        if (mGourmetFilters == null)
-        {
-            return false;
-        }
-
-        return mGourmetFilters.isFiltered(curationOption);
-    }
-
-    public GourmetFilters getFilters()
-    {
-        return mGourmetFilters;
-    }
-
-    private GourmetFilters makeGourmetFilters(String category, JSONObject jsonObject) throws JSONException
-    {
-        if (jsonObject == null)
-        {
-            return null;
-        }
-
-        JSONArray jsonArray = jsonObject.getJSONArray("restaurantTicketList");
-
-        if (jsonArray == null || jsonArray.length() == 0)
-        {
-            return null;
-        }
-
-        int length = jsonArray.length();
-        GourmetFilters gourmetFilters = new GourmetFilters(length);
-        gourmetFilters.category = category;
-
-
-        for (int i = 0; i < length; i++)
-        {
-            gourmetFilters.setGourmetFilter(i, jsonArray.getJSONObject(i));
-        }
-
-        setAmenitiesFlag(gourmetFilters, jsonObject);
-
-        return gourmetFilters;
-    }
-
-    private void setAmenitiesFlag(GourmetFilters gourmetFilters, JSONObject jsonObject) throws JSONException
-    {
-        gourmetFilters.amenitiesFlag = GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE;
-
-        boolean parking = false;
-
-        if (jsonObject.has("parking") == true)
-        {
-            parking = "Y".equalsIgnoreCase(jsonObject.getString("parking"));
-        }
-
-        if (parking == true)
-        {
-            gourmetFilters.amenitiesFlag |= GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING;
-        }
     }
 
     @Override

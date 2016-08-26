@@ -7,7 +7,6 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetParams;
-import com.twoheart.dailyhotel.model.GourmetSearch;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -40,7 +39,7 @@ public class GourmetListNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, params.toParamsString(), mGourmetListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsString(), mGourmetListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +152,7 @@ public class GourmetListNetworkController extends BaseNetworkController
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                gourmet = new GourmetSearch();
+                gourmet = new Gourmet();
 
                 if (gourmet.setData(jsonObject, imageUrl) == true)
                 {
