@@ -20,7 +20,6 @@ import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.TextView;
@@ -33,7 +32,6 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
@@ -73,13 +71,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
     private int mStatusBarHeight;
-    private float mLastFactor;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void showActionBar();
+        void showActionBar(boolean isAnimation);
 
-        void hideActionBar();
+        void hideActionBar(boolean isAnimation);
 
         void onClickImage(PlaceDetail placeDetail);
 
@@ -109,14 +106,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected abstract String getProductTypeTitle();
 
     protected abstract View getTitleLayout();
-
-    protected abstract View getGradeTextView();
-
-    protected abstract View getNameTextView();
-
-    protected abstract View getMagicToolbarView();
-
-    protected abstract View getMagicTitleTextView();
 
     public abstract void setBookingStatus(int status);
 
@@ -632,7 +621,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private OnScrollListener mOnScrollListener = new OnScrollListener()
     {
         private Rect mTitleLayoutRect = new Rect();
-        private Rect mMagicTitleTextViewRect = new Rect();
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState)
@@ -649,7 +637,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
             if (firstVisibleItem > 1)
             {
-                ((OnEventListener) mOnEventListener).showActionBar();
+                ((OnEventListener) mOnEventListener).showActionBar(false);
                 return;
             }
 
@@ -659,137 +647,28 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
 
             View titleLayout = getTitleLayout();
-            View magicTitleTextView = getMagicTitleTextView();
 
-            if (titleLayout == null || magicTitleTextView == null)
+            if (titleLayout == null)
             {
                 return;
             }
 
             titleLayout.getGlobalVisibleRect(mTitleLayoutRect);
-            magicTitleTextView.getGlobalVisibleRect(mMagicTitleTextViewRect);
 
             final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-
-            ExLog.d("rect : " + mTitleLayoutRect.toString() + ", mStatusBarHeight : " + mStatusBarHeight + ", TOOLBAR_HEIGHT : "+ TOOLBAR_HEIGHT);
 
             if (mTitleLayoutRect.top == mTitleLayoutRect.right)
             {
 
             } else
             {
-                if (mMagicTitleTextViewRect.bottom >= mTitleLayoutRect.bottom)
+                if (mTitleLayoutRect.top <= mStatusBarHeight + TOOLBAR_HEIGHT)
                 {
-                    ((OnEventListener) mOnEventListener).showActionBar();
+                    ((OnEventListener) mOnEventListener).showActionBar(true);
                 } else
                 {
-                    ((OnEventListener) mOnEventListener).hideActionBar();
+                    ((OnEventListener) mOnEventListener).hideActionBar(true);
                 }
-            }
-
-            View gradeTextView = getGradeTextView();
-
-            if (gradeTextView == null)
-            {
-                return;
-            }
-
-            float max = ((float) mImageHeight - TOOLBAR_HEIGHT) / 2;
-            float offset = mTitleLayoutRect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
-            float alphaFactor = offset / max;
-
-            if (Util.isOverAPI11() == true)
-            {
-                if (Float.compare(alphaFactor, 0.0f) <= 0)
-                {
-                    gradeTextView.setAlpha(0.0f);
-                } else
-                {
-                    gradeTextView.setAlpha(alphaFactor);
-                }
-            } else
-            {
-                if (Float.compare(alphaFactor, 0.2f) <= 0)
-                {
-                    gradeTextView.setVisibility(View.INVISIBLE);
-                } else
-                {
-                    gradeTextView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            View nameTextView = getNameTextView();
-            Rect firstRect = (Rect) nameTextView.getTag();
-            Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
-
-            if (firstRect != null && firstWidth != null)
-            {
-                final int TOOLBAR_TEXT_X = Util.dpToPx(mContext, 60);
-                float gradeMax = ((float) mImageHeight - TOOLBAR_HEIGHT) / 3;
-                float gradeOffset = mTitleLayoutRect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
-                float xFactor = gradeOffset / gradeMax;
-                float nameMax = firstRect.left - TOOLBAR_TEXT_X;
-
-                if (Float.compare(xFactor, 0.0f) < 0)
-                {
-                    xFactor = 0.0f;
-                }
-
-                if (Util.isOverAPI11() == true)
-                {
-                    if (Float.compare(xFactor, 1.0f) <= 0)
-                    {
-                        nameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
-                    } else
-                    {
-                        nameTextView.setTranslationX(0);
-                    }
-                } else
-                {
-                    if (Float.compare(xFactor, 1.0f) <= 0)
-                    {
-                        TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
-                        anim.setDuration(0);
-                        anim.setFillAfter(true);
-                        nameTextView.startAnimation(anim);
-
-                        mLastFactor = -nameMax * (1.0f - xFactor);
-                    } else
-                    {
-                        nameTextView.setAnimation(null);
-                    }
-                }
-
-                float widthNameMax = firstRect.width() - firstWidth;
-                int newWidth;
-
-                if (Float.compare(xFactor, 1.0f) <= 0)
-                {
-                    newWidth = (int) (firstRect.width() - (widthNameMax * (1.0f - xFactor)));
-                } else
-                {
-                    newWidth = firstRect.width();
-                }
-
-                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
-
-                if (layoutParams.width != newWidth)
-                {
-                    layoutParams.width = newWidth;
-                    nameTextView.setLayoutParams(layoutParams);
-                }
-            }
-
-            View magicToolbarView = getMagicToolbarView();
-
-            if (magicToolbarView != null)
-            {
-                if (magicToolbarView.getVisibility() != View.VISIBLE)
-                {
-                    magicToolbarView.setVisibility(View.VISIBLE);
-                }
-
-                magicToolbarView.setY(mStatusBarHeight - (mTitleLayoutRect.bottom - titleLayout.getHeight()));
             }
         }
     };

@@ -126,7 +126,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     public void setMessage(int messageResId)
     {
-        if(mMessageTextView == null)
+        if (mMessageTextView == null)
         {
             return;
         }

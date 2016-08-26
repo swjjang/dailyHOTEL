@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +30,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private Context mContext;
     private View[] mDeatilViews;
     private int mImageHeight;
-    protected View mGourmetTitleLayout, mTitleLayout;
-    protected TextView mGradeTextView;
-    protected TextView mNameTextView;
-    protected View mMagicToolbar;
+    protected View mGourmetTitleLayout;
 
     private GourmetDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
@@ -81,22 +77,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
     public View getTitleLayout()
     {
-        return mTitleLayout;
-    }
-
-    public View getGradeTextView()
-    {
-        return mGradeTextView;
-    }
-
-    public View getNameTextView()
-    {
-        return mNameTextView;
-    }
-
-    public View getMagicToolbarView()
-    {
-        return mMagicToolbar;
+        return mGourmetTitleLayout;
     }
 
     @Override
@@ -207,45 +188,23 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mGourmetTitleLayout = view.findViewById(R.id.hotelTitleLayout);
         mGourmetTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        mTitleLayout = mGourmetTitleLayout.findViewById(R.id.titleLayout);
-
-        mMagicToolbar = view.findViewById(R.id.magicToolbar);
-
         // 등급
-        mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
+        TextView gradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
 
         if (Util.isTextEmpty(gourmetDetail.category) == true)
         {
-            mGradeTextView.setVisibility(View.GONE);
+            gradeTextView.setVisibility(View.GONE);
         } else
         {
-            mGradeTextView.setVisibility(View.VISIBLE);
-            mGradeTextView.setText(gourmetDetail.category);
-            mGradeTextView.setTextColor(mContext.getResources().getColor(R.color.black));
-            mGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
+            gradeTextView.setVisibility(View.VISIBLE);
+            gradeTextView.setText(gourmetDetail.category);
+            gradeTextView.setTextColor(mContext.getResources().getColor(R.color.black));
+            gradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }
 
         // 호텔명
-        mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        mNameTextView.setText(gourmetDetail.name);
-
-        int width = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60) - Util.dpToPx(mContext, 48);
-        mNameTextView.setTag(mNameTextView.getId(), width);
-        mNameTextView.setSelected(true);
-
-        if (mNameTextView.getTag() == null)
-        {
-            mNameTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Rect rect = new Rect();
-                    mNameTextView.getGlobalVisibleRect(rect);
-                    mNameTextView.setTag(rect);
-                }
-            });
-        }
+        TextView placeNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+        placeNameTextView.setText(gourmetDetail.name);
 
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 

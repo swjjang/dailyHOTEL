@@ -52,45 +52,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         return mListAdapter.getTitleLayout();
     }
 
-    @Override
-    protected View getGradeTextView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getGradeTextView();
-    }
-
-    @Override
-    protected View getNameTextView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getNameTextView();
-    }
-
-    @Override
-    protected View getMagicToolbarView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getMagicToolbarView();
-    }
-
-    @Override
-    protected View getMagicTitleTextView()
-    {
-        return null;
-    }
-
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
     {
         if (gourmetDetail == null)

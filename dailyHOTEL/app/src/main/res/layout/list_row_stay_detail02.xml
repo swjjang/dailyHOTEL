@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="19dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="16dp"
+            android:paddingTop="19dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/hotelGradeTextView"
@@ -51,8 +51,8 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textColor="@color/hoteldetail_title_text"
-                dailyFont:style="Medium"
-                android:textSize="18dp"/>
+                android:textSize="18dp"
+                dailyFont:style="Medium"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/satisfactionView"
@@ -68,70 +68,24 @@
                 android:visibility="visible"
                 dailyFont:style="DemiLight"/>
         </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/magicToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:layout_alignParentBottom="false"
-            android:visibility="invisible">
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@drawable/navibar_ic_back_01_black"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/magicTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="false"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/imageView2"
-                android:layout_toRightOf="@+id/imageView1"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/actionbar_title"
-                android:textSize="18dp"
-                android:visibility="invisible"
-                />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:scaleType="center"
-                android:src="@drawable/navibar_ic_share_01_black"/>
-        </RelativeLayout>
     </RelativeLayout>
-
 
 
     <RelativeLayout
         android:id="@+id/couponLayout"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:visibility="gone"
         android:background="@color/white"
-        >
+        android:visibility="gone">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="특별 할인 혜택"
+            android:layout_marginLeft="15dp"
+            android:text="@string/label_detail_special_discount"
             android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            android:layout_marginLeft="15dp"/>
+            android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/downloadCouponView"
@@ -139,17 +93,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
             android:background="@drawable/shape_rect_cdcdcdd"
             android:drawablePadding="4dp"
             android:drawableRight="@drawable/ic_detail_coupon_down"
-            android:text="할인쿠폰 다운받기"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="11dp"
+            android:paddingBottom="4dp"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:layout_marginRight="15dp"/>
+            android:text="@string/label_detail_download_coupon"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -205,8 +159,7 @@
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/navibar_m_burg_ic_v"
                     android:textColor="@color/default_text_c900034"
-                    android:textSize="15dp"
-                    android:paddingLeft="5dp"/>
+                    android:textSize="15dp"/>
             </LinearLayout>
 
             <View
@@ -236,8 +189,7 @@
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/navibar_m_burg_ic_v"
                     android:textColor="@color/default_text_c900034"
-                    android:textSize="15dp"
-                    android:paddingLeft="5dp"/>
+                    android:textSize="15dp"/>
             </LinearLayout>
         </LinearLayout>
 

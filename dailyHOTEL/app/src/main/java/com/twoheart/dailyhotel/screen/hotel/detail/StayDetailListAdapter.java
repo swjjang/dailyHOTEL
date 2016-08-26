@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +30,7 @@ public class StayDetailListAdapter extends BaseAdapter
     private Context mContext;
     private View[] mDeatilViews;
     private int mImageHeight;
-    private View mHotelTitleLayout, mTitleLayout;
-    private TextView mHotelGradeTextView;
-    private TextView mHotelNameTextView;
-    private TextView mMagicTitleTextView;
-    protected View mMagicToolbar;
+    private View mHotelTitleLayout;
 
     private StayDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
@@ -160,27 +155,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
     public View getTitleLayout()
     {
-        return mTitleLayout;
-    }
-
-    public View getMagicTitleTextView()
-    {
-        return mMagicTitleTextView;
-    }
-
-    public View getGradeTextView()
-    {
-        return mHotelGradeTextView;
-    }
-
-    public View getNameTextView()
-    {
-        return mHotelNameTextView;
-    }
-
-    public View getMagicToolbarView()
-    {
-        return mMagicToolbar;
+        return mHotelTitleLayout;
     }
 
     /**
@@ -211,42 +186,16 @@ public class StayDetailListAdapter extends BaseAdapter
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
 
-        mTitleLayout = mHotelTitleLayout.findViewById(R.id.titleLayout);
-
-        mMagicTitleTextView = (TextView)mHotelTitleLayout.findViewById(R.id.magicTitleTextView);
-        mMagicTitleTextView.setText(stayDetail.name);
-        mMagicTitleTextView.setVisibility(View.INVISIBLE);
-
-        mMagicToolbar = view.findViewById(R.id.magicToolbar);
-
         // 등급
-        mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
-        mHotelGradeTextView.setVisibility(View.VISIBLE);
+        TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
+        hotelGradeTextView.setVisibility(View.VISIBLE);
 
-        mHotelGradeTextView.setText(stayDetail.grade.getName(mContext));
-        mHotelGradeTextView.setBackgroundResource(stayDetail.grade.getColorResId());
+        hotelGradeTextView.setText(stayDetail.grade.getName(mContext));
+        hotelGradeTextView.setBackgroundResource(stayDetail.grade.getColorResId());
 
         // 호텔명
-        mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        mHotelNameTextView.setText(stayDetail.name);
-
-        int width = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60) - Util.dpToPx(mContext, 48);
-        mHotelNameTextView.setTag(mHotelNameTextView.getId(), width);
-        mHotelNameTextView.setSelected(true);
-
-        if (mHotelNameTextView.getTag() == null)
-        {
-            mHotelNameTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Rect rect = new Rect();
-                    mHotelNameTextView.getGlobalVisibleRect(rect);
-                    mHotelNameTextView.setTag(rect);
-                }
-            });
-        }
+        TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+        hotelNameTextView.setText(stayDetail.name);
 
         // 만족도
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);

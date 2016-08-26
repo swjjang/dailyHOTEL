@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.widget;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,8 +13,11 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class DailyToolbarLayout
 {
+    private static final int ANIMATION_DEALY = 200;
+
     private Context mContext;
     private View mToolbar;
+    private AlphaAnimation mAlphaAnimation;
 
     public DailyToolbarLayout(Context context, View toolbar)
     {
@@ -228,13 +233,154 @@ public class DailyToolbarLayout
         }
     }
 
-    public void setToolbarVisibility(boolean visible)
+    boolean mIsShowAnimationStart;
+    boolean mIsHideAnimationStart;
+
+    public void setToolbarVisibility(boolean visible, boolean isAnimation)
     {
         if (mToolbar == null)
         {
             return;
         }
 
-        mToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (visible == true)
+        {
+            if (mToolbar.getVisibility() != View.VISIBLE)
+            {
+                if (isAnimation == true && mIsShowAnimationStart == false)
+                {
+                    mIsHideAnimationStart = false;
+                    showAnimation();
+                } else
+                {
+                    mToolbar.setVisibility(View.VISIBLE);
+
+                    mIsShowAnimationStart = false;
+                    mIsHideAnimationStart = false;
+                }
+            }
+        } else
+        {
+            if (mToolbar.getVisibility() == View.VISIBLE)
+            {
+                if (isAnimation == true && mIsHideAnimationStart == false)
+                {
+                    mIsShowAnimationStart = false;
+                    hideAnimation();
+                } else
+                {
+                    mToolbar.setVisibility(View.GONE);
+
+                    mIsShowAnimationStart = false;
+                    mIsHideAnimationStart = false;
+                }
+            }
+        }
+    }
+
+    private void showAnimation()
+    {
+        if (mToolbar == null)
+        {
+            return;
+        }
+
+        if (mIsShowAnimationStart == true)
+        {
+            return;
+        } else
+        {
+            mIsShowAnimationStart = true;
+        }
+
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+                mToolbar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                mIsShowAnimationStart = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        mToolbar.startAnimation(mAlphaAnimation);
+    }
+
+    private void hideAnimation()
+    {
+        if (mToolbar == null)
+        {
+            return;
+        }
+
+        if (mIsHideAnimationStart == true)
+        {
+            return;
+        } else
+        {
+            mIsHideAnimationStart = true;
+        }
+
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                mToolbar.setVisibility(View.GONE);
+                mIsHideAnimationStart = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        mToolbar.startAnimation(mAlphaAnimation);
     }
 }

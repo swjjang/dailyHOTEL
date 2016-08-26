@@ -57,50 +57,6 @@ public class StayDetailLayout extends PlaceDetailLayout
         return mListAdapter.getTitleLayout();
     }
 
-    @Override
-    protected View getGradeTextView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getGradeTextView();
-    }
-
-    @Override
-    protected View getNameTextView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getNameTextView();
-    }
-
-    @Override
-    protected View getMagicToolbarView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getMagicToolbarView();
-    }
-
-    @Override
-    protected View getMagicTitleTextView()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getMagicTitleTextView();
-    }
-
     public void setDetail(SaleTime saleTime, StayDetail stayDetail, int imagePosition)
     {
         if (stayDetail == null)
