@@ -24,6 +24,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected LayoutInflater mInflater;
     protected List<PlaceViewItem> mPlaceViewItemList;
     protected PaintDrawable mPaintDrawable;
+    protected boolean mShowDistanceIgnoreSort;
 
     private Constants.SortType mSortType;
 
@@ -140,5 +141,10 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     public void setSortType(Constants.SortType sortType)
     {
         this.mSortType = sortType;
+    }
+
+    public void setShowDistanceIgnoreSort(boolean isShow)
+    {
+        mShowDistanceIgnoreSort = isShow;
     }
 }

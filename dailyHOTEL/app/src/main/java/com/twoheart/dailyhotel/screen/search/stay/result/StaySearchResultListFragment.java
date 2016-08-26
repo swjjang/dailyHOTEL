@@ -4,6 +4,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
@@ -20,6 +21,7 @@ public class StaySearchResultListFragment extends StayListFragment
 {
     private boolean mIsOptimizeCategory;
     private boolean mIsDeepLink;
+    private SearchType mSearchType;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
@@ -42,6 +44,19 @@ public class StaySearchResultListFragment extends StayListFragment
     protected StayListLayout getPlaceListLayout()
     {
         return new StaySearchResultListLayout(mBaseActivity, mEventListener);
+    }
+
+    public void setSearchType(SearchType searchType)
+    {
+        mSearchType = searchType;
+    }
+
+    @Override
+    public void setPlaceCuration(PlaceCuration curation)
+    {
+        super.setPlaceCuration(curation);
+
+        ((StaySearchResultListLayout) mPlaceListLayout).setSearchType(mSearchType);
     }
 
     @Override

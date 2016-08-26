@@ -706,6 +706,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.setPlaceCuration(mStaySearchCuration);
+                ((StaySearchResultListFragment)currentPlaceListFragment).setSearchType(mSearchType);
                 currentPlaceListFragment.refreshList(true);
             } else
             {

@@ -42,6 +42,11 @@ public abstract class PlaceCurationOption implements Parcelable
         mDefaultSortType = defaultSortType;
     }
 
+    public Constants.SortType getDefaultSortType()
+    {
+        return mDefaultSortType;
+    }
+
     public boolean isDefaultSortType()
     {
         return mSortType == mDefaultSortType;

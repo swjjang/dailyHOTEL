@@ -269,7 +269,7 @@ public class StayListAdapter extends PlaceListAdapter
             holder.dBenefitLayout.setVisibility(View.GONE);
         }
 
-        if (getSortType() == Constants.SortType.DISTANCE)
+        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
             holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");

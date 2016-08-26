@@ -7,14 +7,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
 
+import java.util.ArrayList;
+
 public class StaySearchResultListLayout extends StayListLayout
 {
     private TextView mResultTextView;
+    private Constants.SearchType mSearchType;
 
     public StaySearchResultListLayout(Context context, OnEventListener eventListener)
     {
@@ -102,6 +106,11 @@ public class StaySearchResultListLayout extends StayListLayout
         mPlaceListMapFragment.setMyLocation(location, isVisible);
     }
 
+    public void setSearchType(Constants.SearchType searchType)
+    {
+        mSearchType = searchType;
+    }
+
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
     {
         if (mResultTextView == null)
@@ -130,5 +139,17 @@ public class StaySearchResultListLayout extends StayListLayout
                 mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
             }
         }
+    }
+
+    @Override
+    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
+                              ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    {
+        if (mSearchType == Constants.SearchType.LOCATION)
+        {
+            mPlaceListAdapter.setShowDistanceIgnoreSort(true);
+        }
+
+        super.addResultList(fragmentManager, viewType, list, sortType);
     }
 }
