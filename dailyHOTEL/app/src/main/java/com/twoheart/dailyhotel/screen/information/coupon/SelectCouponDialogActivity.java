@@ -274,6 +274,8 @@ public class SelectCouponDialogActivity extends BaseActivity
                         mLayout.setTwoButtonLayout(true, R.string.dialog_btn_text_select, R.string.dialog_btn_text_cancel);
                     }
 
+                    mLayout.setData(list, true);
+
                     if (isEmpty == true)
                     {
                         AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
@@ -310,11 +312,10 @@ public class SelectCouponDialogActivity extends BaseActivity
                     }
 
                     mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_close);
+                    mLayout.setData(list, false);
                     break;
                 }
             }
-
-            mLayout.setData(list);
 
             unLockUI();
         }

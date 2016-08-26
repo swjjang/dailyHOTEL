@@ -30,32 +30,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                />
+                android:layout_marginLeft="10dp"/>
 
             <LinearLayout
                 android:id="@+id/leftTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="7dp"
                 android:layout_toRightOf="@id/iconImageView"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/priceTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
                     android:textColor="@color/coupon_red_wine_text"
                     android:textSize="13dp"
-                    dailyFont:style="Bold"
-                    />
+                    dailyFont:style="Bold"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/downloadTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:paddingLeft="7dp"
                     android:text="@string/message_select_coupon_download"
                     android:textColor="@color/coupon_red_wine_text"
                     android:textSize="10dp"

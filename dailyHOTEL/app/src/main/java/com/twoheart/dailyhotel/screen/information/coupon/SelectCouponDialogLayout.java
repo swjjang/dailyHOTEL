@@ -134,7 +134,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mMessageTextView.setText(messageResId);
     }
 
-    public void setData(List<Coupon> list)
+    public void setData(List<Coupon> list, boolean isSelected)
     {
         boolean isEmpty = isEmpty(list) == true;
 
@@ -143,10 +143,12 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         if (mListAdapter == null)
         {
             mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
+            mListAdapter.setSelected(isSelected);
             mListView.setAdapter(mListAdapter);
         } else
         {
             mListAdapter.setData(list);
+            mListAdapter.setSelected(isSelected);
             mListAdapter.notifyDataSetChanged();
         }
     }
