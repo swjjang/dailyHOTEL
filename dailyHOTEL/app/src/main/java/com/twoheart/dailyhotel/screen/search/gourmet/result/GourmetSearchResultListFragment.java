@@ -6,6 +6,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
@@ -19,13 +20,7 @@ import java.util.List;
 public class GourmetSearchResultListFragment extends GourmetListFragment
 {
     private boolean mIsDeepLink;
-
-    public interface OnGourmetSearchResultListFragmentListener extends OnGourmetListFragmentListener
-    {
-        void onGourmetClick(PlaceViewItem placeViewItem, int listCount);
-
-        void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
-    }
+    private SearchType mSearchType;
 
     @Override
     protected BaseNetworkController getNetworkController()
@@ -43,6 +38,19 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
     protected PlaceListLayout getPlaceListLayout()
     {
         return new GourmetSearchResultListLayout(mBaseActivity, mEventListener);
+    }
+
+    public void setSearchType(SearchType searchType)
+    {
+        mSearchType = searchType;
+    }
+
+    @Override
+    public void setPlaceCuration(PlaceCuration curation)
+    {
+        super.setPlaceCuration(curation);
+
+        ((GourmetSearchResultListLayout) mPlaceListLayout).setSearchType(mSearchType);
     }
 
     @Override

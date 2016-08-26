@@ -48,12 +48,6 @@ public class GourmetListAdapter extends PlaceListAdapter
     }
 
     @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == PlaceViewItem.TYPE_SECTION;
-    }
-
-    @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder)
     {
         super.onViewRecycled(holder);
@@ -221,8 +215,6 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.personsTextView.setVisibility(View.GONE);
         }
 
-        String currency = mContext.getResources().getString(R.string.currency);
-
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
         {
             holder.priceView.setVisibility(View.INVISIBLE);
@@ -231,7 +223,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         {
             holder.priceView.setVisibility(View.VISIBLE);
 
-            holder.priceView.setText(strPrice + currency);
+            holder.priceView.setText(strPrice);
             holder.priceView.setPaintFlags(holder.priceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -245,7 +237,7 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        holder.discountView.setText(strDiscount + currency);
+        holder.discountView.setText(strDiscount);
         holder.nameView.setSelected(true); // Android TextView marquee bug
 
         if (Util.isOverAPI16() == true)
@@ -277,10 +269,10 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (getSortType() == Constants.SortType.DISTANCE)
+        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km)");
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
         } else
         {
             holder.distanceTextView.setVisibility(View.GONE);

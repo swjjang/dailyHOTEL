@@ -77,9 +77,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             persions.setVisibility(View.GONE);
         }
 
-        int price = gourmet.price;
-
-        if (price <= 0)
+        if (gourmet.price <= 0)
         {
             priceTextView.setVisibility(View.INVISIBLE);
 
@@ -88,7 +86,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(Util.getPriceFormat(mContext, price, false));
+            priceTextView.setText(Util.getPriceFormat(mContext, gourmet.price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
