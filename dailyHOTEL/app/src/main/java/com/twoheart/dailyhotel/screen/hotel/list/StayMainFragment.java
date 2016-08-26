@@ -54,6 +54,14 @@ public class StayMainFragment extends PlaceMainFragment
     public StayMainFragment()
     {
         mStayCuration = new StayCuration();
+
+        String oldCategoryCode = DailyPreference.getInstance(mBaseActivity).getStayCategoryCode();
+        String oldCategoryName = DailyPreference.getInstance(mBaseActivity).getStayCategoryName();
+
+        if (Util.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
+        {
+            mStayCuration.setCategory(mBaseActivity, new Category(oldCategoryName, oldCategoryCode));
+        }
     }
 
     @Override
@@ -81,7 +89,7 @@ public class StayMainFragment extends PlaceMainFragment
 
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 mStayCuration.setProvince(province);
-                mStayCuration.setCategory(Category.ALL);
+                mStayCuration.setCategory(mBaseActivity, Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
                 mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
@@ -111,7 +119,7 @@ public class StayMainFragment extends PlaceMainFragment
                 int nights = data.getIntExtra(StayRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
 
                 mStayCuration.setProvince(province);
-                mStayCuration.setCategory(Category.ALL);
+                mStayCuration.setCategory(mBaseActivity, Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
                 mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
@@ -358,7 +366,7 @@ public class StayMainFragment extends PlaceMainFragment
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
             Category category = (Category) tab.getTag();
-            mStayCuration.setCategory(category);
+            mStayCuration.setCategory(mBaseActivity, category);
 
             mPlaceMainLayout.setCurrentItem(tab.getPosition());
             mPlaceMainLayout.showBottomLayout(false);
@@ -1437,7 +1445,7 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 if (category.code.equalsIgnoreCase(categoryCode) == true)
                 {
-                    mStayCuration.setCategory(category);
+                    mStayCuration.setCategory(mBaseActivity, category);
                     break;
                 }
             }

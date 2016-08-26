@@ -1,8 +1,11 @@
 package com.twoheart.dailyhotel.model;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 public class StayCuration extends PlaceCuration
 {
@@ -97,12 +100,22 @@ public class StayCuration extends PlaceCuration
 
     public void setCategory(Category category)
     {
+        setCategory(null, category);
+    }
+
+    public void setCategory(Context context, Category category)
+    {
         if (category == null)
         {
             category = Category.ALL;
         }
 
         mCategory = category;
+
+        if (context != null)
+        {
+            DailyPreference.getInstance(context).setStayCategory(category.name, category.code);
+        }
     }
 
     @Override

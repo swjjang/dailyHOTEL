@@ -33,6 +33,9 @@ public class LauncherActivity extends Activity
         DailyPreference.getInstance(this).setStayLastViewDate(null);
         DailyPreference.getInstance(this).setGourmetLastViewDate(null);
 
+        // 스테이 카테고리 정보를 초기화한다.
+        DailyPreference.getInstance(this).setStayCategory(null, null);
+
         Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
 
         Uri uri = getIntent().getData();

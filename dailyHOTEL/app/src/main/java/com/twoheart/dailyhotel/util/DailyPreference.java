@@ -79,6 +79,9 @@ public class DailyPreference
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
 
+    private static final String KEY_STAY_CATEGORY_CODE = "1010";
+    private static final String KEY_STAY_CATEGORY_NAME = "1011";
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
@@ -765,6 +768,23 @@ public class DailyPreference
     {
         return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, true);
     }
+
+    public void setStayCategory(String name, String code)
+    {
+        setValue(mEditor, KEY_STAY_CATEGORY_NAME, name);
+        setValue(mEditor, KEY_STAY_CATEGORY_CODE, code);
+    }
+
+    public String getStayCategoryCode()
+    {
+        return getValue(mPreferences, KEY_STAY_CATEGORY_CODE, null);
+    }
+
+    public String getStayCategoryName()
+    {
+        return getValue(mPreferences, KEY_STAY_CATEGORY_NAME, null);
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
