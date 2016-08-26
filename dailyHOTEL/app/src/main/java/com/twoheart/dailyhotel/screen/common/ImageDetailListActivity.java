@@ -142,6 +142,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                     case MotionEvent.ACTION_DOWN:
                         mY = event.getY();
                         mAlphaView.setAlpha(1.0f);
+                        mAlphaView.setBackgroundResource(R.color.white);
 
                         final int firstChildIndex = 0;
                         final int lastChildIndex = mListView.getChildCount() - 1;
@@ -263,6 +264,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         mListView.setTranslationY(y);
         mToolbarView.setTranslationY(y);
 
+        mAlphaView.setBackgroundResource(R.color.black);
         mAlphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / Util.getLCDHeight(ImageDetailListActivity.this));
         //        mToolbarView.setAlpha(1.0f - Math.abs(y * 20) / Util.getLCDHeight(ImageDetailListActivity.this));
     }
@@ -375,6 +377,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             }
 
             imageView.setLayoutParams(layoutParms);
+        }
+
+        @Override
+        public boolean areAllItemsEnabled()
+        {
+            return true;
         }
     }
 }

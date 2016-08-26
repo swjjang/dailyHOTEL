@@ -50,12 +50,6 @@ public class GourmetListNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -135,6 +129,12 @@ public class GourmetListNetworkController extends BaseNetworkController
 
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
