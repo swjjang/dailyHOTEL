@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.net.URLDecoder;
@@ -25,7 +26,6 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
 
     private SearchType mSearchType;
-    protected GourmetSearchParams mLastParams;
     protected BaseNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
@@ -128,38 +128,6 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     }
 
     @Override
-    protected void requestUpdateResult()
-    {
-        setResultMessage(getResources().getString(R.string.label_searching));
-
-        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
-        {
-            Util.restartApp(this);
-            return;
-        }
-
-        setLastGourmetParams(mGourmetCuration);
-
-        super.requestUpdateResult();
-    }
-
-    @Override
-    protected void requestUpdateResultDelayed()
-    {
-        setResultMessage(getResources().getString(R.string.label_searching));
-
-        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
-        {
-            Util.restartApp(this);
-            return;
-        }
-
-        setLastGourmetParams(mGourmetCuration);
-
-        super.requestUpdateResultDelayed();
-    }
-
-    @Override
     protected BaseNetworkController getNetworkController(Context context)
     {
         return new GourmetSearchResultCurationNetworkController(context, mNetworkTag, mNetworkControllerListener);
@@ -169,6 +137,12 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     protected void updateResultMessage()
     {
         setConfirmOnClickListener(null);
+
+        if (mLastParams != null && Constants.SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
+        {
+            onSearchLoacationResult(null);
+            return;
+        }
 
         ((GourmetSearchResultCurationNetworkController) mNetworkController).requestGourmetSearchList(mLastParams);
     }
@@ -215,7 +189,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
                 // do nothing!
             }
 
-            String lastParams = mLastParams.toParamsString(false);
+            String lastParams = ((GourmetSearchParams) mLastParams).toParamsString(false);
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

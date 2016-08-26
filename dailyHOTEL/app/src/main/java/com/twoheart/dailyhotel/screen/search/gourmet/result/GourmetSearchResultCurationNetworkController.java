@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.GourmetSearchParams;
+import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -24,7 +24,7 @@ public class GourmetSearchResultCurationNetworkController extends BaseNetworkCon
         super(context, networkTag, listener);
     }
 
-    public void requestGourmetSearchList(GourmetSearchParams params)
+    public void requestGourmetSearchList(GourmetParams params)
     {
         if (params == null)
         {

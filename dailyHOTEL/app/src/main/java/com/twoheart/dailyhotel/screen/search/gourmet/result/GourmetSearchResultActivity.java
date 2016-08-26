@@ -343,28 +343,33 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        Map<String, String> params = new HashMap<>();
-
-        params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
-        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
-
-        Province province = mGourmetSearchCuration.getProvince();
-        if (province instanceof Area)
+        try
         {
-            Area area = (Area) province;
-            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else if (province != null)
+            Map<String, String> params = new HashMap<>();
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+
+            Province province = mGourmetSearchCuration.getProvince();
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else if (province != null)
+            {
+                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
+
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);
+        } catch (Exception e)
         {
-            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
-
-        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);
     }
 
     private void recordEventSearchResultByLocation(String address, boolean isEmpty)
@@ -374,20 +379,25 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        String action = null;
+        try
+        {
+            String action = null;
 
-        if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-        }
+            if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
+            {
+                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+            } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
+            {
+                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
+            }
 
-        if (Util.isTextEmpty(action) == false)
+            if (Util.isTextEmpty(action) == false)
+            {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+                    , action, address, null);
+            }
+        } catch (Exception e)
         {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
-                , action, address, null);
         }
     }
 
@@ -785,21 +795,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             } else
             {
                 recordEventSearchResultByKeyword(keyword, isShow);
-
-                // 기존 AppBoy 이벤트
-                PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(0);
-                int placeCount = placeListFragment.getPlaceCount();
-
-                String action = isShow == true ? AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND : AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED;
-                String label = isShow == true ? //
-                    String.format("%s-%s", keyword.name, getSearchDate())//
-                    : String.format("%s-%d-%s", keyword.name, placeCount, getSearchDate());
-
-                Map<String, String> eventParams = new HashMap<>();
-                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
-                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(placeCount));
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                    , action, label, eventParams);
             }
         }
 

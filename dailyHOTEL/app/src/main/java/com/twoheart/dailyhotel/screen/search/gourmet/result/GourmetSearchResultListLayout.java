@@ -67,8 +67,6 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
-                ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
                 break;
 
             case GONE:
