@@ -493,7 +493,7 @@
     <string name="label_booking_gourmet_step2">2. 결제금액</string>
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
-    <string name="message_booking_selected_time">시간을 선택해주세요.</string>
+    <string name="message_booking_selected_time">시간을 선택해주세요</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
     <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요.</string>
     <string name="message_discount_memo">적립금, 할인 쿠폰은 중복 사용 할 수 없습니다.</string>
@@ -871,6 +871,8 @@
 
     <!-- Detail -->
     <string name="label_detail_change_date">날짜변경</string>
+    <string name="label_detail_special_discount">특별 할인 혜택</string>
+    <string name="label_detail_download_coupon">할인쿠폰 다운받기</string>
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="message_stay_detail_changed_price">업체 사정으로 해당 객실의 요금이 변동되었습니다.\n객실 금액을 한번 더 확인해주세요.</string>

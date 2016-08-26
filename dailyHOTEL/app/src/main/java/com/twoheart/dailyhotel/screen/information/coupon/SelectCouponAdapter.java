@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     private List<Coupon> mList;
     private OnCouponItemListener mListener;
     private int mSelectPosition = -1;
+    private boolean mIsSelected;
 
     public interface OnCouponItemListener
     {
@@ -37,7 +39,6 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         void updatePositiveButton();
     }
 
-
     public SelectCouponAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
     {
         super(context, RESOURCE_ID, list);
@@ -45,7 +46,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         mContext = context;
         mList = list;
         mListener = listener;
-
+        setSelected(true);
     }
 
     @Override
@@ -140,25 +141,28 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         holder.upperDivider.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
         //        holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
 
-        holder.listItemLayout.setOnClickListener(new View.OnClickListener()
+        if (mIsSelected == true)
         {
-            @Override
-            public void onClick(View v)
+            holder.listItemLayout.setOnClickListener(new View.OnClickListener()
             {
-                Coupon coupon = getItem(position);
-                if (coupon.isDownloaded == true)
+                @Override
+                public void onClick(View v)
                 {
-                    mSelectPosition = position;
-                } else
-                {
-                    mSelectPosition = -1;
-                    mListener.onDownloadClick(position);
-                }
+                    Coupon coupon = getItem(position);
+                    if (coupon.isDownloaded == true)
+                    {
+                        mSelectPosition = position;
+                    } else
+                    {
+                        mSelectPosition = -1;
+                        mListener.onDownloadClick(position);
+                    }
 
-                notifyDataSetChanged();
-                mListener.updatePositiveButton();
-            }
-        });
+                    notifyDataSetChanged();
+                    mListener.updatePositiveButton();
+                }
+            });
+        }
     }
 
     public void setData(List<Coupon> list)
@@ -166,6 +170,11 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         mList = list;
         clear();
         addAll(list);
+    }
+
+    public void setSelected(boolean selected)
+    {
+        mIsSelected = selected;
     }
 
     public Coupon getCoupon(String userCouponCode)
@@ -207,9 +216,23 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     private void setSelectLayout(SelectViewHolder holder, int position)
     {
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_default);
-        holder.iconImageView.setImageResource(R.drawable.selector_radio_button);
+
+        if (mIsSelected == true)
+        {
+            holder.iconImageView.setVisibility(View.VISIBLE);
+            holder.iconImageView.setImageResource(R.drawable.selector_radio_button);
+            holder.iconImageView.setSelected((mSelectPosition == position));
+
+            holder.priceTextView.setGravity(Gravity.LEFT);
+            holder.priceTextView.setPadding(Util.dpToPx(mContext, 7), 0, 0, 0);
+        } else
+        {
+            holder.iconImageView.setVisibility(View.GONE);
+            holder.priceTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+            holder.priceTextView.setPadding(0, 0, 0, 0);
+        }
+
         holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cd0d0d0));
-        holder.iconImageView.setSelected((mSelectPosition == position));
         holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
         holder.downloadTextView.setVisibility(View.GONE);
         holder.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.black));

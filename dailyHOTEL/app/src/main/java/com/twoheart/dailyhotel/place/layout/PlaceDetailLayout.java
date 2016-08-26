@@ -20,7 +20,6 @@ import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.TextView;
@@ -72,13 +71,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
     private int mStatusBarHeight;
-    private float mLastFactor;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void showActionBar();
+        void showActionBar(boolean isAnimation);
 
-        void hideActionBar();
+        void hideActionBar(boolean isAnimation);
 
         void onClickImage(PlaceDetail placeDetail);
 
@@ -108,12 +106,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected abstract String getProductTypeTitle();
 
     protected abstract View getTitleLayout();
-
-    protected abstract View getGradeTextView();
-
-    protected abstract View getNameTextView();
-
-    protected abstract View getMagicToolbarView();
 
     public abstract void setBookingStatus(int status);
 
@@ -628,6 +620,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private OnScrollListener mOnScrollListener = new OnScrollListener()
     {
+        private Rect mTitleLayoutRect = new Rect();
+
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState)
         {
@@ -643,7 +637,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
             if (firstVisibleItem > 1)
             {
-                ((OnEventListener) mOnEventListener).showActionBar();
+                ((OnEventListener) mOnEventListener).showActionBar(false);
                 return;
             }
 
@@ -659,127 +653,22 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 return;
             }
 
-            Rect rect = new Rect();
-            titleLayout.getGlobalVisibleRect(rect);
-
-            if (rect.top == rect.right)
-            {
-
-            } else
-            {
-                if (rect.top <= mStatusBarHeight)
-                {
-                    ((OnEventListener) mOnEventListener).showActionBar();
-                } else
-                {
-                    ((OnEventListener) mOnEventListener).hideActionBar();
-                }
-            }
-
-            View gradeTextView = getGradeTextView();
-
-            if (gradeTextView == null)
-            {
-                return;
-            }
+            titleLayout.getGlobalVisibleRect(mTitleLayoutRect);
 
             final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-            float max = ((float) mImageHeight - TOOLBAR_HEIGHT) / 2;
-            float offset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
-            float alphaFactor = offset / max;
 
-            if (Util.isOverAPI11() == true)
+            if (mTitleLayoutRect.top == mTitleLayoutRect.right)
             {
-                if (Float.compare(alphaFactor, 0.0f) <= 0)
-                {
-                    gradeTextView.setAlpha(0.0f);
-                } else
-                {
-                    gradeTextView.setAlpha(alphaFactor);
-                }
+
             } else
             {
-                if (Float.compare(alphaFactor, 0.2f) <= 0)
+                if (mTitleLayoutRect.top <= mStatusBarHeight + TOOLBAR_HEIGHT)
                 {
-                    gradeTextView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).showActionBar(true);
                 } else
                 {
-                    gradeTextView.setVisibility(View.VISIBLE);
+                    ((OnEventListener) mOnEventListener).hideActionBar(true);
                 }
-            }
-
-            View nameTextView = getNameTextView();
-            Rect firstRect = (Rect) nameTextView.getTag();
-            Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
-
-            if (firstRect != null && firstWidth != null)
-            {
-                final int TOOLBAR_TEXT_X = Util.dpToPx(mContext, 60);
-                float gradeMax = ((float) mImageHeight - TOOLBAR_HEIGHT) / 3;
-                float gradeOffset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
-                float xFactor = gradeOffset / gradeMax;
-                float nameMax = firstRect.left - TOOLBAR_TEXT_X;
-
-                if (Float.compare(xFactor, 0.0f) < 0)
-                {
-                    xFactor = 0.0f;
-                }
-
-                if (Util.isOverAPI11() == true)
-                {
-                    if (Float.compare(xFactor, 1.0f) <= 0)
-                    {
-                        nameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
-                    } else
-                    {
-                        nameTextView.setTranslationX(0);
-                    }
-                } else
-                {
-                    if (Float.compare(xFactor, 1.0f) <= 0)
-                    {
-                        TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
-                        anim.setDuration(0);
-                        anim.setFillAfter(true);
-                        nameTextView.startAnimation(anim);
-
-                        mLastFactor = -nameMax * (1.0f - xFactor);
-                    } else
-                    {
-                        nameTextView.setAnimation(null);
-                    }
-                }
-
-                float widthNameMax = firstRect.width() - firstWidth;
-                int newWidth;
-
-                if (Float.compare(xFactor, 1.0f) <= 0)
-                {
-                    newWidth = (int) (firstRect.width() - (widthNameMax * (1.0f - xFactor)));
-                } else
-                {
-                    newWidth = firstRect.width();
-                }
-
-                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
-
-                if (layoutParams.width != newWidth)
-                {
-                    layoutParams.width = newWidth;
-                    nameTextView.setLayoutParams(layoutParams);
-                }
-            }
-
-            View magicToolbarView = getMagicToolbarView();
-
-            if (magicToolbarView != null)
-            {
-                if (magicToolbarView.getVisibility() != View.VISIBLE)
-                {
-                    magicToolbarView.setVisibility(View.VISIBLE);
-                }
-
-                magicToolbarView.setY(mStatusBarHeight - rect.top);
             }
         }
     };

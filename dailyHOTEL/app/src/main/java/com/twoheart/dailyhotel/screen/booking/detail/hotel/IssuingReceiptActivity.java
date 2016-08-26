@@ -286,13 +286,13 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         if (bUseFullscreen)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false);
+            mDailyToolbarLayout.setToolbarVisibility(false, false);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         } else
         {
-            mDailyToolbarLayout.setToolbarVisibility(true);
+            mDailyToolbarLayout.setToolbarVisibility(true, false);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

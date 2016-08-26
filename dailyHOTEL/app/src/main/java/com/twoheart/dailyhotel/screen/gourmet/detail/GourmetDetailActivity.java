@@ -224,7 +224,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         setLockUICancelable(true);
         initToolbar(placeName);
 
-        mOnEventListener.hideActionBar();
+        mOnEventListener.hideActionBar(false);
     }
 
     @Override
@@ -532,15 +532,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void showActionBar()
+        public void showActionBar(boolean isAnimation)
         {
-            mDailyToolbarLayout.setToolbarVisibility(true);
+            mDailyToolbarLayout.setToolbarVisibility(true, isAnimation);
         }
 
         @Override
-        public void hideActionBar()
+        public void hideActionBar(boolean isAnimation)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false);
+            mDailyToolbarLayout.setToolbarVisibility(false, isAnimation);
         }
 
         @Override
