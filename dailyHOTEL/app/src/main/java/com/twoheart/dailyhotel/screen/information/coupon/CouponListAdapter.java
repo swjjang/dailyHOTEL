@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -202,17 +204,36 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             dueDateTextView.setText(strDueDate);
 
-            if (coupon.amountMinimum > 0)
-            {
-                String strAmountMinimum = mContext.getResources().getString( //
-                    R.string.coupon_min_price_text, //
-                    Util.getPriceFormat(mContext, coupon.amountMinimum, false));
+            String lastLineText = "";
+            boolean isEmptyStayFromTo = Util.isTextEmpty(coupon.stayFrom, coupon.stayTo);
+            boolean isEmptyAmountMinimum = coupon.amountMinimum == 0;
 
-                minPriceTextView.setText(strAmountMinimum);
-            } else
+            if (isEmptyAmountMinimum == false)
             {
-                minPriceTextView.setText("");
+                lastLineText += mContext.getResources().getString( //
+                    isEmptyStayFromTo == false ? R.string.coupon_min_price_short_text : R.string.coupon_min_price_text, //
+                    Util.getPriceFormat(mContext, coupon.amountMinimum, false));
             }
+
+            if (isEmptyStayFromTo == false)
+            {
+                if (isEmptyAmountMinimum == false)
+                {
+                    lastLineText += ", ";
+                }
+
+                lastLineText += CouponUtil.getDateOfStayAvailableString( //
+                    mContext, coupon.stayFrom, coupon.stayTo);
+            }
+
+            final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
+            final float textWidth = Util.getTextWidth(mContext, lastLineText, 11d, typeface);
+
+            if (minPriceTextView.getWidth() <= textWidth) {
+                lastLineText = lastLineText.replace(", ", ",\n");
+            }
+
+            minPriceTextView.setText(lastLineText);
 
             if (coupon.isDownloaded == true)
             {

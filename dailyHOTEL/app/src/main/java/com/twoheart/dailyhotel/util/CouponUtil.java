@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.util;
 
+import android.content.Context;
+
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CouponHistory;
 
@@ -61,6 +64,12 @@ public class CouponUtil
 
         // coupon object type
         public static final String COUPON_CODE = "couponCode";
+
+        // coupon object type
+        public static final String STAY_FROM = "stayFrom";
+
+        // coupon object type
+        public static final String STAY_TO = "stayTo";
     }
 
     public static ArrayList<Coupon> getCouponList(JSONObject response)
@@ -114,6 +123,8 @@ public class CouponUtil
         Coupon coupon = null;
 
         String couponCode = null; // 이벤트 웹뷰, 쿠폰사용주의사항 용 쿠폰 코드
+        String stayFrom = null;
+        String stayTo = null;
 
         try
         {
@@ -134,8 +145,18 @@ public class CouponUtil
                 couponCode = jsonObject.getString(Type.COUPON_CODE); // 이벤트 웹뷰, 쿠폰 사용주의사항용 쿠폰코드
             }
 
+            if (jsonObject.has(Type.STAY_FROM))
+            {
+                stayFrom = jsonObject.getString(Type.STAY_FROM);
+            }
+
+            if (jsonObject.has(Type.STAY_TO))
+            {
+                stayTo = jsonObject.getString(Type.STAY_TO);
+            }
+
             coupon = new Coupon(userCouponCode, amount, title, validFrom, validTo, amountMinimum, //
-                isDownloaded, availableItem, serverDate, couponCode);
+                isDownloaded, availableItem, serverDate, couponCode, stayFrom, stayTo);
 
         } catch (Exception e)
         {
@@ -282,5 +303,23 @@ public class CouponUtil
             dayCount = (int) (gap / MILLISECOND_IN_A_DAY) + 1;
             return dayCount;
         }
+    }
+
+    public static String getDateOfStayAvailableString(Context context, String startTime, String endTime)
+    {
+        String availableDatesString = "";
+
+        try
+        {
+            String strStart = DailyCalendar.convertDateFormatString(startTime, DailyCalendar.ISO_8601_FORMAT, "MM.dd");
+            String strEnd = DailyCalendar.convertDateFormatString(endTime, DailyCalendar.ISO_8601_FORMAT, "MM.dd");
+
+            availableDatesString = context.getString(R.string.coupon_date_of_stay_available_text, strStart, strEnd);
+        } catch (Exception e)
+        {
+            ExLog.e(e.getMessage());
+        }
+
+        return availableDatesString;
     }
 }
