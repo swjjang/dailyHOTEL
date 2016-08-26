@@ -20,6 +20,8 @@ public class Coupon implements Parcelable
     public String availableItem; // 사용가능처 ,,
     public String serverDate; // 서버시간 ,,
     public String couponCode; // 이벤트 웹뷰, 쿠폰주의사항 사용용 쿠폰 코드
+    public String stayFrom; // 투숙일 정보 - 시작일
+    public String stayTo; // 투숙일 정보 - 종료일
 
 
     public Coupon(Parcel in)
@@ -35,8 +37,7 @@ public class Coupon implements Parcelable
     // Own Coupon && Own Coupon for Payment
     public Coupon(String userCouponCode, int amount, String title, String validFrom, //
                   String validTo, int amountMinimum, boolean isDownloaded, String availableItem, //
-                  String serverDate, String couponCode)
-
+                  String serverDate, String couponCode, String stayFrom, String stayTo)
     {
         this.userCouponCode = userCouponCode;
         this.amount = amount;
@@ -48,6 +49,8 @@ public class Coupon implements Parcelable
         this.availableItem = availableItem;
         this.serverDate = serverDate;
         this.couponCode = couponCode; // 결제시에는 쿠폰코드 없음
+        this.stayFrom = stayFrom;
+        this.stayTo = stayTo;
     }
 
     @Override
@@ -63,6 +66,8 @@ public class Coupon implements Parcelable
         dest.writeString(availableItem);
         dest.writeString(serverDate);
         dest.writeString(couponCode);
+        dest.writeString(stayFrom);
+        dest.writeString(stayTo);
     }
 
     public void readFromParcel(Parcel in)
@@ -77,6 +82,8 @@ public class Coupon implements Parcelable
         availableItem = in.readString();
         serverDate = in.readString();
         couponCode = in.readString();
+        stayFrom = in.readString();
+        stayTo = in.readString();
     }
 
     @Override

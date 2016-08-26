@@ -814,6 +814,7 @@
     <string name="coupon_today_text">(오늘까지)</string>
     <string name="coupon_download_text">다운로드</string>
     <string name="coupon_useable_text">사용가능</string>
+    <string name="coupon_min_price_short_text">%1$s 이상 구매시</string>
     <string name="coupon_min_price_text">%1$s 이상 구매시 사용 가능</string>
     <string name="coupon_header_text">사용 할 수 있는 쿠폰이 %1$d장 있습니다.</string>
     <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
@@ -823,6 +824,7 @@
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>
+    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s일 투숙시 사용가능</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
     <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
     <string name="message_select_coupon_empty">사용할 수 있는 할인 쿠폰이 없습니다.</string>
