@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkC
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -629,7 +630,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
     };
 
-    private GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
+    private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
         public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)

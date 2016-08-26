@@ -20,13 +20,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 {
     private boolean mIsDeepLink;
 
-    public interface OnGourmetSearchResultListFragmentListener extends OnGourmetListFragmentListener
-    {
-        void onGourmetClick(PlaceViewItem placeViewItem, int listCount);
-
-        void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
-    }
-
     @Override
     protected BaseNetworkController getNetworkController()
     {
