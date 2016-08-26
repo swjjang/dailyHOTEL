@@ -17,40 +17,20 @@ public class GourmetCurationOption extends PlaceCurationOption
     public int flagTimeFilter;
     public int flagAmenitiesFilters;
 
-    private ArrayList<GourmetFilters> mGourmetFiltersList;
-
     public GourmetCurationOption()
     {
         mFilterMap = new HashMap<>();
         mCategoryCodeMap = new HashMap<>();
         mCategorySequenceMap = new HashMap<>();
-        mGourmetFiltersList = new ArrayList<>();
 
         clear();
     }
 
     public GourmetCurationOption(Parcel in)
     {
-        mGourmetFiltersList = new ArrayList<>();
-
         clear();
 
         readFromParcel(in);
-    }
-
-    public void setFiltersList(ArrayList<GourmetFilters> arrayList)
-    {
-        mGourmetFiltersList.clear();
-
-        if (arrayList != null)
-        {
-            mGourmetFiltersList.addAll(arrayList);
-        }
-    }
-
-    public ArrayList<GourmetFilters> getFiltersList()
-    {
-        return mGourmetFiltersList;
     }
 
     @Override
@@ -63,8 +43,8 @@ public class GourmetCurationOption extends PlaceCurationOption
             mFilterMap.clear();
         }
 
-        flagTimeFilter = GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE;
-        flagAmenitiesFilters = GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE;
+        flagTimeFilter = GourmetFilter.Time.FLAG_NONE;
+        flagAmenitiesFilters = GourmetFilter.Amenities.FLAG_NONE;
     }
 
     @Override
@@ -72,8 +52,8 @@ public class GourmetCurationOption extends PlaceCurationOption
     {
         if (isDefaultSortType() == false//
             || mFilterMap.size() != 0//
-            || flagTimeFilter != GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE//
-            || flagAmenitiesFilters != GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
+            || flagTimeFilter != GourmetFilter.Time.FLAG_NONE//
+            || flagAmenitiesFilters != GourmetFilter.Amenities.FLAG_NONE)
         {
             return false;
         }
@@ -180,32 +160,32 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         result.append('-');
 
-        if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        if (flagTimeFilter == GourmetFilter.Time.FLAG_NONE)
         {
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_06_11) == GourmetFilter.Time.FLAG_06_11)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_0611).append(',');
             }
 
-            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_11_15) == GourmetFilter.Time.FLAG_11_15)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_1115).append(',');
             }
 
-            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_15_17) == GourmetFilter.Time.FLAG_15_17)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_1517).append(',');
             }
 
-            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_17_21) == GourmetFilter.Time.FLAG_17_21)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_1721).append(',');
             }
 
-            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_21_06) == GourmetFilter.Time.FLAG_21_06)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_2106).append(',');
             }
@@ -218,12 +198,12 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         result.append('-');
 
-        if (flagAmenitiesFilters == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
+        if (flagAmenitiesFilters == GourmetFilter.Amenities.FLAG_NONE)
         {
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            if ((flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
             }
@@ -240,7 +220,6 @@ public class GourmetCurationOption extends PlaceCurationOption
         dest.writeSerializable(mFilterMap);
         dest.writeSerializable(mCategoryCodeMap);
         dest.writeSerializable(mCategorySequenceMap);
-        dest.writeTypedList(mGourmetFiltersList);
         dest.writeInt(flagTimeFilter);
         dest.writeInt(flagAmenitiesFilters);
     }
@@ -253,7 +232,6 @@ public class GourmetCurationOption extends PlaceCurationOption
         mFilterMap = (HashMap<String, Integer>) in.readSerializable();
         mCategoryCodeMap = (HashMap<String, Integer>) in.readSerializable();
         mCategorySequenceMap = (HashMap<String, Integer>) in.readSerializable();
-        in.readTypedList(mGourmetFiltersList, GourmetFilters.CREATOR);
         flagTimeFilter = in.readInt();
         flagAmenitiesFilters = in.readInt();
     }

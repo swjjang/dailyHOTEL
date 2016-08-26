@@ -194,7 +194,7 @@ public class GourmetParams extends PlaceParams
 
     protected String toParamStringByTime(int flagTimeFilter)
     {
-        if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        if (flagTimeFilter == GourmetFilter.Time.FLAG_NONE)
         {
             return null;
         }
@@ -202,27 +202,27 @@ public class GourmetParams extends PlaceParams
         String prefix = "timeFrame=";
         StringBuilder stringBuilder = new StringBuilder();
 
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
+        if ((flagTimeFilter & GourmetFilter.Time.FLAG_06_11) == GourmetFilter.Time.FLAG_06_11)
         {
             stringBuilder.append(prefix).append("06_11").append("&");
         }
 
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
+        if ((flagTimeFilter & GourmetFilter.Time.FLAG_11_15) == GourmetFilter.Time.FLAG_11_15)
         {
             stringBuilder.append(prefix).append("11_15").append("&");
         }
 
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
+        if ((flagTimeFilter & GourmetFilter.Time.FLAG_15_17) == GourmetFilter.Time.FLAG_15_17)
         {
             stringBuilder.append(prefix).append("15_17").append("&");
         }
 
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
+        if ((flagTimeFilter & GourmetFilter.Time.FLAG_17_21) == GourmetFilter.Time.FLAG_17_21)
         {
             stringBuilder.append(prefix).append("17_21").append("&");
         }
 
-        if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
+        if ((flagTimeFilter & GourmetFilter.Time.FLAG_21_06) == GourmetFilter.Time.FLAG_21_06)
         {
             stringBuilder.append(prefix).append("21_06").append("&");
         }
@@ -238,7 +238,7 @@ public class GourmetParams extends PlaceParams
 
     protected String toParamStingByAmenities(int flagAmenitiesFilters)
     {
-        if (flagAmenitiesFilters == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_NONE)
+        if (flagAmenitiesFilters == GourmetFilter.Amenities.FLAG_NONE)
         {
             return null;
         }
@@ -246,7 +246,7 @@ public class GourmetParams extends PlaceParams
         String prefix = "luxury=";
         StringBuilder stringBuilder = new StringBuilder();
 
-        if ((flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
+        if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
         {
             stringBuilder.append(prefix).append("Parking").append("&");
         }

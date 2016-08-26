@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilter;
-import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Province;
@@ -239,7 +238,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         View parkingCheckView = mAmenitiesLayout.findViewById(R.id.parkingCheckView);
         parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
 
-        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING)
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
         {
             parkingCheckView.setSelected(true);
         }
@@ -269,32 +268,32 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         time1721View.setOnClickListener(this);
         time2106View.setOnClickListener(this);
 
-        if (gourmetCurationOption.flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        if (gourmetCurationOption.flagTimeFilter == GourmetFilter.Time.FLAG_NONE)
         {
             return;
         }
 
-        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
+        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.Time.FLAG_06_11) == GourmetFilter.Time.FLAG_06_11)
         {
             time0611View.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
+        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.Time.FLAG_11_15) == GourmetFilter.Time.FLAG_11_15)
         {
             time1115View.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
+        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.Time.FLAG_15_17) == GourmetFilter.Time.FLAG_15_17)
         {
             time1517View.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
+        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.Time.FLAG_17_21) == GourmetFilter.Time.FLAG_17_21)
         {
             time1721View.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
+        if ((gourmetCurationOption.flagTimeFilter & GourmetFilter.Time.FLAG_21_06) == GourmetFilter.Time.FLAG_21_06)
         {
             time2106View.setSelected(true);
         }
@@ -615,27 +614,27 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         switch (v.getId())
         {
             case R.id.parkingCheckView:
-                updateAmenitiesFilter(v, GourmetFilters.FLAG_GOURMET_FILTER_AMENITIES_PARKING);
+                updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_PARKING);
                 break;
 
             case R.id.time0611View:
-                updateTimeRangeFilter(v, GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11);
+                updateTimeRangeFilter(v, GourmetFilter.Time.FLAG_06_11);
                 break;
 
             case R.id.time1115View:
-                updateTimeRangeFilter(v, GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15);
+                updateTimeRangeFilter(v, GourmetFilter.Time.FLAG_11_15);
                 break;
 
             case R.id.time1517View:
-                updateTimeRangeFilter(v, GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17);
+                updateTimeRangeFilter(v, GourmetFilter.Time.FLAG_15_17);
                 break;
 
             case R.id.time1721View:
-                updateTimeRangeFilter(v, GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21);
+                updateTimeRangeFilter(v, GourmetFilter.Time.FLAG_17_21);
                 break;
 
             case R.id.time2106View:
-                updateTimeRangeFilter(v, GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06);
+                updateTimeRangeFilter(v, GourmetFilter.Time.FLAG_21_06);
                 break;
         }
     }
