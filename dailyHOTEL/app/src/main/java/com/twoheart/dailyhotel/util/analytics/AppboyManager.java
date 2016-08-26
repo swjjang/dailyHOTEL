@@ -167,17 +167,7 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (AnalyticsManager.Category.HOTEL_SEARCH.equalsIgnoreCase(category) == true//
-            && (AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND.equalsIgnoreCase(action) == true//
-            || AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED.equalsIgnoreCase(action) == true))//
-        {
-            searchCustomEvent(EventName.SEARCH_TERM, ValueName.DAILYHOTEL, params);
-        } else if (AnalyticsManager.Category.GOURMET_SEARCH.equalsIgnoreCase(category) == true//
-            && (AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_NOT_FOUND.equalsIgnoreCase(action) == true//
-            || AnalyticsManager.Action.GOURMET_KEYWORD_SEARCH_CLICKED.equalsIgnoreCase(action) == true))//
-        {
-            searchCustomEvent(EventName.SEARCH_TERM, ValueName.DAILYGOURMET, params);
-        } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
+        if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {

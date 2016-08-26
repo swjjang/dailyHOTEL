@@ -357,30 +357,35 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        Map<String, String> params = new HashMap<>();
-
-        params.put(AnalyticsManager.KeyType.CHECK_IN, mStaySearchCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
-        params.put(AnalyticsManager.KeyType.CHECK_OUT, mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
-        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);
-        params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
-
-        Province province = mStaySearchCuration.getProvince();
-        if (province instanceof Area)
+        try
         {
-            Area area = (Area) province;
-            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else if (province != null)
+            Map<String, String> params = new HashMap<>();
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mStaySearchCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
+            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);
+            params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
+
+            Province province = mStaySearchCuration.getProvince();
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else if (province != null)
+            {
+                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(screen, params);
+        } catch (Exception e)
         {
-            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
-
-        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(screen, params);
     }
 
     private void recordEventSearchResultByLocation(String address, boolean isEmpty)
@@ -390,23 +395,28 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        String action = null;
+        try
+        {
+            String action = null;
 
-        if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-        }
+            if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
+            {
+                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
+            {
+                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
+            {
+                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
+            }
 
-        if (Util.isTextEmpty(action) == false)
+            if (Util.isTextEmpty(action) == false)
+            {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+                    , action, address, null);
+            }
+        } catch (Exception e)
         {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
-                , action, address, null);
         }
     }
 
