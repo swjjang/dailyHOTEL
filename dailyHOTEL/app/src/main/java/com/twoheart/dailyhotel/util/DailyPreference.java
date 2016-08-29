@@ -304,6 +304,7 @@ public class DailyPreference
             {
                 sharedPreferences.edit().remove(key);
                 sharedPreferences.edit().putBoolean(key, defaultValue);
+                sharedPreferences.edit().apply();
             }
         }
 
