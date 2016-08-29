@@ -11,6 +11,8 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 
+import java.util.ArrayList;
+
 public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 {
     public GourmetSearchResultLayout(Context context, OnBaseEventListener listener)
@@ -34,7 +36,21 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     @Override
     protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new GourmetSearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
+
+        ArrayList<GourmetSearchResultListFragment> list = new ArrayList<>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            GourmetSearchResultListFragment gourmetSearchResultListFragment = new GourmetSearchResultListFragment();
+            gourmetSearchResultListFragment.setPlaceOnListFragmentListener(listener);
+            gourmetSearchResultListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(gourmetSearchResultListFragment);
+        }
+
+        placeListFragmentPagerAdapter.setPlaceFragmentList(list);
+
+        return placeListFragmentPagerAdapter;
     }
 
     @Override

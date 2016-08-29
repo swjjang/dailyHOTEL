@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
@@ -40,7 +41,21 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     @Override
     protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new StaySearchResultListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
+
+        ArrayList<StaySearchResultListFragment> list = new ArrayList<>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            StaySearchResultListFragment staySearchResultListFragment = new StaySearchResultListFragment();
+            staySearchResultListFragment.setPlaceOnListFragmentListener(listener);
+            staySearchResultListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(staySearchResultListFragment);
+        }
+
+        placeListFragmentPagerAdapter.setPlaceFragmentList(list);
+
+        return placeListFragmentPagerAdapter;
     }
 
     @Override

@@ -5,9 +5,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
@@ -15,7 +13,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class GourmetSearchResultListFragment extends GourmetListFragment
 {
@@ -82,53 +79,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         ((GourmetSearchResultListNetworkController) mNetworkController).requestGourmetSearchList(params);
     }
 
-    @Override
-    protected ArrayList<PlaceViewItem> makeSectionGourmetList(List<Gourmet> gourmetList, SortType sortType)
-    {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-
-        if (gourmetList == null || gourmetList.size() == 0)
-        {
-            return placeViewItemList;
-        }
-
-        int entryPosition = 1;
-
-        if (mPlaceListLayout != null)
-        {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
-
-            int oldListSize = oldList == null ? 0 : oldList.size();
-            if (oldListSize > 0)
-            {
-                int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
-                end = end < 0 ? 0 : end;
-
-                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-                for (int i = start; i >= end; i--)
-                {
-                    PlaceViewItem item = oldList.get(i);
-                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
-                    {
-                        Place place = item.getItem();
-                        entryPosition = place.entryPosition + 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        for (Gourmet gourmet : gourmetList)
-        {
-            gourmet.entryPosition = entryPosition;
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
-            entryPosition++;
-        }
-
-        return placeViewItemList;
-    }
-
     public void setIsDeepLink(boolean isDeepLink)
     {
         mIsDeepLink = isDeepLink;
@@ -139,7 +89,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         @Override
         public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
         {
-            GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap);
+            GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
 
             if (mViewType == ViewType.MAP)
             {

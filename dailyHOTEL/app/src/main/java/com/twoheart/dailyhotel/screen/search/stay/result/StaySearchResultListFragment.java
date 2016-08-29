@@ -3,9 +3,7 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
@@ -95,53 +93,6 @@ public class StaySearchResultListFragment extends StayListFragment
         ((StaySearchResultListNetworkController) mNetworkController).requestStaySearchList(params);
     }
 
-    @Override
-    protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
-    {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-
-        if (stayList == null || stayList.size() == 0)
-        {
-            return placeViewItemList;
-        }
-
-        int entryPosition = 1;
-
-        if (mPlaceListLayout != null)
-        {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
-
-            int oldListSize = oldList == null ? 0 : oldList.size();
-            if (oldListSize > 0)
-            {
-                int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
-                end = end < 0 ? 0 : end;
-
-                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-                for (int i = start; i >= end; i--)
-                {
-                    PlaceViewItem item = oldList.get(i);
-                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
-                    {
-                        Place place = item.getItem();
-                        entryPosition = place.entryPosition + 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        for (Stay stay : stayList)
-        {
-            stay.entryPosition = entryPosition;
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-            entryPosition++;
-        }
-
-        return placeViewItemList;
-    }
-
     public void setIsDeepLink(boolean isDeepLink)
     {
         mIsDeepLink = isDeepLink;
@@ -163,7 +114,7 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
             }
 
-            StaySearchResultListFragment.this.onStayList(list, page);
+            StaySearchResultListFragment.this.onStayList(list, page, false);
 
             if (mViewType == ViewType.MAP)
             {

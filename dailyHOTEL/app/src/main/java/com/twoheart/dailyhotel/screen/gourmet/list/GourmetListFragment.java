@@ -9,7 +9,6 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetParams;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -23,7 +22,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class GourmetListFragment extends PlaceListFragment
 {
@@ -93,88 +91,8 @@ public class GourmetListFragment extends PlaceListFragment
         ((GourmetListNetworkController) mNetworkController).requestGourmetList(params);
     }
 
-    protected ArrayList<PlaceViewItem> makeSectionGourmetList(List<Gourmet> gourmetList, SortType sortType)
-    {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-
-        if (gourmetList == null || gourmetList.size() == 0)
-        {
-            return placeViewItemList;
-        }
-
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
-
-        int entryPosition = 1;
-
-        if (mPlaceListLayout != null)
-        {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
-
-            int oldListSize = oldList == null ? 0 : oldList.size();
-            if (oldListSize > 0)
-            {
-                int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
-                end = end < 0 ? 0 : end;
-
-                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-                for (int i = start; i >= end; i--)
-                {
-                    PlaceViewItem item = oldList.get(i);
-                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
-                    {
-                        Place place = item.getItem();
-                        entryPosition = place.entryPosition + 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        for (Gourmet gourmet : gourmetList)
-        {
-            // 지역순에만 section 존재함
-            if (SortType.DEFAULT == sortType)
-            {
-                String region = gourmet.districtName;
-
-                if (Util.isTextEmpty(region) == true)
-                {
-                    continue;
-                }
-
-                if (gourmet.isDailyChoice == true)
-                {
-                    if (hasDailyChoice == false)
-                    {
-                        hasDailyChoice = true;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                        placeViewItemList.add(section);
-                    }
-                } else
-                {
-                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                    {
-                        previousRegion = region;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                        placeViewItemList.add(section);
-                    }
-                }
-            }
-
-            gourmet.entryPosition = entryPosition;
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
-            entryPosition++;
-        }
-
-        return placeViewItemList;
-    }
-
     protected void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, //
-                                 HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
+                                 HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap, boolean hasSection)
     {
         if (isFinishing() == true)
         {
@@ -204,7 +122,7 @@ public class GourmetListFragment extends PlaceListFragment
 
         SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
-        ArrayList<PlaceViewItem> placeViewItems = makeSectionGourmetList(list, sortType);
+        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, sortType, hasSection);
 
         switch (mViewType)
         {
@@ -325,7 +243,7 @@ public class GourmetListFragment extends PlaceListFragment
             String value = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyyMMdd");
             DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(value);
 
-            GourmetListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap);
+            GourmetListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, true);
         }
 
         @Override
