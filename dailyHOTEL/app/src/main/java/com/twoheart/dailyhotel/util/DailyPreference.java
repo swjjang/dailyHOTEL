@@ -1217,6 +1217,11 @@ public class DailyPreference
                     setGASelectedPlaceRegion(getValue(mOldPreferences, KEY_OLD_GA_PLACE_REGION_SELECT, null));
                 }
 
+                if (mOldPreferences.contains(KEY_OLD_GA_PLACE_NAME) == true)
+                {
+                    setGASelectedPlaceName(getValue(mOldPreferences, KEY_OLD_GA_PLACE_NAME, null));
+                }
+
                 if (mOldPreferences.contains(KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG) == true)
                 {
                     setVirtualAccountReadyFlag(getValue(mOldPreferences, KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG, -1));
