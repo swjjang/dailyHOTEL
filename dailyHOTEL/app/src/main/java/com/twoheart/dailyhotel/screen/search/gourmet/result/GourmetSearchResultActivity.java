@@ -108,6 +108,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         lockUI();
 
+        mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+
         if (mSearchType == SearchType.LOCATION)
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(true);
@@ -312,8 +314,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getSaleTime());
-
-        mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
     }

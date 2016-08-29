@@ -111,6 +111,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         lockUI();
 
+        mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+
         if (mSearchType == SearchType.LOCATION)
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(true);
@@ -327,8 +329,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         mPlaceSearchResultLayout.setCalendarText(String.format("%s - %s, %d박", checkInDate, checkOutDate, mStaySearchCuration.getNights()));
-
-        mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
