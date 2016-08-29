@@ -87,56 +87,56 @@ public class DailyPreference
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
+    // Setting
+    private static final String KEY_SETTING_GCM_ID = "PUSH_ID";
 
-    // Event
-    private static final String RESULT_ACTIVITY_SPLASH_NEW_EVENT = "NEW_EVENT";
-    private static final String KEY_PREFERENCE_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
-    private static final String KEY_PREFERENCE_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
-    private static final String KEY_PREFERENCE_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
-    private static final String KEY_PREFERENCE_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
+    //Setting - Region
+    private static final String KEY_SETTING_REGION_STAY_SELECT = "REGION_SELECT";
+    private static final String KEY_SETTING_REGION_STAY_SETTING = "REGION_SETTING";
+    private static final String KEY_SETTING_REGION_FNB_SETTING = "FNB_REGION_SETTING";
+    private static final String KEY_SETTING_REGION_FNB_SELECT = "FNB_REGION_SELECT";
 
-    // Region
-    private static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
-    //    private static final String KEY_PREFERENCE_REGION_SELECT_BEFORE = "REGION_SELECT_BEFORE";
-    private static final String KEY_PREFERENCE_REGION_SETTING = "REGION_SETTING";
-    private static final String KEY_PREFERENCE_FNB_REGION_SETTING = "FNB_REGION_SETTING";
-    private static final String KEY_PREFERENCE_FNB_REGION_SELECT = "FNB_REGION_SELECT";
-    //    private static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
+    // Setting - Version
+    private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
 
-    // User Information
-    private static final String KEY_PREFERENCE_AUTO_LOGIN = "AUTO_LOGIN"; // 사용하지 않음
-    private static final String KEY_PREFERENCE_USER_ID = "USER_ID"; // 사용하지 않음
-    private static final String KEY_PREFERENCE_USER_EMAIL = "USER_EMAIL";
-    private static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
-    private static final String KEY_PREFERENCE_USER_PWD = "USER_PWD"; // 사용하지 않음
-    private static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
-    private static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
-    private static final String KEY_PREFERENCE_USER_RECOMMENDER = "USER_RECOMMENDER";
-    private static final String KEY_PREFERENCE_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
-    private static final String KEY_PREFERENCE_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
-
-    // Version
-    private static final String KEY_PREFERENCE_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
-
+    // User - Information
+    private static final String KEY_USER_AUTO_LOGIN = "AUTO_LOGIN"; // 사용하지 않음
+    private static final String KEY_USER_ID = "USER_ID"; // 사용하지 않음
+    private static final String KEY_USER_EMAIL = "USER_EMAIL";
+    private static final String KEY_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
+    private static final String KEY_USER_PWD = "USER_PWD"; // 사용하지 않음
+    private static final String KEY_USER_TYPE = "USER_TYPE";
+    private static final String KEY_USER_NAME = "USER_NAME";
+    private static final String KEY_USER_RECOMMENDER = "USER_RECOMMENDER";
+    private static final String KEY_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
+    private static final String KEY_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
 
     // payment
-    private static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";
-    private static final String KEY_PREFERENCE_OVERSEAS_PHONE = "OVERSEAS_PHONE";
-    private static final String KEY_PREFERENCE_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
+    private static final String KEY_PAYMENT_OVERSEAS_NAME = "OVERSEAS_NAME";
+    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "OVERSEAS_PHONE";
+    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
+
+    // payment - Virtual Account
+    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG";
+
+    // Event
+    private static final String KEY_EVENT_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
+    private static final String KEY_EVENT_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
+    private static final String KEY_EVENT_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
+    private static final String KEY_EVENT_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
 
     // Google Analytics
-    private static final String KEY_PREFERENCE_REGION_SELECT_GA = "REGION_SELECT_GA";
-    private static final String KEY_PREFERENCE_HOTEL_NAME_GA = "HOTEL_NAME_GA";
-    private static final String KEY_PREFERENCE_PLACE_REGION_SELECT_GA = "PLACE_REGION_SELECT_GA";
-    private static final String KEY_PREFERENCE_PLACE_NAME_GA = "PLACE_NAME_GA";
+    private static final String KEY_GA_REGION_SELECT = "REGION_SELECT_GA";
+    private static final String KEY_GA_STAY_NAME = "HOTEL_NAME_GA";
+    private static final String KEY_GA_PLACE_REGION_SELECT = "PLACE_REGION_SELECT_GA";
+    private static final String KEY_GA_PLACE_NAME = "PLACE_NAME_GA";
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    // Virtual Account
-    private static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
-
+    // New Key
     /////////////////////////////////////////////////////////////////////////////////////////
+
+
 
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
@@ -792,52 +792,52 @@ public class DailyPreference
 
     public String getGCMRegistrationId()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_GCM_ID, null);
+        return getValue(mOldPreferences, KEY_SETTING_GCM_ID, null);
     }
 
     public void setGCMRegistrationId(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_GCM_ID, value);
+        setValue(mOldEditor, KEY_SETTING_GCM_ID, value);
     }
 
     public String getLastestEventTime()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_LASTEST_EVENT_TIME, null);
+        return getValue(mOldPreferences, KEY_EVENT_LASTEST_EVENT_TIME, null);
     }
 
     public void setLastestEventTime(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_LASTEST_EVENT_TIME, value);
+        setValue(mOldEditor, KEY_EVENT_LASTEST_EVENT_TIME, value);
     }
 
     public String getLastestCouponTime()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_LASTEST_COUPON_TIME, null);
+        return getValue(mOldPreferences, KEY_EVENT_LASTEST_COUPON_TIME, null);
     }
 
     public void setLastestCouponTime(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_LASTEST_COUPON_TIME, value);
+        setValue(mOldEditor, KEY_EVENT_LASTEST_COUPON_TIME, value);
     }
 
     public String getViewedEventTime()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_VIEWED_EVENT_TIME, null);
+        return getValue(mOldPreferences, KEY_EVENT_VIEWED_EVENT_TIME, null);
     }
 
     public void setViewedEventTime(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_VIEWED_EVENT_TIME, value);
+        setValue(mOldEditor, KEY_EVENT_VIEWED_EVENT_TIME, value);
     }
 
     public String getViewedCouponTime()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_VIEWED_COUPON_TIME, null);
+        return getValue(mOldPreferences, KEY_EVENT_VIEWED_COUPON_TIME, null);
     }
 
     public void setViewedCouponTime(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_VIEWED_COUPON_TIME, value);
+        setValue(mOldEditor, KEY_EVENT_VIEWED_COUPON_TIME, value);
     }
 
     public String getSelectedRegion(Constants.PlaceType placeType)
@@ -845,11 +845,11 @@ public class DailyPreference
         switch (placeType)
         {
             case FNB:
-                return getValue(mOldPreferences, KEY_PREFERENCE_FNB_REGION_SELECT, null);
+                return getValue(mOldPreferences, KEY_SETTING_REGION_FNB_SELECT, null);
 
             case HOTEL:
             default:
-                return getValue(mOldPreferences, KEY_PREFERENCE_REGION_SELECT, null);
+                return getValue(mOldPreferences, KEY_SETTING_REGION_STAY_SELECT, null);
         }
     }
 
@@ -858,11 +858,11 @@ public class DailyPreference
         switch (placeType)
         {
             case HOTEL:
-                setValue(mOldEditor, KEY_PREFERENCE_REGION_SELECT, value);
+                setValue(mOldEditor, KEY_SETTING_REGION_STAY_SELECT, value);
                 break;
 
             case FNB:
-                setValue(mOldEditor, KEY_PREFERENCE_FNB_REGION_SELECT, value);
+                setValue(mOldEditor, KEY_SETTING_REGION_FNB_SELECT, value);
                 break;
         }
     }
@@ -872,11 +872,11 @@ public class DailyPreference
         switch (placeType)
         {
             case FNB:
-                return getValue(mOldPreferences, KEY_PREFERENCE_FNB_REGION_SETTING, false);
+                return getValue(mOldPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
 
             case HOTEL:
             default:
-                return getValue(mOldPreferences, KEY_PREFERENCE_REGION_SETTING, false);
+                return getValue(mOldPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
         }
     }
 
@@ -885,89 +885,89 @@ public class DailyPreference
         switch (placeType)
         {
             case HOTEL:
-                setValue(mOldEditor, KEY_PREFERENCE_REGION_SETTING, value);
+                setValue(mOldEditor, KEY_SETTING_REGION_STAY_SETTING, value);
                 break;
 
             case FNB:
-                setValue(mOldEditor, KEY_PREFERENCE_FNB_REGION_SETTING, value);
+                setValue(mOldEditor, KEY_SETTING_REGION_FNB_SETTING, value);
                 break;
         }
     }
 
     public String getOverseasName()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_OVERSEAS_NAME, null);
+        return getValue(mOldPreferences, KEY_PAYMENT_OVERSEAS_NAME, null);
     }
 
     public String getOverseasPhone()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_OVERSEAS_PHONE, null);
+        return getValue(mOldPreferences, KEY_PAYMENT_OVERSEAS_PHONE, null);
     }
 
     public String getOverseasEmail()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_OVERSEAS_EMAIL, null);
+        return getValue(mOldPreferences, KEY_PAYMENT_OVERSEAS_EMAIL, null);
     }
 
     public void setOverseasUserInformation(String name, String phone, String email)
     {
         if (mOldEditor != null)
         {
-            mOldEditor.putString(KEY_PREFERENCE_OVERSEAS_NAME, name);
-            mOldEditor.putString(KEY_PREFERENCE_OVERSEAS_PHONE, phone);
-            mOldEditor.putString(KEY_PREFERENCE_OVERSEAS_EMAIL, email);
+            mOldEditor.putString(KEY_PAYMENT_OVERSEAS_NAME, name);
+            mOldEditor.putString(KEY_PAYMENT_OVERSEAS_PHONE, phone);
+            mOldEditor.putString(KEY_PAYMENT_OVERSEAS_EMAIL, email);
             mOldEditor.apply();
         }
     }
 
     public String getUserType()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_TYPE, null);
+        return getValue(mOldPreferences, KEY_USER_TYPE, null);
     }
 
     public String getUserName()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_NAME, null);
+        return getValue(mOldPreferences, KEY_USER_NAME, null);
     }
 
     public String getUserEmail()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_EMAIL, null);
+        return getValue(mOldPreferences, KEY_USER_EMAIL, null);
     }
 
     public String getUserRecommender()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_RECOMMENDER, null);
+        return getValue(mOldPreferences, KEY_USER_RECOMMENDER, null);
     }
 
     public boolean isUserBenefitAlarm()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_BENEFIT_ALARM, false);
+        return getValue(mOldPreferences, KEY_USER_BENEFIT_ALARM, false);
     }
 
     public void setUserBenefitAlarm(boolean value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_BENEFIT_ALARM, value);
+        setValue(mOldEditor, KEY_USER_BENEFIT_ALARM, value);
     }
 
     public boolean isUserExceedBonus()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_IS_EXCEED_BONUS, false);
+        return getValue(mOldPreferences, KEY_USER_IS_EXCEED_BONUS, false);
     }
 
     public void setUserExceedBonus(boolean value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_IS_EXCEED_BONUS, value);
+        setValue(mOldEditor, KEY_USER_IS_EXCEED_BONUS, value);
     }
 
     public void setUserInformation(String type, String email, String name, String recommender)
     {
         if (mOldEditor != null)
         {
-            mOldEditor.putString(KEY_PREFERENCE_USER_TYPE, type);
-            mOldEditor.putString(KEY_PREFERENCE_USER_EMAIL, email);
-            mOldEditor.putString(KEY_PREFERENCE_USER_NAME, name);
-            mOldEditor.putString(KEY_PREFERENCE_USER_RECOMMENDER, recommender);
+            mOldEditor.putString(KEY_USER_TYPE, type);
+            mOldEditor.putString(KEY_USER_EMAIL, email);
+            mOldEditor.putString(KEY_USER_NAME, name);
+            mOldEditor.putString(KEY_USER_RECOMMENDER, recommender);
             mOldEditor.apply();
         }
     }
@@ -976,13 +976,13 @@ public class DailyPreference
     {
         if (mOldEditor != null)
         {
-            mOldEditor.remove(KEY_PREFERENCE_AUTO_LOGIN);
-            mOldEditor.remove(KEY_PREFERENCE_USER_ID);
-            mOldEditor.remove(KEY_PREFERENCE_USER_PWD);
-            mOldEditor.remove(KEY_PREFERENCE_USER_TYPE);
-            mOldEditor.remove(KEY_PREFERENCE_USER_ACCESS_TOKEN);
-            mOldEditor.remove(KEY_PREFERENCE_USER_EMAIL);
-            mOldEditor.remove(KEY_PREFERENCE_USER_NAME);
+            mOldEditor.remove(KEY_USER_AUTO_LOGIN);
+            mOldEditor.remove(KEY_USER_ID);
+            mOldEditor.remove(KEY_USER_PWD);
+            mOldEditor.remove(KEY_USER_TYPE);
+            mOldEditor.remove(KEY_USER_ACCESS_TOKEN);
+            mOldEditor.remove(KEY_USER_EMAIL);
+            mOldEditor.remove(KEY_USER_NAME);
             mEditor.remove(KEY_AUTHORIZATION);
 
             DailyHotel.AUTHORIZATION = null;
@@ -993,62 +993,62 @@ public class DailyPreference
 
     public String getSkipVersion()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0");
+        return getValue(mOldPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0");
     }
 
     public void setSkipVersion(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_SKIP_MAX_VERSION, value);
+        setValue(mOldEditor, KEY_SETTING_VERSION_SKIP_MAX_VERSION, value);
     }
 
 
     public String getGASelectedRegion()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_REGION_SELECT_GA, null);
+        return getValue(mOldPreferences, KEY_GA_REGION_SELECT, null);
     }
 
     public void setGASelectedRegion(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_REGION_SELECT_GA, value);
+        setValue(mOldEditor, KEY_GA_REGION_SELECT, value);
     }
 
     public String getGAHotelName()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_HOTEL_NAME_GA, null);
+        return getValue(mOldPreferences, KEY_GA_STAY_NAME, null);
     }
 
     public void setGAHotelName(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_HOTEL_NAME_GA, value);
+        setValue(mOldEditor, KEY_GA_STAY_NAME, value);
     }
 
     public String getGASelectedPlaceRegion()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_PLACE_REGION_SELECT_GA, null);
+        return getValue(mOldPreferences, KEY_GA_PLACE_REGION_SELECT, null);
     }
 
     public void setGASelectedPlaceRegion(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_PLACE_REGION_SELECT_GA, value);
+        setValue(mOldEditor, KEY_GA_PLACE_REGION_SELECT, value);
     }
 
     public String getGASelectedPlaceName()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_PLACE_NAME_GA, null);
+        return getValue(mOldPreferences, KEY_GA_PLACE_NAME, null);
     }
 
     public void setGASelectedPlaceName(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_PLACE_NAME_GA, value);
+        setValue(mOldEditor, KEY_GA_PLACE_NAME, value);
     }
 
     public int getVirtualAccountReadyFlag()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
+        return getValue(mOldPreferences, KEY_PAYMENT_ACCOUNT_READY_FLAG, -1);
     }
 
     public void setVirtualAccountReadyFlag(int value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_ACCOUNT_READY_FLAG, value);
+        setValue(mOldEditor, KEY_PAYMENT_ACCOUNT_READY_FLAG, value);
     }
 }
