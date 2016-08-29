@@ -185,11 +185,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
     {
         GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
 
-        mGourmetTitleLayout = view.findViewById(R.id.hotelTitleLayout);
+        mGourmetTitleLayout = view.findViewById(R.id.gourmetTitleLayout);
         mGourmetTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         // 등급
-        TextView gradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
+        TextView gradeTextView = (TextView) view.findViewById(R.id.gourmetGradeTextView);
 
         if (Util.isTextEmpty(gourmetDetail.category) == true)
         {
@@ -198,12 +198,10 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             gradeTextView.setVisibility(View.VISIBLE);
             gradeTextView.setText(gourmetDetail.category);
-            gradeTextView.setTextColor(mContext.getResources().getColor(R.color.black));
-            gradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }
 
         // 호텔명
-        TextView placeNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+        TextView placeNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
         placeNameTextView.setText(gourmetDetail.name);
 
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);

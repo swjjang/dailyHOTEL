@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/hotelTitleLayout"
+    android:id="@+id/gourmetTitleLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -22,11 +22,11 @@
             android:paddingTop="19dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/hotelGradeTextView"
+                android:id="@+id/gourmetGradeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="@color/black"
+                android:background="@color/default_background_c929292"
                 android:gravity="center"
                 android:paddingBottom="2dp"
                 android:paddingLeft="6dp"
@@ -37,7 +37,7 @@
                 android:visibility="invisible"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/hotelNameTextView"
+                android:id="@+id/gourmetNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
