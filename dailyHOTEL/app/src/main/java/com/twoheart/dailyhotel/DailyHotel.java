@@ -69,6 +69,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         // 버전 정보 얻기
         VERSION = Util.getAppVersion(getApplicationContext());
 
+        DailyPreference.getInstance(getApplicationContext()).setPreferenceMigration();
+
         AUTHORIZATION = DailyPreference.getInstance(getApplicationContext()).getAuthorization();
 
         String preferenceVersion = DailyPreference.getInstance( //

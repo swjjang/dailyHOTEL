@@ -847,13 +847,18 @@ public class StayMainFragment extends PlaceMainFragment
                 case PlaceViewItem.TYPE_ENTRY:
                 {
                     Stay stay = placeViewItem.getItem();
+                    Province province = mStayCuration.getProvince();
 
-                    String region = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
-                    DailyPreference.getInstance(mBaseActivity).setGASelectedRegion(region);
-                    DailyPreference.getInstance(mBaseActivity).setGAHotelName(stay.name);
+                    String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
+
+                    if (province.name.equalsIgnoreCase(savedRegion) == false)
+                    {
+                        DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+                    }
 
                     Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
-                        mStayCuration.getCheckInSaleTime(), mStayCuration.getProvince(), stay, listCount);
+                        mStayCuration.getCheckInSaleTime(), province, stay, listCount);
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
