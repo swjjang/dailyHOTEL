@@ -122,13 +122,6 @@ public class DailyPreference
     private static final String KEY_OLD_EVENT_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
     private static final String KEY_OLD_EVENT_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
 
-    // Google Analytics
-    private static final String KEY_OLD_GA_REGION_SELECT = "REGION_SELECT_GA";
-    private static final String KEY_OLD_GA_STAY_NAME = "HOTEL_NAME_GA";
-    private static final String KEY_OLD_GA_PLACE_REGION_SELECT = "PLACE_REGION_SELECT_GA";
-    private static final String KEY_OLD_GA_PLACE_NAME = "PLACE_NAME_GA";
-
-
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -164,13 +157,7 @@ public class DailyPreference
     private static final String KEY_EVENT_LASTEST_COUPON_TIME = "6101";
     private static final String KEY_EVENT_VIEWED_EVENT_TIME = "6200";
     private static final String KEY_EVENT_VIEWED_COUPON_TIME = "6201";
-
-    // Google Analytics
-    private static final String KEY_GA_REGION_SELECT = "7000";
-    private static final String KEY_GA_STAY_NAME = "7001";
-    private static final String KEY_GA_PLACE_REGION_SELECT = "7002";
-    private static final String KEY_GA_PLACE_NAME = "7003";
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
@@ -1034,47 +1021,6 @@ public class DailyPreference
         setValue(mEditor, KEY_SETTING_VERSION_SKIP_MAX_VERSION, value);
     }
 
-
-    public String getGASelectedRegion()
-    {
-        return getValue(mPreferences, KEY_GA_REGION_SELECT, null);
-    }
-
-    public void setGASelectedRegion(String value)
-    {
-        setValue(mEditor, KEY_GA_REGION_SELECT, value);
-    }
-
-    public String getGAHotelName()
-    {
-        return getValue(mPreferences, KEY_GA_STAY_NAME, null);
-    }
-
-    public void setGAHotelName(String value)
-    {
-        setValue(mEditor, KEY_GA_STAY_NAME, value);
-    }
-
-    public String getGASelectedPlaceRegion()
-    {
-        return getValue(mPreferences, KEY_GA_PLACE_REGION_SELECT, null);
-    }
-
-    public void setGASelectedPlaceRegion(String value)
-    {
-        setValue(mEditor, KEY_GA_PLACE_REGION_SELECT, value);
-    }
-
-    public String getGASelectedPlaceName()
-    {
-        return getValue(mPreferences, KEY_GA_PLACE_NAME, null);
-    }
-
-    public void setGASelectedPlaceName(String value)
-    {
-        setValue(mEditor, KEY_GA_PLACE_NAME, value);
-    }
-
     public int getVirtualAccountReadyFlag()
     {
         return getValue(mPreferences, KEY_PAYMENT_ACCOUNT_READY_FLAG, -1);
@@ -1189,26 +1135,6 @@ public class DailyPreference
                 if (mOldPreferences.contains(KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION) == true)
                 {
                     setSkipVersion(getValue(mOldPreferences, KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0"));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_GA_REGION_SELECT) == true)
-                {
-                    setGASelectedRegion(getValue(mOldPreferences, KEY_OLD_GA_REGION_SELECT, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_GA_STAY_NAME) == true)
-                {
-                    setGAHotelName(getValue(mOldPreferences, KEY_OLD_GA_STAY_NAME, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_GA_PLACE_REGION_SELECT) == true)
-                {
-                    setGASelectedPlaceRegion(getValue(mOldPreferences, KEY_OLD_GA_PLACE_REGION_SELECT, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_GA_PLACE_NAME) == true)
-                {
-                    setGASelectedPlaceName(getValue(mOldPreferences, KEY_OLD_GA_PLACE_NAME, null));
                 }
 
                 if (mOldPreferences.contains(KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG) == true)

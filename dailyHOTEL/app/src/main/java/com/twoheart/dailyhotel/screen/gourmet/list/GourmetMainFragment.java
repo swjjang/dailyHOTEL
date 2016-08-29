@@ -753,13 +753,18 @@ public class GourmetMainFragment extends PlaceMainFragment
                 case PlaceViewItem.TYPE_ENTRY:
                 {
                     Gourmet gourmet = placeViewItem.getItem();
+                    Province province = mGourmetCuration.getProvince();
 
-                    String region = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.FNB);
-                    DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceRegion(region);
-                    DailyPreference.getInstance(mBaseActivity).setGASelectedPlaceName(gourmet.name);
+                    String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.FNB);
+
+                    if (province.name.equalsIgnoreCase(savedRegion) == false)
+                    {
+                        DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+                    }
 
                     Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                        mGourmetCuration.getSaleTime(), mGourmetCuration.getProvince(), gourmet, listCount);
+                        mGourmetCuration.getSaleTime(), province, gourmet, listCount);
 
                     mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
