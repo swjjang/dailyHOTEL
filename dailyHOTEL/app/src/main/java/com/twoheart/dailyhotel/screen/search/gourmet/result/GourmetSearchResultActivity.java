@@ -678,7 +678,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
                 currentPlaceListFragment.setPlaceCuration(mGourmetSearchCuration);
-                ((GourmetSearchResultListFragment)currentPlaceListFragment).setSearchType(mSearchType);
+                ((GourmetSearchResultListFragment) currentPlaceListFragment).setSearchType(mSearchType);
                 currentPlaceListFragment.refreshList(true);
             } else
             {

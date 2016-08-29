@@ -403,7 +403,6 @@ public class GcmIntentService extends IntentService implements Constants
             }
 
             builder.setContentIntent(mPendingIntent);
-            builder.setPriority(Notification.PRIORITY_MAX);
             mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         }
 

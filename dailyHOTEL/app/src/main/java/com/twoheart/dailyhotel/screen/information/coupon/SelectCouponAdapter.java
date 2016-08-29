@@ -223,7 +223,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.iconImageView.setImageResource(R.drawable.selector_radio_button);
             holder.iconImageView.setSelected((mSelectPosition == position));
 
-            holder.priceTextView.setGravity(Gravity.LEFT);
+            holder.priceTextView.setGravity(Gravity.START);
             holder.priceTextView.setPadding(Util.dpToPx(mContext, 7), 0, 0, 0);
         } else
         {

@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -229,7 +228,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
             final float textWidth = Util.getTextWidth(mContext, lastLineText, 11d, typeface);
 
-            if (minPriceTextView.getWidth() <= textWidth) {
+            if (minPriceTextView.getWidth() <= textWidth)
+            {
                 lastLineText = lastLineText.replace(", ", ",\n");
             }
 

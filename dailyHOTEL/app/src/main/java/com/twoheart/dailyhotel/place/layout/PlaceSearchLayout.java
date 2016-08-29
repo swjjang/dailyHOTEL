@@ -48,7 +48,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
-    private DailyScrollView mAutoCompleteScrollLayout, mRecentSearchesScrollLayout;
+    private DailyScrollView mAutoCompleteScrollLayout;
     private View mRecentSearchLayout;
     private ViewGroup mRcentContentsLayout;
     private View mDeleteAllRecentSearchesView;
@@ -323,8 +323,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initRecentSearchesLayout(View view)
     {
-        mRecentSearchesScrollLayout = (DailyScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
-        mRecentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        DailyScrollView recentSearchesScrollLayout = (DailyScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
+        recentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
         {
             private int mDistance;
             private boolean mIsHide;
@@ -363,7 +363,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             }
         });
 
-        EdgeEffectColor.setEdgeGlowColor(mRecentSearchesScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(recentSearchesScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         // 최근 검색어
         // 전체 삭제

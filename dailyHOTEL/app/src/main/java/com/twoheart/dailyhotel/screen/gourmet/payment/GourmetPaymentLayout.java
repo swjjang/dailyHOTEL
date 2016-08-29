@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Layout;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private TextView mPlaceNameTextView;
     private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
     private EditText mMemoEditText;
-    private View mFakeMobileEditView;
     private ScrollView mScrollLayout;
     private View mBookingLayout;
 
@@ -43,13 +41,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     // 결제 수단 선택
     private View mSimpleCardLayout;
-    private ImageView mSimpleCardImageView;
     private TextView mSimpleCardTextView;
     private View mCardLayout;
     private View mPhoneLayout;
     private View mTransferLayout;
 
-    private View mCardManagerLayout;
     private TextView mCardManagerTextView;
 
     private View mDisableSimpleCardView;
@@ -163,7 +159,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private void initUserInformationLayout(View view)
     {
-        mFakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
+        View fakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
 
         // 예약자
         mUserNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
@@ -180,8 +176,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mUserPhoneEditText.setOnFocusChangeListener(this);
         mUserEmailEditText.setOnFocusChangeListener(this);
 
-        mFakeMobileEditView.setFocusable(true);
-        mFakeMobileEditView.setOnClickListener(this);
+        fakeMobileEditView.setFocusable(true);
+        fakeMobileEditView.setOnClickListener(this);
     }
 
     private void initBookingMemo(View view)
@@ -198,12 +194,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private void initPaymentTypeInformation(View view)
     {
         mSimpleCardLayout = view.findViewById(R.id.simpleCardLayout);
-        mSimpleCardImageView = (ImageView) mSimpleCardLayout.findViewById(R.id.simpleCardImageView);
         mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
         mDisableSimpleCardView = view.findViewById(R.id.disableSimpleCardView);
 
-        mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
-        mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
+        View cardManagerLayout = view.findViewById(R.id.cardManagerLayout);
+        mCardManagerTextView = (TextView) cardManagerLayout.findViewById(R.id.cardManagerTextView);
 
         mCardLayout = view.findViewById(R.id.cardLayout);
         mDisableCardView = mCardLayout.findViewById(R.id.disableCardView);
@@ -214,7 +209,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mTransferLayout = view.findViewById(R.id.transferLayout);
         mDisableTransferView = mTransferLayout.findViewById(R.id.disableTransferView);
 
-        mCardManagerLayout.setOnClickListener(this);
+        cardManagerLayout.setOnClickListener(this);
         mSimpleCardLayout.setOnClickListener(this);
         mCardLayout.setOnClickListener(this);
         mPhoneLayout.setOnClickListener(this);

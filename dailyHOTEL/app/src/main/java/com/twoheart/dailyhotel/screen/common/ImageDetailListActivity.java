@@ -39,7 +39,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     private static final String INTENT_EXTRA_DATA_TITLE = "title";
 
     private DailyPlaceDetailListView mListView;
-    private View mTranslationView, mAlphaView;
+    private View mAlphaView;
     private float mY;
     private boolean mIsMoved, mIsTop, mIsBottom;
     private VelocityTracker mVelocityTracker;
@@ -107,8 +107,8 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     private void initLayout(ArrayList<ImageInformation> arrayList, final int position)
     {
         mListView = (DailyPlaceDetailListView) findViewById(R.id.listView);
-        mTranslationView = findViewById(R.id.translationView);
-        mTranslationView.setClickable(true);
+        View translationView = findViewById(R.id.translationView);
+        translationView.setClickable(true);
         mAlphaView = findViewById(R.id.alphaView);
 
         ImageDetailListAdapter adapter = new ImageDetailListAdapter(this, 0, arrayList);
@@ -123,7 +123,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         });
         mListView.setClickable(false);
 
-        mTranslationView.setOnTouchListener(new View.OnTouchListener()
+        translationView.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
             public boolean onTouch(View v, MotionEvent event)
@@ -322,7 +322,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             }
 
             DraweeController controller;
-            BaseControllerListener baseControllerListener = new BaseControllerListener<ImageInfo>()
+            BaseControllerListener<ImageInfo> baseControllerListener = new BaseControllerListener<ImageInfo>()
             {
                 @Override
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)

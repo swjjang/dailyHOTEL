@@ -35,7 +35,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
     private PlaceRegionListActivity.Region mRegion;
 
-    private View mHeaderView;
     private View mTermsOfLocationView;
     protected BaseActivity mBaseActivity;
 
@@ -60,11 +59,11 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         mListView = (DailyAnimatedExpandableListView) inflater.inflate(R.layout.fragment_region_list, container, false);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
 
-        mHeaderView = LayoutInflater.from(mBaseActivity).inflate(R.layout.layout_region_around_search_header, null);
+        View headerView = LayoutInflater.from(mBaseActivity).inflate(R.layout.layout_region_around_search_header, null);
 
-        initHeaderLayout(mHeaderView);
+        initHeaderLayout(headerView);
 
-        mListView.addHeaderView(mHeaderView);
+        mListView.addHeaderView(headerView);
 
         return mListView;
     }

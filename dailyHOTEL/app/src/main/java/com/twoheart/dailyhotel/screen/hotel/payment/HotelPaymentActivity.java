@@ -100,7 +100,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     // 결제 수단 선택
     private View mSimpleCardLayout;
-    private ImageView mSimpleCardImageView;
     private TextView mSimpleCardTextView;
     private View mCardLayout;
     private View mPhoneLayout;
@@ -322,7 +321,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private void initPaymentTypeInformation()
     {
         mSimpleCardLayout = findViewById(R.id.simpleCardLayout);
-        mSimpleCardImageView = (ImageView) mSimpleCardLayout.findViewById(R.id.simpleCardImageView);
         mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
         mDisableSimpleCardView = findViewById(R.id.disableSimpleCardView);
         mCardManagerLayout = findViewById(R.id.cardManagerLayout);
