@@ -165,10 +165,9 @@ public class Util implements Constants
     public static void setLocale(Context context, Locale locale)
     {
         Resources res = context.getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = locale;
-        res.updateConfiguration(conf, dm);
+        res.updateConfiguration(conf, null);
     }
 
     public static void restartApp(Context context)
