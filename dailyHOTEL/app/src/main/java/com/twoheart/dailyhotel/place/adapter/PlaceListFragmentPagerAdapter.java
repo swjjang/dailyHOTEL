@@ -71,7 +71,7 @@ public class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
         }
 
         mFragmentList.clear();
-        mFragmentList.addAll(list);
+        addPlaceListFragment(list);
     }
 
     public void addPlaceListFragment(ArrayList<? extends PlaceListFragment> list)
@@ -81,6 +81,9 @@ public class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
             return;
         }
 
-        mFragmentList.addAll(list);
+        if (list != null)
+        {
+            mFragmentList.addAll(list);
+        }
     }
 }
