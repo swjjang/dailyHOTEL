@@ -11,7 +11,6 @@ import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
-import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -86,7 +85,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         FacebookSdk.sdkInitialize(getApplicationContext());
         KakaoSDK.init(new KakaoSDKAdapter());
         FontManager.getInstance(getApplicationContext());
-        DailyRemoteConfig.getInstance(getApplicationContext());
 
         GOOGLE_ANALYTICS_CLIENT_ID = AnalyticsManager.getInstance(getApplicationContext()).getGoogleAnalyticsManager().getClientId();
     }
