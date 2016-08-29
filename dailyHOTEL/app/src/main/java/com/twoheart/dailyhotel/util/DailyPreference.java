@@ -79,63 +79,105 @@ public class DailyPreference
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
 
+    private static final String KEY_SETTING_MIGRATION_FLAG = "1003";
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    // "GOOD_NIGHT" Preference
+    // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
     /////////////////////////////////////////////////////////////////////////////////////////
 
     // Setting
-    private static final String KEY_SETTING_GCM_ID = "PUSH_ID";
+    private static final String KEY_OLD_SETTING_GCM_ID = "PUSH_ID";
 
     //Setting - Region
-    private static final String KEY_SETTING_REGION_STAY_SELECT = "REGION_SELECT";
-    private static final String KEY_SETTING_REGION_STAY_SETTING = "REGION_SETTING";
-    private static final String KEY_SETTING_REGION_FNB_SETTING = "FNB_REGION_SETTING";
-    private static final String KEY_SETTING_REGION_FNB_SELECT = "FNB_REGION_SELECT";
+    private static final String KEY_OLD_SETTING_REGION_STAY_SELECT = "REGION_SELECT";
+    private static final String KEY_OLD_SETTING_REGION_STAY_SETTING = "REGION_SETTING";
+    private static final String KEY_OLD_SETTING_REGION_FNB_SETTING = "FNB_REGION_SETTING";
+    private static final String KEY_OLD_SETTING_REGION_FNB_SELECT = "FNB_REGION_SELECT";
 
     // Setting - Version
-    private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
+    private static final String KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
 
     // User - Information
-    private static final String KEY_USER_AUTO_LOGIN = "AUTO_LOGIN"; // 사용하지 않음
-    private static final String KEY_USER_ID = "USER_ID"; // 사용하지 않음
-    private static final String KEY_USER_EMAIL = "USER_EMAIL";
-    private static final String KEY_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
-    private static final String KEY_USER_PWD = "USER_PWD"; // 사용하지 않음
-    private static final String KEY_USER_TYPE = "USER_TYPE";
-    private static final String KEY_USER_NAME = "USER_NAME";
-    private static final String KEY_USER_RECOMMENDER = "USER_RECOMMENDER";
-    private static final String KEY_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
-    private static final String KEY_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
+    private static final String KEY_OLD_USER_AUTO_LOGIN = "AUTO_LOGIN"; // 사용하지 않음
+    private static final String KEY_OLD_USER_ID = "USER_ID"; // 사용하지 않음
+    private static final String KEY_OLD_USER_EMAIL = "USER_EMAIL";
+    private static final String KEY_OLD_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
+    private static final String KEY_OLD_USER_PWD = "USER_PWD"; // 사용하지 않음
+    private static final String KEY_OLD_USER_TYPE = "USER_TYPE";
+    private static final String KEY_OLD_USER_NAME = "USER_NAME";
+    private static final String KEY_OLD_USER_RECOMMENDER = "USER_RECOMMENDER";
+    private static final String KEY_OLD_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
+    private static final String KEY_OLD_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
 
     // payment
-    private static final String KEY_PAYMENT_OVERSEAS_NAME = "OVERSEAS_NAME";
-    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "OVERSEAS_PHONE";
-    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
+    private static final String KEY_OLD_PAYMENT_OVERSEAS_NAME = "OVERSEAS_NAME";
+    private static final String KEY_OLD_PAYMENT_OVERSEAS_PHONE = "OVERSEAS_PHONE";
+    private static final String KEY_OLD_PAYMENT_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
 
     // payment - Virtual Account
-    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG";
+    private static final String KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG";
 
     // Event
-    private static final String KEY_EVENT_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
-    private static final String KEY_EVENT_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
-    private static final String KEY_EVENT_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
-    private static final String KEY_EVENT_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
+    private static final String KEY_OLD_EVENT_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
+    private static final String KEY_OLD_EVENT_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
+    private static final String KEY_OLD_EVENT_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
+    private static final String KEY_OLD_EVENT_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
 
     // Google Analytics
-    private static final String KEY_GA_REGION_SELECT = "REGION_SELECT_GA";
-    private static final String KEY_GA_STAY_NAME = "HOTEL_NAME_GA";
-    private static final String KEY_GA_PLACE_REGION_SELECT = "PLACE_REGION_SELECT_GA";
-    private static final String KEY_GA_PLACE_NAME = "PLACE_NAME_GA";
+    private static final String KEY_OLD_GA_REGION_SELECT = "REGION_SELECT_GA";
+    private static final String KEY_OLD_GA_STAY_NAME = "HOTEL_NAME_GA";
+    private static final String KEY_OLD_GA_PLACE_REGION_SELECT = "PLACE_REGION_SELECT_GA";
+    private static final String KEY_OLD_GA_PLACE_NAME = "PLACE_NAME_GA";
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    // New Key
+    // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
 
+    // Setting
+    private static final String KEY_SETTING_GCM_ID = "1002";
+    private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "1004";
+
+    // Setting - Region
+    private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
+    private static final String KEY_SETTING_REGION_STAY_SETTING = "1111";
+    private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
+    private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
+
+    // User
+    private static final String KEY_USER_AUTO_LOGIN = "2000"; // 사용하지 않음
+    private static final String KEY_USER_ID = "2001"; // 사용하지 않음
+    private static final String KEY_USER_EMAIL = "2002";
+    private static final String KEY_USER_ACCESS_TOKEN = "2003";
+    private static final String KEY_USER_PWD = "2004"; // 사용하지 않음
+    private static final String KEY_USER_TYPE = "2005";
+    private static final String KEY_USER_NAME = "2006";
+    private static final String KEY_USER_RECOMMENDER = "2007";
+    private static final String KEY_USER_BENEFIT_ALARM = "2008";
+    private static final String KEY_USER_IS_EXCEED_BONUS = "2009";
+
+    // Payment
+    private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
+    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
+    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
+
+    // payment - Virtual Account
+    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "4100";
+
+    // Event
+    private static final String KEY_EVENT_LASTEST_EVENT_TIME = "6100";
+    private static final String KEY_EVENT_LASTEST_COUPON_TIME = "6101";
+    private static final String KEY_EVENT_VIEWED_EVENT_TIME = "6200";
+    private static final String KEY_EVENT_VIEWED_COUPON_TIME = "6201";
+
+    // Google Analytics
+    private static final String KEY_GA_REGION_SELECT = "7000";
+    private static final String KEY_GA_STAY_NAME = "7001";
+    private static final String KEY_GA_PLACE_REGION_SELECT = "7002";
+    private static final String KEY_GA_PLACE_NAME = "7003";
 
 
     private static DailyPreference mInstance;
@@ -143,7 +185,6 @@ public class DailyPreference
     private SharedPreferences mOldPreferences;
     private Editor mEditor;
     private Editor mOldEditor;
-    private Editor mVBankEditor;
 
     private DailyPreference(Context context)
     {
@@ -193,12 +234,6 @@ public class DailyPreference
         {
             mOldEditor.clear();
             mOldEditor.apply();
-        }
-
-        if (mVBankEditor != null)
-        {
-            mVBankEditor.clear();
-            mVBankEditor.apply();
         }
 
         setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax, privacyEmail);
@@ -599,6 +634,16 @@ public class DailyPreference
         setValue(mEditor, KEY_VERIFICATION, value);
     }
 
+    public boolean isMigrationFlag()
+    {
+        return getValue(mPreferences, KEY_SETTING_MIGRATION_FLAG, false);
+    }
+
+    public void setMigrationFlag(boolean value)
+    {
+        setValue(mEditor, KEY_SETTING_MIGRATION_FLAG, value);
+    }
+
     public void setHotelRecentSearches(String text)
     {
         setValue(mEditor, KEY_HOTEL_SEARCH_RECENTLY, text);
@@ -785,59 +830,58 @@ public class DailyPreference
         return getValue(mPreferences, KEY_STAY_CATEGORY_NAME, null);
     }
 
-
     /////////////////////////////////////////////////////////////////////////////////////////
-    // "GOOD_NIGHT" Preference
+    // new
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public String getGCMRegistrationId()
     {
-        return getValue(mOldPreferences, KEY_SETTING_GCM_ID, null);
+        return getValue(mPreferences, KEY_SETTING_GCM_ID, null);
     }
 
     public void setGCMRegistrationId(String value)
     {
-        setValue(mOldEditor, KEY_SETTING_GCM_ID, value);
+        setValue(mEditor, KEY_SETTING_GCM_ID, value);
     }
 
     public String getLastestEventTime()
     {
-        return getValue(mOldPreferences, KEY_EVENT_LASTEST_EVENT_TIME, null);
+        return getValue(mPreferences, KEY_EVENT_LASTEST_EVENT_TIME, null);
     }
 
     public void setLastestEventTime(String value)
     {
-        setValue(mOldEditor, KEY_EVENT_LASTEST_EVENT_TIME, value);
+        setValue(mEditor, KEY_EVENT_LASTEST_EVENT_TIME, value);
     }
 
     public String getLastestCouponTime()
     {
-        return getValue(mOldPreferences, KEY_EVENT_LASTEST_COUPON_TIME, null);
+        return getValue(mPreferences, KEY_EVENT_LASTEST_COUPON_TIME, null);
     }
 
     public void setLastestCouponTime(String value)
     {
-        setValue(mOldEditor, KEY_EVENT_LASTEST_COUPON_TIME, value);
+        setValue(mEditor, KEY_EVENT_LASTEST_COUPON_TIME, value);
     }
 
     public String getViewedEventTime()
     {
-        return getValue(mOldPreferences, KEY_EVENT_VIEWED_EVENT_TIME, null);
+        return getValue(mPreferences, KEY_EVENT_VIEWED_EVENT_TIME, null);
     }
 
     public void setViewedEventTime(String value)
     {
-        setValue(mOldEditor, KEY_EVENT_VIEWED_EVENT_TIME, value);
+        setValue(mEditor, KEY_EVENT_VIEWED_EVENT_TIME, value);
     }
 
     public String getViewedCouponTime()
     {
-        return getValue(mOldPreferences, KEY_EVENT_VIEWED_COUPON_TIME, null);
+        return getValue(mPreferences, KEY_EVENT_VIEWED_COUPON_TIME, null);
     }
 
     public void setViewedCouponTime(String value)
     {
-        setValue(mOldEditor, KEY_EVENT_VIEWED_COUPON_TIME, value);
+        setValue(mEditor, KEY_EVENT_VIEWED_COUPON_TIME, value);
     }
 
     public String getSelectedRegion(Constants.PlaceType placeType)
@@ -845,11 +889,11 @@ public class DailyPreference
         switch (placeType)
         {
             case FNB:
-                return getValue(mOldPreferences, KEY_SETTING_REGION_FNB_SELECT, null);
+                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SELECT, null);
 
             case HOTEL:
             default:
-                return getValue(mOldPreferences, KEY_SETTING_REGION_STAY_SELECT, null);
+                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SELECT, null);
         }
     }
 
@@ -858,11 +902,11 @@ public class DailyPreference
         switch (placeType)
         {
             case HOTEL:
-                setValue(mOldEditor, KEY_SETTING_REGION_STAY_SELECT, value);
+                setValue(mEditor, KEY_SETTING_REGION_STAY_SELECT, value);
                 break;
 
             case FNB:
-                setValue(mOldEditor, KEY_SETTING_REGION_FNB_SELECT, value);
+                setValue(mEditor, KEY_SETTING_REGION_FNB_SELECT, value);
                 break;
         }
     }
@@ -872,11 +916,11 @@ public class DailyPreference
         switch (placeType)
         {
             case FNB:
-                return getValue(mOldPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
+                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
 
             case HOTEL:
             default:
-                return getValue(mOldPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
+                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
         }
     }
 
@@ -885,170 +929,313 @@ public class DailyPreference
         switch (placeType)
         {
             case HOTEL:
-                setValue(mOldEditor, KEY_SETTING_REGION_STAY_SETTING, value);
+                setValue(mEditor, KEY_SETTING_REGION_STAY_SETTING, value);
                 break;
 
             case FNB:
-                setValue(mOldEditor, KEY_SETTING_REGION_FNB_SETTING, value);
+                setValue(mEditor, KEY_SETTING_REGION_FNB_SETTING, value);
                 break;
         }
     }
 
     public String getOverseasName()
     {
-        return getValue(mOldPreferences, KEY_PAYMENT_OVERSEAS_NAME, null);
+        return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_NAME, null);
     }
 
     public String getOverseasPhone()
     {
-        return getValue(mOldPreferences, KEY_PAYMENT_OVERSEAS_PHONE, null);
+        return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_PHONE, null);
     }
 
     public String getOverseasEmail()
     {
-        return getValue(mOldPreferences, KEY_PAYMENT_OVERSEAS_EMAIL, null);
+        return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_EMAIL, null);
     }
 
     public void setOverseasUserInformation(String name, String phone, String email)
     {
         if (mOldEditor != null)
         {
-            mOldEditor.putString(KEY_PAYMENT_OVERSEAS_NAME, name);
-            mOldEditor.putString(KEY_PAYMENT_OVERSEAS_PHONE, phone);
-            mOldEditor.putString(KEY_PAYMENT_OVERSEAS_EMAIL, email);
-            mOldEditor.apply();
+            mEditor.putString(KEY_PAYMENT_OVERSEAS_NAME, name);
+            mEditor.putString(KEY_PAYMENT_OVERSEAS_PHONE, phone);
+            mEditor.putString(KEY_PAYMENT_OVERSEAS_EMAIL, email);
+            mEditor.apply();
         }
     }
 
     public String getUserType()
     {
-        return getValue(mOldPreferences, KEY_USER_TYPE, null);
+        return getValue(mPreferences, KEY_USER_TYPE, null);
     }
 
     public String getUserName()
     {
-        return getValue(mOldPreferences, KEY_USER_NAME, null);
+        return getValue(mPreferences, KEY_USER_NAME, null);
     }
 
     public String getUserEmail()
     {
-        return getValue(mOldPreferences, KEY_USER_EMAIL, null);
+        return getValue(mPreferences, KEY_USER_EMAIL, null);
     }
 
     public String getUserRecommender()
     {
-        return getValue(mOldPreferences, KEY_USER_RECOMMENDER, null);
+        return getValue(mPreferences, KEY_USER_RECOMMENDER, null);
     }
 
     public boolean isUserBenefitAlarm()
     {
-        return getValue(mOldPreferences, KEY_USER_BENEFIT_ALARM, false);
+        return getValue(mPreferences, KEY_USER_BENEFIT_ALARM, false);
     }
 
     public void setUserBenefitAlarm(boolean value)
     {
-        setValue(mOldEditor, KEY_USER_BENEFIT_ALARM, value);
+        setValue(mEditor, KEY_USER_BENEFIT_ALARM, value);
     }
 
     public boolean isUserExceedBonus()
     {
-        return getValue(mOldPreferences, KEY_USER_IS_EXCEED_BONUS, false);
+        return getValue(mPreferences, KEY_USER_IS_EXCEED_BONUS, false);
     }
 
     public void setUserExceedBonus(boolean value)
     {
-        setValue(mOldEditor, KEY_USER_IS_EXCEED_BONUS, value);
+        setValue(mEditor, KEY_USER_IS_EXCEED_BONUS, value);
     }
 
     public void setUserInformation(String type, String email, String name, String recommender)
     {
-        if (mOldEditor != null)
+        if (mEditor != null)
         {
-            mOldEditor.putString(KEY_USER_TYPE, type);
-            mOldEditor.putString(KEY_USER_EMAIL, email);
-            mOldEditor.putString(KEY_USER_NAME, name);
-            mOldEditor.putString(KEY_USER_RECOMMENDER, recommender);
-            mOldEditor.apply();
+            mEditor.putString(KEY_USER_TYPE, type);
+            mEditor.putString(KEY_USER_EMAIL, email);
+            mEditor.putString(KEY_USER_NAME, name);
+            mEditor.putString(KEY_USER_RECOMMENDER, recommender);
+            mEditor.apply();
         }
     }
 
     public void removeUserInformation()
     {
-        if (mOldEditor != null)
+        if (mEditor != null)
         {
-            mOldEditor.remove(KEY_USER_AUTO_LOGIN);
-            mOldEditor.remove(KEY_USER_ID);
-            mOldEditor.remove(KEY_USER_PWD);
-            mOldEditor.remove(KEY_USER_TYPE);
-            mOldEditor.remove(KEY_USER_ACCESS_TOKEN);
-            mOldEditor.remove(KEY_USER_EMAIL);
-            mOldEditor.remove(KEY_USER_NAME);
+            mEditor.remove(KEY_USER_AUTO_LOGIN);
+            mEditor.remove(KEY_USER_ID);
+            mEditor.remove(KEY_USER_PWD);
+            mEditor.remove(KEY_USER_TYPE);
+            mEditor.remove(KEY_USER_ACCESS_TOKEN);
+            mEditor.remove(KEY_USER_EMAIL);
+            mEditor.remove(KEY_USER_NAME);
             mEditor.remove(KEY_AUTHORIZATION);
 
             DailyHotel.AUTHORIZATION = null;
 
-            mOldEditor.apply();
+            mEditor.apply();
         }
     }
 
     public String getSkipVersion()
     {
-        return getValue(mOldPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0");
+        return getValue(mPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0");
     }
 
     public void setSkipVersion(String value)
     {
-        setValue(mOldEditor, KEY_SETTING_VERSION_SKIP_MAX_VERSION, value);
+        setValue(mEditor, KEY_SETTING_VERSION_SKIP_MAX_VERSION, value);
     }
 
 
     public String getGASelectedRegion()
     {
-        return getValue(mOldPreferences, KEY_GA_REGION_SELECT, null);
+        return getValue(mPreferences, KEY_GA_REGION_SELECT, null);
     }
 
     public void setGASelectedRegion(String value)
     {
-        setValue(mOldEditor, KEY_GA_REGION_SELECT, value);
+        setValue(mEditor, KEY_GA_REGION_SELECT, value);
     }
 
     public String getGAHotelName()
     {
-        return getValue(mOldPreferences, KEY_GA_STAY_NAME, null);
+        return getValue(mPreferences, KEY_GA_STAY_NAME, null);
     }
 
     public void setGAHotelName(String value)
     {
-        setValue(mOldEditor, KEY_GA_STAY_NAME, value);
+        setValue(mEditor, KEY_GA_STAY_NAME, value);
     }
 
     public String getGASelectedPlaceRegion()
     {
-        return getValue(mOldPreferences, KEY_GA_PLACE_REGION_SELECT, null);
+        return getValue(mPreferences, KEY_GA_PLACE_REGION_SELECT, null);
     }
 
     public void setGASelectedPlaceRegion(String value)
     {
-        setValue(mOldEditor, KEY_GA_PLACE_REGION_SELECT, value);
+        setValue(mEditor, KEY_GA_PLACE_REGION_SELECT, value);
     }
 
     public String getGASelectedPlaceName()
     {
-        return getValue(mOldPreferences, KEY_GA_PLACE_NAME, null);
+        return getValue(mPreferences, KEY_GA_PLACE_NAME, null);
     }
 
     public void setGASelectedPlaceName(String value)
     {
-        setValue(mOldEditor, KEY_GA_PLACE_NAME, value);
+        setValue(mEditor, KEY_GA_PLACE_NAME, value);
     }
 
     public int getVirtualAccountReadyFlag()
     {
-        return getValue(mOldPreferences, KEY_PAYMENT_ACCOUNT_READY_FLAG, -1);
+        return getValue(mPreferences, KEY_PAYMENT_ACCOUNT_READY_FLAG, -1);
     }
 
     public void setVirtualAccountReadyFlag(int value)
     {
-        setValue(mOldEditor, KEY_PAYMENT_ACCOUNT_READY_FLAG, value);
+        setValue(mEditor, KEY_PAYMENT_ACCOUNT_READY_FLAG, value);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void clearOldPreference()
+    {
+        if (mOldEditor != null)
+        {
+            mOldEditor.clear();
+            mOldEditor.apply();
+        }
+    }
+
+    public void setPreferenceMigration()
+    {
+        boolean isMigrationFlag = isMigrationFlag();
+
+        // 이주 필요 확인!
+        if (isMigrationFlag == true)
+        {
+            // 이주가 완료 된 상황이나, 한번더 검사 (처음 중간 끝)
+            if (mOldPreferences.contains(KEY_OLD_SETTING_GCM_ID) == true //
+                || mOldPreferences.contains(KEY_OLD_USER_TYPE) == true //
+                || mOldPreferences.contains(KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG) == true)
+            {
+                isMigrationFlag = false;
+            }
+        }
+
+        if (isMigrationFlag == false)
+        {
+            try
+            {
+                if (mOldPreferences.contains(KEY_OLD_SETTING_GCM_ID) == true)
+                {
+                    setGCMRegistrationId(getValue(mOldPreferences, KEY_OLD_SETTING_GCM_ID, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_EVENT_LASTEST_EVENT_TIME) == true)
+                {
+                    setLastestEventTime(getValue(mOldPreferences, KEY_OLD_EVENT_LASTEST_EVENT_TIME, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_EVENT_LASTEST_COUPON_TIME) == true)
+                {
+                    setLastestCouponTime(getValue(mOldPreferences, KEY_OLD_EVENT_LASTEST_COUPON_TIME, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_EVENT_VIEWED_EVENT_TIME) == true)
+                {
+                    setViewedEventTime(getValue(mOldPreferences, KEY_OLD_EVENT_VIEWED_EVENT_TIME, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_STAY_SELECT) == true)
+                {
+                    setSelectedRegion(Constants.PlaceType.HOTEL, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_STAY_SELECT, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_FNB_SELECT) == true)
+                {
+                    setSelectedRegion(Constants.PlaceType.FNB, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_FNB_SELECT, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_STAY_SETTING) == true)
+                {
+                    setSettingRegion(Constants.PlaceType.HOTEL, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_STAY_SETTING, false));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_FNB_SETTING) == true)
+                {
+                    setSettingRegion(Constants.PlaceType.FNB, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_FNB_SETTING, false));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_EVENT_VIEWED_COUPON_TIME) == true)
+                {
+                    setViewedCouponTime(getValue(mOldPreferences, KEY_OLD_EVENT_VIEWED_COUPON_TIME, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_PAYMENT_OVERSEAS_NAME) == true)
+                {
+                    setOverseasUserInformation(getValue(mOldPreferences, KEY_OLD_PAYMENT_OVERSEAS_NAME, null), //
+                        getValue(mOldPreferences, KEY_OLD_PAYMENT_OVERSEAS_PHONE, null), //
+                        getValue(mOldPreferences, KEY_OLD_PAYMENT_OVERSEAS_EMAIL, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_USER_TYPE) == true)
+                {
+                    setUserInformation(getValue(mOldPreferences, KEY_OLD_USER_TYPE, null), //
+                        getValue(mOldPreferences, KEY_OLD_USER_EMAIL, null), //
+                        getValue(mOldPreferences, KEY_OLD_USER_NAME, null), //
+                        getValue(mOldPreferences, KEY_OLD_USER_RECOMMENDER, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_USER_BENEFIT_ALARM) == true)
+                {
+                    setUserBenefitAlarm(getValue(mOldPreferences, KEY_OLD_USER_BENEFIT_ALARM, false));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_USER_IS_EXCEED_BONUS) == true)
+                {
+                    setUserExceedBonus(getValue(mOldPreferences, KEY_OLD_USER_IS_EXCEED_BONUS, false));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION) == true)
+                {
+                    setSkipVersion(getValue(mOldPreferences, KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0"));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_GA_REGION_SELECT) == true)
+                {
+                    setGASelectedRegion(getValue(mOldPreferences, KEY_OLD_GA_REGION_SELECT, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_GA_STAY_NAME) == true)
+                {
+                    setGAHotelName(getValue(mOldPreferences, KEY_OLD_GA_STAY_NAME, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_GA_PLACE_REGION_SELECT) == true)
+                {
+                    setGASelectedPlaceRegion(getValue(mOldPreferences, KEY_OLD_GA_PLACE_REGION_SELECT, null));
+                }
+
+                if (mOldPreferences.contains(KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG) == true)
+                {
+                    setVirtualAccountReadyFlag(getValue(mOldPreferences, KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG, -1));
+                }
+
+                isMigrationFlag = true;
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+                isMigrationFlag = false;
+            }
+
+            setMigrationFlag(isMigrationFlag);
+
+            if (isMigrationFlag == true)
+            {
+                clearOldPreference();
+            }
+        }
+
     }
 }
