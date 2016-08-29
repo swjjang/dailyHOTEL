@@ -170,8 +170,24 @@ public class DailyPreference
         mPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE_V1, Context.MODE_PRIVATE);
         mEditor = mPreferences.edit();
 
-        mOldPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        mOldEditor = mOldPreferences.edit();
+        boolean isMigrationFlag = isMigrationFlag();
+
+        boolean isFirst = false;
+
+        String firstAppVersion = getFirstAppVersion();
+        String currentAppVersion = Util.getAppVersion(context);
+
+        if (Util.isTextEmpty(firstAppVersion) || firstAppVersion.equalsIgnoreCase(currentAppVersion))
+        {
+            isFirst = true;
+        }
+
+        if (isFirst == false && isMigrationFlag == false)
+        {
+            mOldPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+            mOldEditor = mOldPreferences.edit();
+        }
+
     }
 
     public static synchronized DailyPreference getInstance(Context context)
@@ -1082,18 +1098,7 @@ public class DailyPreference
         boolean isMigrationFlag = isMigrationFlag();
 
         // 이주 필요 확인!
-        if (isMigrationFlag == true)
-        {
-            // 이주가 완료 된 상황이나, 한번더 검사 (처음 중간 끝)
-            if (mOldPreferences.contains(KEY_OLD_SETTING_GCM_ID) == true //
-                || mOldPreferences.contains(KEY_OLD_USER_TYPE) == true //
-                || mOldPreferences.contains(KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG) == true)
-            {
-                isMigrationFlag = false;
-            }
-        }
-
-        if (isMigrationFlag == false)
+        if (isMigrationFlag == false && mOldPreferences != null)
         {
             try
             {
