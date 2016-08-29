@@ -101,11 +101,7 @@ public class DailyPreference
     private static final String KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
 
     // User - Information
-    private static final String KEY_OLD_USER_AUTO_LOGIN = "AUTO_LOGIN"; // 사용하지 않음
-    private static final String KEY_OLD_USER_ID = "USER_ID"; // 사용하지 않음
     private static final String KEY_OLD_USER_EMAIL = "USER_EMAIL";
-    private static final String KEY_OLD_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
-    private static final String KEY_OLD_USER_PWD = "USER_PWD"; // 사용하지 않음
     private static final String KEY_OLD_USER_TYPE = "USER_TYPE";
     private static final String KEY_OLD_USER_NAME = "USER_NAME";
     private static final String KEY_OLD_USER_RECOMMENDER = "USER_RECOMMENDER";
@@ -148,16 +144,12 @@ public class DailyPreference
     private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
 
     // User
-    private static final String KEY_USER_AUTO_LOGIN = "2000"; // 사용하지 않음
-    private static final String KEY_USER_ID = "2001"; // 사용하지 않음
-    private static final String KEY_USER_EMAIL = "2002";
-    private static final String KEY_USER_ACCESS_TOKEN = "2003";
-    private static final String KEY_USER_PWD = "2004"; // 사용하지 않음
-    private static final String KEY_USER_TYPE = "2005";
-    private static final String KEY_USER_NAME = "2006";
-    private static final String KEY_USER_RECOMMENDER = "2007";
-    private static final String KEY_USER_BENEFIT_ALARM = "2008";
-    private static final String KEY_USER_IS_EXCEED_BONUS = "2009";
+    private static final String KEY_USER_EMAIL = "2001";
+    private static final String KEY_USER_TYPE = "2002";
+    private static final String KEY_USER_NAME = "2003";
+    private static final String KEY_USER_RECOMMENDER = "2004";
+    private static final String KEY_USER_BENEFIT_ALARM = "2005";
+    private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
 
     // Payment
     private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
@@ -1021,11 +1013,7 @@ public class DailyPreference
     {
         if (mEditor != null)
         {
-            mEditor.remove(KEY_USER_AUTO_LOGIN);
-            mEditor.remove(KEY_USER_ID);
-            mEditor.remove(KEY_USER_PWD);
             mEditor.remove(KEY_USER_TYPE);
-            mEditor.remove(KEY_USER_ACCESS_TOKEN);
             mEditor.remove(KEY_USER_EMAIL);
             mEditor.remove(KEY_USER_NAME);
             mEditor.remove(KEY_AUTHORIZATION);
