@@ -258,11 +258,17 @@ public class DailyPreference
         {
             if (Constants.DEBUG == false)
             {
-                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                    + " , email : " + getUserEmail();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
+
+                }
             }
 
             if (sharedPreferences != null)
