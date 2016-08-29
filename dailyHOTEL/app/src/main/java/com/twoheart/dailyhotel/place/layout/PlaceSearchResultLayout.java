@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -28,7 +27,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
@@ -44,10 +42,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
-    private TabLayout mCategoryTabLayout;
+    protected TabLayout mCategoryTabLayout;
     private View mCalendarUnderlineView;
-    private ViewPager mViewPager;
-    private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
+    protected ViewPager mViewPager;
+    protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
     private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
@@ -473,101 +471,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
-    /**
-     * 매번 add하는 것은 아니고 setCategoryAllTabLayout이후로 한번만 호출되어야 한다 여러번 안됨.
-     *
-     * @param categoryList
-     * @param listener
-     */
-    public void addCategoryTabLayout(List<Category> categoryList,//
-                                     PlaceListFragment.OnPlaceListFragmentListener listener)
-    {
-        if (categoryList == null)
-        {
-            return;
-        }
-
-        int size = categoryList.size();
-
-        if (size + mCategoryTabLayout.getTabCount() <= 2)
-        {
-            size = 1;
-            setCategoryTabLayoutVisibility(View.GONE);
-
-            mViewPager.setOffscreenPageLimit(size);
-            mViewPager.clearOnPageChangeListeners();
-        } else
-        {
-            setCategoryTabLayoutVisibility(View.VISIBLE);
-
-            Category category;
-            TabLayout.Tab tab;
-            ArrayList<PlaceListFragment> list = new ArrayList<>(size);
-
-            for (int i = 0; i < size; i++)
-            {
-                category = categoryList.get(i);
-
-                tab = mCategoryTabLayout.newTab();
-                tab.setText(category.name);
-                tab.setTag(category);
-                mCategoryTabLayout.addTab(tab);
-
-                StaySearchResultListFragment searchResultListFragment = new StaySearchResultListFragment();
-                searchResultListFragment.setPlaceOnListFragmentListener(listener);
-                searchResultListFragment.setBottomOptionLayout(mBottomOptionLayout);
-                list.add(searchResultListFragment);
-            }
-
-            mFragmentPagerAdapter.addPlaceListFragment(list);
-            mFragmentPagerAdapter.notifyDataSetChanged();
-
-            mViewPager.setOffscreenPageLimit(mCategoryTabLayout.getTabCount());
-
-            mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
-
-            FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
-        }
-    }
-
-    public void removeCategoryTab(HashSet<String> existCategorySet)
-    {
-        int count = mCategoryTabLayout.getTabCount();
-        TabLayout.Tab tab;
-        Category category;
-
-        for (int i = count - 1; i > 0; i--)
-        {
-            tab = mCategoryTabLayout.getTabAt(i);
-            category = (Category) tab.getTag();
-
-            if (existCategorySet.contains(category.code) == false)
-            {
-                mCategoryTabLayout.removeTabAt(i);
-                mFragmentPagerAdapter.removeItem(i);
-            }
-        }
-
-        int existTabCount = mCategoryTabLayout.getTabCount();
-
-        // 2개 이하면 전체 탭 한개로 통합한다.
-        if (existTabCount <= 2)
-        {
-            mCategoryTabLayout.removeTabAt(1);
-            mFragmentPagerAdapter.removeItem(1);
-            mFragmentPagerAdapter.notifyDataSetChanged();
-
-            mViewPager.setOffscreenPageLimit(1);
-            mViewPager.clearOnPageChangeListeners();
-            setCategoryTabLayoutVisibility(View.GONE);
-        } else
-        {
-            mFragmentPagerAdapter.notifyDataSetChanged();
-
-            mViewPager.setOffscreenPageLimit(existTabCount);
-        }
-    }
-
     public void clearCategoryTab()
     {
         mViewPager.setAdapter(null);
@@ -882,8 +785,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    private TabLayout.OnTabSelectedListener mOnCategoryTabSelectedListener = new TabLayout.OnTabSelectedListener()
+    protected TabLayout.OnTabSelectedListener mOnCategoryTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
         public void onTabSelected(TabLayout.Tab tab)

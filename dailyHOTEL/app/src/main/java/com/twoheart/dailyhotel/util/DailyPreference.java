@@ -157,7 +157,7 @@ public class DailyPreference
     private static final String KEY_EVENT_LASTEST_COUPON_TIME = "6101";
     private static final String KEY_EVENT_VIEWED_EVENT_TIME = "6200";
     private static final String KEY_EVENT_VIEWED_COUPON_TIME = "6201";
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
@@ -235,13 +235,23 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            if (Constants.DEBUG == false)
+            try
             {
-                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                    + " , email : " + getUserEmail();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
                 Crashlytics.log(msg);
                 Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
+
+            }
+
+            if (sharedPreferences != null)
+            {
+                sharedPreferences.edit().remove(key);
+                sharedPreferences.edit().putString(key, defaultValue);
+                sharedPreferences.edit().apply();
             }
         }
 
@@ -318,13 +328,23 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            if (Constants.DEBUG == false)
+            try
             {
-                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                    + " , email : " + getUserEmail();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
                 Crashlytics.log(msg);
                 Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
+
+            }
+
+            if (sharedPreferences != null)
+            {
+                sharedPreferences.edit().remove(key);
+                sharedPreferences.edit().putLong(key, defaultValue);
+                sharedPreferences.edit().apply();
             }
         }
 
@@ -353,14 +373,23 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-
-            if (Constants.DEBUG == false)
+            try
             {
-                String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
-                    + " , email : " + getUserEmail();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
                 Crashlytics.log(msg);
                 Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
+
+            }
+
+            if (sharedPreferences != null)
+            {
+                sharedPreferences.edit().remove(key);
+                sharedPreferences.edit().putInt(key, defaultValue);
+                sharedPreferences.edit().apply();
             }
         }
 
