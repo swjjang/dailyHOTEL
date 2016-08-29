@@ -4,36 +4,24 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.place.adapter.PlaceBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
-import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
 
-import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class StayListAdapter extends PlaceListAdapter
 {
     private View.OnClickListener mOnClickListener;
-    private View.OnClickListener mOnEventBannerClickListener;
-    private int mLastEventBannerPosition;
-
-    private Handler mEventBannerHandler;
 
     public StayListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
@@ -42,20 +30,7 @@ public class StayListAdapter extends PlaceListAdapter
         mOnClickListener = listener;
         mOnEventBannerClickListener = eventBannerListener;
 
-        mEventBannerHandler = new EventBannerHandler(this);
-
         setSortType(Constants.SortType.DEFAULT);
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder)
-    {
-        super.onViewRecycled(holder);
-
-        if (holder instanceof EventBannerViewHolder)
-        {
-            mEventBannerHandler.removeMessages(0);
-        }
     }
 
     @Override
@@ -126,61 +101,6 @@ public class StayListAdapter extends PlaceListAdapter
                 onBindViewHolder((EventBannerViewHolder) holder, item);
                 break;
         }
-    }
-
-    private void onBindViewHolder(SectionViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        holder.regionDetailName.setText(placeViewItem.<String>getItem());
-    }
-
-    private void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        ArrayList<EventBanner> eventBannerList = placeViewItem.getItem();
-
-        PlaceBannerViewPagerAdapter adapter = new PlaceBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
-        holder.dailyLoopViewPager.setOnPageChangeListener(null);
-        holder.dailyLoopViewPager.setAdapter(adapter);
-        holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());
-        holder.dailyLoopViewPager.setCurrentItem(mLastEventBannerPosition);
-        holder.dailyLoopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                mLastEventBannerPosition = position;
-
-                holder.viewpagerCircleIndicator.setPosition(position);
-
-                nextEventBannerPosition(holder, position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-                if (state == DailyLoopViewPager.SCROLL_STATE_DRAGGING)
-                {
-                    mEventBannerHandler.removeMessages(0);
-                }
-            }
-        });
-
-        nextEventBannerPosition(holder, mLastEventBannerPosition);
-    }
-
-    private void nextEventBannerPosition(EventBannerViewHolder eventViewHolder, int position)
-    {
-        mEventBannerHandler.removeMessages(0);
-
-        Message message = new Message();
-        message.what = 0;
-        message.arg1 = position;
-        message.obj = eventViewHolder;
-        mEventBannerHandler.sendMessageDelayed(message, 5000);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -314,70 +234,6 @@ public class StayListAdapter extends PlaceListAdapter
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
-        }
-    }
-
-    private class SectionViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView regionDetailName;
-
-        public SectionViewHolder(View itemView)
-        {
-            super(itemView);
-
-            regionDetailName = (TextView) itemView;
-        }
-    }
-
-    private class EventBannerViewHolder extends RecyclerView.ViewHolder
-    {
-        DailyLoopViewPager dailyLoopViewPager;
-        DailyViewPagerCircleIndicator viewpagerCircleIndicator;
-
-        public EventBannerViewHolder(View itemView)
-        {
-            super(itemView);
-
-            dailyLoopViewPager = (DailyLoopViewPager) itemView.findViewById(R.id.loopViewPager);
-            viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
-
-            dailyLoopViewPager.setSlideTime(4);
-        }
-    }
-
-    private class FooterViewHolder extends RecyclerView.ViewHolder
-    {
-        public FooterViewHolder(View itemView)
-        {
-            super(itemView);
-        }
-    }
-
-    private static class EventBannerHandler extends Handler
-    {
-        private final WeakReference<StayListAdapter> mWeakReference;
-
-        public EventBannerHandler(StayListAdapter adapter)
-        {
-            mWeakReference = new WeakReference<>(adapter);
-        }
-
-        @Override
-        public void handleMessage(Message msg)
-        {
-            StayListAdapter hotelListAdapter = mWeakReference.get();
-
-            if (hotelListAdapter == null)
-            {
-                return;
-            }
-
-            EventBannerViewHolder eventBannerViewHolder = (EventBannerViewHolder) msg.obj;
-
-            if (eventBannerViewHolder != null)
-            {
-                eventBannerViewHolder.dailyLoopViewPager.setCurrentItem(msg.arg1 + 1);
-            }
         }
     }
 }

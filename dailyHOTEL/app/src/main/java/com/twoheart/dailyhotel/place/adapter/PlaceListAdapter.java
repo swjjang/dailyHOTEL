@@ -7,13 +7,23 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +35,10 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected List<PlaceViewItem> mPlaceViewItemList;
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
+    protected View.OnClickListener mOnEventBannerClickListener;
 
+    private Handler mEventBannerHandler;
+    private int mLastEventBannerPosition;
     private Constants.SortType mSortType;
 
     public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
@@ -33,11 +46,24 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         mContext = context;
 
         mPlaceViewItemList = new ArrayList<>();
+        mEventBannerHandler = new EventBannerHandler(this);
+
         addAll(arrayList);
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         makeShaderFactory();
+    }
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder)
+    {
+        super.onViewRecycled(holder);
+
+        if (holder instanceof EventBannerViewHolder)
+        {
+            mEventBannerHandler.removeMessages(0);
+        }
     }
 
     private void makeShaderFactory()
@@ -146,5 +172,122 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     public void setShowDistanceIgnoreSort(boolean isShow)
     {
         mShowDistanceIgnoreSort = isShow;
+    }
+
+    protected void onBindViewHolder(SectionViewHolder holder, PlaceViewItem placeViewItem)
+    {
+        holder.regionDetailName.setText(placeViewItem.<String>getItem());
+    }
+
+    protected void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
+    {
+        ArrayList<EventBanner> eventBannerList = placeViewItem.getItem();
+
+        PlaceBannerViewPagerAdapter adapter = new PlaceBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
+        holder.dailyLoopViewPager.setOnPageChangeListener(null);
+        holder.dailyLoopViewPager.setAdapter(adapter);
+        holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());
+        holder.dailyLoopViewPager.setCurrentItem(mLastEventBannerPosition);
+        holder.dailyLoopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+                mLastEventBannerPosition = position;
+
+                holder.viewpagerCircleIndicator.setPosition(position);
+
+                nextEventBannerPosition(holder, position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+                if (state == DailyLoopViewPager.SCROLL_STATE_DRAGGING)
+                {
+                    mEventBannerHandler.removeMessages(0);
+                }
+            }
+        });
+
+        nextEventBannerPosition(holder, mLastEventBannerPosition);
+    }
+
+    private void nextEventBannerPosition(EventBannerViewHolder eventViewHolder, int position)
+    {
+        mEventBannerHandler.removeMessages(0);
+
+        Message message = new Message();
+        message.what = 0;
+        message.arg1 = position;
+        message.obj = eventViewHolder;
+        mEventBannerHandler.sendMessageDelayed(message, 5000);
+    }
+
+    protected class SectionViewHolder extends RecyclerView.ViewHolder
+    {
+        public TextView regionDetailName;
+
+        public SectionViewHolder(View itemView)
+        {
+            super(itemView);
+
+            regionDetailName = (TextView) itemView;
+        }
+    }
+
+    protected class EventBannerViewHolder extends RecyclerView.ViewHolder
+    {
+        public DailyLoopViewPager dailyLoopViewPager;
+        public DailyViewPagerCircleIndicator viewpagerCircleIndicator;
+
+        public EventBannerViewHolder(View itemView)
+        {
+            super(itemView);
+
+            dailyLoopViewPager = (DailyLoopViewPager) itemView.findViewById(R.id.loopViewPager);
+            viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
+
+            dailyLoopViewPager.setSlideTime(4);
+        }
+    }
+
+    protected class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
+        }
+    }
+
+    protected static class EventBannerHandler extends Handler
+    {
+        private final WeakReference<PlaceListAdapter> mWeakReference;
+
+        public EventBannerHandler(PlaceListAdapter placeListAdapter)
+        {
+            mWeakReference = new WeakReference<>(placeListAdapter);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            if (mWeakReference.get() == null)
+            {
+                return;
+            }
+
+            EventBannerViewHolder eventBannerViewHolder = (EventBannerViewHolder) msg.obj;
+
+            if (eventBannerViewHolder != null)
+            {
+                eventBannerViewHolder.dailyLoopViewPager.setCurrentItem(msg.arg1 + 1);
+            }
+        }
     }
 }

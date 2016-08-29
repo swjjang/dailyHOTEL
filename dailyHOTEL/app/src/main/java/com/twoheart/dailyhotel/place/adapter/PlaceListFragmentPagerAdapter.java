@@ -3,27 +3,20 @@ package com.twoheart.dailyhotel.place.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
 
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 
 import java.util.ArrayList;
 
-public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
+public class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
 {
     private ArrayList<PlaceListFragment> mFragmentList;
 
-    protected abstract void makePlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
-
-    protected abstract void addPlaceListFragment(ArrayList<PlaceListFragment> list, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
-
-    public PlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    public PlaceListFragmentPagerAdapter(FragmentManager fragmentManager)
     {
         super(fragmentManager);
 
-        mFragmentList = new ArrayList<>(count);
-
-        makePlaceListFragment(mFragmentList, count, bottomOptionLayout, listener);
+        mFragmentList = new ArrayList<>();
     }
 
     @Override
@@ -42,11 +35,6 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
     {
         int position = mFragmentList.indexOf(object);
         return position == -1 ? POSITION_NONE : position;
-    }
-
-    public void addItemCount(int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
-    {
-        addPlaceListFragment(mFragmentList, count, bottomOptionLayout, listener);
     }
 
     public ArrayList<PlaceListFragment> getFragmentList()
@@ -73,5 +61,26 @@ public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAd
         }
 
         return mFragmentList.size();
+    }
+
+    public void setPlaceFragmentList(ArrayList<? extends PlaceListFragment> list)
+    {
+        if (mFragmentList == null)
+        {
+            return;
+        }
+
+        mFragmentList.clear();
+        mFragmentList.addAll(list);
+    }
+
+    public void addPlaceListFragment(ArrayList<? extends PlaceListFragment> list)
+    {
+        if (mFragmentList == null)
+        {
+            return;
+        }
+
+        mFragmentList.addAll(list);
     }
 }

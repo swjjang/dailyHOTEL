@@ -9,6 +9,8 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 
+import java.util.ArrayList;
+
 public class GourmetMainLayout extends PlaceMainLayout
 {
     public GourmetMainLayout(Context context, OnEventListener mOnEventListener)
@@ -19,7 +21,21 @@ public class GourmetMainLayout extends PlaceMainLayout
     @Override
     protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new GourmetListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
+
+        ArrayList<GourmetListFragment> list = new ArrayList<>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            GourmetListFragment gourmetListFragment = new GourmetListFragment();
+            gourmetListFragment.setPlaceOnListFragmentListener(listener);
+            gourmetListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(gourmetListFragment);
+        }
+
+        placeListFragmentPagerAdapter.setPlaceFragmentList(list);
+
+        return placeListFragmentPagerAdapter;
     }
 
     @Override

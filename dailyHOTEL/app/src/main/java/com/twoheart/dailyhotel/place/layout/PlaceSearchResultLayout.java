@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -501,6 +502,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
             Category category;
             TabLayout.Tab tab;
+            ArrayList<PlaceListFragment> list = new ArrayList<>(size);
 
             for (int i = 0; i < size; i++)
             {
@@ -510,9 +512,14 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 tab.setText(category.name);
                 tab.setTag(category);
                 mCategoryTabLayout.addTab(tab);
+
+                StaySearchResultListFragment searchResultListFragment = new StaySearchResultListFragment();
+                searchResultListFragment.setPlaceOnListFragmentListener(listener);
+                searchResultListFragment.setBottomOptionLayout(mBottomOptionLayout);
+                list.add(searchResultListFragment);
             }
 
-            mFragmentPagerAdapter.addItemCount(size, mBottomOptionLayout, listener);
+            mFragmentPagerAdapter.addPlaceListFragment(list);
             mFragmentPagerAdapter.notifyDataSetChanged();
 
             mViewPager.setOffscreenPageLimit(mCategoryTabLayout.getTabCount());

@@ -7,7 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -23,7 +22,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StayListFragment extends PlaceListFragment
 {
@@ -98,87 +96,7 @@ public class StayListFragment extends PlaceListFragment
         ((StayListNetworkController) mNetworkController).requestStayList(params);
     }
 
-    protected ArrayList<PlaceViewItem> makeSectionStayList(List<Stay> stayList, SortType sortType)
-    {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-
-        if (stayList == null || stayList.size() == 0)
-        {
-            return placeViewItemList;
-        }
-
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
-
-        int entryPosition = 1;
-
-        if (mPlaceListLayout != null)
-        {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
-
-            int oldListSize = oldList == null ? 0 : oldList.size();
-            if (oldListSize > 0)
-            {
-                int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
-                end = end < 0 ? 0 : end;
-
-                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-                for (int i = start; i >= end; i--)
-                {
-                    PlaceViewItem item = oldList.get(i);
-                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
-                    {
-                        Place place = item.getItem();
-                        entryPosition = place.entryPosition + 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        for (Stay stay : stayList)
-        {
-            // 지역순에만 section 존재함
-            if (SortType.DEFAULT == sortType)
-            {
-                String region = stay.districtName;
-
-                if (Util.isTextEmpty(region) == true)
-                {
-                    continue;
-                }
-
-                if (stay.isDailyChoice == true)
-                {
-                    if (hasDailyChoice == false)
-                    {
-                        hasDailyChoice = true;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                        placeViewItemList.add(section);
-                    }
-                } else
-                {
-                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                    {
-                        previousRegion = region;
-
-                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                        placeViewItemList.add(section);
-                    }
-                }
-            }
-
-            stay.entryPosition = entryPosition;
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-            entryPosition++;
-        }
-
-        return placeViewItemList;
-    }
-
-    protected void onStayList(ArrayList<Stay> list, int page)
+    protected void onStayList(ArrayList<Stay> list, int page, boolean hasSection)
     {
         if (isFinishing() == true)
         {
@@ -203,7 +121,7 @@ public class StayListFragment extends PlaceListFragment
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
 
-        ArrayList<PlaceViewItem> placeViewItems = makeSectionStayList(list, sortType);
+        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, sortType, hasSection);
 
         switch (mViewType)
         {
@@ -331,7 +249,7 @@ public class StayListFragment extends PlaceListFragment
             String value = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyyMMdd") + "," + mStayCuration.getNights();
             DailyPreference.getInstance(mBaseActivity).setStayLastViewDate(value);
 
-            StayListFragment.this.onStayList(list, page);
+            StayListFragment.this.onStayList(list, page, true);
         }
 
         @Override

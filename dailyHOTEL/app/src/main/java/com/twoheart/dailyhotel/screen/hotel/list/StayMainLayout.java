@@ -11,6 +11,8 @@ import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
+
 public class StayMainLayout extends PlaceMainLayout
 {
     public StayMainLayout(Context context, OnEventListener mOnEventListener)
@@ -21,7 +23,21 @@ public class StayMainLayout extends PlaceMainLayout
     @Override
     protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        return new StayListFragmentPagerAdapter(fragmentManager, count, bottomOptionLayout, listener);
+        PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
+
+        ArrayList<StayListFragment> list = new ArrayList<>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            StayListFragment stayListFragment = new StayListFragment();
+            stayListFragment.setPlaceOnListFragmentListener(listener);
+            stayListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(stayListFragment);
+        }
+
+        placeListFragmentPagerAdapter.setPlaceFragmentList(list);
+
+        return placeListFragmentPagerAdapter;
     }
 
     @Override
