@@ -162,6 +162,20 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
                     mListener.updatePositiveButton();
                 }
             });
+        } else
+        {
+            holder.listItemLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Coupon coupon = getItem(position);
+                    if (coupon.isDownloaded == false)
+                    {
+                        mListener.onDownloadClick(position);
+                    }
+                }
+            });
         }
     }
 
