@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_booking_simplecard_description"
                         android:textColor="@color/default_text_c929292"
-                        android:textSize="12dp"/>
+                        android:textSize="11dp"/>
                 </LinearLayout>
             </RelativeLayout>
 
@@ -173,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_booking_card_description"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"/>
+                    android:textSize="11dp"/>
             </LinearLayout>
 
             <View
@@ -226,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_booking_phonepay_description"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"/>
+                    android:textSize="11dp"/>
             </LinearLayout>
 
             <View
@@ -280,7 +280,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_booking_virtualpay_description"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"/>
+                    android:textSize="11dp"/>
             </LinearLayout>
 
             <View

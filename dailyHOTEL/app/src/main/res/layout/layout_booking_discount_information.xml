@@ -36,7 +36,8 @@
         android:paddingTop="10dp"
         android:text="@string/label_booking_discount_information"
         android:textColor="@color/default_text_c666666"
-        android:textSize="13dp"/>
+        android:textSize="13dp"
+        dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/guideNameMemoView"
@@ -186,7 +187,8 @@
         android:paddingTop="10dp"
         android:text="@string/act_booking_payment"
         android:textColor="@color/default_text_c666666"
-        android:textSize="13dp"/>
+        android:textSize="13dp"
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:id="@+id/paymentInformationLayout"

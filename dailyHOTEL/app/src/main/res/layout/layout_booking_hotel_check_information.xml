@@ -117,7 +117,8 @@
         android:paddingTop="10dp"
         android:text="@string/label_booking_room_info"
         android:textColor="@color/default_text_c666666"
-        android:textSize="13dp"/>
+        android:textSize="13dp"
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -195,7 +196,8 @@
             android:gravity="center_vertical"
             android:text="@string/act_booking_reserver_info"
             android:textColor="@color/default_text_c666666"
-            android:textSize="13dp"/>
+            android:textSize="13dp"
+            dailyFont:style="Medium"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"

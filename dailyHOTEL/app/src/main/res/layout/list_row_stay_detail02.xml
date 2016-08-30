@@ -28,10 +28,10 @@
                 android:layout_marginLeft="15dp"
                 android:background="@color/black"
                 android:gravity="center"
-                android:paddingBottom="2dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:paddingTop="2dp"
+                android:paddingBottom="1px"
+                android:paddingLeft="5.5dp"
+                android:paddingRight="5.5dp"
+                android:paddingTop="2px"
                 android:textColor="@android:color/white"
                 android:textSize="11dp"
                 android:visibility="invisible"/>
@@ -155,7 +155,7 @@
                     android:id="@+id/checkinDayTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="9dp"
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/navibar_m_burg_ic_v"
                     android:textColor="@color/default_text_c900034"
@@ -185,7 +185,7 @@
                     android:id="@+id/checkoutDayTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="9dp"
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/navibar_m_burg_ic_v"
                     android:textColor="@color/default_text_c900034"
@@ -213,6 +213,6 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="11dp"
+        android:layout_height="10dp"
         android:background="@color/default_background"/>
 </LinearLayout>

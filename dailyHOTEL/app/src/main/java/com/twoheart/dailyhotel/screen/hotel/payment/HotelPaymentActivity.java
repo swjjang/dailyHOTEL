@@ -17,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,10 +63,12 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
@@ -426,6 +429,57 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 }
             });
         }
+    }
+
+    private void updateCheckInOutDate(long checkInDate, long checkOutDate, int nights)
+    {
+        // Check In
+        Calendar calendarCheckin = DailyCalendar.getInstance();
+        calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendarCheckin.setTimeInMillis(checkInDate);
+
+        String checkInDateFormat = DailyCalendar.format(checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
+        checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(HotelPaymentActivity.this).getMediumTypeface()),//
+            checkInDateFormat.length() - 3, checkInDateFormat.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mCheckinDayTextView.setText(checkInSpannableStringBuilder);
+
+        // CheckOut
+        Calendar calendarCheckout = DailyCalendar.getInstance();
+        calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendarCheckout.setTimeInMillis(checkOutDate);
+
+        String checkOutDateFormat = DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
+        checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(HotelPaymentActivity.this).getMediumTypeface()),//
+            checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mCheckoutDayTextView.setText(checkInSpannableStringBuilder);
+
+        mNightsTextView.setText(getString(R.string.label_nights, nights));
+
+        calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
+        calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
+
+        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+
+        if (Util.getLCDWidth(HotelPaymentActivity.this) >= 720)
+        {
+            hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
+                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
+                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
+        } else
+        {
+            hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
+                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
+                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
+        }
+
+        hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
+        hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
     }
 
     private void updatePaymentPrice(HotelPaymentInformation hotelPaymentInformation)
@@ -2128,121 +2182,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UI Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //    private OnClickListener mOnEditInfoOnClickListener = new OnClickListener()
-    //    {
-    //        @Override
-    //        public void onClick(View view)
-    //        {
-    //            mIsEditMode = true;
-    //            view.setVisibility(View.INVISIBLE);
-    //
-    //            // 이름.
-    //            if (mReservationName.isEnabled() == false)
-    //            {
-    //                mReservationName.setEnabled(true);
-    //
-    //                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-    //
-    //                if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
-    //                {
-    //                    // 회원 가입시 이름 필터 적용.
-    //                    StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-    //                    InputFilter[] allowAlphanumericName = new InputFilter[2];
-    //                    allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
-    //                    allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
-    //
-    //                    mReservationName.setFilters(allowAlphanumericName);
-    //                    mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
-    //                } else
-    //                {
-    //                    mReservationName.setEnabled(true);
-    //
-    //                    // 회원 가입시 이름 필터 적용.
-    //                    StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-    //                    InputFilter[] allowAlphanumericHangul = new InputFilter[2];
-    //                    allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-    //                    allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
-    //
-    //                    mReservationName.setFilters(allowAlphanumericHangul);
-    //                    mReservationName.setInputType(InputType.TYPE_CLASS_TEXT);
-    //                }
-    //            }
-    //
-    //            // 전화번호.
-    //            mReservationPhone.setEnabled(true);
-    //            mReservationPhone.setCursorVisible(false);
-    //            mReservationPhone.setOnFocusChangeListener(new View.OnFocusChangeListener()
-    //            {
-    //                @Override
-    //                public void onFocusChange(View v, boolean hasFocus)
-    //                {
-    //                    if (isFinishing() == true)
-    //                    {
-    //                        return;
-    //                    }
-    //
-    //                    if (hasFocus == true)
-    //                    {
-    //                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
-    //                    } else
-    //                    {
-    //                        mReservationPhone.setSelected(false);
-    //                    }
-    //                }
-    //            });
-    //
-    //            View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
-    //
-    //            fakeMobileEditView.setFocusable(true);
-    //            fakeMobileEditView.setOnClickListener(new OnClickListener()
-    //            {
-    //                @Override
-    //                public void onClick(View v)
-    //                {
-    //                    if (mReservationPhone.isSelected() == true)
-    //                    {
-    //                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
-    //                    } else
-    //                    {
-    //                        mReservationPhone.requestFocus();
-    //                        mReservationPhone.setSelected(true);
-    //                    }
-    //                }
-    //            });
-    //
-    //            // 이메일.
-    //
-    //            mReservationEmail.setEnabled(true);
-    //            mReservationEmail.setOnEditorActionListener(new OnEditorActionListener()
-    //            {
-    //                @Override
-    //                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-    //                {
-    //                    if (actionId == EditorInfo.IME_ACTION_DONE)
-    //                    {
-    //                        textView.clearFocus();
-    //
-    //                        if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
-    //                        {
-    //                            return false;
-    //                        }
-    //
-    //                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    //                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-    //                        return true;
-    //                    } else
-    //                    {
-    //                        return false;
-    //                    }
-    //                }
-    //            });
-    //        }
-    //    };
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2422,37 +2361,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                         roomInformation.totalDiscount = discount;
 
-                        // Check In
-                        Calendar calendarCheckin = DailyCalendar.getInstance();
-                        calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                        calendarCheckin.setTimeInMillis(checkInDate);
-                        mCheckinDayTextView.setText(DailyCalendar.format(checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
-
-                        // CheckOut
-                        Calendar calendarCheckout = DailyCalendar.getInstance();
-                        calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
-                        calendarCheckout.setTimeInMillis(checkOutDate);
-                        mCheckoutDayTextView.setText(DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT")));
-
-                        mNightsTextView.setText(getString(R.string.label_nights, roomInformation.nights));
-
-                        if (Util.getLCDWidth(HotelPaymentActivity.this) >= 720)
-                        {
-                            hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
-                                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
-                                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
-                        } else
-                        {
-                            hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
-                                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
-                                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
-                        }
-
-                        calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
-                        calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
-
-                        hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
-                        hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
+                        updateCheckInOutDate(checkInDate, checkOutDate, roomInformation.nights);
 
                         // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                         if (isOnSale == false || availableRooms == 0)
