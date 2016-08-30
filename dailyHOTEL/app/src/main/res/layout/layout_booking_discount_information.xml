@@ -29,11 +29,11 @@
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="36dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="10dp"
+        android:layout_marginTop="10dp"
         android:text="@string/label_booking_discount_information"
         android:textColor="@color/default_text_c666666"
         android:textSize="13dp"
@@ -122,8 +122,8 @@
     <RelativeLayout
         android:id="@+id/couponLayout"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:paddingBottom="10dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
@@ -173,6 +173,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/default_line_cdcdcdd"/>
@@ -180,11 +181,11 @@
     <!-- 결제 -->
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="36dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="10dp"
+        android:layout_marginTop="10dp"
         android:text="@string/act_booking_payment"
         android:textColor="@color/default_text_c666666"
         android:textSize="13dp"

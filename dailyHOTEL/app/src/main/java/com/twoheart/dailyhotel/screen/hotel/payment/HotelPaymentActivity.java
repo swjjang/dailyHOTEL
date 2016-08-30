@@ -10,14 +10,15 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -242,7 +243,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         // 예약 장소
         TextView placeNameTextView = (TextView) findViewById(R.id.placeNameTextView);
-        placeNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName + hotelPaymentInformation.getSaleRoomInformation().hotelName);
+        placeNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName);
 
         // 객실 타입
         TextView roomTypeTextView = (TextView) findViewById(R.id.roomTypeTextView);
@@ -262,6 +263,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mReservationPhone.setOnFocusChangeListener(this);
         mReservationEmail.setOnFocusChangeListener(this);
 
+        final TextView guestNameHintEditText = (TextView) findViewById(R.id.guestNameHintEditText);
+        guestNameHintEditText.setEnabled(false);
+        guestNameHintEditText.setClickable(false);
+        guestNameHintEditText.setVisibility(View.GONE);
+
         // 전화번호.
         mReservationPhone.setCursorVisible(false);
 
@@ -272,7 +278,35 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
         {
-            mReservationName.setHint(R.string.message_guide_name_hint);
+            guestNameHintEditText.setVisibility(View.VISIBLE);
+            guestNameHintEditText.setText(R.string.message_guide_name_hint);
+            mReservationName.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count)
+                {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s)
+                {
+                    if (s == null || s.length() == 0)
+                    {
+                        guestNameHintEditText.setVisibility(View.VISIBLE);
+                    } else
+                    {
+                        guestNameHintEditText.setVisibility(View.GONE);
+                    }
+                }
+            });
+
             guideNameMemo.setVisibility(View.VISIBLE);
 
             if (Util.getLCDWidth(this) > 480)
@@ -2275,22 +2309,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             mIsEditMode = true;
 
                             guest.name = "";
-                            mReservationName.setText("");
-                            mReservationName.setEnabled(true);
+                            mReservationName.setText(null);
                             mReservationName.requestFocus();
-
-                            // 회원 가입시 이름 필터 적용.
-                            StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-                            InputFilter[] allowAlphanumericName = new InputFilter[2];
-                            allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
-                            allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
-
-                            mReservationName.setFilters(allowAlphanumericName);
-                            mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
                         } else
                         {
                             mReservationName.setText(overseasName);
                         }
+
+                        // 회원 가입시 이름 필터 적용.
+                        StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
+                        InputFilter[] allowAlphanumericName = new InputFilter[2];
+                        allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+                        allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
+
+                        mReservationName.setFilters(allowAlphanumericName);
+                        mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
 
                         mReservationPhone.setText(Util.addHippenMobileNumber(HotelPaymentActivity.this, guest.phone));
                         mReservationEmail.setText(guest.email);

@@ -110,11 +110,11 @@
     <!-- 객실 정보 -->
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="36dp"
         android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="10dp"
         android:text="@string/label_booking_room_info"
         android:textColor="@color/default_text_c666666"
         android:textSize="13dp"
@@ -151,8 +151,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="46dp"
-        android:paddingBottom="21dp"
+        android:minHeight="36dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="11dp">
@@ -178,6 +177,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/default_line_cdcdcdd"/>
@@ -185,9 +185,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="10dp"
         android:orientation="horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -238,21 +238,42 @@
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyEditText
-            android:id="@+id/guestNameEditText"
+
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
-            android:gravity="right|center_vertical"
-            android:inputType="textUri"
-            android:lines="1"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            android:textColorHint="@color/default_text_cc5c5c5"
-            android:theme="@style/EditTextTheme"/>
+            android:layout_weight="0.7">
+
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/guestNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center_vertical"
+                android:inputType="textUri"
+                android:lines="1"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                android:textColorHint="@color/default_text_cc5c5c5"
+                android:theme="@style/EditTextTheme"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/guestNameHintEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center_vertical"
+                android:lines="1"
+                android:maxLength="20"
+                android:background="@null"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:paddingRight="5dp"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="13dp"
+                android:visibility="gone"/>
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -298,9 +319,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="36dp"
         android:gravity="center_vertical"
-        android:paddingBottom="20dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
@@ -331,6 +351,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="20dp"
         android:background="@color/default_line_cf0f0f0"/>
 </LinearLayout>
     <!--</merge>-->
