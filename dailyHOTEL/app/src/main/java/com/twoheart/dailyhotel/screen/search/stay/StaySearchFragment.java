@@ -300,6 +300,12 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
+            if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+            {
+                Util.restartApp(mBaseActivity);
+                return;
+            }
+
             if (isAnimation == true)
             {
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
