@@ -131,8 +131,7 @@
             android:layout_weight="0.7"
             android:gravity="right|center_vertical"
             android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            android:textSize="13dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -159,8 +158,7 @@
             android:layout_weight="0.7"
             android:gravity="right|center_vertical"
             android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            android:textSize="13dp"/>
     </LinearLayout>
 
     <LinearLayout
