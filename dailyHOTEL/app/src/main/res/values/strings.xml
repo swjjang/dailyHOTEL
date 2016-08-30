@@ -38,6 +38,7 @@
     <string name="label_share_daum_map">다음맵</string>
     <string name="label_share_naver_map">네이버맵</string>
     <string name="label_share_google_map">구글맵</string>
+    <string name="label_share_kakao_navi">카카오내비</string>
     <string name="label_completed">완료</string>
     <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>

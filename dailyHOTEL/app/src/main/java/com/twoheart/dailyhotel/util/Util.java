@@ -47,6 +47,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -889,32 +890,27 @@ public class Util implements Constants
         }
     }
 
-    //    public static void shareKakaoNavi(Context context, String name, String latitude, String longitude)
-    //    {
-    //        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
-    //        {
-    //            return;
-    //        }
-    //
-    //        final String packageName = "com.nhn.android.nmap";
-    //
-    //        if (isInstalledPackage(context, packageName) == true)
-    //        {
-    //            String url = String.format("kimgisa://navigate?name=%s&coord_type=wgs84&pos_x=%s&pos_y=%s", name, longitude, latitude);
-    //
-    //            Intent intent = new Intent(Intent.ACTION_VIEW);
-    //            intent.setData(Uri.parse(url));
-    //            context.startActivity(intent);
-    //        } else
-    //        {
-    //            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
-    //
-    //            Intent intent = new Intent(Intent.ACTION_VIEW);
-    //            intent.setData(Uri.parse(downloadUrl));
-    //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //            context.startActivity(intent);
-    //        }
-    //    }
+    public static void shareKakaoNavi(Activity activity, String name, String latitude, String longitude)
+    {
+        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        {
+            return;
+        }
+
+        final String packageName = "com.locnall.KimGiSa";
+        String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", name, longitude, latitude, DailyHotelRequest.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+
+        if (isInstalledPackage(activity, packageName, intent) == true)
+        {
+            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
+        } else
+        {
+            installPackage(activity, packageName);
+        }
+    }
 
     public static void shareGoogleMap(Activity activity, String placeName, String latitude, String longitude)
     {
@@ -965,6 +961,7 @@ public class Util implements Constants
             View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
             View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
             View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+            View kakaoNaviLayout = dialogView.findViewById(R.id.kakaoNaviLayout);
 
             kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
             {
@@ -1036,6 +1033,31 @@ public class Util implements Constants
                         } else
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            kakaoNaviLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareKakaoNavi(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakoNavi", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakoNavi-" + gaLabel, null);
                         }
                     }
                 }
@@ -1149,66 +1171,6 @@ public class Util implements Constants
             return decimalFormat.format(price);
         }
     }
-
-    //    public static Date getISO8601Date(String time) throws ParseException, NullPointerException
-    //    {
-    //        if (isTextEmpty(time) == true)
-    //        {
-    //            throw new NullPointerException("time is empty");
-    //        }
-    //
-    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
-    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-    //        return simpleDateFormat.parse(time);
-    //    }
-
-    //    public static String getISO8601String(long time)
-    //    {
-    //        Date date = new Date(time);
-    //
-    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
-    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-    //
-    //        String formatString = simpleDateFormat.format(date);
-    //
-    //        return formatString;
-    //    }
-
-    //    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
-    //    {
-    //        if (Util.isTextEmpty(iso8601, format) == true)
-    //        {
-    //            throw new NullPointerException("iso8601, format is empty");
-    //        }
-    //
-    ////        Date date = getISO8601Date(iso8601);
-    //        Date date = DailyCalendar.convertDate(iso8601, DailyCalendar.ISO_8601_FORMAT);
-    //
-    //        return simpleDateFormat(date, format);
-    //    }
-
-    //    public static String simpleDateFormat(Date date, String format)
-    //    {
-    //        if (date == null || Util.isTextEmpty(format) == true)
-    //        {
-    //            return null;
-    //        }
-    //
-    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.KOREA);
-    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-    //
-    //        return simpleDateFormat.format(date);
-    //    }
-
-    //    public static String getISO8601String(Date date)
-    //    {
-    //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
-    //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-    //
-    //        String formatString = simpleDateFormat.format(date);
-    //
-    //        return formatString;
-    //    }
 
     /**
      * String value 값 중 "true", "1", "Y", "y" 값을 true로 바꿔 주는 메소드
