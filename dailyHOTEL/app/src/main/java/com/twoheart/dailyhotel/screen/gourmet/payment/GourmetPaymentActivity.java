@@ -345,7 +345,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             , R.string.dialog_msg_gourmet_payment_message03//
             , R.string.dialog_msg_gourmet_payment_message08, R.string.dialog_msg_gourmet_payment_message07};
 
-        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this, messageResIds);
+        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this);
+        finalCheckLayout.setMessages(messageResIds);
+
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 

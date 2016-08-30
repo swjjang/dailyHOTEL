@@ -5,6 +5,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,25 +25,59 @@ import com.twoheart.dailyhotel.widget.DailySignatureView;
 public class FinalCheckLayout extends FrameLayout
 {
     private DailySignatureView mDailySignatureView;
+    private ViewGroup mMessageLayout;
 
-    public FinalCheckLayout(Context context, int[] textResIds)
+    public FinalCheckLayout(Context context)
     {
         super(context);
 
-        initLayout(context, textResIds);
+        initLayout(context);
     }
 
-    private void initLayout(Context context, int[] textResIds)
+    public FinalCheckLayout(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+
+        initLayout(context);
+    }
+
+    public FinalCheckLayout(Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+
+        initLayout(context);
+    }
+
+    public FinalCheckLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
+
+        initLayout(context);
+    }
+
+    private void initLayout(Context context)
     {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.layout_finalcheck, this, true);
-        ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
+        mMessageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
+        mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
+    }
 
+    public void setMessages(int[] textResIds)
+    {
+        if (textResIds == null)
+        {
+            return;
+        }
+
+        Context context = getContext();
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         int length = textResIds.length;
 
         for (int i = 0; i < length; i++)
         {
-            View messageRow = inflater.inflate(R.layout.row_payment_agreedialog, messageLayout, false);
+            View messageRow = inflater.inflate(R.layout.row_payment_agreedialog, mMessageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -82,10 +117,8 @@ public class FinalCheckLayout extends FrameLayout
                 messageTextView.setText(message);
             }
 
-            messageLayout.addView(messageRow);
+            mMessageLayout.addView(messageRow);
         }
-
-        mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
     }
 
     public DailySignatureView getDailySignatureView()

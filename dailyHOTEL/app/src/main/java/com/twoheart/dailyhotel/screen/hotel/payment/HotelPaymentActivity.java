@@ -979,7 +979,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         messageResIds = paymentDialogMessage(mPensionPopupMessageType, messageResIds);
 
-        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this, messageResIds);
+        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this);
+        finalCheckLayout.setMessages(messageResIds);
+
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 

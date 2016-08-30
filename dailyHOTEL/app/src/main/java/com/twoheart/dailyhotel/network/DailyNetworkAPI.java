@@ -79,12 +79,7 @@ public class DailyNetworkAPI implements IDailyNetwork
             @Override
             public boolean apply(Request<?> request)
             {
-                if (request != null && tag != null && tag.equals(request.getTag()) == true)
-                {
-                    return true;
-                }
-
-                return false;
+                return request != null && tag != null && tag.equals(request.getTag()) == true;
             }
         });
     }
