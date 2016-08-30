@@ -1,5 +1,9 @@
 package com.twoheart.dailyhotel.model;
 
+import android.content.Context;
+
+import com.twoheart.dailyhotel.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -124,5 +128,34 @@ public class StayDetail extends PlaceDetail
     public ArrayList<RoomInformation> getSaleRoomList()
     {
         return mSaleRoomList;
+    }
+
+    public enum Pictogram
+    {
+        enabledParking(R.string.label_parking, R.drawable.selector_filter_amenities_parking_button),
+        unabledParking(R.string.label_unabled_parking, R.drawable.selector_filter_amenities_parking_button),
+        pool(R.string.label_pool, R.drawable.selector_filter_amenities_pool_button),
+        fitness(R.string.label_fitness, R.drawable.selector_filter_amenities_fitness_button),
+        pat(R.string.label_allowed_pat, R.drawable.selector_filter_amenities_fitness_button),
+        barbecue(R.string.label_allowed_barbecue, R.drawable.selector_filter_amenities_fitness_button);
+
+        private int mNameResId;
+        private int mImageResId;
+
+        Pictogram(int nameResId, int imageResId)
+        {
+            mNameResId = nameResId;
+            mImageResId = imageResId;
+        }
+
+        public String getName(Context context)
+        {
+            return context.getString(mNameResId);
+        }
+
+        public int getImageResId()
+        {
+            return mImageResId;
+        }
     }
 }

@@ -59,7 +59,7 @@
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
     <string name="label_cardcd04">현대</string>
-    <string name="label_cardcd06">국민</string>
+    <string name="label_cardcd06">국민</string>v
     <string name="label_cardcd11">BC</string>
     <string name="label_cardcd12">삼성</string>
     <string name="label_cardcd14">신한</string>
@@ -764,6 +764,9 @@
     <string name="label_fitness">피트니스</string>
     <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
+    <string name="label_unabled_parking">주차불가능</string>
+    <string name="label_allowed_pat">애완동물가능</string>
+    <string name="label_allowed_barbecue">공동바베큐</string>
     <string name="label_time_range">시간대</string>
     <string name="label_time_0611">06–11시</string>
     <string name="label_time_1115">11–15시</string>
