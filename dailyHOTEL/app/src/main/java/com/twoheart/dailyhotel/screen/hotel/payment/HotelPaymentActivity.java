@@ -452,12 +452,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         calendarCheckout.setTimeInMillis(checkOutDate);
 
         String checkOutDateFormat = DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
-        SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
+        SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
         checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(HotelPaymentActivity.this).getMediumTypeface()),//
             checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        mCheckoutDayTextView.setText(checkInSpannableStringBuilder);
+        mCheckoutDayTextView.setText(checkOutSpannableStringBuilder);
 
         mNightsTextView.setText(getString(R.string.label_nights, nights));
 
