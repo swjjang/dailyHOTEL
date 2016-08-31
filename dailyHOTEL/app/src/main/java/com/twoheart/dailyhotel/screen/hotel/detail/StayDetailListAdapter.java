@@ -152,16 +152,11 @@ public class StayDetailListAdapter extends BaseAdapter
         } else
         {
             // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
-            if (mDeatilViews[4] == null)
-            {
-                View view = new View(mContext);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
-                view.setLayoutParams(layoutParams);
-                view.setBackgroundResource(R.color.default_line_cf0f0f0);
-
-                mDeatilViews[4] = view;
-                linearLayout.addView(mDeatilViews[4]);
-            }
+            View view = new View(mContext);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
+            view.setLayoutParams(layoutParams);
+            view.setBackgroundResource(R.color.default_line_cf0f0f0);
+            linearLayout.addView(view);
         }
 
         // 정보 화면
