@@ -38,6 +38,7 @@
     <string name="label_share_daum_map">다음맵</string>
     <string name="label_share_naver_map">네이버맵</string>
     <string name="label_share_google_map">구글맵</string>
+    <string name="label_share_kakao_navi">카카오내비</string>
     <string name="label_completed">완료</string>
     <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>
@@ -59,7 +60,7 @@
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
     <string name="label_cardcd04">현대</string>
-    <string name="label_cardcd06">국민</string>
+    <string name="label_cardcd06">국민</string>v
     <string name="label_cardcd11">BC</string>
     <string name="label_cardcd12">삼성</string>
     <string name="label_cardcd14">신한</string>
@@ -495,7 +496,7 @@
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
     <string name="message_booking_selected_time">시간을 선택해주세요</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
-    <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요.</string>
+    <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요</string>
     <string name="message_discount_memo">적립금, 할인 쿠폰은 중복 사용 할 수 없습니다.</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
     <string name="message_gourmet_please_input_guest">예약자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -764,6 +765,9 @@
     <string name="label_fitness">피트니스</string>
     <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
+    <string name="label_unabled_parking">주차불가능</string>
+    <string name="label_allowed_pat">애완동물가능</string>
+    <string name="label_allowed_barbecue">공동바베큐</string>
     <string name="label_time_range">시간대</string>
     <string name="label_time_0611">06–11시</string>
     <string name="label_time_1115">11–15시</string>

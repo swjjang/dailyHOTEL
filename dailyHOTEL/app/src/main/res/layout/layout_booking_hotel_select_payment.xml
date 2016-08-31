@@ -49,15 +49,15 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_rect_cd0d0d0"
+        android:background="@drawable/shape_rect_ce8e8e9"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginLeft="1px"
-            android:layout_marginRight="1px"
-            android:layout_marginTop="1px"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
             android:background="@drawable/selector_select_paymnettype_top_background">
 
             <RelativeLayout
@@ -139,8 +139,8 @@
             android:id="@+id/cardLayout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginLeft="1px"
-            android:layout_marginRight="1px"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:background="@drawable/selector_select_paymnettype_background">
 
             <ImageView
@@ -192,8 +192,8 @@
             android:id="@+id/phoneLayout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginLeft="1px"
-            android:layout_marginRight="1px"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:background="@drawable/selector_select_paymnettype_background">
 
             <ImageView
@@ -245,9 +245,9 @@
             android:id="@+id/transferLayout"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginBottom="1px"
-            android:layout_marginLeft="1px"
-            android:layout_marginRight="1px"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:background="@drawable/selector_select_paymnettype_bottom_background">
 
             <ImageView
