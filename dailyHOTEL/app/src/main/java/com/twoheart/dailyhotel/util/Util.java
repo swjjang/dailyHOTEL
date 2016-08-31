@@ -33,6 +33,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -44,6 +45,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.skp.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
@@ -58,6 +60,7 @@ import net.simonvt.numberpicker.NumberPicker;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -936,6 +939,76 @@ public class Util implements Constants
         }
     }
 
+    public static void shareTmapNavi(final Activity activity, final String placeName, final float latitude, final float longitude)
+    {
+        if (activity == null || latitude == 0 || longitude == 0)
+        {
+            return;
+        }
+
+        final TMapTapi tmapTapi = new TMapTapi(activity);
+
+        if (tmapTapi == null)
+        {
+            if (DEBUG == false)
+            {
+                Crashlytics.logException(new RuntimeException("TMapTapi initialize failed"));
+            } else
+            {
+                ExLog.d("TMapTapi initialize failed");
+            }
+            return;
+        }
+
+        tmapTapi.setSKPMapAuthentication("api key");
+        tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
+        {
+            @Override
+            public void SKPMapApikeySucceed()
+            {
+                if (tmapTapi.isTmapApplicationInstalled() == true)
+                {
+                    tmapTapi.invokeRoute(placeName, latitude, longitude);
+                } else
+                {
+                    ArrayList<String> downUrlList = tmapTapi.getTMapDownUrl();
+                    if (downUrlList == null || downUrlList.size() == 0)
+                    {
+                        ExLog.d("TMap downUrl is null");
+                        // TODO : ellen 과 시나리오 확인 필요 - 미 개통 단말!
+                    } else
+                    {
+                        // TODO : 여러개의 url이 올경우 시나리오 확인 필요 - 통신사별 url
+                        Uri uri = Uri.parse(downUrlList.get(0));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                        if (resolveInfo != null)
+                        {
+                            activity.startActivity(intent);
+                        } else
+                        {
+                            // TODO : 받을수 있는 앱이 없을때 처리
+                            ExLog.d("resolveInfo is null");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void SKPMapApikeyFailed(String s)
+            {
+                // TODO : ellen 과 시나리오 확인 필요
+                ExLog.d("Tmap : " + s);
+            }
+        });
+
+
+    }
+
     public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName//
         , final double latitude, final double longitude, boolean isOverseas//
         , final String gaCategory, final String gaAction, final String gaLabel)
@@ -961,6 +1034,7 @@ public class Util implements Constants
             View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
             View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
             View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+            View tmapNaviLayout = dialogView.findViewById(R.id.tmapNaviLayout);
             View kakaoNaviLayout = dialogView.findViewById(R.id.kakaoNaviLayout);
 
             kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
@@ -1033,6 +1107,31 @@ public class Util implements Constants
                         } else
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            tmapNaviLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareTmapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi-" + gaLabel, null);
                         }
                     }
                 }
