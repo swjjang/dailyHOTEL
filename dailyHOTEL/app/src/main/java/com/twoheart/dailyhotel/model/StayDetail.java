@@ -39,7 +39,7 @@ public class StayDetail extends PlaceDetail
             grade = Stay.Grade.etc;
         }
 
-        name = jsonObject.getString("hotelName");
+        name = jsonObject.getString("name");
         address = jsonObject.getString("address");
 
         longitude = jsonObject.getDouble("longitude");
