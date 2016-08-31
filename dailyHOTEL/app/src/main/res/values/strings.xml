@@ -56,6 +56,7 @@
     <string name="label_simple_payment">간편결제</string>
     <string name="label_card_payment">일반 카드결제</string>
     <string name="label_nights">%1$d박</string>
+    <string name="label_satisfaction">%1$d%%만족 (%2$d명 평가)</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -766,7 +767,7 @@
     <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
     <string name="label_unabled_parking">주차불가능</string>
-    <string name="label_allowed_pat">애완동물가능</string>
+    <string name="label_allowed_pet">애완동물가능</string>
     <string name="label_allowed_barbecue">공동바베큐</string>
     <string name="label_valet_available">발렛가능</string>
     <string name="label_private_room">프라이빗룸</string>

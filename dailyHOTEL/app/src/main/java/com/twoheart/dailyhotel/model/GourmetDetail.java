@@ -44,9 +44,12 @@ public class GourmetDetail extends PlaceDetail
         longitude = jsonObject.getDouble("longitude");
         latitude = jsonObject.getDouble("latitude");
 
-        if (jsonObject.has("rating") == true)
+        boolean ratingShow = jsonObject.getBoolean("ratingShow");
+
+        if(ratingShow == true)
         {
-            satisfaction = jsonObject.getString("rating");
+            ratingValue = jsonObject.getInt("ratingValue");
+            rate = jsonObject.getInt("rate");
         }
 
         // Image Url

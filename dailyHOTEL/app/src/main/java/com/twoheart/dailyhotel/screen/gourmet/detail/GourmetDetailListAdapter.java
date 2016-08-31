@@ -222,13 +222,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
         // 만족도
-        if (Util.isTextEmpty(gourmetDetail.satisfaction) == true)
+        if (gourmetDetail.ratingValue == 0)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(gourmetDetail.satisfaction);
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, gourmetDetail.ratingValue, gourmetDetail.rate));
         }
 
         // 날짜

@@ -20,6 +20,8 @@ public class StayDetail extends PlaceDetail
     public String categoryCode;
     public boolean hasCoupon;
 
+    private ArrayList<Pictogram> mPictogramList;
+
     public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount)
     {
         this.index = hotelIndex;
@@ -39,17 +41,58 @@ public class StayDetail extends PlaceDetail
             grade = Stay.Grade.etc;
         }
 
-        name = jsonObject.getString("hotelName");
+        name = jsonObject.getString("name");
         address = jsonObject.getString("address");
 
         longitude = jsonObject.getDouble("longitude");
         latitude = jsonObject.getDouble("latitude");
+        isOverseas = jsonObject.getBoolean("overseas");
 
-        isOverseas = jsonObject.getBoolean("isOverseas");
+        boolean ratingShow = jsonObject.getBoolean("ratingShow");
 
-        if (jsonObject.has("rating") == true)
+        if (ratingShow == true)
         {
-            satisfaction = jsonObject.getString("rating");
+            ratingValue = jsonObject.getInt("ratingValue");
+            rate = jsonObject.getInt("rate");
+        }
+
+        // Pictrogram
+        mPictogramList = new ArrayList<>();
+
+        // 주차
+        if (jsonObject.getBoolean("parking") == true)
+        {
+            mPictogramList.add(Pictogram.parking);
+        }
+
+        // 주차금지
+        if (jsonObject.getBoolean("noParking") == true)
+        {
+            mPictogramList.add(Pictogram.noParking);
+        }
+
+        // 수영장
+        if (jsonObject.getBoolean("pool") == true)
+        {
+            mPictogramList.add(Pictogram.pool);
+        }
+
+        // 피트니스
+        if (jsonObject.getBoolean("fitness") == true)
+        {
+            mPictogramList.add(Pictogram.fitness);
+        }
+
+        // 애완동물
+        if (jsonObject.getBoolean("pet") == true)
+        {
+            mPictogramList.add(Pictogram.pet);
+        }
+
+        // 바베큐
+        if (jsonObject.getBoolean("sharedBbq") == true)
+        {
+            mPictogramList.add(Pictogram.sharedBbq);
         }
 
         // Image Url
@@ -82,13 +125,13 @@ public class StayDetail extends PlaceDetail
             }
         }
 
-        if (jsonObject.has("hotelBenefit") == true)
+        if (jsonObject.has("benefit") == true)
         {
-            benefit = jsonObject.getString("hotelBenefit");
+            benefit = jsonObject.getString("benefit");
         }
 
         // Detail
-        JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
+        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
         int detailLength = detailJSONArray.length();
 
         mInformationList = new ArrayList<>(detailLength);
@@ -98,20 +141,8 @@ public class StayDetail extends PlaceDetail
             mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
         }
 
-        // Detail Info
-        JSONArray detailMoreJSONArray = jsonObject.getJSONArray("detailMore");
-        int detailMoreLength = detailMoreJSONArray.length();
-
-        if (detailMoreLength != 0)
-        {
-            for (int i = 0; i < detailMoreLength; i++)
-            {
-                mInformationList.add(new DetailInformation(detailMoreJSONArray.getJSONObject(i)));
-            }
-        }
-
         // Room Sale Info
-        JSONArray saleRoomJSONArray = jsonObject.getJSONArray("hotelRoomDetail");
+        JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
         int saleRoomLength = saleRoomJSONArray.length();
 
         mSaleRoomList = new ArrayList<>(saleRoomLength);
@@ -130,14 +161,20 @@ public class StayDetail extends PlaceDetail
         return mSaleRoomList;
     }
 
+    public ArrayList<Pictogram> getPictogramList()
+    {
+        return mPictogramList;
+    }
+
     public enum Pictogram
     {
-        enabledParking(R.string.label_parking, R.drawable.selector_filter_amenities_parking_button),
-        unabledParking(R.string.label_unabled_parking, R.drawable.selector_filter_amenities_parking_button),
-        pool(R.string.label_pool, R.drawable.selector_filter_amenities_pool_button),
-        fitness(R.string.label_fitness, R.drawable.selector_filter_amenities_fitness_button),
-        pat(R.string.label_allowed_pat, R.drawable.selector_filter_amenities_fitness_button),
-        barbecue(R.string.label_allowed_barbecue, R.drawable.selector_filter_amenities_fitness_button);
+        parking(R.string.label_parking, R.drawable.f_ic_hotel_04_facilities_05_on),
+        noParking(R.string.label_unabled_parking, R.drawable.f_ic_hotel_04_facilities_05_on),
+        pool(R.string.label_pool, R.drawable.f_ic_hotel_04_facilities_05_on),
+        fitness(R.string.label_fitness, R.drawable.f_ic_hotel_04_facilities_05_on),
+        pet(R.string.label_allowed_pet, R.drawable.f_ic_hotel_04_facilities_05_on),
+        sharedBbq(R.string.label_allowed_barbecue, R.drawable.f_ic_hotel_04_facilities_05_on),
+        none(0, 0);
 
         private int mNameResId;
         private int mImageResId;
@@ -150,6 +187,11 @@ public class StayDetail extends PlaceDetail
 
         public String getName(Context context)
         {
+            if (mNameResId == 0)
+            {
+                return null;
+            }
+
             return context.getString(mNameResId);
         }
 
