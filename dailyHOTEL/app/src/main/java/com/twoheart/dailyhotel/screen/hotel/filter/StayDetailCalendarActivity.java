@@ -168,7 +168,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
                     saleRoomCount = 0;
                 } else
                 {
-                    JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("hotelRoomDetail");
+                    JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("rooms");
                     if (saleRoomJSONArray == null)
                     {
                         saleRoomCount = 0;
