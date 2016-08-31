@@ -18,6 +18,8 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 
+import com.twoheart.dailyhotel.util.ExLog;
+
 public class DailyOverScrollViewPager extends ViewPager
 {
 
@@ -285,6 +287,9 @@ public class DailyOverScrollViewPager extends ViewPager
                         {
                             final float over = deltaX + mTouchSlop;
                             mOverScrollEffect.setPull(over / width);
+                        } else
+                        {
+                            ExLog.d("index : " + currentItemIndex + ", leftBound : " + leftBound);
                         }
                     } else if (lastItemIndex == currentItemIndex)
                     {
@@ -348,14 +353,18 @@ public class DailyOverScrollViewPager extends ViewPager
             return false;
         }
 
+        final float translateX = (float) (mOverScrollTranslation * Math.sin(Math.PI * mOverScrollEffect.mOverScroll) * (-1));
         if (mOverScrollEffect.isOverScrolling() && (isFirst() || isLast()))
         {
-            final float translateX = (float) (mOverScrollTranslation * Math.sin(Math.PI * mOverScrollEffect.mOverScroll) * (-1));
             this.setTranslationX(translateX);
 
             return true;
         } else if (mScrollPositionOffset > 0)
         {
+            if (translateX != 0)
+            {
+                this.setTranslationX(0);
+            }
             return true;
         }
         return false;
