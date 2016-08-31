@@ -1054,10 +1054,10 @@ public class Util implements Constants
                     {
                         if (Util.isTextEmpty(gaLabel) == true)
                         {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakoNavi", null);
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi", null);
                         } else
                         {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakoNavi-" + gaLabel, null);
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi-" + gaLabel, null);
                         }
                     }
                 }

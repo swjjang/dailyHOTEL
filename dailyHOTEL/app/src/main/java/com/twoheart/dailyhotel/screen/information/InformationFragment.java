@@ -719,8 +719,6 @@ public class InformationFragment extends BaseFragment implements Constants
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
             }
 
-            mInformationLayout.updateLoginLayout(isLogin, false);
-
             mNetworkController.requestUserProfileBenefit();
         }
 
