@@ -1,7 +1,10 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +20,16 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GourmetDetailListAdapter extends BaseAdapter
 {
-    private static final int NUMBER_OF_ROWSLIST = 6;
+    private static final int NUMBER_OF_ROWSLIST = 7;
+
+    private static final int GRID_COLUME_COUNT = 5;
 
     private GourmetDetail mGourmetDetail;
     private SaleTime mSaleTime;
@@ -107,7 +113,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getEmptyView(mDeatilViews[0]);
         linearLayout.addView(mDeatilViews[0]);
 
-        // 호텔 등급과 이름.
+        // 레스토랑 등급과 이름.
         if (mDeatilViews[1] == null)
         {
             mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_gourmet_detail02, parent, false);
@@ -125,35 +131,44 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getAddressView(mDeatilViews[2], mGourmetDetail);
         linearLayout.addView(mDeatilViews[2]);
 
+        if (mDeatilViews[3] == null)
+        {
+            mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+        }
+
+        getAmenitiesView(mDeatilViews[3], mGourmetDetail);
+        linearLayout.addView(mDeatilViews[3]);
+
+
         if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
         {
             // D Benefit
-            if (mDeatilViews[3] == null)
+            if (mDeatilViews[4] == null)
             {
-                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getBenefitView(mDeatilViews[3], mGourmetDetail);
-            linearLayout.addView(mDeatilViews[3]);
+            getBenefitView(mDeatilViews[4], mGourmetDetail);
+            linearLayout.addView(mDeatilViews[4]);
         }
 
         // 정보
-        if (mDeatilViews[4] == null)
-        {
-            mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
-        }
-
-        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[4], mGourmetDetail);
-        linearLayout.addView(mDeatilViews[4]);
-
-        // 카카오톡 문의
         if (mDeatilViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
         }
 
-        getKakaoView(mDeatilViews[5]);
+        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mGourmetDetail);
         linearLayout.addView(mDeatilViews[5]);
+
+        // 카카오톡 문의
+        if (mDeatilViews[6] == null)
+        {
+            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+        }
+
+        getKakaoView(mDeatilViews[6]);
+        linearLayout.addView(mDeatilViews[6]);
 
         return linearLayout;
     }
@@ -322,7 +337,67 @@ public class GourmetDetailListAdapter extends BaseAdapter
     }
 
     /**
-     * 호텔 Benefit
+     * 편의시설
+     *
+     * @param view
+     * @return
+     */
+    private View getAmenitiesView(View view, PlaceDetail placeDetail)
+    {
+        if (view == null || placeDetail == null)
+        {
+            return view;
+        }
+
+        android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+
+        ArrayList<GourmetDetail.Pictogram> list = ((GourmetDetail) placeDetail).pictogramList;
+        boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
+
+        for (GourmetDetail.Pictogram pictogram : list)
+        {
+            gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
+        }
+
+        int emptyCount = GRID_COLUME_COUNT - (list.size() % GRID_COLUME_COUNT);
+        for (int i = 0; i < emptyCount; i++)
+        {
+            gridLayout.addView(getGridLayoutItemView(mContext, GourmetDetail.Pictogram.none, isSingleLine));
+        }
+
+        return view;
+    }
+
+    protected DailyTextView getGridLayoutItemView(Context context, GourmetDetail.Pictogram pictogram, boolean isSingleLine)
+    {
+        DailyTextView dailyTextView = new DailyTextView(mContext);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
+        dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c323232));
+        dailyTextView.setText(pictogram.getName(context));
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, pictogram.getImageResId(), 0, 0);
+
+        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
+        layoutParams.width = 0;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+        if (isSingleLine == true)
+        {
+            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 15));
+        } else
+        {
+            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 2));
+        }
+
+        dailyTextView.setLayoutParams(layoutParams);
+
+        return dailyTextView;
+    }
+
+    /**
+     * 고메 Benefit
      *
      * @param view
      * @return
