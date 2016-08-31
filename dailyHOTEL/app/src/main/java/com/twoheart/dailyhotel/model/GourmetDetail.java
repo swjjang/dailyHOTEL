@@ -122,12 +122,12 @@ public class GourmetDetail extends PlaceDetail
 
     public enum Pictogram
     {
-        parking(R.string.label_parking, R.string.code_parking, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
-        valetAvailable(R.string.label_valet_available, R.string.code_valet_available, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
-        privateRoom(R.string.label_private_room, R.string.code_private_room, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
-        groupBooking(R.string.label_group_booking, R.string.code_group_booking, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
-        babySeat(R.string.label_baby_seat, R.string.code_baby_seat, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
-        corkage(R.string.label_corkage, R.string.code_corkage, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        parking(R.string.label_parking, R.string.code_parking, R.drawable.ic_detail_facilities_01_parking, GourmetFilter.Amenities.FLAG_PARKING),
+        valetAvailable(R.string.label_valet_available, R.string.code_valet_available, R.drawable.ic_detail_facilities_06_valet, GourmetFilter.Amenities.FLAG_PARKING),
+        privateRoom(R.string.label_private_room, R.string.code_private_room, R.drawable.ic_detail_facilities_07_private, GourmetFilter.Amenities.FLAG_PARKING),
+        groupBooking(R.string.label_group_booking, R.string.code_group_booking, R.drawable.ic_detail_facilities_08_group, GourmetFilter.Amenities.FLAG_PARKING),
+        babySeat(R.string.label_baby_seat, R.string.code_baby_seat, R.drawable.ic_detail_facilities_09_babyseat, GourmetFilter.Amenities.FLAG_PARKING),
+        corkage(R.string.label_corkage, R.string.code_corkage, R.drawable.ic_detail_facilities_10_corkage, GourmetFilter.Amenities.FLAG_PARKING),
         none(0, 0, 0, 0);
 
         private int nameResId;

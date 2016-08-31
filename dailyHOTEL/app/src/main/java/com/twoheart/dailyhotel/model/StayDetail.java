@@ -168,12 +168,12 @@ public class StayDetail extends PlaceDetail
 
     public enum Pictogram
     {
-        parking(R.string.label_parking, R.drawable.f_ic_hotel_04_facilities_05_on),
-        noParking(R.string.label_unabled_parking, R.drawable.f_ic_hotel_04_facilities_05_on),
-        pool(R.string.label_pool, R.drawable.f_ic_hotel_04_facilities_05_on),
-        fitness(R.string.label_fitness, R.drawable.f_ic_hotel_04_facilities_05_on),
-        pet(R.string.label_allowed_pet, R.drawable.f_ic_hotel_04_facilities_05_on),
-        sharedBbq(R.string.label_allowed_barbecue, R.drawable.f_ic_hotel_04_facilities_05_on),
+        parking(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
+        noParking(R.string.label_unabled_parking, R.drawable.ic_detail_facilities_02_no_parking),
+        pool(R.string.label_pool, R.drawable.ic_detail_facilities_03_pool),
+        fitness(R.string.label_fitness, R.drawable.ic_detail_facilities_04_fitness),
+        pet(R.string.label_allowed_pet, R.drawable.ic_detail_facilities_05_pet),
+        sharedBbq(R.string.label_allowed_barbecue, R.drawable.ic_detail_facilities_06_bbq),
         none(0, 0);
 
         private int mNameResId;
