@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.model;
 
+import android.content.Context;
+
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -13,6 +16,7 @@ public class GourmetDetail extends PlaceDetail
 {
     public Gourmet.Grade grade;
     public String category;
+    public ArrayList<Pictogram> pictogramList;
 
     protected ArrayList<TicketInformation> mTicketInformationList;
 
@@ -96,10 +100,68 @@ public class GourmetDetail extends PlaceDetail
         {
             mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
         }
+
+        // TODO : pictogram
+        pictogramList = new ArrayList<>();
+        pictogramList.add(Pictogram.parking);
+
     }
 
     public ArrayList<TicketInformation> getTicketInformation()
     {
         return mTicketInformationList;
+    }
+
+    public enum Pictogram
+    {
+        parking(R.string.label_parking, R.string.code_parking, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        valetAvailable(R.string.label_valet_available, R.string.code_valet_available, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        privateRoom(R.string.label_private_room, R.string.code_private_room, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        groupBooking(R.string.label_group_booking, R.string.code_group_booking, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        babySeat(R.string.label_baby_seat, R.string.code_baby_seat, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        corkage(R.string.label_corkage, R.string.code_corkage, R.drawable.selector_filter_amenities_parking_button, GourmetFilter.Amenities.FLAG_PARKING),
+        none(0, 0, 0, 0);
+
+        private int nameResId;
+        private int codeResId;
+        private int imageResId;
+        private int flag;
+
+        Pictogram(int nameResId, int codeResId, int imageResId, int flag)
+        {
+            this.nameResId = nameResId;
+            this.codeResId = codeResId;
+            this.imageResId = imageResId;
+            this.flag = flag;
+        }
+
+        public String getName(Context context)
+        {
+            if (nameResId <= 0)
+            {
+                return "";
+            }
+            return context.getString(nameResId);
+        }
+
+        public String getCode(Context context)
+        {
+            if (codeResId <= 0)
+            {
+                return "";
+            }
+            return context.getString(codeResId);
+        }
+
+        public int getImageResId()
+        {
+            return imageResId;
+        }
+
+        public int getFlag()
+        {
+            return flag;
+        }
+
     }
 }

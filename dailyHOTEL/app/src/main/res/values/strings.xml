@@ -38,7 +38,6 @@
     <string name="label_share_daum_map">다음맵</string>
     <string name="label_share_naver_map">네이버맵</string>
     <string name="label_share_google_map">구글맵</string>
-    <string name="label_share_kakao_navi">카카오내비</string>
     <string name="label_completed">완료</string>
     <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>
@@ -60,7 +59,7 @@
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
     <string name="label_cardcd04">현대</string>
-    <string name="label_cardcd06">국민</string>v
+    <string name="label_cardcd06">국민</string>
     <string name="label_cardcd11">BC</string>
     <string name="label_cardcd12">삼성</string>
     <string name="label_cardcd14">신한</string>
@@ -768,6 +767,11 @@
     <string name="label_unabled_parking">주차불가능</string>
     <string name="label_allowed_pat">애완동물가능</string>
     <string name="label_allowed_barbecue">공동바베큐</string>
+    <string name="label_valet_available">발렛가능</string>
+    <string name="label_private_room">프라이빗룸</string>
+    <string name="label_group_booking">단체예약</string>
+    <string name="label_baby_seat">베이비시트</string>
+    <string name="label_corkage">코르키지</string>
     <string name="label_time_range">시간대</string>
     <string name="label_time_0611">06–11시</string>
     <string name="label_time_1115">11–15시</string>
@@ -888,4 +892,11 @@
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
+
+    <string name="code_parking">Parking</string>
+    <string name="code_valet_available">Valet</string>
+    <string name="code_private_room">PrivateRoom</string>
+    <string name="code_group_booking">GroupBooking</string>
+    <string name="code_baby_seat">BabySeat</string>
+    <string name="code_corkage">Corkage</string>
 </resources>
