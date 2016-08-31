@@ -131,14 +131,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getAddressView(mDeatilViews[2], mGourmetDetail);
         linearLayout.addView(mDeatilViews[2]);
 
-        if (mDeatilViews[3] == null)
+        ArrayList<GourmetDetail.Pictogram> list = mGourmetDetail.getPictogramList();
+
+        if (list != null && list.size() > 0)
         {
-            mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+            if (mDeatilViews[3] == null)
+            {
+                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+            }
+
+            getAmenitiesView(mDeatilViews[3], mGourmetDetail);
+            linearLayout.addView(mDeatilViews[3]);
         }
-
-        getAmenitiesView(mDeatilViews[3], mGourmetDetail);
-        linearLayout.addView(mDeatilViews[3]);
-
 
         if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
         {
@@ -150,12 +154,25 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
             getBenefitView(mDeatilViews[4], mGourmetDetail);
             linearLayout.addView(mDeatilViews[4]);
+        } else
+        {
+            // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
+            if (mDeatilViews[4] == null)
+            {
+                View view = new View(mContext);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
+                view.setLayoutParams(layoutParams);
+                view.setBackgroundResource(R.color.default_line_cf0f0f0);
+
+                mDeatilViews[4] = view;
+                linearLayout.addView(mDeatilViews[4]);
+            }
         }
 
         // 정보
         if (mDeatilViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
+            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
         getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mGourmetDetail);
@@ -342,16 +359,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getAmenitiesView(View view, PlaceDetail placeDetail)
+    private View getAmenitiesView(View view, GourmetDetail gourmetDetail)
     {
-        if (view == null || placeDetail == null)
+        if (view == null || gourmetDetail == null)
         {
             return view;
         }
 
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+        gridLayout.removeAllViews();
 
-        ArrayList<GourmetDetail.Pictogram> list = ((GourmetDetail) placeDetail).pictogramList;
+        ArrayList<GourmetDetail.Pictogram> list = gourmetDetail.getPictogramList();
+
         boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
 
         for (GourmetDetail.Pictogram pictogram : list)

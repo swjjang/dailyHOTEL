@@ -126,13 +126,18 @@ public class StayDetailListAdapter extends BaseAdapter
         getAddressView(mDeatilViews[2], mStayDetail);
         linearLayout.addView(mDeatilViews[2]);
 
-        if (mDeatilViews[3] == null)
-        {
-            mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
-        }
+        ArrayList<StayDetail.Pictogram> list = mStayDetail.getPictogramList();
 
-        getAmenitiesView(mDeatilViews[3], mStayDetail);
-        linearLayout.addView(mDeatilViews[3]);
+        if (list != null && list.size() > 0)
+        {
+            if (mDeatilViews[3] == null)
+            {
+                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+            }
+
+            getAmenitiesView(mDeatilViews[3], mStayDetail);
+            linearLayout.addView(mDeatilViews[3]);
+        }
 
         // D Benefit
         if (Util.isTextEmpty(mStayDetail.benefit) == false)
@@ -144,6 +149,19 @@ public class StayDetailListAdapter extends BaseAdapter
 
             getDetailBenefitView(mDeatilViews[4], mStayDetail);
             linearLayout.addView(mDeatilViews[4]);
+        } else
+        {
+            // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
+            if (mDeatilViews[4] == null)
+            {
+                View view = new View(mContext);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
+                view.setLayoutParams(layoutParams);
+                view.setBackgroundResource(R.color.default_line_cf0f0f0);
+
+                mDeatilViews[4] = view;
+                linearLayout.addView(mDeatilViews[4]);
+            }
         }
 
         // 정보 화면
@@ -374,8 +392,10 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+        gridLayout.removeAllViews();
 
         ArrayList<StayDetail.Pictogram> list = stayDetail.getPictogramList();
+
         boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
 
         for (StayDetail.Pictogram pictogram : list)
@@ -460,17 +480,15 @@ public class StayDetailListAdapter extends BaseAdapter
 
         if (arrayList != null)
         {
-            ViewGroup informationLayout = (ViewGroup) viewGroup.findViewById(R.id.informationLayout);
-
-            informationLayout.removeAllViews();
+            viewGroup.removeAllViews();
 
             for (DetailInformation information : arrayList)
             {
-                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, informationLayout, false);
+                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
                 makeInformationLayout(layoutInflater, childGroup, information);
 
-                informationLayout.addView(childGroup);
+                viewGroup.addView(childGroup);
             }
         }
 

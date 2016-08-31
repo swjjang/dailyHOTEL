@@ -216,7 +216,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 case CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON:
                 {
-                    mDontReloadAtOnResume = true;
+                    mDontReloadAtOnResume = false;
 
                     if (resultCode == RESULT_OK)
                     {

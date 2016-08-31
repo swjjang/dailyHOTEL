@@ -16,7 +16,7 @@ public class GourmetDetail extends PlaceDetail
 {
     public Gourmet.Grade grade;
     public String category;
-    public ArrayList<Pictogram> pictogramList;
+    private ArrayList<Pictogram> mPictogramList;
 
     protected ArrayList<TicketInformation> mTicketInformationList;
 
@@ -105,14 +105,19 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // TODO : pictogram
-        pictogramList = new ArrayList<>();
-        pictogramList.add(Pictogram.parking);
+        mPictogramList = new ArrayList<>();
+        mPictogramList.add(Pictogram.parking);
 
     }
 
     public ArrayList<TicketInformation> getTicketInformation()
     {
         return mTicketInformationList;
+    }
+
+    public ArrayList<Pictogram> getPictogramList()
+    {
+        return mPictogramList;
     }
 
     public enum Pictogram
