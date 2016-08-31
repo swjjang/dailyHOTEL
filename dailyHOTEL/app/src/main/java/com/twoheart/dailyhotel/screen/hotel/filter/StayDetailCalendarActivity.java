@@ -76,7 +76,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         // 호텔 정보를 가져온다.
         DailyNetworkAPI.getInstance(StayDetailCalendarActivity.this) //
-            .requestHotelDetailInformation(mNetworkTag, mHotelIndex, checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), //
+            .requestHotelDetailInformation(mNetworkTag, mHotelIndex, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
                 nights, mJsonResponseListener);
     }
 
