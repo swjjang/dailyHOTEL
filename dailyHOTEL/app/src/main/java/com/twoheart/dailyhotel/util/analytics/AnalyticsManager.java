@@ -445,6 +445,8 @@ public class AnalyticsManager
         public static final String SEARCH_MAIN = "SearchScreenView";
         public static final String SEARCH_RESULT = "SearchResultView";
         public static final String SEARCH_RESULT_EMPTY = "SearchResultView_Empty";
+        //
+        public static final String BOOKING_ACCOUNTDETAIL = "Booking_AccountDetail";
     }
 
     public static class Action
@@ -574,6 +576,8 @@ public class AnalyticsManager
         public static final String END_PAYMENT = "EndPayment";
         public static final String PAYMENT_USED = "PaymentUsed";
         public static final String COUPON_LOGIN = "CouponLogin";
+        //
+        public static final String ACCOUNT_DETAIL = "AccountDetail";
     }
 
     public static class Category

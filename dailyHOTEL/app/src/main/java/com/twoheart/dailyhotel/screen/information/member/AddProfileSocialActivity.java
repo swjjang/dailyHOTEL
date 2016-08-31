@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class AddProfileSocialActivity extends BaseActivity
@@ -94,10 +95,7 @@ public class AddProfileSocialActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        //        if (mMode == MODE_SIGNUP)
-        //        {
-        //            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordScreen(Screen.SIGNUP, null);
-        //        }
+        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_ACCOUNTDETAIL, null);
 
         super.onStart();
     }
@@ -107,6 +105,14 @@ public class AddProfileSocialActivity extends BaseActivity
     {
         super.finish();
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
+
+        super.onBackPressed();
     }
 
     @Override
@@ -236,6 +242,8 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void finish()
         {
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
+
             AddProfileSocialActivity.this.finish();
         }
     };
@@ -247,6 +255,8 @@ public class AddProfileSocialActivity extends BaseActivity
         {
             if (Util.isTextEmpty(message) == true)
             {
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);
+
                 setResult(RESULT_OK);
                 finish();
             } else
