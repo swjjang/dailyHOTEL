@@ -1,7 +1,10 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,13 +20,14 @@ import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StayDetailListAdapter extends BaseAdapter
 {
-    private static final int NUMBER_OF_ROWSLIST = 6;
+    private static final int NUMBER_OF_ROWSLIST = 7;
 
     private static final int GRID_COLUME_COUNT = 5;
 
@@ -122,35 +126,43 @@ public class StayDetailListAdapter extends BaseAdapter
         getAddressView(mDeatilViews[2], mStayDetail);
         linearLayout.addView(mDeatilViews[2]);
 
+        if (mDeatilViews[3] == null)
+        {
+            mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+        }
+
+        getAmenitiesView(mDeatilViews[3], mStayDetail);
+        linearLayout.addView(mDeatilViews[3]);
+
         // D Benefit
         if (Util.isTextEmpty(mStayDetail.benefit) == false)
         {
-            if (mDeatilViews[3] == null)
+            if (mDeatilViews[4] == null)
             {
-                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getDetailBenefitView(mDeatilViews[3], mStayDetail);
-            linearLayout.addView(mDeatilViews[3]);
+            getDetailBenefitView(mDeatilViews[4], mStayDetail);
+            linearLayout.addView(mDeatilViews[4]);
         }
 
         // 정보 화면
-        if (mDeatilViews[4] == null)
-        {
-            mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
-        }
-
-        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[4], mStayDetail);
-        linearLayout.addView(mDeatilViews[4]);
-
-        // 카카오톡 문의
         if (mDeatilViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getKakaoView(mDeatilViews[5]);
+        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
         linearLayout.addView(mDeatilViews[5]);
+
+        // 카카오톡 문의
+        if (mDeatilViews[6] == null)
+        {
+            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+        }
+
+        getKakaoView(mDeatilViews[6]);
+        linearLayout.addView(mDeatilViews[6]);
 
         return linearLayout;
     }
@@ -356,17 +368,17 @@ public class StayDetailListAdapter extends BaseAdapter
      */
     private View getAmenitiesView(View view, StayDetail stayDetail)
     {
-        if (view == null || placeDetail == null)
+        if (view == null || stayDetail == null)
         {
             return view;
         }
 
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
 
-        ArrayList<StayDetail.Pictogram> list = ((StayDetail) stayDetail).pictogramList;
+        ArrayList<StayDetail.Pictogram> list = stayDetail.getPictogramList();
         boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
 
-        for (GourmetDetail.Pictogram pictogram : list)
+        for (StayDetail.Pictogram pictogram : list)
         {
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
@@ -380,7 +392,7 @@ public class StayDetailListAdapter extends BaseAdapter
         return view;
     }
 
-    private DailyTextView getGridLayoutItemView(Context context, GourmetDetail.Pictogram pictogram, boolean isSingleLine)
+    private DailyTextView getGridLayoutItemView(Context context, StayDetail.Pictogram pictogram, boolean isSingleLine)
     {
         DailyTextView dailyTextView = new DailyTextView(mContext);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);

@@ -20,7 +20,7 @@ public class StayDetail extends PlaceDetail
     public String categoryCode;
     public boolean hasCoupon;
 
-    public ArrayList<Pictogram> mPictogramList;
+    private ArrayList<Pictogram> mPictogramList;
 
     public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount)
     {
@@ -50,7 +50,7 @@ public class StayDetail extends PlaceDetail
 
         boolean ratingShow = jsonObject.getBoolean("ratingShow");
 
-        if(ratingShow == true)
+        if (ratingShow == true)
         {
             ratingValue = jsonObject.getInt("ratingValue");
             rate = jsonObject.getInt("rate");
@@ -60,37 +60,37 @@ public class StayDetail extends PlaceDetail
         mPictogramList = new ArrayList<>();
 
         // 주차
-        if(jsonObject.getBoolean("parking") == true)
+        if (jsonObject.getBoolean("parking") == true)
         {
             mPictogramList.add(Pictogram.parking);
         }
 
         // 주차금지
-        if(jsonObject.getBoolean("noParking") == true)
+        if (jsonObject.getBoolean("noParking") == true)
         {
             mPictogramList.add(Pictogram.noParking);
         }
 
         // 수영장
-        if(jsonObject.getBoolean("pool") == true)
+        if (jsonObject.getBoolean("pool") == true)
         {
             mPictogramList.add(Pictogram.pool);
         }
 
         // 피트니스
-        if(jsonObject.getBoolean("fitness") == true)
+        if (jsonObject.getBoolean("fitness") == true)
         {
             mPictogramList.add(Pictogram.fitness);
         }
 
         // 애완동물
-        if(jsonObject.getBoolean("pet") == true)
+        if (jsonObject.getBoolean("pet") == true)
         {
             mPictogramList.add(Pictogram.pet);
         }
 
         // 바베큐
-        if(jsonObject.getBoolean("sharedBbq") == true)
+        if (jsonObject.getBoolean("sharedBbq") == true)
         {
             mPictogramList.add(Pictogram.sharedBbq);
         }
@@ -131,7 +131,7 @@ public class StayDetail extends PlaceDetail
         }
 
         // Detail
-        JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
+        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
         int detailLength = detailJSONArray.length();
 
         mInformationList = new ArrayList<>(detailLength);
@@ -161,14 +161,20 @@ public class StayDetail extends PlaceDetail
         return mSaleRoomList;
     }
 
+    public ArrayList<Pictogram> getPictogramList()
+    {
+        return mPictogramList;
+    }
+
     public enum Pictogram
     {
-        parking(R.string.label_parking, R.drawable.selector_filter_amenities_parking_button),
-        noParking(R.string.label_unabled_parking, R.drawable.selector_filter_amenities_parking_button),
-        pool(R.string.label_pool, R.drawable.selector_filter_amenities_pool_button),
-        fitness(R.string.label_fitness, R.drawable.selector_filter_amenities_fitness_button),
-        pet(R.string.label_allowed_pet, R.drawable.selector_filter_amenities_fitness_button),
-        sharedBbq(R.string.label_allowed_barbecue, R.drawable.selector_filter_amenities_fitness_button);
+        parking(R.string.label_parking, R.drawable.f_ic_hotel_04_facilities_05_on),
+        noParking(R.string.label_unabled_parking, R.drawable.f_ic_hotel_04_facilities_05_on),
+        pool(R.string.label_pool, R.drawable.f_ic_hotel_04_facilities_05_on),
+        fitness(R.string.label_fitness, R.drawable.f_ic_hotel_04_facilities_05_on),
+        pet(R.string.label_allowed_pet, R.drawable.f_ic_hotel_04_facilities_05_on),
+        sharedBbq(R.string.label_allowed_barbecue, R.drawable.f_ic_hotel_04_facilities_05_on),
+        none(0, 0);
 
         private int mNameResId;
         private int mImageResId;
@@ -181,6 +187,11 @@ public class StayDetail extends PlaceDetail
 
         public String getName(Context context)
         {
+            if (mNameResId == 0)
+            {
+                return null;
+            }
+
             return context.getString(mNameResId);
         }
 

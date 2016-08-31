@@ -893,7 +893,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             ((StayDetail) mPlaceDetail).hasCoupon = hasCoupon;
 
             ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mPlaceDetail.index,//
-                mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), ((StayDetail) mPlaceDetail).nights);
+                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), ((StayDetail) mPlaceDetail).nights);
         }
 
         @Override
