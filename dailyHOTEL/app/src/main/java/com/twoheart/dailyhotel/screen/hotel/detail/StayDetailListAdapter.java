@@ -25,6 +25,8 @@ public class StayDetailListAdapter extends BaseAdapter
 {
     private static final int NUMBER_OF_ROWSLIST = 6;
 
+    private static final int GRID_COLUME_COUNT = 5;
+
     private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
     private Context mContext;
@@ -200,13 +202,13 @@ public class StayDetailListAdapter extends BaseAdapter
         // 만족도
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
-        if (Util.isTextEmpty(stayDetail.satisfaction) == true)
+        if (stayDetail.ratingValue == 0)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(stayDetail.satisfaction);
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, stayDetail.ratingValue, stayDetail.rate));
         }
 
         // 할인 쿠폰
@@ -344,6 +346,66 @@ public class StayDetailListAdapter extends BaseAdapter
         });
 
         return view;
+    }
+
+    /**
+     * 편의시설
+     *
+     * @param view
+     * @return
+     */
+    private View getAmenitiesView(View view, StayDetail stayDetail)
+    {
+        if (view == null || placeDetail == null)
+        {
+            return view;
+        }
+
+        android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+
+        ArrayList<StayDetail.Pictogram> list = ((StayDetail) stayDetail).pictogramList;
+        boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
+
+        for (GourmetDetail.Pictogram pictogram : list)
+        {
+            gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
+        }
+
+        int emptyCount = GRID_COLUME_COUNT - (list.size() % GRID_COLUME_COUNT);
+        for (int i = 0; i < emptyCount; i++)
+        {
+            gridLayout.addView(getGridLayoutItemView(mContext, StayDetail.Pictogram.none, isSingleLine));
+        }
+
+        return view;
+    }
+
+    private DailyTextView getGridLayoutItemView(Context context, GourmetDetail.Pictogram pictogram, boolean isSingleLine)
+    {
+        DailyTextView dailyTextView = new DailyTextView(mContext);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
+        dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c323232));
+        dailyTextView.setText(pictogram.getName(context));
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, pictogram.getImageResId(), 0, 0);
+
+        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
+        layoutParams.width = 0;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+        if (isSingleLine == true)
+        {
+            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 15));
+        } else
+        {
+            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 2));
+        }
+
+        dailyTextView.setLayoutParams(layoutParams);
+
+        return dailyTextView;
     }
 
     /**

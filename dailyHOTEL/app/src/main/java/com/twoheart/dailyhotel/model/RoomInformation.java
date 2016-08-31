@@ -16,7 +16,7 @@ public class RoomInformation implements Parcelable
     public String hotelName;
     public int price;
     public int averageDiscount;
-    public int totalDiscount;
+    public int totalDiscount; // 해당 필드는 결제 화면에서 값을 받는다.
     public int nights;
     public Stay.Grade grade;
     public String address;
@@ -31,9 +31,8 @@ public class RoomInformation implements Parcelable
     public RoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas, int nights) throws Exception
     {
         roomIndex = jsonObject.getInt("roomIdx");
-        averageDiscount = jsonObject.getInt("discountAvg");
+        averageDiscount = jsonObject.getInt("discount");
         price = jsonObject.getInt("price");
-        totalDiscount = jsonObject.getInt("discountTotal");
         roomName = jsonObject.getString("roomName").trim();
         option = jsonObject.getString("description1").trim();
         amenities = jsonObject.getString("description2").trim();
@@ -111,6 +110,5 @@ public class RoomInformation implements Parcelable
         {
             return new RoomInformation[size];
         }
-
     };
 }

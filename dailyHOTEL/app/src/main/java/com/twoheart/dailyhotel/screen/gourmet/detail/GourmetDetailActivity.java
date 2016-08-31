@@ -427,7 +427,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
-            params.put(AnalyticsManager.KeyType.RATING, gourmetDetail.satisfaction);
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetail.ratingValue));
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
 
             AnalyticsManager.getInstance(this).recordScreen(screen, params);

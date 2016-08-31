@@ -500,7 +500,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
-            params.put(AnalyticsManager.KeyType.RATING, stayDetail.satisfaction);
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayDetail.isShowOriginalPrice);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(screen, params);

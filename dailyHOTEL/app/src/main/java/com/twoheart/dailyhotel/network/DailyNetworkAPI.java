@@ -355,9 +355,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelDetailInformation(Object tag, int index, String date, int nights, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/detail" : "NjUkNDgkODgkOCQyNyQ=$MTc5Q0MyMRkY0N0Y1NkIzNTVCMjDM1OTJBRkY3MjlGNERBM0Q1LM0ZBNjE2QzdDNjlBMMzlCRUFEQzg1MDExMzBCOQQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/detail" : "NDgkNjMkMjAkMiQ4MCQ=$RTNBFRUI4MUEwM0ZBMjQ0YRkQ4M0ExQkY1QzcxQUE3QjI4OEREVOEE5QTZEM0U5OEPI0QjY4NUQyRkYyENjBFRDE4MA==$";
 
-        String params = String.format("?hotelIdx=%d&dateCheckIn=%s&lengthStay=%d", index, date, nights);
+        String params = String.format("?hotelIdx=%d&dateCheckIn=%s&stays=%d", index, date, nights);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
