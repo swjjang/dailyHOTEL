@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
@@ -52,13 +53,13 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     {
         if (checkInSaleTime == null || chekcOutSaleTime == null)
         {
-            setSaleRoomResult(-1);
+            setSaleRoomResult(-1, null);
             return;
         }
 
         if (mHotelIndex == -1)
         {
-            setSaleRoomResult(-1);
+            setSaleRoomResult(-1, null);
             return;
         }
 
@@ -80,16 +81,16 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
                 nights, mJsonResponseListener);
     }
 
-    private void setSaleRoomResult(int count)
+    private void setSaleRoomResult(int count, String message)
     {
         if (count < 1)
         {
-            showEmptyDialog();
+            showEmptyDialog(message);
         } else
         {
             if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
             {
-                showEmptyDialog();
+                showEmptyDialog(message);
                 return;
             }
 
@@ -124,12 +125,17 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         }
     }
 
-    private void showEmptyDialog()
+    private void showEmptyDialog(String message)
     {
         unLockUI();
 
         String title = getResources().getString(R.string.dialog_notice2);
-        String message = getResources().getString(R.string.stay_detail_calender_dialog_message);
+
+        if (Util.isTextEmpty(message) == true)
+        {
+            message = getResources().getString(R.string.stay_detail_calender_dialog_message);
+        }
+
         String confirm = getResources().getString(R.string.dialog_btn_text_confirm);
 
         showSimpleDialog(title, message, confirm, null);
@@ -144,13 +150,14 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            showEmptyDialog();
+            showEmptyDialog(null);
         }
 
         @Override
         public void onResponse(String url, JSONObject response)
         {
             int saleRoomCount = 0;
+            String message = null;
 
             try
             {
@@ -163,19 +170,25 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
                     dataJSONObject = response.getJSONObject("data");
                 }
 
-                if (msgCode != 100 || dataJSONObject == null)
+                if (msgCode == 100)
                 {
-                    saleRoomCount = 0;
-                } else
-                {
-                    JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("rooms");
-                    if (saleRoomJSONArray == null)
+                    if (dataJSONObject == null)
                     {
                         saleRoomCount = 0;
                     } else
                     {
-                        saleRoomCount = saleRoomJSONArray.length();
+                        JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("rooms");
+                        if (saleRoomJSONArray == null)
+                        {
+                            saleRoomCount = 0;
+                        } else
+                        {
+                            saleRoomCount = saleRoomJSONArray.length();
+                        }
                     }
+                } else
+                {
+                    message = response.getString("msg");
                 }
             } catch (Exception e)
             {
@@ -183,7 +196,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
             } finally
             {
                 unLockUI();
-                StayDetailCalendarActivity.this.setSaleRoomResult(saleRoomCount);
+                StayDetailCalendarActivity.this.setSaleRoomResult(saleRoomCount, message);
             }
         }
     };
