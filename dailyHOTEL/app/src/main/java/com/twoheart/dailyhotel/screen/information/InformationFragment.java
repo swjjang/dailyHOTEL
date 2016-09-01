@@ -440,7 +440,6 @@ public class InformationFragment extends BaseFragment implements Constants
                     }
                 }, true);
             }
-
         }
 
         @Override

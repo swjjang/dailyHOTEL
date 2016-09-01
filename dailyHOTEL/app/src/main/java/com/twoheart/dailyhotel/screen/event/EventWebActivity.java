@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -31,10 +32,12 @@ import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivit
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -63,6 +66,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
         GOURMET_BANNER,
         EVENT,
     }
+
+    private Handler mHandler = new Handler();
 
     public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName, SaleTime saleTime)
     {
@@ -644,6 +649,24 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                     {
                                         return;
                                     }
+                                } else if (dailyDeepLink.isHotelSearchResultView() == true)
+                                {
+                                    if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                    {
+                                        return;
+                                    }
+                                } else if (dailyDeepLink.isGourmetSearchResultView() == true)
+                                {
+                                    if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                    {
+                                        return;
+                                    }
+                                } else if (dailyDeepLink.isCouponView() == true)
+                                {
+                                    if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                                    {
+                                        return;
+                                    }
                                 } else
                                 {
                                     Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
@@ -711,6 +734,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         @JavascriptInterface
         public void interlLink(String uri)
+        {
+            internalLink(uri);
+        }
+
+        @JavascriptInterface
+        public void internalLink(String uri)
         {
             switch (mSourceType)
             {
@@ -820,7 +849,89 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void enabledBenefitAlarm()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            boolean isBenefitAlarm = DailyPreference.getInstance(EventWebActivity.this).isUserBenefitAlarm();
+
+            if (isBenefitAlarm == false)
+            {
+                // 자바 스크립트 호출시에 스레드가 다른것 같다. 에러나서 수정
+                mHandler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        lockUI();
+
+                        DailyNetworkAPI.getInstance(EventWebActivity.this).requestUpdateBenefitAgreement(mNetworkTag, true, new DailyHotelJsonResponseListener()
+                        {
+                            @Override
+                            public void onResponse(String url, JSONObject response)
+                            {
+                                unLockUI();
+
+                                try
+                                {
+                                    int msgCode = response.getInt("msgCode");
+
+                                    if (msgCode == 100)
+                                    {
+
+                                        JSONObject dataJSONObject = response.getJSONObject("data");
+                                        String serverDate = dataJSONObject.getString("serverDate");
+
+                                        boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
+
+                                        onBenefitAgreement(isAgreed, DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일"));
+                                    } else
+                                    {
+                                        String message = response.getString("msg");
+                                        EventWebActivity.this.onErrorPopupMessage(msgCode, message);
+                                    }
+                                } catch (Exception e)
+                                {
+                                    EventWebActivity.this.onError(e);
+                                }
+                            }
+
+                            public void onBenefitAgreement(final boolean isAgree, String updateDate)
+                            {
+                                DailyPreference.getInstance(EventWebActivity.this).setUserBenefitAlarm(isAgree);
+                                AppboyManager.setPushEnabled(EventWebActivity.this, isAgree);
+
+                                if (isAgree == true)
+                                {
+                                    // 혜택 알림 설정이 off --> on 일때
+                                    String title = getString(R.string.label_setting_alarm);
+                                    String message = getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+                                    String positive = getString(R.string.dialog_btn_text_confirm);
+
+                                    showSimpleDialog(title, message, positive, null);
+                                } else
+                                {
+                                }
+                            }
+
+                            @Override
+                            public void onErrorResponse(final VolleyError volleyError)
+                            {
+                                unLockUI();
+
+                                EventWebActivity.this.onErrorResponse(volleyError);
+                            }
+                        });
+                    }
+                });
+            } else
+            {
+                // 이미 햬택을 받고 계십니다.
+                releaseUiComponent();
+
+                showSimpleDialog(null, getString(R.string.dialog_msg_already_agree_benefit_on), getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
     }
 }
