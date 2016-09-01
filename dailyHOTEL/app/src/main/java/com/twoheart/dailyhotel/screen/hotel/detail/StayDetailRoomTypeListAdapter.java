@@ -12,7 +12,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -94,10 +93,8 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         saleRoomInformationViewHolder.roomTypeTextView.setText(roomInformation.roomName);
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        String currency = mContext.getString(R.string.currency);
-        String price = comma.format(roomInformation.price);
-        String discountPrice = comma.format(roomInformation.averageDiscount);
+        String price = Util.getPriceFormat(mContext, roomInformation.price, false);
+        String discountPrice = Util.getPriceFormat(mContext, roomInformation.averageDiscount, false);
 
         if (roomInformation.price <= 0 || roomInformation.price <= roomInformation.averageDiscount)
         {
@@ -106,10 +103,10 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         } else
         {
             saleRoomInformationViewHolder.priceTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.priceTextView.setText(price + currency);
+            saleRoomInformationViewHolder.priceTextView.setText(price);
         }
 
-        saleRoomInformationViewHolder.discountPriceTextView.setText(discountPrice + currency);
+        saleRoomInformationViewHolder.discountPriceTextView.setText(discountPrice);
 
         if (Util.isTextEmpty(roomInformation.option) == true)
         {

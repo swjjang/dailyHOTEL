@@ -11,6 +11,7 @@ public class TicketInformation implements Parcelable
     public String name;
     public String option;
     public String benefit;
+    public int price;
     public int discountPrice;
     public String placeName;
 
@@ -25,6 +26,7 @@ public class TicketInformation implements Parcelable
         name = jsonObject.getString("ticket_name").trim();
         option = jsonObject.getString("option").trim();
         benefit = jsonObject.getString("ticket_benefit").trim();
+        price = jsonObject.getInt("price");
         discountPrice = jsonObject.getInt("discount");
 
         this.placeName = placeName;
@@ -37,6 +39,7 @@ public class TicketInformation implements Parcelable
         dest.writeString(name);
         dest.writeString(option);
         dest.writeString(benefit);
+        dest.writeInt(price);
         dest.writeInt(discountPrice);
         dest.writeString(placeName);
     }
@@ -47,6 +50,7 @@ public class TicketInformation implements Parcelable
         name = in.readString();
         option = in.readString();
         benefit = in.readString();
+        price = in.readInt();
         discountPrice = in.readInt();
         placeName = in.readString();
     }
