@@ -28,11 +28,13 @@ public class SignupStep2Activity extends BaseActivity
     private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
+    private static final int VERIFY_PHONE_NUMBER_COUNT = 4;
 
     private SignupStep2Layout mSignupStep2Layout;
     private SignupStep2NetworkController mNetworkController;
     private String mCountryCode;
     private String mSignupKey, mEmail, mPassword, mRecommender;
+    private int mRequestVerficationCount;
 
     private Handler mRetryHandler;
 
@@ -70,6 +72,8 @@ public class SignupStep2Activity extends BaseActivity
 
         mCountryCode = Util.getCountryNameNCode(this);
         mSignupStep2Layout.setCountryCode(mCountryCode);
+
+        mRequestVerficationCount = 0;
     }
 
     private void initUserInformation(Intent intent)
@@ -201,6 +205,20 @@ public class SignupStep2Activity extends BaseActivity
             unLockUI();
 
             mSignupStep2Layout.showVerificationVisible();
+
+            if (++mRequestVerficationCount == VERIFY_PHONE_NUMBER_COUNT)
+            {
+                try
+                {
+                    String[] phoneNumber = mSignupStep2Layout.getPhoneNumber().split(" ");
+                    String number = phoneNumber[1].replaceAll("\\(|\\)", "");
+
+                    message = getString(R.string.message_signup_step2_check_your_phonenumber, number);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
 
             showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
