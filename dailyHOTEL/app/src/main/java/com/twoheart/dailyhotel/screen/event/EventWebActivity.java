@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -538,6 +539,16 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    private boolean moveDeepLinkCouponList(Context context)
+    {
+        DailyDeepLink.getInstance().clear();
+
+        Intent intent = CouponListActivity.newInstance(context);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
+
+        return true;
+    }
+
     private void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -746,6 +757,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             {
                                 return;
                             }
+                        } else if (DailyDeepLink.getInstance().isCouponView() == true)
+                        {
+                            if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                            {
+                                return;
+                            }
                         }
                     }
                     break;
@@ -798,6 +815,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 EventWebActivity.this.downloadCoupon(couponCode, deepLink);
             }
+        }
+
+        @JavascriptInterface
+        public void enabledBenefitAlarm()
+        {
+
         }
     }
 }
