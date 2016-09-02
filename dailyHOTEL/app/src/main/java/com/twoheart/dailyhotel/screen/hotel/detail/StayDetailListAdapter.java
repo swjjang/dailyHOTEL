@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -233,7 +234,8 @@ public class StayDetailListAdapter extends BaseAdapter
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, stayDetail.ratingValue, stayDetail.ratingPersons));
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, stayDetail.ratingValue, decimalFormat.format(stayDetail.ratingPersons)));
         }
 
         // 할인 쿠폰
