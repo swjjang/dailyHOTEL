@@ -37,7 +37,7 @@ public class GourmetDetail extends PlaceDetail
 
         subCategory = jsonObject.getString("categorySub");
 
-        name = jsonObject.getString("restaurantName");
+        name = jsonObject.getString("name");
         address = jsonObject.getString("address");
 
         longitude = jsonObject.getDouble("longitude");
