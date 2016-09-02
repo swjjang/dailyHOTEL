@@ -38,42 +38,13 @@ public abstract class PlaceParams implements Parcelable
 
     public abstract String toParamsString();
 
+    public abstract void setSortType(Constants.SortType sortType);
+
     public void setPageInformation(int page, int limit, boolean isDetails)
     {
         this.page = page;
         this.limit = limit;
         this.details = isDetails;
-    }
-
-    public void setSortType(Constants.SortType sortType)
-    {
-        switch (sortType)
-        {
-            case DEFAULT:
-                sortProperty = null;
-                sortDirection = null;
-                break;
-
-            case DISTANCE:
-                sortProperty = "Distance";
-                sortDirection = "Asc";
-                break;
-
-            case LOW_PRICE:
-                sortProperty = "Price";
-                sortDirection = "Asc";
-                break;
-
-            case HIGH_PRICE:
-                sortProperty = "Price";
-                sortDirection = "Desc";
-                break;
-
-            case SATISFACTION:
-                sortProperty = "Rating";
-                sortDirection = null;
-                break;
-        }
     }
 
     public Constants.SortType getSortType()
