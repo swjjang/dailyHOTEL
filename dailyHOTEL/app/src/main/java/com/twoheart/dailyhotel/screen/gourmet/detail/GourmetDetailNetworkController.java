@@ -37,7 +37,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
                 JSONObject dataJSONObject = null;
 
