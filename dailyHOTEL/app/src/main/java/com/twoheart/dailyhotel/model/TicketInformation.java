@@ -22,7 +22,7 @@ public class TicketInformation implements Parcelable
 
     public TicketInformation(String placeName, JSONObject jsonObject) throws Exception
     {
-        index = jsonObject.getInt("saleRecoIdx");
+        index = jsonObject.getInt("saleIdx");
         name = jsonObject.getString("name").trim();
         option = jsonObject.getString("option").trim();
         benefit = jsonObject.getString("benefit").trim();

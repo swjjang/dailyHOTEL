@@ -127,7 +127,7 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // Ticket Information
-        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("restaurantTickets");
+        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
         int ticketInformationLength = ticketInformationJSONArray.length();
 
         mTicketInformationList = new ArrayList<>(ticketInformationLength);
