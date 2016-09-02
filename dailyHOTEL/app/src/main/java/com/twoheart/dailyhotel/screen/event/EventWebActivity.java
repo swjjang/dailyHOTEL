@@ -60,6 +60,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
     private String mDeepLinkUrl;
     private String mConfirmText;
 
+    private JavaScriptExtention mJavaScriptExtention;
+
     public enum SourceType
     {
         HOTEL_BANNER,
@@ -138,7 +140,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         // 추가
-        webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+        mJavaScriptExtention = new JavaScriptExtention();
+
+        webView.addJavascriptInterface(mJavaScriptExtention, "android");
         webView.clearCache(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
@@ -643,11 +647,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                         String validFrom = dataJSONObject.getString("validFrom");
                         String validTo = dataJSONObject.getString("validTo");
-
-                        //                        String message = getString(R.string.message_eventweb_download_coupon//
-                        //                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
-                        //                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
-
                         String message = getString(R.string.message_eventweb_download_coupon//
                             , DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
                             , DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
@@ -659,66 +658,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             @Override
                             public void onClick(View v)
                             {
-                                DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
-                                dailyDeepLink.setDeepLink(Uri.parse(deepLink));
-
-                                if (mSaleTime == null)
+                                if (mJavaScriptExtention == null)
                                 {
-                                    Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setData(Uri.parse(deepLink));
-
-                                    startActivity(intent);
-                                } else
-                                {
-                                    switch (mSourceType)
-                                    {
-                                        case HOTEL_BANNER:
-                                        case GOURMET_BANNER:
-                                        {
-                                            if (dailyDeepLink.isHotelDetailView() == true)
-                                            {
-                                                if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
-                                                {
-                                                    return;
-                                                }
-                                            } else if (dailyDeepLink.isGourmetDetailView() == true)
-                                            {
-                                                if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
-                                                {
-                                                    return;
-                                                }
-                                            } else if (dailyDeepLink.isHotelSearchResultView() == true)
-                                            {
-                                                if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                                {
-                                                    return;
-                                                }
-                                            } else if (dailyDeepLink.isGourmetSearchResultView() == true)
-                                            {
-                                                if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                                {
-                                                    return;
-                                                }
-                                            } else if (dailyDeepLink.isCouponView() == true)
-                                            {
-                                                if (moveDeepLinkCouponList(EventWebActivity.this) == true)
-                                                {
-                                                    return;
-                                                }
-                                            }
-                                            break;
-                                        }
-
-                                        case EVENT:
-                                            break;
-                                    }
-
-                                    Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
-                                    intent.setData(Uri.parse(deepLink));
-
-                                    startActivity(intent);
+                                    return;
                                 }
+
+                                mJavaScriptExtention.internalLink(deepLink);
                             }
                         }, null);
                     } else
@@ -846,6 +791,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse(uri));
 
             startActivity(intent);
