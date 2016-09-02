@@ -37,7 +37,7 @@ public class GourmetDetail extends PlaceDetail
 
         subCategory = jsonObject.getString("categorySub");
 
-        name = jsonObject.getString("restaurantName");
+        name = jsonObject.getString("name");
         address = jsonObject.getString("address");
 
         longitude = jsonObject.getDouble("longitude");
@@ -48,7 +48,7 @@ public class GourmetDetail extends PlaceDetail
         if (ratingShow == true)
         {
             ratingValue = jsonObject.getInt("ratingValue");
-            rate = jsonObject.getInt("rate");
+            ratingPersons = jsonObject.getInt("ratingPersons");
         }
 
         // TODO : pictogram
@@ -60,22 +60,22 @@ public class GourmetDetail extends PlaceDetail
             mPictogramList.add(Pictogram.parking);
         }
         // 발렛가능
-        if (jsonObject.getBoolean("vallet") == true)
+        if (jsonObject.getBoolean("valet") == true)
         {
             mPictogramList.add(Pictogram.valet);
         }
         // 프라이빗룸
-        if (jsonObject.getBoolean("private_room") == true)
+        if (jsonObject.getBoolean("privateRoom") == true)
         {
             mPictogramList.add(Pictogram.privateRoom);
         }
         // 단체예약
-        if (jsonObject.getBoolean("group_booking") == true)
+        if (jsonObject.getBoolean("groupBooking") == true)
         {
             mPictogramList.add(Pictogram.groupBooking);
         }
         // 베이비시트
-        if (jsonObject.getBoolean("baby_seat") == true)
+        if (jsonObject.getBoolean("babySeat") == true)
         {
             mPictogramList.add(Pictogram.babySeat);
         }
@@ -127,7 +127,7 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // Ticket Information
-        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("restaurantTickets");
+        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
         int ticketInformationLength = ticketInformationJSONArray.length();
 
         mTicketInformationList = new ArrayList<>(ticketInformationLength);

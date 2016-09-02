@@ -22,8 +22,8 @@ public class TicketInformation implements Parcelable
 
     public TicketInformation(String placeName, JSONObject jsonObject) throws Exception
     {
-        index = jsonObject.getInt("saleRecoIdx");
-        name = jsonObject.getString("name").trim();
+        index = jsonObject.getInt("saleIdx");
+        name = jsonObject.getString("ticketName").trim();
         option = jsonObject.getString("option").trim();
         benefit = jsonObject.getString("benefit").trim();
         price = jsonObject.getInt("price");

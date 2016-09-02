@@ -233,7 +233,7 @@ public class StayDetailListAdapter extends BaseAdapter
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, stayDetail.ratingValue, stayDetail.rate));
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, stayDetail.ratingValue, stayDetail.ratingPersons));
         }
 
         // 할인 쿠폰
