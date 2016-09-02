@@ -70,7 +70,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
         lockUI();
 
-        DailyNetworkAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyMMdd"), mJsonResponseListener);
+        DailyNetworkAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mJsonResponseListener);
     }
 
     private void setSaleTicketResult(int count)
@@ -136,7 +136,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
                 JSONObject dataJSONObject = null;
 
@@ -145,12 +145,12 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
                     dataJSONObject = response.getJSONObject("data");
                 }
 
-                if (msgCode != 0 || dataJSONObject == null)
+                if (msgCode != 100 || dataJSONObject == null)
                 {
                     saleTicketCount = 0;
                 } else
                 {
-                    JSONArray ticketInfoJSONArray = dataJSONObject.getJSONArray("ticket_info");
+                    JSONArray ticketInfoJSONArray = dataJSONObject.getJSONArray("tickets");
                     if (ticketInfoJSONArray == null)
                     {
                         saleTicketCount = 0;
