@@ -978,7 +978,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         unLockUI();
 
-        updatePaymentPrice((HotelPaymentInformation)mPaymentInformation);
+        updatePaymentPrice((HotelPaymentInformation) mPaymentInformation);
 
         showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
         {
@@ -1060,14 +1060,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(layoutParams);
 
-        int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01//
-            , R.string.dialog_msg_hotel_payment_message14//
-            , R.string.dialog_msg_hotel_payment_message02//
-            , R.string.dialog_msg_hotel_payment_message03//
-            , R.string.dialog_msg_hotel_payment_message08//
-            , R.string.dialog_msg_hotel_payment_message07};
+        int[] messageResIds;
+        if (mPensionPopupMessageType != 0)
+        {
+            messageResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, PlacePaymentInformation.PaymentType.EASY_CARD);
+        } else
+        {
+            messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                , R.string.dialog_msg_hotel_payment_message14//
+                , R.string.dialog_msg_hotel_payment_message02//
+                , R.string.dialog_msg_hotel_payment_message03//
+                , R.string.dialog_msg_hotel_payment_message07};
+        }
 
-        messageResIds = paymentDialogMessage(mPensionPopupMessageType, messageResIds);
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this);
         finalCheckLayout.setMessages(messageResIds);
@@ -1196,37 +1201,50 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         {
             // 신용카드 일반 결제
             case CARD:
-                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14//
-                    , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message06};
 
-                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
+                if (mPensionPopupMessageType != 0)
+                {
+                    textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
+                } else
+                {
+                    textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                }
+
                 break;
 
             // 핸드폰 결제
             case PHONE_PAY:
-                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14//
-                    , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message04//
-                    , R.string.dialog_msg_hotel_payment_message06};
-
-                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
+                if (mPensionPopupMessageType != 0)
+                {
+                    textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
+                } else
+                {
+                    textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                }
                 break;
 
             // 계좌 이체
             case VBANK:
-                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14//
-                    , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message05//
-                    , R.string.dialog_msg_hotel_payment_message06};
-
-                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
+                if (mPensionPopupMessageType != 0)
+                {
+                    textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
+                } else
+                {
+                    textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message05//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                }
                 break;
 
             default:
@@ -1968,50 +1986,56 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         setCouponSelected(false);
     }
 
-    private int[] paymentDialogMessage(int messageType, int[] currentMessages)
+    private int[] pensionPaymentDialogMessage(int messageType, PlacePaymentInformation.PaymentType paymentType)
     {
-        int[] messages;
-        int addMessagesCount = 2;
-        int startPosition = 2;
+        int[] messageList;
+        if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
+        {
+            messageList = new int[6];
+        } else
+        {
+            messageList = new int[5];
+        }
+
+        messageList[0] = R.string.dialog_msg_hotel_payment_message01;
+        messageList[1] = R.string.dialog_msg_hotel_payment_message14;
 
         switch (messageType)
         {
             case 1:
             case 2:
             case 10:
-                messages = new int[currentMessages.length + addMessagesCount];
-                messages[0] = currentMessages[0];
-                messages[1] = currentMessages[1];
-                messages[2] = R.string.dialog_msg_hotel_payment_message09;
-                messages[3] = R.string.dialog_msg_hotel_payment_message15;
-                System.arraycopy(currentMessages, startPosition, messages, startPosition + addMessagesCount, currentMessages.length - startPosition);
+                messageList[2] = R.string.dialog_msg_hotel_payment_message09;
                 break;
 
             case 3:
             case 12:
-                messages = new int[currentMessages.length + addMessagesCount];
-                messages[0] = currentMessages[0];
-                messages[1] = currentMessages[1];
-                messages[2] = R.string.dialog_msg_hotel_payment_message11;
-                messages[3] = R.string.dialog_msg_hotel_payment_message15;
-                System.arraycopy(currentMessages, startPosition, messages, startPosition + addMessagesCount, currentMessages.length - startPosition);
+                messageList[2] = R.string.dialog_msg_hotel_payment_message11;
                 break;
 
             case 11:
-                messages = new int[currentMessages.length + addMessagesCount];
-                messages[0] = currentMessages[0];
-                messages[1] = currentMessages[1];
-                messages[2] = R.string.dialog_msg_hotel_payment_message12;
-                messages[3] = R.string.dialog_msg_hotel_payment_message15;
-                System.arraycopy(currentMessages, startPosition, messages, startPosition + addMessagesCount, currentMessages.length - startPosition);
+                messageList[2] = R.string.dialog_msg_hotel_payment_message12;
                 break;
 
             default:
-                messages = currentMessages;
                 break;
         }
 
-        return messages;
+        messageList[3] = R.string.dialog_msg_hotel_payment_message03;
+
+        if (PlacePaymentInformation.PaymentType.EASY_CARD == paymentType)
+        {
+            messageList[4] = R.string.dialog_msg_hotel_payment_message07;
+        } else if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
+        {
+            messageList[4] = R.string.dialog_msg_hotel_payment_message05;
+            messageList[5] = R.string.dialog_msg_hotel_payment_message06;
+        } else
+        {
+            messageList[4] = R.string.dialog_msg_hotel_payment_message06;
+        }
+
+        return messageList;
     }
 
     @Override
