@@ -59,12 +59,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         mListView = (DailyAnimatedExpandableListView) inflater.inflate(R.layout.fragment_region_list, container, false);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
 
-        View headerView = LayoutInflater.from(mBaseActivity).inflate(R.layout.layout_region_around_search_header, null);
-
-        initHeaderLayout(headerView);
-
-        mListView.addHeaderView(headerView);
-
         return mListView;
     }
 
@@ -90,16 +84,20 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         }
     }
 
-    private void initHeaderLayout(View view)
+    private View getHeaderLayout()
     {
-        View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
+        View headerView = LayoutInflater.from(mBaseActivity).inflate(R.layout.layout_region_around_search_header, null);
+
+        View searchAroundLayout = headerView.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(mOnHeaderClickListener);
 
-        TextView text01View = (TextView) view.findViewById(R.id.text01View);
+        TextView text01View = (TextView) headerView.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceText());
 
-        mTermsOfLocationView = view.findViewById(R.id.text02View);
+        mTermsOfLocationView = headerView.findViewById(R.id.text02View);
         updateTermsOfLocationView();
+
+        return headerView;
     }
 
     public void updateTermsOfLocationView()
@@ -127,6 +125,11 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         {
             Util.restartApp(getContext());
             return;
+        }
+
+        if (mListView.getHeaderViewsCount() == 0)
+        {
+            mListView.addHeaderView(getHeaderLayout());
         }
 
         mListView.setAdapter(mAdapter);
