@@ -240,7 +240,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, gourmetDetail.ratingValue, gourmetDetail.rate));
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, gourmetDetail.ratingValue, gourmetDetail.ratingPersons));
         }
 
         // 날짜

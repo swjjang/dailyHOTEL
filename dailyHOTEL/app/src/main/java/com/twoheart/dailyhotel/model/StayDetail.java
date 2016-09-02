@@ -54,7 +54,7 @@ public class StayDetail extends PlaceDetail
         if (ratingShow == true)
         {
             ratingValue = jsonObject.getInt("ratingValue");
-            rate = jsonObject.getInt("rate");
+            ratingPersons = jsonObject.getInt("ratingPersons");
         }
 
         // Pictrogram

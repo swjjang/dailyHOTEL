@@ -12,7 +12,7 @@ public abstract class PlaceDetail
     public String address;
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
     public String benefit;
-    public int rate;
+    public int ratingPersons;
     public int ratingValue;
     public double latitude;
     public double longitude;
