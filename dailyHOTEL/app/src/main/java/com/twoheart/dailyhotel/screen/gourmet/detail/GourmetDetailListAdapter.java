@@ -373,12 +373,16 @@ public class GourmetDetailListAdapter extends BaseAdapter
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int emptyCount = GRID_COLUME_COUNT - (list.size() % GRID_COLUME_COUNT);
-        for (int i = 0; i < emptyCount; i++)
-        {
-            gridLayout.addView(getGridLayoutItemView(mContext, GourmetDetail.Pictogram.none, isSingleLine));
-        }
+        int columnCount = list.size() % GRID_COLUME_COUNT;
 
+        if (columnCount != 0)
+        {
+            int addViewCount = GRID_COLUME_COUNT - columnCount;
+            for (int i = 0; i < addViewCount; i++)
+            {
+                gridLayout.addView(getGridLayoutItemView(mContext, GourmetDetail.Pictogram.none, isSingleLine));
+            }
+        }
         return view;
     }
 
