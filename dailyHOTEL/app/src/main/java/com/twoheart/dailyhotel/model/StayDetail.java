@@ -31,6 +31,7 @@ public class StayDetail extends PlaceDetail
         this.listCount = listCount;
     }
 
+    @Override
     public void setData(JSONObject jsonObject) throws Exception
     {
         try
@@ -97,16 +98,16 @@ public class StayDetail extends PlaceDetail
 
         // Image Url
         String imageUrl = jsonObject.getString("imgUrl");
-        JSONObject pahtUrlJSONObject = jsonObject.getJSONObject("imgPath");
+        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
 
-        Iterator<String> iterator = pahtUrlJSONObject.keys();
+        Iterator<String> iterator = pathUrlJSONObject.keys();
         while (iterator.hasNext())
         {
             String key = iterator.next();
 
             try
             {
-                JSONArray pathJSONArray = pahtUrlJSONObject.getJSONArray(key);
+                JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
 
                 int length = pathJSONArray.length();
                 mImageInformationList = new ArrayList<>(pathJSONArray.length());

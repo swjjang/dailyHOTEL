@@ -22,7 +22,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onVerification(String time);
+        void onVerification(String message);
 
         void onSignUp(int notificationUid, String gcmRegisterId);
 
@@ -130,7 +130,8 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 {
                     case 100:
                     {
-                        //                        JSONObject dataJONObject = response.getJSONObject("data");
+//                        JSONObject dataJONObject = response.getJSONObject("data");
+//                        String phone = dataJONObject.getString("phone");
                         String message = response.getString("msg");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);

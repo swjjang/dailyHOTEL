@@ -69,7 +69,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private Handler mHandler = new Handler();
 
-    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName, SaleTime saleTime)
+    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName)
     {
         if (sourceType == null || Util.isTextEmpty(url) == true)
         {
@@ -79,7 +79,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = new Intent(context, EventWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
 
         if (Util.isTextEmpty(eventName) == true)
         {
@@ -100,7 +99,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = getIntent();
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
-        //        url = "http://mobile.dailyhotel.co.kr/link_test.html";
 
         try
         {
@@ -111,13 +109,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
         if (Util.isTextEmpty(url) == true)
         {
             finish();
             return;
         }
+
+        requestCommonDatetime(url);
 
         mEventName = intent.getStringExtra(INTENT_EXTRA_DATA_EVENTNAME);
 
@@ -193,6 +191,38 @@ public class EventWebActivity extends WebViewActivity implements Constants
         });
     }
 
+    private void requestCommonDatetime(final String url)
+    {
+        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+            }
+
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    long currentDateTime = response.getLong("currentDateTime");
+                    long dailyDateTime = response.getLong("dailyDateTime");
+
+                    if (mSaleTime == null)
+                    {
+                        mSaleTime = new SaleTime();
+                    }
+
+                    mSaleTime.setCurrentTime(currentDateTime);
+                    mSaleTime.setDailyTime(dailyDateTime);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+    }
+
     @Override
     protected void onStart()
     {
@@ -228,11 +258,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
     protected void onResume()
     {
         super.onResume();
-
-        if (mSaleTime == null)
-        {
-            Util.restartApp(this);
-        }
     }
 
     @Override
@@ -637,43 +662,53 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                 DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
                                 dailyDeepLink.setDeepLink(Uri.parse(deepLink));
 
-                                if (dailyDeepLink.isHotelDetailView() == true)
-                                {
-                                    if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
-                                    {
-                                        return;
-                                    }
-                                } else if (dailyDeepLink.isGourmetDetailView() == true)
-                                {
-                                    if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
-                                    {
-                                        return;
-                                    }
-                                } else if (dailyDeepLink.isHotelSearchResultView() == true)
-                                {
-                                    if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                    {
-                                        return;
-                                    }
-                                } else if (dailyDeepLink.isGourmetSearchResultView() == true)
-                                {
-                                    if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                    {
-                                        return;
-                                    }
-                                } else if (dailyDeepLink.isCouponView() == true)
-                                {
-                                    if (moveDeepLinkCouponList(EventWebActivity.this) == true)
-                                    {
-                                        return;
-                                    }
-                                } else
+                                if (mSaleTime == null)
                                 {
                                     Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.setData(Uri.parse(deepLink));
 
                                     startActivity(intent);
+                                } else
+                                {
+                                    if (dailyDeepLink.isHotelDetailView() == true)
+                                    {
+                                        if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
+                                        {
+                                            return;
+                                        }
+                                    } else if (dailyDeepLink.isGourmetDetailView() == true)
+                                    {
+                                        if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
+                                        {
+                                            return;
+                                        }
+                                    } else if (dailyDeepLink.isHotelSearchResultView() == true)
+                                    {
+                                        if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                        {
+                                            return;
+                                        }
+                                    } else if (dailyDeepLink.isGourmetSearchResultView() == true)
+                                    {
+                                        if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                        {
+                                            return;
+                                        }
+                                    } else if (dailyDeepLink.isCouponView() == true)
+                                    {
+                                        if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                                        {
+                                            return;
+                                        }
+                                    } else
+                                    {
+                                        Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.setData(Uri.parse(deepLink));
+
+                                        startActivity(intent);
+                                    }
                                 }
                             }
                         }, null);

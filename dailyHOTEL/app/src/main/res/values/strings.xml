@@ -549,6 +549,7 @@
     <string name="message_signup_step1_guide">데일리호텔 회원가입하시고 다양한 혜택을 누려보세요!</string>
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
+    <string name="message_signup_step2_check_your_phonenumber">짧은 시간 내 인증번호를\n여러번 요청할 수 없습니다.\n입력하신 전화번호(%1$s)가\n맞는지 확인해주시거나\nSMS 수신이 시간이 걸릴 수 있으니\n잠시만 기다려주세요.</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>
@@ -895,11 +896,4 @@
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
-
-    <string name="code_parking">Parking</string>
-    <string name="code_valet_available">Valet</string>
-    <string name="code_private_room">PrivateRoom</string>
-    <string name="code_group_booking">GroupBooking</string>
-    <string name="code_baby_seat">BabySeat</string>
-    <string name="code_corkage">Corkage</string>
 </resources>
