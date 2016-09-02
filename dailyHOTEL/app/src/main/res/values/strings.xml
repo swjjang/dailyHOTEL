@@ -200,7 +200,6 @@
     <string name="toast_msg_dont_support_googleplay">연결 가능한 앱이 없습니다.\n구글 플레이 스토어 앱 설치를 확인해 주세요.</string>
 
     <!-- Dialog Messages -->
-
     <string name="dialog_title_notice">공지</string>
     <string name="dialog_msg_sent_email">이메일이 발송되었습니다.</string>
     <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어있지 않습니다.\n설치를 눌러 진행해주세요.\n취소를 누르면 결제가 취소됩니다.</string>

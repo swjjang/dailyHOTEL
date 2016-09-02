@@ -671,44 +671,53 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                     startActivity(intent);
                                 } else
                                 {
-                                    if (dailyDeepLink.isHotelDetailView() == true)
+                                    switch (mSourceType)
                                     {
-                                        if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
+                                        case HOTEL_BANNER:
+                                        case GOURMET_BANNER:
                                         {
-                                            return;
+                                            if (dailyDeepLink.isHotelDetailView() == true)
+                                            {
+                                                if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
+                                                {
+                                                    return;
+                                                }
+                                            } else if (dailyDeepLink.isGourmetDetailView() == true)
+                                            {
+                                                if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
+                                                {
+                                                    return;
+                                                }
+                                            } else if (dailyDeepLink.isHotelSearchResultView() == true)
+                                            {
+                                                if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                                {
+                                                    return;
+                                                }
+                                            } else if (dailyDeepLink.isGourmetSearchResultView() == true)
+                                            {
+                                                if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                                {
+                                                    return;
+                                                }
+                                            } else if (dailyDeepLink.isCouponView() == true)
+                                            {
+                                                if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                                                {
+                                                    return;
+                                                }
+                                            }
+                                            break;
                                         }
-                                    } else if (dailyDeepLink.isGourmetDetailView() == true)
-                                    {
-                                        if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
-                                        {
-                                            return;
-                                        }
-                                    } else if (dailyDeepLink.isHotelSearchResultView() == true)
-                                    {
-                                        if (moveDeepLinkStaySearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                        {
-                                            return;
-                                        }
-                                    } else if (dailyDeepLink.isGourmetSearchResultView() == true)
-                                    {
-                                        if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                        {
-                                            return;
-                                        }
-                                    } else if (dailyDeepLink.isCouponView() == true)
-                                    {
-                                        if (moveDeepLinkCouponList(EventWebActivity.this) == true)
-                                        {
-                                            return;
-                                        }
-                                    } else
-                                    {
-                                        Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.setData(Uri.parse(deepLink));
 
-                                        startActivity(intent);
+                                        case EVENT:
+                                            break;
                                     }
+
+                                    Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+                                    intent.setData(Uri.parse(deepLink));
+
+                                    startActivity(intent);
                                 }
                             }
                         }, null);
