@@ -398,10 +398,15 @@ public class StayDetailListAdapter extends BaseAdapter
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int emptyCount = GRID_COLUME_COUNT - (list.size() % GRID_COLUME_COUNT);
-        for (int i = 0; i < emptyCount; i++)
+        int columnCount = list.size() % GRID_COLUME_COUNT;
+
+        if (columnCount != 0)
         {
-            gridLayout.addView(getGridLayoutItemView(mContext, StayDetail.Pictogram.none, isSingleLine));
+            int addEmptyViewCount = GRID_COLUME_COUNT - columnCount;
+            for (int i = 0; i < addEmptyViewCount; i++)
+            {
+                gridLayout.addView(getGridLayoutItemView(mContext, StayDetail.Pictogram.none, isSingleLine));
+            }
         }
 
         return view;

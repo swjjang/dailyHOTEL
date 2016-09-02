@@ -51,8 +51,12 @@ public class GourmetDetail extends PlaceDetail
             ratingPersons = jsonObject.getInt("ratingPersons");
         }
 
-        // TODO : pictogram
-        mPictogramList = new ArrayList<>();
+        if (mPictogramList == null)
+        {
+            mPictogramList = new ArrayList<>();
+        }
+
+        mPictogramList.clear();
 
         // 주차가능
         if (jsonObject.getBoolean("parking") == true)
@@ -145,6 +149,11 @@ public class GourmetDetail extends PlaceDetail
 
     public ArrayList<Pictogram> getPictogramList()
     {
+        if (mPictogramList == null)
+        {
+            mPictogramList = new ArrayList<>();
+        }
+
         return mPictogramList;
     }
 
