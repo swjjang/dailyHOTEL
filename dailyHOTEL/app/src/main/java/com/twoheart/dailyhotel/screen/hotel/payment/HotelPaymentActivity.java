@@ -978,6 +978,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         unLockUI();
 
+        updatePaymentPrice((HotelPaymentInformation)mPaymentInformation);
+
         showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
         {
             @Override
@@ -2552,7 +2554,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         if (isOnSale == false || availableRooms == 0)
                         {
                             showStopOnSaleDialog();
-                        } else if (mIsChangedPrice == true)
+                        } else if (isChangedPrice() == true)
                         {
                             mIsChangedPrice = false;
 
