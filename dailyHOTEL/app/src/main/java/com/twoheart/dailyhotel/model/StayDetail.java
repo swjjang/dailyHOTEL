@@ -58,7 +58,12 @@ public class StayDetail extends PlaceDetail
         }
 
         // Pictrogram
-        mPictogramList = new ArrayList<>();
+        if (mPictogramList == null)
+        {
+            mPictogramList = new ArrayList<>();
+        }
+
+        mPictogramList.clear();
 
         // 주차
         if (jsonObject.getBoolean("parking") == true)
@@ -164,6 +169,11 @@ public class StayDetail extends PlaceDetail
 
     public ArrayList<Pictogram> getPictogramList()
     {
+        if (mPictogramList == null)
+        {
+            mPictogramList = new ArrayList<>();
+        }
+
         return mPictogramList;
     }
 
