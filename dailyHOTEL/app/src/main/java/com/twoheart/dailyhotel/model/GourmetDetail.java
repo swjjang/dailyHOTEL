@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +15,7 @@ public class GourmetDetail extends PlaceDetail
 {
     public Gourmet.Grade grade;
     public String category;
+    public String subCategory;
     private ArrayList<Pictogram> mPictogramList;
 
     protected ArrayList<TicketInformation> mTicketInformationList;
@@ -33,12 +33,11 @@ public class GourmetDetail extends PlaceDetail
     {
         grade = Gourmet.Grade.gourmet;
 
-        if (Util.isTextEmpty(category) == true)
-        {
-            category = jsonObject.getString("category");
-        }
+        category = jsonObject.getString("category");
 
-        name = jsonObject.getString("restaurant_name");
+        subCategory = jsonObject.getString("categorySub");
+
+        name = jsonObject.getString("restaurantName");
         address = jsonObject.getString("address");
 
         longitude = jsonObject.getDouble("longitude");
@@ -46,24 +45,58 @@ public class GourmetDetail extends PlaceDetail
 
         boolean ratingShow = jsonObject.getBoolean("ratingShow");
 
-        if(ratingShow == true)
+        if (ratingShow == true)
         {
             ratingValue = jsonObject.getInt("ratingValue");
             rate = jsonObject.getInt("rate");
         }
 
-        // Image Url
-        String imageUrl = jsonObject.getString("img_url");
-        JSONObject pahtUrlJSONObject = jsonObject.getJSONObject("img_path");
+        // TODO : pictogram
+        mPictogramList = new ArrayList<>();
 
-        Iterator<String> iterator = pahtUrlJSONObject.keys();
+        // 주차가능
+        if (jsonObject.getBoolean("parking") == true)
+        {
+            mPictogramList.add(Pictogram.parking);
+        }
+        // 발렛가능
+        if (jsonObject.getBoolean("vallet") == true)
+        {
+            mPictogramList.add(Pictogram.valet);
+        }
+        // 프라이빗룸
+        if (jsonObject.getBoolean("private_room") == true)
+        {
+            mPictogramList.add(Pictogram.privateRoom);
+        }
+        // 단체예약
+        if (jsonObject.getBoolean("group_booking") == true)
+        {
+            mPictogramList.add(Pictogram.groupBooking);
+        }
+        // 베이비시트
+        if (jsonObject.getBoolean("baby_seat") == true)
+        {
+            mPictogramList.add(Pictogram.babySeat);
+        }
+        // 코르키지
+        if (jsonObject.getBoolean("corkage") == true)
+        {
+            mPictogramList.add(Pictogram.corkage);
+        }
+
+        // Image Url
+        String imageUrl = jsonObject.getString("imgUrl");
+        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+
+        Iterator<String> iterator = pathUrlJSONObject.keys();
         while (iterator.hasNext())
         {
             String key = iterator.next();
 
             try
             {
-                JSONArray pathJSONArray = pahtUrlJSONObject.getJSONArray(key);
+                JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
 
                 int length = pathJSONArray.length();
                 mImageInformationList = new ArrayList<>(pathJSONArray.length());
@@ -83,7 +116,7 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // Detail
-        JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
+        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
         int detailLength = detailJSONArray.length();
 
         mInformationList = new ArrayList<>(detailLength);
@@ -94,7 +127,7 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // Ticket Information
-        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("ticket_info");
+        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("restaurantTickets");
         int ticketInformationLength = ticketInformationJSONArray.length();
 
         mTicketInformationList = new ArrayList<>(ticketInformationLength);
@@ -103,11 +136,6 @@ public class GourmetDetail extends PlaceDetail
         {
             mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
         }
-
-        // TODO : pictogram
-        mPictogramList = new ArrayList<>();
-        mPictogramList.add(Pictogram.parking);
-
     }
 
     public ArrayList<TicketInformation> getTicketInformation()
@@ -122,25 +150,21 @@ public class GourmetDetail extends PlaceDetail
 
     public enum Pictogram
     {
-        parking(R.string.label_parking, R.string.code_parking, R.drawable.ic_detail_facilities_01_parking, GourmetFilter.Amenities.FLAG_PARKING),
-        valetAvailable(R.string.label_valet_available, R.string.code_valet_available, R.drawable.ic_detail_facilities_06_valet, GourmetFilter.Amenities.FLAG_PARKING),
-        privateRoom(R.string.label_private_room, R.string.code_private_room, R.drawable.ic_detail_facilities_07_private, GourmetFilter.Amenities.FLAG_PARKING),
-        groupBooking(R.string.label_group_booking, R.string.code_group_booking, R.drawable.ic_detail_facilities_08_group, GourmetFilter.Amenities.FLAG_PARKING),
-        babySeat(R.string.label_baby_seat, R.string.code_baby_seat, R.drawable.ic_detail_facilities_09_babyseat, GourmetFilter.Amenities.FLAG_PARKING),
-        corkage(R.string.label_corkage, R.string.code_corkage, R.drawable.ic_detail_facilities_10_corkage, GourmetFilter.Amenities.FLAG_PARKING),
-        none(0, 0, 0, 0);
+        parking(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
+        valet(R.string.label_valet_available, R.drawable.ic_detail_facilities_06_valet),
+        privateRoom(R.string.label_private_room, R.drawable.ic_detail_facilities_07_private),
+        groupBooking(R.string.label_group_booking, R.drawable.ic_detail_facilities_08_group),
+        babySeat(R.string.label_baby_seat, R.drawable.ic_detail_facilities_09_babyseat),
+        corkage(R.string.label_corkage, R.drawable.ic_detail_facilities_10_corkage),
+        none(0, 0);
 
         private int nameResId;
-        private int codeResId;
         private int imageResId;
-        private int flag;
 
-        Pictogram(int nameResId, int codeResId, int imageResId, int flag)
+        Pictogram(int nameResId, int imageResId)
         {
             this.nameResId = nameResId;
-            this.codeResId = codeResId;
             this.imageResId = imageResId;
-            this.flag = flag;
         }
 
         public String getName(Context context)
@@ -152,24 +176,9 @@ public class GourmetDetail extends PlaceDetail
             return context.getString(nameResId);
         }
 
-        public String getCode(Context context)
-        {
-            if (codeResId <= 0)
-            {
-                return "";
-            }
-            return context.getString(codeResId);
-        }
-
         public int getImageResId()
         {
             return imageResId;
         }
-
-        public int getFlag()
-        {
-            return flag;
-        }
-
     }
 }
