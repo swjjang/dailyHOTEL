@@ -343,7 +343,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01//
             , R.string.dialog_msg_gourmet_payment_message02//
             , R.string.dialog_msg_gourmet_payment_message03//
-            , R.string.dialog_msg_gourmet_payment_message08, R.string.dialog_msg_gourmet_payment_message07};
+            , R.string.dialog_msg_gourmet_payment_message07};
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this);
         finalCheckLayout.setMessages(messageResIds);
@@ -483,7 +483,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
                     , R.string.dialog_msg_gourmet_payment_message02//
                     , R.string.dialog_msg_gourmet_payment_message03//
-                    , R.string.dialog_msg_gourmet_payment_message04//
                     , R.string.dialog_msg_gourmet_payment_message06};
                 break;
 
