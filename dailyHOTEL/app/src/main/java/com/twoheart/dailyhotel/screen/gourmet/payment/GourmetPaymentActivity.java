@@ -920,7 +920,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         int payPrice = gourmetPaymentInformation.getPaymentToPay();
 
         // 50만원 한도 핸드폰 결제 금지
-        if (payPrice >= PHONE_PAYMENT_LIMIT)
+        if (payPrice > PHONE_PAYMENT_LIMIT)
         {
             if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
             {
