@@ -617,6 +617,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 setPaymentTypeEnabled(mDisableCardView, true);
             }
 
+            // 30만원 한도 핸드폰 결제 금지
+            if (payPrice >= 300000)
+            {
+                setPaymentTypeEnabled(mDisablePhoneView, false);
+            } else
+            {
+                if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
+                {
+                    setPaymentTypeEnabled(mDisablePhoneView, true);
+                }
+            }
+
             // 1000원 이하였다가 되돌아 오는 경우 한번 간편결제로 바꾸어준다.
             if (mIsUnderPrice == true)
             {

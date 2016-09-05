@@ -429,11 +429,25 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
+        int payPrice = gourmetPaymentInformation.getPaymentToPay();
+
         // 결제금액
-        String price = Util.getPriceFormat(mContext, gourmetPaymentInformation.getPaymentToPay(), false);
+        String price = Util.getPriceFormat(mContext, payPrice, false);
 
         mPriceTextView.setText(price);
         mFinalPaymentTextView.setText(price);
+
+        // 30만원 한도 핸드폰 결제 금지
+        if (payPrice >= 300000)
+        {
+            setPaymentTypeEnabled(mDisablePhoneView, false);
+        } else
+        {
+            if (DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled() == true)
+            {
+                setPaymentTypeEnabled(mDisablePhoneView, true);
+            }
+        }
     }
 
     public void setTicketCount(int count)
