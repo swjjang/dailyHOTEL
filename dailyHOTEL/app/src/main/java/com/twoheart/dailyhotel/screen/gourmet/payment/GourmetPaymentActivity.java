@@ -440,14 +440,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
-
-                            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                                , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                         }
                     }
                 });
             }
         });
+
+        AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
 
         dialog.setContentView(finalCheckLayout);
 

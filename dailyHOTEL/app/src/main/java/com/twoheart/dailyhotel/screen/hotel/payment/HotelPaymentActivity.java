@@ -1022,19 +1022,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
         String discountType = Label.FULL_PAYMENT;
-
-        if (paymentInformation.bonus != 0)
+        switch (paymentInformation.discountType)
         {
-            switch (paymentInformation.discountType)
-            {
-                case BONUS:
+            case BONUS:
+                if (paymentInformation.bonus != 0)
+                {
                     discountType = Label.PAYMENTWITH_CREDIT;
-                    break;
+                }
+                break;
 
-                case COUPON:
-                    discountType = Label.PAYMENTWITH_COUPON;
-                    break;
-            }
+            case COUPON:
+                discountType = Label.PAYMENTWITH_COUPON;
+                break;
         }
 
         Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.hotelName//
@@ -1169,14 +1168,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
-
-                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                                , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
                         }
                     }
                 });
             }
         });
+
+        AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
 
         dialog.setContentView(finalCheckLayout);
 
