@@ -51,8 +51,8 @@
     @com.google.android.gms.common.annotation.KeepName *;
 }
 
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
 }
 
 -keep class com.kakao.** { *; }
