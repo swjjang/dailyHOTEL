@@ -910,6 +910,55 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         return params;
     }
 
+    private void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    {
+        if (gourmetPaymentInformation == null)
+        {
+            return;
+        }
+
+        int payPrice = gourmetPaymentInformation.getPaymentToPay();
+
+        // 30만원 한도 핸드폰 결제 금지
+        if (payPrice >= PHONE_PAYMENT_LIMIT)
+        {
+            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+            {
+                mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
+            }
+
+            mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
+        } else
+        {
+            if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true)
+            {
+                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
+            }
+        }
+
+        mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
+    }
+
+    private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
+    {
+        if (DailyPreference.getInstance(this).isGourmetSimpleCardPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.EASY_CARD;
+        } else if (DailyPreference.getInstance(this).isGourmetCardPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.CARD;
+        } else if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.PHONE_PAY;
+        } else if (DailyPreference.getInstance(this).isGourmetVirtualPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.VBANK;
+        } else
+        {
+            return null;
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // User ActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -992,7 +1041,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
+                setPaymentInformation(gourmetPaymentInformation);
             }
         }
 
@@ -1013,7 +1062,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
+                setPaymentInformation(gourmetPaymentInformation);
             }
         }
 
@@ -1354,7 +1403,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation);
                     mGourmetPaymentLayout.setUserInformation(gourmetPaymentInformation);
-                    mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
+                    setPaymentInformation(gourmetPaymentInformation);
                 } else
                 {
                     setResult(CODE_RESULT_ACTIVITY_REFRESH);

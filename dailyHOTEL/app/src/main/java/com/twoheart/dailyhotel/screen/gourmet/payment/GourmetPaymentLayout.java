@@ -278,6 +278,28 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
+    public void setPaymentTypeEnabled(PlacePaymentInformation.PaymentType paymentType, boolean enabled)
+    {
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                setPaymentTypeEnabled(mDisableSimpleCardView, enabled);
+                break;
+
+            case CARD:
+                setPaymentTypeEnabled(mDisableCardView, enabled);
+                break;
+
+            case PHONE_PAY:
+                setPaymentTypeEnabled(mDisablePhoneView, enabled);
+                break;
+
+            case VBANK:
+                setPaymentTypeEnabled(mDisableTransferView, enabled);
+                break;
+        }
+    }
+
     private void setPaymentTypeEnabled(View view, boolean enabled)
     {
         if (view == null)
@@ -429,50 +451,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        int payPrice = gourmetPaymentInformation.getPaymentToPay();
-
         // 결제금액
-        String price = Util.getPriceFormat(mContext, payPrice, false);
+        String price = Util.getPriceFormat(mContext, gourmetPaymentInformation.getPaymentToPay(), false);
 
         mPriceTextView.setText(price);
         mFinalPaymentTextView.setText(price);
-
-        // 30만원 한도 핸드폰 결제 금지
-        if (payPrice >= 300000)
-        {
-            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
-            {
-                ((OnEventListener) mOnEventListener).changedPaymentType(getAvailableDefaultPaymentType());
-            }
-
-            setPaymentTypeEnabled(mDisablePhoneView, false);
-        } else
-        {
-            if (DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled() == true)
-            {
-                setPaymentTypeEnabled(mDisablePhoneView, true);
-            }
-        }
-    }
-
-    private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
-    {
-        if (DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled() == true)
-        {
-            return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled() == true)
-        {
-            return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled() == true)
-        {
-            return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled() == true)
-        {
-            return PlacePaymentInformation.PaymentType.VBANK;
-        } else
-        {
-            return null;
-        }
     }
 
     public void setTicketCount(int count)

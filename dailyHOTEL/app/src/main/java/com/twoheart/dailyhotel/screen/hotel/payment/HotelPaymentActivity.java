@@ -618,7 +618,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             }
 
             // 30만원 한도 핸드폰 결제 금지
-            if (payPrice >= 300000)
+            if (payPrice >= PHONE_PAYMENT_LIMIT)
             {
                 if(mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
                 {
@@ -640,7 +640,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 mIsUnderPrice = false;
 
                 // 기본이 간편카드 결제이다.
-                changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+                changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
             } else
             {
                 changedPaymentType(mPaymentInformation.paymentType, mSelectedCreditCard);

@@ -149,12 +149,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        if (hotelPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
-        {
-            finish();
-            return;
-        }
-
         requestPostPaymentWebView(mWebView, hotelPaymentInformation, saleTime);
     }
 
