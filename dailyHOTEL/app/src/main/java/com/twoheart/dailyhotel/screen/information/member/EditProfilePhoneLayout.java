@@ -383,7 +383,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         }
     }
 
-    private String getPhoneNumber()
+    public String getPhoneNumber()
     {
         String tag = (String) mCountryEditText.getTag();
 

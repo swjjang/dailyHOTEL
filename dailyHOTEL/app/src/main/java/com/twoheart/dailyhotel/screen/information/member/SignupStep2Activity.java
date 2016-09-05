@@ -22,13 +22,14 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupStep2Activity extends BaseActivity
 {
+    public static final int VERIFY_PHONE_NUMBER_COUNT = 4;
+
     private static final String INTENT_EXTRA_DATA_SIGNUPKEY = "signupKey";
     private static final String INTENT_EXTRA_DATA_EMAIL = "email";
     private static final String INTENT_EXTRA_DATA_PASSWORD = "password";
     private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
-    private static final int VERIFY_PHONE_NUMBER_COUNT = 4;
 
     private SignupStep2Layout mSignupStep2Layout;
     private SignupStep2NetworkController mNetworkController;
