@@ -440,6 +440,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         // 30만원 한도 핸드폰 결제 금지
         if (payPrice >= 300000)
         {
+            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+            {
+                ((OnEventListener) mOnEventListener).changedPaymentType(getAvailableDefaultPaymentType());
+            }
+
             setPaymentTypeEnabled(mDisablePhoneView, false);
         } else
         {
@@ -447,6 +452,26 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             {
                 setPaymentTypeEnabled(mDisablePhoneView, true);
             }
+        }
+    }
+
+    private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
+    {
+        if (DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.EASY_CARD;
+        } else if (DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.CARD;
+        } else if (DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.PHONE_PAY;
+        } else if (DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.VBANK;
+        } else
+        {
+            return null;
         }
     }
 
@@ -555,6 +580,16 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void checkPaymentType(PlacePaymentInformation.PaymentType paymentType)
     {
+        if (paymentType == null)
+        {
+            ((View) mSimpleCardLayout.getParent()).setSelected(false);
+            mSimpleCardLayout.setSelected(false);
+            mCardLayout.setSelected(false);
+            mPhoneLayout.setSelected(false);
+            mTransferLayout.setSelected(false);
+            return;
+        }
+
         switch (paymentType)
         {
             case EASY_CARD:

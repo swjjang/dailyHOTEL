@@ -620,6 +620,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 30만원 한도 핸드폰 결제 금지
             if (payPrice >= 300000)
             {
+                if(mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+                {
+                    changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
+                }
+
                 setPaymentTypeEnabled(mDisablePhoneView, false);
             } else
             {
@@ -640,6 +645,26 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 changedPaymentType(mPaymentInformation.paymentType, mSelectedCreditCard);
             }
+        }
+    }
+
+    private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
+    {
+        if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.EASY_CARD;
+        } else if(DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.CARD;
+        } else if(DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.PHONE_PAY;
+        } else if(DailyPreference.getInstance(this).isStayVirtualPaymentEnabled() == true)
+        {
+            return PlacePaymentInformation.PaymentType.VBANK;
+        } else
+        {
+            return null;
         }
     }
 
@@ -910,6 +935,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
     {
+        if(paymentType == null)
+        {
+            ((View) mSimpleCardLayout.getParent()).setSelected(false);
+            mSimpleCardLayout.setSelected(false);
+            mCardLayout.setSelected(false);
+            mPhoneLayout.setSelected(false);
+            mTransferLayout.setSelected(false);
+            return;
+        }
+
         mSelectedCreditCard = creditCard;
         mPaymentInformation.paymentType = paymentType;
 
