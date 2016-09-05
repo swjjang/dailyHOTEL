@@ -919,22 +919,22 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         int payPrice = gourmetPaymentInformation.getPaymentToPay();
 
-        // 30만원 한도 핸드폰 결제 금지
-        //        if (payPrice >= PHONE_PAYMENT_LIMIT)
-        //        {
-        //            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
-        //            {
-        //                mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
-        //            }
-        //
-        //            mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
-        //        } else
-        //        {
-        //            if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true)
-        //            {
-        //                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
-        //            }
-        //        }
+        // 50만원 한도 핸드폰 결제 금지
+        if (payPrice >= PHONE_PAYMENT_LIMIT)
+        {
+            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+            {
+                mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
+            }
+
+            mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
+        } else
+        {
+            if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true)
+            {
+                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
+            }
+        }
 
         mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
     }

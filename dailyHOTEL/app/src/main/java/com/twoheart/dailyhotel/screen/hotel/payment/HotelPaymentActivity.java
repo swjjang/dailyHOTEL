@@ -617,22 +617,22 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 setPaymentTypeEnabled(mDisableCardView, true);
             }
 
-            // 30만원 한도 핸드폰 결제 금지
-            //            if (payPrice >= PHONE_PAYMENT_LIMIT)
-            //            {
-            //                if(mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
-            //                {
-            //                    changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
-            //                }
-            //
-            //                setPaymentTypeEnabled(mDisablePhoneView, false);
-            //            } else
-            //            {
-            //                if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
-            //                {
-            //                    setPaymentTypeEnabled(mDisablePhoneView, true);
-            //                }
-            //            }
+            // 50만원 한도 핸드폰 결제 금지
+            if (payPrice >= PHONE_PAYMENT_LIMIT)
+            {
+                if(mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+                {
+                    changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
+                }
+
+                setPaymentTypeEnabled(mDisablePhoneView, false);
+            } else
+            {
+                if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
+                {
+                    setPaymentTypeEnabled(mDisablePhoneView, true);
+                }
+            }
 
             // 1000원 이하였다가 되돌아 오는 경우 한번 간편결제로 바꾸어준다.
             if (mIsUnderPrice == true)

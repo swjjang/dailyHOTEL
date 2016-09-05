@@ -45,7 +45,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
     protected static final int REQUEST_CODE_COUPONPOPUP_ACTIVITY = 10002;
 
-    protected static final int PHONE_PAYMENT_LIMIT = 300000;
+    protected static final int PHONE_PAYMENT_LIMIT = 500000;
 
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;
