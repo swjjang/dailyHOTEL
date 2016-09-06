@@ -86,7 +86,7 @@ public interface Constants
     public static String KAKAO_USER = "kakao_talk";
     public static String FACEBOOK_USER = "facebook";
     public static String DAILY_INTRO_DEFAULT_VERSION = "2013-07-17T12:00:00+09:00";
-    public static String DAILY_INTRO_CURRENT_VERSION = "2016-08-09T12:00:00+09:00";
+    public static String DAILY_INTRO_CURRENT_VERSION = "2016-09-06T11:00:00+09:00";
 
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GOOGLE_MAP_KEY = UNENCRYPTED_URL ? "AIzaSyBEynLg8WjW7YKtmc2B6aOCn7PQtGig-6I" : "MTEzJDkwJDExOCQxMjQkODgk$N0I2MjE5NjU0Mzg0Q0RBNUUwRUFEMzI2MTAzNDlGRTA3ODRFQ0M5RkEwRThFRDgxQzY0Q0IzNkZBNEZDNkUyOTBFMNUSVBNDdFQTJFMjBENzVBQjIzNJDhEWMzAwNSjA1N0NE$";
