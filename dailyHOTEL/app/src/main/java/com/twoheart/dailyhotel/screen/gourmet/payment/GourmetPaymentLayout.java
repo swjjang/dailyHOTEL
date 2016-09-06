@@ -47,6 +47,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mTransferLayout;
 
     private TextView mCardManagerTextView;
+    private TextView mGuidePaymentMemoView;
 
     private View mDisableSimpleCardView;
     private View mDisableCardView;
@@ -159,8 +160,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private void initUserInformationLayout(View view)
     {
-        View fakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
-
         // 예약자
         mUserNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
 
@@ -176,6 +175,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mUserPhoneEditText.setOnFocusChangeListener(this);
         mUserEmailEditText.setOnFocusChangeListener(this);
 
+        View fakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
         fakeMobileEditView.setFocusable(true);
         fakeMobileEditView.setOnClickListener(this);
     }
@@ -215,67 +215,24 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
 
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled();
+        mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
+    }
 
-        TextView guidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
-        StringBuilder guideMemo = new StringBuilder();
-
-        if (isSimpleCardPaymentEnabled == false)
+    public void setPaymentMemoTextView(String text, boolean visible)
+    {
+        if(mGuidePaymentMemoView == null)
         {
-            guideMemo.append(mContext.getString(R.string.label_simple_payment));
-            guideMemo.append(", ");
+            return;
         }
 
-        if (isCardPaymentEnabled == false)
+        if(Util.isTextEmpty(text) == true || visible == false)
         {
-            guideMemo.append(mContext.getString(R.string.label_card_payment));
-            guideMemo.append(", ");
+            mGuidePaymentMemoView.setVisibility(View.GONE);
+            return;
         }
 
-        if (isPhonePaymentEnabled == false)
-        {
-            guideMemo.append(mContext.getString(R.string.act_booking_pay_mobile));
-            guideMemo.append(", ");
-        }
-
-        if (isVirtualPaymentEnabled == false)
-        {
-            guideMemo.append(mContext.getString(R.string.act_booking_pay_account));
-            guideMemo.append(", ");
-        }
-
-        if (guideMemo.length() > 0)
-        {
-            guideMemo.setLength(guideMemo.length() - 2);
-
-            guidePaymentMemoView.setText(mContext.getString(R.string.message_dont_support_payment_type, guideMemo.toString()));
-            guidePaymentMemoView.setVisibility(View.VISIBLE);
-        } else
-        {
-            guidePaymentMemoView.setVisibility(View.GONE);
-        }
-
-        setPaymentTypeEnabled(mDisableSimpleCardView, DailyPreference.getInstance(mContext).isGourmetSimpleCardPaymentEnabled());
-        setPaymentTypeEnabled(mDisableCardView, DailyPreference.getInstance(mContext).isGourmetCardPaymentEnabled());
-        setPaymentTypeEnabled(mDisablePhoneView, DailyPreference.getInstance(mContext).isGourmetPhonePaymentEnabled());
-        setPaymentTypeEnabled(mDisableTransferView, DailyPreference.getInstance(mContext).isGourmetVirtualPaymentEnabled());
-
-        if (isSimpleCardPaymentEnabled == true)
-        {
-            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
-        } else if (isCardPaymentEnabled == true)
-        {
-            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
-        } else if (isPhonePaymentEnabled == true)
-        {
-            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
-        } else if (isVirtualPaymentEnabled == true)
-        {
-            ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
-        }
+        mGuidePaymentMemoView.setVisibility(View.VISIBLE);
+        mGuidePaymentMemoView.setText(text);
     }
 
     public void setPaymentTypeEnabled(PlacePaymentInformation.PaymentType paymentType, boolean enabled)
@@ -350,15 +307,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         if (gourmetPaymentInformation.ticketTime != 0)
         {
-            //            Calendar calendarTime = DailyCalendar.getInstance();
-            //            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-            //            calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
-            //
-            //            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-            //            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-            //
-            //            // 방문시간
-            //            mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
             mTicketTimeTextView.setText(DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
         }
 
@@ -393,11 +341,13 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mMemoEditText.setText(guest.message);
     }
 
-    /**
-     * @param mobileNumber
-     */
     public void setUserPhoneInformation(String mobileNumber)
     {
+        if(mUserPhoneEditText == null)
+        {
+            return;
+        }
+
         mUserPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
@@ -505,14 +455,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        //        Calendar calendarTime = DailyCalendar.getInstance();
-        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //        calendarTime.setTimeInMillis(time);
-        //
-        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
         mTicketTimeTextView.setText(DailyCalendar.format(time, "HH:mm", TimeZone.getTimeZone("GMT")));
     }
 

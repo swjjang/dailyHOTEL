@@ -99,19 +99,30 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         super.onCreate(savedInstanceState);
 
         mGourmetPaymentLayout = new GourmetPaymentLayout(this, mOnEventListener);
-        mPaymentInformation = new GourmetPaymentInformation();
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
         setContentView(mGourmetPaymentLayout.onCreateView(R.layout.activity_booking_place));
 
         Intent intent = getIntent();
 
-        if (intent == null)
+        if (intent == null || initIntent(intent) == false)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
+
+        mIsChangedPrice = false;
+        mIsChangedTime = false;
+
+        mGourmetPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
+
+        setAvailabledDefaultPaymentType();
+    }
+
+    private boolean initIntent(Intent intent)
+    {
+        mPaymentInformation = new GourmetPaymentInformation();
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
         gourmetPaymentInformation.setTicketInformation((TicketInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
         mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
@@ -124,21 +135,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         if (gourmetPaymentInformation.getTicketInformation() == null)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
-            finish();
-            return;
+            return false;
+        } else
+        {
+            return true;
         }
-
-        mIsChangedPrice = false;
-        mIsChangedTime = false;
-
-        mGourmetPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
     }
 
     @Override
@@ -192,7 +193,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         lockUI();
 
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
+
         Guest guest;
 
         if (mIsEditMode == true)
@@ -200,9 +201,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             guest = mGourmetPaymentLayout.getGuest();
         } else
         {
-            guest = gourmetPaymentInformation.getGuest();
+            guest = paymentInformation.getGuest();
         }
 
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
         Map<String, String> params = new HashMap<>();
@@ -766,9 +768,72 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         // do nothing.
     }
 
-    private void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime checkInSaleTime)
+    private void setAvailabledDefaultPaymentType()
     {
-        if (gourmetPaymentInformation == null || checkInSaleTime == null)
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isGourmetSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isGourmetCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isGourmetVirtualPaymentEnabled();
+
+        StringBuilder guideMemo = new StringBuilder();
+
+        if (isSimpleCardPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.label_simple_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isCardPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.label_card_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isPhonePaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.act_booking_pay_mobile));
+            guideMemo.append(", ");
+        }
+
+        if (isVirtualPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.act_booking_pay_account));
+            guideMemo.append(", ");
+        }
+
+        if (guideMemo.length() > 0)
+        {
+            guideMemo.setLength(guideMemo.length() - 2);
+
+            mGourmetPaymentLayout.setPaymentMemoTextView(getString(R.string.message_dont_support_payment_type, guideMemo.toString()), true);
+        } else
+        {
+            mGourmetPaymentLayout.setPaymentMemoTextView(null, false);
+        }
+
+        mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
+        mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, isCardPaymentEnabled);
+        mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, isPhonePaymentEnabled);
+        mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK, isVirtualPaymentEnabled);
+
+        if (isSimpleCardPaymentEnabled == true)
+        {
+            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+        } else if (isCardPaymentEnabled == true)
+        {
+            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
+        } else if (isPhonePaymentEnabled == true)
+        {
+            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+        } else if (isVirtualPaymentEnabled == true)
+        {
+            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
+        }
+    }
+
+    private void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime saleTime)
+    {
+        if (gourmetPaymentInformation == null || saleTime == null)
         {
             Util.restartApp(this);
             return;
@@ -776,7 +841,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         DailyNetworkAPI.getInstance(this).requestGourmetCheckTicket(mNetworkTag//
             , gourmetPaymentInformation.getTicketInformation().index//
-            , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
+            , saleTime.getDayOfDaysDateFormat("yyMMdd")//
             , gourmetPaymentInformation.ticketCount//
             , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketJsonResponseListener);
     }
@@ -1179,6 +1244,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     return;
                 }
 
+                guest.message = mGourmetPaymentLayout.getMemoEditText();
                 gourmetPaymentInformation.setGuest(guest);
             } else
             {
