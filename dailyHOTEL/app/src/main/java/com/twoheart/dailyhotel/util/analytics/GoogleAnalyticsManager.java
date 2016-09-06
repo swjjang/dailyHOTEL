@@ -156,6 +156,10 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == true)
         {
             recordSearchAnalytics(screen, params);
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            recordScreen(screen);
         }
     }
 

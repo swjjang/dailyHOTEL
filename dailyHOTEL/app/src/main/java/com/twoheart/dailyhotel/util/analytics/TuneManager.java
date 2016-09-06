@@ -173,6 +173,83 @@ public class TuneManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            TuneEvent tuneEvent = getFirstPurchaseTuneEvent(AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS, params, true);
+
+            if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
+            {
+                tuneEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
+            }
+
+            if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_TYPE) == true)
+            {
+                tuneEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
+            }
+
+            TuneEventItem tuneEventItem = getTuneEventItem(params);
+            tuneEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
+            tuneEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
+
+            List<TuneEventItem> list = new ArrayList<>();
+            list.add(tuneEventItem);
+            tuneEvent.withEventItems(list);
+
+            if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
+            {
+                setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+            } else
+            {
+                setUserIndex(mUserIndex);
+            }
+
+            mTune.measureEvent(tuneEvent);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            TuneEvent tuneEvent = getFirstPurchaseTuneEvent(AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS, params, true);
+
+            if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
+            {
+                tuneEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
+            }
+
+            if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_TYPE) == true)
+            {
+                tuneEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
+            }
+
+            if (params.containsKey(AnalyticsManager.KeyType.RESERVATION_TIME) == true)
+            {
+                tuneEvent.withAttribute3(params.get(AnalyticsManager.KeyType.RESERVATION_TIME));
+            }
+
+            TuneEventItem tuneEventItem = getTuneEventItem(params);
+            tuneEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.CATEGORY));
+            tuneEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
+
+            List<TuneEventItem> list = new ArrayList<>();
+            list.add(tuneEventItem);
+            tuneEvent.withEventItems(list);
+
+            if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
+            {
+                setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+            } else
+            {
+                setUserIndex(mUserIndex);
+            }
+
+            mTune.measureEvent(tuneEvent);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
     }
 
@@ -526,6 +603,37 @@ public class TuneManager extends BaseAnalyticsManager
     private TuneEvent getTuneEvent(int eventId, Map<String, String> params, boolean usedRevenue)
     {
         TuneEvent tuneEvent = new TuneEvent(eventId);
+        tuneEvent.withCurrencyCode("KRW");
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            String[] checkInDate = params.get(AnalyticsManager.KeyType.CHECK_IN).split("\\-");
+            tuneEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
+        }
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String[] checkOutDate = params.get(AnalyticsManager.KeyType.CHECK_OUT).split("\\-");
+            tuneEvent.withDate2(new GregorianCalendar(Integer.parseInt(checkOutDate[0]), Integer.parseInt(checkOutDate[1]), Integer.parseInt(checkOutDate[2])).getTime());
+        }
+
+        if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            String[] checkInDate = params.get(AnalyticsManager.KeyType.DATE).split("\\-");
+            tuneEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
+        }
+
+        if (usedRevenue == true && params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
+        {
+            tuneEvent.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
+        }
+
+        return tuneEvent;
+    }
+
+    private TuneEvent getFirstPurchaseTuneEvent(String eventName, Map<String, String> params, boolean usedRevenue)
+    {
+        TuneEvent tuneEvent = new TuneEvent(eventName);
         tuneEvent.withCurrencyCode("KRW");
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)

@@ -447,6 +447,8 @@ public class AnalyticsManager
         public static final String SEARCH_RESULT_EMPTY = "SearchResultView_Empty";
         //
         public static final String BOOKING_ACCOUNTDETAIL = "Booking_AccountDetail";
+        public static final String DAILY_HOTEL_FIRST_PURCHASE_SUCCESS = "DailyHotel_FirstPurchaseSuccess";
+        public static final String DAILY_GOURMET_FIRST_PURCHASE_SUCCESS = "DailyGourmet_FirstPurchaseSuccess";
     }
 
     public static class Action
@@ -578,6 +580,8 @@ public class AnalyticsManager
         public static final String COUPON_LOGIN = "CouponLogin";
         //
         public static final String ACCOUNT_DETAIL = "AccountDetail";
+        public static final String PRODUCT_ID = "ProductID";
+        public static final String FIRST_PURCHASE_SUCCESS = "FirstPurchaseSuccess";
     }
 
     public static class Category

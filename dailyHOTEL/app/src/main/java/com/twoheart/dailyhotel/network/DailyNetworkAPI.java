@@ -1011,4 +1011,14 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener) {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking" : "NTAkMTMkNzUkNSQ0NCQ=$MkEwQHTYyOEE4NUkI1MzA4ODIwM0MwMzc1MzdERkZBRUAMwQTU0MkFY4MTFENkU2Q0I2MDQyMUIzQTjYzREI4M0UxQQ==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

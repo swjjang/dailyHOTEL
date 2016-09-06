@@ -620,7 +620,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 50만원 한도 핸드폰 결제 금지
             if (payPrice > PHONE_PAYMENT_LIMIT)
             {
-                if(mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+                if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
                 {
                     changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
                 }
@@ -1083,8 +1083,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 break;
         }
 
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.hotelName//
-            , roomInformation.roomName, hotelPaymentInformation.checkInOutDate, paymentInformation.paymentType.getName(), discountType);
+        Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
+
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.roomName,//
+            hotelPaymentInformation.checkInOutDate, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
