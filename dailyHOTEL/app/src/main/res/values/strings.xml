@@ -459,6 +459,8 @@
     <string name="act_booking_payment_info01">결제가 안되시나요?</string>
     <string name="act_booking_payment_info02">1800–9120</string>
     <string name="act_booking_payment_info03">으로 전화주세요.</string>
+    <string name="label_booking_hotel_nights">(총 %1$d박)</string>
+    <string name="label_booking_gourmet_count">(총 %1$d개)</string>
     <string name="action_booking_cardmanager">카드관리</string>
     <string name="label_booking_easypayment">결제카드 간편결제</string>
     <string name="label_booking_used_bonus">적립금 사용</string>

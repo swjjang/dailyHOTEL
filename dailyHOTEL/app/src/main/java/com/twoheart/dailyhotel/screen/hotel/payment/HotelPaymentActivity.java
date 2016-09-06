@@ -245,7 +245,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
-        mHotelPaymentLayout.setPaymentInformation(paymentInformation, selectedCreditCard);
+        mHotelPaymentLayout.setPaymentInformation((HotelPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
     @Override
@@ -1147,6 +1147,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             return;
         }
 
+        int nights = hotelPaymentInformation.getSaleRoomInformation().nights;
         int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
         int payPrice = originalPrice;
 
@@ -1172,7 +1173,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     }
                 }
 
-                mHotelPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.BONUS, originalPrice, discountPrice, payPrice);
+                mHotelPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.BONUS, originalPrice, discountPrice, payPrice, nights);
                 break;
             }
 
@@ -1182,7 +1183,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 if (coupon == null)
                 {
-                    mHotelPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.COUPON, originalPrice, 0, payPrice);
+                    mHotelPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.COUPON, originalPrice, 0, payPrice, nights);
                 } else
                 {
                     int discountPrice = coupon.amount;
@@ -1196,7 +1197,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         discountPrice = originalPrice;
                     }
 
-                    mHotelPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.COUPON, originalPrice, discountPrice, payPrice);
+                    mHotelPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.COUPON, originalPrice, discountPrice, payPrice, nights);
                 }
                 break;
             }
@@ -1207,7 +1208,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     setBonusEnabled(false);
                 }
 
-                mHotelPaymentLayout.setPaymentInformation(hotelPaymentInformation.discountType, originalPrice, 0, payPrice);
+                mHotelPaymentLayout.setPaymentInformation(hotelPaymentInformation.discountType, originalPrice, 0, payPrice, nights);
                 break;
         }
 

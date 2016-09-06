@@ -28,6 +28,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 {
     private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
+    private TextView mBookingAmountTextView;
     private TextView mPlaceNameTextView;
     private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
     private EditText mMemoEditText;
@@ -187,6 +188,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private void initPaymentInformation(View view)
     {
+        mBookingAmountTextView = (TextView) view.findViewById(R.id.bookingAmountTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
     }
@@ -431,6 +433,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
 
         mTicketCountTextView.setText(mContext.getString(R.string.label_booking_count, count));
+
+        if (count > 1)
+        {
+            mBookingAmountTextView.setText(mContext.getString(R.string.act_booking_price)//
+                + mContext.getString(R.string.label_booking_gourmet_count, count));
+        } else
+        {
+            mBookingAmountTextView.setText(mContext.getString(R.string.act_booking_price));
+        }
     }
 
     public void setTicketCountMinusButtonEnabled(boolean isEnabled)

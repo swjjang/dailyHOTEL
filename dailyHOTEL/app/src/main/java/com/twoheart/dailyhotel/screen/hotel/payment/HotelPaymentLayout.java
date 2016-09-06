@@ -40,6 +40,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 {
     private View mBookingLayout;
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
+    private TextView mBookingAmountTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private EditText mReservationName, mReservationPhone, mReservationEmail;
     private TextView mPlaceNameTextView, mRoomTypeTextView;
@@ -201,6 +202,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private void initPaymentInformation(View view)
     {
+        mBookingAmountTextView = (TextView) view.findViewById(R.id.bookingAmountTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
@@ -450,16 +452,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setGuestNameInformation(String name)
-    {
-        if (mReservationName == null)
-        {
-            return;
-        }
-
-        mReservationName.setText(name);
-    }
-
     public void setGuestPhoneInformation(String mobileNumber)
     {
         if (mReservationPhone == null)
@@ -470,9 +462,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mReservationPhone.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
-    public void setPaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard selectedCreditCard)
     {
-        if (paymentInformation == null)
+        if (hotelPaymentInformation == null)
         {
             return;
         }
@@ -511,8 +503,14 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setPaymentInformation(PlacePaymentInformation.DiscountType discountType, int originalPrice, int discountPrice, int payPrice)
+    public void setPaymentInformation(PlacePaymentInformation.DiscountType discountType, int originalPrice, int discountPrice, int payPrice, int nights)
     {
+        if (nights > 1)
+        {
+            mBookingAmountTextView.setText(mContext.getString(R.string.act_booking_price)//
+                + mContext.getString(R.string.label_booking_hotel_nights, nights));
+        }
+
         mPriceTextView.setText(Util.getPriceFormat(mContext, originalPrice, false));
 
         switch (discountType)
