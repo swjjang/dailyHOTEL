@@ -21,20 +21,40 @@
             android:paddingBottom="16dp"
             android:paddingTop="19dp">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/gourmetGradeTextView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="@color/default_background_c929292"
-                android:gravity="center"
-                android:paddingBottom="1px"
-                android:paddingLeft="5.5dp"
-                android:paddingRight="5.5dp"
-                android:paddingTop="2px"
-                android:textColor="@android:color/white"
-                android:textSize="11dp"
-                android:visibility="invisible"/>
+                android:orientation="horizontal">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/gourmetGradeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/default_background_c929292"
+                    android:gravity="center"
+                    android:paddingBottom="1px"
+                    android:paddingLeft="5.5dp"
+                    android:paddingRight="5.5dp"
+                    android:paddingTop="2px"
+                    android:textColor="@android:color/white"
+                    android:textSize="11dp"
+                    android:visibility="invisible"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/gourmetSubGradeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/default_background_ca9a9a9"
+                    android:gravity="center"
+                    android:paddingBottom="1px"
+                    android:paddingLeft="5.5dp"
+                    android:paddingRight="5.5dp"
+                    android:paddingTop="2px"
+                    android:textColor="@android:color/white"
+                    android:textSize="11dp"
+                    android:visibility="invisible"/>
+            </LinearLayout>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/gourmetNameTextView"
@@ -50,9 +70,9 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                dailyFont:style="Medium"
                 android:textColor="@color/hoteldetail_title_text"
-                android:textSize="18dp"/>
+                android:textSize="18dp"
+                dailyFont:style="Medium"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/satisfactionView"
@@ -129,9 +149,9 @@
         android:id="@+id/dateInformationLayout"
         android:layout_width="match_parent"
         android:layout_height="78dp"
+        android:background="@color/white"
         android:gravity="center"
-        android:orientation="vertical"
-        android:background="@color/white">
+        android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"

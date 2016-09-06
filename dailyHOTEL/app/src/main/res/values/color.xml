@@ -260,6 +260,7 @@
     <color name="default_background_cf4f4f6">#f4f4f6</color>
     <color name="default_background_cf1f2f3">#f1f2f3</color>
     <color name="default_background_c929292">#929292</color>
+    <color name="default_background_ca9a9a9">#a9a9a9</color>
     <color name="default_placeholder">#dfdfe0</color>
 
     <color name="default_popup_button_background_c900034">#900034</color>
