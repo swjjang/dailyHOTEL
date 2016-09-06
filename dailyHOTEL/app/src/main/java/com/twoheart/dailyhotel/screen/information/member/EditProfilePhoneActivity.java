@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -27,6 +28,7 @@ public class EditProfilePhoneActivity extends BaseActivity
     private String mCountryCode;
     private String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
     private Type mType;
+    private int mRequestVerficationCount;
 
     public enum Type
     {
@@ -220,6 +222,20 @@ public class EditProfilePhoneActivity extends BaseActivity
             unLockUI();
 
             mEditProfilePhoneLayout.showVerificationVisible();
+
+            if (++mRequestVerficationCount == SignupStep2Activity.VERIFY_PHONE_NUMBER_COUNT)
+            {
+                try
+                {
+                    String[] phoneNumber = mEditProfilePhoneLayout.getPhoneNumber().split(" ");
+                    String number = phoneNumber[1].replaceAll("\\(|\\)", "");
+
+                    message = getString(R.string.message_signup_step2_check_your_phonenumber, number);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
 
             showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }

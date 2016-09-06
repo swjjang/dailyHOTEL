@@ -156,6 +156,10 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == true)
         {
             recordSearchAnalytics(screen, params);
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            recordScreen(screen);
         }
     }
 
@@ -583,8 +587,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(rating) == false)
         {
-            String onlyRating = getOnlyRating(rating);
-            screenViewBuilder.setCustomDimension(17, Util.isTextEmpty(onlyRating) == false ? onlyRating : rating);
+            screenViewBuilder.setCustomDimension(17, rating + "%");
         }
 
         if (Util.isTextEmpty(isShowOriginalPrice) == false)
@@ -701,50 +704,5 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         mGoogleAnalyticsTracker.setScreenName(screen);
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-    }
-
-    private String getOnlyRating(String text)
-    {
-        if (Util.isTextEmpty(text) == true)
-        {
-            return null;
-        }
-
-        text = text.trim();
-        if (Util.isTextEmpty(text) == true)
-        {
-            return null;
-        }
-
-        String[] words = text.split(" ");
-        if (words != null)
-        {
-            for (String word : words)
-            {
-                int index = word.lastIndexOf("%");
-                if (index > 0)
-                {
-                    int start = 0;
-                    word = word.substring(0, index + 1);
-
-                    char check;
-                    for (int i = word.length() - 2; i > 0; i--)
-                    {
-                        check = word.charAt(i);
-                        if (check < 48 || check > 58)
-                        {
-                            //해당 char값이 숫자가 아닐 경우
-                            start = i;
-                            break;
-                        }
-                    }
-
-                    word = word.substring(start);
-                    return word;
-                }
-            }
-        }
-
-        return null;
     }
 }

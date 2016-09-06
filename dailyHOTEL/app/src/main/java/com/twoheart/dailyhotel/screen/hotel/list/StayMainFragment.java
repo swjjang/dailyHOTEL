@@ -936,7 +936,7 @@ public class StayMainFragment extends PlaceMainFragment
             } else
             {
                 Intent intent = EventWebActivity.newInstance(mBaseActivity, //
-                    EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, eventBanner.name, checkInSaleTime);
+                    EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, eventBanner.name);
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
@@ -1120,7 +1120,7 @@ public class StayMainFragment extends PlaceMainFragment
         {
             SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
 
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null, checkInSaleTime);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
 

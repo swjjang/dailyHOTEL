@@ -31,9 +31,9 @@ public class RoomInformation implements Parcelable
     public RoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas, int nights) throws Exception
     {
         roomIndex = jsonObject.getInt("roomIdx");
-        averageDiscount = jsonObject.getInt("discountAvg");
-        price = jsonObject.getInt("price");
+        averageDiscount = jsonObject.getInt("discountAverage");
         totalDiscount = jsonObject.getInt("discountTotal");
+        price = jsonObject.getInt("price");
         roomName = jsonObject.getString("roomName").trim();
         option = jsonObject.getString("description1").trim();
         amenities = jsonObject.getString("description2").trim();
@@ -111,6 +111,5 @@ public class RoomInformation implements Parcelable
         {
             return new RoomInformation[size];
         }
-
     };
 }

@@ -261,6 +261,38 @@ public class GourmetParams extends PlaceParams
     }
 
     @Override
+    public void setSortType(Constants.SortType sortType)
+    {
+        switch (sortType)
+        {
+            case DEFAULT:
+                sortProperty = null;
+                sortDirection = null;
+                break;
+
+            case DISTANCE:
+                sortProperty = "Distance";
+                sortDirection = "Asc";
+                break;
+
+            case LOW_PRICE:
+                sortProperty = "PricePerPerson";
+                sortDirection = "Asc";
+                break;
+
+            case HIGH_PRICE:
+                sortProperty = "PricePerPerson";
+                sortDirection = "Desc";
+                break;
+
+            case SATISFACTION:
+                sortProperty = "Rating";
+                sortDirection = null;
+                break;
+        }
+    }
+
+    @Override
     protected void clear()
     {
         super.clear();

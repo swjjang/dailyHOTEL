@@ -131,14 +131,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getAddressView(mDeatilViews[2], mGourmetDetail);
         linearLayout.addView(mDeatilViews[2]);
 
-        if (mDeatilViews[3] == null)
+        ArrayList<GourmetDetail.Pictogram> list = mGourmetDetail.getPictogramList();
+
+        if (list != null && list.size() > 0)
         {
-            mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+            if (mDeatilViews[3] == null)
+            {
+                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+            }
+
+            getAmenitiesView(mDeatilViews[3], mGourmetDetail);
+            linearLayout.addView(mDeatilViews[3]);
         }
-
-        getAmenitiesView(mDeatilViews[3], mGourmetDetail);
-        linearLayout.addView(mDeatilViews[3]);
-
 
         if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
         {
@@ -150,12 +154,20 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
             getBenefitView(mDeatilViews[4], mGourmetDetail);
             linearLayout.addView(mDeatilViews[4]);
+        } else
+        {
+            // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
+            View view = new View(mContext);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
+            view.setLayoutParams(layoutParams);
+            view.setBackgroundResource(R.color.default_line_cf0f0f0);
+            linearLayout.addView(view);
         }
 
         // 정보
         if (mDeatilViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
+            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
         getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mGourmetDetail);
@@ -222,13 +234,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
         // 만족도
-        if (Util.isTextEmpty(gourmetDetail.satisfaction) == true)
+        if (gourmetDetail.ratingValue == 0)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(gourmetDetail.satisfaction);
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, gourmetDetail.ratingValue, gourmetDetail.ratingPersons));
         }
 
         // 날짜
@@ -342,16 +354,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getAmenitiesView(View view, PlaceDetail placeDetail)
+    private View getAmenitiesView(View view, GourmetDetail gourmetDetail)
     {
-        if (view == null || placeDetail == null)
+        if (view == null || gourmetDetail == null)
         {
             return view;
         }
 
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+        gridLayout.removeAllViews();
 
-        ArrayList<GourmetDetail.Pictogram> list = ((GourmetDetail) placeDetail).pictogramList;
+        ArrayList<GourmetDetail.Pictogram> list = gourmetDetail.getPictogramList();
+
         boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
 
         for (GourmetDetail.Pictogram pictogram : list)
@@ -359,12 +373,16 @@ public class GourmetDetailListAdapter extends BaseAdapter
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int emptyCount = GRID_COLUME_COUNT - (list.size() % GRID_COLUME_COUNT);
-        for (int i = 0; i < emptyCount; i++)
-        {
-            gridLayout.addView(getGridLayoutItemView(mContext, GourmetDetail.Pictogram.none, isSingleLine));
-        }
+        int columnCount = list.size() % GRID_COLUME_COUNT;
 
+        if (columnCount != 0)
+        {
+            int addEmptyViewCount = GRID_COLUME_COUNT - columnCount;
+            for (int i = 0; i < addEmptyViewCount; i++)
+            {
+                gridLayout.addView(getGridLayoutItemView(mContext, GourmetDetail.Pictogram.none, isSingleLine));
+            }
+        }
         return view;
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -24,16 +25,19 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -56,6 +60,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
     private String mDeepLinkUrl;
     private String mConfirmText;
 
+    private JavaScriptExtention mJavaScriptExtention;
+
     public enum SourceType
     {
         HOTEL_BANNER,
@@ -63,7 +69,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
         EVENT,
     }
 
-    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName, SaleTime saleTime)
+    private Handler mHandler = new Handler();
+
+    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName)
     {
         if (sourceType == null || Util.isTextEmpty(url) == true)
         {
@@ -73,7 +81,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = new Intent(context, EventWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
 
         if (Util.isTextEmpty(eventName) == true)
         {
@@ -94,7 +101,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = getIntent();
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
-        //        url = "http://mobile.dailyhotel.co.kr/link_test.html";
 
         try
         {
@@ -105,13 +111,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
         if (Util.isTextEmpty(url) == true)
         {
             finish();
             return;
         }
+
+        requestCommonDatetime(url);
 
         mEventName = intent.getStringExtra(INTENT_EXTRA_DATA_EVENTNAME);
 
@@ -134,7 +140,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         // 추가
-        webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+        mJavaScriptExtention = new JavaScriptExtention();
+
+        webView.addJavascriptInterface(mJavaScriptExtention, "android");
         webView.clearCache(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
@@ -187,6 +195,38 @@ public class EventWebActivity extends WebViewActivity implements Constants
         });
     }
 
+    private void requestCommonDatetime(final String url)
+    {
+        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+            }
+
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    long currentDateTime = response.getLong("currentDateTime");
+                    long dailyDateTime = response.getLong("dailyDateTime");
+
+                    if (mSaleTime == null)
+                    {
+                        mSaleTime = new SaleTime();
+                    }
+
+                    mSaleTime.setCurrentTime(currentDateTime);
+                    mSaleTime.setDailyTime(dailyDateTime);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+    }
+
     @Override
     protected void onStart()
     {
@@ -222,11 +262,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
     protected void onResume()
     {
         super.onResume();
-
-        if (mSaleTime == null)
-        {
-            Util.restartApp(this);
-        }
     }
 
     @Override
@@ -538,6 +573,16 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    private boolean moveDeepLinkCouponList(Context context)
+    {
+        DailyDeepLink.getInstance().clear();
+
+        Intent intent = CouponListActivity.newInstance(context);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
+
+        return true;
+    }
+
     private void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -602,11 +647,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                         String validFrom = dataJSONObject.getString("validFrom");
                         String validTo = dataJSONObject.getString("validTo");
-
-                        //                        String message = getString(R.string.message_eventweb_download_coupon//
-                        //                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
-                        //                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
-
                         String message = getString(R.string.message_eventweb_download_coupon//
                             , DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
                             , DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
@@ -618,29 +658,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             @Override
                             public void onClick(View v)
                             {
-                                DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
-                                dailyDeepLink.setDeepLink(Uri.parse(deepLink));
-
-                                if (dailyDeepLink.isHotelDetailView() == true)
+                                if (mJavaScriptExtention == null)
                                 {
-                                    if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
-                                    {
-                                        return;
-                                    }
-                                } else if (dailyDeepLink.isGourmetDetailView() == true)
-                                {
-                                    if (deepLinkGourmetDetail(mSaleTime.getClone(0)) == true)
-                                    {
-                                        return;
-                                    }
-                                } else
-                                {
-                                    Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setData(Uri.parse(deepLink));
-
-                                    startActivity(intent);
+                                    return;
                                 }
+
+                                mJavaScriptExtention.internalLink(deepLink);
                             }
                         }, null);
                     } else
@@ -701,6 +724,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
+            internalLink(uri);
+        }
+
+        @JavascriptInterface
+        public void internalLink(String uri)
+        {
             switch (mSourceType)
             {
                 case HOTEL_BANNER:
@@ -746,6 +775,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             {
                                 return;
                             }
+                        } else if (DailyDeepLink.getInstance().isCouponView() == true)
+                        {
+                            if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                            {
+                                return;
+                            }
                         }
                     }
                     break;
@@ -756,6 +791,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse(uri));
 
             startActivity(intent);
@@ -797,6 +833,94 @@ public class EventWebActivity extends WebViewActivity implements Constants
             } else
             {
                 EventWebActivity.this.downloadCoupon(couponCode, deepLink);
+            }
+        }
+
+        @JavascriptInterface
+        public void enabledBenefitAlarm()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            boolean isBenefitAlarm = DailyPreference.getInstance(EventWebActivity.this).isUserBenefitAlarm();
+
+            if (isBenefitAlarm == false)
+            {
+                // 자바 스크립트 호출시에 스레드가 다른것 같다. 에러나서 수정
+                mHandler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        lockUI();
+
+                        DailyNetworkAPI.getInstance(EventWebActivity.this).requestUpdateBenefitAgreement(mNetworkTag, true, new DailyHotelJsonResponseListener()
+                        {
+                            @Override
+                            public void onResponse(String url, JSONObject response)
+                            {
+                                unLockUI();
+
+                                try
+                                {
+                                    int msgCode = response.getInt("msgCode");
+
+                                    if (msgCode == 100)
+                                    {
+
+                                        JSONObject dataJSONObject = response.getJSONObject("data");
+                                        String serverDate = dataJSONObject.getString("serverDate");
+
+                                        boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
+
+                                        onBenefitAgreement(isAgreed, DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일"));
+                                    } else
+                                    {
+                                        String message = response.getString("msg");
+                                        EventWebActivity.this.onErrorPopupMessage(msgCode, message);
+                                    }
+                                } catch (Exception e)
+                                {
+                                    EventWebActivity.this.onError(e);
+                                }
+                            }
+
+                            public void onBenefitAgreement(final boolean isAgree, String updateDate)
+                            {
+                                DailyPreference.getInstance(EventWebActivity.this).setUserBenefitAlarm(isAgree);
+                                AppboyManager.setPushEnabled(EventWebActivity.this, isAgree);
+
+                                if (isAgree == true)
+                                {
+                                    // 혜택 알림 설정이 off --> on 일때
+                                    String title = getString(R.string.label_setting_alarm);
+                                    String message = getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+                                    String positive = getString(R.string.dialog_btn_text_confirm);
+
+                                    showSimpleDialog(title, message, positive, null);
+                                } else
+                                {
+                                }
+                            }
+
+                            @Override
+                            public void onErrorResponse(final VolleyError volleyError)
+                            {
+                                unLockUI();
+
+                                EventWebActivity.this.onErrorResponse(volleyError);
+                            }
+                        });
+                    }
+                });
+            } else
+            {
+                // 이미 햬택을 받고 계십니다.
+                releaseUiComponent();
+
+                showSimpleDialog(null, getString(R.string.dialog_msg_already_agree_benefit_on), getString(R.string.dialog_btn_text_confirm), null);
             }
         }
     }

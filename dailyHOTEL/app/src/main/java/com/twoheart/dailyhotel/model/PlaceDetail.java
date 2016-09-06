@@ -12,7 +12,8 @@ public abstract class PlaceDetail
     public String address;
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
     public String benefit;
-    public String satisfaction;
+    public int ratingPersons;
+    public int ratingValue;
     public double latitude;
     public double longitude;
     protected ArrayList<ImageInformation> mImageInformationList;

@@ -9,8 +9,16 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -45,6 +53,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
     protected static final int REQUEST_CODE_COUPONPOPUP_ACTIVITY = 10002;
 
+    protected static final int PHONE_PAYMENT_LIMIT = 500000;
+
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;
     protected Dialog mFinalCheckDialog;
@@ -60,9 +70,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
-    protected abstract void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
+    protected abstract void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
 
-    protected abstract void updateGuestInformation(String phoneNumber);
+    protected abstract void setGuestInformation(String phoneNumber);
 
     protected abstract void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard);
 
@@ -199,7 +209,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 if (resultCode == RESULT_OK && intent != null)
                 {
                     String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
-                    updateGuestInformation(mobileNumber);
+                    setGuestInformation(mobileNumber);
                 }
                 break;
             }
@@ -564,6 +574,61 @@ public abstract class PlacePaymentActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
+    protected void makeDialogMessages(ViewGroup viewGroup, int[] textResIds)
+    {
+        if (viewGroup == null || textResIds == null)
+        {
+            return;
+        }
+
+        int length = textResIds.length;
+
+        for (int i = 0; i < length; i++)
+        {
+            View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, viewGroup, false);
+
+            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            if (i == length - 1)
+            {
+                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
+            } else
+            {
+                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
+            }
+
+            messageTextView.setLayoutParams(layoutParams);
+
+            String message = getString(textResIds[i]);
+
+            int startIndex = message.indexOf("<b>");
+
+            if (startIndex >= 0)
+            {
+                message = message.replaceAll("<b>", "");
+
+                int endIndex = message.indexOf("</b>");
+
+                message = message.replaceAll("</b>", "");
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
+
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                messageTextView.setText(spannableStringBuilder);
+            } else
+            {
+                messageTextView.setText(message);
+            }
+
+            viewGroup.addView(messageRow);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -584,7 +649,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 if (length == 0)
                 {
                     mSelectedCreditCard = null;
-                    updateSimpleCardInformation(mPaymentInformation, null);
+                    setSimpleCardInformation(mPaymentInformation, null);
                 } else
                 {
                     if (mSelectedCreditCard == null)
@@ -616,7 +681,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         }
                     }
 
-                    updateSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
+                    setSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
                 }
 
                 // 호텔 가격 정보가 변경되었습니다.
@@ -667,13 +732,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 if (length == 0)
                 {
                     mSelectedCreditCard = null;
-                    updateSimpleCardInformation(mPaymentInformation, null);
+                    setSimpleCardInformation(mPaymentInformation, null);
                 } else
                 {
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                     mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    updateSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
+                    setSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
 
                     // final check 결제 화면을 보여준다.
                     showAgreeTermDialog(PlacePaymentInformation.PaymentType.EASY_CARD);

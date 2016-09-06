@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -38,7 +37,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
                 JSONObject dataJSONObject = null;
 
@@ -47,21 +46,46 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
                     dataJSONObject = response.getJSONObject("data");
                 }
 
-                if (msgCode != 0 || dataJSONObject == null)
+                if (msgCode == 100 && dataJSONObject == null)
                 {
-                    String msg;
-                    if (response.has("msg") == true)
+                    msgCode = 4;
+                }
+
+                // 100	성공
+                // 4	데이터가 없을시
+                // 5	판매 마감시
+                switch (msgCode)
+                {
+                    case 100:
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
+                        break;
+
+                    case 5:
                     {
-                        msg = response.getString("msg");
-                    } else
-                    {
-                        msg = mContext.getString(R.string.act_base_network_connect);
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
                     }
 
-                    mOnNetworkControllerListener.onErrorToastMessage(msg);
-                } else
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
+                    case 4:
+                    default:
+                    {
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
+                            mOnNetworkControllerListener.onErrorToastMessage(msg);
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
+                    }
                 }
             } catch (Exception e)
             {

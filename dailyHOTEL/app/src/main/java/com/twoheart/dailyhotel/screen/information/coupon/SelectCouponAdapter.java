@@ -217,10 +217,15 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     private void setDownLoadLayout(SelectViewHolder holder)
     {
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_dimmed);
+        holder.iconImageView.setVisibility(View.VISIBLE);
         holder.iconImageView.setImageResource(R.drawable.coupon_ic_download);
-        holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.select_coupon_vertical_line_dimmed));
         holder.iconImageView.setSelected(false);
+
+        holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.select_coupon_vertical_line_dimmed));
+
         holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
+        holder.priceTextView.setGravity(Gravity.START);
+        holder.priceTextView.setPadding(Util.dpToPx(mContext, 7), 0, 0, 0);
         holder.downloadTextView.setVisibility(View.VISIBLE);
         holder.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
         holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));

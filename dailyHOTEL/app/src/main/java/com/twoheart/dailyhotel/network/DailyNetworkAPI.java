@@ -355,11 +355,15 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelDetailInformation(Object tag, int index, String date, int nights, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/detail" : "NjUkNDgkODgkOCQyNyQ=$MTc5Q0MyMRkY0N0Y1NkIzNTVCMjDM1OTJBRkY3MjlGNERBM0Q1LM0ZBNjE2QzdDNjlBMMzlCRUFEQzg1MDExMzBCOQQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}" : "NTgkMjkkMiQ0MyQzNCQ=$MzVkzMjc5RDNGQUExRUZCREQ0NERDMVTFEXREM2NUMxMXkY3NTc0OUFDQkZCRkPI0QzQ3MDA5NjgyMjY5OUM2NUQ4Qw==$";
 
-        String params = String.format("?hotelIdx=%d&dateCheckIn=%s&lengthStay=%d", index, date, nights);
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelIdx}", Integer.toString(index));
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        String params = String.format("?dateCheckIn=%s&stays=%d", date, nights);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -530,13 +534,17 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetDetailInformation(Object tag, int index, String day, DailyHotelJsonResponseListener listener)
+    public void requestGourmetDetailInformation(Object tag, int index, String date, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/restaurant/info" : "MjkkMzYkNDckMjUkODMk$M0FCMTY0Qjk2RDU1NTRFNTc1ROURDRVEFFOTEVyMUFDQTkwNJkExRTkwMzBGNUQ5MTgyQUI4MzJGNEQ2MTBUEOEY2OQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}" : "MzYkNzQkMjUkMzQkNzQk$QUUwREI5ODU1MzA4OTc4NzJFMXDdBQzNDMVEVFJQjYzMzEzODdFRTMwNzYwOEQxOUI1NTQ2NkEAwND0M1NUJGMTRGRA==$";
 
-        String params = String.format("?restaurant_idx=%d&sday=%s", index, day);
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(index));
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        String params = String.format("?dateSale=%s", date);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -999,6 +1007,17 @@ public class DailyNetworkAPI implements IDailyNetwork
         String params = String.format("?isAgreed=%b", isAgree);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.PUT, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking" : "NTAkMTMkNzUkNSQ0NCQ=$MkEwQHTYyOEE4NUkI1MzA4ODIwM0MwMzc1MzdERkZBRUAMwQTU0MkFY4MTFENkU2Q0I2MDQyMUIzQTjYzREI4M0UxQQ==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);

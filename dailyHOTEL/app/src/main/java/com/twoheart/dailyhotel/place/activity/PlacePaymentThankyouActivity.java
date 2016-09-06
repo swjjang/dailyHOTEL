@@ -6,21 +6,30 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.Map;
 
 public abstract class PlacePaymentThankyouActivity extends BaseActivity implements OnClickListener
 {
     protected static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
-    protected static final String INTENT_EXTRA_DATA_PLACE = "place";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
-    protected static final String INTENT_EXTRA_DATA_DATEL = "date";
+    protected static final String INTENT_EXTRA_DATA_DATE = "date";
     protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";
     protected static final String INTENT_EXTRA_DATA_DISCOUNT_TYPE = "discountType";
+    protected static final String INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM = "mapPaymentInform";
+
+    private String mPaymentType;
+    private Map<String, String> mParams;
 
     protected abstract void recordEvent(String action, String label);
+
+    protected abstract void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,18 +48,26 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             return;
         }
 
+        mPaymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGEURL);
-        String place = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE);
         String placeType = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_TYPE);
-        String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATEL);
-        String paymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
+        String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATE);
         String discountType = intent.getStringExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE);
+
+        mParams = (Map<String, String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM);
+
+        String productIndex = mParams.get(AnalyticsManager.KeyType.TICKET_INDEX);
+        String place = mParams.get(AnalyticsManager.KeyType.NAME);
 
         initToolbar();
         initLayout(imageUrl, place, placeType, date);
 
-        recordEvent(AnalyticsManager.Action.END_PAYMENT, paymentType);
+        recordEvent(AnalyticsManager.Action.END_PAYMENT, mPaymentType);
         recordEvent(AnalyticsManager.Action.PAYMENT_USED, discountType);
+        recordEvent(AnalyticsManager.Action.PRODUCT_ID, productIndex);
+
+        PlacePaymentThankyouNetworkController networkController = new PlacePaymentThankyouNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        networkController.requestUserTracking();
     }
 
     private void initToolbar()
@@ -106,4 +123,43 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 break;
         }
     }
+
+    private PlacePaymentThankyouNetworkController.OnNetworkControllerListener mNetworkControllerListener = new PlacePaymentThankyouNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onUserTracking(int hotelPaymentCompletedCount, int hotelUsedCount, int gourmetPaymentCompletedCount, int gourmetUsedCount)
+        {
+            boolean isFirstStayPurchase = hotelPaymentCompletedCount == 1 ? true : false;
+            boolean isFirstGourmetPurchase = gourmetPaymentCompletedCount == 1 ? true : false;
+
+            if (isFirstStayPurchase == true || isFirstGourmetPurchase == true)
+            {
+                PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            // do nothing
+        }
+    };
 }

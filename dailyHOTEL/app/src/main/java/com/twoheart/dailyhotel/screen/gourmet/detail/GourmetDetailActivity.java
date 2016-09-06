@@ -321,7 +321,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
                 mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount);
 
-            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyMMdd"), mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
         }
     }
 
@@ -427,7 +427,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
-            params.put(AnalyticsManager.KeyType.RATING, gourmetDetail.satisfaction);
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetail.ratingValue));
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
 
             AnalyticsManager.getInstance(this).recordScreen(screen, params);
@@ -718,7 +718,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
             }
 
-            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyMMdd"), mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
         }
 
         @Override

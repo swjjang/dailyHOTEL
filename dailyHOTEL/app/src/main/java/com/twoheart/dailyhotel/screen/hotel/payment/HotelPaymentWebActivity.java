@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -148,12 +147,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 return true;
             }
         }); // 롱클릭 에러 방지.
-
-        if (hotelPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
-        {
-            finish();
-            return;
-        }
 
         requestPostPaymentWebView(mWebView, hotelPaymentInformation, saleTime);
     }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<merge xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:dailyFont="http://schemas.android.com/apk/res-auto">-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-<!-- GUI 체크시에 풀어서 사용하세요 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    <!-- GUI 체크시에 풀어서 사용하세요 -->
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:dailyFont="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
@@ -97,5 +97,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
-</LinearLayout>
-    <!--</merge>-->
+    <!--</LinearLayout>-->
+</merge>

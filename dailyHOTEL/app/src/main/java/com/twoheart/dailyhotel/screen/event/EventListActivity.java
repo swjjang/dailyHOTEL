@@ -132,6 +132,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -147,7 +149,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
             return;
         }
 
-        Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName, null);
+        Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 

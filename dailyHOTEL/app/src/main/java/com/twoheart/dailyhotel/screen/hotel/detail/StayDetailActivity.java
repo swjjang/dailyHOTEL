@@ -500,7 +500,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
-            params.put(AnalyticsManager.KeyType.RATING, stayDetail.satisfaction);
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayDetail.isShowOriginalPrice);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(screen, params);
@@ -893,7 +893,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             ((StayDetail) mPlaceDetail).hasCoupon = hasCoupon;
 
             ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mPlaceDetail.index,//
-                mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), ((StayDetail) mPlaceDetail).nights);
+                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), ((StayDetail) mPlaceDetail).nights);
         }
 
         @Override

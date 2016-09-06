@@ -301,7 +301,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         }
     }
 
-    private String getPhoneNumber()
+    public String getPhoneNumber()
     {
         String tag = (String) mCountryEditText.getTag();
 

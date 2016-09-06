@@ -59,6 +59,7 @@ import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -878,18 +879,24 @@ public class Util implements Constants
             return;
         }
 
-        final String packageName = "com.nhn.android.nmap";
-        String url = String.format("navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, name);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-
-        if (isInstalledPackage(activity, packageName, intent) == true)
+        try
         {
-            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
-        } else
+            final String packageName = "com.nhn.android.nmap";
+            String url = String.format("navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, URLEncoder.encode(name, "UTF-8"));
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+
+            if (isInstalledPackage(activity, packageName, intent) == true)
+            {
+                activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
+            } else
+            {
+                installPackage(activity, packageName);
+            }
+        } catch (Exception e)
         {
-            installPackage(activity, packageName);
+            ExLog.d(e.toString());
         }
     }
 
@@ -900,18 +907,24 @@ public class Util implements Constants
             return;
         }
 
-        final String packageName = "com.locnall.KimGiSa";
-        String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", name, longitude, latitude, DailyHotelRequest.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-
-        if (isInstalledPackage(activity, packageName, intent) == true)
+        try
         {
-            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
-        } else
+            final String packageName = "com.locnall.KimGiSa";
+            String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", URLEncoder.encode(name, "UTF-8"), longitude, latitude, DailyHotelRequest.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+
+            if (isInstalledPackage(activity, packageName, intent) == true)
+            {
+                activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
+            } else
+            {
+                installPackage(activity, packageName);
+            }
+        } catch (Exception e)
         {
-            installPackage(activity, packageName);
+            ExLog.d(e.toString());
         }
     }
 
@@ -922,20 +935,26 @@ public class Util implements Constants
             return;
         }
 
-        final String packageName = "com.google.android.apps.maps";
-        //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
-        String url = String.format("http://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, placeName);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        intent.setPackage(packageName);
-
-        if (isInstalledPackage(activity, packageName, intent) == true)
+        try
         {
-            activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
-        } else
+            final String packageName = "com.google.android.apps.maps";
+            //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
+            String url = String.format("http://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, URLEncoder.encode(placeName, "UTF-8"));
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            intent.setPackage(packageName);
+
+            if (isInstalledPackage(activity, packageName, intent) == true)
+            {
+                activity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EXTERNAL_MAP);
+            } else
+            {
+                installPackage(activity, packageName);
+            }
+        } catch (Exception e)
         {
-            installPackage(activity, packageName);
+            ExLog.d(e.toString());
         }
     }
 
@@ -1153,10 +1172,10 @@ public class Util implements Constants
                     {
                         if (Util.isTextEmpty(gaLabel) == true)
                         {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakoNavi", null);
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi", null);
                         } else
                         {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakoNavi-" + gaLabel, null);
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi-" + gaLabel, null);
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -94,12 +94,20 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
 
         ticketInformationViewHolder.nameTextView.setText(ticketInformation.name);
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        String currency = mContext.getString(R.string.currency);
-        String discountPrice = comma.format(ticketInformation.discountPrice);
+        String price = Util.getPriceFormat(mContext, ticketInformation.price, false);
+        String discountPrice = Util.getPriceFormat(mContext, ticketInformation.discountPrice, false);
 
-        ticketInformationViewHolder.priceTextView.setVisibility(View.GONE);
-        ticketInformationViewHolder.discountPriceTextView.setText(discountPrice + currency);
+        if (ticketInformation.price <= 0 || ticketInformation.price <= ticketInformation.discountPrice)
+        {
+            ticketInformationViewHolder.priceTextView.setVisibility(View.GONE);
+            ticketInformationViewHolder.priceTextView.setText(null);
+        } else
+        {
+            ticketInformationViewHolder.priceTextView.setVisibility(View.VISIBLE);
+            ticketInformationViewHolder.priceTextView.setText(price);
+        }
+
+        ticketInformationViewHolder.discountPriceTextView.setText(discountPrice);
 
         if (Util.isTextEmpty(ticketInformation.option) == true)
         {
@@ -151,6 +159,7 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
 
             nameTextView = (TextView) itemView.findViewById(R.id.roomTypeTextView);
             priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
+            priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             discountPriceTextView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
             optionTextView = (TextView) itemView.findViewById(R.id.optionTextView);
             amenitiesTextView = (TextView) itemView.findViewById(R.id.amenitiesTextView);

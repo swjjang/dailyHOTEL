@@ -851,7 +851,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             } else
             {
                 Intent intent = EventWebActivity.newInstance(mBaseActivity, //
-                    EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name, saleTime);
+                    EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name);
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
@@ -1026,7 +1026,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null, mGourmetCuration.getSaleTime());
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
 
