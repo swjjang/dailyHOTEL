@@ -10,7 +10,6 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -20,16 +19,17 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 {
     protected static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
-    protected static final String INTENT_EXTRA_DATA_DATEL = "date";
+    protected static final String INTENT_EXTRA_DATA_DATE = "date";
     protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";
     protected static final String INTENT_EXTRA_DATA_DISCOUNT_TYPE = "discountType";
     protected static final String INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM = "mapPaymentInform";
 
     private String mPaymentType;
+    private Map<String, String> mParams;
 
     protected abstract void recordEvent(String action, String label);
 
-    protected abstract void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType);
+    protected abstract void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,32 +51,13 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         mPaymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGEURL);
         String placeType = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_TYPE);
-        String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATEL);
+        String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATE);
         String discountType = intent.getStringExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE);
 
+        mParams = (Map<String, String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM);
 
-
-//        params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
-//        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
-//        params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
-//        params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(gourmetPaymentInformation.ticketCount));
-//        params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
-//        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
-//        params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
-//        params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
-//        params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-//        params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
-//        params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-//        params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
-//        params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
-//        params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
-
-        Map<String, String> params = (Map<String, String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM);
-
-        String productIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-        String place = params.get(AnalyticsManager.KeyType.NAME);
-        ExLog.d("thank map : " + params.toString());
-
+        String productIndex = mParams.get(AnalyticsManager.KeyType.TICKET_INDEX);
+        String place = mParams.get(AnalyticsManager.KeyType.NAME);
 
         initToolbar();
         initLayout(imageUrl, place, placeType, date);
@@ -153,7 +134,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
             if (isFirstStayPurchase == true || isFirstGourmetPurchase == true)
             {
-                PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType);
+                PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
             }
         }
 

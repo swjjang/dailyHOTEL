@@ -314,7 +314,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
-        String placyType = String.format("%s X %d", ticketInformation.name, gourmetPaymentInformation.ticketCount);
+        String placeType = String.format("%s X %d", ticketInformation.name, gourmetPaymentInformation.ticketCount);
         String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 
@@ -324,7 +324,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date, paymentInformation.paymentType.getName(), params);
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeType, date, paymentInformation.paymentType.getName(), params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }

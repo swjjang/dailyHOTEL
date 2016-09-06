@@ -12,13 +12,13 @@ import java.util.Map;
 
 public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
-    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date, String paymentType, String discountType, Map<String, String> params)
+    public static Intent newInstance(Context context, String imageUrl, String placeType, String date, String paymentType, String discountType, Map<String, String> params)
     {
         Intent intent = new Intent(context, HotelPaymentThankyouActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
-        intent.putExtra(INTENT_EXTRA_DATA_DATEL, date);
+        intent.putExtra(INTENT_EXTRA_DATA_DATE, date);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
         intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, discountType);
         intent.putExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM, (Serializable) params);
@@ -41,12 +41,13 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     }
 
     @Override
-    protected void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType)
+    protected void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params)
     {
-        if (isFirstStayPurchase == true) {
+        if (isFirstStayPurchase == true)
+        {
             recordEvent(AnalyticsManager.Action.FIRST_PURCHASE_SUCCESS, paymentType);
 
-            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS, null);
+            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS, params);
         }
     }
 }
