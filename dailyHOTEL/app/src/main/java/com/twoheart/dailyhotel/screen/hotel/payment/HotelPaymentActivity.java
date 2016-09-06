@@ -10,10 +10,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +21,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -121,8 +116,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             finish();
             return;
         }
-
-        initIntent(intent);
 
         mIsChangedPrice = false;
         mWarningDialogMessage = null;
@@ -250,16 +243,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
         mHotelPaymentLayout.setPaymentInformation(paymentInformation, selectedCreditCard);
     }
 
     @Override
-    protected void updateGuestInformation(String phoneNumber)
+    protected void setGuestInformation(String phoneNumber)
     {
         mPaymentInformation.getGuest().phone = phoneNumber;
-        mHotelPaymentLayout.setUserPhoneInformation(phoneNumber);
+        mHotelPaymentLayout.setGuestPhoneInformation(phoneNumber);
     }
 
     @Override
@@ -339,10 +332,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
     {
         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) paymentInformation;
-
         RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
         String discountType = Label.FULL_PAYMENT;
+
         switch (paymentInformation.discountType)
         {
             case BONUS:
@@ -519,106 +512,54 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         int[] textResIds;
 
-        switch (paymentType)
+
+        if (mPensionPopupMessageType != 0)
         {
-            // 신용카드 일반 결제
-            case CARD:
-
-                if (mPensionPopupMessageType != 0)
-                {
-                    textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
-                } else
-                {
+            textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
+        } else
+        {
+            switch (paymentType)
+            {
+                // 신용카드 일반 결제
+                case CARD:
                     textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
                         , R.string.dialog_msg_hotel_payment_message14//
                         , R.string.dialog_msg_hotel_payment_message02//
                         , R.string.dialog_msg_hotel_payment_message03//
                         , R.string.dialog_msg_hotel_payment_message06};
-                }
+                    break;
 
-                break;
-
-            // 핸드폰 결제
-            case PHONE_PAY:
-                if (mPensionPopupMessageType != 0)
-                {
-                    textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
-                } else
-                {
+                // 핸드폰 결제
+                case PHONE_PAY:
                     textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
                         , R.string.dialog_msg_hotel_payment_message14//
                         , R.string.dialog_msg_hotel_payment_message02//
                         , R.string.dialog_msg_hotel_payment_message03//
                         , R.string.dialog_msg_hotel_payment_message06};
-                }
-                break;
+                    break;
 
-            // 계좌 이체
-            case VBANK:
-                if (mPensionPopupMessageType != 0)
-                {
-                    textResIds = pensionPaymentDialogMessage(mPensionPopupMessageType, paymentType);
-                } else
-                {
+                // 계좌 이체
+                case VBANK:
                     textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
                         , R.string.dialog_msg_hotel_payment_message14//
                         , R.string.dialog_msg_hotel_payment_message02//
                         , R.string.dialog_msg_hotel_payment_message03//
                         , R.string.dialog_msg_hotel_payment_message05//
                         , R.string.dialog_msg_hotel_payment_message06};
-                }
-                break;
+                    break;
 
-            default:
-                return null;
+                default:
+                    textResIds = null;
+                    break;
+            }
         }
 
-        int length = textResIds.length;
-
-        for (int i = 0; i < length; i++)
+        if (textResIds == null)
         {
-            View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
-
-            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            if (i == length - 1)
-            {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
-            } else
-            {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
-            }
-
-            messageTextView.setLayoutParams(layoutParams);
-
-            String message = getString(textResIds[i]);
-
-            int startIndex = message.indexOf("<b>");
-
-            if (startIndex >= 0)
-            {
-                message = message.replaceAll("<b>", "");
-
-                int endIndex = message.indexOf("</b>");
-
-                message = message.replaceAll("</b>", "");
-
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                messageTextView.setText(spannableStringBuilder);
-            } else
-            {
-                messageTextView.setText(message);
-            }
-
-            messageLayout.addView(messageRow);
+            return null;
         }
+
+        makeDialogMessages(messageLayout, textResIds);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 
@@ -1012,7 +953,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         try
         {
             String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
-
             String userIndex = paymentInformation.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
 
@@ -1151,7 +1091,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     params.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
                     params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
 
-                    //                    String expireDate = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm");
                     String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
                     params.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
                     break;
@@ -1282,8 +1221,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, false);
             mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, false);
 
-            // 기본이 간편카드 결제이다.
-            changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
+            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else
         {
             if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true)
@@ -1301,7 +1239,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
                 {
-                    changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
+                    mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
                 }
 
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
@@ -1318,27 +1256,30 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 mIsUnderPrice = false;
 
-                // 기본이 간편카드 결제이다.
-                changedPaymentType(getAvailableDefaultPaymentType(), mSelectedCreditCard);
+                mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
             } else
             {
-                changedPaymentType(mPaymentInformation.paymentType, mSelectedCreditCard);
+                mOnEventListener.changedPaymentType(mPaymentInformation.paymentType);
             }
         }
     }
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
     {
-        if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true)
+        if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true &&//
+            mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true &&//
+            mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true &&//
+            mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY) == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(this).isStayVirtualPaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isStayVirtualPaymentEnabled() == true &&//
+            mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK) == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;
         } else
@@ -1438,6 +1379,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     private int[] pensionPaymentDialogMessage(int messageType, PlacePaymentInformation.PaymentType paymentType)
     {
+        if (paymentType == null)
+        {
+            return null;
+        }
+
         int[] messageList;
         if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
         {
@@ -1473,16 +1419,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         messageList[3] = R.string.dialog_msg_hotel_payment_message03;
 
-        if (PlacePaymentInformation.PaymentType.EASY_CARD == paymentType)
+        switch (paymentType)
         {
-            messageList[4] = R.string.dialog_msg_hotel_payment_message07;
-        } else if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
-        {
-            messageList[4] = R.string.dialog_msg_hotel_payment_message05;
-            messageList[5] = R.string.dialog_msg_hotel_payment_message06;
-        } else
-        {
-            messageList[4] = R.string.dialog_msg_hotel_payment_message06;
+            case EASY_CARD:
+                messageList[4] = R.string.dialog_msg_hotel_payment_message07;
+                break;
+
+            case VBANK:
+                messageList[4] = R.string.dialog_msg_hotel_payment_message05;
+                messageList[5] = R.string.dialog_msg_hotel_payment_message06;
+                break;
+
+            default:
+                messageList[4] = R.string.dialog_msg_hotel_payment_message06;
+                break;
         }
 
         return messageList;
@@ -1524,6 +1474,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // User ActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private HotelPaymentLayout.OnEventListener mOnEventListener = new HotelPaymentLayout.OnEventListener()
     {
@@ -1588,7 +1541,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mHotelPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.NAME);
+                    mHotelPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.NAME);
 
                     if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
                     {
@@ -1602,7 +1555,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mHotelPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.PHONE);
+                    mHotelPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.PHONE);
 
                     DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
@@ -1610,7 +1563,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mHotelPaymentLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.EMAIL);
 
                     DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     return;
@@ -1618,7 +1571,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mHotelPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.EMAIL);
+                    mHotelPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.EMAIL);
 
                     DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
@@ -1895,14 +1848,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 buyer.setPhone(phone);
                 buyer.setUserIdx(userIndex);
 
-                Guest guest = new Guest();
-                guest.name = name;
-                guest.phone = phone;
-                guest.email = email;
-                guest.message = mHotelPaymentLayout.getMemoEditText();
-
                 hotelPaymentInformation.setCustomer(buyer);
-                hotelPaymentInformation.setGuest(guest);
+
+                if (mIsEditMode == false)
+                {
+                    Guest guest = new Guest();
+                    guest.name = name;
+                    guest.phone = phone;
+                    guest.email = email;
+                    guest.message = mHotelPaymentLayout.getMemoEditText();
+
+                    hotelPaymentInformation.setGuest(guest);
+                }
+
+                Guest guest = hotelPaymentInformation.getGuest();
 
                 // 해외 호텔인 경우.
                 if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
@@ -1930,7 +1889,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             mIsEditMode = true;
 
                             guest.name = "";
-                            mHotelPaymentLayout.requestUserInformationFocus(UserInformationType.NAME);
+                            mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
                         }
 
                         mHotelPaymentLayout.setGuestInformation(hotelPaymentInformation);

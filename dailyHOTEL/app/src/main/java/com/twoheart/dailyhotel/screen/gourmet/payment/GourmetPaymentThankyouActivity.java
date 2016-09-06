@@ -44,7 +44,8 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
     @Override
     protected void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params)
     {
-        if (isFirstGourmetPurchase == true) {
+        if (isFirstGourmetPurchase == true)
+        {
             recordEvent(AnalyticsManager.Action.FIRST_PURCHASE_SUCCESS, paymentType);
 
             AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS, params);

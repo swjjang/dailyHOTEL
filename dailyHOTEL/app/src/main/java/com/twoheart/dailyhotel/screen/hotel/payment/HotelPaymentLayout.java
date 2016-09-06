@@ -1,13 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.payment;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.Intent;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -16,62 +9,31 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.RoomInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.DailyScrollView;
-import com.twoheart.dailyhotel.widget.DailySignatureView;
-import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
@@ -203,11 +165,20 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         initGuestInformation(view);
     }
 
+    /**
+     * 추후에 게스트입력 정보와 유저 입력 정보를 분리하도록 할때 User, Guest를 구분하도록 한다.
+     *
+     * @param view
+     */
     private void initGuestInformation(View view)
     {
+        mGuideNameMemo = (TextView) view.findViewById(R.id.guideNameMemoView);
+
         mReservationName = (EditText) view.findViewById(R.id.guestNameEditText);
         mReservationPhone = (EditText) view.findViewById(R.id.guestPhoneEditText);
         mReservationEmail = (EditText) view.findViewById(R.id.guestEmailEditText);
+
+        mReservationPhone.setCursorVisible(false);
 
         mReservationName.setOnFocusChangeListener(this);
         mReservationPhone.setOnFocusChangeListener(this);
@@ -218,14 +189,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mGuestNameHintEditText.setClickable(false);
         mGuestNameHintEditText.setVisibility(View.GONE);
 
-        // 전화번호.
-        mReservationPhone.setCursorVisible(false);
-
         View fakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
         fakeMobileEditView.setFocusable(true);
         fakeMobileEditView.setOnClickListener(this);
-
-        mGuideNameMemo = (TextView)view.findViewById(R.id.guideNameMemoView);
     }
 
     private void initBookingMemo(View view)
@@ -267,6 +233,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mSimpleCardLayout = view.findViewById(R.id.simpleCardLayout);
         mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
         mDisableSimpleCardView = view.findViewById(R.id.disableSimpleCardView);
+
         mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
         mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
 
@@ -275,6 +242,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mPhoneLayout = view.findViewById(R.id.phoneLayout);
         mDisablePhoneView = mPhoneLayout.findViewById(R.id.disablePhoneView);
+
         mTransferLayout = view.findViewById(R.id.transferLayout);
         mDisableTransferView = mTransferLayout.findViewById(R.id.disableTransferView);
 
@@ -326,6 +294,51 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
+    public boolean isPaymentTypeEnabled(PlacePaymentInformation.PaymentType paymentType)
+    {
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                return mDisableSimpleCardView.getVisibility() == View.VISIBLE;
+
+            case CARD:
+                return mDisableCardView.getVisibility() == View.VISIBLE;
+
+            case PHONE_PAY:
+                return mDisablePhoneView.getVisibility() == View.VISIBLE;
+
+            case VBANK:
+                return mDisableTransferView.getVisibility() == View.VISIBLE;
+        }
+
+        return false;
+    }
+
+    private void setPaymentTypeEnabled(View view, boolean enabled)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            view.setOnClickListener(null);
+            view.setVisibility(View.GONE);
+        } else
+        {
+            view.setVisibility(View.VISIBLE);
+            view.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
+        }
+    }
+
     public void setReservationInformation(HotelPaymentInformation hotelPaymentInformation, long checkInDate, long checkOutDate, int nights)
     {
         // 예약 장소
@@ -351,32 +364,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mCheckoutDayTextView.setText(checkOutSpannableStringBuilder);
 
         mNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
-    }
-
-
-    private void setPaymentTypeEnabled(View view, boolean enabled)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        if (enabled == true)
-        {
-            view.setOnClickListener(null);
-            view.setVisibility(View.GONE);
-        } else
-        {
-            view.setVisibility(View.VISIBLE);
-            view.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            });
-        }
     }
 
     protected void setGuestInformation(HotelPaymentInformation hotelPaymentInformation)
@@ -463,7 +450,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setUserNameInformation(String name)
+    public void setGuestNameInformation(String name)
     {
         if (mReservationName == null)
         {
@@ -473,7 +460,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mReservationName.setText(name);
     }
 
-    public void setUserPhoneInformation(String mobileNumber)
+    public void setGuestPhoneInformation(String mobileNumber)
     {
         if (mReservationPhone == null)
         {
@@ -481,6 +468,47 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
 
         mReservationPhone.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
+    }
+
+    public void setPaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    {
+        if (paymentInformation == null)
+        {
+            return;
+        }
+
+        if (selectedCreditCard == null)
+        {
+            mCardManagerTextView.setText(R.string.label_register_card);
+            mSimpleCardTextView.setText(R.string.label_booking_easypayment);
+        } else
+        {
+            mCardManagerTextView.setText(R.string.label_manager);
+
+            final String cardName = selectedCreditCard.name.replace("카드", "");
+            final String cardNumber = selectedCreditCard.number;
+
+            mSimpleCardTextView.setText(String.format("%s %s", cardName, cardNumber));
+            mSimpleCardTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Layout layout = mSimpleCardTextView.getLayout();
+
+                    if (layout == null || Util.isTextEmpty(cardName) == true)
+                    {
+                        return;
+                    }
+
+                    int lineCount = mSimpleCardTextView.getLineCount();
+                    if (lineCount > 1)
+                    {
+                        mSimpleCardTextView.setText(String.format("%s\n%s", cardName, cardNumber));
+                    }
+                }
+            });
+        }
     }
 
     public void setPaymentInformation(PlacePaymentInformation.DiscountType discountType, int originalPrice, int discountPrice, int payPrice)
@@ -531,41 +559,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
     }
 
-    public void setPaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
-    {
-        if (selectedCreditCard == null)
-        {
-            mCardManagerTextView.setText(R.string.label_register_card);
-            mSimpleCardTextView.setText(R.string.label_booking_easypayment);
-        } else
-        {
-            mCardManagerTextView.setText(R.string.label_manager);
-
-            final String cardName = selectedCreditCard.name.replace("카드", "");
-            final String cardNumber = selectedCreditCard.number;
-
-            mSimpleCardTextView.setText(String.format("%s %s", cardName, cardNumber));
-            mSimpleCardTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Layout layout = mSimpleCardTextView.getLayout();
-
-                    if (layout == null || Util.isTextEmpty(cardName) == true)
-                    {
-                        return;
-                    }
-
-                    int lineCount = mSimpleCardTextView.getLineCount();
-                    if (lineCount > 1)
-                    {
-                        mSimpleCardTextView.setText(String.format("%s\n%s", cardName, cardNumber));
-                    }
-                }
-            });
-        }
-    }
 
     public Guest getGuest()
     {
@@ -584,7 +577,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         return mMemoEditText.getText().toString().trim();
     }
 
-    public void requestUserInformationFocus(Constants.UserInformationType type)
+    public void requestGuestInformationFocus(Constants.UserInformationType type)
     {
         switch (type)
         {

@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -27,12 +26,12 @@ import java.util.TimeZone;
 
 public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
 {
+    private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
     private TextView mPlaceNameTextView;
     private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
     private EditText mMemoEditText;
     private ScrollView mScrollLayout;
-    private View mBookingLayout;
 
     private TextView mPriceTextView, mFinalPaymentTextView;
     private View mTicketCountMinusButton, mTicketCountPlusButton;
@@ -46,13 +45,13 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mPhoneLayout;
     private View mTransferLayout;
 
-    private TextView mCardManagerTextView;
-    private TextView mGuidePaymentMemoView;
-
     private View mDisableSimpleCardView;
     private View mDisableCardView;
     private View mDisablePhoneView;
     private View mDisableTransferView;
+
+    private TextView mCardManagerTextView;
+    private TextView mGuidePaymentMemoView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -95,6 +94,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         initPaymentInformation(view);
         initPaymentTypeInformation(view);
 
+        // 결제하기
         View doPaymentView = view.findViewById(R.id.doPaymentView);
         doPaymentView.setOnClickListener(this);
     }
@@ -158,15 +158,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         initUserInformationLayout(view);
     }
 
+    /**
+     * 추후에 게스트입력 정보와 유저 입력 정보를 분리하도록 할때 User, Guest를 구분하도록 한다.
+     *
+     * @param view
+     */
     private void initUserInformationLayout(View view)
     {
-        // 예약자
         mUserNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
-
-        // 연락처
         mUserPhoneEditText = (EditText) view.findViewById(R.id.userPhoneEditText);
-
-        // 이메일
         mUserEmailEditText = (EditText) view.findViewById(R.id.userEmailEditText);
 
         mUserPhoneEditText.setCursorVisible(false);
@@ -220,12 +220,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void setPaymentMemoTextView(String text, boolean visible)
     {
-        if(mGuidePaymentMemoView == null)
+        if (mGuidePaymentMemoView == null)
         {
             return;
         }
 
-        if(Util.isTextEmpty(text) == true || visible == false)
+        if (Util.isTextEmpty(text) == true || visible == false)
         {
             mGuidePaymentMemoView.setVisibility(View.GONE);
             return;
@@ -255,6 +255,26 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 setPaymentTypeEnabled(mDisableTransferView, enabled);
                 break;
         }
+    }
+
+    public boolean isPaymentTypeEnabled(PlacePaymentInformation.PaymentType paymentType)
+    {
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                return mDisableSimpleCardView.getVisibility() == View.VISIBLE;
+
+            case CARD:
+                return mDisableCardView.getVisibility() == View.VISIBLE;
+
+            case PHONE_PAY:
+                return mDisablePhoneView.getVisibility() == View.VISIBLE;
+
+            case VBANK:
+                return mDisableTransferView.getVisibility() == View.VISIBLE;
+        }
+
+        return false;
     }
 
     private void setPaymentTypeEnabled(View view, boolean enabled)
@@ -343,7 +363,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void setUserPhoneInformation(String mobileNumber)
     {
-        if(mUserPhoneEditText == null)
+        if (mUserPhoneEditText == null)
         {
             return;
         }
@@ -358,7 +378,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        setPaymentInformation(gourmetPaymentInformation);
+        setPaymentInformation(gourmetPaymentInformation.getPaymentToPay());
 
         if (selectedCreditCard == null)
         {
@@ -394,18 +414,13 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    public void setPaymentInformation(int price)
     {
-        if (gourmetPaymentInformation == null)
-        {
-            return;
-        }
-
         // 결제금액
-        String price = Util.getPriceFormat(mContext, gourmetPaymentInformation.getPaymentToPay(), false);
+        String priceFormat = Util.getPriceFormat(mContext, price, false);
 
-        mPriceTextView.setText(price);
-        mFinalPaymentTextView.setText(price);
+        mPriceTextView.setText(priceFormat);
+        mFinalPaymentTextView.setText(priceFormat);
     }
 
     public void setTicketCount(int count)

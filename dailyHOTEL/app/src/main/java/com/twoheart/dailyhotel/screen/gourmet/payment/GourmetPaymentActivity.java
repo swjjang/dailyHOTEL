@@ -9,10 +9,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +19,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -193,7 +188,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         lockUI();
 
-
         Guest guest;
 
         if (mIsEditMode == true)
@@ -234,13 +228,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
         mGourmetPaymentLayout.setPaymentInformation((GourmetPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
     @Override
-    protected void updateGuestInformation(String phoneNumber)
+    protected void setGuestInformation(String phoneNumber)
     {
         mPaymentInformation.getGuest().phone = phoneNumber;
         mGourmetPaymentLayout.setUserPhoneInformation(phoneNumber);
@@ -275,6 +269,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected void showChangedPriceDialog()
     {
         unLockUI();
+
+        setPaymentInformation((GourmetPaymentInformation) mPaymentInformation);
 
         showChangedValueDialog(R.string.message_gourmet_detail_changed_price, new DialogInterface.OnDismissListener()
         {
@@ -320,9 +316,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 
-//        String strDate = DailyCalendar.format(new Date(), "yyMMddHHmmss");
-//        String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
-//        String transId = strDate + '_' + userIndex;
+        //        String strDate = DailyCalendar.format(new Date(), "yyMMddHHmmss");
+        //        String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
+        //        String transId = strDate + '_' + userIndex;
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
@@ -507,52 +503,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 return null;
         }
 
-        int length = textResIds.length;
-
-        for (int i = 0; i < length; i++)
-        {
-            View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
-
-            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            if (i == length - 1)
-            {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
-            } else
-            {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
-            }
-
-            messageTextView.setLayoutParams(layoutParams);
-
-            String message = getString(textResIds[i]);
-
-            int startIndex = message.indexOf("<b>");
-
-            if (startIndex >= 0)
-            {
-                message = message.replaceAll("<b>", "");
-
-                int endIndex = message.indexOf("</b>");
-
-                message = message.replaceAll("</b>", "");
-
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                messageTextView.setText(spannableStringBuilder);
-            } else
-            {
-                messageTextView.setText(message);
-            }
-
-            messageLayout.addView(messageRow);
-        }
+        makeDialogMessages(messageLayout, textResIds);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 
@@ -818,16 +769,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         if (isSimpleCardPaymentEnabled == true)
         {
-            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+            changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
         } else if (isCardPaymentEnabled == true)
         {
-            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
+            changedPaymentType(PlacePaymentInformation.PaymentType.CARD, mSelectedCreditCard);
         } else if (isPhonePaymentEnabled == true)
         {
-            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+            changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
         } else if (isVirtualPaymentEnabled == true)
         {
-            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
+            changedPaymentType(PlacePaymentInformation.PaymentType.VBANK, mSelectedCreditCard);
         }
     }
 
@@ -850,9 +801,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         try
         {
-            //            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-            //            Date date = new Date();
-            //            String strDate = dateFormat.format(date);
             String strDate = DailyCalendar.format(new Date(), "yyMMddHHmmss");
             String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
@@ -919,6 +867,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private Map<String, String> getMapPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
     {
+        if (gourmetPaymentInformation == null)
+        {
+            return null;
+        }
+
         Map<String, String> params = new HashMap<>();
 
         try
@@ -938,16 +891,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
-
-            //            Calendar calendarTime = DailyCalendar.getInstance();
-            //            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-            //
-            //            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-            //            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-            //
-            //            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(gourmetPaymentInformation.ticketTime));
             params.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
-
             params.put(AnalyticsManager.KeyType.VISIT_HOUR, Long.toString(gourmetPaymentInformation.ticketTime));
 
             if (mProvince == null)
@@ -1006,21 +950,25 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
         }
 
-        mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
+        mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation.getPaymentToPay());
     }
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
     {
-        if (DailyPreference.getInstance(this).isGourmetSimpleCardPaymentEnabled() == true)
+        if (DailyPreference.getInstance(this).isGourmetSimpleCardPaymentEnabled() == true &&//
+            mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(this).isGourmetCardPaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isGourmetCardPaymentEnabled() == true &&//
+            mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true &&//
+            mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY) == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(this).isGourmetVirtualPaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isGourmetVirtualPaymentEnabled() == true &&//
+            mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK) == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;
         } else
