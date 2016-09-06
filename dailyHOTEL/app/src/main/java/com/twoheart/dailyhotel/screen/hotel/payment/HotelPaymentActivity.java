@@ -1083,8 +1083,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 break;
         }
 
+        Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
+
         Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.hotelName//
-            , roomInformation.roomName, hotelPaymentInformation.checkInOutDate, paymentInformation.paymentType.getName(), discountType);
+            , roomInformation.roomName, hotelPaymentInformation.checkInOutDate, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }

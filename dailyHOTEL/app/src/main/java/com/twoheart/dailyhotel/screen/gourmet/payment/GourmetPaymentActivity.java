@@ -318,7 +318,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
         String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
 
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date, paymentInformation.paymentType.getName());
+//        String strDate = DailyCalendar.format(new Date(), "yyMMddHHmmss");
+//        String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
+//        String transId = strDate + '_' + userIndex;
+
+        Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
+
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date, paymentInformation.paymentType.getName(), params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -855,7 +861,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
             params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(gourmetPaymentInformation.ticketCount));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));

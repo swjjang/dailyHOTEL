@@ -161,6 +161,49 @@ public class FacebookManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + parameters.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+
+            String price = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
+            Bundle parameters = new Bundle();
+            parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.HOTEL);
+            parameters.putString(EventParam.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN));
+            parameters.putString(EventParam.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
+            parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, price);
+            parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, Currency.getInstance("KRW").getCurrencyCode());
+
+            appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SPENT_CREDITS, parameters);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+
+            String price = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
+            Bundle parameters = new Bundle();
+            parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.GOURMET);
+            parameters.putString(EventParam.GOURMET_RESERVATION_DATE, params.get(AnalyticsManager.KeyType.DATE));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
+            parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, price);
+            parameters.putString(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, params.get(AnalyticsManager.KeyType.QUANTITY));
+            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, Currency.getInstance("KRW").getCurrencyCode());
+
+            appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SPENT_CREDITS, parameters);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+            }
         }
     }
 

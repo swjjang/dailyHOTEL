@@ -7,9 +7,12 @@ import android.view.View.OnClickListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.io.Serializable;
+import java.util.Map;
+
 public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
-    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date, String paymentType)
+    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date, String paymentType, Map<String, String> map)
     {
         Intent intent = new Intent(context, GourmetPaymentThankyouActivity.class);
 
@@ -19,6 +22,8 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         intent.putExtra(INTENT_EXTRA_DATA_DATEL, date);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
         intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, AnalyticsManager.Label.FULL_PAYMENT);
+
+        intent.putExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM, (Serializable) map);
 
         return intent;
     }
@@ -35,5 +40,15 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
     protected void recordEvent(String action, String label)
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, action, label, null);
+    }
+
+    @Override
+    protected void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType)
+    {
+        if (isFirstGourmetPurchase == true) {
+            recordEvent(AnalyticsManager.Action.FIRST_PURCHASE_SUCCESS, paymentType);
+
+            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS, null);
+        }
     }
 }

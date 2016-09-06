@@ -583,4 +583,6 @@ interface IDailyNetwork
      * @param listener
      */
     void requestUpdateBenefitAgreement(Object tag, boolean isAgree, DailyHotelJsonResponseListener listener);
+
+    void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener);
 }

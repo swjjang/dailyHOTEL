@@ -145,6 +145,12 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(e.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            firstPurchaseEventHotel(params);
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            firstPurchaseEventGourmet(params);
         } else
         {
             AppboyProperties appboyProperties = getAppboyProperties(params);
@@ -454,6 +460,81 @@ public class AppboyManager extends BaseAnalyticsManager
         }
     }
 
+    private void firstPurchaseEventHotel(Map<String, String> params)
+    {
+        AppboyProperties appboyProperties = new AppboyProperties();
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+
+        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, placeName);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.PURCHASED_DATE, new Date());
+
+        try
+        {
+            boolean couponRedeem = Boolean.parseBoolean(params.get(AnalyticsManager.KeyType.COUPON_REDEEM));
+
+            appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE))));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE))));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.COUPON_REDEEM, couponRedeem);
+
+            mAppboy.logPurchase("stay-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), 1, appboyProperties);
+            mAppboy.logCustomEvent(EventName.STAY_FIRST_PURCHASE_COMPLETED, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + placeName + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } catch (NumberFormatException e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void firstPurchaseEventGourmet(Map<String, String> params)
+    {
+        AppboyProperties appboyProperties = new AppboyProperties();
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+
+        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        appboyProperties.addProperty(AnalyticsManager.KeyType.GOURMET_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, placeName);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.PURCHASED_DATE, new Date());
+
+        try
+        {
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_HOUR, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_HOUR))));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_DATE))));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_TICKETS, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
+
+            mAppboy.logPurchase("gourmet-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)), 1, appboyProperties);
+            mAppboy.logCustomEvent(EventName.GOURMET_FIRST_PURCHASE_COMPLETED, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + placeName + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } catch (NumberFormatException e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -738,6 +819,9 @@ public class AppboyManager extends BaseAnalyticsManager
 
         public static final String FIRST_NOTIFICATION_POPUP_ON = "first_notification_popup_on";
         public static final String FIRST_NOTIFICATION_POPUP_OFF = "first_notification_popup_off";
+
+        public static final String STAY_FIRST_PURCHASE_COMPLETED = "stay_first_purchase_completed";
+        public static final String GOURMET_FIRST_PURCHASE_COMPLETED = "gourmet_first_purchase_completed";
     }
 
     private static final class ValueName

@@ -6,21 +6,30 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.Map;
 
 public abstract class PlacePaymentThankyouActivity extends BaseActivity implements OnClickListener
 {
     protected static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
-    protected static final String INTENT_EXTRA_DATA_PLACE = "place";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
     protected static final String INTENT_EXTRA_DATA_DATEL = "date";
     protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";
     protected static final String INTENT_EXTRA_DATA_DISCOUNT_TYPE = "discountType";
+    protected static final String INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM = "mapPaymentInform";
+
+    private String mPaymentType;
 
     protected abstract void recordEvent(String action, String label);
+
+    protected abstract void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,18 +48,45 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             return;
         }
 
+        mPaymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGEURL);
-        String place = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE);
         String placeType = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_TYPE);
         String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATEL);
-        String paymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
         String discountType = intent.getStringExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE);
+
+
+
+//        params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
+//        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
+//        params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
+//        params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(gourmetPaymentInformation.ticketCount));
+//        params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
+//        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
+//        params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
+//        params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
+//        params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+//        params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
+//        params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+//        params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
+//        params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
+//        params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
+
+        Map<String, String> params = (Map<String, String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM);
+
+        String productIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
+        String place = params.get(AnalyticsManager.KeyType.NAME);
+        ExLog.d("thank map : " + params.toString());
+
 
         initToolbar();
         initLayout(imageUrl, place, placeType, date);
 
-        recordEvent(AnalyticsManager.Action.END_PAYMENT, paymentType);
+        recordEvent(AnalyticsManager.Action.END_PAYMENT, mPaymentType);
         recordEvent(AnalyticsManager.Action.PAYMENT_USED, discountType);
+        recordEvent(AnalyticsManager.Action.PRODUCT_ID, productIndex);
+
+        PlacePaymentThankyouNetworkController networkController = new PlacePaymentThankyouNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        networkController.requestUserTracking();
     }
 
     private void initToolbar()
@@ -106,4 +142,43 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 break;
         }
     }
+
+    private PlacePaymentThankyouNetworkController.OnNetworkControllerListener mNetworkControllerListener = new PlacePaymentThankyouNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onUserTracking(int hotelPaymentCompletedCount, int hotelUsedCount, int gourmetPaymentCompletedCount, int gourmetUsedCount)
+        {
+            boolean isFirstStayPurchase = hotelPaymentCompletedCount == 1 ? true : false;
+            boolean isFirstGourmetPurchase = gourmetPaymentCompletedCount == 1 ? true : false;
+
+            if (isFirstStayPurchase == true || isFirstGourmetPurchase == true)
+            {
+                PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            // do nothing
+        }
+    };
 }
