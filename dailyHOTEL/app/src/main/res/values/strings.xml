@@ -480,7 +480,7 @@
     <string name="label_booking_select">선택하세요</string>
     <string name="label_booking_simplecard_description">(법인카드 결제 가능)</string>
     <string name="label_booking_card_description">(할부 결제 가능)</string>
-    <string name="label_booking_phonepay_description">(월 30만원 이내 결제 가능)</string>
+    <string name="label_booking_phonepay_description">(월 50만원 이내 결제 가능)</string>
     <string name="label_booking_virtualpay_description">(가상계좌로 10분 내 입금시 결제 완료)</string>
     <string name="label_booking_own_bonus">(보유: %1$s)</string>
     <string name="label_booking_memo">예약시 요청사항</string>

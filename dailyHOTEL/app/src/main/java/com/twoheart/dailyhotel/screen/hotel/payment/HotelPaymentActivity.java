@@ -617,8 +617,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 setPaymentTypeEnabled(mDisableCardView, true);
             }
 
-            // 30만원 한도 핸드폰 결제 금지
-            if (payPrice >= PHONE_PAYMENT_LIMIT)
+            // 50만원 한도 핸드폰 결제 금지
+            if (payPrice > PHONE_PAYMENT_LIMIT)
             {
                 if(mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
                 {
@@ -653,13 +653,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if(DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if(DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if(DailyPreference.getInstance(this).isStayVirtualPaymentEnabled() == true)
+        } else if (DailyPreference.getInstance(this).isStayVirtualPaymentEnabled() == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;
         } else
@@ -935,7 +935,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
     {
-        if(paymentType == null)
+        if (paymentType == null)
         {
             ((View) mSimpleCardLayout.getParent()).setSelected(false);
             mSimpleCardLayout.setSelected(false);
