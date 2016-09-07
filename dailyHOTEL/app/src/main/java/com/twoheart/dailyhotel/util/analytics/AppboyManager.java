@@ -486,7 +486,6 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.COUPON_REDEEM, couponRedeem);
 
-            mAppboy.logPurchase("stay-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), 1, appboyProperties);
             mAppboy.logCustomEvent(EventName.STAY_FIRST_PURCHASE_COMPLETED, appboyProperties);
 
             if (DEBUG == true)
@@ -522,7 +521,6 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_TICKETS, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
-            mAppboy.logPurchase("gourmet-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)), 1, appboyProperties);
             mAppboy.logCustomEvent(EventName.GOURMET_FIRST_PURCHASE_COMPLETED, appboyProperties);
 
             if (DEBUG == true)
