@@ -768,6 +768,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, (StayDetail) mPlaceDetail, roomInformation));
         }
+
+        @Override
+        public void onChangedViewPrice(int type)
+        {
+            ((StayDetailLayout) mPlaceDetailLayout).setChangedViewPrice(type);
+        }
     };
 
 

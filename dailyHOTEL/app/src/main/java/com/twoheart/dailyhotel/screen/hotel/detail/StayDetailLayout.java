@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -23,8 +24,11 @@ import java.util.ArrayList;
  *
  * @author sheldon
  */
-public class StayDetailLayout extends PlaceDetailLayout
+public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.OnCheckedChangeListener
 {
+    public static final int VIEW_AVERAGE_PRICE = 0;
+    public static final int VIEW_TOTAL_PRICE = 1;
+
     private StayDetailListAdapter mListAdapter;
     private RoomInformation mSelectedRoomInformation;
 
@@ -33,6 +37,8 @@ public class StayDetailLayout extends PlaceDetailLayout
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
         void doBooking(RoomInformation roomInformation);
+
+        void onChangedViewPrice(int type);
     }
 
     public StayDetailLayout(Context context, OnBaseEventListener listener)
@@ -128,6 +134,17 @@ public class StayDetailLayout extends PlaceDetailLayout
             setBookingStatus(STATUS_SELECT_PRODUCT);
 
             updateRoomTypeInformationLayout(saleRoomList);
+        }
+
+        if (stayDetail.nights > 1)
+        {
+            mPriceRadioGroup.check(R.id.averageRadioButton);
+            mPriceRadioGroup.setVisibility(View.VISIBLE);
+            mPriceRadioGroup.setOnCheckedChangeListener(this);
+        } else
+        {
+            mPriceRadioGroup.setVisibility(View.GONE);
+            mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
 
         mListAdapter.notifyDataSetChanged();
@@ -241,5 +258,31 @@ public class StayDetailLayout extends PlaceDetailLayout
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId)
+    {
+        switch (checkedId)
+        {
+            case R.id.averageRadioButton:
+                ((OnEventListener) mOnEventListener).onChangedViewPrice(VIEW_AVERAGE_PRICE);
+                break;
+
+            case R.id.totalRadioButton:
+                ((OnEventListener) mOnEventListener).onChangedViewPrice(VIEW_TOTAL_PRICE);
+                break;
+        }
+    }
+
+    public void setChangedViewPrice(int type)
+    {
+        if(mRoomTypeListAdapter == null)
+        {
+            return;
+        }
+
+        mRoomTypeListAdapter.setChangedViewPrice(type);
+        mRoomTypeListAdapter.notifyDataSetChanged();
     }
 }
