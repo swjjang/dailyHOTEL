@@ -97,23 +97,9 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         return times;
     }
 
-
-    /**
-     * 적립금이 반영된 가격
-     *
-     * @return
-     */
     public int getPaymentToPay()
     {
-        int price = (mTicketInformation.discountPrice * ticketCount) //
-            - (discountType == DiscountType.BONUS ? bonus : 0);
-
-        if (price < 0)
-        {
-            price = 0;
-        }
-
-        return price;
+        return mTicketInformation.discountPrice * ticketCount;
     }
 
     @Override
