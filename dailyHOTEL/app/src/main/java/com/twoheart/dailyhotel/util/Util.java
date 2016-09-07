@@ -991,7 +991,7 @@ public class Util implements Constants
                 {
 //                    ExLog.d("TMap : SKPMapApikeySucceed");
                     DailyHotel.setIsSuccessTMapAuth(true);
-                    moveTmap(activity, tmapTapi, placeName, latitude, longitude);
+                    openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
                 }
 
                 @Override
@@ -1004,13 +1004,13 @@ public class Util implements Constants
             });
         } else
         {
-            moveTmap(activity, tmapTapi, placeName, latitude, longitude);
+            openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
         }
 
 
     }
 
-    private static void moveTmap(Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
+    private static void openTMapNavi(Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
     {
         if (tmapTapi.isTmapApplicationInstalled() == true)
         {
