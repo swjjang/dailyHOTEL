@@ -34,7 +34,6 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -981,13 +980,7 @@ public class Util implements Constants
 
         if (tmapTapi == null)
         {
-            if (DEBUG == false)
-            {
-                Crashlytics.logException(new RuntimeException("TMapApi initialize failed"));
-            } else
-            {
-                ExLog.d("TMap TMapApi initialize failed");
-            }
+            showFailedTMapNaviDialog(activity);
             return;
         }
 
@@ -1007,9 +1000,8 @@ public class Util implements Constants
                 @Override
                 public void SKPMapApikeyFailed(String s)
                 {
-                    // TODO : ellen 과 시나리오 확인 필요
-                    ExLog.d("Tmap : " + s);
                     DailyHotel.setIsSuccessTMapAuth(false);
+                    showFailedTMapNaviDialog(activity);
                 }
             });
         } else
@@ -1020,7 +1012,7 @@ public class Util implements Constants
 
     }
 
-    private static void openTMapNavi(Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
+    private static void openTMapNavi(final Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
     {
         if (tmapTapi.isTmapApplicationInstalled() == true)
         {
@@ -1031,11 +1023,9 @@ public class Util implements Constants
             ArrayList<String> downUrlList = tmapTapi.getTMapDownUrl();
             if (downUrlList == null || downUrlList.size() == 0)
             {
-                ExLog.d("TMap downUrl is null");
-                // TODO : ellen 과 시나리오 확인 필요 - 미 개통 단말!
+                showFailedTMapNaviDialog(activity);
             } else
             {
-                // TODO : 여러개의 url이 올경우 시나리오 확인 필요 - 통신사별 url
                 Uri marketUri = null;
 
                 boolean isCheck = isSktNetwork(activity) ? false : true;
@@ -1066,10 +1056,66 @@ public class Util implements Constants
                     activity.startActivity(intent);
                 } else
                 {
-                    // TODO : 받을수 있는 앱이 없을때 처리
-                    ExLog.d("TMap resolveInfo is null");
+                    showFailedTMapNaviDialog(activity);
                 }
             }
+        }
+    }
+
+    private static void showFailedTMapNaviDialog(final Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText(activity.getString(R.string.dialog_notice2));
+
+        // 메시지
+        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        messageTextView.setText(activity.getString(R.string.message_tmap_navi_failed));
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
+
+        twoButtonLayout.setVisibility(View.GONE);
+        oneButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setText(activity.getString(R.string.dialog_btn_text_confirm));
+        oneButtonLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 
@@ -1113,7 +1159,8 @@ public class Util implements Constants
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
             {
                 tmapNaviLayout.setCompoundDrawablesRelativeWithIntrinsicBounds(0, tmapIconResId, 0, 0);
-            } else {
+            } else
+            {
                 tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
             }
 
