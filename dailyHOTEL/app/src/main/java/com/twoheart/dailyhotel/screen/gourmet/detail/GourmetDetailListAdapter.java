@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -240,7 +241,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
         } else
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, gourmetDetail.ratingValue, gourmetDetail.ratingPersons));
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, //
+                gourmetDetail.ratingValue, decimalFormat.format(gourmetDetail.ratingPersons)));
         }
 
         // 날짜
