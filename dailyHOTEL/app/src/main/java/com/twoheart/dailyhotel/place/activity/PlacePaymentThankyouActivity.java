@@ -127,7 +127,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     private PlacePaymentThankyouNetworkController.OnNetworkControllerListener mNetworkControllerListener = new PlacePaymentThankyouNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserTracking(int hotelPaymentCompletedCount, int hotelUsedCount, int gourmetPaymentCompletedCount, int gourmetUsedCount)
+        public void onUserTracking(int hotelPaymentCompletedCount, int gourmetPaymentCompletedCount)
         {
             boolean isFirstStayPurchase = hotelPaymentCompletedCount == 1 ? true : false;
             boolean isFirstGourmetPurchase = gourmetPaymentCompletedCount == 1 ? true : false;

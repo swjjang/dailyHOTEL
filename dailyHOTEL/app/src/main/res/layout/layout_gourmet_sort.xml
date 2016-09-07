@@ -99,6 +99,20 @@
                 android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/satisfactionCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_sort_satisfaction_button"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:paddingTop="10dp"
+                android:text="@string/label_sort_by_satisfaction"
+                android:textColor="@color/selector_curation_textcolor"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/emptyCheckView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -110,10 +124,6 @@
                 android:textSize="11dp"
                 android:visibility="gone"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
         </RadioGroup>
 
         <View

@@ -19,7 +19,7 @@ public class PlacePaymentThankyouNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserTracking(int hotelPaymentCompletedCount, int hotelUsedCount, int gourmetPaymentCompletedCount, int gourmetUsedCount);
+        void onUserTracking(int hotelPaymentCompletedCount, int gourmetPaymentCompletedCount);
     }
 
     public void requestUserTracking()
@@ -41,13 +41,11 @@ public class PlacePaymentThankyouNetworkController extends BaseNetworkController
                 //                String serverDate = data.getString("serverDate");
 
                 int gourmetPaymentCompletedCount = tracking.getInt("countOfGourmetPaymentCompleted");
-                int gourmetUsedCount = tracking.getInt("countOfGourmetUsed");
 
                 int hotelPaymentCompletedCount = tracking.getInt("countOfHotelPaymentCompleted");
-                int hotelUsedCount = tracking.getInt("countOfHotelUsed");
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserTracking(//
-                    hotelPaymentCompletedCount, hotelUsedCount, gourmetPaymentCompletedCount, gourmetUsedCount);
+                    hotelPaymentCompletedCount, gourmetPaymentCompletedCount);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

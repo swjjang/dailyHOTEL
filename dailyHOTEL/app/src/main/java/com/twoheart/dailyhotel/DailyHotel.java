@@ -30,6 +30,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     public static String AUTHORIZATION;
     public static String GOOGLE_ANALYTICS_CLIENT_ID;
 
+    private static boolean mIsSuccessTMapAuth = false;
+
     @Override
     public void onCreate()
     {
@@ -63,6 +65,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         mInstance = this;
+
+        mIsSuccessTMapAuth = false;
 
         Util.setLocale(getApplicationContext(), Locale.KOREAN);
 
@@ -119,6 +123,17 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     public static boolean isLogin()
     {
         return Util.isTextEmpty(AUTHORIZATION) == false;
+    }
+
+
+    public static boolean isSuccessTMapAuth()
+    {
+        return mIsSuccessTMapAuth;
+    }
+
+    public static void setIsSuccessTMapAuth(boolean isSuccessTMapAuth)
+    {
+        DailyHotel.mIsSuccessTMapAuth = isSuccessTMapAuth;
     }
 
     private static class KakaoSDKAdapter extends KakaoAdapter
