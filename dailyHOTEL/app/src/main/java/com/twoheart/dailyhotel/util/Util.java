@@ -989,7 +989,7 @@ public class Util implements Constants
                 @Override
                 public void SKPMapApikeySucceed()
                 {
-//                    ExLog.d("TMap : SKPMapApikeySucceed");
+                    //                    ExLog.d("TMap : SKPMapApikeySucceed");
                     DailyHotel.setIsSuccessTMapAuth(true);
                     openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
                 }
@@ -1014,7 +1014,7 @@ public class Util implements Constants
     {
         if (tmapTapi.isTmapApplicationInstalled() == true)
         {
-//            ExLog.d("TMap placeName : " + placeName + " , latitude : " + latitude + " , longitude : " + longitude);
+            //            ExLog.d("TMap placeName : " + placeName + " , latitude : " + latitude + " , longitude : " + longitude);
             tmapTapi.invokeRoute(placeName, longitude, latitude);
         } else
         {
@@ -1026,18 +1026,34 @@ public class Util implements Constants
             } else
             {
                 // TODO : 여러개의 url이 올경우 시나리오 확인 필요 - 통신사별 url
-                Uri uri = Uri.parse(downUrlList.get(0));
-//                ExLog.d("TMap downUrl is uri size : " + downUrlList.size());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Uri marketUri = null;
 
+                boolean isCheck = isSktNetwork(activity) ? false : true;
+
+                if (downUrlList.size() > 1)
+                {
+                    for (String url : downUrlList)
+                    {
+                        if (url.contains("play.google.com") == isCheck)
+                        {
+                            marketUri = Uri.parse(url);
+                            break;
+                        }
+                    }
+                }
+
+                if (Uri.EMPTY.equals(marketUri))
+                {
+                    marketUri = Uri.parse(downUrlList.get(0));
+                }
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, marketUri);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
                 if (resolveInfo != null)
                 {
                     activity.startActivity(intent);
-//                    ExLog.d("TMap downUrl is uri : " + uri);
                 } else
                 {
                     // TODO : 받을수 있는 앱이 없을때 처리
@@ -1072,8 +1088,19 @@ public class Util implements Constants
             View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
             View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
             View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
-            View tmapNaviLayout = dialogView.findViewById(R.id.tmapNaviLayout);
+            TextView tmapNaviLayout = (TextView) dialogView.findViewById(R.id.tmapNaviLayout);
             View kakaoNaviLayout = dialogView.findViewById(R.id.kakaoNaviLayout);
+
+            int tmapIconResId;
+            if (isSktNetwork(baseActivity) == true)
+            {
+                tmapIconResId = R.drawable.ic_tmap_red;
+            } else
+            {
+                tmapIconResId = R.drawable.ic_tmap_green;
+            }
+
+            tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
 
             kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
             {
@@ -1372,5 +1399,22 @@ public class Util implements Constants
 
         String[] versions = version.split("\\+");
         return versions[0].replaceAll(REMOVE_CHARACTER, "");
+    }
+
+    public static boolean isSktNetwork(Context context)
+    {
+        if (context == null)
+        {
+            return false;
+        }
+
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        if ("SKTelecom".equalsIgnoreCase(telephonyManager.getNetworkOperatorName()) == false)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
