@@ -70,6 +70,19 @@
             app:layout_columnWeight="1"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/tmapNaviLayout"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="29dp"
+            android:drawablePadding="5dp"
+            android:drawableTop="@drawable/ic_tmap_red"
+            android:gravity="center"
+            android:text="@string/label_share_tmap_navi"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"
+            app:layout_columnWeight="1"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/kakaoNaviLayout"
             android:layout_width="104dp"
             android:layout_height="wrap_content"

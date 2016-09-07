@@ -33,6 +33,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -44,6 +45,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.skp.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
@@ -59,6 +61,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -955,6 +958,111 @@ public class Util implements Constants
         }
     }
 
+    public static void shareTMapNavi(final Activity activity, final String placeName, final float latitude, final float longitude)
+    {
+        ExLog.d("TMap : shareTMapNavi");
+
+        if (activity == null || latitude == 0 || longitude == 0)
+        {
+            return;
+        }
+
+        final TMapTapi tmapTapi = new TMapTapi(activity);
+
+        if (tmapTapi == null)
+        {
+            if (DEBUG == false)
+            {
+                Crashlytics.logException(new RuntimeException("TMapApi initialize failed"));
+            } else
+            {
+                ExLog.d("TMap TMapApi initialize failed");
+            }
+            return;
+        }
+
+        if (DailyHotel.isSuccessTMapAuth() == false)
+        {
+            tmapTapi.setSKPMapAuthentication(DailyHotelRequest.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
+            tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
+            {
+                @Override
+                public void SKPMapApikeySucceed()
+                {
+                    //                    ExLog.d("TMap : SKPMapApikeySucceed");
+                    DailyHotel.setIsSuccessTMapAuth(true);
+                    openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+                }
+
+                @Override
+                public void SKPMapApikeyFailed(String s)
+                {
+                    // TODO : ellen 과 시나리오 확인 필요
+                    ExLog.d("Tmap : " + s);
+                    DailyHotel.setIsSuccessTMapAuth(false);
+                }
+            });
+        } else
+        {
+            openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+        }
+
+
+    }
+
+    private static void openTMapNavi(Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
+    {
+        if (tmapTapi.isTmapApplicationInstalled() == true)
+        {
+            //            ExLog.d("TMap placeName : " + placeName + " , latitude : " + latitude + " , longitude : " + longitude);
+            tmapTapi.invokeRoute(placeName, longitude, latitude);
+        } else
+        {
+            ArrayList<String> downUrlList = tmapTapi.getTMapDownUrl();
+            if (downUrlList == null || downUrlList.size() == 0)
+            {
+                ExLog.d("TMap downUrl is null");
+                // TODO : ellen 과 시나리오 확인 필요 - 미 개통 단말!
+            } else
+            {
+                // TODO : 여러개의 url이 올경우 시나리오 확인 필요 - 통신사별 url
+                Uri marketUri = null;
+
+                boolean isCheck = isSktNetwork(activity) ? false : true;
+
+                if (downUrlList.size() > 1)
+                {
+                    for (String url : downUrlList)
+                    {
+                        if (url.contains("play.google.com") == isCheck)
+                        {
+                            marketUri = Uri.parse(url);
+                            break;
+                        }
+                    }
+                }
+
+                if (Uri.EMPTY.equals(marketUri))
+                {
+                    marketUri = Uri.parse(downUrlList.get(0));
+                }
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, marketUri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (resolveInfo != null)
+                {
+                    activity.startActivity(intent);
+                } else
+                {
+                    // TODO : 받을수 있는 앱이 없을때 처리
+                    ExLog.d("TMap resolveInfo is null");
+                }
+            }
+        }
+    }
+
     public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName//
         , final double latitude, final double longitude, boolean isOverseas//
         , final String gaCategory, final String gaAction, final String gaLabel)
@@ -980,7 +1088,19 @@ public class Util implements Constants
             View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
             View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
             View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+            TextView tmapNaviLayout = (TextView) dialogView.findViewById(R.id.tmapNaviLayout);
             View kakaoNaviLayout = dialogView.findViewById(R.id.kakaoNaviLayout);
+
+            int tmapIconResId;
+            if (isSktNetwork(baseActivity) == true)
+            {
+                tmapIconResId = R.drawable.ic_tmap_red;
+            } else
+            {
+                tmapIconResId = R.drawable.ic_tmap_green;
+            }
+
+            tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
 
             kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
             {
@@ -1052,6 +1172,31 @@ public class Util implements Constants
                         } else
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            tmapNaviLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareTMapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi-" + gaLabel, null);
                         }
                     }
                 }
@@ -1254,5 +1399,22 @@ public class Util implements Constants
 
         String[] versions = version.split("\\+");
         return versions[0].replaceAll(REMOVE_CHARACTER, "");
+    }
+
+    public static boolean isSktNetwork(Context context)
+    {
+        if (context == null)
+        {
+            return false;
+        }
+
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        if ("SKTelecom".equalsIgnoreCase(telephonyManager.getNetworkOperatorName()) == false)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
