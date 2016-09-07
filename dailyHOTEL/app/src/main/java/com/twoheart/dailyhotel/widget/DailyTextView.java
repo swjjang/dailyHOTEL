@@ -3,10 +3,13 @@ package com.twoheart.dailyhotel.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 public class DailyTextView extends AppCompatTextView
 {
@@ -123,5 +126,43 @@ public class DailyTextView extends AppCompatTextView
     {
         setPaintFlags(getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
         super.setTypeface(typeface);
+    }
+
+    @Override
+    public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
+    {
+        if (Util.isOverAPI21() == true)
+        {
+            super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+        } else
+        {
+            Context context = getContext();
+            Drawable leftDrawable = null;
+            Drawable topDrawable = null;
+            Drawable rightDrawable = null;
+            Drawable bottomDrawable = null;
+
+            if (left > 0)
+            {
+                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, left);
+            }
+
+            if (top > 0)
+            {
+                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, top);
+            }
+
+            if (right > 0)
+            {
+                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, right);
+            }
+
+            if (bottom > 0)
+            {
+                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, bottom);
+            }
+
+            super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
+        }
     }
 }
