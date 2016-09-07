@@ -187,20 +187,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/selector_dialog_button01"
-                android:button="@null"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:text="1박 평균가격 보기"
-                android:textColor="@drawable/selector_dialog_text_color01"/>
+                android:textColor="@color/default_text_c323232"/>
 
             <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/totalRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/selector_dialog_button01"
-                android:button="@null"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
                 android:text="총가격 보기"
-                android:textColor="@drawable/selector_dialog_text_color01"/>
+                android:textColor="@color/default_text_c323232"/>
         </RadioGroup>
 
         <android.support.v7.widget.RecyclerView

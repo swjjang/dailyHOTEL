@@ -892,4 +892,5 @@
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
+    <string name="message_detail_nrd">특가상품으로 환불/취소가 불가합니다.</string>
 </resources>

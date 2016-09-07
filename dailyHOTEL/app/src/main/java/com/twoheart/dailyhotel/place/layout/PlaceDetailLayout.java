@@ -280,7 +280,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
         if (Util.isOverAPI12() == true)
         {
             mProductTypeLayout.setVisibility(View.INVISIBLE);
-            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, VIEW_COUNT * 92));
         } else
         {
             mProductTypeLayout.setVisibility(View.GONE);
@@ -316,6 +315,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
             int height = mProductTypeRecyclerView.getHeight() + Util.dpToPx(mContext, 52);
 
+            // 객실의 View타입이 보이는 경우에는 높이를 더한다.
             if (mPriceRadioGroup.getVisibility() == View.VISIBLE)
             {
                 height += Util.dpToPx(mContext, 30);

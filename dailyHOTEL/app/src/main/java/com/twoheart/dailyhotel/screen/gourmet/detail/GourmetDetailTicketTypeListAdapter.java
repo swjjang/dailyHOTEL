@@ -65,7 +65,7 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = mInflater.inflate(R.layout.list_row_detail_roomtype, parent, false);
+        View view = mInflater.inflate(R.layout.list_row_detail_tickettype, parent, false);
 
         return new TicketInformationViewHolder(view);
     }
