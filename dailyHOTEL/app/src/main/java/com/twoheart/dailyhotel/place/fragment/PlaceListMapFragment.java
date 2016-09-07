@@ -123,7 +123,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 mGoogleMap = googleMap;
 
-                //				mGoogleMap.setMyLocationEnabled(true);
+                //                mGoogleMap.setMyLocationEnabled(true);
                 mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
                 mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
                 mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);

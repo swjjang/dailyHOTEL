@@ -95,6 +95,10 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             case HIGH_PRICE:
                 mSortRadioGroup.check(R.id.highPriceCheckView);
                 break;
+
+            case SATISFACTION:
+                mSortRadioGroup.check(R.id.satisfactionCheckView);
+                break;
         }
 
         mSortRadioGroup.setOnCheckedChangeListener(this);
