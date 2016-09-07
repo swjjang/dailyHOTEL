@@ -104,14 +104,23 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         name.setSelected(true); // Android TextView marquee bug
 
+        String displayCategory;
+        if (Util.isTextEmpty(gourmet.subCategory) == false)
+        {
+            displayCategory = gourmet.subCategory;
+        } else
+        {
+            displayCategory = gourmet.category;
+        }
+
         // grade
-        if (Util.isTextEmpty(gourmet.category) == true)
+        if (Util.isTextEmpty(displayCategory) == true)
         {
             grade.setVisibility(View.INVISIBLE);
         } else
         {
             grade.setVisibility(View.VISIBLE);
-            grade.setText(gourmet.category);
+            grade.setText(displayCategory);
         }
 
         Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);

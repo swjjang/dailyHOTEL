@@ -17,6 +17,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -24,7 +25,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings.Secure;
-import android.support.v7.app.AppCompatDelegate;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -1085,7 +1085,7 @@ public class Util implements Constants
         View dialogView;
         final Dialog dialog = new Dialog(baseActivity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
 
         LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -1110,7 +1110,12 @@ public class Util implements Constants
                 tmapIconResId = R.drawable.ic_tmap_green;
             }
 
-            tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            {
+                tmapNaviLayout.setCompoundDrawablesRelativeWithIntrinsicBounds(0, tmapIconResId, 0, 0);
+            } else {
+                tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
+            }
 
             kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
             {

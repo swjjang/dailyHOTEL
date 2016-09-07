@@ -15,6 +15,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
     public String ticketName;
     public String reservationTime;
     public String category;
+    public String subCategory;
 
     public GourmetBookingDetail()
     {
@@ -35,6 +36,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         dest.writeString(ticketName);
         dest.writeString(reservationTime);
         dest.writeString(category);
+        dest.writeString(subCategory);
     }
 
     protected void readFromParcel(Parcel in)
@@ -46,6 +48,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         ticketName = in.readString();
         reservationTime = in.readString();
         category = in.readString();
+        subCategory = in.readString();
     }
 
     public void setData(JSONObject jsonObject) throws Exception
@@ -61,6 +64,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         guestPhone = jsonObject.getString("customerPhone");
         guestEmail = jsonObject.getString("customerEmail");
         addressSummary = jsonObject.getString("addrSummary");
+        subCategory = jsonObject.getString("categorySub");
 
         //
         JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("description"));

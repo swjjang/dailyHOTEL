@@ -91,13 +91,22 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
         TextView placeCateogryTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
-        if (Util.isTextEmpty(gourmetBookingDetail.category) == true)
+        String displayCategory;
+        if (Util.isTextEmpty(gourmetBookingDetail.subCategory) == false)
+        {
+            displayCategory = gourmetBookingDetail.subCategory;
+        } else
+        {
+            displayCategory = gourmetBookingDetail.category;
+        }
+
+        if (Util.isTextEmpty(displayCategory) == true)
         {
             placeCateogryTextView.setVisibility(View.GONE);
         } else
         {
             placeCateogryTextView.setVisibility(View.VISIBLE);
-            placeCateogryTextView.setText(gourmetBookingDetail.category);
+            placeCateogryTextView.setText(displayCategory);
             placeCateogryTextView.setTextColor(getResources().getColor(R.color.black));
             placeCateogryTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }

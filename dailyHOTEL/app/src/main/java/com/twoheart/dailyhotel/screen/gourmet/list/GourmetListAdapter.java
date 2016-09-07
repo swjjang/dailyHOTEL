@@ -170,14 +170,23 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.gradientView.setBackgroundDrawable(mPaintDrawable);
         }
 
+        String displayCategory;
+        if (Util.isTextEmpty(gourmet.subCategory) == false)
+        {
+            displayCategory = gourmet.subCategory;
+        } else
+        {
+            displayCategory = gourmet.category;
+        }
+
         // grade
-        if (Util.isTextEmpty(gourmet.category) == true)
+        if (Util.isTextEmpty(displayCategory) == true)
         {
             holder.gradeView.setVisibility(View.GONE);
         } else
         {
             holder.gradeView.setVisibility(View.VISIBLE);
-            holder.gradeView.setText(gourmet.category);
+            holder.gradeView.setText(displayCategory);
         }
 
         Util.requestImageResize(mContext, holder.gourmetImageView, gourmet.imageUrl);

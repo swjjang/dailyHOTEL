@@ -19,6 +19,7 @@ public class Gourmet extends Place
     public String category;
     public int categoryCode;
     public int categorySequence;
+    public String subCategory;
     public double distance;
 
     public Grade grade;
@@ -83,6 +84,8 @@ public class Gourmet extends Place
             category = jsonObject.getString("category");
             categoryCode = jsonObject.getInt("categoryCode");
             categorySequence = jsonObject.getInt("categorySeq");
+
+            subCategory = jsonObject.getString("categorySub");
 
             if (jsonObject.has("rating") == true)
             {
