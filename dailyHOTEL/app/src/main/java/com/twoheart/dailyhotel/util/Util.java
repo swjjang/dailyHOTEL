@@ -958,8 +958,10 @@ public class Util implements Constants
         }
     }
 
-    public static void shareTmapNavi(final Activity activity, final String placeName, final float latitude, final float longitude)
+    public static void shareTMapNavi(final Activity activity, final String placeName, final float latitude, final float longitude)
     {
+        ExLog.d("TMap : shareTMapNavi");
+
         if (activity == null || latitude == 0 || longitude == 0)
         {
             return;
@@ -971,61 +973,78 @@ public class Util implements Constants
         {
             if (DEBUG == false)
             {
-                Crashlytics.logException(new RuntimeException("TMapTapi initialize failed"));
+                Crashlytics.logException(new RuntimeException("TMapApi initialize failed"));
             } else
             {
-                ExLog.d("TMapTapi initialize failed");
+                ExLog.d("TMap TMapApi initialize failed");
             }
             return;
         }
 
-        tmapTapi.setSKPMapAuthentication("api key");
-        tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
+        if (DailyHotel.isSuccessTMapAuth() == false)
         {
-            @Override
-            public void SKPMapApikeySucceed()
+            tmapTapi.setSKPMapAuthentication(DailyHotelRequest.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
+            tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
             {
-                if (tmapTapi.isTmapApplicationInstalled() == true)
+                @Override
+                public void SKPMapApikeySucceed()
                 {
-                    tmapTapi.invokeRoute(placeName, latitude, longitude);
+//                    ExLog.d("TMap : SKPMapApikeySucceed");
+                    DailyHotel.setIsSuccessTMapAuth(true);
+                    moveTmap(activity, tmapTapi, placeName, latitude, longitude);
+                }
+
+                @Override
+                public void SKPMapApikeyFailed(String s)
+                {
+                    // TODO : ellen 과 시나리오 확인 필요
+                    ExLog.d("Tmap : " + s);
+                    DailyHotel.setIsSuccessTMapAuth(false);
+                }
+            });
+        } else
+        {
+            moveTmap(activity, tmapTapi, placeName, latitude, longitude);
+        }
+
+
+    }
+
+    private static void moveTmap(Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
+    {
+        if (tmapTapi.isTmapApplicationInstalled() == true)
+        {
+//            ExLog.d("TMap placeName : " + placeName + " , latitude : " + latitude + " , longitude : " + longitude);
+            tmapTapi.invokeRoute(placeName, longitude, latitude);
+        } else
+        {
+            ArrayList<String> downUrlList = tmapTapi.getTMapDownUrl();
+            if (downUrlList == null || downUrlList.size() == 0)
+            {
+                ExLog.d("TMap downUrl is null");
+                // TODO : ellen 과 시나리오 확인 필요 - 미 개통 단말!
+            } else
+            {
+                // TODO : 여러개의 url이 올경우 시나리오 확인 필요 - 통신사별 url
+                Uri uri = Uri.parse(downUrlList.get(0));
+//                ExLog.d("TMap downUrl is uri size : " + downUrlList.size());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                if (resolveInfo != null)
+                {
+                    activity.startActivity(intent);
+//                    ExLog.d("TMap downUrl is uri : " + uri);
                 } else
                 {
-                    ArrayList<String> downUrlList = tmapTapi.getTMapDownUrl();
-                    if (downUrlList == null || downUrlList.size() == 0)
-                    {
-                        ExLog.d("TMap downUrl is null");
-                        // TODO : ellen 과 시나리오 확인 필요 - 미 개통 단말!
-                    } else
-                    {
-                        // TODO : 여러개의 url이 올경우 시나리오 확인 필요 - 통신사별 url
-                        Uri uri = Uri.parse(downUrlList.get(0));
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                        ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-                        if (resolveInfo != null)
-                        {
-                            activity.startActivity(intent);
-                        } else
-                        {
-                            // TODO : 받을수 있는 앱이 없을때 처리
-                            ExLog.d("resolveInfo is null");
-                        }
-                    }
+                    // TODO : 받을수 있는 앱이 없을때 처리
+                    ExLog.d("TMap resolveInfo is null");
                 }
             }
-
-            @Override
-            public void SKPMapApikeyFailed(String s)
-            {
-                // TODO : ellen 과 시나리오 확인 필요
-                ExLog.d("Tmap : " + s);
-            }
-        });
-
-
+        }
     }
 
     public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName//
@@ -1141,7 +1160,7 @@ public class Util implements Constants
                         dialog.dismiss();
                     }
 
-                    Util.shareTmapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
+                    Util.shareTMapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
 
                     if (Util.isTextEmpty(gaCategory) == false)
                     {
