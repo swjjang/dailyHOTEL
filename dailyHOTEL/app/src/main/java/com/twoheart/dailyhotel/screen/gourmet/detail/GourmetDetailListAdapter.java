@@ -228,6 +228,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
             gradeTextView.setText(gourmetDetail.category);
         }
 
+        // 소분류 등급
+        TextView subGradeTextView = (TextView) view.findViewById(R.id.gourmetSubGradeTextView);
+
+        if (Util.isTextEmpty(gourmetDetail.subCategory) == true)
+        {
+            subGradeTextView.setVisibility(View.GONE);
+        } else
+        {
+            subGradeTextView.setVisibility(View.VISIBLE);
+            subGradeTextView.setText(gourmetDetail.subCategory);
+        }
+
         // 호텔명
         TextView placeNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
         placeNameTextView.setText(gourmetDetail.name);
