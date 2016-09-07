@@ -23,6 +23,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
     private List<RoomInformation> mRoomInformationList;
     private View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
+    private int mViewPriceType;
 
     public StayDetailRoomTypeListAdapter(Context context, ArrayList<RoomInformation> arrayList, View.OnClickListener listener)
     {
@@ -31,6 +32,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         mRoomInformationList = new ArrayList<>();
         mRoomInformationList.addAll(arrayList);
+        mViewPriceType = StayDetailLayout.VIEW_AVERAGE_PRICE;
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -59,6 +61,11 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         }
 
         return mRoomInformationList.get(position);
+    }
+
+    public void setChangedViewPrice(int type)
+    {
+        mViewPriceType = type;
     }
 
     @Override
@@ -93,8 +100,17 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         saleRoomInformationViewHolder.roomTypeTextView.setText(roomInformation.roomName);
 
-        String price = Util.getPriceFormat(mContext, roomInformation.price, false);
-        String discountPrice = Util.getPriceFormat(mContext, roomInformation.averageDiscount, false);
+        String price, discountPrice;
+
+        if (mViewPriceType == StayDetailLayout.VIEW_TOTAL_PRICE)
+        {
+            price = Util.getPriceFormat(mContext, roomInformation.price * roomInformation.nights, false);
+            discountPrice = Util.getPriceFormat(mContext, roomInformation.totalDiscount, false);
+        } else
+        {
+            price = Util.getPriceFormat(mContext, roomInformation.price, false);
+            discountPrice = Util.getPriceFormat(mContext, roomInformation.averageDiscount, false);
+        }
 
         if (roomInformation.price <= 0 || roomInformation.price <= roomInformation.averageDiscount)
         {
@@ -134,6 +150,14 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.benefitTextView.setText(roomInformation.roomBenefit);
         }
+
+        if(roomInformation.isNRD == true)
+        {
+            saleRoomInformationViewHolder.nrdTextView.setVisibility(View.GONE);
+        } else
+        {
+            saleRoomInformationViewHolder.nrdTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -156,6 +180,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         TextView optionTextView;
         TextView amenitiesTextView;
         TextView benefitTextView;
+        TextView nrdTextView;
 
         public SaleRoomInformationViewHolder(View itemView)
         {
@@ -170,6 +195,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             optionTextView = (TextView) itemView.findViewById(R.id.optionTextView);
             amenitiesTextView = (TextView) itemView.findViewById(R.id.amenitiesTextView);
             benefitTextView = (TextView) itemView.findViewById(R.id.benefitTextView);
+            nrdTextView = (TextView) itemView.findViewById(R.id.nrdTextView);
 
             itemView.setOnClickListener(mOnClickListener);
         }

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="122dp">
+                android:layout_height="100dp">
 
     <View
         android:layout_width="match_parent"
@@ -114,23 +114,6 @@
                 android:maxLines="1"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="12dp"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/nrdTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/shape_fillrect_bf2f2f3"
-                android:freezesText="true"
-                android:maxLines="1"
-                android:paddingBottom="3dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="3dp"
-                android:text="@string/message_detail_nrd"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="11dp"
-                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

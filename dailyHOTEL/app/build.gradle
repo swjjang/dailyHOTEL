@@ -42,6 +42,7 @@ android {
         versionCode 94
         versionName "1.9.4"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
 
         resConfigs "ko"
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"

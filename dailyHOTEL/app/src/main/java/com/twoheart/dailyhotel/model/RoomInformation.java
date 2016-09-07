@@ -20,6 +20,7 @@ public class RoomInformation implements Parcelable
     public int nights;
     public Stay.Grade grade;
     public String address;
+    public boolean isNRD;
     //
     public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
 
@@ -65,6 +66,7 @@ public class RoomInformation implements Parcelable
         dest.writeString(grade.name());
         dest.writeString(address);
         dest.writeString(categoryCode);
+        dest.writeInt(isNRD ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -91,6 +93,7 @@ public class RoomInformation implements Parcelable
 
         address = in.readString();
         categoryCode = in.readString();
+        isNRD = in.readInt() == 1;
     }
 
     @Override
