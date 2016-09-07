@@ -49,6 +49,9 @@ public class StayListAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                view.setLayoutParams(layoutParams);
+
                 return new HotelViewHolder(view);
             }
 

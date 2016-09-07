@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.support.v7.app.AppCompatDelegate;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -294,6 +295,15 @@ public class Util implements Constants
         }
 
         return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    /**
+     * 메인 리스트를 16:9로 표현
+     * @return
+     */
+    public static int getListRowHeight(Context context)
+    {
+        return 9 * getLCDWidth(context) / 16;
     }
 
     public static boolean isNameCharacter(String text)

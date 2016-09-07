@@ -48,6 +48,8 @@ public class GourmetListAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                view.setLayoutParams(layoutParams);
 
                 return new GourmetViewHolder(view);
             }
