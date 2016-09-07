@@ -148,6 +148,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             case HIGH_PRICE:
                 mSortRadioGroup.check(R.id.highPriceCheckView);
                 break;
+
+            case SATISFACTION:
+                mSortRadioGroup.check(R.id.satisfactionCheckView);
+                break;
         }
 
         mSortRadioGroup.setOnCheckedChangeListener(this);
