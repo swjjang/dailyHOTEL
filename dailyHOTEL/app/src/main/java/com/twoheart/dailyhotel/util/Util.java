@@ -301,6 +301,7 @@ public class Util implements Constants
 
     /**
      * 메인 리스트를 16:9로 표현
+     *
      * @return
      */
     public static int getListRowHeight(Context context)
@@ -335,14 +336,19 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
     }
 
+    public static boolean isOverAPI15()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
+    }
+
     public static boolean isOverAPI16()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
-    public static boolean isOverAPI15()
+    public static boolean isOverAPI17()
     {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
 
     public static boolean isOverAPI19()
@@ -1156,13 +1162,7 @@ public class Util implements Constants
                 tmapIconResId = R.drawable.ic_tmap_green;
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            {
-                tmapNaviLayout.setCompoundDrawablesRelativeWithIntrinsicBounds(0, tmapIconResId, 0, 0);
-            } else
-            {
-                tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
-            }
+            tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
 
             kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
             {
