@@ -149,17 +149,17 @@ public class DailyTextView extends AppCompatTextView
 
             if (top > 0)
             {
-                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, top);
+                topDrawable = AppCompatDrawableManager.get().getDrawable(context, top);
             }
 
             if (right > 0)
             {
-                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, right);
+                rightDrawable = AppCompatDrawableManager.get().getDrawable(context, right);
             }
 
             if (bottom > 0)
             {
-                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, bottom);
+                bottomDrawable = AppCompatDrawableManager.get().getDrawable(context, bottom);
             }
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);

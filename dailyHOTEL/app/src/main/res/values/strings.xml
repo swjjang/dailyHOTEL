@@ -833,7 +833,7 @@
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>
-    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s일 투숙시 사용가능</string>
+    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 투숙시 사용가능</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
     <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
     <string name="message_select_coupon_empty">사용할 수 있는 할인 쿠폰이 없습니다.</string>
@@ -894,4 +894,6 @@
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
     <string name="message_detail_nrd">특가상품으로 환불/취소가 불가합니다.</string>
+
+    <string name="message_tmap_navi_failed">T맵 연결이 원활하지 않습니다.\n다른 길찾기 앱을 이용하시거나\n잠시 후 다시 시도해주세요.</string>
 </resources>
