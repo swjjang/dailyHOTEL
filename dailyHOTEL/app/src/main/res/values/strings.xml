@@ -897,7 +897,7 @@
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
-    <string name="message_detail_nrd">특가상품으로 환불/취소가 불가합니다.</string>
+    <string name="message_detail_nrd">특가상품으로 변경, 취소, 환불이 불가합니다.</string>
 
     <string name="message_tmap_navi_failed">T맵 연결이 원활하지 않습니다.\n다른 길찾기 앱을 이용하시거나\n잠시 후 다시 시도해주세요.</string>
     <string name="message_stay_detail_nrd">특가상품으로 설정된 객실은 위 내용과 상관없이 예약의 변경, 취소, 환불이 불가합니다.</string>
