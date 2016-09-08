@@ -170,12 +170,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mMinusPersonView = view.findViewById(R.id.minusPersonView);
         mPlusPersonView = view.findViewById(R.id.plusPersonView);
 
-        View minusDimView = view.findViewById(R.id.minusDimView);
-        View plusDimView = view.findViewById(R.id.plusDimView);
-
-        mMinusPersonView.setTag(minusDimView);
-        mPlusPersonView.setTag(plusDimView);
-
         mPersonCountView = (TextView) view.findViewById(R.id.personCountView);
 
         mMinusPersonView.setOnClickListener(this);
@@ -185,9 +179,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         // 베드타입
         mBedTypeLayout = (ViewGroup) view.findViewById(R.id.bedTypeLayout);
-        View doubleCheckView = view.findViewById(R.id.doubleCheckView);
-        View twinCheckView = view.findViewById(R.id.twinCheckView);
-        View heatedFloorsCheckView = view.findViewById(R.id.heatedFloorsCheckView);
+        DailyTextView doubleCheckView = (DailyTextView) view.findViewById(R.id.doubleCheckView);
+        doubleCheckView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_03_bed_01, 0, 0);
+
+        DailyTextView twinCheckView = (DailyTextView) view.findViewById(R.id.twinCheckView);
+        twinCheckView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_03_bed_02, 0, 0);
+
+        DailyTextView heatedFloorsCheckView = (DailyTextView) view.findViewById(R.id.heatedFloorsCheckView);
+        heatedFloorsCheckView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_03_bed_03, 0, 0);
 
         doubleCheckView.setOnClickListener(this);
         twinCheckView.setOnClickListener(this);
@@ -315,27 +314,18 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         mPersonCountView.setText(getString(R.string.label_more_person, person));
 
-        View minusDimview = (View) mMinusPersonView.getTag();
-        View plusDimview = (View) mPlusPersonView.getTag();
-
         if (person == StayFilter.MIN_PERSON)
         {
             mMinusPersonView.setEnabled(false);
             mPlusPersonView.setEnabled(true);
-            minusDimview.setVisibility(View.VISIBLE);
-            plusDimview.setVisibility(View.GONE);
         } else if (person == StayFilter.MAX_PERSON)
         {
             mMinusPersonView.setEnabled(true);
             mPlusPersonView.setEnabled(false);
-            minusDimview.setVisibility(View.GONE);
-            plusDimview.setVisibility(View.VISIBLE);
         } else
         {
             mMinusPersonView.setEnabled(true);
             mPlusPersonView.setEnabled(true);
-            minusDimview.setVisibility(View.GONE);
-            plusDimview.setVisibility(View.GONE);
         }
 
         requestUpdateResultDelayed();
