@@ -492,6 +492,7 @@
     <string name="label_booking_stay_step2">2. 할인수단 선택 및 결제금액</string>
     <string name="label_booking_gourmet_step2">2. 결제금액</string>
     <string name="label_booking_step3">3. 결제수단</string>
+    <string name="label_booking_step4">4. 취소 및 환불 규정</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
     <string name="message_booking_selected_time">시간을 선택해주세요</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>

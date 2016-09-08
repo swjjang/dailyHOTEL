@@ -1961,6 +1961,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
 
+                        mHotelPaymentLayout.setRefundPolicyVisibility(roomInformation.isNRD);
+
                         // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                         if (isOnSale == false || availableRooms == 0)
                         {

@@ -48,6 +48,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- 4. 취소 및 환불 규정 -->
+            <include
+                layout="@layout/layout_booking_hotel_refund_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
             <!-- 결제 버튼 -->
             <RelativeLayout
                 android:id="@+id/bottomLayout"

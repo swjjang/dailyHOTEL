@@ -78,6 +78,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private TextView mCardManagerTextView;
     private TextView mGuidePaymentMemoView;
 
+    //
+    private View mRefundPolicyLayout;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void editUserInformation();
@@ -116,6 +119,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         initBookingMemo(view);
         initPaymentInformation(view);
         initPaymentTypeInformation(view);
+        initRefundPolicy(view);
 
         // 결제하기
         View doPaymentView = view.findViewById(R.id.doPaymentView);
@@ -255,6 +259,12 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mTransferLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
+    }
+
+    private void initRefundPolicy(View view)
+    {
+        mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+        mRefundPolicyLayout.setVisibility(View.GONE);
     }
 
     public void setPaymentMemoTextView(String text, boolean visible)
@@ -557,6 +567,24 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
     }
 
+    public void setRefundPolicyVisibility(boolean visibility)
+    {
+        if (visibility == true)
+        {
+            mRefundPolicyLayout.setVisibility(View.VISIBLE);
+
+            TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(mContext.getString(R.string.message_booking_refund_product));
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.dh_theme_color)), //
+                0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            refundPolicyTextView.setText(spannableStringBuilder);
+        } else
+        {
+            mRefundPolicyLayout.setVisibility(View.GONE);
+        }
+    }
 
     public Guest getGuest()
     {
