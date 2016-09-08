@@ -277,7 +277,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
     public void setChangedViewPrice(int type)
     {
-        if(mRoomTypeListAdapter == null)
+        if (mRoomTypeListAdapter == null)
         {
             return;
         }

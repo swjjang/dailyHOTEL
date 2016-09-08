@@ -27,7 +27,7 @@ public class FAQActivity extends BaseActivity
         //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //        initToolbar(toolbar, getString(R.string.actionbar_title_faq_activity));
 
-//        mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
+        //        mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
         mListView.setOnGroupExpandListener(new OnGroupExpandListener()
         {
             // expand only one
@@ -76,44 +76,44 @@ public class FAQActivity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//    private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
-//    {
-//        @Override
-//        public void onErrorResponse(VolleyError volleyError)
-//        {
-//
-//        }
-//
-//        @Override
-//        public void onResponse(String url, JSONObject response)
-//        {
-//
-//            mList = new ArrayList<>();
-//
-//            try
-//            {
-//                JSONArray json = response.getJSONArray("articles");
-//
-//                int length = json.length();
-//
-//                for (int i = 0; i < length; i++)
-//                {
-//                    JSONObject obj = json.getJSONObject(i);
-//                    String subject = obj.getString("subject");
-//                    String content = obj.getString("content");
-//                    //					String regdate = obj.getString("regdate");
-//
-//                    mList.add(new Notice(subject, content, null));
-//                }
-//
-//                mListView.setAdapter(new EventListAdapter(FAQActivity.this, mList));
-//            } catch (Exception e)
-//            {
-//                onError(e);
-//            } finally
-//            {
-//                unLockUI();
-//            }
-//        }
-//    };
+    //    private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //
+    //        }
+    //
+    //        @Override
+    //        public void onResponse(String url, JSONObject response)
+    //        {
+    //
+    //            mList = new ArrayList<>();
+    //
+    //            try
+    //            {
+    //                JSONArray json = response.getJSONArray("articles");
+    //
+    //                int length = json.length();
+    //
+    //                for (int i = 0; i < length; i++)
+    //                {
+    //                    JSONObject obj = json.getJSONObject(i);
+    //                    String subject = obj.getString("subject");
+    //                    String content = obj.getString("content");
+    //                    //					String regdate = obj.getString("regdate");
+    //
+    //                    mList.add(new Notice(subject, content, null));
+    //                }
+    //
+    //                mListView.setAdapter(new EventListAdapter(FAQActivity.this, mList));
+    //            } catch (Exception e)
+    //            {
+    //                onError(e);
+    //            } finally
+    //            {
+    //                unLockUI();
+    //            }
+    //        }
+    //    };
 }

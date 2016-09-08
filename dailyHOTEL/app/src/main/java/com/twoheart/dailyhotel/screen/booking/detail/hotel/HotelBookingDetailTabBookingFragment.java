@@ -1,14 +1,10 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * HotelBookingDetailTabBookingFragment (예약한 호텔의 예약 탭)
- * <p>
- * 예약한 호텔 탭 중 예약 탭 프래그먼트
- */
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +77,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         initCheckInOutInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);
         initPaymentInformationLayout(view, mBookingDetail);
+        initRefundPolicyLayout(view, mBookingDetail);
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
@@ -201,5 +198,26 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
 
         totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false));
+    }
+
+    private void initRefundPolicyLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        View refundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+
+        if (bookingDetail.isNRD == true)
+        {
+            refundPolicyLayout.setVisibility(View.VISIBLE);
+
+            TextView refundPolicyTextView = (TextView) refundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.message_booking_refund_product));
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+                0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            refundPolicyTextView.setText(spannableStringBuilder);
+        } else
+        {
+            refundPolicyLayout.setVisibility(View.GONE);
+        }
     }
 }

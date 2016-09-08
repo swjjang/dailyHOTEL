@@ -8,6 +8,9 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,14 +68,14 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
         {
             for (String key : mBookingDetail.getSpecification().keySet())
             {
-                addView(inflater, viewGroup, key, mBookingDetail.getSpecification().get(key));
+                addView(inflater, viewGroup, key, mBookingDetail.getSpecification().get(key), mBookingDetail.isNRD);
             }
         }
 
         return view;
     }
 
-    private void addView(LayoutInflater inflater, ViewGroup viewGroup, String subject, List<String> contentList)
+    private void addView(LayoutInflater inflater, ViewGroup viewGroup, String subject, List<String> contentList, boolean isNRD)
     {
         View sectionView = inflater.inflate(R.layout.list_row_booking_information_section, viewGroup, false);
         TextView sectionTitleView = (TextView) sectionView.findViewById(R.id.sectionTextView);
@@ -80,7 +83,13 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
 
         viewGroup.addView(sectionView);
 
-        addTextView(inflater, viewGroup, contentList);
+        if (isNRD == true && getString(R.string.label_detail_cancellation_refund_policy).equalsIgnoreCase(subject) == true)
+        {
+            addNRDTextView(inflater, viewGroup);
+        } else
+        {
+            addTextView(inflater, viewGroup, contentList);
+        }
     }
 
     private void addTextView(LayoutInflater inflater, ViewGroup viewGroups, List<String> contentList)
@@ -107,5 +116,28 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
 
             viewGroups.addView(textLayout);
         }
+    }
+
+    private void addNRDTextView(LayoutInflater inflater, ViewGroup viewGroups)
+    {
+        if (viewGroups == null)
+        {
+            return;
+        }
+
+        View textLayout = inflater.inflate(R.layout.list_row_detail_text, viewGroups, false);
+        TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.message_booking_refund_product));
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+            0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(spannableStringBuilder);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.bottomMargin = Util.dpToPx(getContext(), 12);
+        textLayout.setLayoutParams(layoutParams);
+
+        viewGroups.addView(textLayout);
     }
 }

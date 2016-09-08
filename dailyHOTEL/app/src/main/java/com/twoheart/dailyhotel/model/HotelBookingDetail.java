@@ -11,12 +11,15 @@ import org.json.JSONObject;
 
 public class HotelBookingDetail extends PlaceBookingDetail
 {
+    private static final String NRD = "nrd";
+
     public int isOverseas; // 0 : 국내 , 1 : 해외
     public String checkInDate;
     public String checkOutDate;
     public String hotelPhone;
     public Grade grade;
     public String roomName;
+    public boolean isNRD;
 
     public HotelBookingDetail()
     {
@@ -91,6 +94,14 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         paymentPrice = jsonObject.getInt("priceTotal");
         paymentDate = jsonObject.getString("paidAt");
+
+        if (jsonObject.has("refundType") == true && NRD.equalsIgnoreCase(jsonObject.getString("refundType")) == true)
+        {
+            isNRD = true;
+        } else
+        {
+            isNRD = false;
+        }
     }
 
     @Override
@@ -106,6 +117,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeString(grade.name());
         dest.writeInt(bonus);
         dest.writeInt(coupon);
+        dest.writeInt(isNRD ? 1 : 0);
     }
 
     public void readFromParcel(Parcel in)
@@ -120,6 +132,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         grade = Grade.valueOf(in.readString());
         bonus = in.readInt();
         coupon = in.readInt();
+        isNRD = in.readInt() == 1;
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

@@ -3,12 +3,12 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Util;
-
 import org.json.JSONObject;
 
 public class RoomInformation implements Parcelable
 {
+    private static final String NRD = "nrd";
+
     public int roomIndex;
     public String roomName;
     public String option;
@@ -50,7 +50,7 @@ public class RoomInformation implements Parcelable
         this.hotelName = hotelName;
         this.nights = nights;
 
-        if (jsonObject.has("refundType") == true && Util.isTextEmpty(jsonObject.getString("refundType")) == false)
+        if (jsonObject.has("refundType") == true && NRD.equalsIgnoreCase(jsonObject.getString("refundType")) == true)
         {
             isNRD = true;
         } else
