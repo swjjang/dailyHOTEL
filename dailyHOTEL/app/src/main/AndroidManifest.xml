@@ -132,7 +132,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".deprecated.NoticeActivity"
+            android:name=".screen.information.notice.NoticeListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.information.notice.NoticeWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

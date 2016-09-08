@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity implements Constants
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-        //                        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
@@ -636,9 +636,9 @@ public class MainActivity extends BaseActivity implements Constants
     private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon)
+        public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon, boolean isNewNotices)
         {
-            if (isNewEvent == false && isNewCoupon == false)
+            if (isNewEvent == false && isNewCoupon == false && isNewNotices == false && Util.hasNoticeNewList(MainActivity.this) == false)
             {
                 mMenuBarLayout.setNewIconVisible(false);
             } else
@@ -648,6 +648,7 @@ public class MainActivity extends BaseActivity implements Constants
 
             DailyPreference.getInstance(MainActivity.this).setNewEvent(isNewEvent);
             DailyPreference.getInstance(MainActivity.this).setNewCoupon(isNewCoupon);
+            DailyPreference.getInstance(MainActivity.this).setNewNotice(isNewNotices);
 
             LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(BROADCAST_EVENT_UPDATE));
         }
@@ -943,6 +944,7 @@ public class MainActivity extends BaseActivity implements Constants
 
             String viewedEventTime = DailyPreference.getInstance(MainActivity.this).getViewedEventTime();
             String viewedCouponTime = DailyPreference.getInstance(MainActivity.this).getViewedCouponTime();
+            String viewedNoticeTime = DailyPreference.getInstance(MainActivity.this).getViewedNoticeTime();
 
             currentDateTime -= 3600 * 1000 * 9;
 
@@ -955,20 +957,24 @@ public class MainActivity extends BaseActivity implements Constants
 
             DailyPreference.getInstance(MainActivity.this).setLastestEventTime(lastestTime);
             DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(lastestTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(lastestTime);
 
             if (Util.isTextEmpty(viewedEventTime) == true)
             {
-                //                viewedEventTime = Util.getISO8601String(new Date(0L));
                 viewedEventTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
             if (Util.isTextEmpty(viewedCouponTime) == true)
             {
-                //                viewedCouponTime = Util.getISO8601String(new Date(0L));
                 viewedCouponTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
-            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime);
+            if (Util.isTextEmpty(viewedNoticeTime) == true)
+            {
+                viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
+            }
+
+            mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);
         }
     };
 }

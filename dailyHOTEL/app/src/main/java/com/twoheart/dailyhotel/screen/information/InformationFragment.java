@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActiv
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
+import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
@@ -74,10 +75,13 @@ public class InformationFragment extends BaseFragment implements Constants
 
         super.onStart();
 
-        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
-        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
+        Context context = getContext();
 
-        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
+        boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
+        boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
+        boolean hasNewNotice = DailyPreference.getInstance(context).hasNewNotice() == true || Util.hasNoticeNewList(context) == true;
+
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon, hasNewNotice);
 
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
@@ -197,10 +201,13 @@ public class InformationFragment extends BaseFragment implements Constants
 
         mInformationLayout.updatePushText(benefitMessage);
 
-        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
-        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
+        Context context = getContext();
 
-        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
+        boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
+        boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
+        boolean hasNewNotice = DailyPreference.getInstance(context).hasNewNotice() == true || Util.hasNoticeNewList(context) == true;
+
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon, hasNewNotice);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -340,6 +347,23 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivity(new Intent(baseActivity, EventListActivity.class));
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
+        }
+
+        @Override
+        public void startNotice()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivity(new Intent(baseActivity, NoticeListActivity.class));
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
@@ -675,8 +699,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
                 boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
                 boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
+                boolean hasNewNotice = DailyPreference.getInstance(context).hasNewNotice() == true || Util.hasNoticeNewList(context) == true;
 
-                mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
+                mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon, hasNewNotice);
             }
         };
 

@@ -38,7 +38,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
     private View mProfileLayout;
     private View mAccountInfoLayout;
-    private View mNewEventIconView;
+    private View mNewEventIconView, mNewNoticeIconView;
     private View mNewCouponIconView;
 
     private TextView mPushTextView;
@@ -61,6 +61,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void startInviteFriend();
 
         void startEvent();
+
+        void startNotice();
 
         void startCall();
 
@@ -110,18 +112,21 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         initAccountInfoLayout(baseActivity, view);
 
         View eventLayout = view.findViewById(R.id.eventLayout);
+        View noticeLayout = view.findViewById(R.id.noticeLayout);
         View recommendLayout = view.findViewById(R.id.recommendLayout);
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
 
         eventLayout.setOnClickListener(this);
+        noticeLayout.setOnClickListener(this);
         recommendLayout.setOnClickListener(this);
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
 
-        mNewEventIconView = eventLayout.findViewById(R.id.newIconView);
+        mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
+        mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
 
         View pushBenefitLayout = view.findViewById(R.id.pushBenefitLayout);
         pushBenefitLayout.setOnClickListener(this);
@@ -266,7 +271,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushTextView.setText(onOff == false ? R.string.label_off : R.string.label_on);
     }
 
-    public void updateNewIconView(boolean hasNewEvent, boolean hasNewCoupon)
+    public void updateNewIconView(boolean hasNewEvent, boolean hasNewCoupon, boolean hasNewNotice)
     {
         if (mNewEventIconView == null)
         {
@@ -292,6 +297,14 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         } else
         {
             mNewCouponIconView.setVisibility(View.GONE);
+        }
+
+        if (hasNewNotice == true)
+        {
+            mNewNoticeIconView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mNewNoticeIconView.setVisibility(View.GONE);
         }
     }
 
@@ -459,124 +472,88 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         switch (v.getId())
         {
             case R.id.loginTextView:
-            {
                 ((OnEventListener) mOnEventListener).startLogin();
                 break;
-            }
 
             case R.id.signupTextView:
-            {
                 ((OnEventListener) mOnEventListener).startSignUp();
                 break;
-            }
 
             case R.id.editProfileTextView:
-            {
                 ((OnEventListener) mOnEventListener).startEditProfile();
                 break;
-            }
 
             case R.id.creditcardLayout:
-            {
                 ((OnEventListener) mOnEventListener).startCreditCardList();
                 break;
-            }
 
             case R.id.couponLayout:
-            {
                 ((OnEventListener) mOnEventListener).startCouponList();
                 break;
-            }
 
             case R.id.bonusLayout:
-            {
                 ((OnEventListener) mOnEventListener).startBonusList();
                 break;
-            }
 
             case R.id.eventLayout:
-            {
                 ((OnEventListener) mOnEventListener).startEvent();
                 break;
-            }
+
+            case R.id.noticeLayout:
+                ((OnEventListener) mOnEventListener).startNotice();
+                break;
 
             case R.id.recommendLayout:
-            {
                 ((OnEventListener) mOnEventListener).startInviteFriend();
                 break;
-            }
 
             case R.id.callLayout:
-            {
                 ((OnEventListener) mOnEventListener).startCall();
                 break;
-            }
 
             case R.id.mailLayout:
-            {
                 ((OnEventListener) mOnEventListener).startEmail();
                 break;
-            }
 
             case R.id.aboutLayout:
-            {
                 ((OnEventListener) mOnEventListener).startAbout();
                 break;
-            }
 
             case R.id.pushBenefitLayout:
-            {
                 ((OnEventListener) mOnEventListener).onPushClick();
                 break;
-            }
 
             case R.id.facebookLinkView:
-            {
                 ((OnEventListener) mOnEventListener).startFacebook();
                 break;
-            }
 
             case R.id.instagramLinkView:
-            {
                 ((OnEventListener) mOnEventListener).startInstagram();
                 break;
-            }
 
             case R.id.naverLinkView:
-            {
                 ((OnEventListener) mOnEventListener).startNaverBlog();
                 break;
-            }
 
             case R.id.youtubeLinkView:
-            {
                 ((OnEventListener) mOnEventListener).startYouTube();
                 break;
-            }
 
             case R.id.termsView:
-            {
                 ((OnEventListener) mOnEventListener).startTerms();
                 break;
-            }
 
             case R.id.personalView:
-            {
                 ((OnEventListener) mOnEventListener).startPersonal();
                 break;
-            }
 
             case R.id.locationTermsView:
-            {
                 ((OnEventListener) mOnEventListener).startLocationTerms();
                 break;
-            }
 
             case R.id.protectChildTermsView:
-            {
                 ((OnEventListener) mOnEventListener).startProtectChildTerms();
                 break;
-            }
 
             default:
                 break;
