@@ -526,7 +526,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
         String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
         String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD);
-        String hotelCategory = params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY);
+        String nrd = params.get(AnalyticsManager.KeyType.NRD);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
         String grade = params.get(AnalyticsManager.KeyType.GRADE);
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
@@ -560,9 +560,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenViewBuilder.setCustomDimension(9, registeredSimpleCard);
         }
 
-        if (Util.isTextEmpty(hotelCategory) == false)
+        if (Util.isTextEmpty(nrd) == false)
         {
-            screenViewBuilder.setCustomDimension(10, hotelCategory);
+            screenViewBuilder.setCustomDimension(10, nrd);
         }
 
         if (Util.isTextEmpty(category) == false)

@@ -995,6 +995,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
 
             if (mProvince == null)
             {

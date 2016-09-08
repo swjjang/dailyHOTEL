@@ -736,6 +736,7 @@ public class AnalyticsManager
         public static final String CATEGORY = "category";
         public static final String ADDRESS = "address";
         public static final String HOTEL_CATEGORY = "hotelCategory";
+        public static final String NRD = "nrd";
         public static final String PROVINCE = "province ";
         public static final String DISTRICT = "district ";
         public static final String AREA = "area ";
