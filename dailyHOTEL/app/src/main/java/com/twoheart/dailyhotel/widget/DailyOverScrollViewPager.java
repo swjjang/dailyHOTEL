@@ -212,135 +212,148 @@ public class DailyOverScrollViewPager extends ViewPager
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev)
     {
-        final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
-        switch (action)
+        try
         {
-            case MotionEvent.ACTION_DOWN:
+            final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
+            switch (action)
             {
-                mLastMotionX = ev.getX();
-                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-                break;
+                case MotionEvent.ACTION_DOWN:
+                {
+                    mLastMotionX = ev.getX();
+                    mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                    break;
+                }
+                case MotionEventCompat.ACTION_POINTER_DOWN:
+                {
+                    final int index = MotionEventCompat.getActionIndex(ev);
+                    mLastMotionX = MotionEventCompat.getX(ev, index);
+                    mActivePointerId = MotionEventCompat.getPointerId(ev, index);
+                    break;
+                }
             }
-            case MotionEventCompat.ACTION_POINTER_DOWN:
-            {
-                final int index = MotionEventCompat.getActionIndex(ev);
-                mLastMotionX = MotionEventCompat.getX(ev, index);
-                mActivePointerId = MotionEventCompat.getPointerId(ev, index);
-                break;
-            }
+
+            return super.onInterceptTouchEvent(ev);
+        } catch (IllegalArgumentException e)
+        {
+            return false;
         }
-        return super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev)
     {
-        boolean callSuper = false;
-
-        final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
-        switch (action)
+        try
         {
-            case MotionEvent.ACTION_DOWN:
-            {
-                callSuper = true;
-                mLastMotionX = ev.getX();
-                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-                break;
-            }
-            case MotionEventCompat.ACTION_POINTER_DOWN:
-            {
-                callSuper = true;
-                final int index = MotionEventCompat.getActionIndex(ev);
-                mLastMotionX = MotionEventCompat.getX(ev, index);
-                mActivePointerId = MotionEventCompat.getPointerId(ev, index);
-                break;
-            }
-            case MotionEvent.ACTION_MOVE:
-            {
-                if (mActivePointerId != INVALID_POINTER_ID)
-                {
-                    // Scroll to follow the motion event
-                    final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-                    final float x = MotionEventCompat.getX(ev, activePointerIndex);
-                    final float deltaX = mLastMotionX - x;
-                    final int width = getWidth();
-                    final int widthWithMargin = width + getPageMargin();
-                    final int lastItemIndex = getAdapter().getCount() - 1;
-                    final int currentItemIndex = getCurrentItem();
-                    final float leftBound = Math.max(0, (currentItemIndex - 1) * widthWithMargin);
-                    final float rightBound = Math.min(currentItemIndex + 1, lastItemIndex) * widthWithMargin;
+            boolean callSuper = false;
 
-                    if (getAdapter().getCount() == 1)
-                    {
-                        if (deltaX < 0 - mTouchSlop)
-                        {
-                            final float over = deltaX + mTouchSlop;
-                            mOverScrollEffect.setPull(over / width);
-                        } else if (deltaX > mTouchSlop)
-                        {
-                            final float over = deltaX - mTouchSlop;
-                            mOverScrollEffect.setPull(over / width);
-                        }
-                    } else if (currentItemIndex == 0)
-                    {
-                        if (leftBound == 0)
-                        {
-                            final float over = deltaX + mTouchSlop;
-                            mOverScrollEffect.setPull(over / width);
-                        } else
-                        {
-                            ExLog.d("index : " + currentItemIndex + ", leftBound : " + leftBound);
-                        }
-                    } else if (lastItemIndex == currentItemIndex)
-                    {
-                        if (rightBound == lastItemIndex * widthWithMargin)
-                        {
-                            final float over = deltaX - mTouchSlop;
-                            mOverScrollEffect.setPull(over / width);
-                        }
-                    }
-                } else
-                {
-                    mOverScrollEffect.onRelease();
-                }
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+            final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
+            switch (action)
             {
-                callSuper = true;
-                mActivePointerId = INVALID_POINTER_ID;
-                mOverScrollEffect.onRelease();
-                break;
-            }
-            case MotionEvent.ACTION_POINTER_UP:
-            {
-                final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-                final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
-                if (pointerId == mActivePointerId)
+                case MotionEvent.ACTION_DOWN:
                 {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                    mLastMotionX = ev.getX(newPointerIndex);
-                    mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
                     callSuper = true;
+                    mLastMotionX = ev.getX();
+                    mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                    break;
                 }
-                break;
-            }
-        }
+                case MotionEventCompat.ACTION_POINTER_DOWN:
+                {
+                    callSuper = true;
+                    final int index = MotionEventCompat.getActionIndex(ev);
+                    mLastMotionX = MotionEventCompat.getX(ev, index);
+                    mActivePointerId = MotionEventCompat.getPointerId(ev, index);
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE:
+                {
+                    if (mActivePointerId != INVALID_POINTER_ID)
+                    {
+                        // Scroll to follow the motion event
+                        final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                        final float x = MotionEventCompat.getX(ev, activePointerIndex);
+                        final float deltaX = mLastMotionX - x;
+                        final int width = getWidth();
+                        final int widthWithMargin = width + getPageMargin();
+                        final int lastItemIndex = getAdapter().getCount() - 1;
+                        final int currentItemIndex = getCurrentItem();
+                        final float leftBound = Math.max(0, (currentItemIndex - 1) * widthWithMargin);
+                        final float rightBound = Math.min(currentItemIndex + 1, lastItemIndex) * widthWithMargin;
 
-        if (mOverScrollEffect.isOverScrolling() && !callSuper)
-        {
-            return true;
-        } else
-        {
-            try
-            {
-                return super.onTouchEvent(ev);
-            } catch (Exception e)
-            {
+                        if (getAdapter().getCount() == 1)
+                        {
+                            if (deltaX < 0 - mTouchSlop)
+                            {
+                                final float over = deltaX + mTouchSlop;
+                                mOverScrollEffect.setPull(over / width);
+                            } else if (deltaX > mTouchSlop)
+                            {
+                                final float over = deltaX - mTouchSlop;
+                                mOverScrollEffect.setPull(over / width);
+                            }
+                        } else if (currentItemIndex == 0)
+                        {
+                            if (leftBound == 0)
+                            {
+                                final float over = deltaX + mTouchSlop;
+                                mOverScrollEffect.setPull(over / width);
+                            } else
+                            {
+                                ExLog.d("index : " + currentItemIndex + ", leftBound : " + leftBound);
+                            }
+                        } else if (lastItemIndex == currentItemIndex)
+                        {
+                            if (rightBound == lastItemIndex * widthWithMargin)
+                            {
+                                final float over = deltaX - mTouchSlop;
+                                mOverScrollEffect.setPull(over / width);
+                            }
+                        }
+                    } else
+                    {
+                        mOverScrollEffect.onRelease();
+                    }
+                    break;
+                }
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                {
+                    callSuper = true;
+                    mActivePointerId = INVALID_POINTER_ID;
+                    mOverScrollEffect.onRelease();
+                    break;
+                }
+                case MotionEvent.ACTION_POINTER_UP:
+                {
+                    final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+                    final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+                    if (pointerId == mActivePointerId)
+                    {
+                        // This was our active pointer going up. Choose a new
+                        // active pointer and adjust accordingly.
+                        final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                        mLastMotionX = ev.getX(newPointerIndex);
+                        mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+                        callSuper = true;
+                    }
+                    break;
+                }
             }
+
+            if (mOverScrollEffect.isOverScrolling() && !callSuper)
+            {
+                return true;
+            } else
+            {
+                try
+                {
+                    return super.onTouchEvent(ev);
+                } catch (Exception e)
+                {
+                }
+                return false;
+            }
+        } catch (IllegalArgumentException e)
+        {
             return false;
         }
     }
