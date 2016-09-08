@@ -15,12 +15,14 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -479,6 +481,16 @@ public class StayDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
+        boolean hasNRD = false;
+        for (RoomInformation roomInformation : stayDetail.getSaleRoomList())
+        {
+            if (roomInformation.isNRD == true)
+            {
+                hasNRD = true;
+                break;
+            }
+        }
+
         ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
 
         if (arrayList != null)
@@ -489,7 +501,7 @@ public class StayDetailListAdapter extends BaseAdapter
             {
                 ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
-                makeInformationLayout(layoutInflater, childGroup, information);
+                makeInformationLayout(layoutInflater, childGroup, information, hasNRD);
 
                 viewGroup.addView(childGroup);
             }
@@ -529,7 +541,7 @@ public class StayDetailListAdapter extends BaseAdapter
         return view;
     }
 
-    private void makeInformationLayout(LayoutInflater layoutInflater, ViewGroup viewGroup, DetailInformation information)
+    private void makeInformationLayout(LayoutInflater layoutInflater, ViewGroup viewGroup, DetailInformation information, boolean hasNRD)
     {
         if (layoutInflater == null || viewGroup == null || information == null)
         {
@@ -542,6 +554,13 @@ public class StayDetailListAdapter extends BaseAdapter
         TextView titleTextView = (TextView) viewGroup.findViewById(R.id.titleTextView);
         titleTextView.setText(information.title);
 
+        boolean isRefundPolicy = false;
+
+        if (hasNRD == true && mContext.getString(R.string.label_detail_cancellation_refund_policy).equalsIgnoreCase(information.title) == true)
+        {
+            isRefundPolicy = true;
+        }
+
         List<String> contentsList = information.getContentsList();
 
         if (contentsList != null)
@@ -553,6 +572,17 @@ public class StayDetailListAdapter extends BaseAdapter
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
                 textView.setText(contentsList.get(i));
+
+                contentsLayout.addView(textLayout);
+            }
+
+            if (isRefundPolicy == true)
+            {
+                View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
+                TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+                textView.setText(R.string.message_stay_detail_nrd);
+                textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+                textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
 
                 contentsLayout.addView(textLayout);
             }

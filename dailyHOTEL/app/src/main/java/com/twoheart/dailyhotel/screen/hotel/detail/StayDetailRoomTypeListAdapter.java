@@ -151,7 +151,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.benefitTextView.setText(roomInformation.roomBenefit);
         }
 
-        if(roomInformation.isNRD == true)
+        if (roomInformation.isNRD == false)
         {
             saleRoomInformationViewHolder.nrdTextView.setVisibility(View.GONE);
         } else
