@@ -21,7 +21,7 @@ public class MainNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void updateNewEvent(boolean isNewEvent, boolean isNewCoupon);
+        void updateNewEvent(boolean isNewEvent, boolean isNewCoupon, boolean isNewNotices);
 
         void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
 
@@ -93,14 +93,14 @@ public class MainNetworkController extends BaseNetworkController
         });
     }
 
-    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime)
+    protected void requestEventNCouponNNoticeNewCount(String lastEventTime, String lastCouponTime, String lastNoticeTime)
     {
-        if (Util.isTextEmpty(lastEventTime, lastCouponTime) == true)
+        if (Util.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNNoticeNewCount(mNetworkTag, lastEventTime, lastCouponTime, lastNoticeTime, mDailyEventCountJsonResponseListener);
     }
 
     protected void requestVersion()
@@ -301,6 +301,7 @@ public class MainNetworkController extends BaseNetworkController
             {
                 boolean isExistNewEvent = false;
                 boolean isExistNewCoupon = false;
+                boolean isExistNewNotices = false;
 
                 int msgCode = response.getInt("msgCode");
 
@@ -310,9 +311,10 @@ public class MainNetworkController extends BaseNetworkController
 
                     isExistNewEvent = datJSONObject.getBoolean("isExistNewEvent");
                     isExistNewCoupon = datJSONObject.getBoolean("isExistNewCoupon");
+                    isExistNewNotices = datJSONObject.getBoolean("isExistNewNotices");
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isExistNewEvent, isExistNewCoupon);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isExistNewEvent, isExistNewCoupon, isExistNewNotices);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

@@ -688,11 +688,11 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener)
+    public void requestEventNCouponNNoticeNewCount(Object tag, String eventLatestDate, String couponLatestDate, String noticeLatestDate, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/new" : "MTEkMzkkMTAkNjUkNjMk$NUVFNTc3QjOcLxODZEMzc0RjM3MDU0NzY2MEZCRjAFEMUREOTNBRTY3MTI1NDNEKRkUFERThFMEM5RTY3MEE2RjFDMg==$";
 
-        String params = String.format("?eventLatestDate=%s&couponLatestDate=%s", URLEncoder.encode(eventLatestDate), URLEncoder.encode(couponLatestDate));
+        String params = String.format("?eventLatestDate=%s&couponLatestDate=%s&noticesLatestDate=%s", URLEncoder.encode(eventLatestDate), URLEncoder.encode(couponLatestDate), URLEncoder.encode(noticeLatestDate));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -1016,6 +1016,17 @@ public class DailyNetworkAPI implements IDailyNetwork
     public void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking" : "NTAkMTMkNzUkNSQ0NCQ=$MkEwQHTYyOEE4NUkI1MzA4ODIwM0MwMzc1MzdERkZBRUAMwQTU0MkFY4MTFENkU2Q0I2MDQyMUIzQTjYzREI4M0UxQQ==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestNoticeList(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/notices" : "NjQkMzUkMzAkODIkNDAk$ODdCQTFBQ0MzNTNGN0EzMEMwNEE3M0TVBRUMIzOTSRCRDM4MDQ0Qzg1NzU3MTQ5MjYxZOTc4MDlDOTZEN0YGyRjAzOQ==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);

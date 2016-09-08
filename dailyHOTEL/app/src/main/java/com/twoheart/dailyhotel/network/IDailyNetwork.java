@@ -401,7 +401,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener);
+    void requestEventNCouponNNoticeNewCount(Object tag, String eventLatestDate, String couponLatestDate, String noticeLatestDate, DailyHotelJsonResponseListener listener);
 
     /**
      * api/daily/event/page
@@ -585,4 +585,6 @@ interface IDailyNetwork
     void requestUpdateBenefitAgreement(Object tag, boolean isAgree, DailyHotelJsonResponseListener listener);
 
     void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener);
+
+    void requestNoticeList(Object tag, DailyHotelJsonResponseListener listener);
 }

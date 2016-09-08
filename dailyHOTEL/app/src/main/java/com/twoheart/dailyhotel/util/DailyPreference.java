@@ -34,6 +34,7 @@ public class DailyPreference
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
     private static final String KEY_NEW_COUPON = "15"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
+    private static final String KEY_NEW_NOTICE = "16"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
 
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
@@ -75,6 +76,9 @@ public class DailyPreference
 
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
+
+    private static final String KEY_NOTICE_NEW_LIST = "202";
+    private static final String KEY_NOTICE_NEW_REMOVE_LIST = "203";
 
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
@@ -155,8 +159,10 @@ public class DailyPreference
     // Event
     private static final String KEY_EVENT_LASTEST_EVENT_TIME = "6100";
     private static final String KEY_EVENT_LASTEST_COUPON_TIME = "6101";
+    private static final String KEY_EVENT_LASTEST_NOTICE_TIME = "6102";
     private static final String KEY_EVENT_VIEWED_EVENT_TIME = "6200";
     private static final String KEY_EVENT_VIEWED_COUPON_TIME = "6201";
+    private static final String KEY_EVENT_VIEWED_NOTICE_TIME = "6202";
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static DailyPreference mInstance;
@@ -462,6 +468,16 @@ public class DailyPreference
     public void setNewCoupon(boolean value)
     {
         setValue(mEditor, KEY_NEW_COUPON, value);
+    }
+
+    public boolean hasNewNotice()
+    {
+        return getValue(mPreferences, KEY_NEW_NOTICE, false);
+    }
+
+    public void setNewNotice(boolean value)
+    {
+        setValue(mEditor, KEY_NEW_NOTICE, value);
     }
 
     public int getNotificationUid()
@@ -895,6 +911,16 @@ public class DailyPreference
         setValue(mEditor, KEY_EVENT_LASTEST_COUPON_TIME, value);
     }
 
+    public String getLastestNoticeTime()
+    {
+        return getValue(mPreferences, KEY_EVENT_LASTEST_NOTICE_TIME, null);
+    }
+
+    public void setLastestNoticeTime(String value)
+    {
+        setValue(mEditor, KEY_EVENT_LASTEST_NOTICE_TIME, value);
+    }
+
     public String getViewedEventTime()
     {
         return getValue(mPreferences, KEY_EVENT_VIEWED_EVENT_TIME, null);
@@ -913,6 +939,36 @@ public class DailyPreference
     public void setViewedCouponTime(String value)
     {
         setValue(mEditor, KEY_EVENT_VIEWED_COUPON_TIME, value);
+    }
+
+    public String getViewedNoticeTime()
+    {
+        return getValue(mPreferences, KEY_EVENT_VIEWED_NOTICE_TIME, null);
+    }
+
+    public void setViewedNoticeTime(String value)
+    {
+        setValue(mEditor, KEY_EVENT_VIEWED_NOTICE_TIME, value);
+    }
+
+    public String getNoticeNewList()
+    {
+        return getValue(mPreferences, KEY_NOTICE_NEW_LIST, null);
+    }
+
+    public void setNoticeNewList(String value)
+    {
+        setValue(mEditor, KEY_NOTICE_NEW_LIST, value);
+    }
+
+    public String getNoticeNewRemoveList()
+    {
+        return getValue(mPreferences, KEY_NOTICE_NEW_REMOVE_LIST, null);
+    }
+
+    public void setNoticeNewRemoveList(String value)
+    {
+        setValue(mEditor, KEY_NOTICE_NEW_REMOVE_LIST, value);
     }
 
     public String getSelectedRegion(Constants.PlaceType placeType)

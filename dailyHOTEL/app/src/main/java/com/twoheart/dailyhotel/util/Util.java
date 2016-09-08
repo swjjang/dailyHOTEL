@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings.Secure;
-import android.support.v7.app.AppCompatDelegate;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -50,6 +49,7 @@ import com.skp.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -302,6 +302,7 @@ public class Util implements Constants
 
     /**
      * 메인 리스트를 16:9로 표현
+     *
      * @return
      */
     public static int getListRowHeight(Context context)
@@ -1426,5 +1427,82 @@ public class Util implements Constants
         }
 
         return true;
+    }
+
+    public static boolean hasNoticeNewList(Context context)
+    {
+        final char SEPARATE = '|';
+
+        String value = DailyPreference.getInstance(context).getNoticeNewList();
+
+        return (Util.isTextEmpty(value) == false);
+    }
+
+    public static ArrayList<Notice> chekckNoticeNewList(Context context, ArrayList<Notice> noticeList)
+    {
+        if (context == null || noticeList == null || noticeList.size() == 0)
+        {
+            return noticeList;
+        }
+
+
+        final char SEPARATE = '|';
+
+        String newValue = DailyPreference.getInstance(context).getNoticeNewList();
+        String removeValue = DailyPreference.getInstance(context).getNoticeNewRemoveList();
+        String indexString;
+
+        if (Util.isTextEmpty(newValue) == true)
+        {
+            newValue = "";
+        }
+
+        if (Util.isTextEmpty(removeValue) == true)
+        {
+            removeValue = "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(newValue);
+
+        for (Notice notice : noticeList)
+        {
+            indexString = Integer.toString(notice.index) + SEPARATE;
+
+            if (removeValue.indexOf(indexString) >= 0)
+            {
+                notice.isNew = false;
+            } else
+            {
+                notice.isNew = true;
+                stringBuilder.append(indexString);
+            }
+        }
+
+        DailyPreference.getInstance(context).setNoticeNewList(stringBuilder.toString());
+
+        return noticeList;
+    }
+
+    public static void removeNoticeNewList(Context context, int index)
+    {
+        final char SEPARATE = '|';
+
+        String newValue = DailyPreference.getInstance(context).getNoticeNewList();
+        String removeValue = DailyPreference.getInstance(context).getNoticeNewRemoveList();
+
+        String indexString = Integer.toString(index) + SEPARATE;
+
+        if (Util.isTextEmpty(newValue) == false)
+        {
+            DailyPreference.getInstance(context).setNoticeNewList(newValue.replace(indexString, ""));
+        }
+
+        if (Util.isTextEmpty(removeValue) == true)
+        {
+            DailyPreference.getInstance(context).setNoticeNewRemoveList(indexString);
+        } else
+        {
+            DailyPreference.getInstance(context).setNoticeNewRemoveList(removeValue + indexString);
+        }
     }
 }

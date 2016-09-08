@@ -10,9 +10,9 @@
         android:id="@+id/backImageView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/navibar_ic_back_01_black"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"/>
+        android:paddingRight="15dp"
+        android:src="@drawable/navibar_ic_back_01_black"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
@@ -20,17 +20,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
         android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@+id/backImageView"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/actionbar_title"
-        android:textSize="18dp"
-        android:layout_toRightOf="@+id/backImageView"/>
+        android:textSize="18dp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/default_line_ce7e7e7"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_line_ce7e7e7"/>
 </RelativeLayout>

@@ -4,19 +4,15 @@ import android.os.Bundle;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class FAQActivity extends BaseActivity
 {
-    private ArrayList<Board> mList;
+    private ArrayList<Notice> mList;
     private ExpandableListView mListView;
 
     @Override
@@ -26,12 +22,12 @@ public class FAQActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_board);
+        setContentView(R.layout.activity_notice);
 
         //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //        initToolbar(toolbar, getString(R.string.actionbar_title_faq_activity));
 
-        mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
+//        mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
         mListView.setOnGroupExpandListener(new OnGroupExpandListener()
         {
             // expand only one
@@ -80,44 +76,44 @@ public class FAQActivity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-
-            mList = new ArrayList<>();
-
-            try
-            {
-                JSONArray json = response.getJSONArray("articles");
-
-                int length = json.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject obj = json.getJSONObject(i);
-                    String subject = obj.getString("subject");
-                    String content = obj.getString("content");
-                    //					String regdate = obj.getString("regdate");
-
-                    mList.add(new Board(subject, content, null));
-                }
-
-                mListView.setAdapter(new BoardListAdapter(FAQActivity.this, mList));
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
+//    private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
+//    {
+//        @Override
+//        public void onErrorResponse(VolleyError volleyError)
+//        {
+//
+//        }
+//
+//        @Override
+//        public void onResponse(String url, JSONObject response)
+//        {
+//
+//            mList = new ArrayList<>();
+//
+//            try
+//            {
+//                JSONArray json = response.getJSONArray("articles");
+//
+//                int length = json.length();
+//
+//                for (int i = 0; i < length; i++)
+//                {
+//                    JSONObject obj = json.getJSONObject(i);
+//                    String subject = obj.getString("subject");
+//                    String content = obj.getString("content");
+//                    //					String regdate = obj.getString("regdate");
+//
+//                    mList.add(new Notice(subject, content, null));
+//                }
+//
+//                mListView.setAdapter(new EventListAdapter(FAQActivity.this, mList));
+//            } catch (Exception e)
+//            {
+//                onError(e);
+//            } finally
+//            {
+//                unLockUI();
+//            }
+//        }
+//    };
 }
