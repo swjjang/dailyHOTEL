@@ -48,63 +48,60 @@ public class AdjustManager extends BaseAnalyticsManager
         config.setLogLevel(LogLevel.VERBOSE);
 
         // set default tracker
-        //config.setDefaultTracker("{YourDefaultTracker}");
+        config.setDefaultTracker("https://app.adjust.com/qbwmpi");
 
         // set process name
-        //config.setProcessName("com.adjust.example");
+        //        config.setProcessName("com.twoheart.dailyhotel");
 
-        if (DEBUG == true)
+        // set attribution delegate
+        config.setOnAttributionChangedListener(new OnAttributionChangedListener()
         {
-            // set attribution delegate
-            config.setOnAttributionChangedListener(new OnAttributionChangedListener()
+            @Override
+            public void onAttributionChanged(AdjustAttribution attribution)
             {
-                @Override
-                public void onAttributionChanged(AdjustAttribution attribution)
-                {
-                    ExLog.d("Adjust attribution: " + attribution.toString());
-                }
-            });
+                ExLog.d("Adjust attribution: " + attribution.toString());
+            }
+        });
 
-            // set event success tracking delegate
-            config.setOnEventTrackingSucceededListener(new OnEventTrackingSucceededListener()
+        // set event success tracking delegate
+        config.setOnEventTrackingSucceededListener(new OnEventTrackingSucceededListener()
+        {
+            @Override
+            public void onFinishedEventTrackingSucceeded(AdjustEventSuccess eventSuccessResponseData)
             {
-                @Override
-                public void onFinishedEventTrackingSucceeded(AdjustEventSuccess eventSuccessResponseData)
-                {
-                    ExLog.d("Adjust success event tracking: " + eventSuccessResponseData.toString());
-                }
-            });
+                ExLog.d("Adjust success event tracking: " + eventSuccessResponseData.toString());
+            }
+        });
 
-            // set event failure tracking delegate
-            config.setOnEventTrackingFailedListener(new OnEventTrackingFailedListener()
+        // set event failure tracking delegate
+        config.setOnEventTrackingFailedListener(new OnEventTrackingFailedListener()
+        {
+            @Override
+            public void onFinishedEventTrackingFailed(AdjustEventFailure eventFailureResponseData)
             {
-                @Override
-                public void onFinishedEventTrackingFailed(AdjustEventFailure eventFailureResponseData)
-                {
-                    ExLog.d("Adjust failed event tracking: " + eventFailureResponseData.toString());
-                }
-            });
+                ExLog.d("Adjust failed event tracking: " + eventFailureResponseData.toString());
+            }
+        });
 
-            // set session success tracking delegate
-            config.setOnSessionTrackingSucceededListener(new OnSessionTrackingSucceededListener()
+        // set session success tracking delegate
+        config.setOnSessionTrackingSucceededListener(new OnSessionTrackingSucceededListener()
+        {
+            @Override
+            public void onFinishedSessionTrackingSucceeded(AdjustSessionSuccess sessionSuccessResponseData)
             {
-                @Override
-                public void onFinishedSessionTrackingSucceeded(AdjustSessionSuccess sessionSuccessResponseData)
-                {
-                    ExLog.d("Adjust success session tracking: " + sessionSuccessResponseData.toString());
-                }
-            });
+                ExLog.d("Adjust success session tracking: " + sessionSuccessResponseData.toString());
+            }
+        });
 
-            // set session failure tracking delegate
-            config.setOnSessionTrackingFailedListener(new OnSessionTrackingFailedListener()
+        // set session failure tracking delegate
+        config.setOnSessionTrackingFailedListener(new OnSessionTrackingFailedListener()
+        {
+            @Override
+            public void onFinishedSessionTrackingFailed(AdjustSessionFailure sessionFailureResponseData)
             {
-                @Override
-                public void onFinishedSessionTrackingFailed(AdjustSessionFailure sessionFailureResponseData)
-                {
-                    ExLog.d("Adjust failed session tracking: " + sessionFailureResponseData.toString());
-                }
-            });
-        }
+                ExLog.d("Adjust failed session tracking: " + sessionFailureResponseData.toString());
+            }
+        });
 
         // evaluate deeplink to be launched
         config.setOnDeeplinkResponseListener(new OnDeeplinkResponseListener()
@@ -136,10 +133,10 @@ public class AdjustManager extends BaseAnalyticsManager
         Adjust.onCreate(config);
 
         // put the SDK in offline mode
-        Adjust.setOfflineMode(true);
+        //        Adjust.setOfflineMode(true);
 
         // disable the SDK
-        Adjust.setEnabled(true);
+        //        Adjust.setEnabled(true);
 
     }
 
