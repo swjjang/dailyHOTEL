@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
+import android.net.Uri;
 
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
@@ -45,4 +46,6 @@ public abstract class BaseAnalyticsManager
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 
     abstract void purchaseCompleteGourmet(String transId, Map<String, String> params);
+
+    abstract void startDeepLink(Uri deepLinkUri);
 }

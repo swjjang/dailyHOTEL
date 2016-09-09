@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 
 import com.appboy.Appboy;
 import com.appboy.enums.NotificationSubscriptionType;
@@ -762,6 +763,12 @@ public class AppboyManager extends BaseAnalyticsManager
         {
             ExLog.d(e.toString());
         }
+    }
+
+    @Override
+    void startDeepLink(Uri deepLinkUri)
+    {
+
     }
 
     private String getUserIndex()

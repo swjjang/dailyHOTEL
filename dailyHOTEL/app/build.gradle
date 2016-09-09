@@ -101,6 +101,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:9.4.0'
     compile 'com.google.firebase:firebase-config:9.4.0'
     compile files('libs/com.skp.Tmap_1.0.43.jar')
+    compile 'com.adjust.sdk:adjust-android:4.7.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

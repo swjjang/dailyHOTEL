@@ -42,6 +42,8 @@ public class LauncherActivity extends Activity
 
         if (uri != null)
         {
+            AnalyticsManager.getInstance(this).startDeepLink(uri);
+
             DailyDeepLink.getInstance().setDeepLink(uri);
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)

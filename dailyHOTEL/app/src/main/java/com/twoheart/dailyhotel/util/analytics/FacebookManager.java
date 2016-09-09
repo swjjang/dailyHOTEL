@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.facebook.appevents.AppEventsConstants;
@@ -410,6 +411,12 @@ public class FacebookManager extends BaseAnalyticsManager
         {
             ExLog.d(TAG + "purchaseCompleteGourmet : " + parameters.toString());
         }
+    }
+
+    @Override
+    void startDeepLink(Uri deepLinkUri)
+    {
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
