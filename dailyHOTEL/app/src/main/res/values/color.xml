@@ -262,6 +262,7 @@
     <color name="default_background_c929292">#929292</color>
     <color name="default_background_ca9a9a9">#a9a9a9</color>
     <color name="default_background_ceaeaea">#eaeaea</color>
+    <color name="default_background_c454545">#454545</color>
     <color name="default_placeholder">#dfdfe0</color>
 
     <color name="default_popup_button_background_c900034">#900034</color>

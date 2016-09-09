@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -28,31 +27,29 @@
                 android:layout_width="130dp"
                 android:layout_height="32dp"
                 android:background="@null"
-                android:thumb="@drawable/toggle_btn_ic_02_knob"
-                app:track="@drawable/toggle_btn_ic_01_template"
-                app:showText="false"
+                android:checked="false"
                 android:theme="@style/CustomSwitch"
-                android:checked="false"/>
+                android:thumb="@drawable/toggle_btn_ic_02_knob"
+                app:showText="false"
+                app:track="@drawable/toggle_btn_ic_01_template"/>
 
             <ImageView
                 android:id="@+id/hotelSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/toggle_ic_03_hotel_on"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="19dp"/>
+                android:layout_marginLeft="19dp"
+                app:srcCompat="@drawable/toggle_ic_03_hotel"/>
 
             <ImageView
                 android:id="@+id/gourmetSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/toggle_ic_04_gourmet_on"
-                android:layout_marginRight="19dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:layout_marginRight="19dp"
+                app:srcCompat="@drawable/toggle_ic_04_gourmet"/>
         </RelativeLayout>
-
-
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/searchView"

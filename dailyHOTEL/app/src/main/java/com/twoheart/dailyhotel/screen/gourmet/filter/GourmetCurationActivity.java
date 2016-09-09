@@ -441,21 +441,21 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private int getCategoryResourceId(int index)
     {
-        final int[] resourceIndex = new int[]{R.drawable.selector_gourmet_category_button00//
-            , R.drawable.selector_gourmet_category_button01//
-            , R.drawable.selector_gourmet_category_button02//
-            , R.drawable.selector_gourmet_category_button03//
-            , R.drawable.selector_gourmet_category_button04//
-            , R.drawable.selector_gourmet_category_button05//
-            , R.drawable.selector_gourmet_category_button06//
-            , R.drawable.selector_gourmet_category_button07//
-            , R.drawable.selector_gourmet_category_button08//
-            , R.drawable.selector_gourmet_category_button09//
-            , R.drawable.selector_gourmet_category_button10//
-            , R.drawable.selector_gourmet_category_button11//
-            , R.drawable.selector_gourmet_category_button12//
-            , R.drawable.selector_gourmet_category_button13//
-            , R.drawable.selector_gourmet_category_button14};
+        final int[] resourceIndex = new int[]{R.drawable.f_ic_gourmet_02_food_etc//
+            , R.drawable.f_ic_gourmet_02_food_01//
+            , R.drawable.f_ic_gourmet_02_food_02//
+            , R.drawable.f_ic_gourmet_02_food_03//
+            , R.drawable.f_ic_gourmet_02_food_04//
+            , R.drawable.f_ic_gourmet_02_food_05//
+            , R.drawable.f_ic_gourmet_02_food_06//
+            , R.drawable.f_ic_gourmet_02_food_07//
+            , R.drawable.f_ic_gourmet_02_food_08//
+            , R.drawable.f_ic_gourmet_02_food_09//
+            , R.drawable.f_ic_gourmet_02_food_10//
+            , R.drawable.f_ic_gourmet_02_food_11//
+            , R.drawable.f_ic_hotel_04_facilities_02//
+            , R.drawable.f_ic_gourmet_02_food_13//
+            , R.drawable.f_ic_gourmet_02_food_14};
 
         if (index < 1 || index >= resourceIndex.length)
         {

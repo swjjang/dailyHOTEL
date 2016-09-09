@@ -258,13 +258,13 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             , AnalyticsManager.Label.SORTFILTER_POOL//
             , AnalyticsManager.Label.SORTFILTER_FITNESS};
 
-        final int[] amenitiesResId = new int[]{R.drawable.selector_filter_amenities_wifi_button//
-            , R.drawable.selector_filter_amenities_breakfast_button//
-            , R.drawable.selector_filter_amenities_cooking_button//
-            , R.drawable.selector_filter_amenities_bath_button//
-            , R.drawable.selector_filter_amenities_parking_button//
-            , R.drawable.selector_filter_amenities_pool_button//
-            , R.drawable.selector_filter_amenities_fitness_button};
+        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_01//
+            , R.drawable.f_ic_hotel_04_facilities_02//
+            , R.drawable.f_ic_hotel_04_facilities_03//
+            , R.drawable.f_ic_hotel_04_facilities_04//
+            , R.drawable.f_ic_hotel_04_facilities_05//
+            , R.drawable.f_ic_hotel_04_facilities_06//
+            , R.drawable.f_ic_hotel_04_facilities_07};
 
         final int[] amenitiesflag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//

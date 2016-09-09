@@ -453,7 +453,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             if (Util.getLCDWidth(mContext) > 480)
             {
-                mGuideNameMemo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_payment_name, 0, 0, 0);
+                mGuideNameMemo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_payment_notice, 0, 0, 0);
                 mGuideNameMemo.setCompoundDrawablePadding(Util.dpToPx(mContext, 4));
             }
         } else
