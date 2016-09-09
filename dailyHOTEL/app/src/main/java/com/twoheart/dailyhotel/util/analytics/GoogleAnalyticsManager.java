@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -419,6 +420,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         {
             ExLog.d(TAG + "checkoutStep : 5 | " + transId + " | " + productAction.toString());
         }
+    }
+
+    @Override
+    void startDeepLink(Uri deepLinkUri)
+    {
+
     }
 
     private Product getProcuct(Map<String, String> params)

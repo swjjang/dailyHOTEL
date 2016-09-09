@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -27,6 +28,7 @@ public class AnalyticsManager
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
     private AppboyManager mAppboyManager;
+    private AdjustManager mAdjustManager;
     private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
     public synchronized static AnalyticsManager getInstance(Context context)
@@ -66,11 +68,13 @@ public class AnalyticsManager
 
             mFacebookManager = new FacebookManager(context);
             mAppboyManager = new AppboyManager(context);
+            mAdjustManager = new AdjustManager(context);
 
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
             mAnalyticsManagerList.add(mTuneManager);
             mAnalyticsManagerList.add(mFacebookManager);
             mAnalyticsManagerList.add(mAppboyManager);
+            mAnalyticsManagerList.add(mAdjustManager);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -340,6 +344,20 @@ public class AnalyticsManager
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void startDeepLink(Uri deepLinkUri)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.startDeepLink(deepLinkUri);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
         }
     }
 
