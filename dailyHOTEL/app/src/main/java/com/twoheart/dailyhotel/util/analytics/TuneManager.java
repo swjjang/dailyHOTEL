@@ -569,6 +569,12 @@ public class TuneManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void startApplication()
+    {
+
+    }
+
     private TuneEventItem getTuneEventItem(Map<String, String> params)
     {
         TuneEventItem tuneEventItem = new TuneEventItem(params.get(AnalyticsManager.KeyType.NAME));

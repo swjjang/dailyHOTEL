@@ -428,6 +428,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void startApplication()
+    {
+
+    }
+
     private Product getProcuct(Map<String, String> params)
     {
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);

@@ -771,6 +771,12 @@ public class AppboyManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void startApplication()
+    {
+
+    }
+
     private String getUserIndex()
     {
         return Util.isTextEmpty(mUserIndex) == true ? AnalyticsManager.ValueType.EMPTY : mUserIndex;

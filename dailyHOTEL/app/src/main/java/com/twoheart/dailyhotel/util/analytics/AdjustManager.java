@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAttribution;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.adjust.sdk.AdjustEventFailure;
 import com.adjust.sdk.AdjustEventSuccess;
 import com.adjust.sdk.AdjustSessionFailure;
@@ -32,7 +33,6 @@ import java.util.Map;
 public class AdjustManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
-    private static final String TAG = "[AdjustManager]";
     private static final String APPLICATION_TOKEN = "jkf7ii0lj9xc";
     private static final String ENVIRONMENT = AdjustConfig.ENVIRONMENT_SANDBOX;
 
@@ -61,7 +61,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 @Override
                 public void onAttributionChanged(AdjustAttribution attribution)
                 {
-                    ExLog.d("attribution: " + attribution.toString());
+                    ExLog.d("Adjust attribution: " + attribution.toString());
                 }
             });
 
@@ -71,7 +71,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 @Override
                 public void onFinishedEventTrackingSucceeded(AdjustEventSuccess eventSuccessResponseData)
                 {
-                    ExLog.d("success event tracking: " + eventSuccessResponseData.toString());
+                    ExLog.d("Adjust success event tracking: " + eventSuccessResponseData.toString());
                 }
             });
 
@@ -81,7 +81,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 @Override
                 public void onFinishedEventTrackingFailed(AdjustEventFailure eventFailureResponseData)
                 {
-                    ExLog.d("failed event tracking: " + eventFailureResponseData.toString());
+                    ExLog.d("Adjust failed event tracking: " + eventFailureResponseData.toString());
                 }
             });
 
@@ -91,7 +91,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 @Override
                 public void onFinishedSessionTrackingSucceeded(AdjustSessionSuccess sessionSuccessResponseData)
                 {
-                    ExLog.d("success session tracking: " + sessionSuccessResponseData.toString());
+                    ExLog.d("Adjust success session tracking: " + sessionSuccessResponseData.toString());
                 }
             });
 
@@ -101,7 +101,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 @Override
                 public void onFinishedSessionTrackingFailed(AdjustSessionFailure sessionFailureResponseData)
                 {
-                    ExLog.d("failed session tracking: " + sessionFailureResponseData.toString());
+                    ExLog.d("Adjust failed session tracking: " + sessionFailureResponseData.toString());
                 }
             });
         }
@@ -112,7 +112,7 @@ public class AdjustManager extends BaseAnalyticsManager
             @Override
             public boolean launchReceivedDeeplink(Uri deeplink)
             {
-                ExLog.d("deepLink to open: " + deeplink);
+                ExLog.d("Adjust deepLink to open: " + deeplink);
 
                 if (Uri.EMPTY.equals(deeplink) == false)
                 {
@@ -139,23 +139,32 @@ public class AdjustManager extends BaseAnalyticsManager
         Adjust.setOfflineMode(true);
 
         // disable the SDK
-        Adjust.setEnabled(DEBUG == true ? false : true);
+        Adjust.setEnabled(true);
+
     }
 
     @Override
     void recordScreen(String screen)
     {
-//        AdjustEvent event = new AdjustEvent(screen);
-//        event.addCallbackParameter("key", "value");
-//        event.addCallbackParameter("foo", "bar");
-//
-//        Adjust.trackEvent(event);
+        //        AdjustEvent event = new AdjustEvent(screen);
+        //        event.addCallbackParameter("key", "value");
+        //        event.addCallbackParameter("foo", "bar");
+        //
+        //        Adjust.trackEvent(event);
     }
 
     @Override
     void recordScreen(String screen, Map<String, String> params)
     {
-
+        if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            AdjustEvent event = new AdjustEvent(EventToken.FIRST_PURCHASE_GOURMET);
+            Adjust.trackEvent(event);
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            AdjustEvent event = new AdjustEvent(EventToken.FIRST_PURCHASE_STAY);
+            Adjust.trackEvent(event);
+        }
     }
 
     @Override
@@ -239,18 +248,43 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-
+        AdjustEvent event = new AdjustEvent(EventToken.PURCHASE_STAY);
+        Adjust.trackEvent(event);
     }
 
     @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-
+        AdjustEvent event = new AdjustEvent(EventToken.PURCHASE_GOURMET);
+        Adjust.trackEvent(event);
     }
 
     @Override
     void startDeepLink(Uri deepLinkUri)
     {
         Adjust.appWillOpenUrl(deepLinkUri);
+    }
+
+    @Override
+    void startApplication()
+    {
+        AdjustEvent event = new AdjustEvent(EventToken.LAUNCH);
+        Adjust.trackEvent(event);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////// Event Token ///////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    protected static final class EventToken
+    {
+        public static final String LAUNCH = "zglco7";
+
+        public static final String PURCHASE_STAY = "bqwrab";
+
+        public static final String PURCHASE_GOURMET = "bpmxez";
+
+        public static final String FIRST_PURCHASE_STAY = "9uxbuf";
+
+        public static final String FIRST_PURCHASE_GOURMET = "qvbirj";
     }
 }

@@ -361,6 +361,20 @@ public class AnalyticsManager
         }
     }
 
+    public void startApplication()
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.startApplication();
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////

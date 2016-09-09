@@ -48,4 +48,6 @@ public abstract class BaseAnalyticsManager
     abstract void purchaseCompleteGourmet(String transId, Map<String, String> params);
 
     abstract void startDeepLink(Uri deepLinkUri);
+
+    abstract void startApplication();
 }
