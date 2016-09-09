@@ -194,7 +194,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         // 객실 개수로 높이를 재지정해준다.
         int size = roomInformationList.size();
-        int height = Util.dpToPx(mContext, 100) * size;
+        int height = Util.dpToPx(mContext, 122) * size;
         final int maxHeight = Util.dpToPx(mContext, 350);
         ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
 
