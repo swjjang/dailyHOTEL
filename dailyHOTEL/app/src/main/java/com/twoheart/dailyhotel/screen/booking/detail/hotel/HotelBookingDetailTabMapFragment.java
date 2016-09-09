@@ -120,7 +120,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
 
                     Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
-                        , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0//
+                        , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas//
                         , AnalyticsManager.Category.BOOKING_STATUS//
                         , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
                         , label);
@@ -179,7 +179,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
             , ZoomMapActivity.SourceType.HOTEL_BOOKING, mBookingDetail.placeName, mBookingDetail.address//
-            , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
+            , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas);
 
         startActivity(intent);
     }

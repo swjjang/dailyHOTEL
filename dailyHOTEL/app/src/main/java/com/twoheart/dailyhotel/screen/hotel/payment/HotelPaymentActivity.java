@@ -1949,8 +1949,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         int discount = jsonData.getInt("discount_total");
                         boolean isOnSale = jsonData.getBoolean("on_sale");
                         int availableRooms = jsonData.getInt("available_rooms");
+                        boolean isNRD = false;
+
+                        if (jsonData.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(jsonData.getString("refund_type")) == true)
+                        {
+                            isNRD = true;
+                        }
 
                         RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+                        roomInformation.isNRD = isNRD;
 
                         // 가격이 변동 되었다.
                         if (roomInformation.totalDiscount != discount)

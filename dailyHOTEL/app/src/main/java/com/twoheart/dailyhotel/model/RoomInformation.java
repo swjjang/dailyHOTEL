@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class RoomInformation implements Parcelable
 {
-    private static final String NRD = "nrd";
+    public static final String NRD = "nrd";
 
     public int roomIndex;
     public String roomName;
