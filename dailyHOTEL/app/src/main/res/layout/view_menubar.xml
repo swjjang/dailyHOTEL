@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/bottomMenuBarLayout"
@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/selector_menu_hotel"/>
+                    app:srcCompat="@drawable/tapbar_ic_01_hotel"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/hotelView"
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/selector_menu_gourmet"/>
+                    app:srcCompat="@drawable/tapbar_ic_02_gourmet"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/gourmetView"
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/selector_menu_bookings"/>
+                    app:srcCompat="@drawable/tapbar_ic_03_reservation"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/bookingView"
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/selector_menu_information"/>
+                    app:srcCompat="@drawable/tapbar_ic_04_more"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/informationView"

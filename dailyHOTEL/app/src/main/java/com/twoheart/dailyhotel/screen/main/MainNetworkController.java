@@ -291,7 +291,6 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            ExLog.d(volleyError.toString());
         }
 
         @Override
@@ -356,7 +355,6 @@ public class MainNetworkController extends BaseNetworkController
         {
 
         }
-
     };
 
     private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
