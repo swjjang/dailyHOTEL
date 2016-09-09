@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -158,8 +159,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignTop="@id/couponImageView"
                         android:layout_marginRight="38dp"
-                        android:src="@drawable/tapbar_ic_n"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/tabbar_ic_n"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -216,8 +217,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignTop="@id/bonusImageView"
                         android:layout_marginRight="38dp"
-                        android:src="@drawable/tapbar_ic_n"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/tabbar_ic_n"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -345,8 +346,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:src="@drawable/tapbar_ic_n"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/tabbar_ic_n"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -378,8 +379,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:src="@drawable/tapbar_ic_n"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/tabbar_ic_n"/>
 
                 <View
                     android:layout_width="match_parent"

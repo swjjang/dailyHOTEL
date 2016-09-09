@@ -67,6 +67,13 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="app">
+        <attr name="drawableCompatLeft" format="reference"/>
+        <attr name="drawableCompatTop" format="reference"/>
+        <attr name="drawableCompatRight" format="reference"/>
+        <attr name="drawableCompatBottom" format="reference"/>
+    </declare-styleable>
+
     <!-- DailyLineIndicator -->
     <declare-styleable name="dailyLineIndicator">
         <attr name="indicatorColor" format="color" />

@@ -19,6 +19,7 @@ public class DailyTextView extends AppCompatTextView
     {
         super(context);
 
+        setDrawableCompat(context, null);
         setFontStyle(context, null);
     }
 
@@ -26,6 +27,7 @@ public class DailyTextView extends AppCompatTextView
     {
         super(context, attrs);
 
+        setDrawableCompat(context, attrs);
         setFontStyle(context, attrs);
     }
 
@@ -33,7 +35,28 @@ public class DailyTextView extends AppCompatTextView
     {
         super(context, attrs, defStyle);
 
+        setDrawableCompat(context, attrs);
         setFontStyle(context, attrs);
+    }
+
+    private void setDrawableCompat(Context context, AttributeSet attrs)
+    {
+        if (context == null || attrs == null)
+        {
+            return;
+        }
+
+        int drawableCompatLeftResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatLeft, 0);
+        int drawableCompatTopResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatTop, 0);
+        int drawableCompatRightResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatRight, 0);
+        int drawableCompatBottomResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatBottom, 0);
+
+        if (drawableCompatLeftResId == 0 && drawableCompatTopResId == 0 && drawableCompatRightResId == 0 && drawableCompatBottomResId == 0)
+        {
+            return;
+        }
+
+        setCompoundDrawablesWithIntrinsicBounds(drawableCompatLeftResId, drawableCompatTopResId, drawableCompatRightResId, drawableCompatBottomResId);
     }
 
     private void setFontStyle(Context context, AttributeSet attrs)

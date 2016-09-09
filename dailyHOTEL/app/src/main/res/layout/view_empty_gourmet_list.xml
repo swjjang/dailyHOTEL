@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/emptyLayout"
@@ -43,7 +44,7 @@
             android:layout_above="@id/textLayout"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:src="@drawable/no_gourmet_ic"/>
+            app:srcCompat="@drawable/no_gourmet_ic"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -87,7 +88,7 @@
             android:layout_above="@id/filterTextLayout"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:src="@drawable/no_gourmet_ic"/>
+            app:srcCompat="@drawable/no_gourmet_ic"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/buttonView"

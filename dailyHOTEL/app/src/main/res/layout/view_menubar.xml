@@ -135,7 +135,7 @@
                     android:layout_marginTop="6dp"
                     android:paddingLeft="28dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/tapbar_ic_n"
+                    app:srcCompat="@drawable/tabbar_ic_n"
                     android:visibility="invisible"/>
             </RelativeLayout>
         </LinearLayout>
