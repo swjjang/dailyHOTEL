@@ -11,9 +11,7 @@ import org.json.JSONObject;
 
 public class HotelBookingDetail extends PlaceBookingDetail
 {
-    private static final String NRD = "nrd";
-
-    public int isOverseas; // 0 : 국내 , 1 : 해외
+    public boolean isOverseas;
     public String checkInDate;
     public String checkOutDate;
     public String hotelPhone;
@@ -49,6 +47,11 @@ public class HotelBookingDetail extends PlaceBookingDetail
         JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap"); // 해당 코드 없음
 
         setSpecification(jsonArray);
+
+        if(jsonObject.has("overseas") == true)
+        {
+            isOverseas = jsonObject.getBoolean("overseas");
+        }
 
         latitude = jsonObject.getDouble("latitude");
         longitude = jsonObject.getDouble("longitude");
@@ -95,7 +98,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         paymentPrice = jsonObject.getInt("priceTotal");
         paymentDate = jsonObject.getString("paidAt");
 
-        if (jsonObject.has("refundType") == true && NRD.equalsIgnoreCase(jsonObject.getString("refundType")) == true)
+        if (jsonObject.has("refundType") == true && RoomInformation.NRD.equalsIgnoreCase(jsonObject.getString("refundType")) == true)
         {
             isNRD = true;
         } else
@@ -109,7 +112,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeInt(isOverseas);
+        dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(roomName);
         dest.writeString(checkInDate);
         dest.writeString(checkOutDate);
@@ -124,7 +127,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     {
         super.readFromParcel(in);
 
-        isOverseas = in.readInt();
+        isOverseas = in.readInt() == 1;
         roomName = in.readString();
         checkInDate = in.readString();
         checkOutDate = in.readString();
