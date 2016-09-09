@@ -2,6 +2,7 @@
 <LinearLayout
     android:id="@+id/hotelTitleLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -96,14 +97,14 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/shape_rect_cdcdcdd"
             android:drawablePadding="4dp"
-            android:drawableRight="@drawable/ic_detail_coupon_down"
             android:paddingBottom="4dp"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
             android:paddingTop="4dp"
             android:text="@string/label_detail_download_coupon"
             android:textColor="@color/default_text_c323232"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatRight="@drawable/ic_detail_coupon_down"/>
 
         <View
             android:layout_width="match_parent"
