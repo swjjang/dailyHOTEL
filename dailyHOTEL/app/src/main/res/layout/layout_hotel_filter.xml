@@ -127,7 +127,8 @@
             android:paddingTop="10dp"
             android:text="@string/label_double"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_03_bed_01"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/twinCheckView"
@@ -138,7 +139,8 @@
             android:paddingTop="10dp"
             android:text="@string/label_twin"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_03_bed_02"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/heatedFloorsCheckView"
@@ -149,7 +151,8 @@
             android:paddingTop="10dp"
             android:text="@string/label_heatedfloors"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_03_bed_03"/>
 
         <View
             android:layout_width="match_parent"

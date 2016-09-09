@@ -180,13 +180,8 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         // 베드타입
         mBedTypeLayout = (ViewGroup) view.findViewById(R.id.bedTypeLayout);
         DailyTextView doubleCheckView = (DailyTextView) view.findViewById(R.id.doubleCheckView);
-        doubleCheckView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_03_bed_01, 0, 0);
-
         DailyTextView twinCheckView = (DailyTextView) view.findViewById(R.id.twinCheckView);
-        twinCheckView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_03_bed_02, 0, 0);
-
         DailyTextView heatedFloorsCheckView = (DailyTextView) view.findViewById(R.id.heatedFloorsCheckView);
-        heatedFloorsCheckView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_03_bed_03, 0, 0);
 
         doubleCheckView.setOnClickListener(this);
         twinCheckView.setOnClickListener(this);
