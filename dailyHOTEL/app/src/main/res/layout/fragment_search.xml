@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -27,7 +28,6 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/default_background_cf4f4f6"
-                    android:drawableLeft="@drawable/search_ic_01_search"
                     android:drawablePadding="8dp"
                     android:gravity="center_vertical"
                     android:maxLines="1"
@@ -36,7 +36,8 @@
                     android:singleLine="true"
                     android:textColor="@color/default_text_c323232"
                     android:textColorHint="@color/default_text_cc5c5c5"
-                    android:textSize="13dp"/>
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/search_ic_01_search"/>
 
                 <ImageView
                     android:id="@+id/deleteView"
@@ -46,7 +47,7 @@
                     android:layout_marginTop="8dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="14dp"
-                    android:src="@drawable/search_ic_01_delete"/>
+                    app:srcCompat="@drawable/search_ic_01_delete"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -61,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
-                    android:src="@drawable/search_ic_01_date"/>
+                    app:srcCompat="@drawable/search_ic_01_date"/>
 
                 <ImageView
                     android:id="@+id/calendarDownArrowView"
@@ -109,7 +110,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/search_ic_01_surrounding"/>
+                app:srcCompat="@drawable/search_ic_01_surrounding"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

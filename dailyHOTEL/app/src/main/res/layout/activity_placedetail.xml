@@ -193,9 +193,11 @@
             android:visibility="gone">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/priceRadioGroup"
+                android:clickable="true"
+                android:gravity="center_vertical"
                 android:text="@string/label_detail_view_price_option"
                 android:textColor="@color/default_text_c666666"
                 android:textSize="13dp"/>
@@ -212,7 +214,7 @@
                     android:id="@+id/averageRadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:background="@null"
                     android:button="@null"
                     android:drawablePadding="4dp"
                     android:paddingRight="10dp"
@@ -225,7 +227,7 @@
                     android:id="@+id/totalRadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:background="@null"
                     android:button="@null"
                     android:drawablePadding="4dp"
                     android:paddingLeft="10dp"
