@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
@@ -17,14 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="false"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:singleLine="true"
             android:text="@string/label_completed_payment"
             android:textColor="@color/actionbar_title"
-            android:textSize="18dp"
-            android:layout_marginLeft="15dp"/>
+            android:textSize="18dp"/>
 
         <ImageView
             android:id="@+id/closeView"
@@ -32,14 +33,14 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:paddingLeft="10dp"
-            android:src="@drawable/navibar_ic_x"
-            android:paddingRight="15dp"/>
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/navibar_ic_x"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_line_ce7e7e7"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
     <com.facebook.drawee.view.SimpleDraweeView

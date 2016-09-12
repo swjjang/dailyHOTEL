@@ -177,7 +177,7 @@
                 android:layout_gravity="right"
                 android:layout_marginBottom="7dp"
                 android:paddingRight="15dp"
-                android:src="@drawable/navibar_ic_x"/>
+                app:srcCompat="@drawable/navibar_ic_x"/>
         </RelativeLayout>
 
         <View
