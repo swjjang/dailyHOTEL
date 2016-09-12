@@ -889,6 +889,9 @@
     <string name="label_detail_download_coupon">할인쿠폰 다운받기</string>
     <string name="label_detail_amenities">편의시설</string>
     <string name="label_detail_cancellation_refund_policy">취소 및 환불 규정</string>
+    <string name="label_detail_view_price_option">가격 보기 옵션</string>
+    <string name="label_detail_view_average_price">1박 평균 가격</string>
+    <string name="label_detail_view_total_price">총가격</string>
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="message_stay_detail_changed_price">업체 사정으로 해당 객실의 요금이 변동되었습니다.\n객실 금액을 한번 더 확인해주세요.</string>

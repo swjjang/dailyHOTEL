@@ -59,6 +59,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected TextView mBookingTextView;
     protected TextView mSoldoutTextView;
     protected TextView mDescriptionTextView;
+    protected View mPriceOptionLayout;
     protected RadioGroup mPriceRadioGroup;
 
     protected int mImageHeight;
@@ -148,9 +149,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
         TextView productTypeTextView = (TextView) mProductTypeLayout.findViewById(R.id.productTypeTextView);
 
         productTypeTextView.setText(getProductTypeTitle());
+        productTypeTextView.setClickable(true);
 
-        mPriceRadioGroup = (RadioGroup) mProductTypeLayout.findViewById(R.id.priceRadioGroup);
-        mPriceRadioGroup.setVisibility(View.GONE);
+        mPriceOptionLayout = mProductTypeLayout.findViewById(R.id.priceOptionLayout);
+        mPriceRadioGroup = (RadioGroup) mPriceOptionLayout.findViewById(R.id.priceRadioGroup);
+
+        mPriceOptionLayout.setVisibility(View.GONE);
 
         mProductTypeRecyclerView = (RecyclerView) mProductTypeLayout.findViewById(R.id.productTypeRecyclerView);
         mProductTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -313,13 +317,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-            int height = mProductTypeRecyclerView.getHeight() + Util.dpToPx(mContext, 52);
+//            int height = mProductTypeRecyclerView.getHeight() + Util.dpToPx(mContext, 52);
+            int height = mProductTypeLayout.getHeight();
 
             // 객실의 View타입이 보이는 경우에는 높이를 더한다.
-            if (mPriceRadioGroup.getVisibility() == View.VISIBLE)
-            {
-                height += Util.dpToPx(mContext, 30);
-            }
+//            if (mPriceOptionLayout.getVisibility() == View.VISIBLE)
+//            {
+//                height += Util.dpToPx(mContext, 40);
+//            }
 
             mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
 
