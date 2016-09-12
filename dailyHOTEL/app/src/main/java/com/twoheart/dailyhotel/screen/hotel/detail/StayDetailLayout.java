@@ -139,11 +139,11 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         if (stayDetail.nights > 1)
         {
             mPriceRadioGroup.check(R.id.averageRadioButton);
-            mPriceRadioGroup.setVisibility(View.VISIBLE);
+            mPriceOptionLayout.setVisibility(View.VISIBLE);
             mPriceRadioGroup.setOnCheckedChangeListener(this);
         } else
         {
-            mPriceRadioGroup.setVisibility(View.GONE);
+            mPriceOptionLayout.setVisibility(View.GONE);
             mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
 
@@ -194,16 +194,19 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         // 객실 개수로 높이를 재지정해준다.
         int size = roomInformationList.size();
-        int height = Util.dpToPx(mContext, 122) * size;
-        final int maxHeight = Util.dpToPx(mContext, 350);
+        int productTitleBarHeight = Util.dpToPx(mContext, 52) + (mSelectedRoomInformation.nights > 1 ? Util.dpToPx(mContext, 40) : 0);
+        int prodcutLayoutHeight = Util.dpToPx(mContext, 122) * size + productTitleBarHeight;
+
+        // 화면 높이 - 상단 타이틀 - 하단 버튼
+        final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() - Util.dpToPx(mContext, 52) - Util.dpToPx(mContext, 64);
         ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
 
-        if (height > maxHeight)
+        if (prodcutLayoutHeight > maxHeight)
         {
-            layoutParams.height = maxHeight;
+            layoutParams.height = maxHeight - productTitleBarHeight;
         } else
         {
-            layoutParams.height = height;
+            layoutParams.height = prodcutLayoutHeight - productTitleBarHeight;
         }
 
         mProductTypeRecyclerView.setLayoutParams(layoutParams);
