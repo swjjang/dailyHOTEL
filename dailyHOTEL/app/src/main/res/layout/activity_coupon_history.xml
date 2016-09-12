@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:drawablePadding="4dp"
-            android:drawableTop="@drawable/more_ic_coupon_03"
+            android:drawableTop="@drawable/more_ic_coupon_01"
             android:text="@string/coupon_history_header_text"
             android:textColor="@color/information_title"
             android:textSize="12dp"/>
