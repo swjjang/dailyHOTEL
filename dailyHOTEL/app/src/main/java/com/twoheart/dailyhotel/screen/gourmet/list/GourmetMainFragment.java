@@ -965,20 +965,6 @@ public class GourmetMainFragment extends PlaceMainFragment
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void startGourmetDetailByDeepLink(int gourmetIndex, SaleTime saleTime, boolean isShowCalendar)
-    {
-        if (isFinishing() || gourmetIndex < 0 || lockUiComponentAndIsLockUiComponent() == true)
-        {
-            return;
-        }
-
-        lockUI();
-
-        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, saleTime, gourmetIndex, isShowCalendar);
-
-        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
-    }
-
     private boolean moveDeepLinkDetail(BaseActivity baseActivity)
     {
         try
@@ -1004,7 +990,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return false;
             }
 
-            startGourmetDetailByDeepLink(gourmetIndex, changedSaleTime, isShowCalendar);
+            Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, isShowCalendar);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
             mIsDeepLink = true;
         } catch (Exception e)
@@ -1028,8 +1015,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-            mIsDeepLink = true;
 
+            mIsDeepLink = true;
             return true;
         } else
         {
@@ -1111,7 +1098,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         Intent intent = GourmetRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, mGourmetCuration.getSaleTime());
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
         mIsDeepLink = true;
@@ -1164,8 +1151,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             return false;
         }
 
-        Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.FNB, checkInSaleTime, 1, word);
-        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, checkInSaleTime, 1, word);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         mIsDeepLink = true;
 
@@ -1229,8 +1216,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 if (latLng != null)
                 {
-                    Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, latLng, radius, true);
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                    Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, checkInSaleTime, latLng, radius, true);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
                     return false;
@@ -1241,8 +1228,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             default:
                 if (Util.isTextEmpty(word) == false)
                 {
-                    Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, new Keyword(0, word), SearchType.SEARCHES);
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                    Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, checkInSaleTime, new Keyword(0, word), SearchType.SEARCHES);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
                     return false;
