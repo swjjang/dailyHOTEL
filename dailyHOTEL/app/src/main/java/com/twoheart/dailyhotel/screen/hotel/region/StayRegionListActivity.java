@@ -123,7 +123,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         });
 
         dailyToolbarLayout.setBackImageView(R.drawable.navibar_ic_x);
-        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override

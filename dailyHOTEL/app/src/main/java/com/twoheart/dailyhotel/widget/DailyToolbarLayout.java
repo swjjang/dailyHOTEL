@@ -199,14 +199,6 @@ public class DailyToolbarLayout
         backView.setImageResource(backResId);
     }
 
-    public void setToolbarRegionText(String title)
-    {
-        // 인덱스 번호는 나중에 바뀜
-        TextView textView = getTitleTextView(mContext);
-        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
-        textView.setText(title);
-    }
-
     public void setToolbarText(String title)
     {
         TextView textView = getTitleTextView(mContext);

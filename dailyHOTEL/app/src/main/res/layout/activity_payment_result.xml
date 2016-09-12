@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:paddingLeft="10dp"
-            android:src="@drawable/navibar_ic_search_x"
+            android:src="@drawable/navibar_ic_x"
             android:paddingRight="15dp"/>
 
         <View

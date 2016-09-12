@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:src="@drawable/navibar_ic_back_01_black"/>
+            app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/titleView"
@@ -80,7 +80,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="9dp"
-                android:src="@drawable/navibar_m_ic_v"/>
+                app:srcCompat="@drawable/navibar_m_ic_v"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/calendarTextView"

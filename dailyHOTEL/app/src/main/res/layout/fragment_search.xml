@@ -71,7 +71,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="9dp"
-                    android:src="@drawable/navibar_m_ic_v"/>
+                    app:srcCompat="@drawable/navibar_m_ic_v"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/calendarTextView"
