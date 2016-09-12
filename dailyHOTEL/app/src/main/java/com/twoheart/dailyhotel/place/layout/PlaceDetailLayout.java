@@ -265,6 +265,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void hideProductInformationLayout()
     {
+        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
         if (mObjectAnimator != null)
         {
             if (mObjectAnimator.isRunning() == true)
@@ -317,15 +323,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-//            int height = mProductTypeRecyclerView.getHeight() + Util.dpToPx(mContext, 52);
             int height = mProductTypeLayout.getHeight();
-
-            // 객실의 View타입이 보이는 경우에는 높이를 더한다.
-//            if (mPriceOptionLayout.getVisibility() == View.VISIBLE)
-//            {
-//                height += Util.dpToPx(mContext, 40);
-//            }
-
             mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
