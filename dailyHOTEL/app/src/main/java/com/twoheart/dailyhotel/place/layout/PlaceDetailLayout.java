@@ -149,6 +149,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         TextView productTypeTextView = (TextView) mProductTypeLayout.findViewById(R.id.productTypeTextView);
 
         productTypeTextView.setText(getProductTypeTitle());
+        productTypeTextView.setClickable(true);
 
         mPriceOptionLayout = mProductTypeLayout.findViewById(R.id.priceOptionLayout);
         mPriceRadioGroup = (RadioGroup) mPriceOptionLayout.findViewById(R.id.priceRadioGroup);

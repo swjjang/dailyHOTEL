@@ -157,13 +157,17 @@
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/productTypeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/closeView"
+                android:gravity="center"
+                android:paddingLeft="45dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="16dp"/>
 
             <ImageView
+                android:id="@+id/closeView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
@@ -185,8 +189,8 @@
             android:layout_height="40dp"
             android:background="@color/white"
             android:paddingLeft="12dp"
-            android:visibility="gone"
-            android:paddingRight="12dp">
+            android:paddingRight="12dp"
+            android:visibility="gone">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
@@ -234,8 +238,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/default_line_ce7e7e7"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
