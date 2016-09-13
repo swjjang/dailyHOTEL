@@ -11,6 +11,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class BonusListAdapter extends ArrayAdapter<Bonus>
@@ -24,6 +26,34 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
 
         mContext = context;
         mBonusList = list;
+    }
+
+    public void addAll(Collection<? extends Bonus> collection)
+    {
+        if (collection == null)
+        {
+            return;
+        }
+
+        if (mBonusList == null)
+        {
+            mBonusList = new ArrayList<>();
+        }
+
+        mBonusList.addAll(collection);
+    }
+
+    @Override
+    public void clear()
+    {
+        if (mBonusList == null)
+        {
+            return;
+        }
+
+        mBonusList.clear();
+
+        super.clear();
     }
 
     @Override

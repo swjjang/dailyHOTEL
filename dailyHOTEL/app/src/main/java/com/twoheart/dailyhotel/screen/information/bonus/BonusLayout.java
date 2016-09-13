@@ -25,6 +25,8 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     private View mFooterView;
     private View mBottomLayout;
 
+    private BonusListAdapter mBonusListAdapter;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onInviteFriends();
@@ -112,17 +114,24 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     public void setData(List<Bonus> list)
     {
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-        BonusListAdapter bonusListAdapter;
+
+        if (mBonusListAdapter == null)
+        {
+            mBonusListAdapter = new BonusListAdapter(mContext, 0, new ArrayList<Bonus>());
+        }
+
+        mBonusListAdapter.clear();
 
         if (list != null && list.size() != 0)
         {
-            mListView.removeFooterView(mFooterView);
-            bonusListAdapter = new BonusListAdapter(mContext, 0, list);
-        } else
-        {
-            bonusListAdapter = new BonusListAdapter(mContext, 0, new ArrayList<Bonus>());
+            if (mListView.getFooterViewsCount() > 0)
+            {
+                mListView.removeFooterView(mFooterView);
+            }
+
+            mBonusListAdapter.addAll(list);
         }
 
-        mListView.setAdapter(bonusListAdapter);
+        mListView.setAdapter(mBonusListAdapter);
     }
 }
