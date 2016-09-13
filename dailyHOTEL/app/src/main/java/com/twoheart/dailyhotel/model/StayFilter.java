@@ -25,6 +25,9 @@ public class StayFilter implements Parcelable
     public static final int FLAG_HOTEL_FILTER_AMENITIES_PARKING = 0x10;
     public static final int FLAG_HOTEL_FILTER_AMENITIES_POOL = 0x20;
     public static final int FLAG_HOTEL_FILTER_AMENITIES_FITNESS = 0x40;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_NOPARKING = 0x80;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_PET = 0x0100;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ = 0x0200;
 
     public static final String DOUBLE = "더블";
     public static final String TWIN = "트윈";

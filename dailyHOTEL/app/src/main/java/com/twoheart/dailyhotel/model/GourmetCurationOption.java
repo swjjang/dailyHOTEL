@@ -205,27 +205,32 @@ public class GourmetCurationOption extends PlaceCurationOption
         {
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE);
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
             {
+                result.append(AnalyticsManager.Label.SORTFILTER_VALET);
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
             {
+                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT);
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
             {
+                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATEROOM);
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
             {
+                result.append(AnalyticsManager.Label.SORTFILTER_GROUPBOOKING);
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
             {
+                result.append(AnalyticsManager.Label.SORTFILTER_CORKAGE);
             }
         }
 

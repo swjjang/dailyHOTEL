@@ -45,68 +45,6 @@ public class StayCurationOption extends PlaceCurationOption
         }
     }
 
-    public void setFiltersListByJson(JSONArray jsonArray)
-    {
-        mStayFiltersList.clear();
-
-        if (jsonArray == null)
-        {
-            return;
-        }
-
-        int length = jsonArray.length();
-        if (length == 0)
-        {
-            return;
-        }
-
-        for (int i = 0; i < length; i++)
-        {
-            try
-            {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                String category = jsonObject.getString("category");
-
-                mStayFiltersList.add(makeHotelFilters(category, jsonObject));
-            } catch (JSONException e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-    }
-
-    private StayFilters makeHotelFilters(String categoryCode, JSONObject jsonObject) throws JSONException
-    {
-        if (jsonObject == null)
-        {
-            return null;
-        }
-
-        JSONArray jsonArray = jsonObject.getJSONArray("hotelRoomElementList");
-
-        if (jsonArray == null || jsonArray.length() == 0)
-        {
-            return null;
-        }
-
-        int length = jsonArray.length();
-        StayFilters hotelFilters = new StayFilters(length);
-        hotelFilters.categoryCode = categoryCode;
-
-        for (int i = 0; i < length; i++)
-        {
-            JSONObject jsonFilter = jsonArray.getJSONObject(i);
-            jsonFilter.put("parking", jsonObject.getString("parking"));
-            jsonFilter.put("pool", jsonObject.getString("pool"));
-            jsonFilter.put("fitness", jsonObject.getString("fitness"));
-
-            hotelFilters.setHotelFilter(i, jsonFilter);
-        }
-
-        return hotelFilters;
-    }
-
     public ArrayList<StayFilters> getFiltersList()
     {
         return mStayFiltersList;
@@ -236,7 +174,7 @@ public class StayCurationOption extends PlaceCurationOption
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
@@ -247,6 +185,21 @@ public class StayCurationOption extends PlaceCurationOption
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(',');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE).append(',');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_SHAREDBBQ).append(',');
             }
 
             if (result.charAt(result.length() - 1) == ',')

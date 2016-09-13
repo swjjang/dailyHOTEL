@@ -245,6 +245,21 @@ public class StayParams extends PlaceParams
             sb.append(prefix).append("Fitness").append("&");
         }
 
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING)
+        {
+            sb.append(prefix).append("NoParking").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
+        {
+            sb.append(prefix).append("Pet").append("&");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ)
+        {
+            sb.append(prefix).append("SharedBbq").append("&");
+        }
+
         int length = sb.length();
         if (length > 0)
         {
