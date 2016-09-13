@@ -29,9 +29,8 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@color/default_text_cc5c5c5"
-            android:textSize="13dp"/>
+            android:textSize="11dp"/>
     </LinearLayout>
-
 
     <ImageView
         android:id="@+id/newIconView"
