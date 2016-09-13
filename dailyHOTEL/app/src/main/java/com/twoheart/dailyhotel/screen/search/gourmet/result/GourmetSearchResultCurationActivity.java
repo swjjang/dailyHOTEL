@@ -127,7 +127,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         requestUpdateResultDelayed();
 
         resetLayout(mGridLayout);
-        resetLayout(mAmenitiesLayout);
+        resetLayout(mAmenitiesGridLayout);
         resetLayout(mTimeRangeLayout);
     }
 

@@ -17,6 +17,10 @@ public class GourmetFilter
     {
         public static final int FLAG_NONE = 0x00;
         public static final int FLAG_PARKING = 0x01;
+        public static final int FLAG_VALET = 0x02;
+        public static final int FLAG_BABYSEAT = 0x04;
+        public static final int FLAG_PRIVATEROOM = 0x08;
+        public static final int FLAG_GROUPBOOKING = 0x10;
+        public static final int FLAG_CORKAGE = 0x20;
     }
-
 }

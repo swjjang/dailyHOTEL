@@ -251,6 +251,31 @@ public class GourmetParams extends PlaceParams
             stringBuilder.append(prefix).append("Parking").append("&");
         }
 
+        if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
+        {
+            stringBuilder.append(prefix).append("Valet").append("&");
+        }
+
+        if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+        {
+            stringBuilder.append(prefix).append("BabySeat").append("&");
+        }
+
+        if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
+        {
+            stringBuilder.append(prefix).append("PrivateRoom").append("&");
+        }
+
+        if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
+        {
+            stringBuilder.append(prefix).append("GroupBooking").append("&");
+        }
+
+        if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
+        {
+            stringBuilder.append(prefix).append("Corkage").append("&");
+        }
+
         int length = stringBuilder.length();
         if (stringBuilder.charAt(length - 1) == '&')
         {

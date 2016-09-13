@@ -207,6 +207,26 @@ public class GourmetCurationOption extends PlaceCurationOption
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
             }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
+            {
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+            {
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
+            {
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
+            {
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
+            {
+            }
         }
 
         return result.toString();
