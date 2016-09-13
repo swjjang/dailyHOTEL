@@ -271,17 +271,17 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             valetCheckView.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
         {
             privateRoomCheckView.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
         {
             groupBookingCheckView.setSelected(true);
         }
 
-        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
         {
             babySeatCheckView.setSelected(true);
         }

@@ -16,6 +16,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -1557,4 +1558,13 @@ public class Util implements Constants
             DailyPreference.getInstance(context).setNoticeNewRemoveList(removeValue + indexString);
         }
     }
+//
+//    public static Bitmap loadBitmapFromView(View v, int width, int height)
+//    {
+//        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//        Canvas c = new Canvas(b);
+//        v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+//        v.draw(c);
+//        return b;
+//    }
 }
