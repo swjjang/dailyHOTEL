@@ -12,9 +12,9 @@ import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,8 +96,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
     public void setBonus(int bonus)
     {
-        DecimalFormat decimalFormat = new DecimalFormat("###,##0원");
-        mBonusTextView.setText(decimalFormat.format(bonus));
+        mBonusTextView.setText(Util.getPriceFormat(mContext, bonus, false));
     }
 
     public void setBottomLayoutVisible(boolean visible)

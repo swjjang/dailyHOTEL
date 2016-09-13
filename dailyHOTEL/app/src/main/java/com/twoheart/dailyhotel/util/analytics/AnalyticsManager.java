@@ -144,7 +144,6 @@ public class AnalyticsManager
 
     public void onResume(Activity activity)
     {
-
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try

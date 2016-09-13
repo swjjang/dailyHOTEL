@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyScrollView;
 
 import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
 import java.util.List;
 
 public abstract class PlaceSearchLayout extends BaseLayout implements View.OnClickListener
@@ -629,11 +628,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                             textView01.setText(keyword.name);
                         }
 
-                        DecimalFormat comma = new DecimalFormat("###,##0");
-                        String strPrice = comma.format(keyword.price);
-
                         textView02.setVisibility(View.VISIBLE);
-                        textView02.setText(strPrice + mContext.getString(R.string.currency));
+                        textView02.setText(Util.getPriceFormat(mContext, keyword.price, false));
                     } else
                     {
                         textView01.setText(keyword.name);

@@ -145,11 +145,11 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordScreen(String screen)
     {
-//        AdjustEvent event = new AdjustEvent(screen);
-//        event.addCallbackParameter("key", "value");
-//        event.addCallbackParameter("foo", "bar");
-//
-//        Adjust.trackEvent(event);
+        //        AdjustEvent event = new AdjustEvent(screen);
+        //        event.addCallbackParameter("key", "value");
+        //        event.addCallbackParameter("foo", "bar");
+        //
+        //        Adjust.trackEvent(event);
     }
 
     @Override
@@ -197,13 +197,13 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void onResume(Activity activity)
     {
-
+        Adjust.onResume();
     }
 
     @Override
     void onPause(Activity activity)
     {
-
+        Adjust.onPause();
     }
 
     @Override

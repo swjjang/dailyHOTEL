@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 
-public class HotelIconGenerator
+public class PlaceIconGenerator
 {
     private static final float TEXT_SIZE_DP = 12.0f;
     private static final float SELECTED_TEXT_SIZE_DP = 16.0f;
@@ -39,7 +39,7 @@ public class HotelIconGenerator
     /**
      * Creates a new IconGenerator with the default style.
      */
-    public HotelIconGenerator(Context context)
+    public PlaceIconGenerator(Context context)
     {
         mContainer = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.marker_hotel, null);
         mTextView = (TextView) mContainer.findViewById(R.id.text);

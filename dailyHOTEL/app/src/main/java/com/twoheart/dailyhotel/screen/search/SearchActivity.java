@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.search;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;

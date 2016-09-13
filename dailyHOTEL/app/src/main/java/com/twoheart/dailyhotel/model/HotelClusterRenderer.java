@@ -33,9 +33,9 @@ public class HotelClusterRenderer extends DefaultClusterRenderer<HotelClusterIte
             mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
         }
 
-        HotelRenderer hotelRenderer = new HotelRenderer(mContext, item.getHotel());
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, item.getHotel().price, item.getHotel().getGradeMarkerResId());
 
-        BitmapDescriptor icon = hotelRenderer.getBitmap(false);
+        BitmapDescriptor icon = placeRenderer.getBitmap(false);
 
         if (icon != null)
         {
