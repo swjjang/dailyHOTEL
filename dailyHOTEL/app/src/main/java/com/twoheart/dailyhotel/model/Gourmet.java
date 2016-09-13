@@ -85,7 +85,10 @@ public class Gourmet extends Place
             categoryCode = jsonObject.getInt("categoryCode");
             categorySequence = jsonObject.getInt("categorySeq");
 
-            subCategory = jsonObject.getString("categorySub");
+            if (jsonObject.has("categorySub") == true)
+            {
+                subCategory = jsonObject.getString("categorySub");
+            }
 
             if (jsonObject.has("rating") == true)
             {
