@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.model;
 
 public class GourmetFilter
 {
-
     public class Time
     {
         public static final int FLAG_NONE = 0x00;

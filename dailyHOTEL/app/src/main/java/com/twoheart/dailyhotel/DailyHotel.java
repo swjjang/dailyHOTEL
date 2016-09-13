@@ -1,11 +1,8 @@
 package com.twoheart.dailyhotel;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
 
-import com.adjust.sdk.Adjust;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;

@@ -218,4 +218,33 @@ public class DailyTextView extends AppCompatTextView
             }
         }
     }
+
+    public void setDrawableVectorTint(int id)
+    {
+        Drawable[] drawables = getCompoundDrawables();
+
+        if (drawables == null)
+        {
+            return;
+        }
+
+        for (Drawable drawable : drawables)
+        {
+            if (drawable == null)
+            {
+                continue;
+            }
+
+            if (drawable instanceof VectorDrawableCompat)
+            {
+                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
+            } else
+            {
+                if (Util.isOverAPI21() == true)
+                {
+                    drawable.setTint(getResources().getColor(id));
+                }
+            }
+        }
+    }
 }

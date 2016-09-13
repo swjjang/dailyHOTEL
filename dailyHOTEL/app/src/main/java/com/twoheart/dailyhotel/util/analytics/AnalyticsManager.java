@@ -669,7 +669,10 @@ public class AnalyticsManager
         public static final String SORTFILTER_FREEBREAKFAST = "FreeBreakfast";
         public static final String SORTFILTER_KITCHEN = "Kitchen";
         public static final String SORTFILTER_BATHTUB = "Bathtub";
-        public static final String SORTFILTER_PARKINGAVAILABEL = "ParkingAvailable";
+        public static final String SORTFILTER_PARKINGAVAILABLE = "ParkingAvailable";
+        public static final String SORTFILTER_PARKINGDISABLE = "NoParking";
+        public static final String SORTFILTER_PET = "Pet";
+        public static final String SORTFILTER_SHAREDBBQ = "SharedBbq";
         public static final String SORTFILTER_POOL = "Pool";
         public static final String SORTFILTER_FITNESS = "Fitness";
         public static final String SORTFILTER_VALET = "Valet";

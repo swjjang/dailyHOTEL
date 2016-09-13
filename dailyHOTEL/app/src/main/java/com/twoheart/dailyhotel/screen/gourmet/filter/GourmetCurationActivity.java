@@ -239,7 +239,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mAmenitiesGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
 
         View parkingCheckView = mAmenitiesGridLayout.findViewById(R.id.parkingCheckView);
-        parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
+        parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE);
 
         DailyTextView valetCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.valetCheckView);
         valetCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_VALET);
