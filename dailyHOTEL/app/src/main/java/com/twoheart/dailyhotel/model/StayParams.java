@@ -255,7 +255,7 @@ public class StayParams extends PlaceParams
             sb.append(prefix).append("Pet").append("&");
         }
 
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ)
         {
             sb.append(prefix).append("SharedBbq").append("&");
         }

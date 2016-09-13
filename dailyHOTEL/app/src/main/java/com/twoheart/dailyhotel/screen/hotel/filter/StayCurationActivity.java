@@ -264,7 +264,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             , AnalyticsManager.Label.SORTFILTER_KITCHEN//
             , AnalyticsManager.Label.SORTFILTER_BATHTUB};
 
-        final int[] amenitiesResId = new int[]{ R.drawable.f_ic_hotel_04_facilities_05//
+        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_05//
             , R.drawable.f_ic_hotel_04_facilities_06//
             , R.drawable.f_ic_hotel_04_facilities_07//
             , R.drawable.ic_detail_facilities_02_no_parking//
@@ -280,7 +280,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//

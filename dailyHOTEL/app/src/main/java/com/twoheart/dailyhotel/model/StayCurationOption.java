@@ -2,14 +2,7 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class StayCurationOption extends PlaceCurationOption
 {
@@ -17,37 +10,16 @@ public class StayCurationOption extends PlaceCurationOption
     public int flagBedTypeFilters;
     public int flagAmenitiesFilters; // luxuries
 
-    private ArrayList<StayFilters> mStayFiltersList;
-
     public StayCurationOption()
     {
-        mStayFiltersList = new ArrayList<>();
-
         clear();
     }
 
     public StayCurationOption(Parcel in)
     {
-        mStayFiltersList = new ArrayList<>();
-
         clear();
 
         readFromParcel(in);
-    }
-
-    public void setFiltersList(ArrayList<StayFilters> arrayList)
-    {
-        mStayFiltersList.clear();
-
-        if (arrayList != null)
-        {
-            mStayFiltersList.addAll(arrayList);
-        }
-    }
-
-    public ArrayList<StayFilters> getFiltersList()
-    {
-        return mStayFiltersList;
     }
 
     public void clear()
@@ -67,7 +39,6 @@ public class StayCurationOption extends PlaceCurationOption
         }
 
         setSortType(stayCurationOption.getSortType());
-        setFiltersList(stayCurationOption.getFiltersList());
 
         person = stayCurationOption.person;
         flagBedTypeFilters = stayCurationOption.flagBedTypeFilters;
@@ -197,7 +168,7 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
             }
 
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREBBQ)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_SHAREDBBQ).append(',');
             }
@@ -218,7 +189,6 @@ public class StayCurationOption extends PlaceCurationOption
 
         dest.writeInt(person);
         dest.writeInt(flagBedTypeFilters);
-        dest.writeTypedList(mStayFiltersList);
         dest.writeInt(flagAmenitiesFilters);
     }
 
@@ -228,7 +198,6 @@ public class StayCurationOption extends PlaceCurationOption
 
         person = in.readInt();
         flagBedTypeFilters = in.readInt();
-        in.readTypedList(mStayFiltersList, StayFilters.CREATOR);
         flagAmenitiesFilters = in.readInt();
     }
 
