@@ -225,7 +225,7 @@ public class GourmetCurationOption extends PlaceCurationOption
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_GROUPBOOKING);
+                result.append(AnalyticsManager.Label.SORTFILTER_GROUP);
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)

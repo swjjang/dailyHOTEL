@@ -258,7 +258,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             , AnalyticsManager.Label.SORTFILTER_FITNESS//
             , AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE//
             , AnalyticsManager.Label.SORTFILTER_PET//
-            , AnalyticsManager.Label.SORTFILTER_SHAREDBBQ//
+            , AnalyticsManager.Label.SORTFILTER_BBQ//
             , AnalyticsManager.Label.SORTFILTER_WIFI//
             , AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST//
             , AnalyticsManager.Label.SORTFILTER_KITCHEN//
@@ -603,16 +603,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             case R.id.minusPersonView:
                 updatePersonFilter(stayCurationOption.person - 1);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(stayCurationOption.person), null);
                 break;
 
             case R.id.plusPersonView:
                 updatePersonFilter(stayCurationOption.person + 1);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(stayCurationOption.person), null);
                 break;
 
             case R.id.doubleCheckView:

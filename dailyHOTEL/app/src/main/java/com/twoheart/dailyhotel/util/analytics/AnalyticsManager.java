@@ -672,13 +672,13 @@ public class AnalyticsManager
         public static final String SORTFILTER_PARKINGAVAILABLE = "ParkingAvailable";
         public static final String SORTFILTER_PARKINGDISABLE = "NoParking";
         public static final String SORTFILTER_PET = "Pet";
-        public static final String SORTFILTER_SHAREDBBQ = "SharedBbq";
+        public static final String SORTFILTER_BBQ = "BBQ";
         public static final String SORTFILTER_POOL = "Pool";
         public static final String SORTFILTER_FITNESS = "Fitness";
         public static final String SORTFILTER_VALET = "Valet";
         public static final String SORTFILTER_BABYSEAT = "BabySeat";
         public static final String SORTFILTER_PRIVATEROOM = "PrivateRoom";
-        public static final String SORTFILTER_GROUPBOOKING = "GroupBooking";
+        public static final String SORTFILTER_GROUP = "Group";
         public static final String SORTFILTER_CORKAGE = "Corkage";
         //
         public static final String SORTFILTER_0611 = "0611";

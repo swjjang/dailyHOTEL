@@ -250,7 +250,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         privateRoomCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
 
         DailyTextView groupBookingCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.groupBookingCheckView);
-        groupBookingCheckView.setTag(groupBookingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_GROUPBOOKING);
+        groupBookingCheckView.setTag(groupBookingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_GROUP);
         groupBookingCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
 
         DailyTextView babySeatCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.babySeatCheckView);

@@ -170,7 +170,7 @@ public class StayCurationOption extends PlaceCurationOption
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_SHAREDBBQ).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(',');
             }
 
             if (result.charAt(result.length() - 1) == ',')
