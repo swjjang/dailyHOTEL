@@ -1402,16 +1402,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             case 1:
             case 2:
-            case 10:
                 messageList[2] = R.string.dialog_msg_hotel_payment_message09;
                 break;
 
+            case 10:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message10;
+                break;
+
             case 3:
-            case 12:
                 messageList[2] = R.string.dialog_msg_hotel_payment_message11;
                 break;
 
             case 11:
+            case 12:
                 messageList[2] = R.string.dialog_msg_hotel_payment_message12;
                 break;
 

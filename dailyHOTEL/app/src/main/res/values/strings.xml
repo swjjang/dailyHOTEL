@@ -234,10 +234,10 @@
     <string name="dialog_msg_hotel_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
     <string name="dialog_msg_hotel_payment_message06">취소 규정 등 위 내용에 동의하시면 버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_hotel_payment_message07">취소 규정 등 위 내용에 동의하시면 서명 후 결제 완료 버튼을 눌러주세요.</string>
-    <string name="dialog_msg_hotel_payment_message09">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message09">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로 전환되며, 예약 확정 여부 확인하여 문자로 안내드리겠습니다.</string>
+    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로 전환되며, 예약 확정 여부 확인하여 문자로 안내드리겠습니다.</string>
+    <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로 전환되며, 오전 11시까지 예약 확정 여부 확인하여 문자로 안내드리겠습니다.</string>
+    <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로 전환되며, 해당 펜션 영업시간 내에 예약 확정 여부 확인하여 문자로 안내드리겠습니다.</string>
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
     <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 규정과 상관없이 변경, 취소, 환불이 &lt;b&gt;절대 불가&lt;/b&gt;합니다.</string>
 
