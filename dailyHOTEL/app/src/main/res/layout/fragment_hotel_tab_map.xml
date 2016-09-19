@@ -11,6 +11,12 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout">
 
+        <fragment
+            android:id="@+id/mapFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/placeholderMapView"
             android:layout_width="match_parent"
@@ -18,6 +24,7 @@
             android:gravity="center"
             android:text="@string/label_google_map"
             android:textColor="@color/booking_subtext"
+            android:background="@color/default_background"
             android:textSize="20dp"/>
     </FrameLayout>
 

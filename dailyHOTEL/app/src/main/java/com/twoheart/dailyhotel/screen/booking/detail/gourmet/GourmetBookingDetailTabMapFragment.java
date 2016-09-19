@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,11 +41,10 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
     private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
     private boolean mIsUsed;
-    private PlaceBookingDetail mPlaceBookingDetail;
-    private SupportMapFragment mMapFragment;
+    private GourmetBookingDetail mGourmetBookingDetail;
     private GoogleMap mGoogleMap;
     private FrameLayout mMapLayout;
-    private View mGoogleMapLayout;
+    private SupportMapFragment mSupportMapFragment;
     private Marker mMarker;
     private Handler mHandler = new Handler();
 
@@ -68,7 +66,7 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
     {
         super.onCreate(savedInstanceState);
 
-        mPlaceBookingDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+        mGourmetBookingDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
         mIsUsed = getArguments().getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
     }
 
@@ -79,25 +77,23 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
         mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
 
-        final GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
-
         TextView placeNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
         TextView placeAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
 
-        placeNameTextView.setText(gourmetBookingDetail.placeName);
+        placeNameTextView.setText(mGourmetBookingDetail.placeName);
         placeNameTextView.setSelected(true);
-        placeAddressTextView.setText(gourmetBookingDetail.address);
+        placeAddressTextView.setText(mGourmetBookingDetail.address);
         placeAddressTextView.setSelected(true);
 
         TextView placeCateogryTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
         String displayCategory;
-        if (Util.isTextEmpty(gourmetBookingDetail.subCategory) == false)
+        if (Util.isTextEmpty(mGourmetBookingDetail.subCategory) == false)
         {
-            displayCategory = gourmetBookingDetail.subCategory;
+            displayCategory = mGourmetBookingDetail.subCategory;
         } else
         {
-            displayCategory = gourmetBookingDetail.category;
+            displayCategory = mGourmetBookingDetail.category;
         }
 
         if (Util.isTextEmpty(displayCategory) == true)
@@ -126,11 +122,11 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                 try
                 {
                     //                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
-                    String reservationTime = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
-                    String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
+                    String reservationTime = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
+                    String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
 
-                    Util.showShareMapDialog(baseActivity, mPlaceBookingDetail.placeName//
-                        , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false, AnalyticsManager.Category.BOOKING_STATUS//
+                    Util.showShareMapDialog(baseActivity, mGourmetBookingDetail.placeName//
+                        , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, false, AnalyticsManager.Category.BOOKING_STATUS//
                         , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
                         , label);
                 } catch (ParseException e)
@@ -148,15 +144,15 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             {
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                Util.clipText(baseActivity, gourmetBookingDetail.address);
+                Util.clipText(baseActivity, mGourmetBookingDetail.address);
 
                 DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
                 try
                 {
                     //                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
-                    String reservationTime = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
-                    String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
+                    String reservationTime = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
+                    String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
 
                     AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
@@ -176,14 +172,14 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || mGoogleMap == null)
         {
             return;
         }
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
-            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mPlaceBookingDetail.placeName, mPlaceBookingDetail.address//
-            , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false);
+            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mGourmetBookingDetail.placeName, mGourmetBookingDetail.address//
+            , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, false);
 
         startActivity(intent);
     }
@@ -209,15 +205,17 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             }
         });
 
+        if (mSupportMapFragment == null)
+        {
+            mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+        }
+
+        View placeholderMapView = mMapLayout.findViewById(R.id.placeholderMapView);
+
         if (Util.isInstallGooglePlayService(baseActivity) == true)
         {
-            try
-            {
-                googleMapSetting(mMapLayout);
-            } catch (Exception | Error e)
-            {
-                ExLog.d(e.toString());
-            }
+            placeholderMapView.setVisibility(View.GONE);
+            googleMapSetting();
         }
     }
 
@@ -280,67 +278,25 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
         }
     }
 
-    private void googleMapSetting(final FrameLayout googleMapLayout)
+    private void googleMapSetting()
     {
-        if (googleMapLayout == null)
+        if (mSupportMapFragment == null || mGoogleMap != null)
         {
             return;
         }
 
-        googleMapLayout.postDelayed(new Runnable()
+        mSupportMapFragment.getMapAsync(new OnMapReadyCallback()
         {
             @Override
-            public void run()
+            public void onMapReady(GoogleMap googleMap)
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
+                mGoogleMap = googleMap;
+                mGoogleMap.setOnMapClickListener(GourmetBookingDetailTabMapFragment.this);
+                mGoogleMap.setMyLocationEnabled(false);
+                mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                if (baseActivity == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    if (mGoogleMapLayout == null)
-                    {
-                        LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        mGoogleMapLayout = inflater.inflate(R.layout.view_map, null, false);
-                    }
-
-                    googleMapLayout.addView(mGoogleMapLayout);
-
-                    mMapFragment = (SupportMapFragment) baseActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-                } catch (Exception | Error e)
-                {
-                    ExLog.e(e.toString());
-
-                    googleMapLayout.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            onMapClick(new LatLng(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude));
-                        }
-                    });
-                    return;
-                }
-
-                googleMapLayout.setOnClickListener(null);
-
-                mMapFragment.getMapAsync(new OnMapReadyCallback()
-                {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap)
-                    {
-                        mGoogleMap = googleMap;
-                        mGoogleMap.setOnMapClickListener(GourmetBookingDetailTabMapFragment.this);
-                        mGoogleMap.setMyLocationEnabled(false);
-                        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                        addMarker(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.placeName);
-                    }
-                });
+                addMarker(mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, mGourmetBookingDetail.placeName);
             }
-        }, 500);
+        });
     }
 }

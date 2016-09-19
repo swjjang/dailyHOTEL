@@ -122,7 +122,8 @@
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/signupMessageView"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
+        android:layout_height="wrap_content"
+        android:minHeight="39dp"
         android:background="@drawable/bg_comment_login"
         android:text="@string/message_login_signup"
         android:textColor="@color/default_text_c323232"
@@ -133,7 +134,8 @@
         android:layout_marginRight="15dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="6dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="6dp"
         android:gravity="center"/>
 
     <RelativeLayout
