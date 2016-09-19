@@ -60,9 +60,9 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterIte
             mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
         }
 
-        HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
+        PlaceRegionRenderer placeRegionRenderer = new PlaceRegionRenderer(mContext, cluster.getSize());
 
-        BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
+        BitmapDescriptor icon = placeRegionRenderer.getBitmap();
 
         if (icon != null)
         {
