@@ -83,11 +83,30 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/registerCouponLayout"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true">
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/default_popup_button_background_c900034"
+            android:textColor="@color/default_popup_button_text_cffffff"
+            android:textSize="17dp"
+            android:gravity="center"
+            dailyFont:style="Medium"
+            android:text="@string/coupon_list_register_coupon"
+            />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/couponLayout"
+        android:layout_above="@id/registerCouponLayout"
         android:scrollbars="vertical"
         />
 
@@ -96,6 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/couponLayout"
+        android:layout_above="@id/registerCouponLayout"
         android:background="@color/information_background"
         android:visibility="gone">
 
