@@ -158,7 +158,6 @@ public class CouponListActivity extends BaseActivity
         public void startCouponHistory()
         {
             // 쿠폰 사용내역 이동
-
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
@@ -174,6 +173,13 @@ public class CouponListActivity extends BaseActivity
             // 쿠폰 사용시 유의사항 안내
             Intent intent = CouponTermActivity.newInstance(CouponListActivity.this);
             startActivity(intent);
+        }
+
+        @Override
+        public void startRegisterCoupon()
+        {
+            // TODO : 쿠폰 등록 화면 이동
+            ExLog.d("need add logic");
         }
 
         @Override
