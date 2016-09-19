@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -351,54 +352,60 @@ public class CreditCardLayout extends FrameLayout
             //			'24','해외아멕스'
             //			'25','해외다이너스'
 
-            if ("01".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_01;
-            } else if ("03".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_02;
-            } else if ("04".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_03;
-            } else if ("06".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_04;
-            } else if ("11".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_05;
-            } else if ("12".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_06;
-            } else if ("14".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_07;
-            } else if ("15".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_08;
-            } else if ("16".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_09;
-            } else if ("17".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_10;
-            } else if ("21".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_11;
-            } else if ("22".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_12;
-            } else if ("23".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_13;
-            } else if ("24".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_14;
-            } else if ("25".equalsIgnoreCase(cardcd) == true)
-            {
-                return R.drawable.card_logo_15;
-            } else
+
+            if (Util.isTextEmpty(cardcd) == true)
             {
                 return 0;
+            }
+
+            switch (cardcd)
+            {
+                case "01":
+                    return R.drawable.card_logo_01;
+                case "03":
+                    return R.drawable.card_logo_02;
+                case "04":
+                    return R.drawable.card_logo_03;
+                case "06":
+                    return R.drawable.card_logo_04;
+                case "11":
+                    return R.drawable.card_logo_05;
+                case "12":
+                    return R.drawable.card_logo_06;
+                case "14":
+                    return R.drawable.card_logo_07;
+                case "15":
+                    return R.drawable.card_logo_08;
+                case "16":
+                    return R.drawable.card_logo_09;
+                case "17":
+                    return R.drawable.card_logo_10;
+                case "21":
+                    return R.drawable.card_logo_11;
+                case "22":
+                    return R.drawable.card_logo_12;
+                case "23":
+                    return R.drawable.card_logo_13;
+                case "24":
+                    return R.drawable.card_logo_14;
+                case "25":
+                    return R.drawable.card_logo_15;
+                case "26":
+                case "32":
+                case "33":
+                case "34":
+                case "35":
+                case "41":
+                case "43":
+                case "44":
+                case "48":
+                case "51":
+                case "52":
+                case "54":
+                case "71":
+                case "95":
+                default:
+                    return 0;
             }
         }
     }

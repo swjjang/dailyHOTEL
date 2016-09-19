@@ -74,6 +74,20 @@
     <string name="label_cardcd23">JCB</string>
     <string name="label_cardcd24">해외아멕스</string>
     <string name="label_cardcd25">해외다이너스</string>
+    <string name="label_cardcd26">중국은련</string>
+    <string name="label_cardcd32">광주</string>
+    <string name="label_cardcd33">전북</string>
+    <string name="label_cardcd34">하나</string>
+    <string name="label_cardcd35">산업카드</string>
+    <string name="label_cardcd41">NH</string>
+    <string name="label_cardcd43">씨티</string>
+    <string name="label_cardcd44">우리</string>
+    <string name="label_cardcd48">신협체크</string>
+    <string name="label_cardcd51">수협</string>
+    <string name="label_cardcd52">제주</string>
+    <string name="label_cardcd54">MG새마을금고체크</string>
+    <string name="label_cardcd71">우체국체크</string>
+    <string name="label_cardcd95">저축은행체크</string>
 
     <string name="message_detail_copy_address">주소가 복사되었습니다.</string>
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
