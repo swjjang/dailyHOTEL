@@ -83,7 +83,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         } else
         {
             radioButton.setText(R.string.label_sort_by_rank);
-            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_sort_rank_button, 0, 0);
+            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_hotel_01_sort_06, 0, 0);
 
             emptyCheckView.setVisibility(View.GONE);
         }

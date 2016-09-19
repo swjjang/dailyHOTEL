@@ -6,24 +6,19 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.twoheart.dailyhotel.R;
-
-import java.text.DecimalFormat;
+import com.twoheart.dailyhotel.util.Util;
 
 public class PlaceRenderer
 {
     private String mPrice;
     private int mMarkerResId;
-    private HotelIconGenerator mIconGenerator;
+    private PlaceIconGenerator mIconGenerator;
 
     public PlaceRenderer(Context context, int price, int markerResId)
     {
-        DecimalFormat comma = new DecimalFormat("###,##0");
-
-        mPrice = comma.format(price) + context.getString(com.twoheart.dailyhotel.R.string.currency);
-
+        mPrice = Util.getPriceFormat(context, price, false);
         mMarkerResId = markerResId;
-
-        mIconGenerator = new HotelIconGenerator(context);
+        mIconGenerator = new PlaceIconGenerator(context);
         mIconGenerator.setTextColor(context.getResources().getColor(R.color.white));
     }
 

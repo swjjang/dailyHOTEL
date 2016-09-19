@@ -12,9 +12,9 @@ import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +24,8 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     private ListView mListView;
     private View mFooterView;
     private View mBottomLayout;
+
+    private BonusListAdapter mBonusListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -96,8 +98,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
     public void setBonus(int bonus)
     {
-        DecimalFormat decimalFormat = new DecimalFormat("###,##0원");
-        mBonusTextView.setText(decimalFormat.format(bonus));
+        mBonusTextView.setText(Util.getPriceFormat(mContext, bonus, false));
     }
 
     public void setBottomLayoutVisible(boolean visible)
@@ -113,17 +114,24 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     public void setData(List<Bonus> list)
     {
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-        BonusListAdapter bonusListAdapter;
+
+        if (mBonusListAdapter == null)
+        {
+            mBonusListAdapter = new BonusListAdapter(mContext, 0, new ArrayList<Bonus>());
+        }
+
+        mBonusListAdapter.clear();
 
         if (list != null && list.size() != 0)
         {
-            mListView.removeFooterView(mFooterView);
-            bonusListAdapter = new BonusListAdapter(mContext, 0, list);
-        } else
-        {
-            bonusListAdapter = new BonusListAdapter(mContext, 0, new ArrayList<Bonus>());
+            if (mListView.getFooterViewsCount() > 0)
+            {
+                mListView.removeFooterView(mFooterView);
+            }
+
+            mBonusListAdapter.addAll(list);
         }
 
-        mListView.setAdapter(bonusListAdapter);
+        mListView.setAdapter(mBonusListAdapter);
     }
 }

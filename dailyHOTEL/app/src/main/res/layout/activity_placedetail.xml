@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
@@ -90,7 +91,8 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:src="@drawable/navibar_ic_back_01_white"/>
+                android:tint="@color/white"
+                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
             <ImageView
                 android:id="@+id/menu1View"
@@ -100,7 +102,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/navibar_ic_share_02_white"/>
+                android:tint="@color/white"
+                app:srcCompat="@drawable/navibar_ic_share_01_black"/>
         </RelativeLayout>
     </RelativeLayout>
 
@@ -147,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -156,13 +159,17 @@
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/productTypeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/closeView"
+                android:gravity="center"
+                android:paddingLeft="45dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="16dp"/>
 
             <ImageView
+                android:id="@+id/closeView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
@@ -170,38 +177,74 @@
                 android:layout_gravity="right"
                 android:layout_marginBottom="7dp"
                 android:paddingRight="15dp"
-                android:src="@drawable/navibar_ic_x"/>
+                app:srcCompat="@drawable/navibar_ic_x"/>
         </RelativeLayout>
 
-        <RadioGroup
-            android:id="@+id/priceRadioGroup"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <RelativeLayout
+            android:id="@+id/priceOptionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:background="@color/white"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/averageRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="1박 평균가격 보기"
-                android:textColor="@color/default_text_c323232"/>
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/priceRadioGroup"
+                android:clickable="true"
+                android:paddingLeft="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_detail_view_price_option"
+                android:textColor="@color/default_text_c666666"
+                android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/totalRadioButton"
+            <RadioGroup
+                android:id="@+id/priceRadioGroup"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="총가격 보기"
-                android:textColor="@color/default_text_c323232"/>
-        </RadioGroup>
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.twoheart.dailyhotel.widget.DailyRadioButton
+                    android:id="@+id/averageRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:button="@null"
+                    android:drawablePadding="4dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/label_detail_view_average_price"
+                    android:textColor="@drawable/selector_text_color_c929292_c666666"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/ic_check_s"/>
+
+                <com.twoheart.dailyhotel.widget.DailyRadioButton
+                    android:id="@+id/totalRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:button="@null"
+                    android:drawablePadding="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="12dp"
+                    android:text="@string/label_detail_view_total_price"
+                    android:textColor="@drawable/selector_text_color_c929292_c666666"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/ic_check_s"/>
+            </RadioGroup>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/default_line_ce7e7e7"/>
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/productTypeRecyclerView"

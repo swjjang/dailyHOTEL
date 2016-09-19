@@ -3,10 +3,13 @@ package com.twoheart.dailyhotel.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 public class DailyRadioButton extends AppCompatRadioButton
 {
@@ -14,6 +17,7 @@ public class DailyRadioButton extends AppCompatRadioButton
     {
         super(context, null);
 
+        setDrawableCompat(context, null);
         setFontStyle(context, null);
     }
 
@@ -21,6 +25,7 @@ public class DailyRadioButton extends AppCompatRadioButton
     {
         super(context, attrs);
 
+        setDrawableCompat(context, attrs);
         setFontStyle(context, attrs);
     }
 
@@ -28,7 +33,28 @@ public class DailyRadioButton extends AppCompatRadioButton
     {
         super(context, attrs, defStyleAttr);
 
+        setDrawableCompat(context, attrs);
         setFontStyle(context, attrs);
+    }
+
+    private void setDrawableCompat(Context context, AttributeSet attrs)
+    {
+        if (context == null || attrs == null)
+        {
+            return;
+        }
+
+        int drawableCompatLeftResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatLeft, 0);
+        int drawableCompatTopResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatTop, 0);
+        int drawableCompatRightResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatRight, 0);
+        int drawableCompatBottomResId = context.obtainStyledAttributes(attrs, R.styleable.app).getResourceId(R.styleable.app_drawableCompatBottom, 0);
+
+        if (drawableCompatLeftResId == 0 && drawableCompatTopResId == 0 && drawableCompatRightResId == 0 && drawableCompatBottomResId == 0)
+        {
+            return;
+        }
+
+        setCompoundDrawablesWithIntrinsicBounds(drawableCompatLeftResId, drawableCompatTopResId, drawableCompatRightResId, drawableCompatBottomResId);
     }
 
     private void setFontStyle(Context context, AttributeSet attrs)
@@ -109,5 +135,43 @@ public class DailyRadioButton extends AppCompatRadioButton
     {
         setPaintFlags(getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
         super.setTypeface(typeface);
+    }
+
+    @Override
+    public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
+    {
+        if (Util.isOverAPI21() == true)
+        {
+            super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+        } else
+        {
+            Context context = getContext();
+            Drawable leftDrawable = null;
+            Drawable topDrawable = null;
+            Drawable rightDrawable = null;
+            Drawable bottomDrawable = null;
+
+            if (left > 0)
+            {
+                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, left);
+            }
+
+            if (top > 0)
+            {
+                topDrawable = AppCompatDrawableManager.get().getDrawable(context, top);
+            }
+
+            if (right > 0)
+            {
+                rightDrawable = AppCompatDrawableManager.get().getDrawable(context, right);
+            }
+
+            if (bottom > 0)
+            {
+                bottomDrawable = AppCompatDrawableManager.get().getDrawable(context, bottom);
+            }
+
+            super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
+        }
     }
 }

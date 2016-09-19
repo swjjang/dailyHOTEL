@@ -28,8 +28,6 @@ public class BonusActivity extends BaseActivity
     private BonusLayout mBonusLayout;
     private BonusNetworkController mNetworkController;
 
-    private boolean mDontReloadAtOnResume;
-
     public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, BonusActivity.class);
@@ -58,27 +56,11 @@ public class BonusActivity extends BaseActivity
 
         if (DailyHotel.isLogin() == false)
         {
-            lockUI();
             showLoginDialog();
-        }
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        if (mDontReloadAtOnResume == true)
-        {
-            unLockUI();
-            mDontReloadAtOnResume = false;
         } else
         {
-            if (DailyHotel.isLogin() == true)
-            {
-                lockUI();
-                mNetworkController.requestBonus();
-            }
+            lockUI();
+            mNetworkController.requestBonus();
         }
     }
 
@@ -95,6 +77,8 @@ public class BonusActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_LOGIN:
@@ -102,15 +86,11 @@ public class BonusActivity extends BaseActivity
                 if (resultCode != Activity.RESULT_OK)
                 {
                     finish();
-                } else
-                {
-                    mDontReloadAtOnResume = false;
                 }
                 break;
             }
 
             default:
-                mDontReloadAtOnResume = true;
                 break;
         }
     }
@@ -196,7 +176,6 @@ public class BonusActivity extends BaseActivity
 
     private BonusNetworkController.OnNetworkControllerListener mNetworkControllerListener = new BonusNetworkController.OnNetworkControllerListener()
     {
-
         @Override
         public void onUserInformation(String recommendCode, String name, boolean isExceedBonus)
         {

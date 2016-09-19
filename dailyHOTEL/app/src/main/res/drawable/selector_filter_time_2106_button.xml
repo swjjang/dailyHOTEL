@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/f_ic_gourmet_03_time_05_on" android:state_selected="true"/>
-    <item android:drawable="@drawable/f_ic_gourmet_03_time_05_on" android:state_pressed="true"/>
-    <item android:drawable="@drawable/f_ic_gourmet_03_time_05_off"/>
-</selector>

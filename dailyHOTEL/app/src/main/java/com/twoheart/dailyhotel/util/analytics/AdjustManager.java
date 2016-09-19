@@ -203,13 +203,13 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void onResume(Activity activity)
     {
-
+        Adjust.onResume();
     }
 
     @Override
     void onPause(Activity activity)
     {
-
+        Adjust.onPause();
     }
 
     @Override

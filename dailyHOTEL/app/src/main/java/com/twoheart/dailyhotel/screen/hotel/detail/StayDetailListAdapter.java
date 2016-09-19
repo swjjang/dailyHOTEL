@@ -426,6 +426,7 @@ public class StayDetailListAdapter extends BaseAdapter
         dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c323232));
         dailyTextView.setText(pictogram.getName(context));
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, pictogram.getImageResId(), 0, 0);
+        dailyTextView.setDrawableVectorTint(R.color.default_background_c454545);
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;

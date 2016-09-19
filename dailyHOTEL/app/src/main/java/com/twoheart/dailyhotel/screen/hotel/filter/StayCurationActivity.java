@@ -242,37 +242,49 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         };
 
-        final String[] amenities = new String[]{getString(R.string.label_wifi)//
+        final String[] amenities = new String[]{getString(R.string.label_parking)//
+            , getString(R.string.label_pool)//
+            , getString(R.string.label_fitness)//
+            , getString(R.string.label_unabled_parking)//
+            , getString(R.string.label_allowed_pet)//
+            , getString(R.string.label_allowed_barbecue)//
+            , getString(R.string.label_wifi)//
             , getString(R.string.label_breakfast)//
             , getString(R.string.label_cooking)//
-            , getString(R.string.label_beth)//
-            , getString(R.string.label_parking)//
-            , getString(R.string.label_pool)//
-            , getString(R.string.label_fitness)};
+            , getString(R.string.label_beth)};
 
-        final String[] analytics = new String[]{AnalyticsManager.Label.SORTFILTER_WIFI//
+        final String[] analytics = new String[]{AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE//
+            , AnalyticsManager.Label.SORTFILTER_POOL//
+            , AnalyticsManager.Label.SORTFILTER_FITNESS//
+            , AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE//
+            , AnalyticsManager.Label.SORTFILTER_PET//
+            , AnalyticsManager.Label.SORTFILTER_BBQ//
+            , AnalyticsManager.Label.SORTFILTER_WIFI//
             , AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST//
             , AnalyticsManager.Label.SORTFILTER_KITCHEN//
-            , AnalyticsManager.Label.SORTFILTER_BATHTUB//
-            , AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL//
-            , AnalyticsManager.Label.SORTFILTER_POOL//
-            , AnalyticsManager.Label.SORTFILTER_FITNESS};
+            , AnalyticsManager.Label.SORTFILTER_BATHTUB};
 
-        final int[] amenitiesResId = new int[]{R.drawable.selector_filter_amenities_wifi_button//
-            , R.drawable.selector_filter_amenities_breakfast_button//
-            , R.drawable.selector_filter_amenities_cooking_button//
-            , R.drawable.selector_filter_amenities_bath_button//
-            , R.drawable.selector_filter_amenities_parking_button//
-            , R.drawable.selector_filter_amenities_pool_button//
-            , R.drawable.selector_filter_amenities_fitness_button};
+        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_05//
+            , R.drawable.f_ic_hotel_04_facilities_06//
+            , R.drawable.f_ic_hotel_04_facilities_07//
+            , R.drawable.ic_detail_facilities_02_no_parking//
+            , R.drawable.ic_detail_facilities_05_pet//
+            , R.drawable.ic_detail_facilities_06_bbq//
+            , R.drawable.f_ic_hotel_04_facilities_01//
+            , R.drawable.f_ic_hotel_04_facilities_02//
+            , R.drawable.f_ic_hotel_04_facilities_03//
+            , R.drawable.f_ic_hotel_04_facilities_04};
 
-        final int[] amenitiesflag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
+        final int[] amenitiesflag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ//
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS};
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH};
 
         int length = amenities.length;
 
@@ -282,6 +294,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             amenitiesView.setOnClickListener(onClickListener);
             amenitiesView.setTag(amenitiesflag[i]);
             amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
+            amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
 
             if ((stayCurationOption.flagAmenitiesFilters & amenitiesflag[i]) == amenitiesflag[i])
             {
@@ -550,27 +563,33 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 return;
         }
 
-        Province province = mStayCuration.getProvince();
-        Map<String, String> eventParams = new HashMap<>();
-
-        if (province != null)
+        try
         {
-            if (province instanceof Area)
-            {
-                Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-            } else
-            {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-            }
-        }
+            Province province = mStayCuration.getProvince();
+            Map<String, String> eventParams = new HashMap<>();
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
+            if (province != null)
+            {
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                }
+            }
+
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
@@ -584,16 +603,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             case R.id.minusPersonView:
                 updatePersonFilter(stayCurationOption.person - 1);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(stayCurationOption.person), null);
                 break;
 
             case R.id.plusPersonView:
                 updatePersonFilter(stayCurationOption.person + 1);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(stayCurationOption.person), null);
                 break;
 
             case R.id.doubleCheckView:

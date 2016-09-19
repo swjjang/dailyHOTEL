@@ -284,7 +284,14 @@ public class DailyPreference
     {
         if (editor != null)
         {
-            editor.putString(key, value);
+            if (Util.isTextEmpty(value) == true)
+            {
+                editor.remove(key);
+            } else
+            {
+                editor.putString(key, value);
+            }
+
             editor.apply();
         }
     }

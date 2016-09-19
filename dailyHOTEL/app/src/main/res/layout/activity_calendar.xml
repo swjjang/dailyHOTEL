@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -31,7 +32,7 @@
                 android:layout_gravity="right"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/navibar_ic_x"/>
+                app:srcCompat="@drawable/navibar_ic_x"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/titleTextView"
@@ -140,9 +141,9 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/bottomLayout"
             android:layout_below="@+id/lineView"
+            android:background="@color/white"
             android:fadingEdge="none"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/calendarLayout"

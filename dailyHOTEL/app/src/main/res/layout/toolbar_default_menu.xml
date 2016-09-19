@@ -2,6 +2,7 @@
 <RelativeLayout
     android:id="@+id/toolbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
     android:background="@color/white">
@@ -12,7 +13,7 @@
         android:layout_height="match_parent"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:src="@drawable/navibar_ic_back_01_black"/>
+        app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
     <LinearLayout
         android:id="@+id/menuLayout"
@@ -53,6 +54,6 @@
         android:id="@+id/toolbarUnderline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/default_line_ce7e7e7"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_line_ce7e7e7"/>
 </RelativeLayout>

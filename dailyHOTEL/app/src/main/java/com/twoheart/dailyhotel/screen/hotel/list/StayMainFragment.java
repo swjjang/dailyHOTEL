@@ -1050,20 +1050,6 @@ public class StayMainFragment extends PlaceMainFragment
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void startStayDetailByDeeplink(int hotelIndex, SaleTime saleTime, int nights, boolean isShowCalendar)
-    {
-        if (isFinishing() == true || hotelIndex < 0 || lockUiComponentAndIsLockUiComponent() == true)
-        {
-            return;
-        }
-
-        lockUI();
-
-        Intent intent = StayDetailActivity.newInstance(mBaseActivity, saleTime, nights, hotelIndex, isShowCalendar);
-
-        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
-    }
-
     private boolean moveDeepLinkDetail(BaseActivity baseActivity)
     {
         try
@@ -1096,7 +1082,8 @@ public class StayMainFragment extends PlaceMainFragment
                 return false;
             }
 
-            startStayDetailByDeeplink(hotelIndex, changedSaleTime, nights, isShowCalendar);
+            Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, isShowCalendar);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
             mIsDeepLink = true;
         } catch (Exception e)
@@ -1122,8 +1109,8 @@ public class StayMainFragment extends PlaceMainFragment
 
             Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-            mIsDeepLink = true;
 
+            mIsDeepLink = true;
             return true;
         } else
         {
@@ -1208,7 +1195,7 @@ public class StayMainFragment extends PlaceMainFragment
         int night = checkInSaleTime.getOffsetDailyDay();
 
         Intent intent = StayRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, checkInSaleTime, night);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
         mIsDeepLink = true;
@@ -1278,8 +1265,8 @@ public class StayMainFragment extends PlaceMainFragment
             return false;
         }
 
-        Intent intent = SearchActivity.newInstance(mBaseActivity, PlaceType.HOTEL, checkInSaleTime, nights, word);
-        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, checkInSaleTime, nights, word);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         mIsDeepLink = true;
 
@@ -1358,8 +1345,8 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 if (latLng != null)
                 {
-                    Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, latLng, radius, true);
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                    Intent intent = StaySearchResultActivity.newInstance(baseActivity, checkInSaleTime, nights, latLng, radius, true);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
                     return false;
@@ -1370,8 +1357,8 @@ public class StayMainFragment extends PlaceMainFragment
             default:
                 if (Util.isTextEmpty(word) == false)
                 {
-                    Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, checkInSaleTime, nights, new Keyword(0, word), SearchType.SEARCHES);
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                    Intent intent = StaySearchResultActivity.newInstance(baseActivity, checkInSaleTime, nights, new Keyword(0, word), SearchType.SEARCHES);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
                     return false;

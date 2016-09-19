@@ -144,7 +144,6 @@ public class AnalyticsManager
 
     public void onResume(Activity activity)
     {
-
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
@@ -684,9 +683,17 @@ public class AnalyticsManager
         public static final String SORTFILTER_FREEBREAKFAST = "FreeBreakfast";
         public static final String SORTFILTER_KITCHEN = "Kitchen";
         public static final String SORTFILTER_BATHTUB = "Bathtub";
-        public static final String SORTFILTER_PARKINGAVAILABEL = "ParkingAvailable";
+        public static final String SORTFILTER_PARKINGAVAILABLE = "ParkingAvailable";
+        public static final String SORTFILTER_PARKINGDISABLE = "NoParking";
+        public static final String SORTFILTER_PET = "Pet";
+        public static final String SORTFILTER_BBQ = "BBQ";
         public static final String SORTFILTER_POOL = "Pool";
         public static final String SORTFILTER_FITNESS = "Fitness";
+        public static final String SORTFILTER_VALET = "Valet";
+        public static final String SORTFILTER_BABYSEAT = "BabySeat";
+        public static final String SORTFILTER_PRIVATEROOM = "PrivateRoom";
+        public static final String SORTFILTER_GROUP = "Group";
+        public static final String SORTFILTER_CORKAGE = "Corkage";
         //
         public static final String SORTFILTER_0611 = "0611";
         public static final String SORTFILTER_1115 = "1115";

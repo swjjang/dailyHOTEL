@@ -48,7 +48,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         setSpecification(jsonArray);
 
-        if(jsonObject.has("overseas") == true)
+        if (jsonObject.has("overseas") == true)
         {
             isOverseas = jsonObject.getBoolean("overseas");
         }

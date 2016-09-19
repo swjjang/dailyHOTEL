@@ -1,11 +1,8 @@
 package com.twoheart.dailyhotel;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
 
-import com.adjust.sdk.Adjust;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
@@ -94,8 +91,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         FacebookSdk.sdkInitialize(getApplicationContext());
         KakaoSDK.init(new KakaoSDKAdapter());
         FontManager.getInstance(getApplicationContext());
-
-        registerActivityLifecycleCallbacks(new DailyLifecycleCallbacks());
 
         GOOGLE_ANALYTICS_CLIENT_ID = AnalyticsManager.getInstance(getApplicationContext()).getGoogleAnalyticsManager().getClientId();
     }
@@ -197,45 +192,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                     return DailyHotel.getGlobalApplicationContext();
                 }
             };
-        }
-    }
-
-    // you can use this class if your app is for Android 4.0 or higher
-    private static final class DailyLifecycleCallbacks implements Application.ActivityLifecycleCallbacks
-    {
-        @Override
-        public void onActivityResumed(Activity activity) {
-            Adjust.onResume();
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-            Adjust.onPause();
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-
         }
     }
 }

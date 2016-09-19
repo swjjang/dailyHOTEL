@@ -34,6 +34,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -983,40 +984,59 @@ public class Util implements Constants
             return;
         }
 
-        final TMapTapi tmapTapi = new TMapTapi(activity);
-
-        if (tmapTapi == null)
+        try
         {
-            showFailedTMapNaviDialog(activity);
-            return;
-        }
+            final TMapTapi tmapTapi = new TMapTapi(activity);
 
-        if (DailyHotel.isSuccessTMapAuth() == false)
-        {
-            tmapTapi.setSKPMapAuthentication(DailyHotelRequest.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
-            tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
+            if (tmapTapi == null)
             {
-                @Override
-                public void SKPMapApikeySucceed()
-                {
-                    //                    ExLog.d("TMap : SKPMapApikeySucceed");
-                    DailyHotel.setIsSuccessTMapAuth(true);
-                    openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
-                }
+                showFailedTMapNaviDialog(activity);
+                return;
+            }
 
-                @Override
-                public void SKPMapApikeyFailed(String s)
+            if (DailyHotel.isSuccessTMapAuth() == false)
+            {
+                tmapTapi.setSKPMapAuthentication(DailyHotelRequest.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
+                tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
                 {
-                    DailyHotel.setIsSuccessTMapAuth(false);
-                    showFailedTMapNaviDialog(activity);
-                }
-            });
-        } else
+                    @Override
+                    public void SKPMapApikeySucceed()
+                    {
+                        //                    ExLog.d("TMap : SKPMapApikeySucceed");
+                        DailyHotel.setIsSuccessTMapAuth(true);
+                        openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+                    }
+
+                    @Override
+                    public void SKPMapApikeyFailed(String s)
+                    {
+                        DailyHotel.setIsSuccessTMapAuth(false);
+                        showFailedTMapNaviDialog(activity);
+                    }
+                });
+            } else
+            {
+                openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+            }
+        } catch (Exception e)
         {
-            openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+            String logMessage;
+            logMessage = activity != null ? activity.getLocalClassName() : "Unknown activity";
+            logMessage = logMessage + " : " + placeName + " : " + latitude + " : " + longitude;
+
+            if (DEBUG == true)
+            {
+                ExLog.d(logMessage);
+            } else
+            {
+                Crashlytics.log(logMessage);
+            }
+
+            if (activity != null)
+            {
+                showFailedTMapNaviDialog(activity);
+            }
         }
-
-
     }
 
     private static void openTMapNavi(final Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
@@ -1557,4 +1577,13 @@ public class Util implements Constants
             DailyPreference.getInstance(context).setNoticeNewRemoveList(removeValue + indexString);
         }
     }
+    //
+    //    public static Bitmap loadBitmapFromView(View v, int width, int height)
+    //    {
+    //        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    //        Canvas c = new Canvas(b);
+    //        v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+    //        v.draw(c);
+    //        return b;
+    //    }
 }

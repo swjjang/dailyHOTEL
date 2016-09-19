@@ -51,8 +51,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     protected RadioGroup mSortRadioGroup;
     protected android.support.v7.widget.GridLayout mGridLayout;
-
-    protected ViewGroup mAmenitiesLayout;
+    protected android.support.v7.widget.GridLayout mAmenitiesGridLayout;
     protected ViewGroup mTimeRangeLayout;
 
     public static Intent newInstance(Context context, ViewType viewType, GourmetCuration gourmetCuration)
@@ -237,17 +236,67 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private void initAmenitiesLayout(View view, GourmetCurationOption gourmetCurationOption)
     {
-        mAmenitiesLayout = (ViewGroup) view.findViewById(R.id.amenitiesLayout);
+        mAmenitiesGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
 
-        View parkingCheckView = mAmenitiesLayout.findViewById(R.id.parkingCheckView);
-        parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
+        View parkingCheckView = mAmenitiesGridLayout.findViewById(R.id.parkingCheckView);
+        parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE);
+
+        DailyTextView valetCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.valetCheckView);
+        valetCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_VALET);
+        valetCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+
+        DailyTextView privateRoomCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.privateRoomCheckView);
+        privateRoomCheckView.setTag(privateRoomCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PRIVATEROOM);
+        privateRoomCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+
+        DailyTextView groupBookingCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.groupBookingCheckView);
+        groupBookingCheckView.setTag(groupBookingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_GROUP);
+        groupBookingCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+
+        DailyTextView babySeatCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.babySeatCheckView);
+        babySeatCheckView.setTag(babySeatCheckView.getId(), AnalyticsManager.Label.SORTFILTER_BABYSEAT);
+        babySeatCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+
+        DailyTextView corkageCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.corkageCheckView);
+        corkageCheckView.setTag(corkageCheckView.getId(), AnalyticsManager.Label.SORTFILTER_CORKAGE);
+        corkageCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
 
         if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
         {
             parkingCheckView.setSelected(true);
         }
 
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
+        {
+            valetCheckView.setSelected(true);
+        }
+
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
+        {
+            privateRoomCheckView.setSelected(true);
+        }
+
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
+        {
+            groupBookingCheckView.setSelected(true);
+        }
+
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+        {
+            babySeatCheckView.setSelected(true);
+        }
+
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
+        {
+            corkageCheckView.setSelected(true);
+        }
+
         parkingCheckView.setOnClickListener(this);
+        valetCheckView.setOnClickListener(this);
+        privateRoomCheckView.setOnClickListener(this);
+        groupBookingCheckView.setOnClickListener(this);
+        babySeatCheckView.setOnClickListener(this);
+        corkageCheckView.setOnClickListener(this);
     }
 
     private void initTimeRangeFilterLayout(View view, GourmetCurationOption gourmetCurationOption)
@@ -370,7 +419,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         if (mGourmetCuration.getProvince().isOverseas == false)
         {
             resetLayout(mGridLayout);
-            resetLayout(mAmenitiesLayout);
+            resetLayout(mAmenitiesGridLayout);
             resetLayout(mTimeRangeLayout);
         }
 
@@ -441,21 +490,21 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private int getCategoryResourceId(int index)
     {
-        final int[] resourceIndex = new int[]{R.drawable.selector_gourmet_category_button00//
-            , R.drawable.selector_gourmet_category_button01//
-            , R.drawable.selector_gourmet_category_button02//
-            , R.drawable.selector_gourmet_category_button03//
-            , R.drawable.selector_gourmet_category_button04//
-            , R.drawable.selector_gourmet_category_button05//
-            , R.drawable.selector_gourmet_category_button06//
-            , R.drawable.selector_gourmet_category_button07//
-            , R.drawable.selector_gourmet_category_button08//
-            , R.drawable.selector_gourmet_category_button09//
-            , R.drawable.selector_gourmet_category_button10//
-            , R.drawable.selector_gourmet_category_button11//
-            , R.drawable.selector_gourmet_category_button12//
-            , R.drawable.selector_gourmet_category_button13//
-            , R.drawable.selector_gourmet_category_button14};
+        final int[] resourceIndex = new int[]{R.drawable.f_ic_gourmet_02_food_etc//
+            , R.drawable.f_ic_gourmet_02_food_01//
+            , R.drawable.f_ic_gourmet_02_food_02//
+            , R.drawable.f_ic_gourmet_02_food_03//
+            , R.drawable.f_ic_gourmet_02_food_04//
+            , R.drawable.f_ic_gourmet_02_food_05//
+            , R.drawable.f_ic_gourmet_02_food_06//
+            , R.drawable.f_ic_gourmet_02_food_07//
+            , R.drawable.f_ic_gourmet_02_food_08//
+            , R.drawable.f_ic_gourmet_02_food_09//
+            , R.drawable.f_ic_gourmet_02_food_10//
+            , R.drawable.f_ic_gourmet_02_food_11//
+            , R.drawable.f_ic_hotel_04_facilities_02//
+            , R.drawable.f_ic_gourmet_02_food_13//
+            , R.drawable.f_ic_gourmet_02_food_14};
 
         if (index < 1 || index >= resourceIndex.length)
         {
@@ -619,6 +668,26 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             case R.id.parkingCheckView:
                 updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_PARKING);
+                break;
+
+            case R.id.valetCheckView:
+                updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_VALET);
+                break;
+
+            case R.id.privateRoomCheckView:
+                updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_PRIVATEROOM);
+                break;
+
+            case R.id.groupBookingCheckView:
+                updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_GROUPBOOKING);
+                break;
+
+            case R.id.babySeatCheckView:
+                updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_BABYSEAT);
+                break;
+
+            case R.id.corkageCheckView:
+                updateAmenitiesFilter(v, GourmetFilter.Amenities.FLAG_CORKAGE);
                 break;
 
             case R.id.time0611View:

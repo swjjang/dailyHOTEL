@@ -79,60 +79,60 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/selector_filter_time_0611_button"
             android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="@string/label_time_0611"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_01"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/time1115View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/selector_filter_time_1115_button"
             android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="@string/label_time_1115"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_02"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/time1517View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/selector_filter_time_1517_button"
             android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="@string/label_time_1517"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_03"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/time1721View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/selector_filter_time_1721_button"
             android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="@string/label_time_1721"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_04"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/time2106View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/selector_filter_time_2106_button"
             android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="@string/label_time_2106"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_05"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -161,44 +161,85 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/amenitiesLayout"
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/amenitiesGridLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        android:stretchMode="columnWidth"
+        app:columnCount="5">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/parkingCheckView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/selector_filter_amenities_parking_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
             android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="@string/label_parking"
             android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_04_facilities_05"
+            app:layout_columnWeight="1"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/valetCheckView"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:text="@string/label_valet_available"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/ic_detail_facilities_06_valet"
+            app:layout_columnWeight="1"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/privateRoomCheckView"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:text="@string/label_private_room"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/ic_detail_facilities_07_private"
+            app:layout_columnWeight="1"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/groupBookingCheckView"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:text="@string/label_group_booking"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/ic_detail_facilities_08_group"
+            app:layout_columnWeight="1"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-    </LinearLayout>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/babySeatCheckView"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:text="@string/label_baby_seat"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/ic_detail_facilities_09_babyseat"
+            app:layout_columnWeight="1"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/corkageCheckView"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:text="@string/label_corkage"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/ic_detail_facilities_10_corkage"
+            app:layout_columnWeight="1"/>
+    </android.support.v7.widget.GridLayout>
 </LinearLayout>

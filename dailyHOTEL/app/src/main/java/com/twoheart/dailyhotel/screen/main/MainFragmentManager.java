@@ -41,6 +41,7 @@ public class MainFragmentManager
             throw new NullPointerException("activity == null || viewGroup == null");
         }
 
+        mIndexLastFragment = -1;
         mBaseActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
@@ -143,37 +144,40 @@ public class MainFragmentManager
 
     public void select(int index)
     {
-        switch (index)
+        if (index != mIndexLastFragment)
         {
-            case INDEX_ERROR_FRAGMENT:
-                replaceFragment(getFragment(INDEX_ERROR_FRAGMENT), String.valueOf(INDEX_ERROR_FRAGMENT));
-                return;
+            switch (index)
+            {
+                case INDEX_ERROR_FRAGMENT:
+                    replaceFragment(getFragment(INDEX_ERROR_FRAGMENT), String.valueOf(INDEX_ERROR_FRAGMENT));
+                    return;
 
-            case INDEX_INFORMATION_FRAGMENT:
-                mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
-                break;
+                case INDEX_INFORMATION_FRAGMENT:
+                    mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
+                    break;
 
-            case INDEX_BOOKING_FRAGMENT:
-                mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
-                break;
+                case INDEX_BOOKING_FRAGMENT:
+                    mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
+                    break;
 
-            case INDEX_GOURMET_FRAGMENT:
-                mIndexLastFragment = INDEX_GOURMET_FRAGMENT;
-                mIndexMainLastFragment = INDEX_GOURMET_FRAGMENT;
+                case INDEX_GOURMET_FRAGMENT:
+                    mIndexLastFragment = INDEX_GOURMET_FRAGMENT;
+                    mIndexMainLastFragment = INDEX_GOURMET_FRAGMENT;
 
-                DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailygourmet));
-                break;
+                    DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailygourmet));
+                    break;
 
-            case INDEX_HOTEL_FRAGMENT:
-            default:
-                mIndexLastFragment = INDEX_HOTEL_FRAGMENT;
-                mIndexMainLastFragment = INDEX_HOTEL_FRAGMENT;
+                case INDEX_HOTEL_FRAGMENT:
+                default:
+                    mIndexLastFragment = INDEX_HOTEL_FRAGMENT;
+                    mIndexMainLastFragment = INDEX_HOTEL_FRAGMENT;
 
-                DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailyhotel));
-                break;
+                    DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailyhotel));
+                    break;
+            }
+
+            replaceFragment(getFragment(mIndexLastFragment), String.valueOf(mIndexLastFragment));
         }
-
-        replaceFragment(getFragment(mIndexLastFragment), String.valueOf(mIndexLastFragment));
 
         if (mMenuBarLayoutOnPageChangeListener != null)
         {

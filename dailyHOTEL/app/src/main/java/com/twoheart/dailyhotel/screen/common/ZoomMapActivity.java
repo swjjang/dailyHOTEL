@@ -127,6 +127,8 @@ public class ZoomMapActivity extends BaseActivity
     @Override
     protected void onStart()
     {
+        super.onStart();
+
         if (mSourceType == null)
         {
             Util.restartApp(this);
@@ -148,8 +150,6 @@ public class ZoomMapActivity extends BaseActivity
                 //                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
                 break;
         }
-
-        super.onStart();
     }
 
     @Override

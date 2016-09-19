@@ -9,8 +9,10 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
+import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class BonusListAdapter extends ArrayAdapter<Bonus>
@@ -24,6 +26,34 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
 
         mContext = context;
         mBonusList = list;
+    }
+
+    public void addAll(Collection<? extends Bonus> collection)
+    {
+        if (collection == null)
+        {
+            return;
+        }
+
+        if (mBonusList == null)
+        {
+            mBonusList = new ArrayList<>();
+        }
+
+        mBonusList.addAll(collection);
+    }
+
+    @Override
+    public void clear()
+    {
+        if (mBonusList == null)
+        {
+            return;
+        }
+
+        mBonusList.clear();
+
+        super.clear();
     }
 
     @Override
@@ -46,20 +76,17 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
         View underLineView = view.findViewById(R.id.underLineView);
 
-        String format;
+        String priceFormat = Util.getPriceFormat(mContext, bonus.bonus, false);
 
         if (bonus.bonus > 0)
         {
-            format = "+ ###,##0";
+            priceFormat = "+ " + priceFormat;
         } else
         {
-            format = "- ###,##0";
+            priceFormat = "- " + priceFormat;
         }
 
-        DecimalFormat comma = new DecimalFormat(format);
-        String strBonus = comma.format(bonus.bonus);
-
-        bonusTextView.setText(strBonus + mContext.getString(R.string.currency));
+        bonusTextView.setText(priceFormat);
         contentTextView.setText(bonus.content);
         expireTextView.setText(mContext.getString(R.string.prefix_expire_time) + " : " + bonus.expires);
 
