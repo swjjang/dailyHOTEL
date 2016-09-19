@@ -4,7 +4,7 @@
         android:viewportHeight="20.0"
         android:viewportWidth="24.0"
         android:tintMode="multiply"
-        android:tint="@drawable/selector_svg_color_dc5c5c5_s900034">
+        android:tint="@color/selector_svg_color_dc5c5c5_s900034">
     <path
         android:fillAlpha="0"
         android:fillColor="#C39696"
