@@ -320,7 +320,6 @@ interface IDailyNetwork
      */
     void requestGourmetPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
 
-
     /**
      * reserv/mine/detail
      * 입금 대기 계좌이체 상세 내용 요청
@@ -328,15 +327,6 @@ interface IDailyNetwork
      * @return
      */
     void requestDepositWaitDetailInformation(Object tag, String tid, DailyHotelJsonResponseListener listener);
-
-
-    /**
-     * reserv/bonus
-     * 적립금 보너스 요청
-     *
-     * @return
-     */
-    void requestBonus(Object tag, DailyHotelStringResponseListener listener);
 
     /**
      * api/reserv/satisfaction_rating/update

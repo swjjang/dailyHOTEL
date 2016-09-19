@@ -35,9 +35,9 @@ public class BonusNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestBonus()
+    public void requestProfileBenefit()
     {
-        DailyNetworkAPI.getInstance(mContext).requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,57 +133,18 @@ public class BonusNetworkController extends BaseNetworkController
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
+                    int bonus = jsonObject.getInt("bonusAmount");
                     boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
 
-                    DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonus(bonus);
 
+                    DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
                     DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
                 } else
                 {
                     String msg = response.getString("msg");
                     mOnNetworkControllerListener.onErrorToastMessage(msg);
                 }
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-    };
-
-    private DailyHotelStringResponseListener mReserveSavedMoneyStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            try
-            {
-                String result = null;
-
-                if (false == Util.isTextEmpty(response))
-                {
-                    result = response.trim();
-                }
-
-                int bonus = 0;
-
-                try
-                {
-                    bonus = Integer.parseInt(result);
-                } catch (NumberFormatException e)
-                {
-                    ExLog.d(e.toString());
-                }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonus(bonus);
-
-                // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

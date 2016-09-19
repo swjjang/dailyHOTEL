@@ -17,9 +17,7 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -594,16 +592,6 @@ public class DailyNetworkAPI implements IDailyNetwork
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestBonus(Object tag, DailyHotelStringResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "reserv/bonus" : "MjYkMzIkMTYkMjckMjMk$MkM1NTUyNzJERjg5IQzgxOTLg1RUDVY0MTcJ3OUMzQ0U3NjI=$";
-
-        DailyHotelStringRequest dailyHotelStringRequest = new DailyHotelStringRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
-
-        mQueue.add(dailyHotelStringRequest);
     }
 
     @Override
