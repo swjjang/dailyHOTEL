@@ -56,7 +56,13 @@ public class AnalyticsManager
         try
         {
             mTuneManager = new TuneManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d((e.toString()));
+        }
 
+        try
+        {
             mGoogleAnalyticsManager = new GoogleAnalyticsManager(context, new GoogleAnalyticsManager.OnClientIdListener()
             {
                 @Override
@@ -65,19 +71,58 @@ public class AnalyticsManager
                     mTuneManager.setGoogleClientId(clientId);
                 }
             });
-
-            mFacebookManager = new FacebookManager(context);
-            mAppboyManager = new AppboyManager(context);
-            mAdjustManager = new AdjustManager(context);
-
-            mAnalyticsManagerList.add(mGoogleAnalyticsManager);
-            mAnalyticsManagerList.add(mTuneManager);
-            mAnalyticsManagerList.add(mFacebookManager);
-            mAnalyticsManagerList.add(mAppboyManager);
-            mAnalyticsManagerList.add(mAdjustManager);
         } catch (Exception e)
         {
-            ExLog.d(TAG + e.toString());
+            ExLog.d((e.toString()));
+        }
+
+        try
+        {
+            mFacebookManager = new FacebookManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d((e.toString()));
+        }
+
+        try
+        {
+            mAppboyManager = new AppboyManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d((e.toString()));
+        }
+
+        try
+        {
+            mAdjustManager = new AdjustManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d((e.toString()));
+        }
+
+        if (mGoogleAnalyticsManager != null)
+        {
+            mAnalyticsManagerList.add(mGoogleAnalyticsManager);
+        }
+
+        if (mTuneManager != null)
+        {
+            mAnalyticsManagerList.add(mTuneManager);
+        }
+
+        if (mFacebookManager != null)
+        {
+            mAnalyticsManagerList.add(mFacebookManager);
+        }
+
+        if (mAppboyManager != null)
+        {
+            mAnalyticsManagerList.add(mAppboyManager);
+        }
+
+        if (mAdjustManager != null)
+        {
+            mAnalyticsManagerList.add(mAdjustManager);
         }
     }
 

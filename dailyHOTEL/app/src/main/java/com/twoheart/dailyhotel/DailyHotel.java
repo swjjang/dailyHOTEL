@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.GoogleAnalyticsManager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Locale;
@@ -91,13 +92,18 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         FacebookSdk.sdkInitialize(getApplicationContext());
         KakaoSDK.init(new KakaoSDKAdapter());
         FontManager.getInstance(getApplicationContext());
-
-        GOOGLE_ANALYTICS_CLIENT_ID = AnalyticsManager.getInstance(getApplicationContext()).getGoogleAnalyticsManager().getClientId();
     }
 
     private void initializeAnalytics(Context context)
     {
         AnalyticsManager.getInstance(context);
+
+        GoogleAnalyticsManager googleAnalyticsManager = AnalyticsManager.getInstance(getApplicationContext()).getGoogleAnalyticsManager();
+
+        if (googleAnalyticsManager != null)
+        {
+            GOOGLE_ANALYTICS_CLIENT_ID = googleAnalyticsManager.getClientId();
+        }
     }
 
     private void initializeVolley(Context context)
