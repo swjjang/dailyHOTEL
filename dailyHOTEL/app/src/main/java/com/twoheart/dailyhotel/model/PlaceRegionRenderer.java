@@ -7,12 +7,12 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.twoheart.dailyhotel.util.Util;
 
-public class HotelRegionRenderer
+public class PlaceRegionRenderer
 {
     private int mCount;
     private RegionIconGenerator mRegionIconGenerator;
 
-    public HotelRegionRenderer(Context context, int count)
+    public PlaceRegionRenderer(Context context, int count)
     {
         mCount = count;
         mRegionIconGenerator = new RegionIconGenerator(context);
