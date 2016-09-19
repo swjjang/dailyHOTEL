@@ -293,6 +293,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
                     return true;
                 }
+            } else if(url.startsWith("market") == true)
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                return true;
             }
 
             // 결제 모듈 실행.
