@@ -246,6 +246,12 @@ public class AdjustManager extends BaseAnalyticsManager
     void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
         AdjustEvent event = new AdjustEvent(EventToken.PURCHASE_STAY);
+
+        if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
+        {
+            event.setRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), "KRW");
+        }
+
         Adjust.trackEvent(event);
     }
 
@@ -253,6 +259,12 @@ public class AdjustManager extends BaseAnalyticsManager
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         AdjustEvent event = new AdjustEvent(EventToken.PURCHASE_GOURMET);
+
+        if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
+        {
+            event.setRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), "KRW");
+        }
+
         Adjust.trackEvent(event);
     }
 
