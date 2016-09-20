@@ -508,6 +508,11 @@
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_step4">4. 취소 및 환불 규정</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
+
+    <string name="label_booking_input_name">이름 입력</string>
+    <string name="label_booking_input_phone">전화번호 입력</string>
+    <string name="label_booking_input_email">이메일 입력</string>
+
     <string name="message_booking_selected_time">시간을 선택해주세요</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
     <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요</string>
@@ -518,6 +523,7 @@
     <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
     <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
+    <string name="message_check_other_user">예약자와 투숙자가 다른 경우 체크해주세요.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>

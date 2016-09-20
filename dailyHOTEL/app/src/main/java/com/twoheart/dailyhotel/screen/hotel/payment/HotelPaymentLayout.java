@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.hotel.payment;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -11,6 +13,10 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -18,6 +24,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -36,17 +43,22 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.TimeZone;
 
-public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
+public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
     private View mBookingLayout;
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
     private TextView mBookingAmountTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
-    private EditText mReservationName, mReservationPhone, mReservationEmail;
+    private TextView mUserName, mUserPhone, mUserEmail;
+    private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
     private TextView mPlaceNameTextView, mRoomTypeTextView;
-    private EditText mMemoEditText;
+    //    private EditText mMemoEditText;
+    private View mUserLayout;
+    private View mGuestFrameLayout, mGuestLinearLayout;
+
     private TextView mGuestNameHintEditText;
     private TextView mGuideNameMemo;
+    private CheckBox mGuestCheckBox;
 
     // 할인 정보
     private ImageView mBonusRadioButton;
@@ -83,8 +95,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void editUserInformation();
-
         void startCreditCardManager();
 
         void changedPaymentType(PlacePaymentInformation.PaymentType paymentType);
@@ -177,31 +187,43 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
      */
     private void initGuestInformation(View view)
     {
-        mGuideNameMemo = (TextView) view.findViewById(R.id.guideNameMemoView);
+        mUserLayout = view.findViewById(R.id.userLayout);
 
-        mReservationName = (EditText) view.findViewById(R.id.guestNameEditText);
-        mReservationPhone = (EditText) view.findViewById(R.id.guestPhoneEditText);
-        mReservationEmail = (EditText) view.findViewById(R.id.guestEmailEditText);
+        mUserName = (TextView) mUserLayout.findViewById(R.id.userNameTextView);
+        mUserPhone = (TextView) mUserLayout.findViewById(R.id.userPhoneTextView);
+        mUserEmail = (TextView) mUserLayout.findViewById(R.id.userEmailTextView);
 
-        mReservationPhone.setCursorVisible(false);
+        mGuestFrameLayout = view.findViewById(R.id.guestFrameLayout);
+        mGuestLinearLayout = mGuestFrameLayout.findViewById(R.id.guestLinearLayout);
 
-        mReservationName.setOnFocusChangeListener(this);
-        mReservationPhone.setOnFocusChangeListener(this);
-        mReservationEmail.setOnFocusChangeListener(this);
+        mGuideNameMemo = (TextView) mGuestLinearLayout.findViewById(R.id.guideNameMemoView);
 
-        mGuestNameHintEditText = (TextView) view.findViewById(R.id.guestNameHintEditText);
+        mGuestNameEditText = (EditText) mGuestLinearLayout.findViewById(R.id.guestNameEditText);
+        mGuestPhoneEditText = (EditText) mGuestLinearLayout.findViewById(R.id.guestPhoneEditText);
+        mGuestEmailEditText = (EditText) mGuestLinearLayout.findViewById(R.id.guestEmailEditText);
+
+        mGuestPhoneEditText.setCursorVisible(false);
+
+        mGuestNameEditText.setOnFocusChangeListener(this);
+        mGuestPhoneEditText.setOnFocusChangeListener(this);
+        mGuestEmailEditText.setOnFocusChangeListener(this);
+
+        mGuestNameHintEditText = (TextView) mGuestLinearLayout.findViewById(R.id.guestNameHintEditText);
         mGuestNameHintEditText.setEnabled(false);
         mGuestNameHintEditText.setClickable(false);
         mGuestNameHintEditText.setVisibility(View.GONE);
 
-        View fakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
+        View fakeMobileEditView = mGuestLinearLayout.findViewById(R.id.fakeMobileEditView);
         fakeMobileEditView.setFocusable(true);
         fakeMobileEditView.setOnClickListener(this);
+
+        mGuestCheckBox = (CheckBox) view.findViewById(R.id.guestCheckBox);
+        mGuestCheckBox.setOnCheckedChangeListener(this);
     }
 
     private void initBookingMemo(View view)
     {
-        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
+        //        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
     }
 
     private void initPaymentInformation(View view)
@@ -378,35 +400,67 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
     }
 
-    protected void setGuestInformation(HotelPaymentInformation hotelPaymentInformation)
+    protected void setUserInformation(Customer user, boolean isOverseas)
     {
-        if (hotelPaymentInformation == null)
+        if (user == null)
         {
             return;
         }
 
-        Guest guest = hotelPaymentInformation.getGuest();
-
-        if (guest == null)
+        // 국내인 경우
+        if (isOverseas == false)
         {
-            return;
+            mUserLayout.setVisibility(View.VISIBLE);
+
+            // 예약자
+            mUserName.setText(user.getName());
+
+            // 연락처
+            mUserPhone.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
+
+            // 이메일
+            mUserEmail.setText(user.getEmail());
+        } else
+        {
+            mUserLayout.setVisibility(View.GONE);
         }
 
-        // 예약자
-        mReservationName.setText(guest.name);
-
-        // 연락처
-        mReservationPhone.setText(Util.addHippenMobileNumber(mContext, guest.phone));
-
-        // 이메일
-        mReservationEmail.setText(guest.email);
 
         // 사용자 요청사항
-        mMemoEditText.setText(guest.message);
+        //        mMemoEditText.setText(guest.message);
+    }
 
-
-        if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
+    protected void setGuestInformation(Guest guest, boolean isOverseas)
+    {
+        if (isOverseas == false)
         {
+            if (guest == null)
+            {
+                mGuestNameEditText.setText(null);
+                mGuestPhoneEditText.setText(null);
+                mGuestEmailEditText.setText(null);
+            } else
+            {
+                mGuestNameEditText.setText(guest.name);
+                mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+                mGuestEmailEditText.setText(guest.email);
+            }
+
+            mGuideNameMemo.setVisibility(View.GONE);
+
+            mGuestNameEditText.setHint(R.string.label_booking_input_name);
+            mGuestPhoneEditText.setHint(R.string.label_booking_input_phone);
+            mGuestEmailEditText.setHint(R.string.label_booking_input_email);
+        } else
+        {
+            ViewGroup.LayoutParams framelayoutParams = mGuestFrameLayout.getLayoutParams();
+            framelayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
+            mGuestFrameLayout.setLayoutParams(framelayoutParams);
+
+            ViewGroup.LayoutParams linearlayoutParams = mGuestLinearLayout.getLayoutParams();
+            linearlayoutParams.height = framelayoutParams.height;
+            mGuestLinearLayout.setLayoutParams(linearlayoutParams);
+
             mGuestNameHintEditText.setVisibility(View.VISIBLE);
             mGuestNameHintEditText.setText(R.string.message_guide_name_hint);
 
@@ -416,13 +470,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
             allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
 
-            mReservationName.setFilters(allowAlphanumericName);
-            mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
+            mGuestNameEditText.setFilters(allowAlphanumericName);
+            mGuestNameEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mGuestNameEditText.getInputType());
 
-            mReservationPhone.setText(Util.addHippenMobileNumber(mContext, guest.phone));
-            mReservationEmail.setText(guest.email);
+            mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+            mGuestEmailEditText.setText(guest.email);
 
-            mReservationName.addTextChangedListener(new TextWatcher()
+            mGuestNameEditText.addTextChangedListener(new TextWatcher()
             {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -449,6 +503,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 }
             });
 
+            mGuestNameEditText.setText(guest.name);
+
             mGuideNameMemo.setVisibility(View.VISIBLE);
 
             if (Util.getLCDWidth(mContext) > 480)
@@ -456,20 +512,17 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 mGuideNameMemo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_payment_notice, 0, 0, 0);
                 mGuideNameMemo.setCompoundDrawablePadding(Util.dpToPx(mContext, 4));
             }
-        } else
-        {
-            mGuideNameMemo.setVisibility(View.GONE);
         }
     }
 
     public void setGuestPhoneInformation(String mobileNumber)
     {
-        if (mReservationPhone == null)
+        if (mGuestPhoneEditText == null)
         {
             return;
         }
 
-        mReservationPhone.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
+        mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
     public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard selectedCreditCard)
@@ -588,35 +641,42 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     public Guest getGuest()
     {
-        Guest guest = new Guest();
+        // 국내인 경우에는 체크된 경우만 해외인 경우에는 무조건 반환
+        if (mGuestCheckBox.isChecked() == true || mUserLayout.getVisibility() == View.GONE)
+        {
+            Guest guest = new Guest();
 
-        guest.name = mReservationName.getText().toString().trim();
-        guest.phone = mReservationPhone.getText().toString().trim();
-        guest.email = mReservationEmail.getText().toString().trim();
-        guest.message = mMemoEditText.getText().toString().trim();
+            guest.name = mGuestNameEditText.getText().toString().trim();
+            guest.phone = mGuestPhoneEditText.getText().toString().trim();
+            guest.email = mGuestEmailEditText.getText().toString().trim();
+            //            guest.message = mMemoEditText.getText().toString().trim();
 
-        return guest;
+            return guest;
+        } else
+        {
+            return null;
+        }
     }
 
-    public String getMemoEditText()
-    {
-        return mMemoEditText.getText().toString().trim();
-    }
+    //    public String getMemoEditText()
+    //    {
+    //        return mMemoEditText.getText().toString().trim();
+    //    }
 
     public void requestGuestInformationFocus(Constants.UserInformationType type)
     {
         switch (type)
         {
             case NAME:
-                mReservationName.requestFocus();
+                mGuestNameEditText.requestFocus();
                 break;
 
             case PHONE:
-                mReservationPhone.requestFocus();
+                mGuestPhoneEditText.requestFocus();
                 break;
 
             case EMAIL:
-                mReservationEmail.requestFocus();
+                mGuestEmailEditText.requestFocus();
                 break;
         }
     }
@@ -785,17 +845,15 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        ((OnEventListener) mOnEventListener).editUserInformation();
-
         switch (v.getId())
         {
             case R.id.guestPhoneEditText:
                 if (hasFocus == true)
                 {
-                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mReservationPhone.getText().toString());
+                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mGuestPhoneEditText.getText().toString());
                 } else
                 {
-                    mReservationPhone.setSelected(false);
+                    mGuestPhoneEditText.setSelected(false);
                 }
                 break;
         }
@@ -808,13 +866,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         {
             case R.id.fakeMobileEditView:
             {
-                if (mReservationPhone.isSelected() == true)
+                if (mGuestPhoneEditText.isSelected() == true)
                 {
-                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mReservationPhone.getText().toString());
+                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mGuestPhoneEditText.getText().toString());
                 } else
                 {
-                    mReservationPhone.requestFocus();
-                    mReservationPhone.setSelected(true);
+                    mGuestPhoneEditText.requestFocus();
+                    mGuestPhoneEditText.setSelected(true);
                 }
                 break;
             }
@@ -859,5 +917,98 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 ((OnEventListener) mOnEventListener).startCreditCardManager();
                 break;
         }
+    }
+
+    private int mAnimationValue;
+    private ValueAnimator mValueAnimator;
+    private boolean mIsAnimationCancel;
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
+    {
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+            }
+
+            mValueAnimator = null;
+        }
+
+        if (isChecked == true)
+        {
+            if (mAnimationValue == 0)
+            {
+                mAnimationValue = 100;
+            }
+
+            mValueAnimator = ValueAnimator.ofInt(0, mAnimationValue);
+        } else
+        {
+            mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
+        }
+
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = ((Integer) animation.getAnimatedValue()).intValue();
+
+                mAnimationValue = value;
+
+                ViewGroup.LayoutParams layoutParams = mGuestFrameLayout.getLayoutParams();
+                layoutParams.height = Util.dpToPx(mContext, 164) * value / 100;
+
+                mGuestLinearLayout.setTranslationY(layoutParams.height - Util.dpToPx(mContext, 164));
+                mGuestFrameLayout.setLayoutParams(layoutParams);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mGuestNameEditText.setEnabled(false);
+                mGuestPhoneEditText.setEnabled(false);
+                mGuestEmailEditText.setEnabled(false);
+
+                mIsAnimationCancel = false;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mIsAnimationCancel == false)
+                {
+                    mGuestNameEditText.setEnabled(true);
+                    mGuestPhoneEditText.setEnabled(true);
+                    mGuestEmailEditText.setEnabled(true);
+
+                    if (isChecked == false)
+                    {
+                        setGuestInformation(null, false);
+                    }
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mIsAnimationCancel = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.setDuration(200);
+        mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mValueAnimator.start();
     }
 }

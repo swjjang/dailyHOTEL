@@ -74,7 +74,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
     private boolean mIsUnderPrice;
-    private boolean mIsEditMode;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
@@ -186,14 +185,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         lockUI();
 
-        Guest guest;
+        Guest guest = mHotelPaymentLayout.getGuest();
 
-        if (mIsEditMode == true)
+        if (guest == null)
         {
-            guest = mHotelPaymentLayout.getGuest();
-        } else
-        {
-            guest = paymentInformation.getGuest();
+            Customer customer = paymentInformation.getCustomer();
+
+            guest = new Guest();
+            guest.name = customer.getName();
+            guest.phone = customer.getPhone();
+            guest.email = customer.getEmail();
         }
 
         RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
@@ -1486,17 +1487,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private HotelPaymentLayout.OnEventListener mOnEventListener = new HotelPaymentLayout.OnEventListener()
     {
         @Override
-        public void editUserInformation()
-        {
-            if (mIsEditMode == true)
-            {
-                return;
-            }
-
-            mIsEditMode = true;
-        }
-
-        @Override
         public void startCreditCardManager()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
@@ -1504,19 +1494,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 return;
             }
 
-            if (mIsEditMode == true)
-            {
-                // 현재 수정 사항을 기억한다.
-                Guest editGuest = mHotelPaymentLayout.getGuest();
-                mPaymentInformation.setGuest(editGuest);
-            } else
-            {
-                // 사용자 요청 메세지 추가
-                Guest guest = mPaymentInformation.getGuest();
-                guest.message = mHotelPaymentLayout.getMemoEditText();
-
-                mPaymentInformation.setGuest(guest);
-            }
+            mPaymentInformation.setGuest(mHotelPaymentLayout.getGuest());
 
             startCreditCardList();
         }
@@ -1538,10 +1516,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-            if (mIsEditMode == true)
-            {
-                Guest guest = mHotelPaymentLayout.getGuest();
+            Guest guest = mHotelPaymentLayout.getGuest();
 
+            if (guest != null)
+            {
                 if (Util.isTextEmpty(guest.name) == true)
                 {
                     releaseUiComponent();
@@ -1587,15 +1565,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                 }
 
-                guest.message = mHotelPaymentLayout.getMemoEditText();
+//                guest.message = mHotelPaymentLayout.getMemoEditText();
                 hotelPaymentInformation.setGuest(guest);
             } else
             {
-                // 사용자 요청 메세지 추가
-                Guest guest = hotelPaymentInformation.getGuest();
-                guest.message = mHotelPaymentLayout.getMemoEditText();
-
-                hotelPaymentInformation.setGuest(guest);
+                hotelPaymentInformation.setGuest(null);
             }
 
             //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
@@ -1855,22 +1829,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 hotelPaymentInformation.setCustomer(buyer);
 
-                if (mIsEditMode == false)
-                {
-                    Guest guest = new Guest();
-                    guest.name = name;
-                    guest.phone = phone;
-                    guest.email = email;
-                    guest.message = mHotelPaymentLayout.getMemoEditText();
-
-                    hotelPaymentInformation.setGuest(guest);
-                }
-
                 Guest guest = hotelPaymentInformation.getGuest();
 
                 // 해외 호텔인 경우.
-                if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
+                boolean isOverseas = hotelPaymentInformation.getSaleRoomInformation().isOverseas;
+
+                if (isOverseas == true)
                 {
+                    if(guest == null)
+                    {
+                        guest = new Guest();
+                    }
+
                     String overseasName = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
                     String overseasPhone = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
                     String overseasEmail = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
@@ -1887,25 +1857,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         guest.email = overseasEmail;
                     }
 
-                    if (mIsEditMode == false)
+                    if (Util.isNameCharacter(overseasName) == false)
                     {
-                        if (Util.isNameCharacter(overseasName) == false)
-                        {
-                            mIsEditMode = true;
-
-                            guest.name = "";
-                            mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
-                        }
-
-                        mHotelPaymentLayout.setGuestInformation(hotelPaymentInformation);
+                        guest.name = "";
+                        mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
                     }
-                } else
-                {
-                    if (mIsEditMode == false)
-                    {
-                        mHotelPaymentLayout.setGuestInformation(hotelPaymentInformation);
-                    }
+
+                    hotelPaymentInformation.setGuest(guest);
                 }
+
+                mHotelPaymentLayout.setUserInformation(buyer, isOverseas);
+                mHotelPaymentLayout.setGuestInformation(guest, isOverseas);
 
                 // 2. 화면 정보 얻기
                 DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
