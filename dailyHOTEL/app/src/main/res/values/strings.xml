@@ -147,6 +147,7 @@
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
     <string name="actionbar_title_coupon_list">할인쿠폰함</string>
     <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
+    <string name="actionbar_title_register_coupon">할인쿠폰 코드 등록</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자를 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -844,6 +845,9 @@
     <string name="message_please_download_coupon">할인쿠폰을 다운로드해주세요.</string>
     <string name="message_downloaded_all_coupon">할인쿠폰을 모두 다운로드했습니다.</string>
     <string name="coupon_list_register_coupon">할인쿠폰 등록</string>
+    <string name="register_coupon_title">쿠폰 등록</string>
+    <string name="register_coupon_edittext_hint">할인쿠폰 코드 입력</string>
+    <string name="register_coupon_complete">할인쿠폰 등록 완료</string>
 
     <!-- Benefit Alarm -->
     <string name="label_setting_alarm">알림 설정</string>

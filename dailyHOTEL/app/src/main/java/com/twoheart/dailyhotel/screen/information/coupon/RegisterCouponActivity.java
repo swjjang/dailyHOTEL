@@ -10,11 +10,8 @@ import android.view.View;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
-
-import java.util.List;
 
 /**
  * Created by android_sam on 2016. 9. 19..
@@ -22,11 +19,11 @@ import java.util.List;
 public class RegisterCouponActivity extends BaseActivity
 {
     private RegisterCouponLayout mRegisterCouponLayout;
-    private CouponListNetworkController mCouponListNetworkController;
+    private RegisterCouponNetworkController mNetworkController;
 
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, CouponListActivity.class);
+        Intent intent = new Intent(context, RegisterCouponActivity.class);
         return intent;
     }
 
@@ -38,9 +35,9 @@ public class RegisterCouponActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         mRegisterCouponLayout = new RegisterCouponLayout(this, mOnEventListener);
-        mCouponListNetworkController = new CouponListNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        mNetworkController = new RegisterCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
-        setContentView(mRegisterCouponLayout.onCreateView(R.layout.activity_coupon_list));
+        setContentView(mRegisterCouponLayout.onCreateView(R.layout.activity_register_coupon));
     }
 
     @Override
@@ -147,8 +144,8 @@ public class RegisterCouponActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = CouponHistoryActivity.newInstance(RegisterCouponActivity.this);
-            startActivity(intent);
+            // TODO : 쿠폰 등록 요청
+            mNetworkController.requestRegisterCoupon(couponCode);
         }
 
         @Override
@@ -161,25 +158,13 @@ public class RegisterCouponActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     // NetworkController
     // ///////////////////////////////////////////////////
-    private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
+    private RegisterCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new RegisterCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onDownloadCoupon(String userCouponCode)
+        public void onRegisterCoupon(String couponCode)
         {
-            lockUI();
-//
-//            Coupon coupon = mRegisterCouponLayout.getCoupon(userCouponCode);
-//            recordAnalytics(coupon);
+            // TODO : 쿠폰 등록 완료 동작
 
-            mCouponListNetworkController.requestCouponList();
-        }
-
-        @Override
-        public void onCouponList(List<Coupon> list)
-        {
-//            mCouponListLayout.setData(list);
-
-            unLockUI();
         }
 
         @Override

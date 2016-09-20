@@ -178,8 +178,8 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void startRegisterCoupon()
         {
-            // TODO : 쿠폰 등록 화면 이동
-            ExLog.d("need add logic");
+            Intent intent = RegisterCouponActivity.newInstance(CouponListActivity.this);
+            startActivity(intent);
         }
 
         @Override

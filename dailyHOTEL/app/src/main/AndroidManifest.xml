@@ -313,7 +313,8 @@
         <activity
             android:name=".screen.information.coupon.RegisterCouponActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".screen.event.EventListActivity"
             android:launchMode="singleTop"
