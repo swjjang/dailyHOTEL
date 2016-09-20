@@ -136,12 +136,12 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         result.append('-');
 
-        if (mCategoryCodeMap.size() == 0)
+        if (mFilterMap.size() == 0)
         {
             result.append(AnalyticsManager.Label.SORTFILTER_NONE);
         } else
         {
-            ArrayList<String> categoryArrayList = new ArrayList<>(mCategoryCodeMap.keySet());
+            ArrayList<String> categoryArrayList = new ArrayList<>(mFilterMap.keySet());
 
             int size = categoryArrayList.size();
 
@@ -205,32 +205,37 @@ public class GourmetCurationOption extends PlaceCurationOption
         {
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE);
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_VALET);
+                result.append(AnalyticsManager.Label.SORTFILTER_VALET).append(',');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT);
+                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT).append(',');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATEROOM);
+                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATEROOM).append(',');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_GROUP);
+                result.append(AnalyticsManager.Label.SORTFILTER_GROUP).append(',');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_CORKAGE);
+                result.append(AnalyticsManager.Label.SORTFILTER_CORKAGE).append(',');
+            }
+
+            if (result.charAt(result.length() - 1) == ',')
+            {
+                result.setLength(result.length() - 1);
             }
         }
 

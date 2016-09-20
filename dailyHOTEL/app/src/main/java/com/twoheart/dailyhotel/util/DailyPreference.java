@@ -1049,7 +1049,7 @@ public class DailyPreference
 
     public void setOverseasUserInformation(String name, String phone, String email)
     {
-        if (mOldEditor != null)
+        if (mEditor != null)
         {
             mEditor.putString(KEY_PAYMENT_OVERSEAS_NAME, name);
             mEditor.putString(KEY_PAYMENT_OVERSEAS_PHONE, phone);
