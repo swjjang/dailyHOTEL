@@ -179,11 +179,31 @@ public class AppboyManager extends BaseAnalyticsManager
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 satisfactionCustomEvent(label);
+            } else if (AnalyticsManager.Action.HOTEL_SATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.STAY_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
+            } else if (AnalyticsManager.Action.GOURMET_SATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.GOURMET_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
             } else if (AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = new AppboyProperties();
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (Util.isTextEmpty(label) == true)
+                {
+                    label = AnalyticsManager.ValueType.EMPTY;
+                }
+
                 appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
                 appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
 
@@ -198,6 +218,12 @@ public class AppboyManager extends BaseAnalyticsManager
                 AppboyProperties appboyProperties = new AppboyProperties();
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (Util.isTextEmpty(label) == true)
+                {
+                    label = AnalyticsManager.ValueType.EMPTY;
+                }
+
                 appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
                 appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
 
@@ -818,8 +844,10 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String GOURMET_PURCHASE_COMPLETED = "gourmet_purchase_completed";
         public static final String REGISTER_COMPLETED = "register_completed";
         public static final String STAY_SATISFACTION_SURVEY = "stay_satisfaction_survey";
+        public static final String STAY_SATISFACTION_DETAIL_RESPONSE = "stay_satisfaction_detail_response\t";
         public static final String STAY_DISSATISFACTION_DETAIL_RESPONSE = "stay_dissatisfaction_detail_response";
         public static final String GOURMET_SATISFACTION_SURVEY = "gourmet_satisfaction_survey";
+        public static final String GOURMET_SATISFACTION_DETAIL_RESPONSE = "gourmet_satisfaction_detail_response";
         public static final String GOURMET_DISSATISFACTION_DETAIL_RESPONSE = "gourmet_dissatisfaction_detail_response";
 
         public static final String STAY_SORTFILTER_CLICKED = "stay_sortfilter_clicked";

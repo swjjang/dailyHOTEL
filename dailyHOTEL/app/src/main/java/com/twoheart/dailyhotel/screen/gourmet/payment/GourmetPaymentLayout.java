@@ -39,7 +39,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private TextView mPlaceNameTextView;
     private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
     private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
-//    private EditText mMemoEditText;
+    //    private EditText mMemoEditText;
     private View mUserLayout;
     private View mGuestFrameLayout, mGuestLinearLayout;
 
@@ -209,7 +209,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private void initBookingMemo(View view)
     {
-//        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
+        //        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
     }
 
     private void initPaymentInformation(View view)
@@ -388,7 +388,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
 
         // 사용자 요청사항
-//        mMemoEditText.setText(guest.message);
+        //        mMemoEditText.setText(guest.message);
     }
 
     protected void setGuestInformation(Guest guest, boolean isOverseas)
@@ -555,10 +555,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-//    public String getMemoEditText()
-//    {
-//        return mMemoEditText.getText().toString().trim();
-//    }
+    //    public String getMemoEditText()
+    //    {
+    //        return mMemoEditText.getText().toString().trim();
+    //    }
 
     public void requestUserInformationFocus(Constants.UserInformationType type)
     {

@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -298,7 +297,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
                     return true;
                 }
-            } else if(url.startsWith("market") == true)
+            } else if (url.startsWith("market") == true)
             {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 return true;
