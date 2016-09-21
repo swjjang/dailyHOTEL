@@ -12,17 +12,22 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.TimeZone;
 
+import static com.twoheart.dailyhotel.util.DailyCalendar.format;
+
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
+    private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
     private ArrayList<Booking> mBookingList;
     private Context mContext;
     private BookingListFragment.OnUserActionListener mOnUserActionListener;
@@ -131,6 +136,17 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             }
         }
 
+        boolean isLastPosition = false;
+
+        int count = getCount();
+        if (count > 0)
+        {
+            if (count - 1 == position)
+            {
+                isLastPosition = true;
+            }
+        }
+
         switch (booking.type)
         {
             case Booking.TYPE_ENTRY:
@@ -142,7 +158,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                     convertView.setTag(Booking.TYPE_ENTRY);
                 }
 
-                convertView = getEntryView(convertView, booking);
+                convertView = getEntryView(convertView, booking, isLastPosition);
                 break;
             }
 
@@ -163,7 +179,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         return convertView;
     }
 
-    private View getEntryView(View view, final Booking booking)
+    private View getEntryView(View view, final Booking booking, boolean isLastPosition)
     {
         if (view == null || booking == null)
         {
@@ -175,40 +191,40 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         Util.requestImageResize(mContext, hotelImageView, booking.hotelImageUrl);
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
-        ImageView bookingIconImageView = (ImageView) view.findViewById(R.id.bookingIconImageView);
         TextView name = (TextView) view.findViewById(R.id.placeNameTextView);
         TextView day = (TextView) view.findViewById(R.id.bookingDateTextView);
+        TextView nights = (TextView) view.findViewById(R.id.bookingNightsTextView);
         View deleteView = view.findViewById(R.id.deleteView);
+        View bottomDivider = view.findViewById(R.id.bottomDivider);
 
         name.setText(booking.placeName);
 
-        //        Date checkinDate = new Date(booking.checkinTime);
-        //        Date checkOutDate = new Date(booking.checkoutTime);
+        bottomDivider.setVisibility(isLastPosition == false ? View.VISIBLE : View.GONE);
 
         switch (booking.placeType)
         {
             case HOTEL:
             {
-                //                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-                //                sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                //                String period = String.format("%s - %s", sFormat.format(checkinDate), sFormat.format(checkOutDate));
-
                 String period = String.format("%s - %s"//
-                    , DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT"))//
-                    , DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")));
+                    , format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"))//
+                    , format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT")));
 
                 day.setText(period);
+
+                int nightsCount = (int) ((getCompareDate(booking.checkoutTime) - getCompareDate(booking.checkinTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                nights.setVisibility(View.VISIBLE);
+                nights.setText(mContext.getString(R.string.label_nights, nightsCount));
                 break;
             }
 
             case FNB:
             {
-                //                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-                //                sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                //                String period = sFormat.format(checkinDate);
-                String period = DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT"));
+                String period = format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"));
 
                 day.setText(period);
+
+                nights.setVisibility(View.GONE);
                 break;
             }
         }
@@ -218,7 +234,6 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             setGrayScale(hotelImageView);
 
             waitAccountTextView.setVisibility(View.GONE);
-            bookingIconImageView.setVisibility(View.GONE);
 
             deleteView.setVisibility(View.VISIBLE);
 
@@ -238,17 +253,50 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         {
             hotelImageView.clearColorFilter();
 
-            bookingIconImageView.setVisibility(View.VISIBLE);
-
             if (booking.payType == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
             {
                 waitAccountTextView.setVisibility(View.VISIBLE);
                 waitAccountTextView.setText(booking.ment);
-                bookingIconImageView.setImageResource(R.drawable.ic_wait);
             } else
             {
-                waitAccountTextView.setVisibility(View.GONE);
-                bookingIconImageView.setImageResource(R.drawable.ic_complete);
+                String text;
+
+                int dayOfDays = (int) ((getCompareDate(System.currentTimeMillis()) - getCompareDate(booking.checkinTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                if (dayOfDays > 0)
+                {
+                    // 하루이상 남음
+                    text = mContext.getString(R.string.frag_booking_duedate_formet, dayOfDays);
+                } else
+                {
+                    // 당일
+                    switch (booking.placeType)
+                    {
+                        case HOTEL:
+                        {
+                            text = mContext.getString(R.string.frag_booking_today_type_stay);
+                            break;
+                        }
+
+                        case FNB:
+                        {
+                            text = mContext.getString(R.string.frag_booking_today_type_gourmet);
+                            break;
+                        }
+
+                        default:
+                            text = null;
+                            break;
+                    }
+                }
+
+                if (Util.isTextEmpty(text) == true)
+                {
+                    waitAccountTextView.setVisibility(View.GONE);
+                } else
+                {
+                    waitAccountTextView.setVisibility(View.VISIBLE);
+                    waitAccountTextView.setText(text);
+                }
             }
 
             deleteView.setVisibility(View.GONE);
@@ -275,7 +323,23 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
     {
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
+        matrix.getArray()[18] = 0.8f;
+
         ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
         imageView.setColorFilter(colorFilter);
+    }
+
+    private long getCompareDate(long timeInMillis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
     }
 }
