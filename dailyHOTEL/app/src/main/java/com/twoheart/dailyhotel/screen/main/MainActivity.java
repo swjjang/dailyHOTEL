@@ -288,6 +288,7 @@ public class MainActivity extends BaseActivity implements Constants
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+                mNetworkController.requestNoticeAgreement();
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -835,6 +836,9 @@ public class MainActivity extends BaseActivity implements Constants
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
                         mNetworkController.requestNoticeAgreement();
+                    } else
+                    {
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                     }
                 }
             }
@@ -845,6 +849,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == true)
             {
+                AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                 return;
             }
 
@@ -860,12 +865,14 @@ public class MainActivity extends BaseActivity implements Constants
 
                 } else
                 {
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                     return;
                 }
             } else
             {
                 if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
                 {
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                     return;
                 }
             }
@@ -911,13 +918,27 @@ public class MainActivity extends BaseActivity implements Constants
                 AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , AnalyticsManager.Action.FIRST_NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
 
-                showSimpleDialog(getString(R.string.label_setting_alarm), agreeMessage, getString(R.string.dialog_btn_text_confirm), null);
+                showSimpleDialog(getString(R.string.label_setting_alarm), agreeMessage, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
+                    }
+                });
             } else
             {
                 AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , AnalyticsManager.Action.FIRST_NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
 
-                showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null);
+                showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
+                    }
+                });
             }
         }
 

@@ -525,6 +525,8 @@ public class AnalyticsManager
         public static final String BOOKING_ACCOUNTDETAIL = "Booking_AccountDetail";
         public static final String DAILY_HOTEL_FIRST_PURCHASE_SUCCESS = "DailyHotel_FirstPurchaseSuccess";
         public static final String DAILY_GOURMET_FIRST_PURCHASE_SUCCESS = "DailyGourmet_FirstPurchaseSuccess";
+        //
+        public static final String APP_LAUNCHED = "app_launched";
     }
 
     public static class Action

@@ -174,7 +174,19 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
+        if (AnalyticsManager.Screen.APP_LAUNCHED.equalsIgnoreCase(category) == true)
+        {
+            AppboyProperties appboyProperties = new AppboyProperties();
+
+            appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+            mAppboy.logCustomEvent(category, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + category + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
