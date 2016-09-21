@@ -765,7 +765,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
 
     /**
-     * 버튼이 상하로 되어있는데 팝업
+     * 버튼이 좌우가 3:7로 되어있는 팝업
      *
      * @param titleText
      * @param msg
@@ -797,7 +797,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_dialog_button_up_down_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_button_weight_layout, null, false);
 
         mDialog = new Dialog(this);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
