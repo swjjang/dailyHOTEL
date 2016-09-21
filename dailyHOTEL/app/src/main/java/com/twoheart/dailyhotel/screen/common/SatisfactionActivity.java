@@ -507,6 +507,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     // 아무내용이 없으면 보내지 않는다.
                     if (Util.isTextEmpty(mCommentsView.getText().toString().trim()) == true)
                     {
+                        recordAnalytics(mPlaceType, null, isSatisfaction);
+
                         finish();
                         return;
                     }
@@ -534,6 +536,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     // 아무내용이 없으면 보내지 않는다.
                     if (Util.isTextEmpty(mCommentsView.getText().toString().trim()) == true && Util.isTextEmpty(ratingTypes) == true)
                     {
+                        recordAnalytics(mPlaceType, null, isSatisfaction);
+
                         finish();
                         return;
                     }
@@ -544,42 +548,39 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     }
 
                     params.put("rating_types", ratingTypes);
-                    params.put("msg", mCommentsView.getText().toString().trim());
+                }
 
-                    switch (mPlaceType)
+                params.put("msg", mCommentsView.getText().toString().trim());
+
+                switch (mPlaceType)
+                {
+                    case HOTEL:
                     {
-                        case HOTEL:
+                        params.put("reserv_idx", String.valueOf(mReservationIndex));
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+
+                        if (Util.isTextEmpty(ratingName) == true)
                         {
-                            params.put("reserv_idx", String.valueOf(mReservationIndex));
-                            DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
-
-                            if (Util.isTextEmpty(ratingName) == true)
-                            {
-                                ratingName = AnalyticsManager.ValueType.EMPTY;
-                            }
-
-                            Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
-                            AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                                , AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
-                            break;
+                            ratingName = AnalyticsManager.ValueType.EMPTY;
                         }
 
-                        case FNB:
+                        recordAnalytics(mPlaceType, ratingName, isSatisfaction);
+                        break;
+                    }
+
+                    case FNB:
+                    {
+                        params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
+
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+
+                        if (Util.isTextEmpty(ratingName) == true)
                         {
-                            params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
-
-                            DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
-
-                            if (Util.isTextEmpty(ratingName) == true)
-                            {
-                                ratingName = AnalyticsManager.ValueType.EMPTY;
-                            }
-
-                            Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
-                            AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                                , AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
-                            break;
+                            ratingName = AnalyticsManager.ValueType.EMPTY;
                         }
+
+                        recordAnalytics(mPlaceType, ratingName, isSatisfaction);
+                        break;
                     }
                 }
             }
@@ -590,6 +591,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             @Override
             public void onCancel(DialogInterface dialog)
             {
+                recordAnalytics(mPlaceType, null, isSatisfaction);
+
                 finish();
             }
         });
@@ -629,6 +632,50 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             case FNB:
                 DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
+        }
+    }
+
+    private void recordAnalytics(PlaceType placeType, String ratingName, boolean isSatisfaction)
+    {
+        if (isSatisfaction == true)
+        {
+            switch (placeType)
+            {
+                case HOTEL:
+                {
+                    AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                        , AnalyticsManager.Action.HOTEL_SATISFACTION_DETAILED_POPPEDUP, ratingName, null);
+                    break;
+                }
+
+                case FNB:
+                {
+                    Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                    AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                        , AnalyticsManager.Action.GOURMET_SATISFACTION_DETAILED_POPPEDUP, ratingName, null);
+                    break;
+                }
+            }
+        } else
+        {
+            switch (placeType)
+            {
+                case HOTEL:
+                {
+                    Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                    AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                        , AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
+                    break;
+                }
+
+                case FNB:
+                {
+                    Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                    AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                        , AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
+                    break;
+                }
+            }
         }
     }
 

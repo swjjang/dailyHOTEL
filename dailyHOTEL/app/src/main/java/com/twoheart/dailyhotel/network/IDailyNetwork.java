@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.network;
 
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 
 import java.util.Map;
 

@@ -525,6 +525,8 @@ public class AnalyticsManager
         public static final String BOOKING_ACCOUNTDETAIL = "Booking_AccountDetail";
         public static final String DAILY_HOTEL_FIRST_PURCHASE_SUCCESS = "DailyHotel_FirstPurchaseSuccess";
         public static final String DAILY_GOURMET_FIRST_PURCHASE_SUCCESS = "DailyGourmet_FirstPurchaseSuccess";
+        //
+        public static final String APP_LAUNCHED = "app_launched";
     }
 
     public static class Action
@@ -583,7 +585,9 @@ public class AnalyticsManager
         public static final String EVENT_CLICKED = "EventClicked";
         //
         public static final String SATISFACTION_EVALUATION_POPPEDUP = "SatisfactionEvaluationPoppedup";
+        public static final String HOTEL_SATISFACTION_DETAILED_POPPEDUP = "HotelSatisfactionDetailedPoppedup";
         public static final String HOTEL_DISSATISFACTION_DETAILED_POPPEDUP = "HotelDissatisfactionDetailedPoppedup";
+        public static final String GOURMET_SATISFACTION_DETAILED_POPPEDUP = "GourmetSatisfactionDetailedPoppedup";
         public static final String GOURMET_DISSATISFACTION_DETAILED_POPPEDUP = "GourmetDissatisfactionDetailedPoppedup";
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
