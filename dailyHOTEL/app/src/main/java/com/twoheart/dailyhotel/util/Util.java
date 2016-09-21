@@ -1503,8 +1503,6 @@ public class Util implements Constants
 
     public static boolean hasNoticeNewList(Context context)
     {
-        final char SEPARATE = '|';
-
         String value = DailyPreference.getInstance(context).getNoticeNewList();
 
         return (Util.isTextEmpty(value) == false);
@@ -1516,7 +1514,6 @@ public class Util implements Constants
         {
             return noticeList;
         }
-
 
         final char SEPARATE = '|';
 

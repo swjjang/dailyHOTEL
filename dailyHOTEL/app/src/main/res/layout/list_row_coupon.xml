@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="155dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="155dp">
 
     <View
         android:id="@+id/bottomDivider"
@@ -87,12 +87,12 @@
             android:id="@+id/minPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="17dp"
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="13dp"
             android:layout_toLeftOf="@id/vericalLine"
             android:gravity="center_vertical"
+            android:minHeight="17dp"
             android:textColor="@color/coupon_description_text"
             android:textSize="11dp"/>
 
@@ -119,12 +119,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:drawableTop="@drawable/more_ic_coupon_01"
                 android:gravity="center"
                 android:text="@string/coupon_useable_text"
                 android:textColor="@color/default_line_c323232"
                 android:textSize="11dp"
                 android:visibility="gone"
+                app:drawableCompatTop="@drawable/more_ic_coupon_01"
                 dailyFont:style="Medium"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:drawableTop="@drawable/more_ic_coupon_02"
+                app:drawableCompatTop="@drawable/more_ic_coupon_02"
                 android:gravity="center"
                 android:text="@string/coupon_download_text"
                 android:textColor="@color/white"

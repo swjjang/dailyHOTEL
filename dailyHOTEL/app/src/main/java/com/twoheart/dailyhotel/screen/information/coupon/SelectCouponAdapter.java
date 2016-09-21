@@ -58,6 +58,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         {
             bindView(position, convertView);
         }
+
         return convertView;
     }
 

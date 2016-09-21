@@ -650,7 +650,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
                 case FNB:
                 {
-                    Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
                     AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.GOURMET_SATISFACTION_DETAILED_POPPEDUP, ratingName, null);
                     break;

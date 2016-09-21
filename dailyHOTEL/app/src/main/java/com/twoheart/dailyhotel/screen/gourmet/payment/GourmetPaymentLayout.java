@@ -760,7 +760,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             @Override
             public void onAnimationUpdate(ValueAnimator animation)
             {
-                int value = ((Integer) animation.getAnimatedValue()).intValue();
+                int value = (Integer) animation.getAnimatedValue();
 
                 mAnimationValue = value;
 

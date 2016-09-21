@@ -810,7 +810,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
 
-            SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
+            // SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
 
             // 이벤트 배너 딥링크 사용하지 않기로 했음.
             if (eventBanner.isDeepLink() == true)

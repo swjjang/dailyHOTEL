@@ -140,7 +140,7 @@ public class DailyRemoteConfig
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.getInstance().logException(e);
+                    Crashlytics.logException(e);
                 } else
                 {
                     ExLog.e(e.toString());

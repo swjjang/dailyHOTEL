@@ -895,7 +895,7 @@ public class StayMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.HOTEL_EVENT_BANNER_CLICKED, eventBanner.name, null);
 
-            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
+            //            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
 
             // 이벤트 배너 딥링크 사용하지 않기로 했음.
             if (eventBanner.isDeepLink() == true)
@@ -1105,8 +1105,6 @@ public class StayMainFragment extends PlaceMainFragment
 
         if (Util.isTextEmpty(url) == false)
         {
-            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-
             Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
 

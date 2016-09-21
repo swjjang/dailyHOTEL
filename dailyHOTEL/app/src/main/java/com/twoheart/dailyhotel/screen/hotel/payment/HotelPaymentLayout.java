@@ -949,7 +949,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             @Override
             public void onAnimationUpdate(ValueAnimator animation)
             {
-                int value = ((Integer) animation.getAnimatedValue()).intValue();
+                int value = (Integer) animation.getAnimatedValue();
 
                 mAnimationValue = value;
 
