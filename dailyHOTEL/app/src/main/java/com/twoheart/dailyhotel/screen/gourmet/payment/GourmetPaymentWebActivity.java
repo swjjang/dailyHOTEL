@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -59,7 +60,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     public int m_nStat = PROGRESS_STAT_NOT_START;
 
     private WebView mWebView;
-
     private Handler handler = new Handler();
 
     @Override
@@ -148,20 +148,32 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
-        {
-            finish();
-            return;
-        }
-
         requestPostPaymentWebView(mWebView, gourmetPaymentInformation);
     }
 
     private void requestPostPaymentWebView(WebView webView, GourmetPaymentInformation gourmetPaymentInformation)
     {
+        String name;
+        String phone;
+        String email;
+
         Guest guest = gourmetPaymentInformation.getGuest();
 
-        if (guest == null || Util.isTextEmpty(guest.name, guest.phone, guest.email) == true)
+        if (guest == null)
+        {
+            Customer customer = gourmetPaymentInformation.getCustomer();
+
+            name = customer.getName();
+            phone = customer.getPhone();
+            email = customer.getEmail();
+        } else
+        {
+            name = guest.name;
+            phone = guest.phone;
+            email = guest.email;
+        }
+
+        if (Util.isTextEmpty(name, phone, email) == true)
         {
             restartExpiredSession();
             return;
@@ -173,11 +185,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         builder.add("sale_reco_idx", String.valueOf(ticketInformation.index));
         builder.add("payment_type", gourmetPaymentInformation.paymentType.name());
         builder.add("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
-        builder.add("customer_name", guest.name);
-        builder.add("customer_phone", guest.phone.replace("-", ""));
-        builder.add("customer_email", guest.email);
+        builder.add("customer_name", name);
+        builder.add("customer_phone", phone.replace("-", ""));
+        builder.add("customer_email", email);
         builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
-        builder.add("customer_msg", guest.message);
 
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
@@ -524,11 +535,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
-            //			ExLog.d("[PayDemoActivity] called__shouldOverrideUrlLoading - url=[" + url + "]");
-
             if (url != null && !url.equals("about:blank"))
             {
-
                 if (url.startsWith("http://") || url.startsWith("https://"))
                 {
                     if (url.contains("http://market.android.com") || url.contains("http://m.ahnlab.com/kr/site/download") || url.endsWith(".apk"))

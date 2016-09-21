@@ -432,10 +432,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
                 if (strResCD.equals("0000") == true)
                 {
-
-                    String strApprovalKey;
-
-                    strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
+                    String strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
                     //					ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
 
@@ -488,6 +485,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
             }
         }
+
         setResult(resultCode);
         finish();
     }

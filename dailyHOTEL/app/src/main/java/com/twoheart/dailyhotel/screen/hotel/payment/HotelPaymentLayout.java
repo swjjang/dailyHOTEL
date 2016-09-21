@@ -49,7 +49,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
     private TextView mBookingAmountTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
-    private TextView mUserName, mUserPhone, mUserEmail;
+    private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
     private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
     private TextView mPlaceNameTextView, mRoomTypeTextView;
     //    private EditText mMemoEditText;
@@ -92,6 +92,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     //
     private View mRefundPolicyLayout;
+    //
+    private int mAnimationValue;
+    private ValueAnimator mValueAnimator;
+    private boolean mIsAnimationCancel;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -189,9 +193,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     {
         mUserLayout = view.findViewById(R.id.userLayout);
 
-        mUserName = (TextView) mUserLayout.findViewById(R.id.userNameTextView);
-        mUserPhone = (TextView) mUserLayout.findViewById(R.id.userPhoneTextView);
-        mUserEmail = (TextView) mUserLayout.findViewById(R.id.userEmailTextView);
+        mUserNameTextView = (TextView) mUserLayout.findViewById(R.id.userNameTextView);
+        mUserPhoneTextView = (TextView) mUserLayout.findViewById(R.id.userPhoneTextView);
+        mUserEmailTextView = (TextView) mUserLayout.findViewById(R.id.userEmailTextView);
 
         mGuestFrameLayout = view.findViewById(R.id.guestFrameLayout);
         mGuestLinearLayout = mGuestFrameLayout.findViewById(R.id.guestLinearLayout);
@@ -413,13 +417,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mUserLayout.setVisibility(View.VISIBLE);
 
             // 예약자
-            mUserName.setText(user.getName());
+            mUserNameTextView.setText(user.getName());
 
             // 연락처
-            mUserPhone.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
+            mUserPhoneTextView.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
 
             // 이메일
-            mUserEmail.setText(user.getEmail());
+            mUserEmailTextView.setText(user.getEmail());
         } else
         {
             mUserLayout.setVisibility(View.GONE);
@@ -919,10 +923,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    private int mAnimationValue;
-    private ValueAnimator mValueAnimator;
-    private boolean mIsAnimationCancel;
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
     {
@@ -938,12 +938,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         if (isChecked == true)
         {
-            if (mAnimationValue == 0)
-            {
-                mAnimationValue = 100;
-            }
-
-            mValueAnimator = ValueAnimator.ofInt(0, mAnimationValue);
+            mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 100);
         } else
         {
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
@@ -992,6 +987,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                         setGuestInformation(null, false);
                     }
                 }
+
+                mIsAnimationCancel = false;
             }
 
             @Override
@@ -1007,7 +1004,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             }
         });
 
-        mValueAnimator.setDuration(200);
+        mValueAnimator.setDuration(300);
         mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         mValueAnimator.start();
     }

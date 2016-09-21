@@ -1,14 +1,21 @@
 package com.twoheart.dailyhotel.screen.gourmet.payment;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.text.Layout;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -24,15 +31,20 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.TimeZone;
 
-public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
+public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
     private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
     private TextView mBookingAmountTextView;
     private TextView mPlaceNameTextView;
-    private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
-    private EditText mMemoEditText;
+    private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
+    private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
+//    private EditText mMemoEditText;
+    private View mUserLayout;
+    private View mGuestFrameLayout, mGuestLinearLayout;
+
     private ScrollView mScrollLayout;
+    private CheckBox mGuestCheckBox;
 
     private TextView mPriceTextView, mFinalPaymentTextView;
     private View mTicketCountMinusButton, mTicketCountPlusButton;
@@ -53,12 +65,14 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private TextView mCardManagerTextView;
     private TextView mGuidePaymentMemoView;
+    //
+    private int mAnimationValue;
+    private ValueAnimator mValueAnimator;
+    private boolean mIsAnimationCancel;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void selectTicketTime(String selectedTime);
-
-        void editUserInformation();
 
         void plusTicketCount();
 
@@ -166,24 +180,36 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
      */
     private void initUserInformationLayout(View view)
     {
-        mUserNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
-        mUserPhoneEditText = (EditText) view.findViewById(R.id.userPhoneEditText);
-        mUserEmailEditText = (EditText) view.findViewById(R.id.userEmailEditText);
+        mUserLayout = view.findViewById(R.id.userLayout);
 
-        mUserPhoneEditText.setCursorVisible(false);
+        mUserNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
+        mUserPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
+        mUserEmailTextView = (TextView) view.findViewById(R.id.userEmailTextView);
 
-        mUserNameEditText.setOnFocusChangeListener(this);
-        mUserPhoneEditText.setOnFocusChangeListener(this);
-        mUserEmailEditText.setOnFocusChangeListener(this);
+        mGuestFrameLayout = view.findViewById(R.id.guestFrameLayout);
+        mGuestLinearLayout = mGuestFrameLayout.findViewById(R.id.guestLinearLayout);
+
+        mGuestNameEditText = (EditText) mGuestLinearLayout.findViewById(R.id.guestNameEditText);
+        mGuestPhoneEditText = (EditText) mGuestLinearLayout.findViewById(R.id.guestPhoneEditText);
+        mGuestEmailEditText = (EditText) mGuestLinearLayout.findViewById(R.id.guestEmailEditText);
+
+        mGuestPhoneEditText.setCursorVisible(false);
+
+        mGuestNameEditText.setOnFocusChangeListener(this);
+        mGuestPhoneEditText.setOnFocusChangeListener(this);
+        mGuestEmailEditText.setOnFocusChangeListener(this);
 
         View fakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
         fakeMobileEditView.setFocusable(true);
         fakeMobileEditView.setOnClickListener(this);
+
+        mGuestCheckBox = (CheckBox) view.findViewById(R.id.guestCheckBox);
+        mGuestCheckBox.setOnCheckedChangeListener(this);
     }
 
     private void initBookingMemo(View view)
     {
-        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
+//        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
     }
 
     private void initPaymentInformation(View view)
@@ -336,41 +362,67 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mTicketCountTextView.setText(mContext.getString(R.string.label_booking_count, gourmetPaymentInformation.ticketCount));
     }
 
-    protected void setUserInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    protected void setUserInformation(Customer user, boolean isOverseas)
     {
-        if (gourmetPaymentInformation == null)
+        if (user == null)
         {
             return;
         }
 
-        Guest guest = gourmetPaymentInformation.getGuest();
-
-        if (guest == null)
+        // 국내인 경우
+        if (isOverseas == false)
         {
-            return;
+            mUserLayout.setVisibility(View.VISIBLE);
+
+            // 예약자
+            mUserNameTextView.setText(user.getName());
+
+            // 연락처
+            mUserPhoneTextView.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
+
+            // 이메일
+            mUserEmailTextView.setText(user.getEmail());
+        } else
+        {
+            mUserLayout.setVisibility(View.GONE);
         }
-
-        // 예약자
-        mUserNameEditText.setText(guest.name);
-
-        // 연락처
-        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
-
-        // 이메일
-        mUserEmailEditText.setText(guest.email);
 
         // 사용자 요청사항
-        mMemoEditText.setText(guest.message);
+//        mMemoEditText.setText(guest.message);
     }
 
-    public void setUserPhoneInformation(String mobileNumber)
+    protected void setGuestInformation(Guest guest, boolean isOverseas)
     {
-        if (mUserPhoneEditText == null)
+        if (isOverseas == false)
+        {
+            if (guest == null)
+            {
+                mGuestNameEditText.setText(null);
+                mGuestPhoneEditText.setText(null);
+                mGuestEmailEditText.setText(null);
+            } else
+            {
+                mGuestNameEditText.setText(guest.name);
+                mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+                mGuestEmailEditText.setText(guest.email);
+            }
+
+            mGuestNameEditText.setHint(R.string.label_booking_input_name);
+            mGuestPhoneEditText.setHint(R.string.label_booking_input_phone);
+            mGuestEmailEditText.setHint(R.string.label_booking_input_email);
+        } else
+        {
+        }
+    }
+
+    public void setGuestPhoneInformation(String mobileNumber)
+    {
+        if (mGuestPhoneEditText == null)
         {
             return;
         }
 
-        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
+        mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
     public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
@@ -486,35 +538,42 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public Guest getGuest()
     {
-        Guest guest = new Guest();
+        // 국내인 경우에는 체크된 경우만 해외인 경우에는 무조건 반환
+        if (mGuestCheckBox.isChecked() == true || mUserLayout.getVisibility() == View.GONE)
+        {
+            Guest guest = new Guest();
 
-        guest.name = mUserNameEditText.getText().toString().trim();
-        guest.phone = mUserPhoneEditText.getText().toString().trim();
-        guest.email = mUserEmailEditText.getText().toString().trim();
-        guest.message = mMemoEditText.getText().toString().trim();
+            guest.name = mGuestNameEditText.getText().toString().trim();
+            guest.phone = mGuestPhoneEditText.getText().toString().trim();
+            guest.email = mGuestEmailEditText.getText().toString().trim();
+            //            guest.message = mMemoEditText.getText().toString().trim();
 
-        return guest;
+            return guest;
+        } else
+        {
+            return null;
+        }
     }
 
-    public String getMemoEditText()
-    {
-        return mMemoEditText.getText().toString().trim();
-    }
+//    public String getMemoEditText()
+//    {
+//        return mMemoEditText.getText().toString().trim();
+//    }
 
     public void requestUserInformationFocus(Constants.UserInformationType type)
     {
         switch (type)
         {
             case NAME:
-                mUserNameEditText.requestFocus();
+                mGuestNameEditText.requestFocus();
                 break;
 
             case PHONE:
-                mUserPhoneEditText.requestFocus();
+                mGuestPhoneEditText.requestFocus();
                 break;
 
             case EMAIL:
-                mUserEmailEditText.requestFocus();
+                mGuestEmailEditText.requestFocus();
                 break;
         }
     }
@@ -601,17 +660,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        ((OnEventListener) mOnEventListener).editUserInformation();
-
         switch (v.getId())
         {
-            case R.id.userPhoneEditText:
+            case R.id.guestPhoneEditText:
                 if (hasFocus == true)
                 {
-                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
+                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mGuestPhoneEditText.getText().toString());
                 } else
                 {
-                    mUserPhoneEditText.setSelected(false);
+                    mGuestPhoneEditText.setSelected(false);
                 }
                 break;
         }
@@ -624,13 +681,13 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         {
             case R.id.fakeMobileEditView:
             {
-                if (mUserPhoneEditText.isSelected() == true)
+                if (mGuestPhoneEditText.isSelected() == true)
                 {
-                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
+                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mGuestPhoneEditText.getText().toString());
                 } else
                 {
-                    mUserPhoneEditText.requestFocus();
-                    mUserPhoneEditText.setSelected(true);
+                    mGuestPhoneEditText.requestFocus();
+                    mGuestPhoneEditText.setSelected(true);
                 }
                 break;
             }
@@ -675,5 +732,91 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 ((OnEventListener) mOnEventListener).startCreditCardManager();
                 break;
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
+    {
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+            }
+
+            mValueAnimator = null;
+        }
+
+        if (isChecked == true)
+        {
+            mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 100);
+        } else
+        {
+            mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
+        }
+
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = ((Integer) animation.getAnimatedValue()).intValue();
+
+                mAnimationValue = value;
+
+                ViewGroup.LayoutParams layoutParams = mGuestFrameLayout.getLayoutParams();
+                layoutParams.height = Util.dpToPx(mContext, 164) * value / 100;
+
+                mGuestLinearLayout.setTranslationY(layoutParams.height - Util.dpToPx(mContext, 164));
+                mGuestFrameLayout.setLayoutParams(layoutParams);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mGuestNameEditText.setEnabled(false);
+                mGuestPhoneEditText.setEnabled(false);
+                mGuestEmailEditText.setEnabled(false);
+
+                mIsAnimationCancel = false;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mIsAnimationCancel == false)
+                {
+                    mGuestNameEditText.setEnabled(true);
+                    mGuestPhoneEditText.setEnabled(true);
+                    mGuestEmailEditText.setEnabled(true);
+
+                    if (isChecked == false)
+                    {
+                        setGuestInformation(null, false);
+                    }
+                }
+
+                mIsAnimationCancel = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mIsAnimationCancel = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.setDuration(300);
+        mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mValueAnimator.start();
     }
 }

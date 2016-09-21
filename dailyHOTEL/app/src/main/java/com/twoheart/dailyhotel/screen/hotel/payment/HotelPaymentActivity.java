@@ -178,8 +178,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        if (paymentInformation == null || checkInSaleTime == null)
+        if (paymentInformation == null || checkInSaleTime == null || mSelectedCreditCard == null)
         {
+            Util.restartApp(this);
             return;
         }
 
@@ -1564,13 +1565,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                 }
-
-//                guest.message = mHotelPaymentLayout.getMemoEditText();
-                hotelPaymentInformation.setGuest(guest);
-            } else
-            {
-                hotelPaymentInformation.setGuest(null);
             }
+
+            hotelPaymentInformation.setGuest(guest);
 
             //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
             if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
@@ -1836,7 +1833,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 if (isOverseas == true)
                 {
-                    if(guest == null)
+                    if (guest == null)
                     {
                         guest = new Guest();
                     }
@@ -2172,9 +2169,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code != 0)
+                if (msgCode != 0)
                 {
                     if (response.has("msg") == true)
                     {
