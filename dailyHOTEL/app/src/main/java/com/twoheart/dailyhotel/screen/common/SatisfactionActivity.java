@@ -544,44 +544,42 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     }
 
                     params.put("rating_types", ratingTypes);
-                }
+                    params.put("msg", mCommentsView.getText().toString().trim());
 
-                params.put("msg", mCommentsView.getText().toString().trim());
-
-                switch (mPlaceType)
-                {
-                    case HOTEL:
+                    switch (mPlaceType)
                     {
-                        params.put("reserv_idx", String.valueOf(mReservationIndex));
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
-
-                        if (Util.isTextEmpty(ratingName) == true)
+                        case HOTEL:
                         {
-                            ratingName = AnalyticsManager.ValueType.EMPTY;
+                            params.put("reserv_idx", String.valueOf(mReservationIndex));
+                            DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+
+                            if (Util.isTextEmpty(ratingName) == true)
+                            {
+                                ratingName = AnalyticsManager.ValueType.EMPTY;
+                            }
+
+                            Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                            AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                                , AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
+                            break;
                         }
 
-
-                        Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
-                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                            , AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
-                        break;
-                    }
-
-                    case FNB:
-                    {
-                        params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
-
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
-
-                        if (Util.isTextEmpty(ratingName) == true)
+                        case FNB:
                         {
-                            ratingName = AnalyticsManager.ValueType.EMPTY;
-                        }
+                            params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
-                        Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
-                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                            , AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
-                        break;
+                            DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+
+                            if (Util.isTextEmpty(ratingName) == true)
+                            {
+                                ratingName = AnalyticsManager.ValueType.EMPTY;
+                            }
+
+                            Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                            AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                                , AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
+                            break;
+                        }
                     }
                 }
             }

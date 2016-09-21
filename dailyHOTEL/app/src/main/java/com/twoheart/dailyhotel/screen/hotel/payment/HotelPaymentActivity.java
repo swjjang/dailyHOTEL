@@ -222,7 +222,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         params.put("guest_name", guest.name);
         params.put("guest_phone", guest.phone.replace("-", ""));
         params.put("guest_email", guest.email);
-        params.put("guest_msg", guest.message);
+        params.put("guest_msg", "");
 
         //            if (DEBUG == true)
         //            {

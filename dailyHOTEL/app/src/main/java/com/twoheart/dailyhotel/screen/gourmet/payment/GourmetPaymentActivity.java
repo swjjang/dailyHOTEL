@@ -211,7 +211,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
         params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
-        params.put("customer_msg", guest.message);
+        params.put("customer_msg", "");
 
         //        if (DEBUG == true)
         //        {

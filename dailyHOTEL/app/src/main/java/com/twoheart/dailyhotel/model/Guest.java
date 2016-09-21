@@ -8,7 +8,7 @@ public class Guest implements Parcelable
     public String email;
     public String name;
     public String phone;
-    public String message;
+//    public String message;
 
     public Guest()
     {
@@ -25,7 +25,7 @@ public class Guest implements Parcelable
         dest.writeString(email);
         dest.writeString(name);
         dest.writeString(phone);
-        dest.writeString(message);
+//        dest.writeString(message);
     }
 
     private void readFromParcel(Parcel in)
@@ -33,7 +33,7 @@ public class Guest implements Parcelable
         email = in.readString();
         name = in.readString();
         phone = in.readString();
-        message = in.readString();
+//        message = in.readString();
     }
 
     @Override
