@@ -163,7 +163,7 @@
     <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
 
     <!-- Toast Messages -->
-    <string name="toast_msg_please_input_guest">투숙자를 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
+    <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="toast_msg_please_input_guest_typeoverseas">해외 호텔 예약시에는 투숙자를 영문 성함으로 입력해주세요.</string>
     <string name="toast_msg_please_input_contact">연락처를 입력해주세요.</string>
     <string name="toast_msg_please_input_email">이메일을 입력해주세요.</string>
@@ -457,7 +457,6 @@
     <string name="act_booking_chkin">체크인</string>
     <string name="act_booking_chkout">체크아웃</string>
     <string name="act_booking_reserver_info">투숙객 정보</string>
-    <string name="act_booking_reserver">투숙자</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
     <string name="act_booking_payment">결제 정보</string>
@@ -492,7 +491,9 @@
     <string name="label_booking_select_ticket_count">수량 선택</string>
     <string name="label_booking_select_ticket_time">방문시간</string>
     <string name="label_booking_user_info">예약자 정보</string>
-    <string name="label_booking_user">예약자</string>
+    <string name="label_booking_visitor_info">방문자 정보</string>
+    <string name="label_booking_user_name">예약자명</string>
+    <string name="label_booking_visitor_name">방문자명</string>
     <string name="label_booking_count">%1$d개</string>
     <string name="label_booking_select">선택하세요</string>
     <string name="label_booking_simplecard_description">(법인카드 결제 가능)</string>
@@ -508,16 +509,23 @@
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_step4">4. 취소 및 환불 규정</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
+
+    <string name="label_booking_input_name">이름 입력</string>
+    <string name="label_booking_input_phone">전화번호 입력</string>
+    <string name="label_booking_input_email">이메일 입력</string>
+
     <string name="message_booking_selected_time">시간을 선택해주세요</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
     <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요</string>
     <string name="message_discount_memo">적립금, 할인 쿠폰은 중복 사용 할 수 없습니다.</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
-    <string name="message_gourmet_please_input_guest">예약자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
+    <string name="message_gourmet_please_input_guest">방문자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
     <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
     <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
+    <string name="message_stay_check_other_user">예약자와 투숙자가 다른 경우 체크해주세요.</string>
+    <string name="message_gourmet_check_other_user">예약자와 방문자가 다른 경우 체크해주세요.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>

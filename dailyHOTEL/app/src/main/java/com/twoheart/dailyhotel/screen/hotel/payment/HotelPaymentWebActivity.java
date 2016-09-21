@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
@@ -153,9 +154,36 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
     private void requestPostPaymentWebView(WebView webView, HotelPaymentInformation hotelPaymentInformation, SaleTime saleTime)
     {
+        String name;
+        String phone;
+        String email;
+
+        boolean isOverseas = hotelPaymentInformation.getSaleRoomInformation().isOverseas;
         Guest guest = hotelPaymentInformation.getGuest();
 
-        if (Util.isTextEmpty(guest.name, guest.phone, guest.email) == true)
+        if (isOverseas == true)
+        {
+            name = guest.name;
+            phone = guest.phone;
+            email = guest.email;
+        } else
+        {
+            if (guest == null)
+            {
+                Customer customer = hotelPaymentInformation.getCustomer();
+
+                name = customer.getName();
+                phone = customer.getPhone();
+                email = customer.getEmail();
+            } else
+            {
+                name = guest.name;
+                phone = guest.phone;
+                email = guest.email;
+            }
+        }
+
+        if (Util.isTextEmpty(name, phone, email) == true)
         {
             restartExpiredSession();
             return;
@@ -180,10 +208,9 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 break;
         }
 
-        builder.add("guest_name", guest.name);
-        builder.add("guest_phone", guest.phone.replace("-", ""));
-        builder.add("guest_email", guest.email);
-        builder.add("guest_msg", guest.message);
+        builder.add("guest_name", name);
+        builder.add("guest_phone", phone.replace("-", ""));
+        builder.add("guest_email", email);
 
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
@@ -293,7 +320,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
                     return true;
                 }
-            } else if(url.startsWith("market") == true)
+            } else if (url.startsWith("market") == true)
             {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 return true;
@@ -405,10 +432,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
                 if (strResCD.equals("0000") == true)
                 {
-
-                    String strApprovalKey;
-
-                    strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
+                    String strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
                     //					ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
 
@@ -461,6 +485,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
             }
         }
+
         setResult(resultCode);
         finish();
     }

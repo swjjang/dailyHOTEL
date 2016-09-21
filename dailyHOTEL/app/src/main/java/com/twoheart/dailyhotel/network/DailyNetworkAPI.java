@@ -399,11 +399,12 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb" : "MyQ2MSQzOCQyMyQ3MCQ=$NTVUDMjQ4RTQ2OUY3OUY4QUIM3OTI3QzQxQzI4NYzVGRTI0N0Y1RkEzQTA5RDhFMQUFCRDDBCRDg1OTU5MUExRTNCQQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{fnbReservationIdx}" : "MTEwJDc2JDEwNiQ2NyQxMyQ=$NDgzNDA0NUZBMMzgyMzYwRjQ0MDI0MzZDNzQwNkFENDhCQjdEM0RGREYwNjhFNDlGOTEK1MjUwMDhGENTE1NzdFMDgxODAyMkRDMkNCMTQyRWjNDNDYU0NzU4NjYzNzJBOUIw$";
 
-        String params = String.format("/%d", index);
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{fnbReservationIdx}", Integer.toString(index));
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);

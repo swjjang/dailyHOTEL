@@ -30,11 +30,11 @@
                 android:visibility="visible"/>
 
             <!-- 예약 메모 -->
-            <include
-                layout="@layout/layout_booking_memo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
+            <!--<include-->
+                <!--layout="@layout/layout_booking_memo"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:visibility="gone"/>-->
 
             <!-- 2. 할인수단 선택 및 결제금액 -->
             <include

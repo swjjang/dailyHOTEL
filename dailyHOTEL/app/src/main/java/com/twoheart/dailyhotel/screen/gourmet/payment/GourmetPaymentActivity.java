@@ -66,7 +66,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private boolean mIsChangedTime;
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
-    private boolean mIsEditMode;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
     private Dialog mTimeDialog;
@@ -181,21 +180,24 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        if (paymentInformation == null || checkInSaleTime == null)
+        if (paymentInformation == null || checkInSaleTime == null || mSelectedCreditCard == null)
         {
+            Util.restartApp(this);
             return;
         }
 
         lockUI();
 
-        Guest guest;
+        Guest guest = mGourmetPaymentLayout.getGuest();
 
-        if (mIsEditMode == true)
+        if (guest == null)
         {
-            guest = mGourmetPaymentLayout.getGuest();
-        } else
-        {
-            guest = paymentInformation.getGuest();
+            Customer customer = paymentInformation.getCustomer();
+
+            guest = new Guest();
+            guest.name = customer.getName();
+            guest.phone = customer.getPhone();
+            guest.email = customer.getEmail();
         }
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
@@ -209,7 +211,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
         params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
-        params.put("customer_msg", guest.message);
+        params.put("customer_msg", "");
 
         //        if (DEBUG == true)
         //        {
@@ -236,8 +238,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void setGuestInformation(String phoneNumber)
     {
-        mPaymentInformation.getGuest().phone = phoneNumber;
-        mGourmetPaymentLayout.setUserPhoneInformation(phoneNumber);
+        mGourmetPaymentLayout.setGuestPhoneInformation(phoneNumber);
     }
 
     @Override
@@ -1085,17 +1086,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void editUserInformation()
-        {
-            if (mIsEditMode == true)
-            {
-                return;
-            }
-
-            mIsEditMode = true;
-        }
-
-        @Override
         public void startCreditCardManager()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
@@ -1103,19 +1093,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 return;
             }
 
-            if (mIsEditMode == true)
-            {
-                // 현재 수정 사항을 기억한다.
-                Guest editGuest = mGourmetPaymentLayout.getGuest();
-                mPaymentInformation.setGuest(editGuest);
-            } else
-            {
-                // 사용자 요청 메세지 추가
-                Guest guest = mPaymentInformation.getGuest();
-                guest.message = mGourmetPaymentLayout.getMemoEditText();
-
-                mPaymentInformation.setGuest(guest);
-            }
+            mPaymentInformation.setGuest(mGourmetPaymentLayout.getGuest());
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
@@ -1153,11 +1131,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 return;
             }
 
-            // 수정 모드인 경우 데이터를 다시 받아와야 한다.
-            if (mIsEditMode == true)
-            {
-                Guest guest = mGourmetPaymentLayout.getGuest();
+            Guest guest = mGourmetPaymentLayout.getGuest();
 
+            // 수정 모드인 경우 데이터를 다시 받아와야 한다.
+            if (guest != null)
+            {
                 if (Util.isTextEmpty(guest.name) == true)
                 {
                     releaseUiComponent();
@@ -1191,17 +1169,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
-
-                guest.message = mGourmetPaymentLayout.getMemoEditText();
-                gourmetPaymentInformation.setGuest(guest);
-            } else
-            {
-                // 사용자 요청 메세지 추가
-                Guest guest = gourmetPaymentInformation.getGuest();
-                guest.message = mGourmetPaymentLayout.getMemoEditText();
-
-                gourmetPaymentInformation.setGuest(guest);
             }
+
+            gourmetPaymentInformation.setGuest(guest);
 
             if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.VBANK && DailyPreference.getInstance(GourmetPaymentActivity.this).getNotificationUid() < 0)
             {
@@ -1321,16 +1291,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 gourmetPaymentInformation.setCustomer(buyer);
 
-                if (mIsEditMode == false)
-                {
-                    Guest guest = new Guest();
-                    guest.name = name;
-                    guest.phone = phone;
-                    guest.email = email;
-                    guest.message = mGourmetPaymentLayout.getMemoEditText();
+                Guest guest = gourmetPaymentInformation.getGuest();
 
-                    gourmetPaymentInformation.setGuest(guest);
-                }
+                mGourmetPaymentLayout.setUserInformation(buyer, false);
+                mGourmetPaymentLayout.setGuestInformation(guest, false);
 
                 // 2. 화면 정보 얻기
                 DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag//
@@ -1421,7 +1385,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
 
                     mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation);
-                    mGourmetPaymentLayout.setUserInformation(gourmetPaymentInformation);
                     setPaymentInformation(gourmetPaymentInformation);
                 } else
                 {
