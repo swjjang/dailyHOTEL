@@ -601,7 +601,7 @@
     <string name="label_booking_payment_date">결제일</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_booking_refund_product">변경, 취소, 환불이 불가한 특가 할인 상품입니다.</string>
-
+    <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 [결제하기] 버튼을 눌러주세요.</string>
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
