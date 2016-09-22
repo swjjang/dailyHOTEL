@@ -71,8 +71,6 @@ public class DailyRemoteConfig
                 String companyInfo = mFirebaseRemoteConfig.getString("companyInfo");
                 String androidSplashImageUrl = mFirebaseRemoteConfig.getString("androidSplashImageLink");
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
-                String androidServiceShutdown = mFirebaseRemoteConfig.getString("androidServiceShutdown");
-                String androidServiceShutdownMessage = mFirebaseRemoteConfig.getString("androidServiceShutdownMessage");
 
                 if (Constants.DEBUG == true)
                 {
@@ -83,8 +81,6 @@ public class DailyRemoteConfig
                         ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
                         ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
                         ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
-                        ExLog.d("androidServiceShutdown : " + new JSONObject(androidServiceShutdown).toString());
-                        ExLog.d("androidServiceShutdownMessage : " + new JSONObject(androidServiceShutdownMessage).toString());
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -92,7 +88,6 @@ public class DailyRemoteConfig
                 }
 
                 // 버전
-
                 String currentVersion = null, forceVersion = null;
 
                 try
