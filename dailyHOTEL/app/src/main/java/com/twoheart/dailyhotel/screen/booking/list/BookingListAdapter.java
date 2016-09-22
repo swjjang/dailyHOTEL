@@ -261,7 +261,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             {
                 String text;
 
-                int dayOfDays = (int) ((getCompareDate(System.currentTimeMillis()) - getCompareDate(booking.checkinTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(System.currentTimeMillis())) / SaleTime.MILLISECOND_IN_A_DAY);
                 if (dayOfDays > 0)
                 {
                     // 하루이상 남음
