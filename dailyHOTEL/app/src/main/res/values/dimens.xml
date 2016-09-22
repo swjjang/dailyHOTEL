@@ -19,7 +19,7 @@
     <dimen name="issuingreceipt_linespacing">9dp</dimen>
     <dimen name="hdpi_issuingreceipt_linespacing">5dp</dimen>
 
-    <dimen name="toolbar_height">53dp</dimen>
+    <dimen name="toolbar_height">52dp</dimen>
     <dimen name="menubar_height">51dp</dimen>
 
     <dimen name="signature_height">160dp</dimen>

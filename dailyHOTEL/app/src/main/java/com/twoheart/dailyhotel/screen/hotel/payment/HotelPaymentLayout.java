@@ -377,7 +377,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setReservationInformation(HotelPaymentInformation hotelPaymentInformation, long checkInDate, long checkOutDate, int nights)
+    public void setReservationInformation(HotelPaymentInformation hotelPaymentInformation)
     {
         // 예약 장소
         mPlaceNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName);
@@ -385,7 +385,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         // 객실 타입
         mRoomTypeTextView.setText(hotelPaymentInformation.getSaleRoomInformation().roomName);
 
-        String checkInDateFormat = DailyCalendar.format(checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkInDateFormat = DailyCalendar.format(hotelPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
         checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkInDateFormat.length() - 3, checkInDateFormat.length(),//
@@ -393,7 +393,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckinDayTextView.setText(checkInSpannableStringBuilder);
 
-        String checkOutDateFormat = DailyCalendar.format(checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkOutDateFormat = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
         checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
@@ -401,7 +401,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckoutDayTextView.setText(checkOutSpannableStringBuilder);
 
-        mNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
+        mNightsTextView.setText(mContext.getString(R.string.label_nights, hotelPaymentInformation.nights));
     }
 
     protected void setUserInformation(Customer user, boolean isOverseas)
