@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="31dp"
             android:layout_alignBottom="@+id/textInformationLayout"
-            android:background="@drawable/thankyou_recipt_top"/>
+            android:background="@drawable/thankyou_receipt"/>
 
         <ImageView
             android:id="@+id/confirmImageView"
