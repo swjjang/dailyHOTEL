@@ -308,7 +308,36 @@ public class Util implements Constants
      */
     public static int getListRowHeight(Context context)
     {
-        return 9 * getLCDWidth(context) / 16;
+        return getRatioHeightType16x9(getLCDWidth(context));
+    }
+
+    /**
+     * 16:9로 표현된 높이
+     *
+     * @return
+     */
+    public static int getRatioHeightType16x9(int width) {
+        if (width < 1)
+        {
+            return 0;
+        }
+
+        return width * 9 / 16;
+    }
+
+    /**
+     * 4:3으로 표현된 높이
+     *
+     * @return
+     */
+    public static  int getRatioHeightType4x3(int width)
+    {
+        if (width < 1)
+        {
+            return 0;
+        }
+
+        return width * 3 / 4;
     }
 
     public static boolean isNameCharacter(String text)

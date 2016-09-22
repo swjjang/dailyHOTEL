@@ -313,17 +313,19 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
-        String placeType = String.format("%s X %d", ticketInformation.name, gourmetPaymentInformation.ticketCount);
-        String time = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
-        String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
+        String placeName = ticketInformation.placeName;
+        String placeType = ticketInformation.name;
+        int productCount = gourmetPaymentInformation.ticketCount;
 
-        //        String strDate = DailyCalendar.format(new Date(), "yyMMddHHmmss");
-        //        String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
-        //        String transId = strDate + '_' + userIndex;
+        String date = gourmetPaymentInformation.checkInTime;
+        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
+
+        String userName = gourmetPaymentInformation.getCustomer().getName();
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeType, date, paymentInformation.paymentType.getName(), params);
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
+            userName, date, visitTime, productCount, paymentInformation.paymentType.getName(), params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }

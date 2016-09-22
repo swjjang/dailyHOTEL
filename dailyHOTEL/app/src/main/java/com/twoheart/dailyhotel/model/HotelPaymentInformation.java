@@ -6,8 +6,10 @@ import android.os.Parcelable;
 public class HotelPaymentInformation extends PlacePaymentInformation
 {
     private RoomInformation mRoomInformation;
-    //
-    public String checkInOutDate; // Thankyou에 넘기기 위한 데이터 저장
+    // Thankyou에 넘기기 위한 데이터 저장
+    public long checkInDate;
+    public long checkOutDate;
+    public int nights;
 
     // None Parcelable
     public String checkInDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용

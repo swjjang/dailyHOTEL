@@ -352,10 +352,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
+        String placeName = roomInformation.hotelName;
+        String placeType = roomInformation.roomName;
+        String checkInDate = DailyCalendar.format(hotelPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkOutDate = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        int nights = hotelPaymentInformation.nights;
+        String userName = hotelPaymentInformation.getCustomer().getName();
+
         Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
 
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, roomInformation.roomName,//
-            hotelPaymentInformation.checkInOutDate, paymentInformation.paymentType.getName(), discountType, params);
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
+            userName, checkInDate, checkOutDate, nights, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -1450,7 +1457,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-        mHotelPaymentLayout.setReservationInformation(hotelPaymentInformation, checkInDate, checkOutDate, nights);
+        hotelPaymentInformation.checkInDate = checkInDate;
+        hotelPaymentInformation.checkOutDate = checkOutDate;
+        hotelPaymentInformation.nights = nights;
+
+        mHotelPaymentLayout.setReservationInformation(hotelPaymentInformation);
 
         // Check In
         Calendar calendarCheckin = DailyCalendar.getInstance();
@@ -1464,18 +1475,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
         calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
-
-        if (Util.getLCDWidth(this) >= 720)
-        {
-            hotelPaymentInformation.checkInOutDate = String.format("%s - %s"//
-                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
-                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
-        } else
-        {
-            hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
-                , DailyCalendar.format(checkInDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT"))//
-                , DailyCalendar.format(checkOutDate, "yyyy.M.d(EEE) HH시", TimeZone.getTimeZone("GMT")));
-        }
 
         hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
         hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);

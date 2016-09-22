@@ -2,8 +2,11 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -12,14 +15,22 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Map;
 
 public abstract class PlacePaymentThankyouActivity extends BaseActivity implements OnClickListener
 {
     protected static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
+    protected static final String INTENT_EXTRA_DATA_PLACE_NAME = "placeName";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
-    protected static final String INTENT_EXTRA_DATA_DATE = "date";
+    protected static final String INTENT_EXTRA_DATA_USER_NAME = "userName";
+    protected static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkIn";
+    protected static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOut";
+    protected static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
+    protected static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
+    protected static final String INTENT_EXTRA_DATA_PRODUCT_COUNT = "productCount";
     protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";
     protected static final String INTENT_EXTRA_DATA_DISCOUNT_TYPE = "discountType";
     protected static final String INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM = "mapPaymentInform";
@@ -49,18 +60,20 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         mPaymentType = intent.getStringExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE);
+
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGEURL);
+        String placeName = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_NAME);
         String placeType = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_TYPE);
-        String date = intent.getStringExtra(INTENT_EXTRA_DATA_DATE);
+        String userName = intent.getStringExtra(INTENT_EXTRA_DATA_USER_NAME);
+
         String discountType = intent.getStringExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE);
 
         mParams = (Map<String, String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM);
 
         String productIndex = mParams.get(AnalyticsManager.KeyType.TICKET_INDEX);
-        String place = mParams.get(AnalyticsManager.KeyType.NAME);
 
         initToolbar();
-        initLayout(imageUrl, place, placeType, date);
+        initLayout(imageUrl, placeName, placeType, userName);
 
         recordEvent(AnalyticsManager.Action.END_PAYMENT, mPaymentType);
         recordEvent(AnalyticsManager.Action.PAYMENT_USED, discountType);
@@ -76,24 +89,38 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         closeView.setOnClickListener(this);
     }
 
-    private void initLayout(String imageUrl, String place, String placeType, String date)
+    private void initLayout(String imageUrl, String place, String placeType, String userName)
     {
-        if (Util.isTextEmpty(place, placeType, date) == true)
+        if (Util.isTextEmpty(place, placeType, userName) == true)
         {
             Util.restartApp(this);
             return;
         }
 
-        com.facebook.drawee.view.SimpleDraweeView simpleDraweeVie = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
+        int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(this));
+
+        com.facebook.drawee.view.SimpleDraweeView simpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
+        ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
+        layoutParams.height = imageHeight;
+        simpleDraweeView.setLayoutParams(layoutParams);
+
         TextView placeTextView = (TextView) findViewById(R.id.bookingPlaceTextView);
-        TextView placeTypeTextView = (TextView) findViewById(R.id.placeTypeTextView);
-        TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
+        TextView placeTypeTextView = (TextView) findViewById(R.id.productTypeTextView);
+        TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
         View confirmView = findViewById(R.id.confirmView);
 
-        Util.requestImageResize(this, simpleDraweeVie, imageUrl);
+        Util.requestImageResize(this, simpleDraweeView, imageUrl);
         placeTextView.setText(place);
         placeTypeTextView.setText(placeType);
-        dateTextView.setText(date);
+
+        String message = getString(R.string.message_completed_payment_format, userName);
+        SpannableStringBuilder userNameBuilder = new SpannableStringBuilder(message);
+        userNameBuilder.setSpan( //
+            new CustomFontTypefaceSpan(FontManager.getInstance(this).getMediumTypeface()),//
+            0, userName.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        messageTextView.setText(userNameBuilder);
 
         confirmView.setOnClickListener(this);
     }
