@@ -26,8 +26,6 @@ import javax.crypto.spec.SecretKeySpec;
 public class Crypto
 {
     private final static String HEX = "0123456789ABCDEF";
-    // 암호화에 사용할 키. 원하는 값으로 바꿔주자.
-    private final static byte[] key = {(byte) 0x02, (byte) 0x4F, (byte) 0xf0, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x31, (byte) 0xAE, (byte) 0x0C, (byte) 0xE0, (byte) 0xA0, (byte) 0x7D, (byte) 0xE2, (byte) 0x01, (byte) 0x00, (byte) 0xFF};
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // AES암호
@@ -86,7 +84,6 @@ public class Crypto
         }
 
         byte[] seedByte = seed.getBytes();
-        System.arraycopy(seedByte, 0, key, 0, ((seedByte.length < 16) ? seedByte.length : 16));
         String base64 = new String(Base64.decode(encrypted, Base64.NO_WRAP));
         byte[] rawKey = getRawKey(seedByte);
         byte[] enc = toByte(base64);
