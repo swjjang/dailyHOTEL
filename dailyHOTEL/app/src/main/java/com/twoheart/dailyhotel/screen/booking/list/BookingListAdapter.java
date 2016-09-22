@@ -312,7 +312,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             return view;
         }
 
-        TextView sectionName = (TextView) view;
+        TextView sectionName = (TextView) view.findViewById(R.id.sectionTextView);
 
         sectionName.setText(booking.placeName);
 

@@ -237,7 +237,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             super(itemView);
 
-            regionDetailName = (TextView) itemView;
+            regionDetailName = (TextView) itemView.findViewById(R.id.sectionTextView);
         }
     }
 
