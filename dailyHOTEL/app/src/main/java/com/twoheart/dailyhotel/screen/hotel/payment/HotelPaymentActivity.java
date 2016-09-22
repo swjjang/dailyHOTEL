@@ -1835,6 +1835,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     if (guest == null)
                     {
+                        guest = mHotelPaymentLayout.getGuest();
+                    }
+
+                    if (guest == null)
+                    {
                         guest = new Guest();
                     }
 
@@ -1844,14 +1849,26 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     guest.name = overseasName;
 
-                    if (Util.isTextEmpty(overseasPhone) == false)
+                    if (Util.isTextEmpty(guest.phone) == true)
                     {
-                        guest.phone = overseasPhone;
+                        if (Util.isTextEmpty(overseasPhone) == false)
+                        {
+                            guest.phone = overseasPhone;
+                        } else
+                        {
+                            guest.phone = phone;
+                        }
                     }
 
-                    if (Util.isTextEmpty(overseasEmail) == false)
+                    if (Util.isTextEmpty(guest.email) == true)
                     {
-                        guest.email = overseasEmail;
+                        if (Util.isTextEmpty(overseasEmail) == false)
+                        {
+                            guest.email = overseasEmail;
+                        } else
+                        {
+                            guest.email = email;
+                        }
                     }
 
                     if (Util.isNameCharacter(overseasName) == false)

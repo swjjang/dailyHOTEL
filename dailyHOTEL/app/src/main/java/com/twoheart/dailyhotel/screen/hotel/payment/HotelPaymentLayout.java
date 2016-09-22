@@ -467,6 +467,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             mGuestNameHintEditText.setVisibility(View.VISIBLE);
             mGuestNameHintEditText.setText(R.string.message_guide_name_hint);
+            mGuestPhoneEditText.setHint(R.string.label_booking_input_phone);
+            mGuestEmailEditText.setHint(R.string.label_booking_input_email);
 
             // 회원 가입시 이름 필터 적용.
             StringFilter stringFilter = new StringFilter(mContext);
