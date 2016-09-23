@@ -31,112 +31,100 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
-    <FrameLayout
+    <RadioGroup
+        android:id="@+id/sortLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
-        <RadioGroup
-            android:id="@+id/sortLayout"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/regionCheckView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:text="@string/label_sort_by_area"
-                android:textColor="@color/selector_curation_textcolor"
-                android:textSize="11dp"
-                app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_01"/>
-
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/distanceCheckView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:text="@string/label_sort_by_distance"
-                android:textColor="@color/selector_curation_textcolor"
-                android:textSize="11dp"
-                app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_02"/>
-
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/lowPriceCheckView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:text="@string/label_sort_by_low_price"
-                android:textColor="@color/selector_curation_textcolor"
-                android:textSize="11dp"
-                app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_03"/>
-
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/highPriceCheckView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:text="@string/label_sort_by_high_price"
-                android:textColor="@color/selector_curation_textcolor"
-                android:textSize="11dp"
-                app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_04"/>
-
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/satisfactionCheckView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:text="@string/label_sort_by_satisfaction"
-                android:textColor="@color/selector_curation_textcolor"
-                android:textSize="11dp"
-                app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_05"/>
-
-            <com.twoheart.dailyhotel.widget.DailyRadioButton
-                android:id="@+id/emptyCheckView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:gravity="center_horizontal"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:textSize="11dp"
-                android:visibility="gone"/>
-        </RadioGroup>
-
-        <View
-            android:id="@+id/dimView"
+        <com.twoheart.dailyhotel.widget.DailyRadioButton
+            android:id="@+id/regionCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white_a80"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_sort_by_area"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_01"/>
+
+        <com.twoheart.dailyhotel.widget.DailyRadioButton
+            android:id="@+id/distanceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_sort_by_distance"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_02"/>
+
+        <com.twoheart.dailyhotel.widget.DailyRadioButton
+            android:id="@+id/lowPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_sort_by_low_price"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_03"/>
+
+        <com.twoheart.dailyhotel.widget.DailyRadioButton
+            android:id="@+id/highPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_sort_by_high_price"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_04"/>
+
+        <com.twoheart.dailyhotel.widget.DailyRadioButton
+            android:id="@+id/satisfactionCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_sort_by_satisfaction"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_05"/>
+
+        <com.twoheart.dailyhotel.widget.DailyRadioButton
+            android:id="@+id/emptyCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="10dp"
+            android:textSize="11dp"
             android:visibility="gone"/>
-    </FrameLayout>
+    </RadioGroup>
 </LinearLayout>

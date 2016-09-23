@@ -3,5 +3,6 @@
     <item android:color="@color/dh_theme_color" android:state_selected="true"/>
     <item android:color="@color/dh_theme_color" android:state_pressed="true"/>
     <item android:color="@color/dh_theme_color" android:state_checked="true"/>
+    <item android:color="@color/default_background_ceaeaea" android:state_enabled="false"/>
     <item android:color="@color/default_text_c929292"/>
 </selector>

@@ -246,9 +246,6 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         {
             sortLayout.getChildAt(i).setEnabled(false);
         }
-
-        View dimView = view.findViewById(R.id.dimView);
-        dimView.setVisibility(View.VISIBLE);
     }
 
     protected void resetLayout(ViewGroup viewGroup)

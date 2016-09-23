@@ -329,7 +329,7 @@
             android:layout_marginTop="10dp"
             android:background="@color/default_line_cdcdcdd"/>
 
-        <com.twoheart.dailyhotel.widget.DailyCheckBox
+        <com.twoheart.dailyhotel.widget.DailyCheckedTextView
             android:id="@+id/guestCheckBox"
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -337,11 +337,13 @@
             android:layout_marginRight="15dp"
             android:background="@null"
             android:button="@null"
-            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+            android:checkMarkTint="@color/dh_theme_color"
+            android:checkMarkTintMode="multiply"
             android:gravity="center_vertical"
             android:text="@string/message_gourmet_check_other_user"
             android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"/>
+            android:textSize="12dp"/>/>
     </LinearLayout>
 
     <FrameLayout
