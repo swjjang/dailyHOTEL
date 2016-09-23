@@ -30,16 +30,15 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@color/default_line_cf0f0f0"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:layout_alignParentBottom="true"
             android:background="@color/default_line_cf0f0f0"/>
     </RelativeLayout>
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/couponHistoryRecyclerView"
@@ -47,6 +46,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/couponHistoryLayout"
         android:scrollbars="vertical"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/couponHistoryRecyclerView"
+        android:background="@color/default_line_cf0f0f0"/>
 
     <RelativeLayout
         android:id="@+id/emptyView"

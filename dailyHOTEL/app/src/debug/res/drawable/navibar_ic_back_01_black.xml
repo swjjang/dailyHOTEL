@@ -3,7 +3,7 @@
         android:height="30dp"
         android:viewportHeight="60.0"
         android:viewportWidth="60.0"
-        android:tintMode="multiply"
+        android:tintMode="src_in"
         android:tint="@color/default_background_c454545">
     <path
         android:fillColor="#ffffff"
