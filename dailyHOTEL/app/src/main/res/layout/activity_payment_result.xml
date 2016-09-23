@@ -9,27 +9,18 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/placeImageView"
         android:layout_width="match_parent"
-        android:layout_height="202dp"
+        android:layout_height="270dp"
         android:adjustViewBounds="true"
-        fresco:actualImageScaleType="centerCrop"/>
-
-    <View
-        android:id="@+id/placeImageMarginView"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_below="@id/placeImageView"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="137dp"
-        android:layout_alignTop="@id/placeImageView"
-        android:background="@drawable/img_detail_gradient"/>
+        fresco:actualImageScaleType="centerCrop"
+        fresco:overlayImage="@drawable/img_detail_gradient"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="113dp"
-        android:layout_alignBottom="@id/placeImageMarginView"
+        android:layout_alignBottom="@id/placeImageView"
+        android:layout_marginBottom="-5dp"
         android:background="@drawable/img_bottom_white_gradient"/>
+
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -71,7 +62,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@color/default_line_ce7e7e7"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -161,6 +152,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:background="@color/default_line_cf0f0f0"/>
         </LinearLayout>
 
@@ -247,8 +240,10 @@
             android:id="@+id/dateBottomView"
             android:layout_width="match_parent"
             android:layout_height="1px"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:layout_below="@id/dateInformationLayout"
-            android:background="@color/default_line_cf0f0f0"/>
+            android:background="@color/default_line_cdcdcdd"/>
 
         <LinearLayout
             android:id="@+id/textInformationLayout"
