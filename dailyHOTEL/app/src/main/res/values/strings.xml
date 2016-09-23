@@ -412,8 +412,8 @@
     <string name="frag_booking_complete_payment">결제 완료</string>
     <string name="frag_booking_use">이용 완료</string>
     <string name="frag_booking_duedate_formet">%d일 남았습니다.</string>
-    <string name="frag_booking_today_type_stay">오늘이 체크인일 입니다.</string>
-    <string name="frag_booking_today_type_gourmet">오늘이 방문일입니다.</string>
+    <string name="frag_booking_today_type_stay">오늘이 체크인일 입니다</string>
+    <string name="frag_booking_today_type_gourmet">오늘이 방문일입니다</string>
     <string name="frag_issuing_receipt">영수증 확인</string>
 
     <!-- Profile Activity -->
@@ -460,7 +460,7 @@
     <string name="act_booking_chkin_info">체크인 정보</string>
     <string name="act_booking_chkin">체크인</string>
     <string name="act_booking_chkout">체크아웃</string>
-    <string name="act_booking_reserver_info">투숙객 정보</string>
+    <string name="act_booking_reserver_info">투숙자 정보</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
     <string name="act_booking_payment">결제 정보</string>

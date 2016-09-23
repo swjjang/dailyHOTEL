@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -98,7 +99,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(this));
-
+        ExLog.d("height : " + imageHeight);
         com.facebook.drawee.view.SimpleDraweeView simpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
         layoutParams.height = imageHeight;
