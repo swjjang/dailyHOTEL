@@ -72,6 +72,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
+        holder.lastBottomLine.setVisibility(position == getItemCount() - 1 ? View.VISIBLE : View.GONE);
+
         int resId;
         if (coupon.isRedeemed == true)
         {
@@ -129,6 +131,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         TextView expireTextView;
         TextView stateTextView;
         View upperLine;
+        View lastBottomLine;
 
         public CouponViewHolder(View itemView)
         {
@@ -140,6 +143,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
             upperLine = itemView.findViewById(R.id.upperLineView);
+            lastBottomLine = itemView.findViewById(R.id.lastBottomLine);
         }
     }
 }

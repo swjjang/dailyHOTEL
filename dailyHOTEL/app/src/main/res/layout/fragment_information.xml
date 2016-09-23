@@ -33,7 +33,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentTop="true"
                     android:background="@color/default_line_cf0f0f0"/>
 
@@ -283,7 +283,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/default_line_cf0f0f0"/>
             </RelativeLayout>
@@ -300,19 +300,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentTop="true"
                     android:background="@color/default_line_cf0f0f0"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/frag_recommend_text"
-                    android:textColor="@color/information_title"
-                    android:textSize="15dp"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -320,7 +310,20 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@color/default_line_cdcdcdd"/>
+                    android:background="@color/default_line_cdcdcdd"
+                    android:id="@+id/view"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/frag_recommend_text"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignLeft="@+id/view"
+                    android:layout_alignStart="@+id/view"
+                    android:id="@+id/dailyTextView"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -353,7 +356,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/default_line_cf0f0f0"/>
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/default_line_cdcdcdd"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -370,7 +375,8 @@
                     android:gravity="center_vertical"
                     android:text="@string/actionbar_title_notice_activity"
                     android:textColor="@color/information_title"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp"
+                    android:id="@+id/dailyTextView2"/>
 
                 <ImageView
                     android:id="@+id/noticeNewIconView"
@@ -384,11 +390,10 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/default_line_cdcdcdd"/>
+                    android:id="@+id/view2"/>
             </RelativeLayout>
 
             <View
@@ -404,7 +409,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentTop="true"
                     android:background="@color/default_line_cf0f0f0"/>
 
@@ -470,7 +475,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/default_line_cf0f0f0"/>
             </RelativeLayout>
@@ -487,7 +492,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentTop="true"
                     android:background="@color/default_line_cf0f0f0"/>
 
@@ -533,7 +538,7 @@
                 <View
                     android:id="@+id/bottomBenefitLineView"
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_below="@id/pushBenefitTextView"
                     android:layout_marginTop="7dp"
                     android:background="@color/default_line_cf0f0f0"/>
