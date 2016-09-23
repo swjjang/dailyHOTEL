@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.payment;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -45,6 +46,8 @@ import java.util.TimeZone;
 
 public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
+    private ScrollView mScrollView;
+    //
     private View mBookingLayout;
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
     private TextView mBookingAmountTextView;
@@ -96,6 +99,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private int mAnimationValue;
     private ValueAnimator mValueAnimator;
     private boolean mIsAnimationCancel;
+    //
+    private Rect mGuestFrameLayoutRect = new Rect();
+    private int mScrollMoveHeight;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -124,10 +130,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     {
         initToolbar(view);
 
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mBookingLayout = scrollView.findViewById(R.id.bookingLayout);
+        mBookingLayout = mScrollView.findViewById(R.id.bookingLayout);
 
         initReservationInformation(view);
         initBookingMemo(view);
@@ -946,6 +952,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
         }
 
+        final int dp164 = Util.dpToPx(mContext, 164);
+        final int height = Util.getLCDHeight(mContext);
+        mScrollMoveHeight = -1;
+
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override
@@ -956,10 +966,30 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 mAnimationValue = value;
 
                 ViewGroup.LayoutParams layoutParams = mGuestFrameLayout.getLayoutParams();
-                layoutParams.height = Util.dpToPx(mContext, 164) * value / 100;
+                layoutParams.height = dp164 * value / 100;
 
-                mGuestLinearLayout.setTranslationY(layoutParams.height - Util.dpToPx(mContext, 164));
+                float prevTranslationY = mGuestLinearLayout.getTranslationY();
+
+                mGuestLinearLayout.setTranslationY(layoutParams.height - dp164);
                 mGuestFrameLayout.setLayoutParams(layoutParams);
+
+                if (isChecked == true)
+                {
+                    mGuestFrameLayout.getGlobalVisibleRect(mGuestFrameLayoutRect);
+
+                    if (mScrollMoveHeight < 0)
+                    {
+                        mScrollMoveHeight = (mGuestFrameLayoutRect.top + dp164 - height) / 2;
+                    }
+
+                    if (mScrollMoveHeight >= 0 && mGuestFrameLayoutRect.top + dp164 > (height - mScrollMoveHeight))
+                    {
+                        mScrollView.scrollBy(0, (int) (mGuestLinearLayout.getTranslationY() - prevTranslationY));
+                    }
+                } else
+                {
+                    mScrollMoveHeight = -1;
+                }
             }
         });
 
