@@ -103,7 +103,7 @@ public class NoticeListAdapter extends ArrayAdapter<Notice>
 
         try
         {
-            dateTextView.setText(DailyCalendar.convertDateFormatString(notice.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
+            dateTextView.setText(DailyCalendar.convertDateFormatString(notice.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
