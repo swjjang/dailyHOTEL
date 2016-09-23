@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.gourmet.payment;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import java.util.TimeZone;
 
 public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
+    private ScrollView mScrollView;
+    //
     private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
     private TextView mBookingAmountTextView;
@@ -42,8 +45,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     //    private EditText mMemoEditText;
     private View mUserLayout;
     private View mGuestFrameLayout, mGuestLinearLayout;
-
-    private ScrollView mScrollLayout;
     private CheckBox mGuestCheckBox;
 
     private TextView mPriceTextView, mFinalPaymentTextView;
@@ -69,6 +70,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private int mAnimationValue;
     private ValueAnimator mValueAnimator;
     private boolean mIsAnimationCancel;
+    //
+    private Rect mGuestFrameLayoutRect = new Rect();
+    private int mScrollMoveHeight;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -99,10 +103,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     {
         initToolbar(view);
 
-        mScrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(mScrollLayout, view.getResources().getColor(R.color.default_over_scroll_edge));
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, view.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mBookingLayout = mScrollLayout.findViewById(R.id.bookingLayout);
+        mBookingLayout = mScrollView.findViewById(R.id.bookingLayout);
 
         initReservationInformation(view);
         initBookingMemo(view);
@@ -649,12 +653,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void scrollTop()
     {
-        if (mScrollLayout == null)
+        if (mScrollView == null)
         {
             return;
         }
 
-        mScrollLayout.scrollTo(0, 0);
+        mScrollView.scrollTo(0, 0);
     }
 
     @Override
@@ -755,6 +759,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
         }
 
+        final int dp164 = Util.dpToPx(mContext, 164);
+        final int height = Util.getLCDHeight(mContext);
+        mScrollMoveHeight = -1;
+
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override
@@ -765,10 +773,30 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 mAnimationValue = value;
 
                 ViewGroup.LayoutParams layoutParams = mGuestFrameLayout.getLayoutParams();
-                layoutParams.height = Util.dpToPx(mContext, 164) * value / 100;
+                layoutParams.height = dp164 * value / 100;
 
-                mGuestLinearLayout.setTranslationY(layoutParams.height - Util.dpToPx(mContext, 164));
+                float prevTranslationY = mGuestLinearLayout.getTranslationY();
+
+                mGuestLinearLayout.setTranslationY(layoutParams.height - dp164);
                 mGuestFrameLayout.setLayoutParams(layoutParams);
+
+                if (isChecked == true)
+                {
+                    mGuestFrameLayout.getGlobalVisibleRect(mGuestFrameLayoutRect);
+
+                    if (mScrollMoveHeight < 0)
+                    {
+                        mScrollMoveHeight = (mGuestFrameLayoutRect.top + dp164 - height) / 2;
+                    }
+
+                    if (mScrollMoveHeight >= 0 && mGuestFrameLayoutRect.top + dp164 > (height - mScrollMoveHeight))
+                    {
+                        mScrollView.scrollBy(0, (int) (mGuestLinearLayout.getTranslationY() - prevTranslationY));
+                    }
+                } else
+                {
+                    mScrollMoveHeight = -1;
+                }
             }
         });
 
