@@ -267,7 +267,31 @@ public class AppboyManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true)
+            if (AnalyticsManager.Action.DAILY_HOTEL_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.DAILYHOTEL_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.DAILYHOTEL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            } else if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.DAILYGOURMET_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.DAILYGOURMET_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            } else if (AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -873,6 +897,9 @@ public class AppboyManager extends BaseAnalyticsManager
 
         public static final String STAY_FIRST_PURCHASE_COMPLETED = "stay_first_purchase_completed";
         public static final String GOURMET_FIRST_PURCHASE_COMPLETED = "gourmet_first_purchase_completed";
+
+        public static final String DAILYHOTEL_CLICKED = "dailyhotel_clicked";
+        public static final String DAILYGOURMET_CLICKED = "dailygourmet_clicked";
     }
 
     private static final class ValueName
