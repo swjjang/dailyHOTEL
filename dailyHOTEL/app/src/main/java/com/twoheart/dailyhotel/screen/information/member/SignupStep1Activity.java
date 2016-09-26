@@ -76,8 +76,8 @@ public class SignupStep1Activity extends BaseActivity
             mSignupStep1Layout.setRecommenderText(recommender);
         }
 
-        Intent intentPermission = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
-        startActivityForResult(intentPermission, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+//        Intent intentPermission = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
+//        startActivityForResult(intentPermission, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
 
     @Override
@@ -186,14 +186,6 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            final String deviceId = Util.getDeviceId(SignupStep1Activity.this);
-
-            if (Util.isTextEmpty(deviceId) == true)
-            {
-                DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_dont_support_service_phone, Toast.LENGTH_LONG);
-                return;
-            }
-
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
@@ -207,7 +199,6 @@ public class SignupStep1Activity extends BaseActivity
             mSignupParams.clear();
             mSignupParams.put("email", email);
             mSignupParams.put("pw", password);
-            mSignupParams.put("device", deviceId);
             mSignupParams.put("name", name);
 
             if (Util.isTextEmpty(recommender) == false)

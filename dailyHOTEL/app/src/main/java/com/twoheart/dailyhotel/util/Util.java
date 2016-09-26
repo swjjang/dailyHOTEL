@@ -238,48 +238,48 @@ public class Util implements Constants
         System.exit(0);
     }
 
-    public static String getDeviceId(Context context)
-    {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId = telephonyManager.getDeviceId();
-
-        // // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
-        if (Util.isTelephonyEnabled(context) == false && deviceId == null)
-        {
-            return getDeviceUUID(context);
-        }
-
-        return deviceId;
-    }
-
-    public static String getDeviceUUID(Context context)
-    {
-        UUID uuid = null;
-
-        final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-        try
-        {
-            if ("9774d56d682e549c".equals(androidId) == false)
-            {
-                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
-            } else
-            {
-                final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
-            }
-        } catch (UnsupportedEncodingException e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        if (uuid != null)
-        {
-            return uuid.toString();
-        } else
-        {
-            return null;
-        }
-    }
+//    public static String getDeviceId(Context context)
+//    {
+//        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//        String deviceId = telephonyManager.getDeviceId();
+//
+//        // // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
+//        if (Util.isTelephonyEnabled(context) == false && deviceId == null)
+//        {
+//            return getDeviceUUID(context);
+//        }
+//
+//        return deviceId;
+//    }
+//
+//    public static String getDeviceUUID(Context context)
+//    {
+//        UUID uuid = null;
+//
+//        final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+//        try
+//        {
+//            if ("9774d56d682e549c".equals(androidId) == false)
+//            {
+//                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+//            } else
+//            {
+//                final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+//                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+//            }
+//        } catch (UnsupportedEncodingException e)
+//        {
+//            ExLog.d(e.toString());
+//        }
+//
+//        if (uuid != null)
+//        {
+//            return uuid.toString();
+//        } else
+//        {
+//            return null;
+//        }
+//    }
 
     public static int getLCDWidth(Context context)
     {
