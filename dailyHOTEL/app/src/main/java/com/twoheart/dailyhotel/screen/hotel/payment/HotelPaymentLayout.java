@@ -16,7 +16,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -43,7 +44,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.TimeZone;
 
-public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
+public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
     private ScrollView mScrollView;
     //
@@ -60,7 +61,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private TextView mGuestNameHintEditText;
     private TextView mGuideNameMemo;
-    private CheckedTextView mGuestCheckBox;
+    private CheckBox mGuestCheckBox;
 
     // 할인 정보
     private ImageView mBonusRadioButton;
@@ -226,17 +227,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         fakeMobileEditView.setFocusable(true);
         fakeMobileEditView.setOnClickListener(this);
 
-        mGuestCheckBox = (CheckedTextView) view.findViewById(R.id.guestCheckBox);
-        mGuestCheckBox.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mGuestCheckBox.setChecked(!mGuestCheckBox.isChecked());
-
-                onCheckedChanged(mGuestCheckBox, mGuestCheckBox.isChecked());
-            }
-        });
+        mGuestCheckBox = (CheckBox) view.findViewById(R.id.guestCheckBox);
+        mGuestCheckBox.setOnCheckedChangeListener(this);
     }
 
     private void initBookingMemo(View view)
@@ -939,7 +931,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    private void onCheckedChanged(CheckedTextView checkedTextView, final boolean isChecked)
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
     {
         if (mValueAnimator != null)
         {

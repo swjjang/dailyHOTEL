@@ -329,21 +329,28 @@
             android:layout_marginTop="10dp"
             android:background="@color/default_line_cdcdcdd"/>
 
-        <com.twoheart.dailyhotel.widget.DailyCheckedTextView
-            android:id="@+id/guestCheckBox"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@null"
-            android:button="@null"
-            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-            android:checkMarkTint="@color/dh_theme_color"
-            android:checkMarkTintMode="multiply"
-            android:gravity="center_vertical"
-            android:text="@string/message_gourmet_check_other_user"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"/>/>
+            android:layout_height="55dp">
+
+            <com.twoheart.dailyhotel.widget.DailyCheckBox
+                android:id="@+id/guestCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:theme="@style/CheckBoxTheme"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:gravity="center_vertical"
+                android:text="@string/message_stay_check_other_user"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"
+                android:layout_marginRight="15dp"
+                android:layout_toRightOf="@+id/guestCheckBox"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <FrameLayout

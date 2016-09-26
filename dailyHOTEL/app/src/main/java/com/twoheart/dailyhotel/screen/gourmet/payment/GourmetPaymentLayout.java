@@ -8,7 +8,8 @@ import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.TimeZone;
 
-public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
+public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
     private ScrollView mScrollView;
     //
@@ -44,7 +45,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     //    private EditText mMemoEditText;
     private View mUserLayout;
     private View mGuestFrameLayout, mGuestLinearLayout;
-    private CheckedTextView mGuestCheckBox;
+    private CheckBox mGuestCheckBox;
 
     private TextView mPriceTextView, mFinalPaymentTextView;
     private View mTicketCountMinusButton, mTicketCountPlusButton;
@@ -206,17 +207,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         fakeMobileEditView.setFocusable(true);
         fakeMobileEditView.setOnClickListener(this);
 
-        mGuestCheckBox = (CheckedTextView) view.findViewById(R.id.guestCheckBox);
-        mGuestCheckBox.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mGuestCheckBox.setChecked(!mGuestCheckBox.isChecked());
-
-                onCheckedChanged(mGuestCheckBox, mGuestCheckBox.isChecked());
-            }
-        });
+        mGuestCheckBox = (CheckBox) view.findViewById(R.id.guestCheckBox);
+        mGuestCheckBox.setOnCheckedChangeListener(this);
     }
 
     private void initBookingMemo(View view)
@@ -746,7 +738,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    public void onCheckedChanged(CheckedTextView checkedTextView, final boolean isChecked)
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
     {
         if (mValueAnimator != null)
         {
