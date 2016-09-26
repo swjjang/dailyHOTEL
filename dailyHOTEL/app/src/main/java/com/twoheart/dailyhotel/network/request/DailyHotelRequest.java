@@ -240,7 +240,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     public static String urlEncrypt(final String url)
     {
-        final int SEED_LENGTH = 5;
         StringBuilder encodeUrl = new StringBuilder();
         StringBuilder seedLocationNumber = new StringBuilder();
 
