@@ -29,7 +29,7 @@
 }
 
 -keepclassmembers class * {
-	@android.webkit.JavascriptInterface <methods>;
+    @android.webkit.JavascriptInterface <methods>;
 }
 
 -keepattributes JavascriptInterface
@@ -90,8 +90,6 @@
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
 -dontwarn okio.**
-
--keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
 
 -keepnames class android.widget.ScrollView { *; }
 -keepnames class android.widget.AbsListView { *; }
