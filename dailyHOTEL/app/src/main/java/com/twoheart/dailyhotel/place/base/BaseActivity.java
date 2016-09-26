@@ -29,6 +29,7 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -355,6 +356,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     public void onErrorResponse(VolleyError error)
     {
         unLockUI();
+
+        if (error.getCause() instanceof java.net.ConnectException)
+        {
+            VolleyHttpClient.getInstance(this).getRequestQueue().getCache().clear();
+        }
 
         if (error.networkResponse != null && error.networkResponse.statusCode == 401)
         {
