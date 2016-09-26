@@ -28,6 +28,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     // Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
     private static final int REQUEST_MAX_RETRY = 0;
 
+    private static final int SEED_LENGTH = 16;
+
     private Map<String, String> mParameters;
     private boolean mIsUsedAccept;
 
@@ -86,7 +88,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     private static String getUrlEncoder(final String url)
     {
-        final int SEED_LENGTH = 5;
         StringBuilder encodeUrl = new StringBuilder();
         StringBuilder seedLocationNumber = new StringBuilder();
 
@@ -203,12 +204,9 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     private static String getUrlDecoder(String url)
     {
-        final int SEED_LENGTH = 5;
-
         String decodeUrl = null;
         String[] text = url.split("\\$");
 
-        // 앞의 5개가 위치키이다.
         StringBuilder seed = new StringBuilder();
         StringBuilder base64Url = new StringBuilder(text[SEED_LENGTH]);
         char[] alpha = new char[1];
@@ -326,6 +324,87 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         }
 
         return decodeUrl.toString();
+    }
+
+    public static String oldUrlDecrypt(String url)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return null;
+        }
+
+        String param = null;
+        String encoderUrl;
+
+        if (url.contains("/") == true)
+        {
+            int index = url.indexOf('/');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else if (url.contains("?") == true)
+        {
+            int index = url.indexOf('?');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else
+        {
+            encoderUrl = url;
+        }
+
+        StringBuilder decodeUrl = new StringBuilder();
+        String[] seperateUrl = encoderUrl.split("\\$");
+
+        int count = seperateUrl.length / 2;
+
+        // 앞의것 2개는 Url, 뒤의것 2개는 API
+        for (int i = 0; i < count; i++)
+        {
+            String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
+            decodeUrl.append(getOldUrlDecoder(locatinoNumber + seperateUrl[i * 2 + 1]));
+        }
+
+        if (param != null)
+        {
+            decodeUrl.append(param);
+        }
+
+        return decodeUrl.toString();
+    }
+
+    private static String getOldUrlDecoder(String url)
+    {
+        String decodeUrl = null;
+        String[] text = url.split("\\$");
+
+        StringBuilder seed = new StringBuilder();
+        StringBuilder base64Url = new StringBuilder(text[SEED_LENGTH]);
+        char[] alpha = new char[1];
+
+        for (int i = SEED_LENGTH - 1; i >= 0; i--)
+        {
+            try
+            {
+                int location = Integer.parseInt(text[i]);
+
+                base64Url.getChars(location, location + 1, alpha, 0);
+                base64Url.delete(location, location + 1);
+
+                seed.insert(0, alpha);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        try
+        {
+            decodeUrl = Crypto.oldDecrypt(seed.toString(), base64Url.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return decodeUrl;
     }
 
     @Override

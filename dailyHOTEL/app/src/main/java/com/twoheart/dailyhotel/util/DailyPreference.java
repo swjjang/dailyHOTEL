@@ -668,7 +668,17 @@ public class DailyPreference
 
     public String getAuthorization()
     {
-        return DailyHotelRequest.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+        try
+        {
+            return DailyHotelRequest.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+        } catch (Exception e)
+        {
+            String authorization = DailyHotelRequest.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+
+            setValue(mEditor, KEY_AUTHORIZATION, authorization);
+
+            return authorization;
+        }
     }
 
     public void setAuthorization(String value)
