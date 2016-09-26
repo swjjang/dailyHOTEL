@@ -28,7 +28,7 @@ import okhttp3.internal.platform.Platform;
 
 public class VolleyHttpClient implements Constants
 {
-    private static final String KEY = Constants.UNENCRYPTED_URL ? "androidDAILYHOTEL_MIIEowIBAA" : "ODIkNjkkMTEkODYkNDQk$NzdENjkwNTQY0NUY3QjQ5QjIyNUZCRjg0NENDOTZCOEEY5OUEzQTZGQUU3NkZFOTZDQzI4NTThBRDhBMzhGQjEhVFNw==$";
+    private static final String KEY = Constants.UNENCRYPTED_URL ? "androidDAILYHOTEL_MIIEowIBAA" : "NjYkNzMkNTgkNTEkMTAkMzQkNzEkMzgkMjIkNzIkNTYkNTckMzMkNzMkNjQkNDYk$REUyREY5RTTMzOTQwNzBEQUTI4Q0MyQjIB1NLzY1IOERGRMjlDODQ5OUMPRQxMzQ5KQjUZFNjdEENTCBZg1NzE5MRTlCRkQ1NEYwOQ==$";
 
     private static VolleyHttpClient mInstance;
     private RequestQueue mRequestQueue;
