@@ -127,7 +127,6 @@ public class MainActivity extends BaseActivity implements Constants
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
-        //        DailyPreference.getInstance(this).removeDeepLink();
         DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
         DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
 

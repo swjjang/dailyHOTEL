@@ -373,14 +373,16 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     private static String getOldUrlDecoder(String url)
     {
+        final int OLD_SEED_LENGTH = 5;
+
         String decodeUrl = null;
         String[] text = url.split("\\$");
 
         StringBuilder seed = new StringBuilder();
-        StringBuilder base64Url = new StringBuilder(text[SEED_LENGTH]);
+        StringBuilder base64Url = new StringBuilder(text[OLD_SEED_LENGTH]);
         char[] alpha = new char[1];
 
-        for (int i = SEED_LENGTH - 1; i >= 0; i--)
+        for (int i = OLD_SEED_LENGTH - 1; i >= 0; i--)
         {
             try
             {
