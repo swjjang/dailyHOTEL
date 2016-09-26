@@ -1,18 +1,11 @@
 package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.util.Util;
@@ -37,65 +30,31 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        if (mImageInformationList == null || mImageInformationList.size() == 0 || position < 0)
-        {
-            return null;
-        }
-
         final int width = Util.getLCDWidth(mContext);
         final com.facebook.drawee.view.SimpleDraweeView imageView = new com.facebook.drawee.view.SimpleDraweeView(mContext);
 
+        if (mImageInformationList == null || mImageInformationList.size() == 0 || position < 0)
+        {
+            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+            imageView.setTag(imageView.getId(), position);
+            imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
+            container.addView(imageView, 0, layoutParams);
+
+            return imageView;
+        }
+
         if (position < mImageInformationList.size())
         {
-            Uri imageUri = Util.isTextEmpty(mImageInformationList.get(position).url) == true ? null : Uri.parse(mImageInformationList.get(position).url);
+            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+            imageView.setTag(imageView.getId(), position);
+            imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            if (mImageInformationList.size() == 1)
-            {
-                final int height = Util.dpToPx(mContext, 202);
+            Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).url);
 
-                DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
-                {
-                    @Override
-                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
-                    {
-                        if (imageInfo == null)
-                        {
-                            return;
-                        }
-
-                        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-                        layoutParams.height = width;
-                        imageView.setLayoutParams(layoutParams);
-                    }
-
-                    @Override
-                    public void onFailure(String id, Throwable throwable)
-                    {
-                        super.onFailure(id, throwable);
-
-                        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-                        layoutParams.height = width;
-                        imageView.setLayoutParams(layoutParams);
-                    }
-                }).setUri(imageUri).build();
-
-                imageView.setController(controller);
-                imageView.setTag(imageView.getId(), position);
-                imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, height);
-                container.addView(imageView, 0, layoutParams);
-            } else
-            {
-                imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-                imageView.setTag(imageView.getId(), position);
-                imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-
-                Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).url);
-
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
-                container.addView(imageView, 0, layoutParams);
-            }
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
+            container.addView(imageView, 0, layoutParams);
         } else
         {
             Util.restartApp(mContext);
