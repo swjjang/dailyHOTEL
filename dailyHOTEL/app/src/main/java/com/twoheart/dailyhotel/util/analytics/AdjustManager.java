@@ -38,6 +38,8 @@ public class AdjustManager extends BaseAnalyticsManager
     private static final String APPLICATION_TOKEN = "jkf7ii0lj9xc";
     private static final String ENVIRONMENT = AdjustConfig.ENVIRONMENT_SANDBOX;
 
+    private String mUserIndex;
+
     private Context mContext;
 
     public AdjustManager(Context context)
@@ -187,7 +189,7 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void setUserIndex(String index)
     {
-
+        mUserIndex = index;
     }
 
     @Override
@@ -276,6 +278,7 @@ public class AdjustManager extends BaseAnalyticsManager
         Adjust.trackEvent(event);
     }
 
+
     @Override
     void startDeepLink(Uri deepLinkUri)
     {
@@ -286,6 +289,7 @@ public class AdjustManager extends BaseAnalyticsManager
     void startApplication()
     {
         AdjustEvent event = new AdjustEvent(EventToken.LAUNCH);
+        event.addCallbackParameter("user_id", mUserIndex);
         Adjust.trackEvent(event);
     }
 
