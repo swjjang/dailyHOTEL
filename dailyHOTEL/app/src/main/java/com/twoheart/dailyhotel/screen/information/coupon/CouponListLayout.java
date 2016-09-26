@@ -33,6 +33,8 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         void startNotice();
 
+        void startRegisterCoupon();
+
         void showListItemNotice(Coupon coupon);
 
         void onListItemDownLoadClick(Coupon coupon);
@@ -53,6 +55,9 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
         couponHistoryView.setOnClickListener(this);
+
+        View registerCouponView = view.findViewById(R.id.registerCouponLayout);
+        registerCouponView.setOnClickListener(this);
 
         updateHeaderTextView(0);
 
@@ -116,6 +121,10 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         {
             case R.id.couponHistoryTextView:
                 ((OnEventListener) mOnEventListener).startCouponHistory();
+                break;
+
+            case R.id.registerCouponLayout:
+                ((OnEventListener) mOnEventListener).startRegisterCoupon();
                 break;
         }
     }
