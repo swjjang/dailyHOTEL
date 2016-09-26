@@ -29,7 +29,7 @@
 }
 
 -keepclassmembers class * {
-	@android.webkit.JavascriptInterface <methods>;
+    @android.webkit.JavascriptInterface <methods>;
 }
 
 -keepattributes JavascriptInterface
@@ -82,10 +82,14 @@
 -keep class com.google.android.** { *; }
 -keep interface com.google.android.** { *; }
 
+
+#OkHttp3
+-keepattributes Signature
+-keepattributes Annotation
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
-
--keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
 
 -keepnames class android.widget.ScrollView { *; }
 -keepnames class android.widget.AbsListView { *; }
@@ -132,8 +136,6 @@
     public void onEvent(**);
 }
 
--dontwarn okhttp3.**
--dontwarn okio.**
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**
 -dontwarn org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**
 -dontwarn com.google.**, android.net.http.AndroidHttpClient, com.android.volley.**
