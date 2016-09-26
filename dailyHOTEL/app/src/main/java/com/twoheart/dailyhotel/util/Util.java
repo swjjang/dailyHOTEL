@@ -24,7 +24,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.provider.Settings.Secure;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -59,13 +58,11 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -238,48 +235,48 @@ public class Util implements Constants
         System.exit(0);
     }
 
-    public static String getDeviceId(Context context)
-    {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId = telephonyManager.getDeviceId();
-
-        // // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
-        if (Util.isTelephonyEnabled(context) == false && deviceId == null)
-        {
-            return getDeviceUUID(context);
-        }
-
-        return deviceId;
-    }
-
-    public static String getDeviceUUID(Context context)
-    {
-        UUID uuid = null;
-
-        final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-        try
-        {
-            if ("9774d56d682e549c".equals(androidId) == false)
-            {
-                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
-            } else
-            {
-                final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
-            }
-        } catch (UnsupportedEncodingException e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        if (uuid != null)
-        {
-            return uuid.toString();
-        } else
-        {
-            return null;
-        }
-    }
+    //    public static String getDeviceId(Context context)
+    //    {
+    //        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    //        String deviceId = telephonyManager.getDeviceId();
+    //
+    //        // // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
+    //        if (Util.isTelephonyEnabled(context) == false && deviceId == null)
+    //        {
+    //            return getDeviceUUID(context);
+    //        }
+    //
+    //        return deviceId;
+    //    }
+    //
+    //    public static String getDeviceUUID(Context context)
+    //    {
+    //        UUID uuid = null;
+    //
+    //        final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+    //        try
+    //        {
+    //            if ("9774d56d682e549c".equals(androidId) == false)
+    //            {
+    //                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+    //            } else
+    //            {
+    //                final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+    //                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+    //            }
+    //        } catch (UnsupportedEncodingException e)
+    //        {
+    //            ExLog.d(e.toString());
+    //        }
+    //
+    //        if (uuid != null)
+    //        {
+    //            return uuid.toString();
+    //        } else
+    //        {
+    //            return null;
+    //        }
+    //    }
 
     public static int getLCDWidth(Context context)
     {
@@ -316,7 +313,8 @@ public class Util implements Constants
      *
      * @return
      */
-    public static int getRatioHeightType16x9(int width) {
+    public static int getRatioHeightType16x9(int width)
+    {
         if (width < 1)
         {
             return 0;
@@ -330,7 +328,7 @@ public class Util implements Constants
      *
      * @return
      */
-    public static  int getRatioHeightType4x3(int width)
+    public static int getRatioHeightType4x3(int width)
     {
         if (width < 1)
         {

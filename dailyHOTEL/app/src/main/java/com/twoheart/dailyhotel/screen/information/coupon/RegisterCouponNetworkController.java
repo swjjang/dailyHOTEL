@@ -31,7 +31,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
             return;
         }
 
-//        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mJsonResponseListener);
+        //        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mJsonResponseListener);
     }
 
     public RegisterCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)

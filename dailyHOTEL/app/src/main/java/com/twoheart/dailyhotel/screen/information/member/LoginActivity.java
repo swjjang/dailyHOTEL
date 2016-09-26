@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.information.ForgotPasswordActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -87,8 +86,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         initEditTextsLayout();
         initButtonsLayout();
 
-        Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
-        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+        //        Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
+        //        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
 
     private void initToolbar()
@@ -209,8 +208,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerFacebookUser(String id, String name, String email, String gender)
     {
-        String deviceId = Util.getDeviceId(this);
-
         if (mStoreParams == null)
         {
             mStoreParams = new HashMap<>();
@@ -244,11 +241,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("gender", gender);
         }
 
-        if (Util.isTextEmpty(deviceId) == false)
-        {
-            mStoreParams.put("device", deviceId);
-        }
-
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
         DailyNetworkAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
@@ -257,7 +249,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void registerKakaokUser(long id)
     {
         String index = String.valueOf(id);
-        String deviceId = Util.getDeviceId(this);
 
         if (mStoreParams == null)
         {
@@ -276,12 +267,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
-
-        if (Util.isTextEmpty(deviceId) == false)
-        {
-            mStoreParams.put("device", deviceId);
-        }
-
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
         DailyNetworkAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);

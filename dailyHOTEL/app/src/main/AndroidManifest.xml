@@ -12,8 +12,6 @@
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
     <!-- 혀용하지 않는 퍼미션 -->
-    <!-- PHONE -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <!-- LOCATION -->
     <uses-permission android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE"/>

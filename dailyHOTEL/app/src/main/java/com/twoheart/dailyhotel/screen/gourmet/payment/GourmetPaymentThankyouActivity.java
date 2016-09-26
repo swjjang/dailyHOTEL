@@ -61,7 +61,8 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         initTextLayout(textLayout, productCount);
     }
 
-    private void initDateLayout(View view, String date, String visitTime, int productCount) {
+    private void initDateLayout(View view, String date, String visitTime, int productCount)
+    {
         if (view == null)
         {
             return;
@@ -86,7 +87,8 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         visitTimeTextView.setText(visitTime);
     }
 
-    private void initTextLayout(View view, int productCount) {
+    private void initTextLayout(View view, int productCount)
+    {
         if (view == null)
         {
             return;
