@@ -100,7 +100,8 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         nightsTextView.setText(this.getString(R.string.label_nights, nights));
     }
 
-    private void initTextLayout(View view) {
+    private void initTextLayout(View view)
+    {
         if (view == null)
         {
             return;

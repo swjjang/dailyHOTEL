@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.util.AttributeSet;
 

@@ -255,7 +255,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         final String[] analytics = new String[]{AnalyticsManager.Label.SORTFILTER_WIFI//
             , AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST//
             , AnalyticsManager.Label.SORTFILTER_KITCHEN//
-            , AnalyticsManager.Label.SORTFILTER_BATHTUB
+            , AnalyticsManager.Label.SORTFILTER_BATHTUB//
             , AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE//
             , AnalyticsManager.Label.SORTFILTER_POOL//
             , AnalyticsManager.Label.SORTFILTER_FITNESS//
@@ -265,7 +265,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_01//
             , R.drawable.f_ic_hotel_04_facilities_02//
             , R.drawable.f_ic_hotel_04_facilities_03//
-            , R.drawable.f_ic_hotel_04_facilities_04
+            , R.drawable.f_ic_hotel_04_facilities_04//
             , R.drawable.f_ic_hotel_04_facilities_05//
             , R.drawable.f_ic_hotel_04_facilities_06//
             , R.drawable.f_ic_hotel_04_facilities_07//
@@ -275,7 +275,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         final int[] amenitiesflag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH
+            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS//

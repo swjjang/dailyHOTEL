@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -76,8 +75,8 @@ public class SignupStep1Activity extends BaseActivity
             mSignupStep1Layout.setRecommenderText(recommender);
         }
 
-//        Intent intentPermission = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
-//        startActivityForResult(intentPermission, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+        //        Intent intentPermission = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
+        //        startActivityForResult(intentPermission, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
 
     @Override

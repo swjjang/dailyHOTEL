@@ -15,18 +15,12 @@ package com.twoheart.dailyhotel.util;
 import android.os.Build;
 import android.util.Base64;
 
-import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.security.spec.KeySpec;
-import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto
@@ -93,7 +87,6 @@ public class Crypto
 
         return new String(result);
     }
-
 
 
     private static byte[] encrypt(byte[] key, byte[] value) throws Exception
