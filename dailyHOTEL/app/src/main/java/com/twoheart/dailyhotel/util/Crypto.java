@@ -15,12 +15,18 @@ package com.twoheart.dailyhotel.util;
 import android.os.Build;
 import android.util.Base64;
 
+import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto
@@ -31,9 +37,6 @@ public class Crypto
     // AES암호
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * byte[] ret = HashUtil.digest("MD5", "abcd".getBytes()); 처럼 호출
-     */
     public static byte[] digest(String alg, byte[] input)
     {
         try
@@ -69,7 +72,7 @@ public class Crypto
             return null;
         }
 
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = seed.getBytes("UTF-8");
         byte[] result = encrypt(rawKey, text.getBytes());
         String fromHex = toHex(result);
 
@@ -83,62 +86,32 @@ public class Crypto
             return null;
         }
 
-        byte[] seedByte = seed.getBytes();
         String base64 = new String(Base64.decode(encrypted, Base64.NO_WRAP));
-        byte[] rawKey = getRawKey(seedByte);
+        byte[] rawKey = seed.getBytes("UTF-8");
         byte[] enc = toByte(base64);
         byte[] result = decrypt(rawKey, enc);
 
         return new String(result);
     }
 
-    private static byte[] getRawKey(byte[] seed) throws Exception
+
+
+    private static byte[] encrypt(byte[] key, byte[] value) throws Exception
     {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr;
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-        {
-            sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
-        } else
-        {
-            sr = SecureRandom.getInstance("SHA1PRNG");
-        }
-        sr.setSeed(seed);
-
-        try
-        {
-            kgen.init(256, sr);
-        } catch (Exception e)
-        {
-            try
-            {
-                kgen.init(192, sr);
-            } catch (Exception e1)
-            {
-                kgen.init(128, sr);
-            }
-        }
-
-        SecretKey skey = kgen.generateKey();
-
-        return skey.getEncoded();
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+        return cipher.doFinal(value);
     }
 
-    private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception
+    private static byte[] decrypt(byte[] key, byte[] value) throws Exception
     {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        return cipher.doFinal(clear);
-    }
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 
-    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception
-    {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        return cipher.doFinal(encrypted);
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+        return cipher.doFinal(value);
     }
 
     private static byte[] toByte(String hexString)
@@ -171,5 +144,62 @@ public class Crypto
     private static void appendHex(StringBuffer sb, byte b)
     {
         sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
+    }
+
+    public static String oldDecrypt(String seed, String encrypted) throws Exception
+    {
+        if (Util.isTextEmpty(encrypted) == true)
+        {
+            return null;
+        }
+
+        byte[] seedByte = seed.getBytes();
+        String base64 = new String(Base64.decode(encrypted, Base64.NO_WRAP));
+        byte[] rawKey = oldGetRawKey(seedByte);
+        byte[] enc = toByte(base64);
+        byte[] result = oldDecrypt(rawKey, enc);
+
+        return new String(result);
+    }
+
+    private static byte[] oldGetRawKey(byte[] seed) throws Exception
+    {
+        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        SecureRandom sr;
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+        {
+            sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
+        } else
+        {
+            sr = SecureRandom.getInstance("SHA1PRNG");
+        }
+        sr.setSeed(seed);
+
+        try
+        {
+            kgen.init(256, sr);
+        } catch (Exception e)
+        {
+            try
+            {
+                kgen.init(192, sr);
+            } catch (Exception e1)
+            {
+                kgen.init(128, sr);
+            }
+        }
+
+        SecretKey skey = kgen.generateKey();
+
+        return skey.getEncoded();
+    }
+
+    private static byte[] oldDecrypt(byte[] raw, byte[] encrypted) throws Exception
+    {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        return cipher.doFinal(encrypted);
     }
 }
