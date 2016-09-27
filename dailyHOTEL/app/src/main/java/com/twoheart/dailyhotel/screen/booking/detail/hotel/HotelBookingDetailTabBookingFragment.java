@@ -22,7 +22,9 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants
+import java.util.TimeZone;
+
+public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
@@ -73,6 +75,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
+        initPlaceInformationLayout(view, mBookingDetail);
         initHotelInformationLayout(view, mBookingDetail);
         initCheckInOutInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);
@@ -102,12 +105,51 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         return view;
     }
 
+    private void initPlaceInformationLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
+        TextView placeNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
+        placeNameTextView.setText(bookingDetail.placeName);
+
+        View viewDetailView = view.findViewById(R.id.viewDetailView);
+        View viewMapView = view.findViewById(R.id.viewMapView);
+        View callView = view.findViewById(R.id.callView);
+
+        viewDetailView.setOnClickListener(this);
+        viewMapView.setOnClickListener(this);
+        callView.setOnClickListener(this);
+    }
+
     private void initHotelInformationLayout(View view, HotelBookingDetail bookingDetail)
     {
         if (view == null || bookingDetail == null)
         {
             return;
         }
+
+        // 3일전 부터 몇일 남음 필요.
+
+        // 체크인 체크아웃
+        TextView checkinDayTextView = (TextView) view.findViewById(R.id.checkinDayTextView);
+        TextView checkoutDayTextView = (TextView) view.findViewById(R.id.checkoutDayTextView);
+
+        String checkInDateFormat = DailyCalendar.format(bookingDetail.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
+        checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
+            checkInDateFormat.length() - 3, checkInDateFormat.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mCheckinDayTextView.setText(checkInSpannableStringBuilder);
+
+        String checkOutDateFormat = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
+        checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
+            checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         TextView tvHotelName = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
         TextView tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
@@ -218,6 +260,22 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         } else
         {
             refundPolicyLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch(v.getId())
+        {
+            case R.id.viewDetailView:
+                break;
+
+            case R.id.viewMapView:
+                break;
+
+            case R.id.callView:
+                break;
         }
     }
 }

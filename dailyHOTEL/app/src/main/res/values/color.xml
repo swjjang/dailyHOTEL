@@ -285,6 +285,7 @@
     <color name="default_line_ceeeef0">#eeeef0</color>
     <color name="default_line_ce8e8e9">#e8e8e9</color>
     <color name="default_line_cd9d9d9">#d9d9d9</color>
+    <color name="default_line_c1a000000">#1a000000</color>
 
     <!-- Coupon -->
     <color name="coupon_expire_text">#929292</color>

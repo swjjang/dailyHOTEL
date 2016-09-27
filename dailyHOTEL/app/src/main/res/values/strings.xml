@@ -415,7 +415,7 @@
     <string name="frag_booking_duedate_formet">%d일 남았습니다.</string>
     <string name="frag_booking_today_type_stay">오늘이 체크인일 입니다</string>
     <string name="frag_booking_today_type_gourmet">오늘이 방문일입니다</string>
-    <string name="frag_issuing_receipt">영수증 확인</string>
+    <string name="frag_issuing_receipt">영수증 확인하기</string>
 
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>
@@ -601,6 +601,12 @@
     <string name="label_booking_date">날짜</string>
     <string name="label_reservation_contact">예약자 전화번호</string>
     <string name="label_booking_payment_date">결제일</string>
+    <string name="label_booking_view_detail">상세 정보 보기</string>
+    <string name="label_booking_view_map">길찾기</string>
+    <string name="label_booking_call">문의하기</string>
+    <string name="label_booking_reservation_information">1. 예약 정보</string>
+    <string name="label_booking_payment_information">2. 결제 금액 정보</string>
+    <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_booking_refund_product">변경, 취소, 환불이 불가한 특가 할인 상품입니다.</string>
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 [결제하기] 버튼을 눌러주세요.</string>

@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
-    protected static final int TAB_COUNT = 3;
+    protected static final int TAB_COUNT = 2;
 
     private ViewPager mViewPager;
     protected Booking mBooking;
@@ -69,7 +69,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_info_title));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_map_title));
         FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -92,15 +91,15 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onOptionsItemSelected(v);
-            }
-        });
+//        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+//        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                onOptionsItemSelected(v);
+//            }
+//        });
     }
 
     public ViewPager getViewPager()

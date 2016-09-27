@@ -72,9 +72,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         BaseFragment baseFragment02 = HotelBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
         fragmentList.add(baseFragment02);
 
-        BaseFragment baseFragment03 = HotelBookingDetailTabMapFragment.newInstance(placeBookingDetail, mBooking.isUsed);
-        fragmentList.add(baseFragment03);
-
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(fragmentPagerAdapter);
     }
