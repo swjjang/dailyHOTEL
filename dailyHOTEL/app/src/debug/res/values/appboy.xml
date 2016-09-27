@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string translatable="false" name="com_appboy_api_key">a63d8044-df3b-4a4a-94b7-4a4ef42827cb</string>
+    <string translatable="false" name="com_appboy_api_key">1ca58612-33ef-43a7-891d-2d32e23fcff1</string>
     <bool name="com_appboy_push_gcm_messaging_registration_enabled">true</bool>
     <bool name="com_appboy_push_adm_messaging_registration_enabled">true</bool>
     <string name="com_appboy_push_gcm_sender_id">1025681158000</string>
