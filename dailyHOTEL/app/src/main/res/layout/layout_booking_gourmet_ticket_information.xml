@@ -345,7 +345,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:gravity="center_vertical"
-                android:text="@string/message_stay_check_other_user"
+                android:text="@string/message_gourmet_check_other_user"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"
                 android:layout_marginRight="15dp"
