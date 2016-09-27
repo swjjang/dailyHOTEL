@@ -131,7 +131,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 if (mAdapter == null)
                 {
-                    mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<Booking>());
+                    mAdapter = new BookingListAdapter(baseActivity, //
+                        R.layout.list_row_booking, new ArrayList<Booking>(), mCurrentTime);
                     mAdapter.setOnUserActionListener(mOnUserActionListener);
                     mListView.setOnItemClickListener(BookingListFragment.this);
                     mListView.setAdapter(mAdapter);
