@@ -34,7 +34,7 @@
     <RadioGroup
         android:id="@+id/sortLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
