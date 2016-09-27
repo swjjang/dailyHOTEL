@@ -65,6 +65,7 @@ public class RegisterCouponActivity extends BaseActivity
     {
         super.finish();
 
+        setResult(RESULT_OK);
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 

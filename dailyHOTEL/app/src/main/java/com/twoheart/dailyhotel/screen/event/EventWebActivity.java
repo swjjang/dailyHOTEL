@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -583,6 +584,16 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    private boolean moveDeepLinkRegisterCoupon(Context context)
+    {
+        DailyDeepLink.getInstance().clear();
+
+        Intent intent = RegisterCouponActivity.newInstance(context);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
+
+        return true;
+    }
+
     private void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -778,6 +789,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         } else if (DailyDeepLink.getInstance().isCouponView() == true)
                         {
                             if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                            {
+                                return;
+                            }
+                        } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
+                        {
+                            if (moveDeepLinkRegisterCoupon(EventWebActivity.this) == true)
                             {
                                 return;
                             }

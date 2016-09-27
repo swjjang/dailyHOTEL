@@ -255,6 +255,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (dailyDeepLink.isRecommendFriendView() == true)
         {
             screenName = AnalyticsManager.Screen.MENU_INVITE_FRIENDS;
+        } else if(dailyDeepLink.isRegisterCouponView() == true)
+        {
+//            screenName = AnalyticsManager.Screen.
         }
 
         if (Util.isTextEmpty(screenName) == false)
