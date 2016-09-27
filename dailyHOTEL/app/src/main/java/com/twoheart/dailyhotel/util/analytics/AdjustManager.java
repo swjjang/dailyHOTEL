@@ -20,6 +20,8 @@ import com.adjust.sdk.OnEventTrackingFailedListener;
 import com.adjust.sdk.OnEventTrackingSucceededListener;
 import com.adjust.sdk.OnSessionTrackingFailedListener;
 import com.adjust.sdk.OnSessionTrackingSucceededListener;
+import com.appboy.Appboy;
+import com.appboy.models.outgoing.AttributionData;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -61,6 +63,12 @@ public class AdjustManager extends BaseAnalyticsManager
             @Override
             public void onAttributionChanged(AdjustAttribution attribution)
             {
+                Appboy.getInstance(mContext).getCurrentUser().setAttributionData(new AttributionData( //
+                    attribution.network,//
+                    attribution.campaign,//
+                    attribution.adgroup,//
+                    attribution.creative));
+
                 ExLog.d("Adjust attribution: " + attribution.toString());
             }
         });
