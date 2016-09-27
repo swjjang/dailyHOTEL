@@ -28,11 +28,12 @@ import static com.twoheart.dailyhotel.util.DailyCalendar.format;
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
+    private long mCurrentTime;
     private ArrayList<Booking> mBookingList;
     private Context mContext;
     private BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items)
+    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items, long currentTime)
     {
         super(context, resourceId, items);
 
@@ -45,6 +46,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         mBookingList.addAll(items);
 
         this.mContext = context;
+        this.mCurrentTime = currentTime;
     }
 
     public void setOnUserActionListener(BookingListFragment.OnUserActionListener listener)
@@ -261,7 +263,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             {
                 String text;
 
-                int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(System.currentTimeMillis())) / SaleTime.MILLISECOND_IN_A_DAY);
+                int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(mCurrentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
                 if (dayOfDays > 3)
                 {
                     text = null;
