@@ -357,7 +357,7 @@ public class StayDetailListAdapter extends BaseAdapter
         height = width * ratio;
 
         String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
-        String iconUrl = "http://s3.dailyhotel.kr/resources/images/_banner/googlemap_marker-1.png";
+        String iconUrl = "http://img.dailyhotel.me/app_static/googlemap_marker-1.png";
         String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
             , size, iconUrl, mStayDetail.latitude, mStayDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
