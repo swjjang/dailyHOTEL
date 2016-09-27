@@ -40,7 +40,7 @@ public class KakaoLinkManager implements Constants
         try
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
-            messageBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao01.jpg", 300, 400);
+            messageBuilder.addImage("http://img.dailyhotel.me/app_static/kakao01.jpg", 300, 400);
             messageBuilder.addText(text);
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
             mKakaoLink.sendMessage(messageBuilder, mContext);
