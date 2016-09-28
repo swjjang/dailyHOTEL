@@ -23,7 +23,8 @@
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/mapImageView"
                 android:layout_width="match_parent"
-                android:layout_height="202dp"
+                android:layout_height="242dp"
+                android:layout_marginTop="-71dp"
                 android:adjustViewBounds="true"
                 fresco:actualImageScaleType="centerCrop"/>
 
@@ -59,17 +60,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/mapImageView"
+                android:layout_marginTop="-71dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="131dp"
                 android:background="@drawable/shape_fillrect_l1a000000_bffffff"
                 android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/placeNameTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="46dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:minHeight="46dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
@@ -95,7 +100,13 @@
                         android:text="@string/label_booking_view_detail"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="12dp"
-                        app:drawableTopCompat="@drawable/reservation_ic_detail_info"/>
+                        app:drawableCompatTop="@drawable/reservation_ic_detail_info"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/default_line_cf0f0f0"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/viewMapView"
@@ -107,7 +118,13 @@
                         android:text="@string/label_booking_view_map"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="12dp"
-                        app:drawableTopCompat="@drawable/reservation_ic_directions"/>
+                        app:drawableCompatTop="@drawable/reservation_ic_directions"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/default_line_cf0f0f0"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/callView"
@@ -119,7 +136,7 @@
                         android:text="@string/label_booking_call"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="12dp"
-                        app:drawableTopCompat="@drawable/reservation_ic_receipt"/>
+                        app:drawableCompatTop="@drawable/navibar_ic_call"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -151,14 +168,13 @@
                 android:background="@color/default_line_cdcdcdd"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/confirmView"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:gravity="center"
                 android:text="@string/frag_issuing_receipt"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="12dp"
-                app:drawableLeftCompat="@drawable/reservation_ic_receipt"/>
+                app:drawableCompatLeft="@drawable/reservation_ic_receipt"/>
 
             <View
                 android:layout_width="match_parent"

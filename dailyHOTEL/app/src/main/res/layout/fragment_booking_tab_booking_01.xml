@@ -308,7 +308,7 @@
             android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/emailTextView"
+            android:id="@+id/guestEmailTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"

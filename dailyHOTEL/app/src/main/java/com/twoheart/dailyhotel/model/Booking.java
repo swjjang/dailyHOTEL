@@ -22,6 +22,8 @@ public class Booking implements Parcelable
     public String ment;
     public long checkinTime;
     public long checkoutTime;
+    public long currentDateTime;
+
     public String hotelImageUrl;
     public boolean isUsed;
     public Constants.PlaceType placeType;
@@ -76,6 +78,7 @@ public class Booking implements Parcelable
 
         dest.writeLong(checkinTime);
         dest.writeLong(checkoutTime);
+        dest.writeLong(currentDateTime);
         dest.writeString(hotelImageUrl);
         dest.writeInt(isUsed ? 1 : 0);
         dest.writeString(placeType.name());
@@ -92,6 +95,7 @@ public class Booking implements Parcelable
 
         checkinTime = in.readLong();
         checkoutTime = in.readLong();
+        currentDateTime = in.readLong();
         hotelImageUrl = in.readString();
         isUsed = in.readInt() == 1;
         placeType = Constants.PlaceType.valueOf(in.readString());

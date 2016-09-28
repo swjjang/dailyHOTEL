@@ -6,14 +6,20 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
+
+import org.json.JSONObject;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
@@ -91,15 +97,15 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-//        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-//        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                onOptionsItemSelected(v);
-//            }
-//        });
+        //        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        //        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                onOptionsItemSelected(v);
+        //            }
+        //        });
     }
 
     public ViewPager getViewPager()
@@ -120,8 +126,36 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         lockUI();
 
-        // 호텔 정보를 가져온다.
-        requestPlaceBookingDetail(mBooking.reservationIndex);
+        requestCommonDatetime();
+    }
+
+    protected void requestCommonDatetime()
+    {
+        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    long currentDateTime = response.getLong("currentDateTime");
+
+                    mBooking.currentDateTime = currentDateTime;
+
+                    // 호텔 정보를 가져온다.
+                    requestPlaceBookingDetail(mBooking.reservationIndex);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                PlaceBookingDetailTabActivity.this.onErrorResponse(volleyError);
+            }
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
