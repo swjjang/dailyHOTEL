@@ -523,6 +523,14 @@ interface IDailyNetwork
     void requestCouponHistoryList(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
+     * 키워드를 사용한 쿠폰 등록
+     * @param tag
+     * @param keyword
+     * @param listener
+     */
+    void requestRegistKeywordCoupon(Object tag, String keyword, DailyHotelJsonResponseListener listener);
+
+    /**
      * 혜택 알림을 받아야 하는지 알려준다.
      *
      * @param tag

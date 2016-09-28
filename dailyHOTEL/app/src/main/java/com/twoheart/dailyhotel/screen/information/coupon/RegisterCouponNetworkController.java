@@ -4,10 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -19,7 +20,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onRegisterCoupon(String couponCode);
+        void onRegisterCoupon(String couponCode, String message);
     }
 
     public void requestRegisterCoupon(String couponCode)
@@ -27,11 +28,11 @@ public class RegisterCouponNetworkController extends BaseNetworkController
 
         if (Util.isTextEmpty(couponCode))
         {
-            ExLog.e("couponCode is empty");
+            mOnNetworkControllerListener.onErrorToastMessage(mContext.getString(R.string.toast_msg_register_coupon_empty_keyword));
             return;
         }
 
-        //        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestRegistKeywordCoupon(mNetworkTag, couponCode, mJsonResponseListener);
     }
 
     public RegisterCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -47,16 +48,17 @@ public class RegisterCouponNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                String message = response.getString("msg");
 
                 if (msgCode == 100)
                 {
                     Uri uri = Uri.parse(url);
-                    String userCouponCode = uri.getQueryParameter("userCouponCode");
+                    String userCouponCode = uri.getQueryParameter("keyword");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, message);
                 } else
                 {
-                    String message = response.getString("msg");
+
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
 
