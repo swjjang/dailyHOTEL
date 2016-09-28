@@ -92,7 +92,7 @@ public class RegisterCouponActivity extends BaseActivity
         };
 
         String title = this.getResources().getString(R.string.dialog_notice2);
-        String message = this.getResources().getString(R.string.dialog_message_coupon_list_login);
+        String message = this.getResources().getString(R.string.dialog_message_register_coupon_login);
         String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
         String negative = this.getResources().getString(R.string.dialog_btn_text_no);
 
@@ -139,13 +139,11 @@ public class RegisterCouponActivity extends BaseActivity
         @Override
         public void onRegisterCoupon(String couponCode)
         {
-            // 쿠폰 사용내역 이동
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            // TODO : 쿠폰 등록 요청
             mNetworkController.requestRegisterCoupon(couponCode);
         }
 
@@ -162,10 +160,20 @@ public class RegisterCouponActivity extends BaseActivity
     private RegisterCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new RegisterCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegisterCoupon(String couponCode)
+        public void onRegisterCoupon(String couponCode, String message)
         {
-            // TODO : 쿠폰 등록 완료 동작
+            unLockUI();
 
+            showSimpleDialog(RegisterCouponActivity.this.getString(R.string.dialog_notice2), //
+                message, RegisterCouponActivity.this.getString(R.string.dialog_btn_text_confirm), //
+                null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        finish();
+                    }
+                });
         }
 
         @Override
@@ -183,7 +191,7 @@ public class RegisterCouponActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            RegisterCouponActivity.this.onErrorPopupMessage(msgCode, message);
+            RegisterCouponActivity.this.onErrorPopupMessage(msgCode, message, null);
         }
 
         @Override
