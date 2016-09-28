@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/popup_bg_white_full"
@@ -16,13 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
+        android:text="@string/label_call_service"
         android:textColor="@color/default_text_c323232"
         android:textSize="17dp"
-        dailyFont:style="Medium"
-        android:text="@string/label_call_service"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,10 +32,9 @@
         android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/callDailyView"
+            android:id="@+id/callPlaceView"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:text="@string/label_daily_customer_service"
             android:gravity="center_vertical"
             app:drawableCompatLeft="@drawable/navibar_ic_call"/>
 
@@ -48,8 +47,8 @@
             android:id="@+id/kakaoDailyView"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:text="@string/label_daily_kakaotalk"
             android:gravity="center_vertical"
+            android:text="@string/label_daily_kakaotalk"
             app:drawableCompatLeft="@drawable/navibar_ic_call"/>
 
         <View
@@ -58,10 +57,11 @@
             android:background="@color/default_line_cdcdcdd"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/callPlaceView"
+            android:id="@+id/callDailyView"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:gravity="center_vertical"
+            android:text="@string/label_daily_customer_service"
             app:drawableCompatLeft="@drawable/navibar_ic_call"/>
     </LinearLayout>
 </LinearLayout>
