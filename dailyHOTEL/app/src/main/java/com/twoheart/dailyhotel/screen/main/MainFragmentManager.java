@@ -142,9 +142,9 @@ public class MainFragmentManager
         }
     }
 
-    public void select(int index)
+    public void select(int index, boolean isRefresh)
     {
-        if (index != mIndexLastFragment)
+        if (index != mIndexLastFragment || isRefresh == true)
         {
             switch (index)
             {
