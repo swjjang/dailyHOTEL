@@ -38,6 +38,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected abstract void setCurrentDateTime(long currentDateTime, long dailyDateTime);
 
+    protected abstract void showCallDialog();
+
     protected abstract void onTabSelected(int position);
 
     @Override
@@ -99,15 +101,15 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-        //        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        //        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                onOptionsItemSelected(v);
-        //            }
-        //        });
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showCallDialog();
+            }
+        });
     }
 
     public ViewPager getViewPager()

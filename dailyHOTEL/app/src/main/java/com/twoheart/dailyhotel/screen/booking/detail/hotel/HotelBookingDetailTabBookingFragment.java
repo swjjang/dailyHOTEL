@@ -143,11 +143,11 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-        View callView = view.findViewById(R.id.callView);
+//        View callView = view.findViewById(R.id.callView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
-        callView.setOnClickListener(this);
+//        callView.setOnClickListener(this);
     }
 
     private void initHotelInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
@@ -194,7 +194,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
 
         // 체크인 체크아웃
-        initCheckInformatonLayout(context, view, bookingDetail);
+        initTimeInformatonLayout(context, view, bookingDetail);
 
         // 예약 장소
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
@@ -206,7 +206,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         addressTextView.setText(bookingDetail.address);
     }
 
-    private void initCheckInformatonLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initTimeInformatonLayout(Context context, View view, HotelBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -219,7 +219,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         try
         {
-            String checkInDateFormat = DailyCalendar.convertDateFormatString(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d (EEE) HH시");
+            String checkInDateFormat = DailyCalendar.convertDateFormatString(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
             SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
             checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(context).getMediumTypeface()),//
                 checkInDateFormat.length() - 3, checkInDateFormat.length(),//
@@ -233,7 +233,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         try
         {
-            String checkOutDateFormat = DailyCalendar.convertDateFormatString(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d (EEE) HH시");
+            String checkOutDateFormat = DailyCalendar.convertDateFormatString(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
             SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
             checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(context).getMediumTypeface()),//
                 checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
@@ -430,21 +430,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 break;
             }
 
-            case R.id.callView:
-            {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                lockUI(false);
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                showCallDialog(baseActivity);
-                break;
-            }
-
             case R.id.callDailyView:
             {
                 BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -532,48 +517,5 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         return calendar.getTimeInMillis();
     }
 
-    public void showCallDialog(BaseActivity activity)
-    {
-        if (isFinishing())
-        {
-            return;
-        }
 
-        LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
-
-        Dialog dialog = new Dialog(activity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(true);
-
-        // 버튼
-        View callDailyView = dialogView.findViewById(R.id.callDailyView);
-        View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
-        TextView callPlaceView = (TextView) dialogView.findViewById(R.id.callPlaceView);
-
-        callPlaceView.setText(R.string.label_hotel_direct_phone);
-
-        callDailyView.setOnClickListener(this);
-        kakaoDailyView.setOnClickListener(this);
-        callPlaceView.setOnClickListener(this);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockUI();
-            }
-        });
-
-        try
-        {
-            dialog.setContentView(dialogView);
-            dialog.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
 }

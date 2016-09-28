@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--<merge xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
 <!--xmlns:dailyFont="http://schemas.android.com/apk/res-auto">-->
 
 <!--UI 확인시에만 열어주세요-->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
@@ -105,7 +105,8 @@
             android:id="@+id/bonusLayout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
@@ -129,7 +130,8 @@
             android:id="@+id/couponLayout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
