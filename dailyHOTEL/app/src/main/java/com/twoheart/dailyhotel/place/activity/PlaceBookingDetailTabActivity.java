@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
-    protected static final int TAB_COUNT = 2;
+    protected static final int TAB_COUNT = 1;
 
     private ViewPager mViewPager;
     private boolean mDontReload;
@@ -71,21 +71,9 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         initToolbar(getString(R.string.actionbar_title_booking_list_frag));
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tabLayout.getLayoutParams();
-        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
-        tabLayout.setLayoutParams(layoutParams);
-
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_info_title));
-        FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
-        tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
         mViewPager.clearOnPageChangeListeners();
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
     private void initToolbar(String title)

@@ -7,21 +7,9 @@
 
     <include layout="@layout/toolbar_default_underline_menu"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
-        app:tabIndicatorHeight="2dp"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/default_text_c900034"
-        app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"/>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tabLayout"/>
+        android:layout_below="@id/toolbar"/>
 </RelativeLayout>

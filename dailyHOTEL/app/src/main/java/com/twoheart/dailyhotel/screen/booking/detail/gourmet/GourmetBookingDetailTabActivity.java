@@ -74,9 +74,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex);
         fragmentList.add(baseFragment01);
 
-        BaseFragment baseFragment02 = GourmetBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
-        fragmentList.add(baseFragment02);
-
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(fragmentPagerAdapter);
     }
