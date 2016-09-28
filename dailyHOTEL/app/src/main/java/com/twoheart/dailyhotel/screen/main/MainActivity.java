@@ -302,7 +302,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                 } else
                 {
                     mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
@@ -346,7 +346,7 @@ public class MainActivity extends BaseActivity implements Constants
             }
         } else
         {
-            mMainFragmentManager.select(mMainFragmentManager.getLastMainIndexFragment());
+            mMainFragmentManager.select(mMainFragmentManager.getLastMainIndexFragment(), false);
         }
     }
 
@@ -373,7 +373,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             super.onError();
 
-            mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT);
+            mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT, false);
         }
     }
 
@@ -592,28 +592,28 @@ public class MainActivity extends BaseActivity implements Constants
             switch (index)
             {
                 case 0:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
                     break;
 
                 case 1:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
                     break;
 
                 case 2:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
                     break;
 
                 case 3:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.MENU_CLICKED, AnalyticsManager.Label.MENU_SCREEN, null);
@@ -756,13 +756,13 @@ public class MainActivity extends BaseActivity implements Constants
             {
                 if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isBookingView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
                     || DailyDeepLink.getInstance().isBonusView() == true//
                     || DailyDeepLink.getInstance().isEventDetailView() == true//
@@ -771,20 +771,20 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isRecommendFriendView() == true //
                     || DailyDeepLink.getInstance().isRegisterCouponView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
                 {
                     if (DailyHotel.isLogin() == false)
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
                     } else
                     {
                         DailyDeepLink.getInstance().clear();
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
                     }
                 } else
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
                 }
             } else
             {
@@ -792,18 +792,18 @@ public class MainActivity extends BaseActivity implements Constants
 
                 if (getString(R.string.label_dailygourmet).equalsIgnoreCase(lastMenu) == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
                 } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
                 } else
                 {
                     if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
                     } else
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
                     }
                 }
 
