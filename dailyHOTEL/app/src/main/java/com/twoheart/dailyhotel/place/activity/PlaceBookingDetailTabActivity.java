@@ -67,7 +67,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     {
         setContentView(R.layout.activity_booking_tab);
 
-        initToolbar(mBooking.placeName);
+        initToolbar(getString(R.string.actionbar_title_booking_list_frag));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 

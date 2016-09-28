@@ -1,7 +1,11 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -10,9 +14,11 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
@@ -25,10 +31,12 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Calendar;
@@ -400,8 +408,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 saleTime.setCurrentTime(mBookingDetail.currentDateTime);
                 saleTime.setDailyTime(mBookingDetail.dailyDateTime);
 
-                //                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, false);
-                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, 131, false);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                 break;
             }
@@ -430,8 +437,82 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     return;
                 }
 
-                lockUI();
+                lockUI(false);
 
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                showCallDialog(baseActivity);
+                break;
+            }
+
+            case R.id.callDailyView:
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (Util.isTelephonyEnabled(baseActivity) == true)
+                {
+                    try
+                    {
+                        String phone = DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber();
+
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                }
+                break;
+            }
+
+            case R.id.kakaoDailyView:
+            {
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+                } catch (ActivityNotFoundException e)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+                    } catch (ActivityNotFoundException e1)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                        startActivity(marketLaunch);
+                    }
+                }
+                break;
+            }
+
+            case R.id.callPlaceView:
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (Util.isTelephonyEnabled(baseActivity) == true)
+                {
+                    String phone = mBookingDetail.hotelPhone;
+
+                    if (Util.isTextEmpty(mBookingDetail.hotelPhone) == true)
+                    {
+                        phone = DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber();
+                    }
+
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
+                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
+                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+                }
                 break;
             }
         }
@@ -449,5 +530,50 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         calendar.set(Calendar.MILLISECOND, 0);
 
         return calendar.getTimeInMillis();
+    }
+
+    public void showCallDialog(BaseActivity activity)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
+
+        Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View callDailyView = dialogView.findViewById(R.id.callDailyView);
+        View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
+        TextView callPlaceView = (TextView) dialogView.findViewById(R.id.callPlaceView);
+
+        callPlaceView.setText(R.string.label_hotel_direct_phone);
+
+        callDailyView.setOnClickListener(this);
+        kakaoDailyView.setOnClickListener(this);
+        callPlaceView.setOnClickListener(this);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 }
