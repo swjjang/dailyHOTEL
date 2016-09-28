@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -60,11 +61,23 @@ public class CouponListActivity extends BaseActivity
 
         AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_BOX);
 
-        if (DailyHotel.isLogin() == false)
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
-            lockUI();
-            showLoginDialog();
+            if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
+            {
+                startRegisterCoupon();
+            }
+
+            DailyDeepLink.getInstance().clear();
+        } else
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                lockUI();
+                showLoginDialog();
+            }
         }
+
     }
 
     @Override
@@ -130,6 +143,12 @@ public class CouponListActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
+    private void startRegisterCoupon()
+    {
+        Intent intent = RegisterCouponActivity.newInstance(CouponListActivity.this);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -140,6 +159,15 @@ public class CouponListActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_LOGIN:
             {
                 if (resultCode != Activity.RESULT_OK)
+                {
+                    finish();
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_REGISTER_COUPON:
+            {
+                if (DailyHotel.isLogin() == false)
                 {
                     finish();
                 }
@@ -178,8 +206,7 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void startRegisterCoupon()
         {
-            Intent intent = RegisterCouponActivity.newInstance(CouponListActivity.this);
-            startActivity(intent);
+            CouponListActivity.this.startRegisterCoupon();
         }
 
         @Override

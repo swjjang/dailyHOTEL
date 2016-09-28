@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -26,6 +27,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     protected static final int TAB_COUNT = 2;
 
     private ViewPager mViewPager;
+    private boolean mDontReload;
     protected Booking mBooking;
 
     private DailyToolbarLayout mDailyToolbarLayout;
@@ -34,7 +36,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected abstract void requestPlaceBookingDetail(int reservationIndex);
 
-    protected abstract void onOptionsItemSelected(View view);
+    protected abstract void setCurrentDateTime(long currentDateTime, long dailyDateTime);
 
     protected abstract void onTabSelected(int position);
 
@@ -124,9 +126,47 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             return;
         }
 
-        lockUI();
+        if (mDontReload == false)
+        {
+            lockUI();
 
-        requestCommonDatetime();
+            requestCommonDatetime();
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mDontReload == false)
+        {
+            mDontReload = true;
+        } else
+        {
+            unLockUI();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            {
+                setResult(resultCode);
+
+                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
+                {
+                    finish();
+                }
+                break;
+            }
+        }
     }
 
     protected void requestCommonDatetime()
@@ -139,8 +179,9 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                 try
                 {
                     long currentDateTime = response.getLong("currentDateTime");
+                    long dailyDateTime = response.getLong("dailyDateTime");
 
-                    mBooking.currentDateTime = currentDateTime;
+                    setCurrentDateTime(currentDateTime, dailyDateTime);
 
                     // 호텔 정보를 가져온다.
                     requestPlaceBookingDetail(mBooking.reservationIndex);

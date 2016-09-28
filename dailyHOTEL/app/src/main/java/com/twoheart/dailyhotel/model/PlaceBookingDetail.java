@@ -13,6 +13,8 @@ import java.util.Map;
 
 public abstract class PlaceBookingDetail implements Parcelable
 {
+    public int placeIndex;
+
     public String address;
     public double latitude;
     public double longitude;
@@ -28,6 +30,8 @@ public abstract class PlaceBookingDetail implements Parcelable
     public int bonus;
     public int coupon;
     public int paymentPrice;
+    public long currentDateTime;
+    public long dailyDateTime;
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
@@ -40,6 +44,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        dest.writeInt(placeIndex);
         dest.writeString(address);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
@@ -56,10 +61,13 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeInt(bonus);
         dest.writeInt(coupon);
         dest.writeInt(paymentPrice);
+        dest.writeLong(currentDateTime);
+        dest.writeLong(dailyDateTime);
     }
 
     protected void readFromParcel(Parcel in)
     {
+        placeIndex = in.readInt();
         address = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
@@ -76,6 +84,8 @@ public abstract class PlaceBookingDetail implements Parcelable
         bonus = in.readInt();
         coupon = in.readInt();
         paymentPrice = in.readInt();
+        currentDateTime = in.readLong();
+        dailyDateTime = in.readLong();
     }
 
     public Map<String, List<String>> getSpecification()

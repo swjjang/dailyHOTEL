@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -91,26 +92,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         initPaymentInformationLayout(view, mBookingDetail);
         initRefundPolicyLayout(view, mBookingDetail);
 
-        // 영수증 발급
-        View confirmView = view.findViewById(R.id.buttonLayout);
-        confirmView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null)
-                {
-                    return;
-                }
-
-                Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
-                startActivity(intent);
-            }
-        });
-
         return view;
     }
 
@@ -129,7 +110,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         double height = Util.getListRowHeight(context);
         double ratio = height / width;
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)mapImageView.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
         layoutParams.width = (int) width;
         layoutParams.height = (int) height + Util.dpToPx(context, 71);
 
@@ -163,16 +144,67 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private void initHotelInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
     {
-        if (view == null || bookingDetail == null)
+        if (context == null || view == null || bookingDetail == null)
         {
             return;
         }
 
         // 3일전 부터 몇일 남음 필요.
-        
+        View remainedDayLayout = view.findViewById(R.id.remainedDayLayout);
+        TextView remainedDayTextView = (TextView) view.findViewById(R.id.remainedDayTextView);
+        String remainedDayText;
 
+        try
+        {
+            Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
+
+            int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(bookingDetail.currentDateTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+            if (dayOfDays < 0 || dayOfDays > 3)
+            {
+                remainedDayText = null;
+            } else if (dayOfDays > 0)
+            {
+                // 하루이상 남음
+                remainedDayText = context.getString(R.string.frag_booking_duedate_formet, dayOfDays);
+            } else
+            {
+                // 당일
+                remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
+            }
+
+            if (Util.isTextEmpty(remainedDayText) == true)
+            {
+                remainedDayLayout.setVisibility(View.GONE);
+            } else
+            {
+                remainedDayLayout.setVisibility(View.VISIBLE);
+                remainedDayTextView.setText(remainedDayText);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
         // 체크인 체크아웃
+        initCheckInformatonLayout(context, view, bookingDetail);
+
+        // 예약 장소
+        TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+        TextView roomTypeTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
+        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
+
+        hotelNameTextView.setText(bookingDetail.placeName);
+        roomTypeTextView.setText(bookingDetail.roomName);
+        addressTextView.setText(bookingDetail.address);
+    }
+
+    private void initCheckInformatonLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    {
+        if (context == null || view == null || bookingDetail == null)
+        {
+            return;
+        }
+
         TextView checkinDayTextView = (TextView) view.findViewById(R.id.checkinDayTextView);
         TextView checkoutDayTextView = (TextView) view.findViewById(R.id.checkoutDayTextView);
         TextView nightsTextView = (TextView) view.findViewById(R.id.nightsTextView);
@@ -216,19 +248,15 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         {
             nightsTextView.setText(null);
         }
-
-        // 예약 장소
-        TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        TextView roomTypeTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
-        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
-
-        hotelNameTextView.setText(bookingDetail.placeName);
-        roomTypeTextView.setText(bookingDetail.roomName);
-        addressTextView.setText(bookingDetail.address);
     }
 
     private void initGuestInformationLayout(View view, HotelBookingDetail bookingDetail)
     {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
         TextView guestNameTextView = (TextView) view.findViewById(R.id.guestNameTextView);
         TextView guestPhoneTextView = (TextView) view.findViewById(R.id.guestPhoneTextView);
         TextView guestEmailTextView = (TextView) view.findViewById(R.id.guestEmailTextView);
@@ -240,6 +268,11 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private void initPaymentInformationLayout(View view, HotelBookingDetail bookingDetail)
     {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
         TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
 
@@ -280,10 +313,35 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
 
         totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false));
+
+        // 영수증 발급
+        View confirmView = view.findViewById(R.id.buttonLayout);
+        confirmView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null)
+                {
+                    return;
+                }
+
+                Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initRefundPolicyLayout(View view, HotelBookingDetail bookingDetail)
     {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
         View refundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
 
         if (bookingDetail.isNRD == true)
@@ -310,6 +368,13 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         {
             case R.id.mapImageView:
             {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
                 Intent intent = ZoomMapActivity.newInstance(baseActivity//
@@ -321,13 +386,54 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             }
 
             case R.id.viewDetailView:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                SaleTime saleTime = new SaleTime();
+                saleTime.setCurrentTime(mBookingDetail.currentDateTime);
+                saleTime.setDailyTime(mBookingDetail.dailyDateTime);
+
+                //                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, false);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, 131, false);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                 break;
+            }
 
             case R.id.viewMapView:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
+                    , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas//
+                    , null, null, null);
                 break;
+            }
 
             case R.id.callView:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
                 break;
+            }
         }
     }
 

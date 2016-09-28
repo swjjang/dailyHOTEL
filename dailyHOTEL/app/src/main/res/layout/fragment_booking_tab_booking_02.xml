@@ -16,7 +16,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/default_line_cdcdcdd"/>
+        android:background="@color/default_line_cf0f0f0"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
@@ -31,10 +31,17 @@
         android:textSize="14dp"
         dailyFont:style="Medium"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/shape_wait_payment_background"
         android:orientation="vertical"
         android:paddingLeft="10dp"
@@ -176,65 +183,33 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/refundPolicyLayout"
+        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="25dp">
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:background="@color/default_background_section_cf2f2f3"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="15dp"
-                android:text="@string/label_detail_cancellation_refund_policy"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="13dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/default_line_ce7e7e7"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignParentBottom="true"
-                android:background="@color/default_line_ce7e7e7"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="18dp">
+            android:background="@color/default_line_cdcdcdd"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/info_ic_text_dot_black"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="@string/frag_issuing_receipt"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="12dp"
+            app:drawableCompatLeft="@drawable/reservation_ic_receipt"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/refundPolicyTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="-2dp"
-                android:text="@string/message_booking_refund_product"
-                android:textColor="@color/default_background_section_c323232"
-                android:textSize="13dp"/>
-        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
     </LinearLayout>
 </LinearLayout>
     <!--</merge>-->

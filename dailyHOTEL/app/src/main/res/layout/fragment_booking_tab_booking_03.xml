@@ -20,10 +20,14 @@
         android:textSize="14dp"
         dailyFont:style="Medium"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
+        android:layout_height="55dp"
         android:gravity="center_vertical">
 
         <ImageView

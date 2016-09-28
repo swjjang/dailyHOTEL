@@ -292,6 +292,7 @@ public class MainActivity extends BaseActivity implements Constants
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
+            case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
             {
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
@@ -767,7 +768,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isEventDetailView() == true//
                     || DailyDeepLink.getInstance().isCouponView() == true //
                     || DailyDeepLink.getInstance().isInformationView() == true //
-                    || DailyDeepLink.getInstance().isRecommendFriendView() == true)
+                    || DailyDeepLink.getInstance().isRecommendFriendView() == true //
+                    || DailyDeepLink.getInstance().isRegisterCouponView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)

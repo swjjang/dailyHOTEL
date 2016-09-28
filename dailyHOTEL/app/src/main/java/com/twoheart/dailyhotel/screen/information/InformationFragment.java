@@ -107,6 +107,9 @@ public class InformationFragment extends BaseFragment implements Constants
             } else if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
             {
                 mOnEventListener.startInviteFriend();
+            } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true) {
+                mOnEventListener.startCouponList();
+                return;
             }
 
             DailyDeepLink.getInstance().clear();
