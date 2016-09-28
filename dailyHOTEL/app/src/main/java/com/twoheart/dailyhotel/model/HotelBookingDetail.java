@@ -59,6 +59,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         roomName = jsonObject.getString("roomName");
         guestPhone = jsonObject.getString("guestPhone");
         guestName = jsonObject.getString("guestName");
+        guestEmail = jsonObject.getString("guestEmail");
 
         checkInDate = jsonObject.getString("checkIn");
         checkOutDate = jsonObject.getString("checkOut");

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black_a67">
@@ -17,29 +17,16 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/exitView">
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/informationLayout"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@color/white">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/resetCurationView"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="@string/label_reset"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="16dp"/>
-
             <ImageView
                 android:id="@+id/closeView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_gravity="right"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
@@ -48,13 +35,11 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/closeView"
-                android:layout_toRightOf="@+id/resetCurationView"
                 android:gravity="center"
-                android:textColor="@color/default_text_c323232"
                 android:text="@string/activity_curation_title"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="16dp"/>
-        </RelativeLayout>
+        </FrameLayout>
 
         <ScrollView
             android:id="@+id/contentScrollView"
@@ -90,17 +75,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
+                android:layout_toLeftOf="@+id/resetCurationView"
                 android:background="@drawable/selector_button_default_background"
                 android:gravity="center"
                 android:text="@string/label_searching"
                 android:textColor="@drawable/selector_button_default_text_color"
                 android:textSize="17dp"
                 dailyFont:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/resetCurationView"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
+                android:drawablePadding="4dp"
+                android:gravity="center_horizontal"
+                android:paddingTop="9dp"
+                android:text="@string/label_reset"
+                android:textColor="@color/default_text_c454545"
+                android:textSize="9dp"
+                app:drawableCompatTop="@drawable/ic_refresh"/>
         </RelativeLayout>
     </RelativeLayout>
 
     <View
         android:id="@+id/disableLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="76dp"
+        android:layout_marginStart="76dp"/>
 </RelativeLayout>

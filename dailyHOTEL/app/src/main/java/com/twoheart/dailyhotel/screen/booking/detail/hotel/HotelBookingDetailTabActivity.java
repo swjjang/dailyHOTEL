@@ -72,54 +72,51 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         BaseFragment baseFragment02 = HotelBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
         fragmentList.add(baseFragment02);
 
-        BaseFragment baseFragment03 = HotelBookingDetailTabMapFragment.newInstance(placeBookingDetail, mBooking.isUsed);
-        fragmentList.add(baseFragment03);
-
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(fragmentPagerAdapter);
     }
 
-    @Override
-    protected void onOptionsItemSelected(View view)
-    {
-        PopupMenu popupMenu = new PopupMenu(this, view);
-
-        if (Util.isTextEmpty(mHotelBookingDetail.hotelPhone) == false)
-        {
-            popupMenu.getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call, popupMenu.getMenu());
-        } else
-        {
-            popupMenu.getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call2, popupMenu.getMenu());
-        }
-
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-        {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                onOptionsItemSelected(item);
-                return false;
-            }
-        });
-
-        try
-        {
-            popupMenu.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        view.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                FontManager.apply(((ViewGroup) getWindow().getDecorView())//
-                    , FontManager.getInstance(HotelBookingDetailTabActivity.this).getRegularTypeface());
-            }
-        });
-    }
+//    @Override
+//    protected void onOptionsItemSelected(View view)
+//    {
+//        PopupMenu popupMenu = new PopupMenu(this, view);
+//
+//        if (Util.isTextEmpty(mHotelBookingDetail.hotelPhone) == false)
+//        {
+//            popupMenu.getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call, popupMenu.getMenu());
+//        } else
+//        {
+//            popupMenu.getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call2, popupMenu.getMenu());
+//        }
+//
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+//        {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item)
+//            {
+//                onOptionsItemSelected(item);
+//                return false;
+//            }
+//        });
+//
+//        try
+//        {
+//            popupMenu.show();
+//        } catch (Exception e)
+//        {
+//            ExLog.d(e.toString());
+//        }
+//
+//        view.post(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                FontManager.apply(((ViewGroup) getWindow().getDecorView())//
+//                    , FontManager.getInstance(HotelBookingDetailTabActivity.this).getRegularTypeface());
+//            }
+//        });
+//    }
 
     @Override
     protected void onTabSelected(int position)
@@ -238,6 +235,13 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         // 호텔 정보를 가져온다.
         DailyNetworkAPI.getInstance(this).requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener);
+    }
+
+    @Override
+    protected void setCurrentDateTime(long currentDateTime, long dailyDateTime)
+    {
+        mHotelBookingDetail.currentDateTime = currentDateTime;
+        mHotelBookingDetail.dailyDateTime = dailyDateTime;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

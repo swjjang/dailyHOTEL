@@ -22,6 +22,7 @@ public class Booking implements Parcelable
     public String ment;
     public long checkinTime;
     public long checkoutTime;
+
     public String hotelImageUrl;
     public boolean isUsed;
     public Constants.PlaceType placeType;

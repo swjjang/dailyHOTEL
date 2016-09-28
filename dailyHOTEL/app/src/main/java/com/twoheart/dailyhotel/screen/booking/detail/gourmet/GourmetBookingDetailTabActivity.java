@@ -81,47 +81,47 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         viewPager.setAdapter(mFragmentPagerAdapter);
     }
 
-    @Override
-    protected void onOptionsItemSelected(View view)
-    {
-        final PopupMenu popupMenu = new PopupMenu(this, view);
-
-        if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == false)
-        {
-            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, popupMenu.getMenu());
-        } else
-        {
-            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, popupMenu.getMenu());
-        }
-
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-        {
-            @Override
-            public boolean onMenuItemClick(MenuItem item)
-            {
-                onOptionsItemSelected(item);
-                return false;
-            }
-        });
-
-        try
-        {
-            popupMenu.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        view.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                FontManager.apply(((ViewGroup) getWindow().getDecorView())//
-                    , FontManager.getInstance(GourmetBookingDetailTabActivity.this).getRegularTypeface());
-            }
-        });
-    }
+//    @Override
+//    protected void onOptionsItemSelected(View view)
+//    {
+//        final PopupMenu popupMenu = new PopupMenu(this, view);
+//
+//        if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == false)
+//        {
+//            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, popupMenu.getMenu());
+//        } else
+//        {
+//            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, popupMenu.getMenu());
+//        }
+//
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+//        {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item)
+//            {
+//                onOptionsItemSelected(item);
+//                return false;
+//            }
+//        });
+//
+//        try
+//        {
+//            popupMenu.show();
+//        } catch (Exception e)
+//        {
+//            ExLog.d(e.toString());
+//        }
+//
+//        view.post(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                FontManager.apply(((ViewGroup) getWindow().getDecorView())//
+//                    , FontManager.getInstance(GourmetBookingDetailTabActivity.this).getRegularTypeface());
+//            }
+//        });
+//    }
 
     @Override
     protected void onTabSelected(int position)
@@ -232,6 +232,13 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     {
         lockUI();
         DailyNetworkAPI.getInstance(this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener);
+    }
+
+    @Override
+    protected void setCurrentDateTime(long currentDateTime, long dailyDateTime)
+    {
+        mGourmetBookingDetail.currentDateTime = currentDateTime;
+        mGourmetBookingDetail.dailyDateTime = dailyDateTime;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

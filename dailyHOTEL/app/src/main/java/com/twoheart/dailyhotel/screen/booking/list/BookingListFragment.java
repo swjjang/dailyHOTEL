@@ -251,18 +251,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 case FNB:
                     intent = new Intent(baseActivity, GourmetBookingDetailTabActivity.class);
                     break;
+                default:
+                    releaseUiComponent();
+                    return;
             }
 
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
         } else if (item.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
         {
             // 가상계좌 입금대기
             intent = new Intent(baseActivity, PaymentWaitActivity.class);
-        }
-
-        if (intent != null)
-        {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
         } else
         {
             releaseUiComponent();
@@ -287,11 +288,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         releaseUiComponent();
 
-        if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL)
+        switch(requestCode)
         {
-            switch (resultCode)
+            case CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
             {
-                case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
+                if(resultCode == CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT)
+                {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
 
                     if (baseActivity == null)
@@ -300,7 +302,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     }
 
                     baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
-                    break;
+                }
+                break;
             }
         }
     }

@@ -1,25 +1,33 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
-    protected static final int TAB_COUNT = 3;
+    protected static final int TAB_COUNT = 2;
 
     private ViewPager mViewPager;
+    private boolean mDontReload;
     protected Booking mBooking;
 
     private DailyToolbarLayout mDailyToolbarLayout;
@@ -28,7 +36,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected abstract void requestPlaceBookingDetail(int reservationIndex);
 
-    protected abstract void onOptionsItemSelected(View view);
+    protected abstract void setCurrentDateTime(long currentDateTime, long dailyDateTime);
 
     protected abstract void onTabSelected(int position);
 
@@ -59,7 +67,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     {
         setContentView(R.layout.activity_booking_tab);
 
-        initToolbar(mBooking.placeName);
+        initToolbar(getString(R.string.actionbar_title_booking_list_frag));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
@@ -69,7 +77,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_info_title));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_map_title));
         FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -92,15 +99,15 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onOptionsItemSelected(v);
-            }
-        });
+        //        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        //        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                onOptionsItemSelected(v);
+        //            }
+        //        });
     }
 
     public ViewPager getViewPager()
@@ -119,10 +126,77 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             return;
         }
 
-        lockUI();
+        if (mDontReload == false)
+        {
+            lockUI();
 
-        // 호텔 정보를 가져온다.
-        requestPlaceBookingDetail(mBooking.reservationIndex);
+            requestCommonDatetime();
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mDontReload == false)
+        {
+            mDontReload = true;
+        } else
+        {
+            unLockUI();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            {
+                setResult(resultCode);
+
+                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
+                {
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+    protected void requestCommonDatetime()
+    {
+        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    long currentDateTime = response.getLong("currentDateTime");
+                    long dailyDateTime = response.getLong("dailyDateTime");
+
+                    setCurrentDateTime(currentDateTime, dailyDateTime);
+
+                    // 호텔 정보를 가져온다.
+                    requestPlaceBookingDetail(mBooking.reservationIndex);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                PlaceBookingDetailTabActivity.this.onErrorResponse(volleyError);
+            }
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
