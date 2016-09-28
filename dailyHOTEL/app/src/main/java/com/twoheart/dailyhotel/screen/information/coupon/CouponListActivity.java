@@ -145,7 +145,7 @@ public class CouponListActivity extends BaseActivity
 
     private void startRegisterCoupon()
     {
-        Intent intent = RegisterCouponActivity.newInstance(CouponListActivity.this);
+        Intent intent = RegisterCouponActivity.newInstance(CouponListActivity.this, AnalyticsManager.Screen.MENU_COUPON_BOX);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
     }
 

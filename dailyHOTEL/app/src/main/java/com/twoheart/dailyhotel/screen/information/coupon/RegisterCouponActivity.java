@@ -12,6 +12,9 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import static com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity.INTENT_EXTRA_DATA_CALL_BY_SCREEN;
 
 /**
  * Created by android_sam on 2016. 9. 19..
@@ -21,9 +24,12 @@ public class RegisterCouponActivity extends BaseActivity
     private RegisterCouponLayout mRegisterCouponLayout;
     private RegisterCouponNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context)
+    private String mCallByScreen;
+
+    public static Intent newInstance(Context context, String callByScreen)
     {
         Intent intent = new Intent(context, RegisterCouponActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         return intent;
     }
 
@@ -33,6 +39,8 @@ public class RegisterCouponActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        initIntent(getIntent());
 
         mRegisterCouponLayout = new RegisterCouponLayout(this, mOnEventListener);
         mNetworkController = new RegisterCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
@@ -45,7 +53,7 @@ public class RegisterCouponActivity extends BaseActivity
     {
         super.onStart();
 
-        //        AnalyticsManager.getInstance(RegisterCouponActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_BOX);
+        AnalyticsManager.getInstance(RegisterCouponActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_REGISTRATION);
 
         if (DailyHotel.isLogin() == false)
         {
@@ -67,6 +75,19 @@ public class RegisterCouponActivity extends BaseActivity
 
         setResult(RESULT_OK);
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    private void initIntent(Intent intent)
+    {
+        if (intent == null)
+        {
+            return;
+        }
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+        {
+            mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+        }
     }
 
     private void showLoginDialog()
@@ -145,6 +166,10 @@ public class RegisterCouponActivity extends BaseActivity
             }
 
             mNetworkController.requestRegisterCoupon(couponCode);
+
+            AnalyticsManager.getInstance(RegisterCouponActivity.this).recordEvent(//
+                AnalyticsManager.Category.COUPON_BOX, AnalyticsManager.Action.REGISTRATION_CLICKED,//
+                mCallByScreen, null);
         }
 
         @Override
@@ -160,7 +185,7 @@ public class RegisterCouponActivity extends BaseActivity
     private RegisterCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new RegisterCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegisterCoupon(String couponCode, String message)
+        public void onRegisterCoupon(String couponCode, final boolean isSuccess, String message)
         {
             unLockUI();
 
@@ -171,9 +196,17 @@ public class RegisterCouponActivity extends BaseActivity
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        finish();
+                        if (isSuccess == true)
+                        {
+                            finish();
+                        }
                     }
                 });
+
+            AnalyticsManager.getInstance(RegisterCouponActivity.this).recordEvent( //
+                AnalyticsManager.Category.COUPON_BOX, //
+                isSuccess == true ? AnalyticsManager.Action.REGISTRATION_COMPLETE : AnalyticsManager.Action.REGISTRATION_REJECTED //
+                , couponCode, null);
         }
 
         @Override
@@ -191,7 +224,7 @@ public class RegisterCouponActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            RegisterCouponActivity.this.onErrorPopupMessage(msgCode, message, null);
+            RegisterCouponActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
