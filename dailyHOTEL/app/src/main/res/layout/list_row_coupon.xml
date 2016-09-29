@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="28dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="13dp"
             android:layout_toLeftOf="@id/vericalLine"
             android:gravity="center_vertical"
@@ -45,6 +46,7 @@
             android:layout_height="18dp"
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_below="@id/couponPriceTextView"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="6dp"
             android:layout_toLeftOf="@id/vericalLine"
             android:ellipsize="end"
@@ -59,6 +61,7 @@
             android:layout_height="17dp"
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_below="@id/descriptionTextView"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="1dp"
             android:layout_toLeftOf="@id/vericalLine"
             android:orientation="horizontal">
@@ -90,6 +93,7 @@
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="13dp"
+            android:layout_marginRight="16dp"
             android:layout_toLeftOf="@id/vericalLine"
             android:gravity="center_vertical"
             android:minHeight="17dp"
@@ -103,6 +107,7 @@
             android:layout_above="@id/minPriceTextView"
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_toLeftOf="@id/vericalLine"
+            android:layout_marginRight="16dp"
             android:gravity="center_vertical"
             android:textColor="@color/coupon_description_text"
             android:textSize="11dp"/>
@@ -133,12 +138,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                app:drawableCompatTop="@drawable/more_ic_coupon_02"
                 android:gravity="center"
                 android:text="@string/coupon_download_text"
                 android:textColor="@color/white"
                 android:textSize="11dp"
                 android:visibility="gone"
+                app:drawableCompatTop="@drawable/more_ic_coupon_02"
                 dailyFont:style="Medium"/>
 
             <View

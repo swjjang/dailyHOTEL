@@ -20,7 +20,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onRegisterCoupon(String couponCode, String message);
+        void onRegisterCoupon(String couponCode, boolean isSuccess, String message);
     }
 
     public void requestRegisterCoupon(String couponCode)
@@ -48,20 +48,13 @@ public class RegisterCouponNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                boolean isSuccess = msgCode == 100 ? true : false;
                 String message = response.getString("msg");
 
-                if (msgCode == 100)
-                {
-                    Uri uri = Uri.parse(url);
-                    String userCouponCode = uri.getQueryParameter("keyword");
+                Uri uri = Uri.parse(url);
+                String userCouponCode = uri.getQueryParameter("keyword");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, message);
-                } else
-                {
-
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                }
-
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, isSuccess , message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

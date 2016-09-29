@@ -588,7 +588,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         DailyDeepLink.getInstance().clear();
 
-        Intent intent = RegisterCouponActivity.newInstance(context);
+        Intent intent = RegisterCouponActivity.newInstance(context, Screen.EVENT_DETAIL);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
 
         return true;

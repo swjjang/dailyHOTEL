@@ -514,6 +514,7 @@ public class AnalyticsManager
         public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
         public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
         public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
+        public static final String MENU_COUPON_REGISTRATION = "Menu_CouponRegistration";
         //
         public static final String DAILYHOTEL_DEPOSITWAITING = "DailyHotel_DepositWaiting";
         public static final String DAILYGOURMET_DEPOSITWAITING = "DailyGourmet_DepositWaiting";
@@ -578,6 +579,8 @@ public class AnalyticsManager
         public static final String MENU_CLICKED = "MenuClicked";
         public static final String LOGIN_CLICKED = "LoginClicked";
         public static final String REGISTRATION_CLICKED = "RegistrationClicked";
+        public static final String REGISTRATION_COMPLETE = "RegistrationComplete";
+        public static final String REGISTRATION_REJECTED = "RegistrationRejected";
         public static final String CARD_MANAGEMENT_CLICKED = "CardManagementClicked";
         public static final String REGISTERED_CARD_DELETE_POPPEDUP = "RegisteredCardDeletePoppedup";
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
