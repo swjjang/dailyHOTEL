@@ -114,14 +114,20 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         placeTextView.setText(place);
         placeTypeTextView.setText(placeType);
 
-        String message = getString(R.string.message_completed_payment_format, userName);
-        SpannableStringBuilder userNameBuilder = new SpannableStringBuilder(message);
-        userNameBuilder.setSpan( //
-            new CustomFontTypefaceSpan(FontManager.getInstance(this).getMediumTypeface()),//
-            0, userName.length(),//
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        messageTextView.setText(userNameBuilder);
+        String message;
+        if (Util.isTextEmpty(userName) == false)
+        {
+            message = getString(R.string.message_completed_payment_format, userName);
+            SpannableStringBuilder userNameBuilder = new SpannableStringBuilder(message);
+            userNameBuilder.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(this).getMediumTypeface()),//
+                0, userName.length(),//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            messageTextView.setText(userNameBuilder);
+        } else {
+            message = getString(R.string.message_completed_payment_default);
+            messageTextView.setText(message);
+        }
 
         confirmView.setOnClickListener(this);
     }

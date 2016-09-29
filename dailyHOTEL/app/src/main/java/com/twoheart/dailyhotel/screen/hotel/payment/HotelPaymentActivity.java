@@ -357,7 +357,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String checkInDate = DailyCalendar.format(hotelPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         String checkOutDate = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         int nights = hotelPaymentInformation.nights;
-        String userName = hotelPaymentInformation.getCustomer().getName();
+        String userName = hotelPaymentInformation.getCustomer() == null ? "" : hotelPaymentInformation.getCustomer().getName();
 
         Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
 
