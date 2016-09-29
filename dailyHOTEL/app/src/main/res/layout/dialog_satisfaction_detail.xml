@@ -62,7 +62,7 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/selector_dialog_select_button"
             android:gravity="center"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@drawable/selector_text_color_c323232_cffffff"
             android:textSize="14dp"
             app:layout_columnWeight="1"
             dailyFont:style="Medium"/>
@@ -75,7 +75,7 @@
             android:layout_marginLeft="5dp"
             android:background="@drawable/selector_dialog_select_button"
             android:gravity="center"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@drawable/selector_text_color_c323232_cffffff"
             android:textSize="14dp"
             app:layout_columnWeight="1"
             dailyFont:style="Medium"/>
@@ -89,7 +89,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_dialog_select_button"
             android:gravity="center"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@drawable/selector_text_color_c323232_cffffff"
             android:textSize="14dp"
             app:layout_columnWeight="1"
             dailyFont:style="Medium"/>
@@ -102,7 +102,7 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/selector_dialog_select_button"
             android:gravity="center"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@drawable/selector_text_color_c323232_cffffff"
             android:textSize="14dp"
             app:layout_columnWeight="1"
             dailyFont:style="Medium"/>
