@@ -36,7 +36,7 @@ public class AdjustManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String APPLICATION_TOKEN = "jkf7ii0lj9xc";
-    private static final String ENVIRONMENT = AdjustConfig.ENVIRONMENT_PRODUCTION;
+    private static final String ENVIRONMENT = DEBUG == true ? AdjustConfig.ENVIRONMENT_SANDBOX : AdjustConfig.ENVIRONMENT_PRODUCTION;
 
     private String mUserIndex;
 
