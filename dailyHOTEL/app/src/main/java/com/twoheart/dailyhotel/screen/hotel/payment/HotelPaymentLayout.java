@@ -50,7 +50,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     //
     private View mBookingLayout;
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
-    private TextView mBookingAmountTextView;
+    private TextView mAmountNightsTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
     private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
@@ -238,7 +238,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private void initPaymentInformation(View view)
     {
-        mBookingAmountTextView = (TextView) view.findViewById(R.id.bookingAmountTextView);
+        mAmountNightsTextView = (TextView) view.findViewById(R.id.amountNightsTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
@@ -582,8 +582,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     {
         if (nights > 1)
         {
-            mBookingAmountTextView.setText(mContext.getString(R.string.act_booking_price)//
-                + mContext.getString(R.string.label_booking_hotel_nights, nights));
+            mAmountNightsTextView.setText(mContext.getString(R.string.label_booking_hotel_nights, nights));
+            mAmountNightsTextView.setVisibility(View.VISIBLE);
+        } else {
+            mAmountNightsTextView.setVisibility(View.GONE);
         }
 
         mPriceTextView.setText(Util.getPriceFormat(mContext, originalPrice, false));

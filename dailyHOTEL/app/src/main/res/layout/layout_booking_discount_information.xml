@@ -228,6 +228,17 @@
                 android:duplicateParentState="true"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/amountNightsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/originalPriceTextView"
+                android:layout_marginRight="6dp"
+                android:duplicateParentState="true"
+                android:textColor="@color/default_text_c929292"
+                android:visibility="gone"
+                android:textSize="12dp"/>
         </RelativeLayout>
 
         <RelativeLayout
