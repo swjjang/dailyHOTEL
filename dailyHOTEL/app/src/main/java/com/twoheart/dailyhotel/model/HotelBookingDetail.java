@@ -9,6 +9,8 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import static com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity.INTENT_EXTRA_HOTEL_IDX;
+
 public class HotelBookingDetail extends PlaceBookingDetail
 {
     public boolean isOverseas;
@@ -105,6 +107,11 @@ public class HotelBookingDetail extends PlaceBookingDetail
         } else
         {
             isNRD = false;
+        }
+
+        if (jsonObject.has(INTENT_EXTRA_HOTEL_IDX) == true)
+        {
+            placeIndex = jsonObject.getInt(INTENT_EXTRA_HOTEL_IDX);
         }
     }
 

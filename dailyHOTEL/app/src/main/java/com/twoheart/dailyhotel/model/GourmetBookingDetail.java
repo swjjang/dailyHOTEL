@@ -98,6 +98,11 @@ public class GourmetBookingDetail extends PlaceBookingDetail
 
         paymentPrice = jsonObject.getInt("discountTotal");
         paymentDate = jsonObject.getString("paidAt");
+
+        if (jsonObject.has("restaurantIdx") == true)
+        {
+            placeIndex = jsonObject.getInt("restaurantIdx");
+        }
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
