@@ -134,7 +134,7 @@ public class PaymentWaitActivity extends BaseActivity
         ScrollView scrollLayout = (ScrollView) findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
-        TextView placeNameTextView = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
+        TextView placeNameTextView = (TextView) findViewById(R.id.paymentWaitHotelNameView);
         mAccountTextView = (TextView) findViewById(R.id.tv_payment_wait_account);
         mDailyTextView = (TextView) findViewById(R.id.tv_payment_wait_name);
         mPriceTextView = (TextView) findViewById(R.id.priceTextView);
@@ -168,7 +168,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         lockUI();
 
-        TextView placeInformationView = (TextView) findViewById(R.id.placeInformationView);
+        TextView placeInformationView = (TextView) findViewById(R.id.placeInformationTitleView);
         TextView placeNameView = (TextView) findViewById(R.id.placeNameView);
 
         switch (booking.placeType)
