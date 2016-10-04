@@ -119,7 +119,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/common/datetime" : "MTEkNDgkNDAkMCQ1MyQzMSQ0MyQ5MCQ5MSQxMiQ5NyQxOCQyMCQ2NyQ4MSQyOSQ=$NNTM1NzY2OTVBGERkFSEDMkU0N0FGSQjYyNWEVDNjFGMUIBQxM0Y2MEIC3RBDlGOTJCMMDdDNTU0RjJEMkOE5OTZEOEI0Q0NHVFOQ=Q=$";
 
-        String params = "?timeZone=" + URLEncoder.encode("Asia/Seoul");
+        String params = "?timeZone=Asia%2FSeoul";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, listener);
 
