@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -74,16 +73,16 @@ public class Util implements Constants
 
     private static SoftReference<String> MEMORY_CLEAR;
 
-//    static
-//    {
-//        try
-//        {
-//            SoLoaderShim.loadLibrary("webp");
-//        } catch (UnsatisfiedLinkError e)
-//        {
-//            ExLog.e(e.toString());
-//        }
-//    }
+    //    static
+    //    {
+    //        try
+    //        {
+    //            SoLoaderShim.loadLibrary("webp");
+    //        } catch (UnsatisfiedLinkError e)
+    //        {
+    //            ExLog.e(e.toString());
+    //        }
+    //    }
 
     public static void initializeMemory()
     {
@@ -167,10 +166,16 @@ public class Util implements Constants
 
     public static void setLocale(Context context, Locale locale)
     {
-        Resources res = context.getResources();
-        Configuration conf = res.getConfiguration();
-        conf.locale = locale;
-        res.updateConfiguration(conf, null);
+        try
+        {
+            Resources res = context.getResources();
+            Configuration conf = res.getConfiguration();
+            conf.locale = locale;
+            res.updateConfiguration(conf, null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     public static void restartApp(Context context)
