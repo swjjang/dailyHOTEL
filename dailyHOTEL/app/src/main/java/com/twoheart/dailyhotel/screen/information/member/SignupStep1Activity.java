@@ -31,21 +31,31 @@ public class SignupStep1Activity extends BaseActivity
 
     private SignupStep1Layout mSignupStep1Layout;
     private Map<String, String> mSignupParams;
+    private String mCallByScreen;
 
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, String callByScreen)
     {
         Intent intent = new Intent(context, SignupStep1Activity.class);
 
+        if (Util.isTextEmpty(callByScreen) == false)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+        }
         return intent;
     }
 
-    public static Intent newInstance(Context context, String recommender)
+    public static Intent newInstance(Context context, String recommender, String callByScreen)
     {
         Intent intent = new Intent(context, SignupStep1Activity.class);
 
         if (Util.isTextEmpty(recommender) == false)
         {
             intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+        }
+
+        if (Util.isTextEmpty(callByScreen) == false)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
         }
 
         return intent;
@@ -64,6 +74,11 @@ public class SignupStep1Activity extends BaseActivity
         if (intent != null && intent.hasExtra(INTENT_EXTRA_DATA_RECOMMENDER) == true)
         {
             recommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
+        }
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        {
+            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
         }
 
         mSignupStep1Layout = new SignupStep1Layout(this, mOnEventListener);
@@ -259,7 +274,9 @@ public class SignupStep1Activity extends BaseActivity
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     String signupKey = dataJSONObject.getString("signup_key");
 
-                    Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), mSignupParams.get("recommender"));
+                    Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
+                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), //
+                        mSignupParams.get("recommender"), mCallByScreen);
                     startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 } else
                 {

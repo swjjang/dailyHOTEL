@@ -317,13 +317,13 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+                analyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType, callByScreen);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -331,13 +331,13 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
+    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType, recommender);
+                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType, recommender, callByScreen);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());

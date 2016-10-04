@@ -601,8 +601,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(EventWebActivity.this, LoginActivity.class);
-
+                Intent intent = LoginActivity.newInstance(EventWebActivity.this);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
             }
         }, null);

@@ -416,7 +416,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         mTune.setUserId(userIndex);
 
@@ -455,12 +455,12 @@ public class TuneManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "signUpSocialUser : " + userIndex + ", " + email + ", " + name + ", " + gender + ", " + phoneNumber + ", " + userType);
+            ExLog.d(TAG + "signUpSocialUser : " + userIndex + ", " + email + ", " + name + ", " + gender + ", " + phoneNumber + ", " + userType + ", " + callByScreen);
         }
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
     {
         // Tune
         mTune.setUserId(userIndex);
@@ -476,7 +476,7 @@ public class TuneManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "signUpDailyUser : " + userIndex + ", " + email + ", " + name + ", " + phoneNumber + ", " + userType);
+            ExLog.d(TAG + "signUpDailyUser : " + userIndex + ", " + email + ", " + name + ", " + phoneNumber + ", " + userType + ", " + callByScreen);
         }
     }
 

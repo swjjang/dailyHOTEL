@@ -279,7 +279,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
             case R.id.signinTextView:
             {
-                Intent intent = new Intent(this, LoginActivity.class);
+                Intent intent = LoginActivity.newInstance(this);
                 startActivityForResult(intent, REQUEST_ACTIVITY_LOGIN);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
@@ -288,7 +288,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
             case R.id.signupTextView:
             {
-                Intent intent = SignupStep1Activity.newInstance(InviteFriendsActivity.this);
+                Intent intent = SignupStep1Activity.newInstance(InviteFriendsActivity.this, null);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SIGNUP);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
