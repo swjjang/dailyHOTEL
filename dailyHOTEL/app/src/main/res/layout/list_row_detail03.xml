@@ -26,6 +26,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="66dp"
             android:background="@drawable/detail_map_gradient"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView

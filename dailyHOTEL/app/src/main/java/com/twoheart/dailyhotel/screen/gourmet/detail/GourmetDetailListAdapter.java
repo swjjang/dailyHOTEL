@@ -338,7 +338,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         layoutParams.height = (int)height;
 
         mapImageView.setLayoutParams(layoutParams);
-        mapImageView.setTranslationX((int)width / 2 - Util.dpToPx(mContext, 40));
+        mapImageView.setTranslationX((int)width / 2 - Util.dpToPx(mContext, 45));
 
         double ratio = height / width;
 
