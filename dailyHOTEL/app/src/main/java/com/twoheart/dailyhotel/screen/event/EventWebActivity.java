@@ -67,7 +67,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         HOTEL_BANNER,
         GOURMET_BANNER,
-        EVENT,
+        EVENT
     }
 
     private Handler mHandler = new Handler();
