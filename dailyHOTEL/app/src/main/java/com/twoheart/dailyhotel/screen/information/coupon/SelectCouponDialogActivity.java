@@ -35,7 +35,6 @@ public class SelectCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_CATEGORY_CODE = "categoryCode";
     public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
-    public static final String INTENT_EXTRA_CALL_BY_SCREEN = "callByScreen";
 
     private SelectCouponDialogLayout mLayout;
     private SelectCouponNetworkController mNetworkController;
@@ -64,7 +63,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
-        intent.putExtra(INTENT_EXTRA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT);
+        intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT);
 
         return intent;
     }
@@ -78,7 +77,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
-        intent.putExtra(INTENT_EXTRA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+        intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
 
         return intent;
     }
@@ -96,7 +95,7 @@ public class SelectCouponDialogActivity extends BaseActivity
             return;
         }
 
-        mCallByScreen = intent.getStringExtra(INTENT_EXTRA_CALL_BY_SCREEN);
+        mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
 
         switch (mCallByScreen)
         {

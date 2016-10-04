@@ -97,7 +97,7 @@ public class BonusActivity extends BaseActivity
 
     private void startLogin()
     {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 

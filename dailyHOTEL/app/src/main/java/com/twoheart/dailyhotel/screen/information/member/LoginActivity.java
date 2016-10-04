@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -70,6 +71,23 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private boolean mIsSocialSignUp;
     private boolean mCertifyingTermination;
 
+    private String mCallByScreen;
+
+    public static Intent newInstance(Context context) {
+        return newInstance(context, null);
+    }
+
+    public static Intent newInstance(Context context, String callByScreen)
+    {
+        Intent intent = new Intent(context, LoginActivity.class);
+
+        if (Util.isTextEmpty(callByScreen) == false)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+        }
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -80,6 +98,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyHotel.setCurrentActivity(this);
 
         setContentView(R.layout.activity_login);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        {
+            mCallByScreen = getIntent().getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
+        }
 
         initToolbar();
         initTopLayout();
@@ -279,7 +303,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             case R.id.signupView:
             {
-                Intent intent = SignupStep1Activity.newInstance(this);
+                Intent intent = SignupStep1Activity.newInstance(this, mCallByScreen);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
 
                 AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
@@ -572,7 +596,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 AnalyticsManager.getInstance(LoginActivity.this).signUpSocialUser(//
                     mStoreParams.get("user_idx"), mStoreParams.get("email"), mStoreParams.get("name")//
-                    , mStoreParams.get("gender"), null, mStoreParams.get("user_type"));
+                    , mStoreParams.get("gender"), null, mStoreParams.get("user_type"), mCallByScreen);
             }
 
             DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);

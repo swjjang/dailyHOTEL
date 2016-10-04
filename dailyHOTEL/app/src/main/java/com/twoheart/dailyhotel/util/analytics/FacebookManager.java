@@ -335,7 +335,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -351,7 +351,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 

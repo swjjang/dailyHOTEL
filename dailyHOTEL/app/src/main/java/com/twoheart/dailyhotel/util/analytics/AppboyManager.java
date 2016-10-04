@@ -690,7 +690,7 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -699,7 +699,19 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.REGISTRATION_DATE, new Date());
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, AnalyticsManager.ValueType.EMPTY);
 
-        mAppboy.logCustomEvent(EventName.REGISTER_COMPLETED, appboyProperties);
+        String eventName;
+        if (Util.isTextEmpty(callByScreen) == true) {
+            eventName = EventName.REGISTER_COMPLETED;
+        } else {
+            if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(callByScreen) //
+                || AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(callByScreen)) {
+                eventName = EventName.REGISTER_COMPLETED_BEFORE_BOOKING;
+            } else {
+                eventName = EventName.REGISTER_COMPLETED;
+            }
+        }
+
+        mAppboy.logCustomEvent(eventName, appboyProperties);
 
         if (DEBUG == true)
         {
@@ -708,7 +720,7 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -723,7 +735,19 @@ public class AppboyManager extends BaseAnalyticsManager
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, recommender);
 
-        mAppboy.logCustomEvent(EventName.REGISTER_COMPLETED, appboyProperties);
+        String eventName;
+        if (Util.isTextEmpty(callByScreen) == true) {
+            eventName = EventName.REGISTER_COMPLETED;
+        } else {
+            if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(callByScreen) //
+                || AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(callByScreen)) {
+                eventName = EventName.REGISTER_COMPLETED_BEFORE_BOOKING;
+            } else {
+                eventName = EventName.REGISTER_COMPLETED;
+            }
+        }
+
+        mAppboy.logCustomEvent(eventName, appboyProperties);
 
         if (DEBUG == true)
         {
@@ -879,6 +903,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String GOURMET_BOOKING_INITIALISED = "gourmet_booking_initialised";
         public static final String GOURMET_PURCHASE_COMPLETED = "gourmet_purchase_completed";
         public static final String REGISTER_COMPLETED = "register_completed";
+        public static final String REGISTER_COMPLETED_BEFORE_BOOKING = "register_completed_before_booking";
         public static final String STAY_SATISFACTION_SURVEY = "stay_satisfaction_survey";
         public static final String STAY_SATISFACTION_DETAIL_RESPONSE = "stay_satisfaction_detail_response\t";
         public static final String STAY_DISSATISFACTION_DETAIL_RESPONSE = "stay_dissatisfaction_detail_response";

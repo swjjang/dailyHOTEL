@@ -35,11 +35,12 @@ public class SignupStep2Activity extends BaseActivity
     private SignupStep2NetworkController mNetworkController;
     private String mCountryCode;
     private String mSignupKey, mEmail, mPassword, mRecommender;
+    private String mCallByScreen;
     private int mRequestVerficationCount;
 
     private Handler mRetryHandler;
 
-    public static Intent newInstance(Context context, String singupKey, String email, String password, String recommmender)
+    public static Intent newInstance(Context context, String singupKey, String email, String password, String recommmender, String callByScreen)
     {
         Intent intent = new Intent(context, SignupStep2Activity.class);
 
@@ -53,6 +54,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommmender);
+        intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
@@ -88,6 +90,11 @@ public class SignupStep2Activity extends BaseActivity
         mEmail = intent.getStringExtra(INTENT_EXTRA_DATA_EMAIL);
         mPassword = intent.getStringExtra(INTENT_EXTRA_DATA_PASSWORD);
         mRecommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
+
+        if (intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        {
+            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
+        }
     }
 
     @Override
@@ -254,21 +261,13 @@ public class SignupStep2Activity extends BaseActivity
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
 
-            showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+            showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
             {
                 @Override
-                public void onClick(View v)
+                public void onDismiss(DialogInterface dialog)
                 {
-                    AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
-
-                    signupAndFinish();
-                }
-            }, new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialog)
-                {
-                    AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
+                    AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
+                        userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
                     signupAndFinish();
                 }

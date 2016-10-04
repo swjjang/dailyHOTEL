@@ -183,10 +183,10 @@ public class InformationFragment extends BaseFragment implements Constants
 
         if (Util.isTextEmpty(recommenderCode) == true)
         {
-            intent = SignupStep1Activity.newInstance(baseActivity);
+            intent = SignupStep1Activity.newInstance(baseActivity, null);
         } else
         {
-            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode);
+            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode, null);
         }
 
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
@@ -230,7 +230,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivity(new Intent(baseActivity, LoginActivity.class));
+            baseActivity.startActivity(LoginActivity.newInstance(baseActivity));
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);

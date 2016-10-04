@@ -896,11 +896,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
-    protected void startLoginActivity()
+    /**
+     * open login page
+     * @param callByScreen AnalyticsManager.Screen
+     */
+    protected void startLoginActivity(String callByScreen)
     {
         DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = LoginActivity.newInstance(this, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 }

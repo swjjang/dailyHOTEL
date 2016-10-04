@@ -376,7 +376,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     {
                         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
 
-                        Intent intent = new Intent(StayDetailActivity.this, LoginActivity.class);
+                        Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
                     }
                 }, new View.OnClickListener()
@@ -757,7 +757,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == false)
             {
-                startLoginActivity();
+                startLoginActivity(Screen.DAILYHOTEL_DETAIL);
             } else
             {
                 lockUI();

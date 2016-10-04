@@ -570,7 +570,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         // 세션이 종료되어있으면 다시 로그인한다.
         DailyPreference.getInstance(this).removeUserInformation();
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 

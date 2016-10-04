@@ -507,7 +507,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == false)
             {
-                startLoginActivity();
+                startLoginActivity(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
             } else
             {
                 lockUI();

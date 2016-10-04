@@ -39,9 +39,9 @@ public abstract class BaseAnalyticsManager
 
     abstract void updateCreditCard(String cardTypes);
 
-    abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType);
+    abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen);
 
-    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender);
+    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen);
 
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 
