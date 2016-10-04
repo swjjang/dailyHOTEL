@@ -313,6 +313,12 @@ public class MainActivity extends BaseActivity implements Constants
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
                 mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                 break;
             }
