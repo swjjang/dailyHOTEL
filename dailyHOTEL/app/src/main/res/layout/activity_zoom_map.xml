@@ -7,9 +7,8 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <fragment
-        android:id="@+id/frag_full_map"
-        class="com.google.android.gms.maps.SupportMapFragment"
+    <FrameLayout
+        android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addressLayout"
@@ -35,8 +34,7 @@
             android:maxLines="1"
             android:text="@string/label_copy_address"
             android:textColor="@color/hoteldetail_title_text"
-            android:textSize="11dp"
-            />
+            android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/addressTextView"

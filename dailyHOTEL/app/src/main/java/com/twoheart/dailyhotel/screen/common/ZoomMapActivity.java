@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -229,7 +230,10 @@ public class ZoomMapActivity extends BaseActivity
             }
         });
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
+        FrameLayout mapLayout = (FrameLayout) findViewById(R.id.mapLayout);
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+
+        getSupportFragmentManager().beginTransaction().add(mapLayout.getId(), mapFragment).commitAllowingStateLoss();
 
         mapFragment.getMapAsync(new OnMapReadyCallback()
         {
