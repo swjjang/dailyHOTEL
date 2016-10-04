@@ -74,16 +74,16 @@ public class Util implements Constants
 
     private static SoftReference<String> MEMORY_CLEAR;
 
-    static
-    {
-        try
-        {
-            SoLoaderShim.loadLibrary("webp");
-        } catch (UnsatisfiedLinkError e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
+//    static
+//    {
+//        try
+//        {
+//            SoLoaderShim.loadLibrary("webp");
+//        } catch (UnsatisfiedLinkError e)
+//        {
+//            ExLog.e(e.toString());
+//        }
+//    }
 
     public static void initializeMemory()
     {
