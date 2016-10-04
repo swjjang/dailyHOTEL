@@ -253,7 +253,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void setGuestInformation(String phoneNumber)
     {
-        mPaymentInformation.getGuest().phone = phoneNumber;
         mHotelPaymentLayout.setGuestPhoneInformation(phoneNumber);
     }
 
