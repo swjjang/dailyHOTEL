@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:fresco="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -13,79 +14,107 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="84dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/mapImageView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             fresco:actualImageScaleType="centerCrop"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="66dp"
+            android:background="@drawable/detail_map_gradient"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/detailAddressTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="15dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/ic_map_expand"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="100dp"
+            android:freezesText="true"
+            android:maxLines="3"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="13dp"/>
     </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/default_line_cf0f0f0"/>
-
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/detailAddressTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp"
-        android:freezesText="true"
-        android:gravity="center"
-        android:textColor="@color/hoteldetail_title_text"
-        android:textSize="13dp"/>
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/default_line_cdcdcdd"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/navigatorView"
-            android:layout_width="58dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/more_btn_padding"
-            android:freezesText="true"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/label_navigator"
-            android:textColor="@color/hoteldetail_title_text"
-            android:textSize="11dp"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <LinearLayout
             android:id="@+id/copyAddressView"
-            android:layout_width="58dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/more_btn_padding"
-            android:freezesText="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/label_copy_address"
-            android:textColor="@color/hoteldetail_title_text"
-            android:textSize="11dp"/>
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/detail_ic_copy"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:freezesText="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/label_copy_address"
+                android:textColor="@color/hoteldetail_title_text"
+                android:textSize="11dp"/>
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:background="@color/default_line_ce8e8e9"/>
+
+        <LinearLayout
+            android:id="@+id/navigatorView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/detail_ic_directions"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:freezesText="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/label_navigator"
+                android:textColor="@color/hoteldetail_title_text"
+                android:textSize="11dp"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="20dp"
         android:background="@color/default_line_cf0f0f0"/>
 
     <View

@@ -331,13 +331,20 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
 
-        double width = mImageHeight;
-        double height = Util.dpToPx(mContext, 200);
+        double width = Util.getLCDWidth(mContext);
+        double height = 2.15f * width / 9;
+
+        ViewGroup.LayoutParams layoutParams = mapImageView.getLayoutParams();
+        layoutParams.height = (int)height;
+
+        mapImageView.setLayoutParams(layoutParams);
+        mapImageView.setTranslationX((int)width / 2 - Util.dpToPx(mContext, 45));
+
         double ratio = height / width;
 
-        if (width >= 640)
+        if (width >= 720)
         {
-            width = 640;
+            width = 720;
         }
 
         height = width * ratio;
