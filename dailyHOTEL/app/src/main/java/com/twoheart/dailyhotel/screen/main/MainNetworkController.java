@@ -71,7 +71,6 @@ public class MainNetworkController extends BaseNetworkController
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-
             }
 
             @Override
