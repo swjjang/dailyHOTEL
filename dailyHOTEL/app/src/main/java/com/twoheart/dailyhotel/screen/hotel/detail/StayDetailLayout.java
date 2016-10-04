@@ -218,6 +218,12 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     {
         mBookingStatus = status;
 
+        if (mBookingTextView == null || mSoldoutTextView == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
         switch (status)
         {
             case STATUS_NONE:

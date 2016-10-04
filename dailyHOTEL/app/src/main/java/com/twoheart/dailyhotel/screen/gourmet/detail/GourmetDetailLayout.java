@@ -194,6 +194,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         mBookingStatus = status;
 
+        if (mBookingTextView == null || mSoldoutTextView == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
         switch (status)
         {
             case STATUS_NONE:
