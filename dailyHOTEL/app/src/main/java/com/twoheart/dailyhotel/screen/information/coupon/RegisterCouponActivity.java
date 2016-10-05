@@ -57,7 +57,6 @@ public class RegisterCouponActivity extends BaseActivity
 
         if (DailyHotel.isLogin() == false)
         {
-            lockUI();
             showLoginDialog();
         }
     }
@@ -98,7 +97,11 @@ public class RegisterCouponActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                lockUI();
+                if(lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
                 startLogin();
             }
         };
@@ -137,6 +140,8 @@ public class RegisterCouponActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
 
         switch (requestCode)
         {
