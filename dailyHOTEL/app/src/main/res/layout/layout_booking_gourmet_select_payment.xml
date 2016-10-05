@@ -154,7 +154,7 @@
                         android:text="@string/label_creditcard_introduce"
                         android:textColor="@color/default_text_c666666"
                         android:textSize="13dp"
-                        app:drawableCompatTop="@drawable/ic_payment_ic_01_card_placeholder"/>
+                        app:drawableCompatTop="@drawable/card_add_ic"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -168,11 +168,10 @@
                         android:id="@+id/logoTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="15dp"
                         android:layout_marginTop="15dp"
                         android:textColor="@color/default_text_c323232"
-                        android:textSize="16dp"
-                        dailyFont:style="Medium"/>
+                        android:textSize="19dp"/>
 
                     <ImageView
                         android:id="@+id/imageView1"
