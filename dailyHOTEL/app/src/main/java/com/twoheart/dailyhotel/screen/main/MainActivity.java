@@ -129,8 +129,6 @@ public class MainActivity extends BaseActivity implements Constants
         DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
         DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
 
-        AnalyticsManager.getInstance(this).startApplication();
-
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
         String currentVersion = Util.getAppVersion(this);
@@ -757,14 +755,18 @@ public class MainActivity extends BaseActivity implements Constants
 
             finishSplash();
 
+            PlaceType placeType = null;
+
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
                 if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                    placeType = PlaceType.HOTEL;
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
+                    placeType = PlaceType.FNB;
                 } else if (DailyDeepLink.getInstance().isBookingView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, true);
@@ -786,11 +788,23 @@ public class MainActivity extends BaseActivity implements Constants
                     {
                         DailyDeepLink.getInstance().clear();
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                        placeType = PlaceType.HOTEL;
                     }
                 } else
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                    placeType = PlaceType.HOTEL;
                 }
+
+                if (placeType != null) {
+                    String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
+                    boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
+                    String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+
+                    AnalyticsManager.getInstance(MainActivity.this).onRegionChanged(overSeas, realProvinceName);
+                }
+
+                AnalyticsManager.getInstance(MainActivity.this).startApplication();
             } else
             {
                 String lastMenu = DailyPreference.getInstance(MainActivity.this).getLastMenu();
@@ -798,24 +812,37 @@ public class MainActivity extends BaseActivity implements Constants
                 if (getString(R.string.label_dailygourmet).equalsIgnoreCase(lastMenu) == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+                    placeType = PlaceType.FNB;
                 } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                    placeType = PlaceType.HOTEL;
                 } else
                 {
                     if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+                        placeType = PlaceType.FNB;
                     } else
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                        placeType = PlaceType.HOTEL;
                     }
+                }
+
+                if (placeType != null) {
+                    String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
+                    boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
+                    String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+
+                    AnalyticsManager.getInstance(MainActivity.this).onRegionChanged(overSeas, realProvinceName);
                 }
 
                 if (DailyHotel.isLogin() == true)
                 {
                     // session alive
                     // 호텔 평가를 위한 사용자 정보 조회
+                    // 해당 경우는 Analytics 의 startApplication을 해당 메소드의 onResponse에서 처리
                     mNetworkController.requestUserInformation();
                 } else
                 {
@@ -845,6 +872,8 @@ public class MainActivity extends BaseActivity implements Constants
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                         AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(true);
                     }
+
+                    AnalyticsManager.getInstance(MainActivity.this).startApplication();
                 }
             }
         }

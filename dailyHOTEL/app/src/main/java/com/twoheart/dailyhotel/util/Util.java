@@ -48,7 +48,9 @@ import com.skp.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -1615,4 +1617,29 @@ public class Util implements Constants
     //        v.draw(c);
     //        return b;
     //    }
+
+    /**
+     * 대지역 이름 반환
+     * @param province
+     * @return
+     */
+    public static String getRealProvinceName(Province province)
+    {
+        String realProvinceName;
+        try
+        {
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                realProvinceName = area.getProvince().name;
+            } else
+            {
+                realProvinceName = province.name;
+            }
+        } catch (Exception e) {
+            realProvinceName = null;
+        }
+
+        return realProvinceName;
+    }
 }

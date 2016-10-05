@@ -101,6 +101,11 @@ public class StayMainFragment extends PlaceMainFragment
                 {
                     DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+
+                    String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String realProvinceName = Util.getRealProvinceName(province);
+                    DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
+                    AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                 }
 
                 mPlaceMainLayout.setCategoryTabLayout(getChildFragmentManager(), province.getCategoryList(), //
@@ -131,6 +136,11 @@ public class StayMainFragment extends PlaceMainFragment
                 {
                     DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+
+                    String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String realProvinceName = Util.getRealProvinceName(province);
+                    DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
+                    AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                 }
 
                 SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
@@ -681,6 +691,11 @@ public class StayMainFragment extends PlaceMainFragment
                         selectedProvince = province;
                         DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                         DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+
+                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String realProvinceName = Util.getRealProvinceName(province);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
+                        AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                         break;
                     }
                 }
@@ -855,6 +870,11 @@ public class StayMainFragment extends PlaceMainFragment
                     {
                         DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                         DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+
+                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String realProvinceName = Util.getRealProvinceName(province);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
+                        AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                     }
 
                     Intent intent = StayDetailActivity.newInstance(mBaseActivity, //

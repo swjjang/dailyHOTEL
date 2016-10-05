@@ -92,6 +92,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                    String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String realProvinceName = Util.getRealProvinceName(province);
+                    DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                    AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                 }
 
                 refreshCurrentFragment(true);
@@ -588,6 +593,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                         selectedProvince = province;
                         DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                         DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String realProvinceName = Util.getRealProvinceName(province);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                        AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                         break;
                     }
                 }
@@ -761,6 +771,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                     {
                         DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                         DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String realProvinceName = Util.getRealProvinceName(province);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                        AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                     }
 
                     Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //

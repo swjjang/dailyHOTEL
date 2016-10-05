@@ -190,14 +190,17 @@ public class AdjustManager extends BaseAnalyticsManager
         if (Util.isTextEmpty(index) == true)
         {
             Adjust.removeSessionCallbackParameter(Key.USER_INDEX);
-        } else {
+        } else
+        {
             Adjust.addSessionCallbackParameter(Key.USER_INDEX, index);
         }
 
-        if (Util.isTextEmpty(userType) == true) {
+        if (Util.isTextEmpty(userType) == true)
+        {
             Adjust.addSessionCallbackParameter(Key.USER_TYPE, UserType.GUEST);
             Adjust.removeSessionCallbackParameter(Key.MEMBER_TYPE);
-        } else {
+        } else
+        {
             String memberType = getMemberType(userType);
             Adjust.addSessionCallbackParameter(Key.USER_TYPE, UserType.MEMBER);
             Adjust.addSessionCallbackParameter(Key.MEMBER_TYPE, memberType);
@@ -317,16 +320,16 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
 
-//    private void addSessionParam()
-//    {
-//        //        Adjust.addSessionCallbackParameter("user_id", mUserIndex);
-//        Adjust.addSessionCallbackParameter("service", ); // stay, gourmet 구분
-//        Adjust.addSessionCallbackParameter("country", AnalyticsManager.KeyType.DOMESTIC); // domestic / overseas 구분
-//        Adjust.addSessionCallbackParameter("province", ); // 대지역 구분
-//        Adjust.addSessionCallbackParameter("user_type", ); // guest, member 구분
-//        Adjust.addSessionCallbackParameter("member_type", ); // 회원 종류 구분(email / facebook / kakao)
-//        Adjust.addSessionCallbackParameter("push_notification", ); // 푸쉬 on/off 구분
-//    }
+    //    private void addSessionParam()
+    //    {
+    //        //        Adjust.addSessionCallbackParameter("user_id", mUserIndex);
+    //        Adjust.addSessionCallbackParameter("service", ); // stay, gourmet 구분
+    //        Adjust.addSessionCallbackParameter("country", AnalyticsManager.KeyType.DOMESTIC); // domestic / overseas 구분
+    //        Adjust.addSessionCallbackParameter("province", ); // 대지역 구분
+    //        Adjust.addSessionCallbackParameter("user_type", ); // guest, member 구분
+    //        Adjust.addSessionCallbackParameter("member_type", ); // 회원 종류 구분(email / facebook / kakao)
+    //        Adjust.addSessionCallbackParameter("push_notification", ); // 푸쉬 on/off 구분
+    //    }
 
     private String getMemberType(String userType)
     {
@@ -406,7 +409,8 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String KAKAO = "kakao";
     }
 
-    private static final class OnOffType {
+    private static final class OnOffType
+    {
         public static final String ON = "on";
         public static final String OFF = "off";
     }
