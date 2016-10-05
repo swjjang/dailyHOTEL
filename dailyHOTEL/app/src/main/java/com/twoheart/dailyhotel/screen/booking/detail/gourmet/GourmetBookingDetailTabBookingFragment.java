@@ -7,18 +7,14 @@
  */
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -144,11 +140,11 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-//        View callView = view.findViewById(R.id.callView);
+        //        View callView = view.findViewById(R.id.callView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
-//        callView.setOnClickListener(this);
+        //        callView.setOnClickListener(this);
     }
 
     private void initGourmetInformationLayout(Context context, View view, GourmetBookingDetail bookingDetail)

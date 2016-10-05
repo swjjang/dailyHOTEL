@@ -349,10 +349,10 @@ public class StayDetailListAdapter extends BaseAdapter
         double height = 2.15f * width / 9;
 
         ViewGroup.LayoutParams layoutParams = mapImageView.getLayoutParams();
-        layoutParams.height = (int)height;
+        layoutParams.height = (int) height;
 
         mapImageView.setLayoutParams(layoutParams);
-        mapImageView.setTranslationX((int)width / 2 - Util.dpToPx(mContext, 45));
+        mapImageView.setTranslationX((int) width / 2 - Util.dpToPx(mContext, 45));
 
         double ratio = height / width;
 

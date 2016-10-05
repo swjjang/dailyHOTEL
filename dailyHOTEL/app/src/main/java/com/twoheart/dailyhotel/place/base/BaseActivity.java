@@ -898,6 +898,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     /**
      * open login page
+     *
      * @param callByScreen AnalyticsManager.Screen
      */
     protected void startLoginActivity(String callByScreen)

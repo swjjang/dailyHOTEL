@@ -73,7 +73,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private String mCallByScreen;
 
-    public static Intent newInstance(Context context) {
+    public static Intent newInstance(Context context)
+    {
         return newInstance(context, null);
     }
 

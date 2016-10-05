@@ -524,6 +524,7 @@ interface IDailyNetwork
 
     /**
      * 키워드를 사용한 쿠폰 등록
+     *
      * @param tag
      * @param keyword
      * @param listener

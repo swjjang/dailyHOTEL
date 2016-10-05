@@ -124,7 +124,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 0, userName.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             messageTextView.setText(userNameBuilder);
-        } else {
+        } else
+        {
             message = getString(R.string.message_completed_payment_default);
             messageTextView.setText(message);
         }

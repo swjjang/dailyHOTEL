@@ -700,13 +700,17 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, AnalyticsManager.ValueType.EMPTY);
 
         String eventName;
-        if (Util.isTextEmpty(callByScreen) == true) {
+        if (Util.isTextEmpty(callByScreen) == true)
+        {
             eventName = EventName.REGISTER_COMPLETED;
-        } else {
+        } else
+        {
             if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(callByScreen) //
-                || AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(callByScreen)) {
+                || AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(callByScreen))
+            {
                 eventName = EventName.REGISTER_COMPLETED_BEFORE_BOOKING;
-            } else {
+            } else
+            {
                 eventName = EventName.REGISTER_COMPLETED;
             }
         }
@@ -736,13 +740,17 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, recommender);
 
         String eventName;
-        if (Util.isTextEmpty(callByScreen) == true) {
+        if (Util.isTextEmpty(callByScreen) == true)
+        {
             eventName = EventName.REGISTER_COMPLETED;
-        } else {
+        } else
+        {
             if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(callByScreen) //
-                || AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(callByScreen)) {
+                || AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(callByScreen))
+            {
                 eventName = EventName.REGISTER_COMPLETED_BEFORE_BOOKING;
-            } else {
+            } else
+            {
                 eventName = EventName.REGISTER_COMPLETED;
             }
         }

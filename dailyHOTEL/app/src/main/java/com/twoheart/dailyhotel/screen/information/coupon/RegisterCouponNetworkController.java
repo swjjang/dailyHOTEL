@@ -54,7 +54,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
                 Uri uri = Uri.parse(url);
                 String userCouponCode = uri.getQueryParameter("keyword");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, isSuccess , message);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, isSuccess, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

@@ -289,11 +289,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         releaseUiComponent();
 
-        switch(requestCode)
+        switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
             {
-                if(resultCode == CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT)
+                if (resultCode == CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT)
                 {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
 

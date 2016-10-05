@@ -584,7 +584,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         {
             mAmountNightsTextView.setText(mContext.getString(R.string.label_booking_hotel_nights, nights));
             mAmountNightsTextView.setVisibility(View.VISIBLE);
-        } else {
+        } else
+        {
             mAmountNightsTextView.setVisibility(View.GONE);
         }
 
