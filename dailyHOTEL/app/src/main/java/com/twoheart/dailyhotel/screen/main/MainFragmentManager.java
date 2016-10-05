@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
@@ -125,6 +126,10 @@ public class MainFragmentManager
             mFragment = fragment;
 
             mFragmentManager.beginTransaction().replace(mContentLayout.getId(), fragment, tag).commitAllowingStateLoss();
+        } catch (IllegalStateException e)
+        {
+            Crashlytics.log("StayListLayout");
+            Crashlytics.logException(e);
         } catch (Exception e)
         {
             // 에러가 나는 경우 앱을 재부팅 시킨다.

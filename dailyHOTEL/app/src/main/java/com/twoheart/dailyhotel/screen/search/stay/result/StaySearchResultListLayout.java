@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -65,9 +66,16 @@ public class StaySearchResultListLayout extends StayListLayout
 
                 if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
-                    mPlaceListMapFragment = new StayListMapFragment();
-                    mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                    try
+                    {
+                        mPlaceListMapFragment = new StayListMapFragment();
+                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                    } catch (IllegalStateException e)
+                    {
+                        Crashlytics.log("StaySearchResuktListLayout");
+                        Crashlytics.logException(e);
+                    }
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);

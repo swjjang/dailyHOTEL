@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -88,9 +89,16 @@ public class GourmetListLayout extends PlaceListLayout
 
                 if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
-                    mPlaceListMapFragment = new GourmetListMapFragment();
-                    mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                    try
+                    {
+                        mPlaceListMapFragment = new GourmetListMapFragment();
+                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                    } catch (IllegalStateException e)
+                    {
+                        Crashlytics.log("GourmetListLayout");
+                        Crashlytics.logException(e);
+                    }
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
