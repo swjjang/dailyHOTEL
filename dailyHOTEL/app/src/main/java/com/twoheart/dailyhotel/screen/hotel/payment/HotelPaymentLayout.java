@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -79,7 +78,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     // 결제 수단 선택
     private View mSimpleCardLayout;
-    private TextView mSimpleCardTextView;
+    private TextView mSimpleCardNumberTextView;
+    private TextView mSimpleCardLogoTextView;
     private View mCardLayout;
     private View mPhoneLayout;
     private View mTransferLayout;
@@ -93,6 +93,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private TextView mCardManagerTextView;
     private TextView mGuidePaymentMemoView;
 
+    private View mEmptySimpleCardLayout;
+    private View mSelectedSimpleCardLayout;
     //
     private View mRefundPolicyLayout;
     //
@@ -269,7 +271,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private void initPaymentTypeInformation(View view)
     {
         mSimpleCardLayout = view.findViewById(R.id.simpleCardLayout);
-        mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
         mDisableSimpleCardView = view.findViewById(R.id.disableSimpleCardView);
 
         mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
@@ -289,6 +290,17 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mCardLayout.setOnClickListener(this);
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
+
+        mEmptySimpleCardLayout = view.findViewById(R.id.emptySimpleCardLayout);
+        mSelectedSimpleCardLayout = view.findViewById(R.id.selectedSimpleCardLayout);
+        mSimpleCardLogoTextView = (TextView) mSelectedSimpleCardLayout.findViewById(R.id.logoTextView);
+        mSimpleCardNumberTextView = (TextView) mSelectedSimpleCardLayout.findViewById(R.id.numberTextView);
+
+        mEmptySimpleCardLayout.setVisibility(View.VISIBLE);
+        mSelectedSimpleCardLayout.setVisibility(View.GONE);
+
+        mEmptySimpleCardLayout.setOnClickListener(this);
+        mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
     }
@@ -435,7 +447,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mUserLayout.setVisibility(View.GONE);
         }
 
-
         // 사용자 요청사항
         //        mMemoEditText.setText(guest.message);
     }
@@ -537,45 +548,37 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
-    public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard selectedCreditCard)
+    public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard creditCard)
     {
         if (hotelPaymentInformation == null)
         {
             return;
         }
 
-        if (selectedCreditCard == null)
+        if (creditCard == null)
         {
-            mCardManagerTextView.setText(R.string.label_register_card);
-            mSimpleCardTextView.setText(R.string.label_booking_easypayment);
+            mCardManagerLayout.setVisibility(View.GONE);
+            mEmptySimpleCardLayout.setVisibility(View.VISIBLE);
+            mSelectedSimpleCardLayout.setVisibility(View.GONE);
         } else
         {
-            mCardManagerTextView.setText(R.string.label_manager);
+            mCardManagerLayout.setVisibility(View.VISIBLE);
+            mEmptySimpleCardLayout.setVisibility(View.GONE);
+            mSelectedSimpleCardLayout.setVisibility(View.VISIBLE);
 
-            final String cardName = selectedCreditCard.name.replace("카드", "");
-            final String cardNumber = selectedCreditCard.number;
-
-            mSimpleCardTextView.setText(String.format("%s %s", cardName, cardNumber));
-            mSimpleCardTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Layout layout = mSimpleCardTextView.getLayout();
-
-                    if (layout == null || Util.isTextEmpty(cardName) == true)
-                    {
-                        return;
-                    }
-
-                    int lineCount = mSimpleCardTextView.getLineCount();
-                    if (lineCount > 1)
-                    {
-                        mSimpleCardTextView.setText(String.format("%s\n%s", cardName, cardNumber));
-                    }
-                }
-            });
+            setSimpleCardLayout(creditCard);
         }
+    }
+
+    private void setSimpleCardLayout(CreditCard creditCard)
+    {
+        if (creditCard == null)
+        {
+            return;
+        }
+
+        mSimpleCardLogoTextView.setText(creditCard.name);
+        mSimpleCardNumberTextView.setText(creditCard.number);
     }
 
     public void setPaymentInformation(PlacePaymentInformation.DiscountType discountType, int originalPrice, int discountPrice, int payPrice, int nights)
@@ -929,6 +932,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 break;
 
             case R.id.cardManagerLayout:
+            case R.id.emptySimpleCardLayout:
+            case R.id.selectedSimpleCardLayout:
                 ((OnEventListener) mOnEventListener).startCreditCardManager();
                 break;
         }

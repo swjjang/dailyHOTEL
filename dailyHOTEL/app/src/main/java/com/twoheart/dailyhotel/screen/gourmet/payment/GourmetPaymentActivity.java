@@ -1148,7 +1148,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.NAME);
+                    mGourmetPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.NAME);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.message_gourmet_please_input_guest, Toast.LENGTH_SHORT);
                     return;
@@ -1156,7 +1156,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.PHONE);
+                    mGourmetPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.PHONE);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
@@ -1164,7 +1164,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     return;
@@ -1172,7 +1172,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
