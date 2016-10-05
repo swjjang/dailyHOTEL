@@ -123,6 +123,7 @@ public class MainFragmentManager
             clearFragmentBackStack();
 
             mFragment = fragment;
+
             mFragmentManager.beginTransaction().replace(mContentLayout.getId(), fragment, tag).commitAllowingStateLoss();
         } catch (Exception e)
         {

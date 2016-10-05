@@ -234,9 +234,10 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
         , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
+        mCategoryTabLayout.setOnTabSelectedListener(null);
+
         if (categoryList == null)
         {
-            mCategoryTabLayout.setOnTabSelectedListener(null);
             mViewPager.removeAllViews();
             setCategoryTabLayoutVisibility(View.GONE);
             return;
@@ -255,6 +256,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             mViewPager.setOffscreenPageLimit(size);
             mViewPager.setAdapter(mFragmentPagerAdapter);
             mViewPager.clearOnPageChangeListeners();
+
+            mCategoryTabLayout.setOnTabSelectedListener(null);
         } else
         {
             setCategoryTabLayoutVisibility(View.VISIBLE);
