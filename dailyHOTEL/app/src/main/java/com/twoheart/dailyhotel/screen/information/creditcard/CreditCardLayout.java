@@ -297,7 +297,7 @@ public class CreditCardLayout extends FrameLayout
                 } else
                 {
                     checkImageView.setVisibility(View.INVISIBLE);
-                    cardLayout.setBackgroundResource(R.drawable.shape_fillrect_le6e6e7_bffffff);
+                    cardLayout.setBackgroundResource(R.drawable.shape_fillrect_ld1d1d1_bffffff);
                 }
             }
 

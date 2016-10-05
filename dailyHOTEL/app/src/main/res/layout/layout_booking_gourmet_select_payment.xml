@@ -161,7 +161,7 @@
                     android:id="@+id/selectedSimpleCardLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/shape_fillrect_le6e6e7_bffffff"
+                    android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
                     android:visibility="gone">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView

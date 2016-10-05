@@ -11,7 +11,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/shape_fillrect_le6e6e7_bffffff">
+        android:background="@drawable/shape_fillrect_ld1d1d1_bffffff">
 
         <ImageView
             android:id="@+id/logoImageView"
