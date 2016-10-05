@@ -665,6 +665,11 @@ public class AnalyticsManager
         public static final String ACCOUNT_DETAIL = "AccountDetail";
         public static final String PRODUCT_ID = "ProductID";
         public static final String FIRST_PURCHASE_SUCCESS = "FirstPurchaseSuccess";
+        //
+        public static final String BOOKING_DETAIL = "BookingDetail";
+        public static final String MENU = "Menu";
+        public static final String DEPOSIT_WAITING = "DepositWaiting";
+        public static final String BOOKING_INITIALISE = "BookingInitialise";
     }
 
     public static class Category
@@ -681,6 +686,7 @@ public class AnalyticsManager
         public static final String SEARCH = "Search";
         public static final String AUTO_SEARCH = "AutoSearch";
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
+        public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
     }
 
     public static class Label
@@ -795,6 +801,11 @@ public class AnalyticsManager
         public static final String FULL_PAYMENT = "FullPayment";
         public static final String PAYMENTWITH_COUPON = "PaymentwithCoupon";
         public static final String PAYMENTWITH_CREDIT = "PaymentwithCredit";
+        //
+        public static final String CUSTOMER_CENTER_CALL = "CustomerCenterCall";
+        public static final String KAKAO = "Kakao";
+        public static final String DIRECT_CALL = "DirectCall";
+        public static final String CLICK = "Click";
     }
 
     public static class UserType

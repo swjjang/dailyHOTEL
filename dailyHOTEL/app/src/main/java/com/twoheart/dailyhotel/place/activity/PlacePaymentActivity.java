@@ -463,12 +463,16 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showCallDialog()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CLICK, null);
+
         OnClickListener positiveListener = new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 releaseUiComponent();
+
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CALL, null);
 
                 if (Util.isTelephonyEnabled(PlacePaymentActivity.this) == true)
                 {
@@ -489,7 +493,14 @@ public abstract class PlacePaymentActivity extends BaseActivity
         String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
 
         showSimpleDialog(getString(R.string.label_call_service), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new OnDismissListener()
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL, null);
+                }
+            }, null, new OnDismissListener()
             {
                 @Override
                 public void onDismiss(DialogInterface dialog)

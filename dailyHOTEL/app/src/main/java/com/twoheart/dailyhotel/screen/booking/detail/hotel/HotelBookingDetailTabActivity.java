@@ -222,6 +222,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private void callDaily()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
+
         if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
         {
             try
@@ -241,6 +243,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private void kakaoDaily()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+
         try
         {
             startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
@@ -260,6 +264,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private void callHotel()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
+
         if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
         {
             String phone = mHotelBookingDetail.hotelPhone;

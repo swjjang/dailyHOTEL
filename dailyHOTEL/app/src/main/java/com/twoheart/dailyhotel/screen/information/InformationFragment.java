@@ -386,8 +386,7 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             showCallDialog(baseActivity);
 
-            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CALL_CS, 0L);
-
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CLICK, null);
         }
 
         @Override
@@ -652,6 +651,8 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 releaseUiComponent();
 
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CALL, null);
+
                 if (Util.isTelephonyEnabled(baseActivity) == true)
                 {
                     try
@@ -671,7 +672,14 @@ public class InformationFragment extends BaseFragment implements Constants
         String operatingTimeMessage = DailyPreference.getInstance(baseActivity).getOperationTimeMessage(baseActivity);
 
         baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage,//
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new DialogInterface.OnDismissListener()
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CANCEL, null);
+                }
+            }, null, new DialogInterface.OnDismissListener()
             {
                 @Override
                 public void onDismiss(DialogInterface dialog)

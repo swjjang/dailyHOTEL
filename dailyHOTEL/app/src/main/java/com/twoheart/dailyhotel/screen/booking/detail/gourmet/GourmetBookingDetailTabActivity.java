@@ -217,6 +217,8 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
     private void callDaily()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
+
         if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)
         {
             try
@@ -236,6 +238,8 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
     private void kakaoDaily()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+
         try
         {
             startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
@@ -255,6 +259,8 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
     private void callGourmet()
     {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
+
         if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)
         {
             String phone = mGourmetBookingDetail.gourmetPhone;

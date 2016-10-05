@@ -200,12 +200,16 @@ public class PaymentWaitActivity extends BaseActivity
             return;
         }
 
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CLICK, null);
+
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 releaseUiComponent();
+
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CALL, null);
 
                 if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
                 {
@@ -226,7 +230,14 @@ public class PaymentWaitActivity extends BaseActivity
         String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
 
         showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new DialogInterface.OnDismissListener()
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CANCEL, null);
+                }
+            }, null, new DialogInterface.OnDismissListener()
             {
                 @Override
                 public void onDismiss(DialogInterface dialog)
