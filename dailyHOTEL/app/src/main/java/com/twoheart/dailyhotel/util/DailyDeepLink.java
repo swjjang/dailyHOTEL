@@ -81,6 +81,13 @@ public class DailyDeepLink
     private static final String RECOMMEND_FRIEND_V5 = "rf"; // 친구 추천하기 화면
 
     private static final String REGISTER_COUPON_V7 = "cr"; // 쿠폰 등록 화면
+    private static final String BOOKING_DETAIL_V7 = "bd"; // 예약 상세화면
+    private static final String NOTICE_DETAIL_V7 = "nd"; // 공지사항 상세화면
+
+    private static final String PARAM_V7_TITLE = "t"; // 타이틀
+    private static final String PARAM_V7_RESERVATION_INDEX = "ri"; // 예약 인덱스
+    private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet
+    private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
     private static final String V3 = "3";
     private static final String V4 = "4";
@@ -514,6 +521,32 @@ public class DailyDeepLink
         }
     }
 
+    public boolean isBookingDetailView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 7)
+        {
+            return BOOKING_DETAIL_V7.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
+    public boolean isNoticeDetailView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 7)
+        {
+            return NOTICE_DETAIL_V7.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
 
     public String getIndex()
     {
@@ -816,12 +849,91 @@ public class DailyDeepLink
         return radius;
     }
 
+    public String getTitle()
+    {
+        String value;
+
+        if (mVersionCode >= 7)
+        {
+            value = mParams.get(PARAM_V7_TITLE);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
+    public int getReservationIndex()
+    {
+        int reservationIndex = 0;
+
+        if (mVersionCode >= 7)
+        {
+            String value = mParams.get(PARAM_V7_RESERVATION_INDEX);
+
+            if (Util.isTextEmpty(value) == false)
+            {
+                try
+                {
+                    reservationIndex = Integer.parseInt(value);
+                } catch (NumberFormatException e)
+                {
+                }
+            }
+        }
+
+        return reservationIndex;
+    }
+
+    public String getPlaceType()
+    {
+        String value;
+
+        if (mVersionCode >= 7)
+        {
+            value = mParams.get(PARAM_V7_PLACE_TYPE);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
+    public int getNoticeIndex()
+    {
+        int noticeIndex = 0;
+
+        if (mVersionCode >= 7)
+        {
+            String value = mParams.get(PARAM_V7_NOTICE_INDEX);
+
+            if (Util.isTextEmpty(value) == false)
+            {
+                try
+                {
+                    noticeIndex = Integer.parseInt(value);
+                } catch (NumberFormatException e)
+                {
+                }
+            }
+        }
+
+        return noticeIndex;
+    }
+
     private boolean decodingLinkV7(Uri uri)
     {
         if (decodingLinkV6(uri) == false)
         {
             return false;
         }
+
+        putParams(uri, PARAM_V7_TITLE);
+        putParams(uri, PARAM_V7_RESERVATION_INDEX);
+        putParams(uri, PARAM_V7_PLACE_TYPE);
+        putParams(uri, PARAM_V7_NOTICE_INDEX);
 
         return true;
     }

@@ -70,7 +70,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        BaseFragment baseFragment01 = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex);
+        BaseFragment baseFragment01 = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
         fragmentList.add(baseFragment01);
 
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -141,43 +141,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         } catch (Exception e)
         {
             ExLog.d(e.toString());
-        }
-    }
-
-    @Override
-    protected void onTabSelected(int position)
-    {
-        switch (position)
-        {
-            case 0:
-                break;
-
-            case 1:
-                break;
-
-            case 2:
-            {
-                try
-                {
-                    // Check In
-                    //                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkInDate, "yyMMdd");
-                    String checkInDay = DailyCalendar.convertDateFormatString(mHotelBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
-
-                    // Check Out
-                    //                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkOutDate, "yyMMdd");
-                    String checkOutDay = DailyCalendar.convertDateFormatString(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
-
-                    String label = String.format("Hotel-%s-%s-%s", mHotelBookingDetail.placeName, checkInDay, checkOutDay);
-
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                        , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
-                        , label, null);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-                break;
-            }
         }
     }
 

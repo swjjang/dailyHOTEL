@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -67,11 +68,39 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
+            {
+                int index = DailyDeepLink.getInstance().getNoticeIndex();
+
+                if (index > 0)
+                {
+                    Util.removeNoticeNewList(this, index);
+                }
+
+                String title = DailyDeepLink.getInstance().getTitle();
+                String url = DailyDeepLink.getInstance().getUrl();
+
+                Intent intent = NoticeWebActivity.newInstance(this, title, url);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICELIST);
+            }
+
+            DailyDeepLink.getInstance().clear();
+        }
+    }
+
+
+    @Override
     protected void onResume()
     {
         super.onResume();
 
-        if (mDontReload == true)
+        if (mDontReload == true && mNoticeListAdapter != null)
         {
             mDontReload = false;
             mNoticeListAdapter.notifyDataSetChanged();

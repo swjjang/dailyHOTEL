@@ -7,12 +7,14 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -26,7 +28,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     private ViewPager mViewPager;
     private boolean mDontReload;
-    protected Booking mBooking;
+    protected int mReservationIndex;
 
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -38,8 +40,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected abstract void showCallDialog();
 
-    protected abstract void onTabSelected(int position);
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,10 +49,10 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         if (bundle != null)
         {
-            mBooking = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+            mReservationIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKINGIDX);
         }
 
-        if (mBooking == null)
+        if (mReservationIndex <= 0)
         {
             Util.restartApp(this);
             return;
@@ -108,9 +108,15 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     {
         super.onStart();
 
-        if (mBooking == null)
+        if (mReservationIndex <= 0)
         {
             Util.restartApp(this);
+            return;
+        }
+
+        if (DailyHotel.isLogin() == false)
+        {
+            startLogin();
             return;
         }
 
@@ -154,6 +160,20 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    lockUI();
+
+                    requestCommonDatetime();
+                } else
+                {
+                    finish();
+                }
+                break;
+            }
         }
     }
 
@@ -172,7 +192,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                     setCurrentDateTime(currentDateTime, dailyDateTime);
 
                     // 호텔 정보를 가져온다.
-                    requestPlaceBookingDetail(mBooking.reservationIndex);
+                    requestPlaceBookingDetail(mReservationIndex);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -187,48 +207,27 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         });
     }
 
+    private void startLogin()
+    {
+        showSimpleDialog(null, getString(R.string.message_booking_detail_do_login), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = LoginActivity.newInstance(PlaceBookingDetailTabActivity.this);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+            }
+        }, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
-    {
-        @Override
-        public void onTabSelected(TabLayout.Tab tab)
-        {
-            int position = tab.getPosition();
-
-            if (mViewPager != null)
-            {
-                mViewPager.setCurrentItem(position);
-            }
-
-            switch (position)
-            {
-                case 0:
-                    AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL);
-                    break;
-
-                case 1:
-                    AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_INFORMATION);
-                    break;
-
-                case 2:
-                    AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP);
-                    break;
-            }
-
-            PlaceBookingDetailTabActivity.this.onTabSelected(position);
-        }
-
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab)
-        {
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab)
-        {
-        }
-    };
 }

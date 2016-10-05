@@ -71,7 +71,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex);
+        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
         fragmentList.add(baseFragment01);
 
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -142,37 +142,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         } catch (Exception e)
         {
             ExLog.d(e.toString());
-        }
-    }
-
-    @Override
-    protected void onTabSelected(int position)
-    {
-        switch (position)
-        {
-            case 0:
-                break;
-
-            case 1:
-                break;
-
-            case 2:
-            {
-                try
-                {
-                    //                    String reservationTime = Util.simpleDateFormatISO8601toFormat(mGourmetBookingDetail.reservationTime, "yyMMdd");
-                    String reservationTime = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
-                    String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
-
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                        , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
-                        , label, null);
-                } catch (ParseException e)
-                {
-                    ExLog.d(e.toString());
-                }
-                break;
-            }
         }
     }
 

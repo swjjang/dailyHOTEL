@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetai
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.HotelBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -164,6 +165,33 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         super.onStart();
 
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isBookingDetailView() == true)
+            {
+                PlaceType placeType = null;
+
+                if ("stay".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
+                {
+                    placeType = PlaceType.HOTEL;
+                } else if ("gourmet".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
+                {
+                    placeType = PlaceType.FNB;
+                }
+
+                int reservationIndex = DailyDeepLink.getInstance().getReservationIndex();
+
+                if (placeType != null && reservationIndex > 0)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    startBookingDetail(baseActivity, placeType, reservationIndex);
+                }
+            }
+
+            DailyDeepLink.getInstance().clear();
+        }
+
         if (DailyHotel.isLogin() == false)
         {
             AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST);
@@ -205,8 +233,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            Intent i = LoginActivity.newInstance(baseActivity);
-            startActivity(i);
+            Intent intent = LoginActivity.newInstance(baseActivity);
+            startActivity(intent);
 
             //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN, 0L);
         }
@@ -229,9 +257,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         lockUiComponent();
 
-        Booking item = mAdapter.getItem(position);
+        Booking booking = mAdapter.getItem(position);
 
-        if (item.type == Booking.TYPE_SECTION)
+        if (booking.type == Booking.TYPE_SECTION)
         {
             releaseUiComponent();
             return;
@@ -239,31 +267,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         Intent intent = null;
 
-        if (item.payType == CODE_PAY_TYPE_CARD_COMPLETE || item.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
+        if (booking.payType == CODE_PAY_TYPE_CARD_COMPLETE || booking.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
         {
             // 카드결제 완료 || 가상계좌 완료
 
-            switch (item.placeType)
+            if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex) == false)
             {
-                case HOTEL:
-                    intent = new Intent(baseActivity, HotelBookingDetailTabActivity.class);
-                    break;
-
-                case FNB:
-                    intent = new Intent(baseActivity, GourmetBookingDetailTabActivity.class);
-                    break;
-                default:
-                    releaseUiComponent();
-                    return;
+                releaseUiComponent();
             }
-
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
-        } else if (item.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
+        } else if (booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
         {
             // 가상계좌 입금대기
             intent = new Intent(baseActivity, PaymentWaitActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, booking);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
         } else
         {
@@ -287,7 +303,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        releaseUiComponent();
+        unLockUI();
 
         switch (requestCode)
         {
@@ -308,6 +324,35 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             }
         }
     }
+
+    private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType, int reservationIndex)
+    {
+        Intent intent = null;
+
+        switch (placeType)
+        {
+            case HOTEL:
+                intent = new Intent(baseActivity, HotelBookingDetailTabActivity.class);
+                break;
+
+            case FNB:
+                intent = new Intent(baseActivity, GourmetBookingDetailTabActivity.class);
+                break;
+            default:
+                return false;
+        }
+
+        if (intent == null)
+        {
+            return false;
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+
+        return true;
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener

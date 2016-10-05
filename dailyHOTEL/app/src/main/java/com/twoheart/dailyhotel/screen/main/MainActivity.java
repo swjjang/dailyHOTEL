@@ -766,7 +766,8 @@ public class MainActivity extends BaseActivity implements Constants
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
-                } else if (DailyDeepLink.getInstance().isBookingView() == true)
+                } else if (DailyDeepLink.getInstance().isBookingView() == true //
+                    || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
@@ -775,7 +776,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isCouponView() == true //
                     || DailyDeepLink.getInstance().isInformationView() == true //
                     || DailyDeepLink.getInstance().isRecommendFriendView() == true //
-                    || DailyDeepLink.getInstance().isRegisterCouponView() == true)
+                    || DailyDeepLink.getInstance().isRegisterCouponView() == true //
+                    || DailyDeepLink.getInstance().isNoticeDetailView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
