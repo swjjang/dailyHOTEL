@@ -214,6 +214,12 @@ public class AdjustManager extends BaseAnalyticsManager
                     event = new AdjustEvent(EventToken.SOCIAL_LOGIN);
                 }
             }
+        } else if (AnalyticsManager.Category.INVITE_FRIEND.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.KAKAO_FRIEND_INVITED.equalsIgnoreCase(action) == true)
+            {
+                event = new AdjustEvent(EventToken.FRIEND_REFERRAL);
+            }
         }
 
         if (event != null)
