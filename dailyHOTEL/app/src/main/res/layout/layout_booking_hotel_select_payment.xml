@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-       xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--<merge xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:dailyFont="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto">-->
 
-    <!-- GUI 체크시에 풀어서 사용하세요 -->
-    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:dailyFont="http://schemas.android.com/apk/res-auto"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
+<!-- GUI 체크시에 풀어서 사용하세요 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
@@ -35,14 +36,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        app:drawableCompatLeft="@drawable/ic_payment_notice"
         android:drawablePadding="6dp"
         android:gravity="center_vertical"
         android:minHeight="36dp"
         android:text="@string/message_dont_support_payment_type"
         android:textColor="@color/default_text_c929292"
         android:textSize="11dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:drawableCompatLeft="@drawable/ic_payment_notice"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -129,6 +130,49 @@
                 android:layout_height="match_parent"
                 android:background="@color/default_background_disable_cccffffff"
                 android:visibility="gone"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/card_bg">
+
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="18dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/card_daily"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/logoImageView"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                app:srcCompat="@drawable/card_chip"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/numberTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/imageView1"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="16dp"
+                android:textColor="@color/creditcard_number_text"
+                android:textSize="16dp"/>
         </RelativeLayout>
 
         <View
@@ -291,5 +335,5 @@
                 android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>
-    <!--</LinearLayout>-->
-</merge>
+</LinearLayout>
+    <!--</merge>-->

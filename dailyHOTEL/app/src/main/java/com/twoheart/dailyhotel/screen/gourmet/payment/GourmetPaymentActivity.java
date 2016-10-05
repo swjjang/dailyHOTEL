@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
@@ -310,6 +311,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
     {
+        if(paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+        {
+            DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
+        }
+
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
