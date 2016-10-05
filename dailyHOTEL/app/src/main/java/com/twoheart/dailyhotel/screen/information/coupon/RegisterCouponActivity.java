@@ -97,7 +97,7 @@ public class RegisterCouponActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if(lockUiComponentAndIsLockUiComponent() == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }

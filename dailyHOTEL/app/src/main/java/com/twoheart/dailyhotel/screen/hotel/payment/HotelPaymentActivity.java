@@ -333,7 +333,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
     {
-        if(paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+        if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
         {
             DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
         }
