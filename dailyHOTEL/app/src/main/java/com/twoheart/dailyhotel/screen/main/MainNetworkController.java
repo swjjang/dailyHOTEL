@@ -408,7 +408,8 @@ public class MainNetworkController extends BaseNetworkController
                     JSONObject jsonObject = response.getJSONObject("data");
 
                     final String userIndex = jsonObject.getString("userIdx");
-                    AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
+                    final String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
+                    AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
 
                     Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
                     {

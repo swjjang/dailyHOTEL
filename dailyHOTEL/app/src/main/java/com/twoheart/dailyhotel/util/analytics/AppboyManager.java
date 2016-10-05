@@ -31,21 +31,6 @@ public class AppboyManager extends BaseAnalyticsManager
         mAppboy = Appboy.getInstance(context);
     }
 
-    public static void setPushEnabled(Context context, boolean enabled)
-    {
-        Appboy.getInstance(context).getCurrentUser().setCustomUserAttribute("notification_status", enabled);
-
-        if (enabled == true)
-        {
-            Appboy.getInstance(context).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
-        } else
-        {
-            Appboy.getInstance(context).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
-        }
-
-        Appboy.getInstance(context).requestImmediateDataFlush();
-    }
-
     @Override
     void recordScreen(String screen)
     {
@@ -601,7 +586,7 @@ public class AppboyManager extends BaseAnalyticsManager
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    void setUserIndex(String index)
+    void setUserInformation(String index, String userType)
     {
         mUserIndex = index;
         mAppboy.changeUser(index);
@@ -870,6 +855,29 @@ public class AppboyManager extends BaseAnalyticsManager
     {
 
     }
+
+    @Override
+    void onRegionChanged(String country, String provinceName)
+    {
+
+    }
+
+    @Override
+    void setPushEnabled(boolean enabled)
+    {
+        mAppboy.getCurrentUser().setCustomUserAttribute("notification_status", enabled);
+
+        if (enabled == true)
+        {
+            mAppboy.getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+        } else
+        {
+            mAppboy.getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+        }
+
+        mAppboy.requestImmediateDataFlush();
+    }
+
 
     private String getUserIndex()
     {

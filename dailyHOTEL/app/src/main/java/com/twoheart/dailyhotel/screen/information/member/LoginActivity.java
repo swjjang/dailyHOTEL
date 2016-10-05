@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -433,7 +432,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
         DailyPreference.getInstance(this).setUserInformation(userType, email, name, recommender);
 
-        AnalyticsManager.getInstance(this).setUserIndex(userIndex);
+        AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);
 
         return userIndex;
     }
@@ -733,7 +732,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
                         DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
-                        AppboyManager.setPushEnabled(LoginActivity.this, false);
+                        AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false);
 
                         HashMap<String, String> params = new HashMap<>();
 
@@ -934,7 +933,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
 
                     DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
-                    AppboyManager.setPushEnabled(LoginActivity.this, isAgreedBenefit);
+                    AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(isAgreedBenefit);
 
                     String userIndex = jsonObject.getString("userIdx");
                     boolean isVerified = jsonObject.getBoolean("verified");

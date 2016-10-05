@@ -131,13 +131,13 @@ public class AnalyticsManager
         return mGoogleAnalyticsManager;
     }
 
-    public void setUserIndex(String index)
+    public void setUserInformation(String index, String userType)
     {
         try
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.setUserIndex(index);
+                analyticsManager.setUserInformation(index, userType);
             }
         } catch (Exception e)
         {
@@ -412,6 +412,32 @@ public class AnalyticsManager
             try
             {
                 analyticsManager.startApplication();
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onRegionChanged(String country, String provinceName) {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onRegionChanged(country, provinceName);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void setPushEnabled(boolean onOff) {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.setPushEnabled(onOff);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());

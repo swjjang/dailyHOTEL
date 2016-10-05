@@ -177,7 +177,7 @@ public class ProfileActivity extends BaseActivity
                     unLockUI();
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 
-                    AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(AnalyticsManager.ValueType.EMPTY);
+                    AnalyticsManager.getInstance(ProfileActivity.this).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
                     AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.MENU_LOGOUT_COMPLETE);
 
                     finish();

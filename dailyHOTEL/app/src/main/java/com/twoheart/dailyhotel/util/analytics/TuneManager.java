@@ -105,7 +105,7 @@ public class TuneManager extends BaseAnalyticsManager
             list.add(tuneEventItem);
             tuneEvent.withEventItems(list);
 
-            setUserIndex(mUserIndex);
+            setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
             mTune.measureEvent(tuneEvent);
 
@@ -125,7 +125,7 @@ public class TuneManager extends BaseAnalyticsManager
             list.add(tuneEventItem);
             tuneEvent.withEventItems(list);
 
-            setUserIndex(mUserIndex);
+            setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
             mTune.measureEvent(tuneEvent);
 
@@ -145,7 +145,7 @@ public class TuneManager extends BaseAnalyticsManager
             list.add(tuneEventItem);
             tuneEvent.withEventItems(list);
 
-            setUserIndex(mUserIndex);
+            setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
             mTune.measureEvent(tuneEvent);
 
@@ -165,7 +165,7 @@ public class TuneManager extends BaseAnalyticsManager
             list.add(tuneEventItem);
             tuneEvent.withEventItems(list);
 
-            setUserIndex(mUserIndex);
+            setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
             mTune.measureEvent(tuneEvent);
 
@@ -195,13 +195,16 @@ public class TuneManager extends BaseAnalyticsManager
             list.add(tuneEventItem);
             tuneEvent.withEventItems(list);
 
+            String userIndex;
             if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
             {
-                setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+                userIndex = params.get(AnalyticsManager.KeyType.USER_INDEX);
             } else
             {
-                setUserIndex(mUserIndex);
+                userIndex = mUserIndex;
             }
+
+            setUserInformation(userIndex, AnalyticsManager.ValueType.EMPTY);
 
             mTune.measureEvent(tuneEvent);
 
@@ -236,13 +239,16 @@ public class TuneManager extends BaseAnalyticsManager
             list.add(tuneEventItem);
             tuneEvent.withEventItems(list);
 
+            String userIndex;
             if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
             {
-                setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+                userIndex = params.get(AnalyticsManager.KeyType.USER_INDEX);
             } else
             {
-                setUserIndex(mUserIndex);
+                userIndex = mUserIndex;
             }
+
+            setUserInformation(userIndex, AnalyticsManager.ValueType.EMPTY);
 
             mTune.measureEvent(tuneEvent);
 
@@ -273,7 +279,7 @@ public class TuneManager extends BaseAnalyticsManager
                 list.add(tuneEventItem);
                 tuneEvent.withEventItems(list);
 
-                setUserIndex(mUserIndex);
+                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
                 mTune.measureEvent(tuneEvent);
 
@@ -294,7 +300,7 @@ public class TuneManager extends BaseAnalyticsManager
                 list.add(tuneEventItem);
                 tuneEvent.withEventItems(list);
 
-                setUserIndex(mUserIndex);
+                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
                 mTune.measureEvent(tuneEvent);
 
@@ -309,7 +315,7 @@ public class TuneManager extends BaseAnalyticsManager
             {
                 TuneEvent tuneEvent = new TuneEvent(TuneEventId.MENU_GOURMET);
 
-                setUserIndex(mUserIndex);
+                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
                 mTune.measureEvent(tuneEvent);
 
@@ -321,7 +327,7 @@ public class TuneManager extends BaseAnalyticsManager
             {
                 TuneEvent tuneEvent = new TuneEvent(TuneEventId.INVITE_FRIEND);
 
-                setUserIndex(mUserIndex);
+                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
                 mTune.measureEvent(tuneEvent);
 
@@ -344,7 +350,7 @@ public class TuneManager extends BaseAnalyticsManager
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    void setUserIndex(String index)
+    void setUserInformation(String index, String userType)
     {
         mUserIndex = index;
 
@@ -399,7 +405,7 @@ public class TuneManager extends BaseAnalyticsManager
         TuneEvent tuneEvent = new TuneEvent(TuneEventId.CARDLIST_ADDED_CARD);
         tuneEvent.withAttribute1(cardType);
 
-        setUserIndex(mUserIndex);
+        setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
 
         mTune.measureEvent(tuneEvent);
 
@@ -503,13 +509,16 @@ public class TuneManager extends BaseAnalyticsManager
         list.add(tuneEventItem);
         tuneEvent.withEventItems(list);
 
+        String userIndex;
         if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
-            setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+            userIndex = params.get(AnalyticsManager.KeyType.USER_INDEX);
         } else
         {
-            setUserIndex(mUserIndex);
+            userIndex = mUserIndex;
         }
+
+        setUserInformation(userIndex, AnalyticsManager.ValueType.EMPTY);
 
         mTune.measureEvent(tuneEvent);
 
@@ -547,13 +556,16 @@ public class TuneManager extends BaseAnalyticsManager
         list.add(tuneEventItem);
         tuneEvent.withEventItems(list);
 
+        String userIndex;
         if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
-            setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+            userIndex = params.get(AnalyticsManager.KeyType.USER_INDEX);
         } else
         {
-            setUserIndex(mUserIndex);
+            userIndex = mUserIndex;
         }
+
+        setUserInformation(userIndex, AnalyticsManager.ValueType.EMPTY);
 
         mTune.measureEvent(tuneEvent);
 
@@ -574,6 +586,19 @@ public class TuneManager extends BaseAnalyticsManager
     {
 
     }
+
+    @Override
+    void onRegionChanged(String country, String provinceName)
+    {
+
+    }
+
+    @Override
+    void setPushEnabled(boolean onOff)
+    {
+
+    }
+
 
     private TuneEventItem getTuneEventItem(Map<String, String> params)
     {

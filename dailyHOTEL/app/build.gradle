@@ -79,7 +79,7 @@ dependencies {
     compile 'com.kakao.sdk:kakaolink:1.1.20'
     compile 'com.kakao.sdk:kakaotalk:1.1.20'
     compile 'com.appboy:android-sdk-ui:1.15.+'
-    compile 'com.adjust.sdk:adjust-android:4.7.0'
+    compile 'com.adjust.sdk:adjust-android:4.10.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
         transitive = true;
     }

@@ -137,7 +137,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //            {
     //                String userIndex = String.valueOf(response.getInt("idx"));
     //
-    //                AnalyticsManager.getInstance(AddProfileSocialNetworkController.this).setUserIndex(userIndex);
+    //                AnalyticsManager.getInstance(AddProfileSocialNetworkController.this).setUserInformation(userIndex);
     //                AnalyticsManager.getInstance(AddProfileSocialNetworkController.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
     //                    , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
     //

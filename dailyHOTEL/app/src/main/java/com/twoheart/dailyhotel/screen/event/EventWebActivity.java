@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -906,7 +905,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             public void onBenefitAgreement(final boolean isAgree, String updateDate)
                             {
                                 DailyPreference.getInstance(EventWebActivity.this).setUserBenefitAlarm(isAgree);
-                                AppboyManager.setPushEnabled(EventWebActivity.this, isAgree);
+                                AnalyticsManager.getInstance(EventWebActivity.this).setPushEnabled(isAgree);
 
                                 if (isAgree == true)
                                 {

@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
 import java.io.File;
 import java.util.Calendar;
@@ -151,10 +150,10 @@ public class MainActivity extends BaseActivity implements Constants
         // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
         if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
         {
-            AppboyManager.setPushEnabled(this, true);
+            AnalyticsManager.getInstance(this).setPushEnabled(true);
         } else
         {
-            AppboyManager.setPushEnabled(this, false);
+            AnalyticsManager.getInstance(this).setPushEnabled(false);
         }
     }
 
@@ -840,9 +839,11 @@ public class MainActivity extends BaseActivity implements Constants
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
                         mNetworkController.requestNoticeAgreement();
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(false);
                     } else
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(true);
                     }
                 }
             }
@@ -915,7 +916,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
             DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(mIsBenefitAlarm);
-            AppboyManager.setPushEnabled(MainActivity.this, mIsBenefitAlarm);
+            AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(mIsBenefitAlarm);
 
             if (mIsBenefitAlarm == true)
             {

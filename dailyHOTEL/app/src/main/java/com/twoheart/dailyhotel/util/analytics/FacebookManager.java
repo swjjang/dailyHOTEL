@@ -263,7 +263,7 @@ public class FacebookManager extends BaseAnalyticsManager
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    void setUserIndex(String index)
+    void setUserInformation(String index, String userType)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -424,6 +424,19 @@ public class FacebookManager extends BaseAnalyticsManager
     {
 
     }
+
+    @Override
+    void onRegionChanged(String country, String provinceName)
+    {
+
+    }
+
+    @Override
+    void setPushEnabled(boolean onOff)
+    {
+
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
