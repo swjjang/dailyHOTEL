@@ -148,10 +148,10 @@ public class MainActivity extends BaseActivity implements Constants
         // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
         if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
         {
-            AnalyticsManager.getInstance(this).setPushEnabled(true);
+            AnalyticsManager.getInstance(this).setPushEnabled(true, null);
         } else
         {
-            AnalyticsManager.getInstance(this).setPushEnabled(false);
+            AnalyticsManager.getInstance(this).setPushEnabled(false, null);
         }
     }
 
@@ -866,11 +866,11 @@ public class MainActivity extends BaseActivity implements Constants
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
                         mNetworkController.requestNoticeAgreement();
-                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(false);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(false, null);
                     } else
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
-                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(true);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(true, null);
                     }
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();
@@ -945,7 +945,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
             DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(mIsBenefitAlarm);
-            AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(mIsBenefitAlarm);
+            AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(mIsBenefitAlarm, AnalyticsManager.ValueType.LAUNCH);
 
             if (mIsBenefitAlarm == true)
             {

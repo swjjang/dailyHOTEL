@@ -53,5 +53,5 @@ public abstract class BaseAnalyticsManager
 
     abstract void onRegionChanged(String country, String provinceName);
 
-    abstract void setPushEnabled(boolean onOff);
+    abstract void setPushEnabled(boolean onOff, String pushSettingType);
 }

@@ -432,7 +432,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setPushEnabled(boolean onOff)
+    void setPushEnabled(boolean onOff, String pushSettingType)
     {
 
     }

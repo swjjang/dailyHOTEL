@@ -749,7 +749,7 @@ public class InformationFragment extends BaseFragment implements Constants
             if (isLogin == true)
             {
                 DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
-                AnalyticsManager.getInstance(getContext()).setPushEnabled(isAgreedBenefit);
+                AnalyticsManager.getInstance(getContext()).setPushEnabled(isAgreedBenefit, null);
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
             }
@@ -793,7 +793,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgree);
             mInformationLayout.updatePushIcon(isAgree);
-            AnalyticsManager.getInstance(baseActivity).setPushEnabled(isAgree);
+            AnalyticsManager.getInstance(baseActivity).setPushEnabled(isAgree, AnalyticsManager.ValueType.OTHER);
 
             if (isAgree == true)
             {

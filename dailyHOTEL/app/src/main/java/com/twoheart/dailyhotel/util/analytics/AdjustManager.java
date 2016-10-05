@@ -151,23 +151,37 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordScreen(String screen)
     {
-        //        AdjustEvent event = new AdjustEvent(screen);
-        //        event.addCallbackParameter("key", "value");
-        //        event.addCallbackParameter("foo", "bar");
-        //
-        //        Adjust.trackEvent(event);
+        AdjustEvent event = null;
+
+        if (AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screen) == true)
+        {
+            // 해당 경우 유저 타입을 알지 못해 recordEvent에서 처리함 - 보내는 시점은 recordEvent와 같음
+        } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screen) == true)
+        {
+            event = new AdjustEvent(EventToken.LOGOUT);
+        }
+
+        if (event != null)
+        {
+            Adjust.trackEvent(event);
+        }
     }
 
     @Override
     void recordScreen(String screen, Map<String, String> params)
     {
+        AdjustEvent event = null;
+
         if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
-            AdjustEvent event = new AdjustEvent(EventToken.GOURMET_FIRST_PURCHASE);
-            Adjust.trackEvent(event);
+            event = new AdjustEvent(EventToken.GOURMET_FIRST_PURCHASE);
         } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
-            AdjustEvent event = new AdjustEvent(EventToken.STAY_FIRST_PURCHASE);
+            event = new AdjustEvent(EventToken.STAY_FIRST_PURCHASE);
+        }
+
+        if (event != null)
+        {
             Adjust.trackEvent(event);
         }
     }
@@ -175,7 +189,37 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (Util.isTextEmpty(category, action) == true)
+        {
+            return;
+        }
 
+        AdjustEvent event = null;
+
+        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.LOGIN_COMPLETE.equalsIgnoreCase(action) == true)
+            {
+                if (Util.isTextEmpty(label) == true)
+                {
+                    return;
+                }
+
+                if (AnalyticsManager.UserType.EMAIL.equalsIgnoreCase(label) == true)
+                {
+                    event = new AdjustEvent(EventToken.LOGIN);
+                } else if (AnalyticsManager.UserType.FACEBOOK.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.UserType.KAKAO.equalsIgnoreCase(label) == true)
+                {
+                    event = new AdjustEvent(EventToken.SOCIAL_LOGIN);
+                }
+            }
+        }
+
+        if (event != null)
+        {
+            Adjust.trackEvent(event);
+        }
     }
 
     @Override
@@ -259,12 +303,18 @@ public class AdjustManager extends BaseAnalyticsManager
     void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         setUserInformation(userIndex, userType);
+
+        AdjustEvent event = new AdjustEvent(EventToken.SOCIAL_SIGNUP);
+        Adjust.trackEvent(event);
     }
 
     @Override
     void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
     {
         setUserInformation(userIndex, userType);
+
+        AdjustEvent event = new AdjustEvent(EventToken.SIGNUP);
+        Adjust.trackEvent(event);
     }
 
     @Override
@@ -314,9 +364,22 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setPushEnabled(boolean onOff)
+    void setPushEnabled(boolean onOff, String pushSettingType)
     {
         Adjust.addSessionCallbackParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
+
+        if (Util.isTextEmpty(pushSettingType) == true)
+        {
+            return;
+        }
+
+        if (AnalyticsManager.ValueType.LAUNCH.equalsIgnoreCase(pushSettingType) == true //
+            || AnalyticsManager.ValueType.OTHER.equalsIgnoreCase(pushSettingType) == true)
+        {
+            AdjustEvent event = new AdjustEvent(onOff ? EventToken.PUSH_ON : EventToken.PUSH_OFF);
+            event.addCallbackParameter(Key.PUSH_SETTING, pushSettingType);
+            Adjust.trackEvent(event);
+        }
     }
 
 
@@ -394,6 +457,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String USER_TYPE = "user_type";
         public static final String MEMBER_TYPE = "member_type";
         public static final String PUSH_NOTIFICATION = "push_notification";
+        public static final String PUSH_SETTING = "push_setting";
     }
 
     private static final class UserType

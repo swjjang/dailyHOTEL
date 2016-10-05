@@ -732,7 +732,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
                         DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
-                        AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false);
+                        AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
 
                         HashMap<String, String> params = new HashMap<>();
 
@@ -933,7 +933,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
 
                     DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
-                    AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(isAgreedBenefit);
+                    AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(isAgreedBenefit, null);
 
                     String userIndex = jsonObject.getString("userIdx");
                     boolean isVerified = jsonObject.getBoolean("verified");

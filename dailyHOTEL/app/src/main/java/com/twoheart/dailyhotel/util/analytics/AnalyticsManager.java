@@ -432,12 +432,12 @@ public class AnalyticsManager
         }
     }
 
-    public void setPushEnabled(boolean onOff) {
+    public void setPushEnabled(boolean onOff, String pushSettingType) {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.setPushEnabled(onOff);
+                analyticsManager.setPushEnabled(onOff, pushSettingType);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -937,5 +937,7 @@ public class AnalyticsManager
         public static final String EVENT = "event";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String ALL_LOCALE_KR = "전체";
+        public static final String LAUNCH = "launch";
+        public static final String OTHER = "other";
     }
 }

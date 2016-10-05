@@ -863,7 +863,7 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setPushEnabled(boolean enabled)
+    void setPushEnabled(boolean enabled, String pushSettingType)
     {
         mAppboy.getCurrentUser().setCustomUserAttribute("notification_status", enabled);
 

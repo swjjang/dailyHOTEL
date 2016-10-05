@@ -905,7 +905,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             public void onBenefitAgreement(final boolean isAgree, String updateDate)
                             {
                                 DailyPreference.getInstance(EventWebActivity.this).setUserBenefitAlarm(isAgree);
-                                AnalyticsManager.getInstance(EventWebActivity.this).setPushEnabled(isAgree);
+                                AnalyticsManager.getInstance(EventWebActivity.this).setPushEnabled(isAgree, AnalyticsManager.ValueType.LAUNCH);
 
                                 if (isAgree == true)
                                 {
