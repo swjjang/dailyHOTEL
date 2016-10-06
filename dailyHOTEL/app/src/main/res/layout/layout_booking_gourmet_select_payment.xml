@@ -168,10 +168,12 @@
                         android:id="@+id/logoTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:drawablePadding="6dp"
                         android:textColor="@color/default_text_c323232"
-                        android:textSize="19dp"/>
+                        android:textSize="19dp"
+                        dailyFont:style="Medium"/>
 
                     <ImageView
                         android:id="@+id/imageView1"
@@ -179,8 +181,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true"
-                        android:layout_marginBottom="18dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginRight="20dp"
                         android:src="@drawable/card_daily"/>
 
                     <ImageView
@@ -188,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/logoTextView"
                         android:layout_marginLeft="16dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="18dp"
                         app:srcCompat="@drawable/card_chip"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
@@ -197,8 +199,8 @@
                         android:layout_height="wrap_content"
                         android:layout_above="@id/imageView1"
                         android:layout_alignParentRight="true"
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginRight="20dp"
                         android:textColor="@color/creditcard_number_text"
                         android:textSize="16dp"/>
                 </RelativeLayout>
