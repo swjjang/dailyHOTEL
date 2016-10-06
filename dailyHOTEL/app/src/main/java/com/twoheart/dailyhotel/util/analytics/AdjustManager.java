@@ -254,6 +254,24 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
 
         if (event != null)
