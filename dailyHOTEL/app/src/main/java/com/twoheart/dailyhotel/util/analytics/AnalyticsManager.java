@@ -935,12 +935,14 @@ public class AnalyticsManager
         public static final String FIRST_PURCHASE = "first_purchase"; // 첫 결제 여부
         public static final String STATUS_CODE = "status_code";
         public static final String SATISFACTION_SURVEY = "satisfaction_survey";
+        public static final String FILTER = "filter";
     }
 
     public static class ValueType
     {
         public static final String EMPTY = "null";
         public static final String LIST = "list";
+        public static final String MAP = "map";
         public static final String SEARCH = "search";
         public static final String SEARCH_RESULT = "searchResult";
         public static final String CHANGED = "Changed";

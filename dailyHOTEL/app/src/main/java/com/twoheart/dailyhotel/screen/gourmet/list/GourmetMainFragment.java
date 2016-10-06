@@ -264,6 +264,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         Map<String, String> params = new HashMap<>();
 
         params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
 
         if (DailyHotel.isLogin() == false)
         {
@@ -275,6 +276,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+        params.put(AnalyticsManager.KeyType.FILTER, mGourmetCuration.getCurationOption().toAdjustString());
 
         Province province = mGourmetCuration.getProvince();
 

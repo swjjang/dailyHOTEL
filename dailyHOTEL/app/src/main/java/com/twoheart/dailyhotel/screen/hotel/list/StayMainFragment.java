@@ -329,6 +329,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         params.put(AnalyticsManager.KeyType.CHECK_IN, mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
         params.put(AnalyticsManager.KeyType.CHECK_OUT, mStayCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mStayCuration.getNights()));
 
         if (DailyHotel.isLogin() == false)
         {
@@ -341,6 +342,7 @@ public class StayMainFragment extends PlaceMainFragment
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);
         params.put(AnalyticsManager.KeyType.CATEGORY, mStayCuration.getCategory().code);
+        params.put(AnalyticsManager.KeyType.FILTER, mStayCuration.getCurationOption().toAdjustString());
 
         Province province = mStayCuration.getProvince();
 

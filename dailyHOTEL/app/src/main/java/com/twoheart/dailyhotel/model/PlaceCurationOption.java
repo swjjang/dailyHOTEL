@@ -70,4 +70,6 @@ public abstract class PlaceCurationOption implements Parcelable
     {
         return 0;
     }
+
+    public abstract String toAdjustString();
 }

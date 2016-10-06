@@ -196,6 +196,46 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
 
         if (event != null)
@@ -683,6 +723,46 @@ public class AdjustManager extends BaseAnalyticsManager
         return event;
     }
 
+    private AdjustEvent getListEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        AdjustEvent event = new AdjustEvent(eventToken);
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        event.addCallbackParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addCallbackParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        String filter = params.get(AnalyticsManager.KeyType.FILTER); // filter
+        event.addCallbackParameter(AnalyticsManager.KeyType.FILTER, filter);
+
+        return event;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// Event Token ///////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -734,6 +814,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String COUPON_PRICE = "coupon_value"; // 사용된 쿠폰금액
         public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
         public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
+        public static final String VIEW = "view"; // 리스트 인지 맵인지
     }
 
     private static final class UserType
