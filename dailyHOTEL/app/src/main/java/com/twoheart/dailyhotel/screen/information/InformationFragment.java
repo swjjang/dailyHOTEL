@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.appboy.Appboy;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -112,7 +111,7 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startCouponList();
                 return;
-            } else if(DailyDeepLink.getInstance().isNoticeDetailView() == true)
+            } else if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
             {
                 mOnEventListener.startNotice();
                 return;

@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -42,7 +41,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
