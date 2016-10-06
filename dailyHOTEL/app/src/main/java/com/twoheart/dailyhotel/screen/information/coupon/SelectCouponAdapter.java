@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyImageView;
 
 import java.text.ParseException;
 import java.util.List;
@@ -76,7 +77,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         holder.listItemLayout = view.findViewById(R.id.listItemLayout);
         holder.verticalLine = view.findViewById(R.id.vericalLine);
         holder.priceTextView = (TextView) view.findViewById(R.id.priceTextView);
-        holder.iconImageView = (ImageView) view.findViewById(R.id.iconImageView);
+        holder.iconImageView = (DailyImageView) view.findViewById(R.id.iconImageView);
         holder.downloadTextView = (TextView) view.findViewById(R.id.downloadTextView);
         holder.descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
         holder.expireTextView = (TextView) view.findViewById(R.id.expireTextView);
@@ -219,7 +220,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     {
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_dimmed);
         holder.iconImageView.setVisibility(View.VISIBLE);
-        holder.iconImageView.setImageResource(R.drawable.coupon_ic_download);
+        holder.iconImageView.setVectorImageResource(R.drawable.coupon_ic_download);
         holder.iconImageView.setSelected(false);
 
         holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.select_coupon_vertical_line_dimmed));
@@ -265,7 +266,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         View listItemLayout;
         View verticalLine;
         TextView priceTextView;
-        ImageView iconImageView;
+        DailyImageView iconImageView;
         TextView downloadTextView;
         TextView descriptionTextView;
         TextView expireTextView;

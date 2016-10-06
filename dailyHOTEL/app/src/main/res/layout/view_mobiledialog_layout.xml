@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -15,24 +16,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
+        android:text="@string/label_registeration_mobile"
         android:textColor="@color/default_text_c323232"
         android:textSize="17dp"
-        dailyFont:style="Medium"
-        android:text="@string/label_registeration_mobile"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/messageTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="13dp"
-        android:text="@string/message_signup_inputmobile"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:text="@string/message_signup_inputmobile"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,24 +48,25 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:singleLine="true"
             android:textColor="@color/default_text_c323232"
-            android:textSize="17dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"/>
+            android:textSize="17dp"/>
 
         <ImageView
             android:id="@+id/spinnerImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/countryTextView"
-            android:src="@drawable/spinner"/>
+            app:srcCompat="@drawable/spinner"/>
 
-        <View android:layout_width="1px"
-              android:layout_height="match_parent"
-              android:background="@color/default_line_cd0d0d0"
-              android:layout_toRightOf="@+id/spinnerImageView"
-              android:layout_marginLeft="10dp"/>
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/spinnerImageView"
+            android:background="@color/default_line_cd0d0d0"/>
 
         <com.twoheart.dailyhotel.widget.DailyEditText
             android:id="@+id/mobileTextView"

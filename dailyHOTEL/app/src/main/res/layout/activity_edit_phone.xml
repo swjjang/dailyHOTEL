@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -52,7 +53,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/text_fields_off"
-                    android:drawableRight="@drawable/spinner"
                     android:ellipsize="end"
                     android:hint="@string/label_necessary"
                     android:maxLength="20"
@@ -62,7 +62,7 @@
                     android:textColorHint="@color/search_hint_text"
                     android:textSize="16dp"
                     android:theme="@style/EditTextTheme"
-                    />
+                    app:drawableCompatRight="@drawable/spinner"/>
             </LinearLayout>
 
             <View
