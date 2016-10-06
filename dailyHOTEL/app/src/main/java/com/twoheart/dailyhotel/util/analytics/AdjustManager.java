@@ -296,6 +296,49 @@ public class AdjustManager extends BaseAnalyticsManager
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
                 }
             }
+        } else if (AnalyticsManager.Category.COUPON_BOX.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.REGISTRATION_REJECTED.equalsIgnoreCase(action) == true)
+            {
+                if (params != null)
+                {
+                    String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+                    StringBuilder couponBuilder = new StringBuilder("[");
+
+                    if (params.containsKey(AnalyticsManager.KeyType.COUPON_CODE) == true)
+                    {
+                        couponBuilder.append("id:").append(params.get(AnalyticsManager.KeyType.COUPON_CODE)); // coupon_id
+                    }
+
+                    if (params.containsKey(AnalyticsManager.KeyType.STATUS_CODE) == true)
+                    {
+                        couponBuilder.append(",rejection:").append(params.get(AnalyticsManager.KeyType.STATUS_CODE)); // 거절사유
+                    }
+
+                    couponBuilder.append("]");
+
+                    event.addCallbackParameter(Key.SERVICE, placeType);
+                    event.addCallbackParameter(Key.COUPON_REJECTED, couponBuilder.toString());
+                }
+            }
+        } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                if (AnalyticsManager.Label.HOTEL_SATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.GOURMET_SATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.HOTEL_DISSATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.GOURMET_DISSATISFACTION.equalsIgnoreCase(label) == true)
+                {
+                    String placeName = params.get(AnalyticsManager.KeyType.NAME);
+                    String satisfaction = params.get(AnalyticsManager.KeyType.SATISFACTION_SURVEY);
+                    String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+
+                    event.addCallbackParameter(Key.PLACE_NAME, placeName);
+                    event.addCallbackParameter(AnalyticsManager.KeyType.SATISFACTION_SURVEY, satisfaction);
+                    event.addCallbackParameter(Key.SERVICE, placeType);
+                }
+            }
         }
 
         if (event != null)
@@ -690,6 +733,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String COUPON_CODE = "coupon_id"; // 사용된 쿠폰코드
         public static final String COUPON_PRICE = "coupon_value"; // 사용된 쿠폰금액
         public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
+        public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
     }
 
     private static final class UserType

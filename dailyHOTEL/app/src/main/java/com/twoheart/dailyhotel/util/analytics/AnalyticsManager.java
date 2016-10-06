@@ -933,6 +933,8 @@ public class AnalyticsManager
         public static final String LIST_INDEX = "list_index";
         public static final String REGISTERED_SIMPLE_CARD = "registeredSimpleCard";
         public static final String FIRST_PURCHASE = "first_purchase"; // 첫 결제 여부
+        public static final String STATUS_CODE = "status_code";
+        public static final String SATISFACTION_SURVEY = "satisfaction_survey";
     }
 
     public static class ValueType
@@ -954,5 +956,7 @@ public class AnalyticsManager
         public static final String ALL_LOCALE_KR = "전체";
         public static final String LAUNCH = "launch";
         public static final String OTHER = "other";
+        public static final String SATISFIED = "satisfied";
+        public static final String DISSATISFIED = "dissatisfied";
     }
 }
