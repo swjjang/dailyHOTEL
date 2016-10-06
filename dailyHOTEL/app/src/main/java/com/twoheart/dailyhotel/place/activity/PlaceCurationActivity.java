@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RadioGroup;
@@ -70,6 +72,19 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     protected abstract BaseNetworkController getNetworkController(Context context);
 
     protected abstract PlaceCuration getPlaceCuration();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        if (Util.isOverAPI21() == true)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.black_a67));
+        }
+    }
 
     protected void initLayout()
     {
