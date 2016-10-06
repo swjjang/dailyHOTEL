@@ -878,6 +878,11 @@ public class AppboyManager extends BaseAnalyticsManager
         mAppboy.requestImmediateDataFlush();
     }
 
+    @Override
+    void purchaseWithCoupon(Map<String, String> param)
+    {
+
+    }
 
     private String getUserIndex()
     {

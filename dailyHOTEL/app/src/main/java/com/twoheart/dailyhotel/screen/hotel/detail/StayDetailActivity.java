@@ -287,6 +287,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         HashMap<String, String> params = new HashMap<>();
         params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index));
         params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));

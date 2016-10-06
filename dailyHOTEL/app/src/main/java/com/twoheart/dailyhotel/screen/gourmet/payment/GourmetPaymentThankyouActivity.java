@@ -133,4 +133,12 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
             AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS, params);
         }
     }
+
+    @Override
+    protected void onCouponUsedPurchase(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params)
+    {
+        params.put(AnalyticsManager.KeyType.FIRST_PURCHASE, isFirstGourmetPurchase ? "y" : "n");
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+        AnalyticsManager.getInstance(this).purchaseWithCoupon(params);
+    }
 }

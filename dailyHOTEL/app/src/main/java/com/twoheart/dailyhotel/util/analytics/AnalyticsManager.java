@@ -445,6 +445,19 @@ public class AnalyticsManager
         }
     }
 
+    public void purchaseWithCoupon( Map<String, String> param) {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.purchaseWithCoupon(param);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -919,6 +932,7 @@ public class AnalyticsManager
         public static final String IS_SHOW_ORIGINAL_PRICE = "isShowOriginalPrice";
         public static final String LIST_INDEX = "list_index";
         public static final String REGISTERED_SIMPLE_CARD = "registeredSimpleCard";
+        public static final String FIRST_PURCHASE = "first_purchase"; // 첫 결제 여부
     }
 
     public static class ValueType
@@ -933,6 +947,7 @@ public class AnalyticsManager
         public static final String GUEST = "guest";
         public static final String DETAIL = "detailview";
         public static final String HOTEL = "hotel";
+        public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
         public static final String EVENT = "event";
         public static final String CHANGE_LOCATION = "changelocation";

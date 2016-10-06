@@ -599,6 +599,11 @@ public class TuneManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void purchaseWithCoupon(Map<String, String> param)
+    {
+
+    }
 
     private TuneEventItem getTuneEventItem(Map<String, String> params)
     {

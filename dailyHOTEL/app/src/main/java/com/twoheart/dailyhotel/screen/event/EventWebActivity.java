@@ -915,8 +915,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                     String positive = getString(R.string.dialog_btn_text_confirm);
 
                                     showSimpleDialog(title, message, positive, null);
+
+//                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+//                                        AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
                                 } else
                                 {
+//                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+//                                        AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
                                 }
                             }
 

@@ -449,6 +449,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void purchaseWithCoupon(Map<String, String> param)
+    {
+
+    }
+
 
     private Product getProcuct(Map<String, String> params)
     {

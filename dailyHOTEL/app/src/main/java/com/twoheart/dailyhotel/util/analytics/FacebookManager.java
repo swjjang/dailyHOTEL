@@ -437,6 +437,11 @@ public class FacebookManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void purchaseWithCoupon(Map<String, String> param)
+    {
+
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

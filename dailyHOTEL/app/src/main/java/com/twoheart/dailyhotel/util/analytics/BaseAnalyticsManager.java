@@ -54,4 +54,6 @@ public abstract class BaseAnalyticsManager
     abstract void onRegionChanged(String country, String provinceName);
 
     abstract void setPushEnabled(boolean onOff, String pushSettingType);
+
+    abstract void purchaseWithCoupon(Map<String, String> param);
 }
