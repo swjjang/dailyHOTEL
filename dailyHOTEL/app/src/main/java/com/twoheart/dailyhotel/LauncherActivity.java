@@ -18,6 +18,8 @@ public class LauncherActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+        DailyPreference.getInstance(this).setBackgroundAppTime(0);
+
         Intent intent = getIntent();
 
         if (intent == null)
