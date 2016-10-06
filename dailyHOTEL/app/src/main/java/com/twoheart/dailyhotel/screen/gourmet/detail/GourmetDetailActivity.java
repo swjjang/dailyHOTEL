@@ -74,6 +74,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, gourmet.isDailyChoice);
 
         String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
@@ -111,6 +112,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         return intent;
     }
@@ -138,6 +140,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, gourmet.isDailyChoice);
 
         String isShowOriginalPrice;
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
@@ -251,8 +254,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         int entryIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
         int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        return new GourmetDetail(index, entryIndex, isShowOriginalPrice, listCount);
+        return new GourmetDetail(index, entryIndex, isShowOriginalPrice, listCount, isDailyChoice);
     }
 
     @Override
@@ -320,7 +324,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             mSaleTime = checkInSaleTime;
             mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
-                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount);
+                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount, mPlaceDetail.isDailyChoice);
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
         }
@@ -430,6 +434,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetail.ratingValue));
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetDetail.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
 
             AnalyticsManager.getInstance(this).recordScreen(screen, params);
         } catch (Exception e)

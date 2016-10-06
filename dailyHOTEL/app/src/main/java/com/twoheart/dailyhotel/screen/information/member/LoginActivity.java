@@ -83,7 +83,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         if (Util.isTextEmpty(callByScreen) == false)
         {
-            intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
         return intent;
     }
@@ -100,9 +100,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         setContentView(R.layout.activity_login);
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {
-            mCallByScreen = getIntent().getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
+            mCallByScreen = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
         }
 
         initToolbar();

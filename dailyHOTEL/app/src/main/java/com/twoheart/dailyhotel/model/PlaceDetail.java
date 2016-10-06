@@ -21,6 +21,7 @@ public abstract class PlaceDetail
     // GA용
     public int entryPosition;
     public String isShowOriginalPrice; // "Y", "N", empty
+    public boolean isDailyChoice;
 
     public abstract void setData(JSONObject jsonObject) throws Exception;
 

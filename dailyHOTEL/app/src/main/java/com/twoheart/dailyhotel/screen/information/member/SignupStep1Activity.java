@@ -39,7 +39,7 @@ public class SignupStep1Activity extends BaseActivity
 
         if (Util.isTextEmpty(callByScreen) == false)
         {
-            intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
         return intent;
     }
@@ -55,7 +55,7 @@ public class SignupStep1Activity extends BaseActivity
 
         if (Util.isTextEmpty(callByScreen) == false)
         {
-            intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
 
         return intent;
@@ -76,9 +76,9 @@ public class SignupStep1Activity extends BaseActivity
             recommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
         }
 
-        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {
-            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
+            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
         }
 
         mSignupStep1Layout = new SignupStep1Layout(this, mOnEventListener);

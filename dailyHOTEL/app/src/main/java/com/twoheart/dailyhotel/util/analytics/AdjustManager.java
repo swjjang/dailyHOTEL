@@ -236,6 +236,24 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        {
+            event = getDetailEvent(EventToken.VIEW_DETAIL, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        {
+            event = getDetailEvent(EventToken.VIEW_DETAIL, params);
+            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
 
         if (event != null)
@@ -763,6 +781,67 @@ public class AdjustManager extends BaseAnalyticsManager
         return event;
     }
 
+    private AdjustEvent getDetailEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        AdjustEvent event = new AdjustEvent(eventToken);
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        event.addCallbackParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addCallbackParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
+        event.addCallbackParameter(AnalyticsManager.KeyType.GRADE, grade);
+
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
+        event.addCallbackParameter(Key.PLACE_INDEX, placeIndex);
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
+        event.addCallbackParameter(Key.PLACE_NAME, placeName);
+
+        String rating = params.get(AnalyticsManager.KeyType.RATING); // vendor_satisfaction
+        event.addCallbackParameter(Key.RATING, rating);
+
+        String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        event.addCallbackParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+
+        String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
+        event.addCallbackParameter(Key.LIST_INDEX, listIndex);
+
+        String dailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE); // ranking
+        event.addCallbackParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
+
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        event.addCallbackParameter(Key.DBENEFIT, dBenefit);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        return event;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// Event Token ///////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -803,6 +882,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String SHARE_METHOD = "share_method"; // 공유수단
         public static final String PLACE_INDEX = "vendor_id"; // 업장 아이디
         public static final String PLACE_NAME = "vendor_name"; // 업장 이름
+        public static final String RATING = "vendor_satisfaction"; // 만족도
         public static final String IS_SHOW_ORIGINAL_PRICE = "discounted_price"; // 정가표시여부(y/n)
         public static final String LIST_INDEX = "ranking"; // 리스트화면에서 디테일화면으로 들어온 노출순위
         public static final String DBENEFIT = "d_benefit"; // 디베네핏 여부(y/n)

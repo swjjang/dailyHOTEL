@@ -53,7 +53,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommmender);
-        intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
@@ -90,9 +90,9 @@ public class SignupStep2Activity extends BaseActivity
         mPassword = intent.getStringExtra(INTENT_EXTRA_DATA_PASSWORD);
         mRecommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
 
-        if (intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {
-            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
+            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
         }
     }
 

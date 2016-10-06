@@ -78,6 +78,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
 
         String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -119,6 +120,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         return intent;
     }
@@ -145,6 +147,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
 
         String isShowOriginalPrice;
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
@@ -259,8 +262,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
         int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        return new StayDetail(stayIndex, nights, entryPosition, isShowOriginalPrice, listCount);
+        return new StayDetail(stayIndex, nights, entryPosition, isShowOriginalPrice, listCount, isDailyChoice);
     }
 
     @Override
@@ -338,7 +342,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
             mPlaceDetail = new StayDetail(mPlaceDetail.index, nights, mPlaceDetail.entryPosition, //
-                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount);
+                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount, mPlaceDetail.isDailyChoice);
 
             ((StayDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights);
         }
@@ -503,6 +507,8 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayDetail.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayDetail.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayDetail.nights));
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(screen, params);
         } catch (Exception e)

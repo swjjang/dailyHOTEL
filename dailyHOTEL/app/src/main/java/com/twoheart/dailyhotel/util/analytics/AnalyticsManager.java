@@ -936,6 +936,7 @@ public class AnalyticsManager
         public static final String STATUS_CODE = "status_code";
         public static final String SATISFACTION_SURVEY = "satisfaction_survey";
         public static final String FILTER = "filter";
+        public static final String DAILYCHOICE = "dailychoice";
     }
 
     public static class ValueType
