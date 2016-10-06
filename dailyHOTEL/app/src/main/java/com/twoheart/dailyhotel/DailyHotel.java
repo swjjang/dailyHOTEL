@@ -174,6 +174,12 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 }
 
                 @Override
+                public boolean isSecureMode()
+                {
+                    return false;
+                }
+
+                @Override
                 public ApprovalType getApprovalType()
                 {
                     return ApprovalType.INDIVIDUAL;
