@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+             xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/cardLayout"
-        android:layout_width="match_parent"
-        android:layout_height="190dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="188dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/shape_fillrect_ld1d1d1_bffffff">
 
-        <ImageView
-            android:id="@+id/logoImageView"
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/logoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="6dp"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="19dp"
+            dailyFont:style="Medium"/>
 
         <ImageView
             android:id="@+id/imageView1"
@@ -26,16 +32,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="18dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
             android:src="@drawable/card_daily"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/logoImageView"
+            android:layout_below="@id/logoTextView"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             app:srcCompat="@drawable/card_chip"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -44,30 +50,19 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/imageView1"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="6dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="20dp"
             android:textColor="@color/creditcard_number_text"
             android:textSize="16dp"/>
 
         <ImageView
             android:id="@+id/deleteImageView"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/card_btn_x_off"/>
-
-        <ImageView
-            android:id="@+id/checkedImageView"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginRight="9dp"
-            android:layout_marginTop="15dp"
-            android:layout_toLeftOf="@id/deleteImageView"
-            android:src="@drawable/card_btn_v_off"
-            android:visibility="gone"/>
-
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/card_btn_x_off"/>
     </RelativeLayout>
 </FrameLayout>
