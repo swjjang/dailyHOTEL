@@ -46,7 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     private LoadingDialog mLockUI;
     private Handler handler;
     protected String mNetworkTag;
-    private boolean mRefreshData;
 
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
