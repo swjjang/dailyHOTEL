@@ -209,7 +209,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     private class DailyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks
     {
-        private int running = 0;
+        private int mRunningActivity = 0;
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle)
@@ -220,12 +220,12 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityStarted(Activity activity)
         {
-            if (++running == 1)
+            if (++mRunningActivity == 1)
             {
                 // 30 분이 지나면 재시작
                 final long DELAY_TIME = 30 * 60 * 1000;
 
-                // return to forground");
+                // return to forground
                 long currentTime = DailyCalendar.getInstance().getTimeInMillis();
                 long backgroundTime = DailyPreference.getInstance(activity).getBackgroundAppTime();
 
@@ -233,8 +233,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 {
                     Util.restartApp(activity);
                 }
-            } else if (running > 1)
-            {
             }
         }
 
@@ -251,7 +249,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityStopped(Activity activity)
         {
-            if (--running == 0)
+            if (--mRunningActivity == 0)
             {
                 // go background
                 DailyPreference.getInstance(activity).setBackgroundAppTime(DailyCalendar.getInstance().getTimeInMillis());
