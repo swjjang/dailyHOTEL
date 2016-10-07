@@ -5,7 +5,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/white">
 
-    <!--<include layout="@layout/toolbar_default"/>-->
+    <include layout="@layout/toolbar_default"/>
 
     <ScrollView
         android:id="@+id/scrollLayout"
@@ -43,6 +43,23 @@
                 android:text="@string/label_email"
                 android:textColor="@drawable/selector_label_textcolor"
                 android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/selector_edittext_background"
+                android:hint="@string/label_necessary"
+                android:inputType="textEmailAddress"
+                android:maxLength="50"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/search_hint_text"
+                android:textSize="16dp"
+                android:theme="@style/EditTextTheme"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,23 +142,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.twoheart.dailyhotel.widget.DailyEditText
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/selector_edittext_background"
-                android:hint="@string/label_necessary"
-                android:inputType="textEmailAddress"
-                android:maxLength="50"
-                android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
-                android:textColorHint="@color/search_hint_text"
-                android:textSize="16dp"
-                android:theme="@style/EditTextTheme"/>
-
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/nameView"
                 android:layout_width="match_parent"
@@ -170,70 +170,73 @@
                 android:textSize="16dp"
                 android:theme="@style/EditTextTheme"/>
 
-            <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
-            <!--android:id="@+id/birthDayView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_marginTop="16dp"-->
-            <!--android:text="@string/label_birthday"-->
-            <!--android:textColor="@drawable/selector_label_textcolor"-->
-            <!--android:textSize="12dp"/>-->
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/birthdayView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_birthday"
+                android:textColor="@drawable/selector_label_textcolor"
+                android:textSize="12dp"/>
 
-            <!--<FrameLayout-->
-            <!--android:id="@+id/birthDayLayout"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content">-->
+            <FrameLayout
+                android:id="@+id/birthdayLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <!--<com.twoheart.dailyhotel.widget.DailyEditText-->
-            <!--android:id="@+id/birthDayEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:background="@drawable/selector_edittext_background"-->
-            <!--android:hint="@string/label_option_benefit"-->
-            <!--android:inputType="text"-->
-            <!--android:maxLength="20"-->
-            <!--android:focusable="false"-->
-            <!--android:clickable="false"-->
-            <!--android:cursorVisible="false"-->
-            <!--android:singleLine="true"-->
-            <!--android:textColor="@color/default_text_c323232"-->
-            <!--android:textColorHint="@color/search_hint_text"-->
-            <!--android:textSize="16dp"-->
-            <!--android:theme="@style/EditTextTheme"/>-->
-            <!--</FrameLayout>-->
+                <com.twoheart.dailyhotel.widget.DailyEditText
+                    android:id="@+id/birthdayEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_edittext_background"
+                    android:cursorVisible="false"
+                    android:hint="@string/label_option_benefit"
+                    android:inputType="text"
+                    android:maxLength="20"
+                    android:singleLine="true"
+                    android:textColor="@color/default_text_c323232"
+                    android:textColorHint="@color/search_hint_text"
+                    android:textSize="16dp"
+                    android:theme="@style/EditTextTheme"/>
 
-            <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
-            <!--android:id="@+id/recommenderView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_marginTop="16dp"-->
-            <!--android:text="@string/label_recommender_code"-->
-            <!--android:textColor="@drawable/selector_label_textcolor"-->
-            <!--android:textSize="12dp"/>-->
+                <View
+                    android:id="@+id/fakeBirthdayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
 
-            <!--<com.twoheart.dailyhotel.widget.DailyEditText-->
-            <!--android:id="@+id/recommenderEditText"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:background="@drawable/selector_edittext_background"-->
-            <!--android:hint="@string/label_select"-->
-            <!--android:inputType="text"-->
-            <!--android:maxLength="20"-->
-            <!--android:singleLine="true"-->
-            <!--android:textColor="@color/default_text_c323232"-->
-            <!--android:textColorHint="@color/search_hint_text"-->
-            <!--android:textSize="16dp"-->
-            <!--android:theme="@style/EditTextTheme"/>-->
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/recommenderView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/label_recommender_code"
+                android:textColor="@drawable/selector_label_textcolor"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/recommenderEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/selector_edittext_background"
+                android:hint="@string/label_select"
+                android:inputType="text"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/search_hint_text"
+                android:textSize="16dp"
+                android:theme="@style/EditTextTheme"/>
 
             <com.twoheart.dailyhotel.widget.DailyCheckBox
                 android:id="@+id/allAgreementCheckBox"

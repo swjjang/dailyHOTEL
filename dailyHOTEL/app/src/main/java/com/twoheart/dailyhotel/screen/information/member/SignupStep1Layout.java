@@ -22,11 +22,13 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
-    private View mEmailView, mNameView, mPasswordView, mConfirmPasswordView, mRecommenderView;
-    private EditText mEmailEditText, mNameEditText, mPasswordEditText, mConfirmPasswordEditText, mRecommenderEditText;
+    private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
+    private EditText mEmailEditText, mNameEditText, mPasswordEditText;
+    private EditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
+    private CheckBox mBenefitCheckBox;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -35,6 +37,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         void showTermOfService();
 
         void showTermOfPrivacy();
+
+        void showBirthdayDatePicker();
     }
 
     public SignupStep1Layout(Context context, OnEventListener mOnEventListener)
@@ -77,6 +81,9 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mNameEditText = (EditText) view.findViewById(R.id.nameEditText);
         mNameEditText.setOnFocusChangeListener(this);
 
+        mNameView.setNextFocusDownId(R.id.fakeBirthdayView);
+        mNameView.setNextFocusForwardId(R.id.fakeBirthdayView);
+
         mPasswordView = view.findViewById(R.id.passwordView);
         mPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         mPasswordEditText.setOnFocusChangeListener(this);
@@ -84,6 +91,17 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (EditText) view.findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
+
+        mBirthdayView = view.findViewById(R.id.birthdayView);
+        mBirthdayEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText.setOnFocusChangeListener(this);
+
+        mBirthdayEditText.setFocusable(false);
+
+        View fakeBirthdayView = view.findViewById(R.id.fakeBirthdayView);
+        fakeBirthdayView.setFocusable(true);
+        fakeBirthdayView.setOnFocusChangeListener(this);
+        fakeBirthdayView.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (EditText) view.findViewById(R.id.recommenderEditText);
@@ -113,10 +131,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
+        mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
         mAllAgreementCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
+        mBenefitCheckBox.setOnClickListener(this);
 
         TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -135,6 +155,16 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     public boolean isCheckedTermsOfPrivacy()
     {
         return mTermsOfPrivacyCheckBox.isChecked();
+    }
+
+    public boolean isBenefitCheckBox()
+    {
+        return mBenefitCheckBox.isChecked();
+    }
+
+    public void setBirthdayText(String text)
+    {
+        mBirthdayEditText.setText(text);
     }
 
     public void setRecommenderText(String recommender)
@@ -185,16 +215,18 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
+                mBenefitCheckBox.setChecked(isChecked);
                 break;
             }
 
             case R.id.personalCheckBox:
             case R.id.termsCheckBox:
+            case R.id.benefitCheckBox:
             {
                 InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
 
-                if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
+                if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
                 {
                     mAllAgreementCheckBox.setChecked(true);
                 } else
@@ -203,6 +235,16 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 }
                 break;
             }
+
+            case R.id.fakeBirthdayView:
+                if (mBirthdayView.isSelected() == true)
+                {
+                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                } else
+                {
+                    mBirthdayView.requestFocus();
+                }
+                break;
         }
     }
 
@@ -224,6 +266,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mPasswordView.setSelected(false);
         mConfirmPasswordView.setSelected(false);
         mRecommenderView.setSelected(false);
+        mBirthdayView.setSelected(false);
+        mBirthdayEditText.setSelected(false);
     }
 
     private void setFocusTextView(int id)
@@ -246,6 +290,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
             case R.id.confirmPasswordEditText:
                 mConfirmPasswordView.setSelected(true);
+                break;
+
+            case R.id.fakeBirthdayView:
+                mBirthdayEditText.setSelected(true);
+                mBirthdayView.setSelected(true);
+                ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
                 break;
 
             case R.id.recommenderEditText:

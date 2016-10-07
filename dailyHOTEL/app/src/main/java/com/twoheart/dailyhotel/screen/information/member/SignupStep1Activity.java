@@ -1,8 +1,16 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -14,6 +22,7 @@ import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -247,6 +256,78 @@ public class SignupStep1Activity extends BaseActivity
 
             Intent intent = new Intent(SignupStep1Activity.this, PrivacyActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
+        }
+
+        @Override
+        public void showBirthdayDatePicker()
+        {
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
+
+            final Dialog dialog = new Dialog(SignupStep1Activity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.setCanceledOnTouchOutside(false);
+
+            final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+
+            datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+            {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+                {
+
+                }
+            });
+
+            // 상단
+            TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+            titleTextView.setVisibility(View.VISIBLE);
+            titleTextView.setText("생일 선택");
+
+            // 버튼
+            View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+            View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+            negativeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            positiveTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+
+                    mSignupStep1Layout.setBirthdayText(String.format("%4d.%2d.%2d", datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
+                }
+            });
+
+            dialog.setCancelable(true);
+
+            try
+            {
+                dialog.setContentView(dialogView);
+                dialog.show();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         @Override
