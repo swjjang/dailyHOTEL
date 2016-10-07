@@ -138,7 +138,7 @@ public class AdjustManager extends BaseAnalyticsManager
         config.setSendInBackground(true);
 
         // enable event buffering
-        config.setEventBufferingEnabled(true);
+        config.setEventBufferingEnabled(DEBUG == true ? false : true);
 
         Adjust.onCreate(config);
 
@@ -245,7 +245,7 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
             event = getDetailEvent(EventToken.VIEW_DETAIL, params);
             event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);

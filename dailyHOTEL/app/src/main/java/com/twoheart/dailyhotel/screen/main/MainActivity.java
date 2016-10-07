@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
 import java.io.File;
 import java.util.Calendar;
@@ -768,7 +767,6 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
                     placeType = PlaceType.FNB;
-                } else if (DailyDeepLink.getInstance().isBookingView() == true)
                 } else if (DailyDeepLink.getInstance().isBookingView() == true //
                     || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
