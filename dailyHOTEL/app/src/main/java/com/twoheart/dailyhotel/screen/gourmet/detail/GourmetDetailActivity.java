@@ -613,7 +613,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 Window window = getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(getResources().getColor(R.color.black_a67));
+                window.setStatusBarColor(getResources().getColor(R.color.textView_textColor_shadow_soldout));
             }
 
             releaseUiComponent();

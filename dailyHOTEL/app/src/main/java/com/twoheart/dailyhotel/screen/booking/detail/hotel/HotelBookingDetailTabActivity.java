@@ -265,16 +265,31 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch (msgCode)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    case 100:
+                        JSONObject jsonObject = response.getJSONObject("data");
 
-                    mHotelBookingDetail.setData(jsonObject);
+                        mHotelBookingDetail.setData(jsonObject);
 
-                    loadFragments(getViewPager(), mHotelBookingDetail);
-                } else
-                {
-                    onErrorPopupMessage(msgCode, response.getString("msg"));
+                        loadFragments(getViewPager(), mHotelBookingDetail);
+                        break;
+
+                    // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
+                    case 501:
+                        onErrorPopupMessage(msgCode, response.getString("msg"), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.restartApp(HotelBookingDetailTabActivity.this);
+                            }
+                        });
+                        break;
+
+                    default:
+                        onErrorPopupMessage(msgCode, response.getString("msg"));
+                        break;
                 }
             } catch (Exception e)
             {

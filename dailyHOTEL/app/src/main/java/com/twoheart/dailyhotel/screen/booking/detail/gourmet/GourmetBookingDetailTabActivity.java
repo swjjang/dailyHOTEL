@@ -265,16 +265,31 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch(msgCode)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    case 100:
+                        JSONObject jsonObject = response.getJSONObject("data");
 
-                    mGourmetBookingDetail.setData(jsonObject);
+                        mGourmetBookingDetail.setData(jsonObject);
 
-                    loadFragments(getViewPager(), mGourmetBookingDetail);
-                } else
-                {
-                    onErrorPopupMessage(msgCode, response.getString("msg"));
+                        loadFragments(getViewPager(), mGourmetBookingDetail);
+                        break;
+
+                    // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
+                    case 501:
+                        onErrorPopupMessage(msgCode, response.getString("msg"), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.restartApp(GourmetBookingDetailTabActivity.this);
+                            }
+                        });
+                        break;
+
+                    default:
+                        onErrorPopupMessage(msgCode, response.getString("msg"));
+                        break;
                 }
             } catch (Exception e)
             {
