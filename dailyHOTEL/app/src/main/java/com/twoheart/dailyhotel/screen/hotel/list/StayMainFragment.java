@@ -1066,6 +1066,12 @@ public class StayMainFragment extends PlaceMainFragment
                 // GA 수집시에 메모리 해지 에러는 버린다.
             }
         }
+
+        @Override
+        public void onSearchCountUpdate(int searchCount, int searchMaxCount)
+        {
+
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
