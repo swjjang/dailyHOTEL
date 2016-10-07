@@ -275,7 +275,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         loadFragments(getViewPager(), mHotelBookingDetail);
                         break;
 
-                    case 9999:
+                    // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
+                    case 501:
                         onErrorPopupMessage(msgCode, response.getString("msg"), new View.OnClickListener()
                         {
                             @Override
