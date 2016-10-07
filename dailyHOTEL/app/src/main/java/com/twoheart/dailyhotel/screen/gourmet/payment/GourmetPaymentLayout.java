@@ -86,7 +86,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         void minusTicketCount();
 
-        void startCreditCardManager();
+        void startCreditCardManager(boolean isRegister);
 
         void changedPaymentType(PlacePaymentInformation.PaymentType paymentType);
 
@@ -259,7 +259,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mSelectedSimpleCardLayout.setVisibility(View.GONE);
 
         mEmptySimpleCardLayout.setOnClickListener(this);
-        mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
     }
@@ -740,9 +739,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 break;
 
             case R.id.cardManagerLayout:
+                ((OnEventListener) mOnEventListener).startCreditCardManager(false);
+                break;
+
             case R.id.emptySimpleCardLayout:
-            case R.id.selectedSimpleCardLayout:
-                ((OnEventListener) mOnEventListener).startCreditCardManager();
+                ((OnEventListener) mOnEventListener).startCreditCardManager(true);
                 break;
         }
     }

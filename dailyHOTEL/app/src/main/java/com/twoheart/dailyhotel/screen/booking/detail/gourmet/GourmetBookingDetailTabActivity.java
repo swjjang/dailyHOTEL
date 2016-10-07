@@ -265,7 +265,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             {
                 int msgCode = response.getInt("msgCode");
 
-                switch(msgCode)
+                switch (msgCode)
                 {
                     case 100:
                         JSONObject jsonObject = response.getJSONObject("data");
