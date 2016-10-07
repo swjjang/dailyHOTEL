@@ -265,16 +265,30 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch(msgCode)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    case 100:
+                        JSONObject jsonObject = response.getJSONObject("data");
 
-                    mGourmetBookingDetail.setData(jsonObject);
+                        mGourmetBookingDetail.setData(jsonObject);
 
-                    loadFragments(getViewPager(), mGourmetBookingDetail);
-                } else
-                {
-                    onErrorPopupMessage(msgCode, response.getString("msg"));
+                        loadFragments(getViewPager(), mGourmetBookingDetail);
+                        break;
+
+                    case 9999:
+                        onErrorPopupMessage(msgCode, response.getString("msg"), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.restartApp(GourmetBookingDetailTabActivity.this);
+                            }
+                        });
+                        break;
+
+                    default:
+                        onErrorPopupMessage(msgCode, response.getString("msg"));
+                        break;
                 }
             } catch (Exception e)
             {
