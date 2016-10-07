@@ -1100,12 +1100,13 @@ public class DailyPreference
     {
         switch (placeType)
         {
-            case HOTEL:
-                setValue(mEditor, KEY_SETTING_REGION_PROVINCE_STAY_SELECT, value);
-                break;
-
             case FNB:
                 setValue(mEditor, KEY_SETTING_REGION_PROVINCE_FNB_SELECT, value);
+                break;
+
+            case HOTEL:
+            default:
+                setValue(mEditor, KEY_SETTING_REGION_PROVINCE_STAY_SELECT, value);
                 break;
         }
     }

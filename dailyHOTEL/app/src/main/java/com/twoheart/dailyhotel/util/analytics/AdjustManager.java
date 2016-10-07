@@ -46,6 +46,11 @@ public class AdjustManager extends BaseAnalyticsManager
     {
         mContext = context;
 
+        Adjust.resetSessionCallbackParameters();
+        Adjust.resetSessionPartnerParameters();
+
+        setUserInformation(null, null);
+
         AdjustConfig config = new AdjustConfig(context, APPLICATION_TOKEN, ENVIRONMENT);
 
         // change the log level
@@ -450,20 +455,26 @@ public class AdjustManager extends BaseAnalyticsManager
         if (Util.isTextEmpty(index) == true)
         {
             Adjust.removeSessionPartnerParameter(Key.USER_INDEX);
+            Adjust.removeSessionCallbackParameter(Key.USER_INDEX);
         } else
         {
             Adjust.addSessionPartnerParameter(Key.USER_INDEX, index);
+            Adjust.addSessionCallbackParameter(Key.USER_INDEX, index);
         }
 
-        if (Util.isTextEmpty(userType) == true)
+        String memberType = getMemberType(userType);
+        if (Util.isTextEmpty(memberType) == true)
         {
             Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.GUEST);
             Adjust.removeSessionPartnerParameter(Key.MEMBER_TYPE);
+            Adjust.addSessionCallbackParameter(Key.USER_TYPE, UserType.GUEST);
+            Adjust.removeSessionCallbackParameter(Key.MEMBER_TYPE);
         } else
         {
-            String memberType = getMemberType(userType);
             Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.MEMBER);
             Adjust.addSessionPartnerParameter(Key.MEMBER_TYPE, memberType);
+            Adjust.addSessionCallbackParameter(Key.USER_TYPE, UserType.MEMBER);
+            Adjust.addSessionCallbackParameter(Key.MEMBER_TYPE, memberType);
         }
     }
 
@@ -577,6 +588,8 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void onRegionChanged(String country, String provinceName)
     {
+        Adjust.addSessionCallbackParameter(AnalyticsManager.KeyType.COUNTRY, country);
+        Adjust.addSessionCallbackParameter(AnalyticsManager.KeyType.PROVINCE, provinceName);
         Adjust.addSessionPartnerParameter(AnalyticsManager.KeyType.COUNTRY, country);
         Adjust.addSessionPartnerParameter(AnalyticsManager.KeyType.PROVINCE, provinceName);
     }
@@ -584,6 +597,7 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void setPushEnabled(boolean onOff, String pushSettingType)
     {
+        Adjust.addSessionCallbackParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
         Adjust.addSessionPartnerParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
 
         if (Util.isTextEmpty(pushSettingType) == true)
