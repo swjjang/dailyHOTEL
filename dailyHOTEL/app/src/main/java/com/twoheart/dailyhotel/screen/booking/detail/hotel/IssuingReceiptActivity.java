@@ -225,13 +225,13 @@ public class IssuingReceiptActivity extends BaseActivity
 
             JSONObject provider = jsonObject.getJSONObject("provider");
 
-            String phone = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyPhoneNumber();
-            String fax = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyFax();
+            String phone = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
+            String fax = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyFax();
             String memo = provider.getString("memo");
-            String address = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyAddress();
-            String ceoName = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyCEO();
-            String registrationNo = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyBizRegNumber();
-            String companyName = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyName();
+            String address = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyAddress();
+            String ceoName = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyCEO();
+            String registrationNo = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
+            String companyName = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyName();
 
             View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 

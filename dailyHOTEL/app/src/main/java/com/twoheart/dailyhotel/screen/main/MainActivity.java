@@ -203,7 +203,7 @@ public class MainActivity extends BaseActivity implements Constants
 
     private void loadSplash(View splashLayout)
     {
-        String splashVersion = DailyPreference.getInstance(this).getIntroImageVersion();
+        String splashVersion = DailyPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
         ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
 
@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (file.exists() == false)
             {
-                DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                 imageView.setImageResource(R.drawable.img_splash_logo);
             } else
             {
@@ -233,7 +233,7 @@ public class MainActivity extends BaseActivity implements Constants
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception e)
                 {
-                    DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                    DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                     imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
                     imageView.setScaleType(ImageView.ScaleType.CENTER);
                     imageView.setImageResource(R.drawable.img_splash_logo);

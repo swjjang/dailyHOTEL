@@ -16,6 +16,8 @@ public class DailyPreference
     public static final String DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT"; // 기존에 존재하던
     public static final String DAILYHOTEL_SHARED_PREFERENCE_V1 = "dailyHOTEL_v1"; // 새로 만든
 
+    public static final String PREFERENCE_REMOTE_CONFIG = "DH_RemoteConfig";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // "dailyHOTEL_v1" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -47,32 +49,8 @@ public class DailyPreference
     private static final String KEY_FIRST_BUYER = "26";
     private static final String KEY_FIRST_APP_VERSION = "27";
 
-    private static final String KEY_COMPANY_NAME = "100";
-    private static final String KEY_COMPANY_CEO = "101";
-    private static final String KEY_COMPANY_BIZREGNUMBER = "102";
-    private static final String KEY_COMPANY_ITCREGNUMBER = "103";
-    private static final String KEY_COMPANY_ADDRESS = "104";
-    private static final String KEY_COMPANY_PHONENUMBER = "105";
-    private static final String KEY_COMPANY_FAX = "106";
-    private static final String KEY_COMPANY_PRIVACY_EMAIL = "107";
-
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
-
-    private static final String KEY_INTRO_VERSION = "110";
-
-    private static final String KEY_INTRO_NEW_VERSION = "112";
-    private static final String KEY_INTRO_NEW_URL = "113";
-
-    private static final String KEY_STAY_PAYMENT_IS_SIMPLECARD_ENABLED = "120";
-    private static final String KEY_STAY_PAYMENT_IS_CARD_ENABLED = "121";
-    private static final String KEY_STAY_PAYMENT_IS_PHONE_ENABLED = "122";
-    private static final String KEY_STAY_PAYMENT_IS_VIRTUAL_ENABLED = "123";
-
-    private static final String KEY_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED = "124";
-    private static final String KEY_GOURMET_PAYMENT_IS_CARD_ENABLED = "125";
-    private static final String KEY_GOURMET_PAYMENT_IS_PHONE_ENABLED = "126";
-    private static final String KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED = "127";
 
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
@@ -90,6 +68,38 @@ public class DailyPreference
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // Remote Config Preference
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    // remote config text
+    private static final String KEY_REMOTE_CONFIG_INTRO_VERSION = "1";
+    private static final String KEY_REMOTE_CONFIG_INTRO_NEW_VERSION = "2";
+    private static final String KEY_REMOTE_CONFIG_INTRO_NEW_URL = "3";
+
+    private static final String KEY_REMOTE_CONFIG_TEXT_VERSION = "100";
+    private static final String KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01 = "101";
+    private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01 = "102";
+
+    private static final String KEY_REMOTE_CONFIG_COMPANY_NAME = "200";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_CEO = "201";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_BIZREGNUMBER = "202";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_ITCREGNUMBER = "203";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_ADDRESS = "204";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_PHONENUMBER = "205";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_FAX = "206";
+    private static final String KEY_REMOTE_CONFIG_COMPANY_PRIVACY_EMAIL = "207";
+
+    private static final String KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_SIMPLECARD_ENABLED = "300";
+    private static final String KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_CARD_ENABLED = "301";
+    private static final String KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_PHONE_ENABLED = "302";
+    private static final String KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_VIRTUAL_ENABLED = "303";
+
+    private static final String KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED = "304";
+    private static final String KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_CARD_ENABLED = "305";
+    private static final String KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_PHONE_ENABLED = "306";
+    private static final String KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED = "307";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
@@ -172,14 +182,19 @@ public class DailyPreference
 
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
+    private SharedPreferences mRemoteConfigPreferences;
     private SharedPreferences mOldPreferences;
     private Editor mEditor;
+    private Editor mRemoteConfigEditor;
     private Editor mOldEditor;
 
     private DailyPreference(Context context)
     {
         mPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE_V1, Context.MODE_PRIVATE);
         mEditor = mPreferences.edit();
+
+        mRemoteConfigPreferences = context.getSharedPreferences(PREFERENCE_REMOTE_CONFIG, Context.MODE_PRIVATE);
+        mRemoteConfigEditor = mRemoteConfigPreferences.edit();
 
         boolean isMigrationFlag = isMigrationFlag();
 
@@ -216,16 +231,6 @@ public class DailyPreference
      */
     public void clear()
     {
-        // 회사 정보는 삭제되면 안된다
-        String name = getCompanyName();
-        String ceo = getCompanyCEO();
-        String bizRegNumber = getCompanyBizRegNumber();
-        String itcRegNumber = getCompanyItcRegNumber();
-        String address = getCompanyAddress();
-        String phoneNumber = getCompanyPhoneNumber();
-        String fax = getCompanyFax();
-        String privacyEmail = getCompanyPrivacyEmail();
-
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
@@ -242,7 +247,6 @@ public class DailyPreference
             mOldEditor.apply();
         }
 
-        setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax, privacyEmail);
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
 
@@ -522,68 +526,6 @@ public class DailyPreference
         setValue(mEditor, KEY_SHOW_GUIDE, value);
     }
 
-    public void setCompanyInformation(String name, String ceo, String bizRegNumber//
-        , String itcRegNumber, String address, String phoneNumber, String fax, String email)
-    {
-        if (mEditor != null)
-        {
-            mEditor.putString(KEY_COMPANY_NAME, name);
-            mEditor.putString(KEY_COMPANY_CEO, ceo);
-            mEditor.putString(KEY_COMPANY_BIZREGNUMBER, bizRegNumber);
-            mEditor.putString(KEY_COMPANY_ITCREGNUMBER, itcRegNumber);
-            mEditor.putString(KEY_COMPANY_ADDRESS, address);
-            mEditor.putString(KEY_COMPANY_PHONENUMBER, phoneNumber);
-            mEditor.putString(KEY_COMPANY_FAX, fax);
-
-            if (Util.isTextEmpty(email) == false)
-            {
-                mEditor.putString(KEY_COMPANY_PRIVACY_EMAIL, email);
-            }
-
-            mEditor.apply();
-        }
-    }
-
-    public String getCompanyName()
-    {
-        return getValue(mPreferences, KEY_COMPANY_NAME, null);
-    }
-
-    public String getCompanyCEO()
-    {
-        return getValue(mPreferences, KEY_COMPANY_CEO, null);
-    }
-
-    public String getCompanyBizRegNumber()
-    {
-        return getValue(mPreferences, KEY_COMPANY_BIZREGNUMBER, null);
-    }
-
-    public String getCompanyItcRegNumber()
-    {
-        return getValue(mPreferences, KEY_COMPANY_ITCREGNUMBER, null);
-    }
-
-    public String getCompanyAddress()
-    {
-        return getValue(mPreferences, KEY_COMPANY_ADDRESS, null);
-    }
-
-    public String getCompanyPhoneNumber()
-    {
-        return getValue(mPreferences, KEY_COMPANY_PHONENUMBER, null);
-    }
-
-    public String getCompanyFax()
-    {
-        return getValue(mPreferences, KEY_COMPANY_FAX, null);
-    }
-
-    public String getCompanyPrivacyEmail()
-    {
-        return getValue(mPreferences, KEY_COMPANY_PRIVACY_EMAIL, "privacy.korea@dailyhotel.com");
-    }
-
     public String getCollapsekey()
     {
         return getValue(mPreferences, KEY_COLLAPSEKEY, null);
@@ -612,36 +554,6 @@ public class DailyPreference
     public void setGourmetLastViewDate(String value)
     {
         setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
-    }
-
-    public String getIntroImageVersion()
-    {
-        return getValue(mPreferences, KEY_INTRO_VERSION, Constants.DAILY_INTRO_CURRENT_VERSION);
-    }
-
-    public void setIntroImageVersion(String value)
-    {
-        setValue(mEditor, KEY_INTRO_VERSION, value);
-    }
-
-    public String getIntroImageNewVersion()
-    {
-        return getValue(mPreferences, KEY_INTRO_NEW_VERSION, null);
-    }
-
-    public void setIntroImageNewVersion(String value)
-    {
-        setValue(mEditor, KEY_INTRO_NEW_VERSION, value);
-    }
-
-    public String getIntroImageNewUrl()
-    {
-        return getValue(mPreferences, KEY_INTRO_NEW_URL, null);
-    }
-
-    public void setIntroImageNewUrl(String value)
-    {
-        setValue(mEditor, KEY_INTRO_NEW_URL, value);
     }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
@@ -803,86 +715,6 @@ public class DailyPreference
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
     }
 
-    public void setStaySimpleCardPaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_STAY_PAYMENT_IS_SIMPLECARD_ENABLED, value);
-    }
-
-    public boolean isStaySimpleCardPaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_SIMPLECARD_ENABLED, true);
-    }
-
-    public void setStayCardPaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_STAY_PAYMENT_IS_CARD_ENABLED, value);
-    }
-
-    public boolean isStayCardPaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_CARD_ENABLED, true);
-    }
-
-    public void setStayPhonePaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_STAY_PAYMENT_IS_PHONE_ENABLED, value);
-    }
-
-    public boolean isStayPhonePaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_PHONE_ENABLED, true);
-    }
-
-    public void setStayVirtualPaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_STAY_PAYMENT_IS_VIRTUAL_ENABLED, value);
-    }
-
-    public boolean isStayVirtualPaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_STAY_PAYMENT_IS_VIRTUAL_ENABLED, true);
-    }
-
-    public void setGourmetSimpleCardPaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED, value);
-    }
-
-    public boolean isGourmetSimpleCardPaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED, true);
-    }
-
-    public void setGourmetCardPaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_CARD_ENABLED, value);
-    }
-
-    public boolean isGourmetCardPaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_CARD_ENABLED, true);
-    }
-
-    public void setGourmetPhonePaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_PHONE_ENABLED, value);
-    }
-
-    public boolean isGourmetPhonePaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_PHONE_ENABLED, true);
-    }
-
-    public void setGourmetVirtualPaymentEnabled(boolean value)
-    {
-        setValue(mEditor, KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, value);
-    }
-
-    public boolean isGourmetVirtualPaymentEnabled()
-    {
-        return getValue(mPreferences, KEY_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, true);
-    }
-
     public void setStayCategory(String name, String code)
     {
         setValue(mEditor, KEY_STAY_CATEGORY_NAME, name);
@@ -907,6 +739,212 @@ public class DailyPreference
     public void setBackgroundAppTime(long value)
     {
         setValue(mEditor, KEY_BACKGROUND_APP_TIME, value);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // Remote Config Text
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    public String getRemoteConfigIntroImageVersion()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_INTRO_VERSION, Constants.DAILY_INTRO_CURRENT_VERSION);
+    }
+
+    public void setRemoteConfigIntroImageVersion(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_INTRO_VERSION, value);
+    }
+
+    public String getRemoteConfigIntroImageNewVersion()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_INTRO_NEW_VERSION, null);
+    }
+
+    public void setRemoteConfigIntroImageNewVersion(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_INTRO_NEW_VERSION, value);
+    }
+
+    public String getRemoteConfigIntroImageNewUrl()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_INTRO_NEW_URL, null);
+    }
+
+    public void setRemoteConfigIntroImageNewUrl(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_INTRO_NEW_URL, value);
+    }
+
+    public void setRemoteConfigTextVersion(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_TEXT_VERSION, value);
+    }
+
+    public String getRemoteConfigTextVersion()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT_VERSION, null);
+    }
+
+    public void setRemoteConfigTextLoginText01(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01, value);
+    }
+
+    public String getRemoteConfigTextLoginText01()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01, null);
+    }
+
+    public void setRemoteConfigTextSignUpText01(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01, value);
+    }
+
+    public String getRemoteConfigTextSignUpText01()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01, null);
+    }
+
+    public void setRemoteConfigCompanyInformation(String name, String ceo, String bizRegNumber//
+        , String itcRegNumber, String address, String phoneNumber, String fax, String email)
+    {
+        if (mRemoteConfigEditor != null)
+        {
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_NAME, name);
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_CEO, ceo);
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_BIZREGNUMBER, bizRegNumber);
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_ITCREGNUMBER, itcRegNumber);
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_ADDRESS, address);
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_PHONENUMBER, phoneNumber);
+            mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_FAX, fax);
+
+            if (Util.isTextEmpty(email) == false)
+            {
+                mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_PRIVACY_EMAIL, email);
+            }
+
+            mRemoteConfigEditor.apply();
+        }
+    }
+
+    public String getRemoteConfigCompanyName()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_NAME, null);
+    }
+
+    public String getRemoteConfigCompanyCEO()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_CEO, null);
+    }
+
+    public String getRemoteConfigCompanyBizRegNumber()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_BIZREGNUMBER, null);
+    }
+
+    public String getRemoteConfigCompanyItcRegNumber()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_ITCREGNUMBER, null);
+    }
+
+    public String getRemoteConfigCompanyAddress()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_ADDRESS, null);
+    }
+
+    public String getRemoteConfigCompanyPhoneNumber()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_PHONENUMBER, null);
+    }
+
+    public String getRemoteConfigCompanyFax()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_FAX, null);
+    }
+
+    public String getRemoteConfigCompanyPrivacyEmail()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_COMPANY_PRIVACY_EMAIL, "privacy.korea@dailyhotel.com");
+    }
+
+    public void setRemoteConfigStaySimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStaySimpleCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_CARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStayCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayPhonePaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStayPhonePaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayVirtualPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_VIRTUAL_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStayVirtualPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_PAYMENT_IS_VIRTUAL_ENABLED, true);
+    }
+
+    public void setRemoteConfigGourmetSimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigGourmetSimpleCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigGourmetCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_CARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigGourmetCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigGourmetPhonePaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigGourmetPhonePaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setRemoteConfigGourmetVirtualPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigGourmetVirtualPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, true);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
