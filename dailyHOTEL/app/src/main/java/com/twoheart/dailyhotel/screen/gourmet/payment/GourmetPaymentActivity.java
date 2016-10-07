@@ -730,10 +730,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private void setAvailabledDefaultPaymentType()
     {
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isGourmetSimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isGourmetCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isGourmetVirtualPaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetVirtualPaymentEnabled();
 
         StringBuilder guideMemo = new StringBuilder();
 
@@ -953,7 +953,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
         } else
         {
-            if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true)
+            if (DailyPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled() == true)
             {
                 mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
             }
@@ -964,19 +964,19 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
     {
-        if (DailyPreference.getInstance(this).isGourmetSimpleCardPaymentEnabled() == true &&//
+        if (DailyPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(this).isGourmetCardPaymentEnabled() == true &&//
+        } else if (DailyPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(this).isGourmetPhonePaymentEnabled() == true &&//
+        } else if (DailyPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY) == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(this).isGourmetVirtualPaymentEnabled() == true &&//
+        } else if (DailyPreference.getInstance(this).isRemoteConfigGourmetVirtualPaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK) == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;

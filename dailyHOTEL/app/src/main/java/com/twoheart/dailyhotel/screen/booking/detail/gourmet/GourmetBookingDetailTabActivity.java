@@ -190,7 +190,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         {
             try
             {
-                String phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getCompanyPhoneNumber();
+                String phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
 
                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
             } catch (ActivityNotFoundException e)
@@ -234,7 +234,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
             if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == true)
             {
-                phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getCompanyPhoneNumber();
+                phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
             }
 
             try

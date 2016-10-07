@@ -190,7 +190,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         {
             try
             {
-                String phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getCompanyPhoneNumber();
+                String phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
 
                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
             } catch (ActivityNotFoundException e)
@@ -234,7 +234,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
             if (Util.isTextEmpty(mHotelBookingDetail.hotelPhone) == true)
             {
-                phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getCompanyPhoneNumber();
+                phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
             }
 
             try

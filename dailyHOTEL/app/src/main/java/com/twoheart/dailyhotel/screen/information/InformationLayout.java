@@ -242,28 +242,28 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
 
         business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(baseActivity).getCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()//
-            , DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber()));
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyCEO()//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyBizRegNumber()//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber()));
 
         if (Util.getLCDWidth(baseActivity) < 720)
         {
-            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + '\n'//
+            String text = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress() + '\n'//
                 + mContext.getResources().getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
+                , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber());
 
             business2TextView.setText(text);
         } else
         {
-            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + " | "//
+            String text = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress() + " | "//
                 + mContext.getResources().getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
+                , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber());
 
             business2TextView.setText(text);
         }
 
         business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(baseActivity).getCompanyPrivacyEmail()));
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPrivacyEmail()));
     }
 
     private void initTermsLayout(BaseActivity baseActivity, View view)

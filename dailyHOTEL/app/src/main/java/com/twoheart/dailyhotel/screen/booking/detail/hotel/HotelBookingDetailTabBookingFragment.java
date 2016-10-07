@@ -434,7 +434,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 {
                     try
                     {
-                        String phone = DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber();
+                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
 
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
                     } catch (ActivityNotFoundException e)
@@ -478,7 +478,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
                     if (Util.isTextEmpty(mBookingDetail.hotelPhone) == true)
                     {
-                        phone = DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber();
+                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
                     }
 
                     try
