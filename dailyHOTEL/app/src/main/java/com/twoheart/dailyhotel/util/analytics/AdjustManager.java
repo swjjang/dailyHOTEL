@@ -152,14 +152,14 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordScreen(String screen)
     {
-        AdjustEvent event = null;
+        DailyAdjustEvent event = null;
 
         if (AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screen) == true)
         {
             // 해당 경우 유저 타입을 알지 못해 recordEvent에서 처리함 - 보내는 시점은 recordEvent와 같음
         } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screen) == true)
         {
-            event = new AdjustEvent(EventToken.LOGOUT);
+            event = new DailyAdjustEvent(EventToken.LOGOUT);
 
             if (DEBUG == true)
             {
@@ -176,12 +176,12 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordScreen(String screen, Map<String, String> params)
     {
-        AdjustEvent event = null;
+        DailyAdjustEvent event = null;
 
         if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
             event = getPaymentEvent(EventToken.GOURMET_FIRST_PURCHASE, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
             if (DEBUG == true)
             {
@@ -190,7 +190,7 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
             event = getPaymentEvent(EventToken.STAY_FIRST_PURCHASE, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
             if (DEBUG == true)
             {
@@ -199,8 +199,8 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
         {
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
-            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
 
             if (DEBUG == true)
             {
@@ -209,8 +209,8 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true)
         {
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
-            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
 
             if (DEBUG == true)
             {
@@ -219,8 +219,8 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
         {
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
-            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
 
             if (DEBUG == true)
             {
@@ -229,8 +229,8 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
         {
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
-            event.addCallbackParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
 
             if (DEBUG == true)
             {
@@ -239,7 +239,7 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
         {
             event = getDetailEvent(EventToken.VIEW_DETAIL, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
             if (DEBUG == true)
             {
@@ -248,7 +248,7 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
             event = getDetailEvent(EventToken.VIEW_DETAIL, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
             if (DEBUG == true)
             {
@@ -257,7 +257,7 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
         {
             event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
             if (DEBUG == true)
             {
@@ -266,7 +266,7 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
             event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params);
-            event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
             if (DEBUG == true)
             {
@@ -288,7 +288,7 @@ public class AdjustManager extends BaseAnalyticsManager
             return;
         }
 
-        AdjustEvent event = null;
+        DailyAdjustEvent event = null;
 
         if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
@@ -301,11 +301,11 @@ public class AdjustManager extends BaseAnalyticsManager
 
                 if (AnalyticsManager.UserType.EMAIL.equalsIgnoreCase(label) == true)
                 {
-                    event = new AdjustEvent(EventToken.LOGIN);
+                    event = new DailyAdjustEvent(EventToken.LOGIN);
                 } else if (AnalyticsManager.UserType.FACEBOOK.equalsIgnoreCase(label) == true //
                     || AnalyticsManager.UserType.KAKAO.equalsIgnoreCase(label) == true)
                 {
-                    event = new AdjustEvent(EventToken.SOCIAL_LOGIN);
+                    event = new DailyAdjustEvent(EventToken.SOCIAL_LOGIN);
                 }
 
                 if (DEBUG == true)
@@ -317,7 +317,7 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             if (AnalyticsManager.Action.KAKAO_FRIEND_INVITED.equalsIgnoreCase(action) == true)
             {
-                event = new AdjustEvent(EventToken.FRIEND_REFERRAL);
+                event = new DailyAdjustEvent(EventToken.FRIEND_REFERRAL);
 
                 if (DEBUG == true)
                 {
@@ -337,11 +337,11 @@ public class AdjustManager extends BaseAnalyticsManager
                     placeName = params.get(AnalyticsManager.KeyType.NAME);
                 }
 
-                event = new AdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
-                event.addCallbackParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
-                event.addCallbackParameter(Key.PLACE_INDEX, placeIndex);
-                event.addCallbackParameter(Key.PLACE_NAME, placeName);
+                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
+                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+                event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
                 if (DEBUG == true)
                 {
@@ -361,11 +361,11 @@ public class AdjustManager extends BaseAnalyticsManager
                     placeName = params.get(AnalyticsManager.KeyType.NAME);
                 }
 
-                event = new AdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
-                event.addCallbackParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
-                event.addCallbackParameter(Key.PLACE_INDEX, placeIndex);
-                event.addCallbackParameter(Key.PLACE_NAME, placeName);
+                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
+                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+                event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
                 if (DEBUG == true)
                 {
@@ -393,8 +393,8 @@ public class AdjustManager extends BaseAnalyticsManager
 
                     couponBuilder.append("]");
 
-                    event.addCallbackParameter(Key.SERVICE, placeType);
-                    event.addCallbackParameter(Key.COUPON_REJECTED, couponBuilder.toString());
+                    event.addPartnerParameter(Key.SERVICE, placeType);
+                    event.addPartnerParameter(Key.COUPON_REJECTED, couponBuilder.toString());
                 }
             }
         } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
@@ -410,9 +410,9 @@ public class AdjustManager extends BaseAnalyticsManager
                     String satisfaction = params.get(AnalyticsManager.KeyType.SATISFACTION_SURVEY);
                     String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
 
-                    event.addCallbackParameter(Key.PLACE_NAME, placeName);
-                    event.addCallbackParameter(AnalyticsManager.KeyType.SATISFACTION_SURVEY, satisfaction);
-                    event.addCallbackParameter(Key.SERVICE, placeType);
+                    event.addPartnerParameter(Key.PLACE_NAME, placeName);
+                    event.addPartnerParameter(AnalyticsManager.KeyType.SATISFACTION_SURVEY, satisfaction);
+                    event.addPartnerParameter(Key.SERVICE, placeType);
                 }
             }
         } else if (AnalyticsManager.Category.SEARCH.equalsIgnoreCase(category) == true)
@@ -449,21 +449,21 @@ public class AdjustManager extends BaseAnalyticsManager
     {
         if (Util.isTextEmpty(index) == true)
         {
-            Adjust.removeSessionCallbackParameter(Key.USER_INDEX);
+            Adjust.removeSessionPartnerParameter(Key.USER_INDEX);
         } else
         {
-            Adjust.addSessionCallbackParameter(Key.USER_INDEX, index);
+            Adjust.addSessionPartnerParameter(Key.USER_INDEX, index);
         }
 
         if (Util.isTextEmpty(userType) == true)
         {
-            Adjust.addSessionCallbackParameter(Key.USER_TYPE, UserType.GUEST);
-            Adjust.removeSessionCallbackParameter(Key.MEMBER_TYPE);
+            Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.GUEST);
+            Adjust.removeSessionPartnerParameter(Key.MEMBER_TYPE);
         } else
         {
             String memberType = getMemberType(userType);
-            Adjust.addSessionCallbackParameter(Key.USER_TYPE, UserType.MEMBER);
-            Adjust.addSessionCallbackParameter(Key.MEMBER_TYPE, memberType);
+            Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.MEMBER);
+            Adjust.addSessionPartnerParameter(Key.MEMBER_TYPE, memberType);
         }
     }
 
@@ -520,7 +520,7 @@ public class AdjustManager extends BaseAnalyticsManager
     {
         setUserInformation(userIndex, userType);
 
-        AdjustEvent event = new AdjustEvent(EventToken.SOCIAL_SIGNUP);
+        DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SOCIAL_SIGNUP);
         Adjust.trackEvent(event);
     }
 
@@ -529,7 +529,7 @@ public class AdjustManager extends BaseAnalyticsManager
     {
         setUserInformation(userIndex, userType);
 
-        AdjustEvent event = new AdjustEvent(EventToken.SIGNUP);
+        DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SIGNUP);
         Adjust.trackEvent(event);
     }
 
@@ -541,8 +541,8 @@ public class AdjustManager extends BaseAnalyticsManager
             return;
         }
 
-        AdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params);
-        event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+        DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params);
+        event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
         Adjust.trackEvent(event);
     }
@@ -555,8 +555,8 @@ public class AdjustManager extends BaseAnalyticsManager
             return;
         }
 
-        AdjustEvent event = getPaymentEvent(EventToken.GOURMET_PURCHASE, params);
-        event.addCallbackParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+        DailyAdjustEvent event = getPaymentEvent(EventToken.GOURMET_PURCHASE, params);
+        event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
         Adjust.trackEvent(event);
     }
@@ -570,21 +570,21 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void startApplication()
     {
-        AdjustEvent event = new AdjustEvent(EventToken.LAUNCH);
+        DailyAdjustEvent event = new DailyAdjustEvent(EventToken.LAUNCH);
         Adjust.trackEvent(event);
     }
 
     @Override
     void onRegionChanged(String country, String provinceName)
     {
-        Adjust.addSessionCallbackParameter(AnalyticsManager.KeyType.COUNTRY, country);
-        Adjust.addSessionCallbackParameter(AnalyticsManager.KeyType.PROVINCE, provinceName);
+        Adjust.addSessionPartnerParameter(AnalyticsManager.KeyType.COUNTRY, country);
+        Adjust.addSessionPartnerParameter(AnalyticsManager.KeyType.PROVINCE, provinceName);
     }
 
     @Override
     void setPushEnabled(boolean onOff, String pushSettingType)
     {
-        Adjust.addSessionCallbackParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
+        Adjust.addSessionPartnerParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
 
         if (Util.isTextEmpty(pushSettingType) == true)
         {
@@ -594,8 +594,8 @@ public class AdjustManager extends BaseAnalyticsManager
         if (AnalyticsManager.ValueType.LAUNCH.equalsIgnoreCase(pushSettingType) == true //
             || AnalyticsManager.ValueType.OTHER.equalsIgnoreCase(pushSettingType) == true)
         {
-            AdjustEvent event = new AdjustEvent(onOff ? EventToken.PUSH_ON : EventToken.PUSH_OFF);
-            event.addCallbackParameter(Key.PUSH_SETTING, pushSettingType);
+            DailyAdjustEvent event = new DailyAdjustEvent(onOff ? EventToken.PUSH_ON : EventToken.PUSH_OFF);
+            event.addPartnerParameter(Key.PUSH_SETTING, pushSettingType);
             Adjust.trackEvent(event);
         }
     }
@@ -603,7 +603,7 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void purchaseWithCoupon(Map<String, String> param)
     {
-        AdjustEvent event = getCouponEvent(EventToken.PURCHASE_WITH_COUPON, param);
+        DailyAdjustEvent event = getCouponEvent(EventToken.PURCHASE_WITH_COUPON, param);
         Adjust.trackEvent(event);
     }
 
@@ -632,45 +632,45 @@ public class AdjustManager extends BaseAnalyticsManager
         return memberType;
     }
 
-    private AdjustEvent getPaymentEvent(String eventToken, Map<String, String> params)
+    private DailyAdjustEvent getPaymentEvent(String eventToken, Map<String, String> params)
     {
         if (params == null)
         {
             return null;
         }
 
-        AdjustEvent event = new AdjustEvent(eventToken);
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
 
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)); // 금액
         event.setRevenue(paymentPrice, "KRW");
 
         String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
         //        String area = params.get(AnalyticsManager.KeyType.AREA); // area ?
-        event.addCallbackParameter(AnalyticsManager.KeyType.AREA, district);
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
 
         String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
-        event.addCallbackParameter(AnalyticsManager.KeyType.CATEGORY, category);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
 
         String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
-        event.addCallbackParameter(AnalyticsManager.KeyType.GRADE, grade);
+        event.addPartnerParameter(AnalyticsManager.KeyType.GRADE, grade);
 
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
-        event.addCallbackParameter(Key.PLACE_INDEX, placeIndex);
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
 
         String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
-        event.addCallbackParameter(Key.PLACE_NAME, placeName);
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
-        event.addCallbackParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+        event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
 
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
-        event.addCallbackParameter(Key.LIST_INDEX, listIndex);
+        event.addPartnerParameter(Key.LIST_INDEX, listIndex);
 
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
-        event.addCallbackParameter(Key.DBENEFIT, dBenefit);
+        event.addPartnerParameter(Key.DBENEFIT, dBenefit);
 
         String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX); // product_id
-        event.addCallbackParameter(Key.TICKET_INDEX, ticketIndex);
+        event.addPartnerParameter(Key.TICKET_INDEX, ticketIndex);
 
         String checkIn = null;
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
@@ -680,22 +680,22 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
         }
-        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
         {
             String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
-            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
 
         String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD); // card_registration
-        event.addCallbackParameter(Key.REGISTERED_SIMPLE_CARD, registeredSimpleCard);
+        event.addPartnerParameter(Key.REGISTERED_SIMPLE_CARD, registeredSimpleCard);
 
         String nrd = params.get(AnalyticsManager.KeyType.NRD); // nrd
-        event.addCallbackParameter(AnalyticsManager.KeyType.NRD, nrd);
+        event.addPartnerParameter(AnalyticsManager.KeyType.NRD, nrd);
 
         // 결제시에만 들어가는 부분
         if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
@@ -704,56 +704,56 @@ public class AdjustManager extends BaseAnalyticsManager
             || EventToken.GOURMET_PURCHASE.equalsIgnoreCase(eventToken) == true)
         {
             String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE); // payment_method
-            event.addCallbackParameter(Key.PAYMENT_TYPE, paymentType);
+            event.addPartnerParameter(Key.PAYMENT_TYPE, paymentType);
 
             if (params.containsKey(AnalyticsManager.KeyType.COUPON_CODE) == true)
             {
                 String couponCode = params.get(AnalyticsManager.KeyType.COUPON_CODE); // coupon_id
-                event.addCallbackParameter(Key.COUPON_CODE, couponCode);
+                event.addPartnerParameter(Key.COUPON_CODE, couponCode);
             }
 
             if (params.containsKey(AnalyticsManager.KeyType.PRICE_OFF) == true)
             {
                 String couponPrice = params.get(AnalyticsManager.KeyType.PRICE_OFF); // coupon_value
-                event.addCallbackParameter(Key.COUPON_PRICE, couponPrice);
+                event.addPartnerParameter(Key.COUPON_PRICE, couponPrice);
             }
 
             if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
             {
                 String bonusPrice = params.get(AnalyticsManager.KeyType.USED_BOUNS); // point_value
-                event.addCallbackParameter(Key.BONUS_PRICE, bonusPrice);
+                event.addPartnerParameter(Key.BONUS_PRICE, bonusPrice);
             }
         }
 
         return event;
     }
 
-    private AdjustEvent getCouponEvent(String eventToken, Map<String, String> params)
+    private DailyAdjustEvent getCouponEvent(String eventToken, Map<String, String> params)
     {
         if (params == null)
         {
             return null;
         }
 
-        AdjustEvent event = new AdjustEvent(eventToken);
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
 
         String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE); // service
-        event.addCallbackParameter(Key.SERVICE, placeType);
+        event.addPartnerParameter(Key.SERVICE, placeType);
 
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
-        event.addCallbackParameter(Key.PLACE_INDEX, placeIndex);
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
 
         String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
-        event.addCallbackParameter(Key.PLACE_NAME, placeName);
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
         String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX); // product_id
-        event.addCallbackParameter(Key.TICKET_INDEX, ticketIndex);
+        event.addPartnerParameter(Key.TICKET_INDEX, ticketIndex);
 
         String firstPurchaseYn = params.get(AnalyticsManager.KeyType.FIRST_PURCHASE);
-        event.addCallbackParameter(AnalyticsManager.KeyType.FIRST_PURCHASE, firstPurchaseYn);
+        event.addPartnerParameter(AnalyticsManager.KeyType.FIRST_PURCHASE, firstPurchaseYn);
 
         String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE); // payment_method
-        event.addCallbackParameter(Key.PAYMENT_TYPE, paymentType);
+        event.addPartnerParameter(Key.PAYMENT_TYPE, paymentType);
 
         StringBuilder couponBuilder = new StringBuilder("[");
 
@@ -769,25 +769,25 @@ public class AdjustManager extends BaseAnalyticsManager
 
         couponBuilder.append("]");
 
-        event.addCallbackParameter(Key.COUPON, couponBuilder.toString());
+        event.addPartnerParameter(Key.COUPON, couponBuilder.toString());
 
         return event;
     }
 
-    private AdjustEvent getListEvent(String eventToken, Map<String, String> params)
+    private DailyAdjustEvent getListEvent(String eventToken, Map<String, String> params)
     {
         if (params == null)
         {
             return null;
         }
 
-        AdjustEvent event = new AdjustEvent(eventToken);
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
 
         String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
-        event.addCallbackParameter(AnalyticsManager.KeyType.AREA, district);
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
 
         String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
-        event.addCallbackParameter(AnalyticsManager.KeyType.CATEGORY, category);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
 
         String checkIn = null;
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
@@ -797,61 +797,61 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
         }
-        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
         {
             String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
-            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
 
         String filter = params.get(AnalyticsManager.KeyType.FILTER); // filter
-        event.addCallbackParameter(AnalyticsManager.KeyType.FILTER, filter);
+        event.addPartnerParameter(AnalyticsManager.KeyType.FILTER, filter);
 
         return event;
     }
 
-    private AdjustEvent getDetailEvent(String eventToken, Map<String, String> params)
+    private DailyAdjustEvent getDetailEvent(String eventToken, Map<String, String> params)
     {
         if (params == null)
         {
             return null;
         }
 
-        AdjustEvent event = new AdjustEvent(eventToken);
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
 
         String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
-        event.addCallbackParameter(AnalyticsManager.KeyType.AREA, district);
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
 
         String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
-        event.addCallbackParameter(AnalyticsManager.KeyType.CATEGORY, category);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
 
         String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
-        event.addCallbackParameter(AnalyticsManager.KeyType.GRADE, grade);
+        event.addPartnerParameter(AnalyticsManager.KeyType.GRADE, grade);
 
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
-        event.addCallbackParameter(Key.PLACE_INDEX, placeIndex);
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
 
         String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
-        event.addCallbackParameter(Key.PLACE_NAME, placeName);
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
         String rating = params.get(AnalyticsManager.KeyType.RATING); // vendor_satisfaction
-        event.addCallbackParameter(Key.RATING, rating);
+        event.addPartnerParameter(Key.RATING, rating);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
-        event.addCallbackParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+        event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
 
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
-        event.addCallbackParameter(Key.LIST_INDEX, listIndex);
+        event.addPartnerParameter(Key.LIST_INDEX, listIndex);
 
         String dailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE); // ranking
-        event.addCallbackParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
+        event.addPartnerParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
 
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
-        event.addCallbackParameter(Key.DBENEFIT, dBenefit);
+        event.addPartnerParameter(Key.DBENEFIT, dBenefit);
 
         String checkIn = null;
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
@@ -861,28 +861,28 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
         }
-        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
         {
             String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
-            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
 
         return event;
     }
 
-    private AdjustEvent getSearchEvent(String eventToken, Map<String, String> params)
+    private DailyAdjustEvent getSearchEvent(String eventToken, Map<String, String> params)
     {
         if (params == null)
         {
             return null;
         }
 
-        AdjustEvent event = new AdjustEvent(eventToken);
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
 
         String checkIn = null;
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
@@ -892,35 +892,73 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
         }
-        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
 
         if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
         {
             String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
-            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
         String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE); // service == placeType
-        event.addCallbackParameter(Key.SERVICE, placeType);
+        event.addPartnerParameter(Key.SERVICE, placeType);
 
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
 
         String searchWord = params.get(AnalyticsManager.KeyType.SEARCH_WORD); // 입력어
-        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_WORD, searchWord);
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_WORD, searchWord);
 
         String searchPath = params.get(AnalyticsManager.KeyType.SEARCH_PATH); // 내주변(around), 자동완성(auto), 최근검색어(recent), 검색어(direct)
-        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_PATH, searchPath);
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_PATH, searchPath);
 
         String searchCount = params.get(AnalyticsManager.KeyType.SEARCH_COUNT); // 검색되는 업장개수
-        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_COUNT, searchCount);
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_COUNT, searchCount);
 
         String searchResult = params.get(AnalyticsManager.KeyType.SEARCH_RESULT); // 검색결과
-        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_RESULT, searchResult);
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_RESULT, searchResult);
 
         return event;
     }
 
+    private class DailyAdjustEvent extends AdjustEvent
+    {
+        public DailyAdjustEvent(String eventToken)
+        {
+            super(eventToken);
+        }
+
+        @Override
+        public void setRevenue(double revenue, String currency)
+        {
+            super.setRevenue(revenue, currency);
+        }
+
+        @Override
+        public void addCallbackParameter(String key, String value)
+        {
+            super.addCallbackParameter(key, value);
+        }
+
+        @Override
+        public void addPartnerParameter(String key, String value)
+        {
+            super.addPartnerParameter(key, value);
+            super.addCallbackParameter(key, value);
+        }
+
+        @Override
+        public void setOrderId(String orderId)
+        {
+            super.setOrderId(orderId);
+        }
+
+        @Override
+        public boolean isValid()
+        {
+            return super.isValid();
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// Event Token ///////////////////////////////////////////////
