@@ -547,9 +547,11 @@
     <!-- Signup Activity -->
     <string name="label_necessary">필수</string>
     <string name="label_name">이름</string>
+    <string name="label_birthday">생일</string>
     <string name="label_password_4over">비밀번호 (4자이상)</string>
     <string name="label_confirm_password_4over">비밀번호 확인 (4자이상)</string>
     <string name="label_necessary_reservation">필수 (예약시 사용)</string>
+    <string name="label_option_benefit">선택 (추후 혜택 제공시 사용)</string>
     <string name="label_recommender_code">추천인 코드</string>
     <string name="label_select">선택</string>
     <string name="label_country">국가</string>
