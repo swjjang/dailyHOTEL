@@ -243,6 +243,145 @@ public class GourmetCurationOption extends PlaceCurationOption
     }
 
     @Override
+    public String toAdjustString()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append("[sort:");
+
+        switch (getSortType())
+        {
+            case DEFAULT:
+                result.append(AnalyticsManager.Label.SORTFILTER_DISTRICT);
+                break;
+
+            case DISTANCE:
+                result.append(AnalyticsManager.Label.SORTFILTER_DISTANCE);
+                break;
+
+            case LOW_PRICE:
+                result.append(AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE);
+                break;
+
+            case HIGH_PRICE:
+                result.append(AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE);
+                break;
+
+            case SATISFACTION:
+                result.append(AnalyticsManager.Label.SORTFILTER_RATING);
+                break;
+        }
+
+        result.append(",category:");
+
+        if (mFilterMap.size() == 0)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            ArrayList<String> categoryArrayList = new ArrayList<>(mFilterMap.keySet());
+
+            int size = categoryArrayList.size();
+
+            for (int i = 0; i < size; i++)
+            {
+                if (i == 0)
+                {
+                    result.append(categoryArrayList.get(i));
+                } else
+                {
+                    result.append('-');
+                    result.append(categoryArrayList.get(i));
+                }
+            }
+        }
+
+        result.append(",reservationTime:");
+
+        if (flagTimeFilter == GourmetFilter.Time.FLAG_NONE)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_06_11) == GourmetFilter.Time.FLAG_06_11)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_0611).append('-');
+            }
+
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_11_15) == GourmetFilter.Time.FLAG_11_15)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_1115).append('-');
+            }
+
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_15_17) == GourmetFilter.Time.FLAG_15_17)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_1517).append('-');
+            }
+
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_17_21) == GourmetFilter.Time.FLAG_17_21)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_1721).append('-');
+            }
+
+            if ((flagTimeFilter & GourmetFilter.Time.FLAG_21_06) == GourmetFilter.Time.FLAG_21_06)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_2106).append('-');
+            }
+
+            if (result.charAt(result.length() - 1) == '-')
+            {
+                result.setLength(result.length() - 1);
+            }
+        }
+
+        result.append(",facility:");
+
+        if (flagAmenitiesFilters == GourmetFilter.Amenities.FLAG_NONE)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append('-');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_VALET).append('-');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT).append('-');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATEROOM).append('-');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_GROUP).append('-');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_CORKAGE).append('-');
+            }
+
+            if (result.charAt(result.length() - 1) == '-')
+            {
+                result.setLength(result.length() - 1);
+            }
+        }
+
+        result.append("]");
+
+        return result.toString();
+    }
+
+    @Override
     public void writeToParcel(Parcel dest, int flags)
     {
         super.writeToParcel(dest, flags);

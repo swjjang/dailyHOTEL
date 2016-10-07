@@ -41,7 +41,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class InformationFragment extends BaseFragment implements Constants
@@ -754,7 +753,7 @@ public class InformationFragment extends BaseFragment implements Constants
             if (isLogin == true)
             {
                 DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
-                AppboyManager.setPushEnabled(getContext(), isAgreedBenefit);
+                AnalyticsManager.getInstance(getContext()).setPushEnabled(isAgreedBenefit, null);
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
             }
@@ -798,7 +797,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgree);
             mInformationLayout.updatePushIcon(isAgree);
-            AppboyManager.setPushEnabled(baseActivity, isAgree);
+            AnalyticsManager.getInstance(baseActivity).setPushEnabled(isAgree, AnalyticsManager.ValueType.OTHER);
 
             if (isAgree == true)
             {

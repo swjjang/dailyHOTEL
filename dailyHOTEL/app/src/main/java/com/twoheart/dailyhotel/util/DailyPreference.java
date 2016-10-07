@@ -140,8 +140,10 @@ public class DailyPreference
     // Setting - Region
     private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
     private static final String KEY_SETTING_REGION_STAY_SETTING = "1111";
+    private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112";
     private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
     private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
+    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122";
 
     // User
     private static final String KEY_USER_EMAIL = "2001";
@@ -1034,6 +1036,37 @@ public class DailyPreference
 
             case FNB:
                 setValue(mEditor, KEY_SETTING_REGION_FNB_SELECT, value);
+                break;
+        }
+    }
+
+    /**
+     * 선택된 대지역 저장값 - Adjust 용
+     * @return
+     */
+    public String getSelectedRegionTypeProvince(Constants.PlaceType placeType)
+    {
+        switch (placeType)
+        {
+            case FNB:
+                return getValue(mPreferences, KEY_SETTING_REGION_PROVINCE_FNB_SELECT, null);
+
+            case HOTEL:
+            default:
+                return getValue(mPreferences, KEY_SETTING_REGION_PROVINCE_STAY_SELECT, null);
+        }
+    }
+
+    public void setSelectedRegionTypeProvince(Constants.PlaceType placeType, String value)
+    {
+        switch (placeType)
+        {
+            case HOTEL:
+                setValue(mEditor, KEY_SETTING_REGION_PROVINCE_STAY_SELECT, value);
+                break;
+
+            case FNB:
+                setValue(mEditor, KEY_SETTING_REGION_PROVINCE_FNB_SELECT, value);
                 break;
         }
     }

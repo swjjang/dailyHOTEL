@@ -183,6 +183,134 @@ public class StayCurationOption extends PlaceCurationOption
     }
 
     @Override
+    public String toAdjustString()
+    {
+        StringBuilder result = new StringBuilder();
+
+        result.append("[sort:");
+
+        switch (getSortType())
+        {
+            case DEFAULT:
+                result.append(AnalyticsManager.Label.SORTFILTER_DISTRICT);
+                break;
+
+            case DISTANCE:
+                result.append(AnalyticsManager.Label.SORTFILTER_DISTANCE);
+                break;
+
+            case LOW_PRICE:
+                result.append(AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE);
+                break;
+
+            case HIGH_PRICE:
+                result.append(AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE);
+                break;
+
+            case SATISFACTION:
+                result.append(AnalyticsManager.Label.SORTFILTER_RATING);
+                break;
+        }
+
+        result.append(",persons:");
+        result.append(person);
+        result.append(",type:");
+
+        if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append('-');
+            }
+
+            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_TWIN).append('-');
+            }
+
+            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append('-');
+            }
+
+            if (result.charAt(result.length() - 1) == '-')
+            {
+                result.setLength(result.length() - 1);
+            }
+        }
+
+        result.append(",facility:");
+
+        if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_WIFI).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_POOL).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_PET).append('-');
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_BBQ).append('-');
+            }
+
+            if (result.charAt(result.length() - 1) == '-')
+            {
+                result.setLength(result.length() - 1);
+            }
+        }
+
+        result.append("]");
+
+        return result.toString();
+    }
+
+    @Override
     public void writeToParcel(Parcel dest, int flags)
     {
         super.writeToParcel(dest, flags);

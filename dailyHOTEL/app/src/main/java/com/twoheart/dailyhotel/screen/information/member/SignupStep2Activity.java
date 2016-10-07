@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupStep2Activity extends BaseActivity
@@ -54,7 +53,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommmender);
-        intent.putExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN, callByScreen);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
@@ -91,9 +90,9 @@ public class SignupStep2Activity extends BaseActivity
         mPassword = intent.getStringExtra(INTENT_EXTRA_DATA_PASSWORD);
         mRecommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
 
-        if (intent.hasExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN) == true)
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {
-            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_CALL_BY_SCREEN);
+            mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
         }
     }
 
@@ -137,7 +136,7 @@ public class SignupStep2Activity extends BaseActivity
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarmFirstBuyer(false);
         DailyPreference.getInstance(this).setLastestCouponTime("");
-        AppboyManager.setPushEnabled(this, false);
+        AnalyticsManager.getInstance(this).setPushEnabled(false, null);
 
         DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 
@@ -257,7 +256,7 @@ public class SignupStep2Activity extends BaseActivity
             DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
             DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
 
-            AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).setUserInformation(userIndex, userType);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
 

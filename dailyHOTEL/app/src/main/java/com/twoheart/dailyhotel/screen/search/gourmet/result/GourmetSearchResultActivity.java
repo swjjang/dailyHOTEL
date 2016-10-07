@@ -373,7 +373,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
-    private void recordEventSearchResultByLocation(String address, boolean isEmpty)
+    private void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
     {
         if (Util.isTextEmpty(address))
         {
@@ -387,6 +387,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
             {
                 action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
+
+                params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
+                params.put(AnalyticsManager.KeyType.SEARCH_WORD, address);
+                params.put(AnalyticsManager.KeyType.SEARCH_RESULT, address);
             } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
             {
                 action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
@@ -395,7 +399,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             if (Util.isTextEmpty(action) == false)
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , action, address, null);
+                    , action, address, params);
             }
         } catch (Exception e)
         {
@@ -589,8 +593,36 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
                         if (placeListFragmentList != null || placeListFragmentList.size() > 0)
                         {
+                            Map<String, String> params = new HashMap<>();
+                            try
+                            {
+                                params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+                                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+                                params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+
+                                Province province = mGourmetSearchCuration.getProvince();
+                                if (province instanceof Area)
+                                {
+                                    Area area = (Area) province;
+                                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                                } else if (province != null)
+                                {
+                                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                                }
+
+                                params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
+                            } catch (Exception e)
+                            {
+
+                            }
+
                             int placeCount = placeListFragmentList.get(0).getPlaceCount();
-                            recordEventSearchResultByLocation(address, placeCount == 0);
+                            recordEventSearchResultByLocation(address, placeCount == 0, params);
                             mReceiveDataFlag = 2;
                         }
                     }
@@ -773,6 +805,34 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.showListLayout();
             }
 
+            Map<String, String> params = new HashMap<>();
+            try
+            {
+                params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+                params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+
+                Province province = mGourmetSearchCuration.getProvince();
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else if (province != null)
+                {
+                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                }
+
+                params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
+            } catch (Exception e)
+            {
+
+            }
+
             Keyword keyword = mGourmetSearchCuration.getKeyword();
 
             if (mSearchType == SearchType.LOCATION)
@@ -784,19 +844,19 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         mReceiveDataFlag = 1;
                     } else if (mReceiveDataFlag == 1)
                     {
-                        recordEventSearchResultByLocation(mAddress, isShow);
+                        recordEventSearchResultByLocation(mAddress, isShow, params);
                         mReceiveDataFlag = 2;
                     }
                 }
             } else if (mSearchType == SearchType.RECENT)
             {
-                recordEventSearchResultByRecentKeyword(keyword, isShow);
+                recordEventSearchResultByRecentKeyword(keyword, isShow, params);
             } else if (mSearchType == SearchType.AUTOCOMPLETE)
             {
-                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow);
+                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow, params);
             } else
             {
-                recordEventSearchResultByKeyword(keyword, isShow);
+                recordEventSearchResultByKeyword(keyword, isShow, params);
             }
         }
 
@@ -813,6 +873,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 ExLog.d(e.getMessage());
             }
+        }
+
+        @Override
+        public void onSearchCountUpdate(int searchCount, int searchMaxCount)
+        {
+            mSearchCount = searchCount;
+            mSearchMaxCount = searchMaxCount;
         }
 
         private String getSearchDate()

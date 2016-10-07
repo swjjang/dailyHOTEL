@@ -92,6 +92,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                     DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                    String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String realProvinceName = Util.getRealProvinceName(province);
+                    DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                    AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                 }
 
                 refreshCurrentFragment(true);
@@ -259,6 +264,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         Map<String, String> params = new HashMap<>();
 
         params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
 
         if (DailyHotel.isLogin() == false)
         {
@@ -270,6 +276,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+        params.put(AnalyticsManager.KeyType.FILTER, mGourmetCuration.getCurationOption().toAdjustString());
 
         Province province = mGourmetCuration.getProvince();
 
@@ -588,6 +595,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                         selectedProvince = province;
                         DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                         DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String realProvinceName = Util.getRealProvinceName(province);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                        AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                         break;
                     }
                 }
@@ -761,6 +773,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                     {
                         DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
                         DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String realProvinceName = Util.getRealProvinceName(province);
+                        DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                        AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
                     }
 
                     Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
@@ -958,6 +975,12 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 // GA 수집시에 메모리 해지 에러는 버린다.
             }
+        }
+
+        @Override
+        public void onSearchCountUpdate(int searchCount, int searchMaxCount)
+        {
+
         }
     };
 

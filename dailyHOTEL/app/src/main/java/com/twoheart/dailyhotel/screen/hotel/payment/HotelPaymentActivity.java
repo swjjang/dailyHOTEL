@@ -1008,6 +1008,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
 
@@ -1085,6 +1086,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     params.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(bonus));
                     params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    params.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    params.put(AnalyticsManager.KeyType.COUPON_CODE, "");
                     params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(payPrice));
                     break;
                 }
@@ -1103,6 +1106,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
                     params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(payPrice));
                     params.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                    params.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
                     params.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
                     params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
 
@@ -1115,6 +1119,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
                     params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    params.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    params.put(AnalyticsManager.KeyType.COUPON_CODE, "");
                     params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(roomInformation.totalDiscount));
                     break;
                 }

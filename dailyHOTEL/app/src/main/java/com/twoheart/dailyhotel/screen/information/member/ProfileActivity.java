@@ -177,8 +177,9 @@ public class ProfileActivity extends BaseActivity
                     unLockUI();
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 
-                    AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(AnalyticsManager.ValueType.EMPTY);
+                    // Adjust에서 로그아웃시 기존 정보를 보냄으로 이벤트 발생후 삭제 필요.
                     AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.MENU_LOGOUT_COMPLETE);
+                    AnalyticsManager.getInstance(ProfileActivity.this).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
 
                     finish();
                 }

@@ -228,7 +228,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         }
 
-        String placeName = String.format("\'%s\'", mTicketName);
+        final String placeName = String.format("\'%s\'", mTicketName);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.frag_rating_hotel_text2, placeName));
         spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), 0, placeName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -241,16 +241,24 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             {
                 updateSatifactionRating(mPlaceType, mReservationIndex, RECOMMEND);
 
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, placeName);
+                params.put(AnalyticsManager.KeyType.SATISFACTION_SURVEY, AnalyticsManager.ValueType.SATISFIED);
+
                 switch (mPlaceType)
                 {
                     case HOTEL:
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+
                         AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_SATISFACTION, null);
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_SATISFACTION, params);
                         break;
 
                     case FNB:
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+
                         AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_SATISFACTION, null);
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_SATISFACTION, params);
                         break;
                 }
             }
@@ -263,16 +271,24 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             {
                 updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RECOMMEND);
 
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, placeName);
+                params.put(AnalyticsManager.KeyType.SATISFACTION_SURVEY, AnalyticsManager.ValueType.DISSATISFIED);
+
                 switch (mPlaceType)
                 {
                     case HOTEL:
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+
                         AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_DISSATISFACTION, null);
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_DISSATISFACTION, params);
                         break;
 
                     case FNB:
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+
                         AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, null);
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, params);
                         break;
                 }
             }

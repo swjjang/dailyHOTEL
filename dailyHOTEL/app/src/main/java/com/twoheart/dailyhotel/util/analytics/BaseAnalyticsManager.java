@@ -21,7 +21,7 @@ public abstract class BaseAnalyticsManager
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    abstract void setUserIndex(String index);
+    abstract void setUserInformation(String index, String userType);
 
     abstract void setExceedBonus(boolean isExceedBonus);
 
@@ -50,4 +50,10 @@ public abstract class BaseAnalyticsManager
     abstract void startDeepLink(Uri deepLinkUri);
 
     abstract void startApplication();
+
+    abstract void onRegionChanged(String country, String provinceName);
+
+    abstract void setPushEnabled(boolean onOff, String pushSettingType);
+
+    abstract void purchaseWithCoupon(Map<String, String> param);
 }

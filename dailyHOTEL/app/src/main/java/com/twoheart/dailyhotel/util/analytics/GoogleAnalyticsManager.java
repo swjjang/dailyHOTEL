@@ -273,7 +273,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    void setUserIndex(String index)
+    void setUserInformation(String index, String userType)
     {
         if (Util.isTextEmpty(index) == true)
         {
@@ -436,6 +436,25 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
 
     }
+
+    @Override
+    void onRegionChanged(String country, String provinceName)
+    {
+
+    }
+
+    @Override
+    void setPushEnabled(boolean onOff, String pushSettingType)
+    {
+
+    }
+
+    @Override
+    void purchaseWithCoupon(Map<String, String> param)
+    {
+
+    }
+
 
     private Product getProcuct(Map<String, String> params)
     {

@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
@@ -35,10 +36,9 @@ import java.util.Map;
 public class AdjustManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
+    private static final String TAG = "[AdjustManager]";
     private static final String APPLICATION_TOKEN = "jkf7ii0lj9xc";
     private static final String ENVIRONMENT = DEBUG == true ? AdjustConfig.ENVIRONMENT_SANDBOX : AdjustConfig.ENVIRONMENT_PRODUCTION;
-
-    private String mUserIndex;
 
     private Context mContext;
 
@@ -52,7 +52,7 @@ public class AdjustManager extends BaseAnalyticsManager
         config.setLogLevel(LogLevel.VERBOSE);
 
         // set default tracker
-        config.setDefaultTracker("https://app.adjust.com/qbwmpi");
+        //        config.setDefaultTracker("https://app.adjust.com/qbwmpi");
 
         // set process name
         //        config.setProcessName("com.twoheart.dailyhotel");
@@ -138,7 +138,7 @@ public class AdjustManager extends BaseAnalyticsManager
         config.setSendInBackground(true);
 
         // enable event buffering
-        config.setEventBufferingEnabled(true);
+        config.setEventBufferingEnabled(DEBUG == true ? false : true);
 
         Adjust.onCreate(config);
 
@@ -147,29 +147,135 @@ public class AdjustManager extends BaseAnalyticsManager
 
         // disable the SDK
         //        Adjust.setEnabled(true);
-
     }
 
     @Override
     void recordScreen(String screen)
     {
-        //        AdjustEvent event = new AdjustEvent(screen);
-        //        event.addCallbackParameter("key", "value");
-        //        event.addCallbackParameter("foo", "bar");
-        //
-        //        Adjust.trackEvent(event);
+        DailyAdjustEvent event = null;
+
+        if (AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screen) == true)
+        {
+            // 해당 경우 유저 타입을 알지 못해 recordEvent에서 처리함 - 보내는 시점은 recordEvent와 같음
+        } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screen) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.LOGOUT);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen);
+            }
+        }
+
+        if (event != null)
+        {
+            Adjust.trackEvent(event);
+        }
     }
 
     @Override
     void recordScreen(String screen, Map<String, String> params)
     {
+        DailyAdjustEvent event = null;
+
         if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
-            AdjustEvent event = new AdjustEvent(EventToken.FIRST_PURCHASE_GOURMET);
-            Adjust.trackEvent(event);
+            event = getPaymentEvent(EventToken.GOURMET_FIRST_PURCHASE, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
-            AdjustEvent event = new AdjustEvent(EventToken.FIRST_PURCHASE_STAY);
+            event = getPaymentEvent(EventToken.STAY_FIRST_PURCHASE, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
+        {
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        {
+            event = getDetailEvent(EventToken.VIEW_DETAIL, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        {
+            event = getDetailEvent(EventToken.VIEW_DETAIL, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params);
+            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        }
+
+        if (event != null)
+        {
             Adjust.trackEvent(event);
         }
     }
@@ -177,7 +283,159 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (Util.isTextEmpty(category, action) == true)
+        {
+            return;
+        }
 
+        DailyAdjustEvent event = null;
+
+        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.LOGIN_COMPLETE.equalsIgnoreCase(action) == true)
+            {
+                if (Util.isTextEmpty(label) == true)
+                {
+                    return;
+                }
+
+                if (AnalyticsManager.UserType.EMAIL.equalsIgnoreCase(label) == true)
+                {
+                    event = new DailyAdjustEvent(EventToken.LOGIN);
+                } else if (AnalyticsManager.UserType.FACEBOOK.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.UserType.KAKAO.equalsIgnoreCase(label) == true)
+                {
+                    event = new DailyAdjustEvent(EventToken.SOCIAL_LOGIN);
+                }
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+                }
+            }
+        } else if (AnalyticsManager.Category.INVITE_FRIEND.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.KAKAO_FRIEND_INVITED.equalsIgnoreCase(action) == true)
+            {
+                event = new DailyAdjustEvent(EventToken.FRIEND_REFERRAL);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+                }
+            }
+        } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                String placeIndex = null;
+                String placeName = null;
+
+                if (params != null)
+                {
+                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+                    placeName = params.get(AnalyticsManager.KeyType.NAME);
+                }
+
+                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
+                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+                event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+                }
+            }
+        } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                String placeIndex = null;
+                String placeName = null;
+
+                if (params != null)
+                {
+                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+                    placeName = params.get(AnalyticsManager.KeyType.NAME);
+                }
+
+                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
+                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+                event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+                }
+            }
+        } else if (AnalyticsManager.Category.COUPON_BOX.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.REGISTRATION_REJECTED.equalsIgnoreCase(action) == true)
+            {
+                if (params != null)
+                {
+                    String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+                    StringBuilder couponBuilder = new StringBuilder("[");
+
+                    if (params.containsKey(AnalyticsManager.KeyType.COUPON_CODE) == true)
+                    {
+                        couponBuilder.append("id:").append(params.get(AnalyticsManager.KeyType.COUPON_CODE)); // coupon_id
+                    }
+
+                    if (params.containsKey(AnalyticsManager.KeyType.STATUS_CODE) == true)
+                    {
+                        couponBuilder.append(",rejection:").append(params.get(AnalyticsManager.KeyType.STATUS_CODE)); // 거절사유
+                    }
+
+                    couponBuilder.append("]");
+
+                    event.addPartnerParameter(Key.SERVICE, placeType);
+                    event.addPartnerParameter(Key.COUPON_REJECTED, couponBuilder.toString());
+                }
+            }
+        } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                if (AnalyticsManager.Label.HOTEL_SATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.GOURMET_SATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.HOTEL_DISSATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.GOURMET_DISSATISFACTION.equalsIgnoreCase(label) == true)
+                {
+                    String placeName = params.get(AnalyticsManager.KeyType.NAME);
+                    String satisfaction = params.get(AnalyticsManager.KeyType.SATISFACTION_SURVEY);
+                    String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+
+                    event.addPartnerParameter(Key.PLACE_NAME, placeName);
+                    event.addPartnerParameter(AnalyticsManager.KeyType.SATISFACTION_SURVEY, satisfaction);
+                    event.addPartnerParameter(Key.SERVICE, placeType);
+                }
+            }
+        } else if (AnalyticsManager.Category.SEARCH.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.AROUND_SEARCH_CLICKED.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.KEYWORD_NOT_FOUND.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.KEYWORD.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.RECENT_KEYWORD.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND.equalsIgnoreCase(category) == true)
+            {
+                event = getSearchEvent(EventToken.SEARCH_RESULT, params);
+            }
+        } else if (AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND.equalsIgnoreCase(category) == true //
+            || AnalyticsManager.Category.AUTO_SEARCH.equalsIgnoreCase(category) == true)
+        {
+            event = getSearchEvent(EventToken.SEARCH_RESULT, params);
+        }
+
+        if (event != null)
+        {
+            Adjust.trackEvent(event);
+        }
     }
 
     @Override
@@ -187,9 +445,26 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setUserIndex(String index)
+    void setUserInformation(String index, String userType)
     {
-        mUserIndex = index;
+        if (Util.isTextEmpty(index) == true)
+        {
+            Adjust.removeSessionPartnerParameter(Key.USER_INDEX);
+        } else
+        {
+            Adjust.addSessionPartnerParameter(Key.USER_INDEX, index);
+        }
+
+        if (Util.isTextEmpty(userType) == true)
+        {
+            Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.GUEST);
+            Adjust.removeSessionPartnerParameter(Key.MEMBER_TYPE);
+        } else
+        {
+            String memberType = getMemberType(userType);
+            Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.MEMBER);
+            Adjust.addSessionPartnerParameter(Key.MEMBER_TYPE, memberType);
+        }
     }
 
     @Override
@@ -243,24 +518,31 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
+        setUserInformation(userIndex, userType);
 
+        DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SOCIAL_SIGNUP);
+        Adjust.trackEvent(event);
     }
 
     @Override
     void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
     {
+        setUserInformation(userIndex, userType);
 
+        DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SIGNUP);
+        Adjust.trackEvent(event);
     }
 
     @Override
     void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        AdjustEvent event = new AdjustEvent(EventToken.PURCHASE_STAY);
-
-        if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
+        if (params == null)
         {
-            event.setRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), "KRW");
+            return;
         }
+
+        DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params);
+        event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
         Adjust.trackEvent(event);
     }
@@ -268,16 +550,16 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        AdjustEvent event = new AdjustEvent(EventToken.PURCHASE_GOURMET);
-
-        if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
+        if (params == null)
         {
-            event.setRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), "KRW");
+            return;
         }
+
+        DailyAdjustEvent event = getPaymentEvent(EventToken.GOURMET_PURCHASE, params);
+        event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
         Adjust.trackEvent(event);
     }
-
 
     @Override
     void startDeepLink(Uri deepLinkUri)
@@ -288,9 +570,394 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void startApplication()
     {
-        AdjustEvent event = new AdjustEvent(EventToken.LAUNCH);
-        event.addCallbackParameter("user_id", mUserIndex);
+        DailyAdjustEvent event = new DailyAdjustEvent(EventToken.LAUNCH);
         Adjust.trackEvent(event);
+    }
+
+    @Override
+    void onRegionChanged(String country, String provinceName)
+    {
+        Adjust.addSessionPartnerParameter(AnalyticsManager.KeyType.COUNTRY, country);
+        Adjust.addSessionPartnerParameter(AnalyticsManager.KeyType.PROVINCE, provinceName);
+    }
+
+    @Override
+    void setPushEnabled(boolean onOff, String pushSettingType)
+    {
+        Adjust.addSessionPartnerParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
+
+        if (Util.isTextEmpty(pushSettingType) == true)
+        {
+            return;
+        }
+
+        if (AnalyticsManager.ValueType.LAUNCH.equalsIgnoreCase(pushSettingType) == true //
+            || AnalyticsManager.ValueType.OTHER.equalsIgnoreCase(pushSettingType) == true)
+        {
+            DailyAdjustEvent event = new DailyAdjustEvent(onOff ? EventToken.PUSH_ON : EventToken.PUSH_OFF);
+            event.addPartnerParameter(Key.PUSH_SETTING, pushSettingType);
+            Adjust.trackEvent(event);
+        }
+    }
+
+    @Override
+    void purchaseWithCoupon(Map<String, String> param)
+    {
+        DailyAdjustEvent event = getCouponEvent(EventToken.PURCHASE_WITH_COUPON, param);
+        Adjust.trackEvent(event);
+    }
+
+    private String getMemberType(String userType)
+    {
+        if (Util.isTextEmpty(userType) == true)
+        {
+            return null;
+        }
+
+        String memberType;
+        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+        {
+            memberType = AnalyticsManager.UserType.KAKAO;
+        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+        {
+            memberType = AnalyticsManager.UserType.FACEBOOK;
+        } else if (Constants.DAILY_USER.equalsIgnoreCase(userType) == true)
+        {
+            memberType = AnalyticsManager.UserType.EMAIL;
+        } else
+        {
+            memberType = null;
+        }
+
+        return memberType;
+    }
+
+    private DailyAdjustEvent getPaymentEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)); // 금액
+        event.setRevenue(paymentPrice, "KRW");
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        //        String area = params.get(AnalyticsManager.KeyType.AREA); // area ?
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
+        event.addPartnerParameter(AnalyticsManager.KeyType.GRADE, grade);
+
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+        String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+
+        String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
+        event.addPartnerParameter(Key.LIST_INDEX, listIndex);
+
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        event.addPartnerParameter(Key.DBENEFIT, dBenefit);
+
+        String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX); // product_id
+        event.addPartnerParameter(Key.TICKET_INDEX, ticketIndex);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD); // card_registration
+        event.addPartnerParameter(Key.REGISTERED_SIMPLE_CARD, registeredSimpleCard);
+
+        String nrd = params.get(AnalyticsManager.KeyType.NRD); // nrd
+        event.addPartnerParameter(AnalyticsManager.KeyType.NRD, nrd);
+
+        // 결제시에만 들어가는 부분
+        if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
+            || EventToken.STAY_PURCHASE.equalsIgnoreCase(eventToken) == true //
+            || EventToken.GOURMET_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
+            || EventToken.GOURMET_PURCHASE.equalsIgnoreCase(eventToken) == true)
+        {
+            String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE); // payment_method
+            event.addPartnerParameter(Key.PAYMENT_TYPE, paymentType);
+
+            if (params.containsKey(AnalyticsManager.KeyType.COUPON_CODE) == true)
+            {
+                String couponCode = params.get(AnalyticsManager.KeyType.COUPON_CODE); // coupon_id
+                event.addPartnerParameter(Key.COUPON_CODE, couponCode);
+            }
+
+            if (params.containsKey(AnalyticsManager.KeyType.PRICE_OFF) == true)
+            {
+                String couponPrice = params.get(AnalyticsManager.KeyType.PRICE_OFF); // coupon_value
+                event.addPartnerParameter(Key.COUPON_PRICE, couponPrice);
+            }
+
+            if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
+            {
+                String bonusPrice = params.get(AnalyticsManager.KeyType.USED_BOUNS); // point_value
+                event.addPartnerParameter(Key.BONUS_PRICE, bonusPrice);
+            }
+        }
+
+        return event;
+    }
+
+    private DailyAdjustEvent getCouponEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE); // service
+        event.addPartnerParameter(Key.SERVICE, placeType);
+
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+        String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX); // product_id
+        event.addPartnerParameter(Key.TICKET_INDEX, ticketIndex);
+
+        String firstPurchaseYn = params.get(AnalyticsManager.KeyType.FIRST_PURCHASE);
+        event.addPartnerParameter(AnalyticsManager.KeyType.FIRST_PURCHASE, firstPurchaseYn);
+
+        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE); // payment_method
+        event.addPartnerParameter(Key.PAYMENT_TYPE, paymentType);
+
+        StringBuilder couponBuilder = new StringBuilder("[");
+
+        if (params.containsKey(AnalyticsManager.KeyType.COUPON_CODE) == true)
+        {
+            couponBuilder.append("id:").append(params.get(AnalyticsManager.KeyType.COUPON_CODE)); // coupon_id
+        }
+
+        if (params.containsKey(AnalyticsManager.KeyType.PRICE_OFF) == true)
+        {
+            couponBuilder.append(",value:").append(params.get(AnalyticsManager.KeyType.PRICE_OFF)); // coupon_value
+        }
+
+        couponBuilder.append("]");
+
+        event.addPartnerParameter(Key.COUPON, couponBuilder.toString());
+
+        return event;
+    }
+
+    private DailyAdjustEvent getListEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        String filter = params.get(AnalyticsManager.KeyType.FILTER); // filter
+        event.addPartnerParameter(AnalyticsManager.KeyType.FILTER, filter);
+
+        return event;
+    }
+
+    private DailyAdjustEvent getDetailEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
+        event.addPartnerParameter(AnalyticsManager.KeyType.GRADE, grade);
+
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+        String rating = params.get(AnalyticsManager.KeyType.RATING); // vendor_satisfaction
+        event.addPartnerParameter(Key.RATING, rating);
+
+        String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+
+        String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
+        event.addPartnerParameter(Key.LIST_INDEX, listIndex);
+
+        String dailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE); // ranking
+        event.addPartnerParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
+
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        event.addPartnerParameter(Key.DBENEFIT, dBenefit);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        return event;
+    }
+
+    private DailyAdjustEvent getSearchEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE); // service == placeType
+        event.addPartnerParameter(Key.SERVICE, placeType);
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        String searchWord = params.get(AnalyticsManager.KeyType.SEARCH_WORD); // 입력어
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_WORD, searchWord);
+
+        String searchPath = params.get(AnalyticsManager.KeyType.SEARCH_PATH); // 내주변(around), 자동완성(auto), 최근검색어(recent), 검색어(direct)
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_PATH, searchPath);
+
+        String searchCount = params.get(AnalyticsManager.KeyType.SEARCH_COUNT); // 검색되는 업장개수
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_COUNT, searchCount);
+
+        String searchResult = params.get(AnalyticsManager.KeyType.SEARCH_RESULT); // 검색결과
+        event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_RESULT, searchResult);
+
+        return event;
+    }
+
+    private class DailyAdjustEvent extends AdjustEvent
+    {
+        public DailyAdjustEvent(String eventToken)
+        {
+            super(eventToken);
+        }
+
+        @Override
+        public void setRevenue(double revenue, String currency)
+        {
+            super.setRevenue(revenue, currency);
+        }
+
+        @Override
+        public void addCallbackParameter(String key, String value)
+        {
+            super.addCallbackParameter(key, value);
+        }
+
+        @Override
+        public void addPartnerParameter(String key, String value)
+        {
+            super.addPartnerParameter(key, value);
+            super.addCallbackParameter(key, value);
+        }
+
+        @Override
+        public void setOrderId(String orderId)
+        {
+            super.setOrderId(orderId);
+        }
+
+        @Override
+        public boolean isValid()
+        {
+            return super.isValid();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -298,14 +965,65 @@ public class AdjustManager extends BaseAnalyticsManager
     ////////////////////////////////////////////////////////////////////////////////////////////////
     protected static final class EventToken
     {
-        public static final String LAUNCH = "zglco7";
+        public static final String LAUNCH = "zglco7"; // 앱이 실행될 경우
+        public static final String SIGNUP = "o49cnd"; //회원가입을 하는 경우
+        public static final String SOCIAL_SIGNUP = "u9jtyd"; // 소셜 회원가입을 하는 경우
+        public static final String LOGIN = "abm00g"; //로그인을 할 경우
+        public static final String SOCIAL_LOGIN = "v3dnvq"; // 소셜 로그인을 할 경우
+        public static final String LOGOUT = "9wow7l"; // 로그아웃을 할 경우
+        public static final String PUSH_ON = "8n8r17"; // 팝업 또는 더보기에서 푸쉬를 켰을 경우
+        public static final String PUSH_OFF = "9w31iv"; // 팝업 또는 더보기에서 푸쉬를 껏을 경우
+        public static final String FRIEND_REFERRAL = "oqkwnd"; // 친구를 초대했을 경우
+        public static final String SOCIAL_SHARE = "ubu8fq"; // 공유버튼을 눌러 세부 공유  "보내기"버튼까지 눌렀을 경우
+        public static final String STAY_PURCHASE = "bqwrab"; // 스테이 결제가 완료되었을 때
+        public static final String GOURMET_PURCHASE = "bpmxez"; // 고메 결제가 완료되었을 때
+        public static final String PURCHASE_WITH_COUPON = "vtzvjn"; // 쿠폰을 사용하여 결제가 완료되었을 때
+        public static final String STAY_FIRST_PURCHASE = "9uxbuf"; // 스테이 처음 결제가 완료되었을 때
+        public static final String GOURMET_FIRST_PURCHASE = "qvbirj"; // 고메 처음 결제가 완료되었을 때
+        public static final String FIRST_PURCHASE_WITH_COUPON = "oqbhce"; // 쿠폰을 사용하여 첫 결제가 완료되었을 때
+        public static final String COUPON_REJECTED = "881sbf"; // 쿠폰이 거절되었을 때
+        public static final String SATISFACTION_SURVEY = "n5pe52"; // 만족도 평가 완료 시
+        public static final String VIEW_LIST = "qtgwuc"; // 리스트 화면이 노출될 때
+        public static final String VIEW_DETAIL = "8atmoj"; // 업장 디테일화면이 노출될 때
+        public static final String VIEW_BOOKING_INITIALISE = "4s8i0m"; // 결제화면이 노출될 때
+        public static final String SEARCH_RESULT = "szintj"; // 검색어를 입력하여 검색결과 화면이 노출될 때
+    }
 
-        public static final String PURCHASE_STAY = "bqwrab";
+    private static final class Key
+    {
+        public static final String USER_INDEX = "user_id"; // Adjust에서는 user_id 로 넘긴다고 함 - 혼선가능성으로 키 이름만 변경!
+        public static final String SERVICE = "service";
+        public static final String USER_TYPE = "user_type";
+        public static final String MEMBER_TYPE = "member_type";
+        public static final String PUSH_NOTIFICATION = "push_notification";
+        public static final String PUSH_SETTING = "push_setting";
+        public static final String SHARE_METHOD = "share_method"; // 공유수단
+        public static final String PLACE_INDEX = "vendor_id"; // 업장 아이디
+        public static final String PLACE_NAME = "vendor_name"; // 업장 이름
+        public static final String RATING = "vendor_satisfaction"; // 만족도
+        public static final String IS_SHOW_ORIGINAL_PRICE = "discounted_price"; // 정가표시여부(y/n)
+        public static final String LIST_INDEX = "ranking"; // 리스트화면에서 디테일화면으로 들어온 노출순위
+        public static final String DBENEFIT = "d_benefit"; // 디베네핏 여부(y/n)
+        public static final String TICKET_INDEX = "product_id"; // sale reco idx
+        public static final String REGISTERED_SIMPLE_CARD = "card_registration"; // 간편결제 카드 등록 여부(y/n)
+        public static final String PAYMENT_TYPE = "payment_method"; // 결제수단(easycard / card / phonebill / virtualaccount)
+        public static final String COUPON = "coupon"; // 사용된 쿠폰
+        public static final String COUPON_CODE = "coupon_id"; // 사용된 쿠폰코드
+        public static final String COUPON_PRICE = "coupon_value"; // 사용된 쿠폰금액
+        public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
+        public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
+        public static final String VIEW = "view"; // 리스트 인지 맵인지
+    }
 
-        public static final String PURCHASE_GOURMET = "bpmxez";
+    private static final class UserType
+    {
+        public static final String GUEST = "guest";
+        public static final String MEMBER = "member";
+    }
 
-        public static final String FIRST_PURCHASE_STAY = "9uxbuf";
-
-        public static final String FIRST_PURCHASE_GOURMET = "qvbirj";
+    private static final class OnOffType
+    {
+        public static final String ON = "on";
+        public static final String OFF = "off";
     }
 }

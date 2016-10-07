@@ -27,6 +27,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.Map;
+
 public abstract class PlaceSearchResultActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
@@ -46,6 +48,9 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected boolean mIsFixedLocation;
     protected boolean mIsDeepLink;
     protected String mCallByScreen;
+
+    protected int mSearchCount;
+    protected int mSearchMaxCount;
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
 
@@ -379,27 +384,38 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             }, true);
     }
 
-    protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty)
+    protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
 
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-            , action, keyword.name, null);
+            , action, keyword.name, params);
     }
 
-    protected void recordEventSearchResultByKeyword(Keyword keyword, boolean isEmpty)
+    protected void recordEventSearchResultByKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.KEYWORD_NOT_FOUND : AnalyticsManager.Action.KEYWORD;
 
+        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.DIRECT);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
+
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-            , action, keyword.name, null);
+            , action, keyword.name, params);
     }
 
-    protected void recordEventSearchResultByAutoSearch(Keyword keyword, String inputText, boolean isEmpty)
+    protected void recordEventSearchResultByAutoSearch(Keyword keyword, String inputText, boolean isEmpty, Map<String, String> params)
     {
         String category = (isEmpty == true) ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
 
+        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputText);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
+
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
-            , keyword.name, inputText, null);
+            , keyword.name, inputText, params);
     }
 }

@@ -43,6 +43,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     protected abstract void onFirstPurchaseSuccess(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params);
 
+    protected abstract void onCouponUsedPurchase(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -170,6 +172,24 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             if (isFirstStayPurchase == true || isFirstGourmetPurchase == true)
             {
                 PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
+            }
+
+            boolean isCouponUsed = false;
+
+            if (mParams != null && mParams.containsKey(AnalyticsManager.KeyType.COUPON_REDEEM) == true)
+            {
+                try
+                {
+                    isCouponUsed = Boolean.parseBoolean(mParams.get(AnalyticsManager.KeyType.COUPON_REDEEM));
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+
+            if (isCouponUsed == true)
+            {
+                PlacePaymentThankyouActivity.this.onCouponUsedPurchase(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
             }
         }
 

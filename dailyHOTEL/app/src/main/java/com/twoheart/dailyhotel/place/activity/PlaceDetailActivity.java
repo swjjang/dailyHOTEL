@@ -82,7 +82,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }, false);
 
         mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelected);
+        mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelectedListener);
 
         View backImage = findViewById(R.id.backView);
         View shareView = findViewById(R.id.shareView);
@@ -101,7 +101,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                mToolbarOptionsItemSelected.onClick(null);
+                mToolbarOptionsItemSelectedListener.onClick(null);
             }
         });
     }
@@ -275,7 +275,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
+    private View.OnClickListener mToolbarOptionsItemSelectedListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)

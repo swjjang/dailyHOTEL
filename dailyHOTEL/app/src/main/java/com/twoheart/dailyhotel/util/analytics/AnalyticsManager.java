@@ -131,13 +131,13 @@ public class AnalyticsManager
         return mGoogleAnalyticsManager;
     }
 
-    public void setUserIndex(String index)
+    public void setUserInformation(String index, String userType)
     {
         try
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.setUserIndex(index);
+                analyticsManager.setUserInformation(index, userType);
             }
         } catch (Exception e)
         {
@@ -412,6 +412,45 @@ public class AnalyticsManager
             try
             {
                 analyticsManager.startApplication();
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onRegionChanged(String country, String provinceName) {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onRegionChanged(country, provinceName);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void setPushEnabled(boolean onOff, String pushSettingType) {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.setPushEnabled(onOff, pushSettingType);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void purchaseWithCoupon( Map<String, String> param) {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.purchaseWithCoupon(param);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -893,12 +932,22 @@ public class AnalyticsManager
         public static final String IS_SHOW_ORIGINAL_PRICE = "isShowOriginalPrice";
         public static final String LIST_INDEX = "list_index";
         public static final String REGISTERED_SIMPLE_CARD = "registeredSimpleCard";
+        public static final String FIRST_PURCHASE = "first_purchase"; // 첫 결제 여부
+        public static final String STATUS_CODE = "status_code";
+        public static final String SATISFACTION_SURVEY = "satisfaction_survey";
+        public static final String FILTER = "filter";
+        public static final String DAILYCHOICE = "dailychoice";
+        public static final String SEARCH_WORD = "search_word";
+        public static final String SEARCH_PATH = "search_path";
+        public static final String SEARCH_COUNT = "search_count";
+        public static final String SEARCH_RESULT = "search_result";
     }
 
     public static class ValueType
     {
         public static final String EMPTY = "null";
         public static final String LIST = "list";
+        public static final String MAP = "map";
         public static final String SEARCH = "search";
         public static final String SEARCH_RESULT = "searchResult";
         public static final String CHANGED = "Changed";
@@ -907,9 +956,18 @@ public class AnalyticsManager
         public static final String GUEST = "guest";
         public static final String DETAIL = "detailview";
         public static final String HOTEL = "hotel";
+        public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
         public static final String EVENT = "event";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String ALL_LOCALE_KR = "전체";
+        public static final String LAUNCH = "launch";
+        public static final String OTHER = "other";
+        public static final String SATISFIED = "satisfied";
+        public static final String DISSATISFIED = "dissatisfied";
+        public static final String AROUND = "around";
+        public static final String AUTO = "auto";
+        public static final String RECENT = "recent";
+        public static final String DIRECT = "direct";
     }
 }

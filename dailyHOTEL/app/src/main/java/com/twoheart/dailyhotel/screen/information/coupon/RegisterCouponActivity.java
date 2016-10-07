@@ -14,6 +14,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity.INTENT_EXTRA_DATA_CALL_BY_SCREEN;
 
 /**
@@ -190,7 +193,7 @@ public class RegisterCouponActivity extends BaseActivity
     private RegisterCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new RegisterCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegisterCoupon(String couponCode, final boolean isSuccess, String message)
+        public void onRegisterCoupon(String couponCode, final boolean isSuccess, int msgCode, String message)
         {
             unLockUI();
 
@@ -208,10 +211,14 @@ public class RegisterCouponActivity extends BaseActivity
                     }
                 });
 
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
+            params.put(AnalyticsManager.KeyType.STATUS_CODE, Integer.toString(msgCode));
+
             AnalyticsManager.getInstance(RegisterCouponActivity.this).recordEvent( //
                 AnalyticsManager.Category.COUPON_BOX, //
                 isSuccess == true ? AnalyticsManager.Action.REGISTRATION_COMPLETE : AnalyticsManager.Action.REGISTRATION_REJECTED //
-                , couponCode, null);
+                , couponCode, params);
         }
 
         @Override

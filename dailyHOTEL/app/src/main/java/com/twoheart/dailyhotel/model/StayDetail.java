@@ -22,13 +22,14 @@ public class StayDetail extends PlaceDetail
 
     private ArrayList<Pictogram> mPictogramList;
 
-    public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount)
+    public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
     {
         this.index = hotelIndex;
         this.nights = nights;
         this.entryPosition = entryIndex;
         this.isShowOriginalPrice = isShowOriginalPrice;
         this.listCount = listCount;
+        this.isDailyChoice = isDailyChoice;
     }
 
     @Override

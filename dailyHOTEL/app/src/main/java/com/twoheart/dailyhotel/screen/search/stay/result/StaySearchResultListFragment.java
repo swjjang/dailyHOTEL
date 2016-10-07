@@ -111,6 +111,7 @@ public class StaySearchResultListFragment extends StayListFragment
                 if (page <= 1 && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
                 {
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
+                    mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
                 }
             }
 
