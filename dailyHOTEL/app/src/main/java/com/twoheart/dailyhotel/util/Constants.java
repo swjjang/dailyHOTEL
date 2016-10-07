@@ -216,7 +216,7 @@ public interface Constants
     public static final int CODE_REQUEST_ISPMOBILE = 9;
     public static final int CODE_REQUEST_KFTC_BANKPAY = 10;
     public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
-    public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
+    public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT = 12;
     public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
     public static final int CODE_REQUEST_ACTIVITY_REGIONLIST = 14;
     public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
@@ -240,6 +240,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_COUPONLIST = 43;
     public static final int CODE_REQUEST_ACTIVITY_NOTICELIST = 44;
     public static final int CODE_REQUEST_ACTIVITY_REGISTER_COUPON = 45;
+    public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 46;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
