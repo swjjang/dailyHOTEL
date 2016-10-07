@@ -1620,6 +1620,7 @@ public class Util implements Constants
 
     /**
      * 대지역 이름 반환
+     *
      * @param province
      * @return
      */
@@ -1636,7 +1637,8 @@ public class Util implements Constants
             {
                 realProvinceName = province.name;
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             realProvinceName = null;
         }
 

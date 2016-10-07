@@ -798,7 +798,8 @@ public class MainActivity extends BaseActivity implements Constants
                     placeType = PlaceType.HOTEL;
                 }
 
-                if (placeType != null) {
+                if (placeType != null)
+                {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
                     boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
                     String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
@@ -832,7 +833,8 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                 }
 
-                if (placeType != null) {
+                if (placeType != null)
+                {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
                     boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
                     String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;

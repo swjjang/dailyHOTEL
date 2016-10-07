@@ -239,6 +239,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 return;
             }
 
+            case CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT:
             case CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD:
             {
                 // 간편 결제 실행후 카드가 없어 등록후에 돌아온경우.
@@ -247,10 +248,16 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 switch (resultCode)
                 {
                     case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                        mDontReload = true;
+                        if (requestCode == CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT)
+                        {
+                            mDontReload = true;
 
-                        // 신용카드 등록후에 바로 결제를 할경우.
-                        DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardJsonResponseListener);
+                            // 신용카드 등록후에 바로 결제를 할경우.
+                            DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardJsonResponseListener);
+                        } else
+                        {
+                            mDontReload = false;
+                        }
                         return;
 
                     case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -390,7 +397,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
         {
             Intent intent = new Intent(this, RegisterCreditCardActivity.class);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
         } else
         {
             showAgreeTermDialog(mPaymentInformation.paymentType);
