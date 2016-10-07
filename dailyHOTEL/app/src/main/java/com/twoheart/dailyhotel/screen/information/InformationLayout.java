@@ -1,6 +1,10 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,6 +44,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mAccountInfoLayout;
     private View mNewEventIconView, mNewNoticeIconView;
     private View mNewCouponIconView;
+    private View mlinkAlarmLayoutView;
 
     private TextView mPushTextView;
     private TextView mPushBenefitTextView;
@@ -88,6 +93,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startProtectChildTerms();
 
+        void startSettingAlarm();
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -155,6 +161,25 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
+
+        mlinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
+
+        TextView linkAlarmTextView = (TextView) mlinkAlarmLayoutView.findViewById(R.id.linkAlarmTextView);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(linkAlarmTextView.getText());
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c323232)), //
+            0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new UnderlineSpan(), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c900034)), //
+            7, 17, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        linkAlarmTextView.setText(spannableStringBuilder);
+        linkAlarmTextView.setOnClickListener(this);
+
+        setLinkAlarmVisible(false);
     }
 
     private void initToolbar(Context context, View view)
@@ -466,6 +491,23 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushBenefitTextView.setText(message);
     }
 
+    public void setLinkAlarmVisible(boolean visible)
+    {
+        if (visible == true)
+        {
+            if (mlinkAlarmLayoutView.getVisibility() != View.VISIBLE)
+            {
+                mlinkAlarmLayoutView.setVisibility(View.VISIBLE);
+            }
+        } else
+        {
+            if (mlinkAlarmLayoutView.getVisibility() != View.GONE)
+            {
+                mlinkAlarmLayoutView.setVisibility(View.GONE);
+            }
+        }
+    }
+
     @Override
     public void onClick(View v)
     {
@@ -553,6 +595,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.protectChildTermsView:
                 ((OnEventListener) mOnEventListener).startProtectChildTerms();
+                break;
+
+            case R.id.linkAlarmTextView:
+                ((OnEventListener) mOnEventListener).startSettingAlarm();
                 break;
 
             default:

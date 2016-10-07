@@ -279,6 +279,8 @@ public interface Constants
     public static final int REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION = 10;
     public static final int REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE = 11;
 
+    public static final int REQUEST_CODE_APPLICATION_DETAILS_SETTINGS = 1000;
+
     // 리스트 페이지 사이즈
     public static final int PAGENATION_LIST_SIZE = 200;
 }

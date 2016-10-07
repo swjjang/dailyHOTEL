@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,7 +137,6 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUI();
 
             mNetworkController.requestUserProfile();
-
         } else
         {
             // 비로그인 상태
@@ -143,11 +144,11 @@ public class InformationFragment extends BaseFragment implements Constants
 
             mInformationLayout.updateLoginLayout(false, false);
             mInformationLayout.updateAccountLayout(false, 0, 0);
+            mInformationLayout.setLinkAlarmVisible(false);
         }
 
         // 혜택 알림 메세지 가져오기
         mNetworkController.requestPushBenefitText();
-
     }
 
     @Override
@@ -167,6 +168,23 @@ public class InformationFragment extends BaseFragment implements Constants
         {
             case CODE_REQEUST_ACTIVITY_SIGNUP:
             {
+                break;
+            }
+
+            case Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS:
+            {
+                if (Util.isOverAPI19() == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == true)
+                    {
+
+                    } else
+                    {
+
+                    }
+                }
                 break;
             }
         }
@@ -639,6 +657,14 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
+        public void startSettingAlarm()
+        {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+            startActivityForResult(intent, Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS);
+        }
+
+        @Override
         public void finish()
         {
             //do nothing.
@@ -756,6 +782,19 @@ public class InformationFragment extends BaseFragment implements Constants
                 AnalyticsManager.getInstance(getContext()).setPushEnabled(isAgreedBenefit, null);
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
+
+                if (Util.isOverAPI19() == true && isAgreedBenefit == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == false)
+                    {
+                        mInformationLayout.setLinkAlarmVisible(true);
+                    } else
+                    {
+                        mInformationLayout.setLinkAlarmVisible(false);
+                    }
+                }
             }
 
             mNetworkController.requestUserProfileBenefit();
@@ -815,6 +854,19 @@ public class InformationFragment extends BaseFragment implements Constants
                     }
                 }, true);
 
+                if (Util.isOverAPI19() == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == false)
+                    {
+                        mInformationLayout.setLinkAlarmVisible(true);
+                    } else
+                    {
+                        mInformationLayout.setLinkAlarmVisible(false);
+                    }
+                }
+
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
             } else
@@ -832,6 +884,8 @@ public class InformationFragment extends BaseFragment implements Constants
                         releaseUiComponent();
                     }
                 }, true);
+
+                mInformationLayout.setLinkAlarmVisible(false);
 
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
