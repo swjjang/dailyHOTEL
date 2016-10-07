@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
+import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -1094,7 +1095,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void startCreditCardManager()
+        public void startCreditCardManager(boolean isRegister)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -1103,14 +1104,23 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             mPaymentInformation.setGuest(mGourmetPaymentLayout.getGuest());
 
-            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
+            if (isRegister == true)
+            {
+                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
 
-            Intent intent = new Intent(GourmetPaymentActivity.this, CreditCardListActivity.class);
-            intent.setAction(Intent.ACTION_PICK);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
+                Intent intent = new Intent(GourmetPaymentActivity.this, RegisterCreditCardActivity.class);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+            } else
+            {
+                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
+                Intent intent = new Intent(GourmetPaymentActivity.this, CreditCardListActivity.class);
+                intent.setAction(Intent.ACTION_PICK);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
+            }
         }
 
         @Override

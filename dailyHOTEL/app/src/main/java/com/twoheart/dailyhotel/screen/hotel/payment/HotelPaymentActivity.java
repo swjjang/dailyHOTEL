@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
+import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -1498,7 +1499,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private HotelPaymentLayout.OnEventListener mOnEventListener = new HotelPaymentLayout.OnEventListener()
     {
         @Override
-        public void startCreditCardManager()
+        public void startCreditCardManager(boolean isRegister)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -1507,7 +1508,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             mPaymentInformation.setGuest(mHotelPaymentLayout.getGuest());
 
-            startCreditCardList();
+            if (isRegister == true)
+            {
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
+
+                Intent intent = new Intent(HotelPaymentActivity.this, RegisterCreditCardActivity.class);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+            } else
+            {
+                startCreditCardList();
+            }
         }
 
         @Override

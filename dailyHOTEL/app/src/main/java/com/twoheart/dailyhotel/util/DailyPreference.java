@@ -1080,6 +1080,7 @@ public class DailyPreference
 
     /**
      * 선택된 대지역 저장값 - Adjust 용
+     *
      * @return
      */
     public String getSelectedRegionTypeProvince(Constants.PlaceType placeType)

@@ -419,7 +419,8 @@ public class AnalyticsManager
         }
     }
 
-    public void onRegionChanged(String country, String provinceName) {
+    public void onRegionChanged(String country, String provinceName)
+    {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
@@ -432,7 +433,8 @@ public class AnalyticsManager
         }
     }
 
-    public void setPushEnabled(boolean onOff, String pushSettingType) {
+    public void setPushEnabled(boolean onOff, String pushSettingType)
+    {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
@@ -445,7 +447,8 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseWithCoupon( Map<String, String> param) {
+    public void purchaseWithCoupon(Map<String, String> param)
+    {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
@@ -739,6 +742,7 @@ public class AnalyticsManager
         public static final String MENU_SCREEN = "MenuScreen";
         //
         public static final String PAYMENT_CARD_EDIT = "PaymentCardEdit";
+        public static final String PAYMENT_CARD_REGISTRATION = "PaymentCardRegistration";
         public static final String AGREE = "Agree";
         public static final String CANCEL = "Cancel";
         public static final String OK = "Okay";
