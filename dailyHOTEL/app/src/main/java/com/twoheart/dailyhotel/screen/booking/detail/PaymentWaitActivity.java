@@ -168,25 +168,16 @@ public class PaymentWaitActivity extends BaseActivity
 
         lockUI();
 
-        TextView placeInformationView = (TextView) findViewById(R.id.placeInformationTitleView);
-        TextView placeNameView = (TextView) findViewById(R.id.placeNameView);
-
         switch (booking.placeType)
         {
             case HOTEL:
             {
-                placeInformationView.setText(R.string.actionbar_title_hoteldetailinfo_activity);
-                placeNameView.setText(R.string.label_receipt_hotelname);
-
                 DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationJsonResponseListener);
                 break;
             }
 
             case FNB:
             {
-                placeInformationView.setText(R.string.label_restaurant_information);
-                placeNameView.setText(R.string.label_receipt_restaurantname);
-
                 DailyNetworkAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener);
                 break;
             }
