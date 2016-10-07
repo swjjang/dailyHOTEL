@@ -58,6 +58,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onShowActivityEmptyView(boolean isShow);
 
         void onRecordAnalytics(Constants.ViewType viewType);
+
+        void onSearchCountUpdate(int searchCount, int searchMaxCount);
     }
 
     protected abstract int getLayoutResourceId();

@@ -99,6 +99,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
             if (page <= 1)
             {
                 ((GourmetSearchResultListLayout) mPlaceListLayout).updateResultCount(mViewType, totalCount, maxCount);
+                mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
             }
         }
 

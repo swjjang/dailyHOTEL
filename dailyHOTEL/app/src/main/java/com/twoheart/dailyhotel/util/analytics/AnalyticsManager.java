@@ -937,6 +937,10 @@ public class AnalyticsManager
         public static final String SATISFACTION_SURVEY = "satisfaction_survey";
         public static final String FILTER = "filter";
         public static final String DAILYCHOICE = "dailychoice";
+        public static final String SEARCH_WORD = "search_word";
+        public static final String SEARCH_PATH = "search_path";
+        public static final String SEARCH_COUNT = "search_count";
+        public static final String SEARCH_RESULT = "search_result";
     }
 
     public static class ValueType
@@ -961,5 +965,9 @@ public class AnalyticsManager
         public static final String OTHER = "other";
         public static final String SATISFIED = "satisfied";
         public static final String DISSATISFIED = "dissatisfied";
+        public static final String AROUND = "around";
+        public static final String AUTO = "auto";
+        public static final String RECENT = "recent";
+        public static final String DIRECT = "direct";
     }
 }

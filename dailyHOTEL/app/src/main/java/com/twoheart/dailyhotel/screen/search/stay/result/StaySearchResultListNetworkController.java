@@ -72,7 +72,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                     }
 
-                    int totalCount = 0;
+                    int totalCount = dataJSONObject.getInt("searchCount");
                     int maxCount = dataJSONObject.getInt("searchMaxCount");
                     int page;
                     String imageUrl;
@@ -106,8 +106,6 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                                 {
                                     categoryList.add(new Category(name, code));
                                 }
-
-                                totalCount += count;
                             }
                         }
                     }

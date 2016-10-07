@@ -415,6 +415,21 @@ public class AdjustManager extends BaseAnalyticsManager
                     event.addCallbackParameter(Key.SERVICE, placeType);
                 }
             }
+        } else if (AnalyticsManager.Category.SEARCH.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.AROUND_SEARCH_CLICKED.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.KEYWORD_NOT_FOUND.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.KEYWORD.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.RECENT_KEYWORD.equalsIgnoreCase(category) == true //
+                || AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND.equalsIgnoreCase(category) == true)
+            {
+                event = getSearchEvent(EventToken.SEARCH_RESULT, params);
+            }
+        } else if (AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND.equalsIgnoreCase(category) == true //
+            || AnalyticsManager.Category.AUTO_SEARCH.equalsIgnoreCase(category) == true)
+        {
+            event = getSearchEvent(EventToken.SEARCH_RESULT, params);
         }
 
         if (event != null)
@@ -859,6 +874,53 @@ public class AdjustManager extends BaseAnalyticsManager
 
         return event;
     }
+
+    private AdjustEvent getSearchEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        AdjustEvent event = new AdjustEvent(eventToken);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addCallbackParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE); // service == placeType
+        event.addCallbackParameter(Key.SERVICE, placeType);
+
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        event.addCallbackParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+
+        String searchWord = params.get(AnalyticsManager.KeyType.SEARCH_WORD); // 입력어
+        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_WORD, searchWord);
+
+        String searchPath = params.get(AnalyticsManager.KeyType.SEARCH_PATH); // 내주변(around), 자동완성(auto), 최근검색어(recent), 검색어(direct)
+        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_PATH, searchPath);
+
+        String searchCount = params.get(AnalyticsManager.KeyType.SEARCH_COUNT); // 검색되는 업장개수
+        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_COUNT, searchCount);
+
+        String searchResult = params.get(AnalyticsManager.KeyType.SEARCH_RESULT); // 검색결과
+        event.addCallbackParameter(AnalyticsManager.KeyType.SEARCH_RESULT, searchResult);
+
+        return event;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// Event Token ///////////////////////////////////////////////
