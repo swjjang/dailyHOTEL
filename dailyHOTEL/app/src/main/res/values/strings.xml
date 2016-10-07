@@ -131,7 +131,7 @@
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_invite_friends">친구 초대하기</string>
-    <string name="actionbar_title_reg_creditcard">결제카드 추가하기</string>
+    <string name="actionbar_title_reg_creditcard">간편결제 카드 등록하기</string>
     <string name="actionbar_title_setting_frag">더보기</string>
     <string name="actionbar_title_error_frag">DAILYHOTEL</string>
     <string name="actionbar_title_wait_timer_frag">DAILYHOTEL</string>
@@ -152,7 +152,7 @@
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
-    <string name="actionbar_title_creditcard_activity">결제카드 관리</string>
+    <string name="actionbar_title_creditcard_activity">간편결제 카드 관리</string>
     <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
     <string name="actionbar_title_event_list_frag">이벤트</string>
     <string name="actionbar_title_edit_email">이메일 설정</string>
@@ -472,7 +472,7 @@
     <string name="act_booking_price">예약 금액</string>
     <string name="act_booking_credit_discount">할인 금액</string>
     <string name="act_booking_price_real">총 결제금액(VAT 포함)</string>
-    <string name="act_booking_pay_card">결제카드 일반결제</string>
+    <string name="act_booking_pay_card">신용/체크카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰 결제</string>
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
@@ -483,7 +483,7 @@
     <string name="label_booking_hotel_nights">(총 %1$d박)</string>
     <string name="label_booking_gourmet_count">(총 %1$d개)</string>
     <string name="action_booking_cardmanager">카드관리</string>
-    <string name="label_booking_easypayment">결제카드 간편결제</string>
+    <string name="label_booking_easypayment">신용/체크카드 간편결제</string>
     <string name="label_booking_used_bonus">적립금 사용</string>
     <string name="label_booking_used_coupon">할인쿠폰 사용</string>
     <string name="label_booking_select_coupon">할인쿠폰 선택</string>
@@ -612,6 +612,7 @@
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_booking_refund_product">변경, 취소, 환불이 불가한 특가 할인 상품입니다.</string>
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 [결제하기] 버튼을 눌러주세요.</string>
+    <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
@@ -706,8 +707,7 @@
     <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
 
     <!-- CreditCardFragment -->
-    <string name="label_register_creditcard">결제카드 등록하기</string>
-    <string name="label_add_creditcard">결제카드 추가하기</string>
+    <string name="label_add_creditcard">간편결제 카드 등록하기</string>
     <string name="label_creditcard_introduce">간편하게 카드 등록하고\n1초만에 결제하세요!</string>
     <string name="message_billing_success">결제카드 등록을 완료했습니다.</string>
     <string name="message_billing_fail">결제카드 등록에 실패했습니다.</string>

@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
@@ -665,7 +666,25 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 {
                     if (mSelectedCreditCard == null)
                     {
-                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        JSONObject jsonObject = null;
+
+                        String selectedSimpleCard = DailyHotelRequest.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
+
+                        if (Util.isTextEmpty(selectedSimpleCard) == true)
+                        {
+                            jsonObject = jsonArray.getJSONObject(0);
+                        } else
+                        {
+                            for (int i = 0; i < length; i++)
+                            {
+                                jsonObject = jsonArray.getJSONObject(i);
+
+                                if (selectedSimpleCard.equalsIgnoreCase(jsonObject.getString("billkey")) == true)
+                                {
+                                    break;
+                                }
+                            }
+                        }
 
                         mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
                     } else

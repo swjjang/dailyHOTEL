@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
 import java.io.File;
 import java.util.Calendar;
@@ -768,6 +769,8 @@ public class MainActivity extends BaseActivity implements Constants
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
                     placeType = PlaceType.FNB;
                 } else if (DailyDeepLink.getInstance().isBookingView() == true)
+                } else if (DailyDeepLink.getInstance().isBookingView() == true //
+                    || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
@@ -776,7 +779,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isCouponView() == true //
                     || DailyDeepLink.getInstance().isInformationView() == true //
                     || DailyDeepLink.getInstance().isRecommendFriendView() == true //
-                    || DailyDeepLink.getInstance().isRegisterCouponView() == true)
+                    || DailyDeepLink.getInstance().isRegisterCouponView() == true //
+                    || DailyDeepLink.getInstance().isNoticeDetailView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)

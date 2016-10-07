@@ -80,6 +80,8 @@ public class DailyPreference
     private static final String KEY_NOTICE_NEW_LIST = "202";
     private static final String KEY_NOTICE_NEW_REMOVE_LIST = "203";
 
+    private static final String KEY_SELECTED_SIMPLE_CARD = "204"; // 마지막으로 간편결제된 카드
+
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
 
@@ -87,6 +89,7 @@ public class DailyPreference
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
+    private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
@@ -896,6 +899,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_STAY_CATEGORY_NAME, null);
     }
 
+    public long getBackgroundAppTime()
+    {
+        return getValue(mPreferences, KEY_BACKGROUND_APP_TIME, 0L);
+    }
+
+    public void setBackgroundAppTime(long value)
+    {
+        setValue(mEditor, KEY_BACKGROUND_APP_TIME, value);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // new
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -988,6 +1001,16 @@ public class DailyPreference
     public void setNoticeNewRemoveList(String value)
     {
         setValue(mEditor, KEY_NOTICE_NEW_REMOVE_LIST, value);
+    }
+
+    public String getSelectedSimpleCard()
+    {
+        return getValue(mPreferences, KEY_SELECTED_SIMPLE_CARD, null);
+    }
+
+    public void setSelectedSimpleCard(String value)
+    {
+        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, value);
     }
 
     public String getSelectedRegion(Constants.PlaceType placeType)

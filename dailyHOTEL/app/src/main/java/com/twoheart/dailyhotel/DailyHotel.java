@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
@@ -13,6 +14,7 @@ import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -95,6 +97,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         FacebookSdk.sdkInitialize(getApplicationContext());
         KakaoSDK.init(new KakaoSDKAdapter());
         FontManager.getInstance(getApplicationContext());
+
+        registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
     }
 
     private void initializeAnalytics(Context context)
@@ -134,7 +138,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         return Util.isTextEmpty(AUTHORIZATION) == false;
     }
 
-
     public static boolean isSuccessTMapAuth()
     {
         return mIsSuccessTMapAuth;
@@ -171,6 +174,12 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 }
 
                 @Override
+                public boolean isSecureMode()
+                {
+                    return false;
+                }
+
+                @Override
                 public ApprovalType getApprovalType()
                 {
                     return ApprovalType.INDIVIDUAL;
@@ -201,6 +210,66 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                     return DailyHotel.getGlobalApplicationContext();
                 }
             };
+        }
+    }
+
+    private class DailyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks
+    {
+        private int mRunningActivity = 0;
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle bundle)
+        {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity)
+        {
+            if (++mRunningActivity == 1)
+            {
+                // 30 분이 지나면 재시작
+                final long DELAY_TIME = 30 * 60 * 1000;
+
+                // return to forground
+                long currentTime = DailyCalendar.getInstance().getTimeInMillis();
+                long backgroundTime = DailyPreference.getInstance(activity).getBackgroundAppTime();
+
+                if (backgroundTime != 0 && currentTime - backgroundTime > DELAY_TIME)
+                {
+                    Util.restartApp(activity);
+                }
+            }
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity)
+        {
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity)
+        {
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity)
+        {
+            if (--mRunningActivity == 0)
+            {
+                // go background
+                DailyPreference.getInstance(activity).setBackgroundAppTime(DailyCalendar.getInstance().getTimeInMillis());
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+        {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity)
+        {
         }
     }
 }

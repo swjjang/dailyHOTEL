@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -42,7 +41,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
@@ -71,7 +69,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex);
+        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
         fragmentList.add(baseFragment01);
 
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -142,37 +140,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         } catch (Exception e)
         {
             ExLog.d(e.toString());
-        }
-    }
-
-    @Override
-    protected void onTabSelected(int position)
-    {
-        switch (position)
-        {
-            case 0:
-                break;
-
-            case 1:
-                break;
-
-            case 2:
-            {
-                try
-                {
-                    //                    String reservationTime = Util.simpleDateFormatISO8601toFormat(mGourmetBookingDetail.reservationTime, "yyMMdd");
-                    String reservationTime = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd");
-                    String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
-
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                        , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
-                        , label, null);
-                } catch (ParseException e)
-                {
-                    ExLog.d(e.toString());
-                }
-                break;
-            }
         }
     }
 

@@ -7,9 +7,11 @@
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/actionbar_background</item>
+        <item name="colorPrimaryDark">@color/actionbar_background</item>
         <item name="colorAccent">@color/actionbar_hamburger</item>
         <item name="colorButtonNormal">@color/actionbar_hamburger</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="numberPickerStyle">@style/NPWidget.Holo.Light.NumberPicker</item>
     </style>
 

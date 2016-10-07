@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -11,8 +12,8 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottomLayout">
+        android:layout_above="@+id/bottomLayout"
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +62,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/text_fields_off"
-                        android:drawableRight="@drawable/spinner"
                         android:ellipsize="end"
                         android:hint="@string/label_necessary"
                         android:maxLength="20"
@@ -70,7 +70,8 @@
                         android:textColor="@color/default_text_c323232"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/EditTextTheme"
+                        app:drawableCompatRight="@drawable/spinner"/>
                 </LinearLayout>
 
                 <View
@@ -114,9 +115,9 @@
                 android:id="@+id/emailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/emailView"
@@ -147,9 +148,9 @@
                 android:id="@+id/nameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/nameView"

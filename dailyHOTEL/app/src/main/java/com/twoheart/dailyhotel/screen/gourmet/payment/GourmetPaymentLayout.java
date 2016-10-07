@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
-import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -54,7 +53,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     // 결제 수단 선택
     private View mSimpleCardLayout;
-    private TextView mSimpleCardTextView;
+    private TextView mSimpleCardNumberTextView;
+    private TextView mSimpleCardLogoTextView;
     private View mCardLayout;
     private View mPhoneLayout;
     private View mTransferLayout;
@@ -64,8 +64,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mDisablePhoneView;
     private View mDisableTransferView;
 
+    private View mCardManagerLayout;
     private TextView mCardManagerTextView;
     private TextView mGuidePaymentMemoView;
+
+    private View mEmptySimpleCardLayout;
+    private View mSelectedSimpleCardLayout;
     //
     private int mAnimationValue;
     private ValueAnimator mValueAnimator;
@@ -226,11 +230,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private void initPaymentTypeInformation(View view)
     {
         mSimpleCardLayout = view.findViewById(R.id.simpleCardLayout);
-        mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
         mDisableSimpleCardView = view.findViewById(R.id.disableSimpleCardView);
 
-        View cardManagerLayout = view.findViewById(R.id.cardManagerLayout);
-        mCardManagerTextView = (TextView) cardManagerLayout.findViewById(R.id.cardManagerTextView);
+        mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
+        mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
 
         mCardLayout = view.findViewById(R.id.cardLayout);
         mDisableCardView = mCardLayout.findViewById(R.id.disableCardView);
@@ -241,11 +244,22 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mTransferLayout = view.findViewById(R.id.transferLayout);
         mDisableTransferView = mTransferLayout.findViewById(R.id.disableTransferView);
 
-        cardManagerLayout.setOnClickListener(this);
+        mCardManagerLayout.setOnClickListener(this);
         mSimpleCardLayout.setOnClickListener(this);
         mCardLayout.setOnClickListener(this);
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
+
+        mEmptySimpleCardLayout = view.findViewById(R.id.emptySimpleCardLayout);
+        mSelectedSimpleCardLayout = view.findViewById(R.id.selectedSimpleCardLayout);
+        mSimpleCardLogoTextView = (TextView) mSelectedSimpleCardLayout.findViewById(R.id.logoTextView);
+        mSimpleCardNumberTextView = (TextView) mSelectedSimpleCardLayout.findViewById(R.id.numberTextView);
+
+        mEmptySimpleCardLayout.setVisibility(View.VISIBLE);
+        mSelectedSimpleCardLayout.setVisibility(View.GONE);
+
+        mEmptySimpleCardLayout.setOnClickListener(this);
+        mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
     }
@@ -429,7 +443,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
-    public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
+    public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard creditCard)
     {
         if (gourmetPaymentInformation == null)
         {
@@ -438,38 +452,30 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         setPaymentInformation(gourmetPaymentInformation.getPaymentToPay());
 
-        if (selectedCreditCard == null)
+        if (creditCard == null)
         {
-            mCardManagerTextView.setText(R.string.label_register_card);
-            mSimpleCardTextView.setText(R.string.label_booking_easypayment);
+            mCardManagerLayout.setVisibility(View.GONE);
+            mEmptySimpleCardLayout.setVisibility(View.VISIBLE);
+            mSelectedSimpleCardLayout.setVisibility(View.GONE);
         } else
         {
-            mCardManagerTextView.setText(R.string.label_manager);
+            mCardManagerLayout.setVisibility(View.VISIBLE);
+            mEmptySimpleCardLayout.setVisibility(View.GONE);
+            mSelectedSimpleCardLayout.setVisibility(View.VISIBLE);
 
-            final String cardName = selectedCreditCard.name.replace("카드", "");
-            final String cardNumber = selectedCreditCard.number;
-
-            mSimpleCardTextView.setText(String.format("%s %s", cardName, cardNumber));
-            mSimpleCardTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Layout layout = mSimpleCardTextView.getLayout();
-
-                    if (layout == null || Util.isTextEmpty(cardName) == true)
-                    {
-                        return;
-                    }
-
-                    int lineCount = mSimpleCardTextView.getLineCount();
-                    if (lineCount > 1)
-                    {
-                        mSimpleCardTextView.setText(String.format("%s\n%s", cardName, cardNumber));
-                    }
-                }
-            });
+            setSimpleCardLayout(creditCard);
         }
+    }
+
+    private void setSimpleCardLayout(CreditCard creditCard)
+    {
+        if (creditCard == null)
+        {
+            return;
+        }
+
+        mSimpleCardLogoTextView.setText(creditCard.name);
+        mSimpleCardNumberTextView.setText(creditCard.number);
     }
 
     public void setPaymentInformation(int price)
@@ -565,7 +571,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     //        return mMemoEditText.getText().toString().trim();
     //    }
 
-    public void requestUserInformationFocus(Constants.UserInformationType type)
+    public void requestGuestInformationFocus(Constants.UserInformationType type)
     {
         switch (type)
         {
@@ -734,6 +740,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 break;
 
             case R.id.cardManagerLayout:
+            case R.id.emptySimpleCardLayout:
+            case R.id.selectedSimpleCardLayout:
                 ((OnEventListener) mOnEventListener).startCreditCardManager();
                 break;
         }

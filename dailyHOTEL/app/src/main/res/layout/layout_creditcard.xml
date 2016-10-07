@@ -47,52 +47,27 @@
             android:paddingBottom="10dp"/>
 
         <RelativeLayout
-            android:id="@+id/introductionLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottomLayout"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="invisible">
-
-            <RelativeLayout
-                android:id="@+id/emptyCardLayout"
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/card_add_bg">
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="40dp"
-                    app:srcCompat="@drawable/card_add_ic"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/imageView"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:text="@string/label_register_creditcard"
-                    android:textColor="@color/creditcard_add_card_text"
-                    android:textSize="18dp"/>
-            </RelativeLayout>
+            android:id="@+id/emptyCardLayout"
+            android:layout_width="300dp"
+            android:layout_height="188dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
+            android:visibility="gone">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/emptyCardLayout"
-                android:layout_marginTop="30dp"
+                android:layout_below="@+id/imageView"
+                android:layout_centerVertical="true"
+                android:drawablePadding="12dp"
                 android:gravity="center"
                 android:text="@string/label_creditcard_introduce"
-                android:textColor="@color/creditcard_introduce_text"
-                android:textSize="18dp"/>
+                android:textColor="@color/creditcard_add_card_text"
+                android:textSize="13dp"
+                app:drawableCompatTop="@drawable/card_add_ic"/>
         </RelativeLayout>
     </RelativeLayout>
 </merge>

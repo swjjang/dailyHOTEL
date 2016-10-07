@@ -25,8 +25,7 @@ public class DailyImageView extends AppCompatImageView
         super(context, attrs, defStyle);
     }
 
-    @Override
-    public void setImageResource(@DrawableRes int resId)
+    public void setVectorImageResource(@DrawableRes int resId)
     {
         super.setImageResource(resId);
 

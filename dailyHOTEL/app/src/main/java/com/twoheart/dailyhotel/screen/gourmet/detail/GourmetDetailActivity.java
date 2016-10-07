@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -614,6 +616,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.showAnimationProductInformationLayout();
             }
 
+            if (Util.isOverAPI21() == true)
+            {
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(getResources().getColor(R.color.black_a67));
+            }
+
             releaseUiComponent();
 
             recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);
@@ -634,6 +643,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 mPlaceDetailLayout.hideAnimationProductInformationLayout();
+            }
+
+            if (Util.isOverAPI21() == true)
+            {
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(getResources().getColor(R.color.white));
             }
 
             releaseUiComponent();

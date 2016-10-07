@@ -169,7 +169,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                hideAnimationProductInformationLayout();
+                ((OnEventListener) mOnEventListener).hideProductInformationLayout();
             }
         });
 
