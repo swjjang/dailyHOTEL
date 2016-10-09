@@ -242,7 +242,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                     ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
                 } else
                 {
-                    mBirthdayView.requestFocus();
+                    onFocusChange(v, true);
                 }
                 break;
         }
