@@ -35,7 +35,7 @@
     <string name="label_on">ON</string>
     <string name="label_off">OFF</string>
     <string name="label_version">Version %1$s</string>
-    <string name="label_share_daum_map">다음맵</string>
+    <string name="label_share_daum_map">카카오맵</string>
     <string name="label_share_naver_map">네이버맵</string>
     <string name="label_share_google_map">구글맵</string>
     <string name="label_share_tmap_navi">티맵</string>
