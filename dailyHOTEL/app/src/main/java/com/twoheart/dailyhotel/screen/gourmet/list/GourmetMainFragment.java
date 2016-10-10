@@ -607,6 +607,16 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             mGourmetCuration.setProvince(selectedProvince);
 
+            // 기존 저장 Province 가 소지역이 아닐수도 있고, 또한 default 지역인 서울로 하드 코딩 될수 있음으로 한번더 검사
+            String saveProvinceName = DailyPreference.getInstance(mBaseActivity).getSelectedRegionTypeProvince(PlaceType.FNB);
+            if (selectedProvince.name.equalsIgnoreCase(saveProvinceName) == false)
+            {
+                String country = selectedProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                String realProvinceName = Util.getRealProvinceName(selectedProvince);
+                DailyPreference.getInstance(mBaseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
+                AnalyticsManager.getInstance(mBaseActivity).onRegionChanged(country, realProvinceName);
+            }
+
             if (DailyDeepLink.getInstance().isValidateLink() == true//
                 && processDeepLinkByRegionList(mBaseActivity, provinceList, areaList) == true)
             {
