@@ -7,11 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Notice;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -104,6 +107,14 @@ public class NoticeListAdapter extends ArrayAdapter<Notice>
         try
         {
             dateTextView.setText(DailyCalendar.convertDateFormatString(notice.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+        } catch (ParseException e)
+        {
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.log("notice.createdAt: " + (notice != null ? notice.createdAt : ""));
+            }
+
+            ExLog.d(e.toString());
         } catch (Exception e)
         {
             ExLog.d(e.toString());

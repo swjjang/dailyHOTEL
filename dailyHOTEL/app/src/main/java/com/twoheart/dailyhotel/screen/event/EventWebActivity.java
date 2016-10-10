@@ -14,6 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -43,6 +44,7 @@ import com.twoheart.dailyhotel.widget.DailyWebView;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -632,6 +634,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                     AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
                         , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Event-NULL", paramsMap);
+                } catch (ParseException e)
+                {
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log("requestDownloadEventCoupon::CouponCode: " + couponCode + ", validTo: " + validTo);
+                    }
+
+                    ExLog.d(e.toString());
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -680,6 +690,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         String message = response.getString("msg");
                         onErrorPopupMessage(msgCode, message, null);
                     }
+
+                } catch (ParseException e)
+                {
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log("Url: " + url);
+                    }
+
+                    onError(e);
                 } catch (Exception e)
                 {
                     onError(e);
@@ -896,6 +915,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                         String message = response.getString("msg");
                                         EventWebActivity.this.onErrorPopupMessage(msgCode, message);
                                     }
+                                } catch (ParseException e)
+                                {
+                                    if (Constants.DEBUG == false)
+                                    {
+                                        Crashlytics.log("Url: " + url);
+                                    }
+
+                                    EventWebActivity.this.onError(e);
                                 } catch (Exception e)
                                 {
                                     EventWebActivity.this.onError(e);

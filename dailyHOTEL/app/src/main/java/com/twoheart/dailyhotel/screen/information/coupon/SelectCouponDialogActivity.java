@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -399,6 +400,13 @@ public class SelectCouponDialogActivity extends BaseActivity
                         break;
                     }
                 }
+            } catch (ParseException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                }
+                ExLog.d(e.toString());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

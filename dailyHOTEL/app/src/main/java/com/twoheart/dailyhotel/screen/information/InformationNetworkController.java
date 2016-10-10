@@ -4,13 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
+
+import java.text.ParseException;
 
 /**
  * Created by Sam Lee on 2016. 5. 19..
@@ -190,7 +194,14 @@ public class InformationNetworkController extends BaseNetworkController
                     String message = response.getString("msg");
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
+            } catch (ParseException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log("Url: " + url);
+                }
 
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
