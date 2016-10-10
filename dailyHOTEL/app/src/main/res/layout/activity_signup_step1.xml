@@ -61,8 +61,7 @@
                 android:textColor="@color/default_text_c323232"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
-                android:theme="@style/EditTextTheme"
-                app:drawableCompatRight="@drawable/search_ic_01_delete"/>
+                android:theme="@style/EditTextTheme"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,7 +73,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -113,7 +112,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -151,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_name"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -180,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_birthday"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -209,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_recommender_code"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>

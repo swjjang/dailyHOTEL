@@ -356,16 +356,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         return false;
     }
 
-    private void resetFocus()
-    {
-        mEmailView.setSelected(false);
-        mNameView.setSelected(false);
-        mPasswordView.setSelected(false);
-        mConfirmPasswordView.setSelected(false);
-        mRecommenderView.setSelected(false);
-        mBirthdayView.setSelected(false);
-    }
-
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
         if (hasFocus == true)
