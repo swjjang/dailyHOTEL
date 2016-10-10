@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -113,6 +115,10 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.expireTextView.setVisibility(View.VISIBLE);
         } catch (ParseException e)
         {
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+            }
             ExLog.d(e.getMessage());
             holder.expireTextView.setVisibility(View.GONE);
         }

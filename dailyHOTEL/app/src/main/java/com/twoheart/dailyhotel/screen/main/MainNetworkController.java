@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.main;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -16,6 +17,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
+
+import java.text.ParseException;
 
 public class MainNetworkController extends BaseNetworkController
 {
@@ -549,6 +552,14 @@ public class MainNetworkController extends BaseNetworkController
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
                 }
+            } catch (ParseException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log("Url: " + url);
+                }
+
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
