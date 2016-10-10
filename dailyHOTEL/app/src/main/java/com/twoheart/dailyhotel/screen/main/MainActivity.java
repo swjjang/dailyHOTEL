@@ -866,15 +866,16 @@ public class MainActivity extends BaseActivity implements Constants
                     });
 
                     // 헤택이 Off 되어있는 경우 On으로 수정
-                    if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == false//
+                    boolean isUserBenefitAlarm = DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm();
+                    if (isUserBenefitAlarm == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
                         mNetworkController.requestNoticeAgreement();
-                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(false, null);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(isUserBenefitAlarm, null);
                     } else
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
-                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(true, null);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(isUserBenefitAlarm, null);
                     }
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();
