@@ -360,10 +360,11 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 return false;
             }
 
-            if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
+
+            if (event.getRawX() >= (editText.getRight() - withDrawable))
             {
                 editText.setText(null);
-                return true;
             }
         }
 
