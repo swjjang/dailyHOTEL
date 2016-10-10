@@ -158,6 +158,7 @@
     <string name="actionbar_title_event_list_frag">이벤트</string>
     <string name="actionbar_title_edit_email">이메일 설정</string>
     <string name="actionbar_title_edit_name">이름 설정</string>
+    <string name="actionbar_title_edit_birthday">생일 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
     <string name="actionbar_title_coupon_list">할인쿠폰함</string>
@@ -435,9 +436,11 @@
     <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
     <string name="act_profile_input_contact">휴대폰 번호를 등록해주세요.</string>
     <string name="act_profile_input_email">이메일을 등록해주세요.</string>
+    <string name="act_profile_input_birthday">생일 정보를 입력해주세요.</string>
     <string name="label_confirm_phone">이메일 설정 완료</string>
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
     <string name="label_confirm_name">이름 설정 완료</string>
+    <string name="label_confirm_birthday">생일 설정 완료</string>
     <string name="label_confirm_password">비밀번호 설정 완료</string>
     <string name="label_confirm_profile">비밀번호 설정 완료</string>
     <string name="label_dont_verification">(인증필요)</string>

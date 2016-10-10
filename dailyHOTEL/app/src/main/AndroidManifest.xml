@@ -241,6 +241,12 @@
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
+            android:name=".screen.information.member.EditProfileBirthdayActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
             android:name=".screen.information.member.AddProfileSocialActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

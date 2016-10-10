@@ -1,10 +1,8 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -21,16 +19,17 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener, View.OnTouchListener, View.OnFocusChangeListener
+public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     private View mEmailView;
-    private EditText mEmailEditText;
+    private DailyEditText mEmailEditText;
     private String mEmail;
 
     @Override
@@ -45,13 +44,13 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         initToolbar();
 
         mEmailView = findViewById(R.id.emailView);
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
 
         final View forgotView = findViewById(R.id.btn_forgot_pwd);
         forgotView.setOnClickListener(this);
 
         mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        mEmailEditText.setOnTouchListener(this);
+        mEmailEditText.setDeleteButtonVisible(true);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
@@ -140,49 +139,12 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
-
-            if (event.getRawX() >= (editText.getRight() - withDrawable))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
-    }
-
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
         if (hasFocus == true)
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -191,8 +153,6 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 

@@ -1,12 +1,10 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -22,17 +20,18 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class EditProfilePhoneLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
+public class EditProfilePhoneLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
     private static final int VERIFICATION_NUMBER_LENGTH = 4;
 
     private View mCertificationLayout;
     private View mVerificationLayout, mConfirm, mCertificationNumberView;
     private View mPhoneView, mVerificationView;
-    private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
+    private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextView mGuideTextView;
     private TextWatcher mTextWatcher;
 
@@ -76,7 +75,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     private void initLayoutForm(View view)
     {
         mGuideTextView = (TextView) view.findViewById(R.id.guideTextView);
-        mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
+        mCountryEditText = (DailyEditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
@@ -89,9 +88,9 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         });
 
         mPhoneView = view.findViewById(R.id.phoneView);
-        mPhoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText.setDeleteButtonVisible(true);
         mPhoneEditText.setOnFocusChangeListener(this);
-        mPhoneEditText.setOnTouchListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -148,9 +147,9 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationLayout.setVisibility(View.INVISIBLE);
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
-        mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText.setDeleteButtonVisible(true);
         mVerificationEditText.setOnFocusChangeListener(this);
-        mVerificationEditText.setOnTouchListener(this);
 
         mVerificationEditText.addTextChangedListener(new TextWatcher()
         {
@@ -411,49 +410,12 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         }
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
-
-            if (event.getRawX() >= (editText.getRight() - withDrawable))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
-    }
-
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
         if (hasFocus == true)
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -462,8 +424,6 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 }

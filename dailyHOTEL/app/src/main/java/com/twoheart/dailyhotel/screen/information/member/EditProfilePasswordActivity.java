@@ -3,12 +3,10 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -23,6 +21,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -31,10 +30,10 @@ import org.json.JSONObject;
 import java.util.Collections;
 import java.util.Map;
 
-public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
+public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private View mPasswordView, mConfirmPasswordView;
-    private EditText mPasswordEditText, mConfirmPasswordEditText;
+    private DailyEditText mPasswordEditText, mConfirmPasswordEditText;
     private View mConfirmView;
 
     public static Intent newInstance(Context context)
@@ -73,14 +72,14 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     private void initLayout()
     {
         mPasswordView = findViewById(R.id.passwordView);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
-        mPasswordEditText.setOnTouchListener(this);
 
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
-        mConfirmPasswordEditText = (EditText) findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText = (DailyEditText) findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText.setDeleteButtonVisible(true);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
-        mConfirmPasswordEditText.setOnTouchListener(this);
         mConfirmPasswordEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -201,49 +200,12 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
-
-            if (event.getRawX() >= (editText.getRight() - withDrawable))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
-    }
-
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
         if (hasFocus == true)
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -252,8 +214,6 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 

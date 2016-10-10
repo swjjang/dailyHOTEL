@@ -102,7 +102,7 @@ public class SignupStep1Activity extends BaseActivity
 
         String signUpText = DailyPreference.getInstance(this).getRemoteConfigTextSignUpText01();
 
-        if(Util.isTextEmpty(signUpText) == false)
+        if (Util.isTextEmpty(signUpText) == false)
         {
             mSignupStep1Layout.signUpBalloonsTextView(signUpText);
         }

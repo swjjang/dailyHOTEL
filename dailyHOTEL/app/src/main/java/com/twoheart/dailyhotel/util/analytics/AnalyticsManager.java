@@ -546,6 +546,7 @@ public class AnalyticsManager
         public static final String MENU_REGISTRATION_PHONENUMBERVERIFICATION = "Menu_Registration_PhoneNumberVerification";
         public static final String MENU_SETPROFILE_EMAILACCOUNT = "Menu_SetProfileEmailAccount";
         public static final String MENU_SETPROFILE_NAME = "Menu_SetProfileName";
+        public static final String MENU_SETPROFILE_BIRTHDAY = "Menu_SetProfileBirthday";
         public static final String MENU_SETPROFILE_PASSWORD = "Menu_SetProfilePassword";
         public static final String MENU_SETPROFILE_PHONENUMBER = "Menu_SetProfilePhoneNumber";
         public static final String MENU_COUPON_BOX = "Menu_CouponBox";

@@ -2,11 +2,9 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -24,24 +22,25 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Calendar;
 
-public class AddProfileSocialLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
+public class AddProfileSocialLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mPhoneLayout, mEmailLayout, mNameLayout;
     private View mEmailView, mNameView, mBirthdayView, mRecommenderView;
-    private EditText mEmailEditText, mNameEditText, mBirthdayEditText, mRecommenderEditText;
+    private DailyEditText mEmailEditText, mNameEditText, mBirthdayEditText, mRecommenderEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
 
     private View mPhoneView;
-    private EditText mCountryEditText, mPhoneEditText;
+    private DailyEditText mCountryEditText, mPhoneEditText;
     private TextWatcher mTextWatcher;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -93,7 +92,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailLayout = view.findViewById(R.id.emailLayout);
         mNameLayout = view.findViewById(R.id.nameLayout);
 
-        mCountryEditText = (EditText) mPhoneLayout.findViewById(R.id.countryEditText);
+        mCountryEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
@@ -106,32 +105,33 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         });
 
         mPhoneView = mPhoneLayout.findViewById(R.id.phoneView);
-        mPhoneEditText = (EditText) mPhoneLayout.findViewById(R.id.phoneEditText);
+        mPhoneEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.phoneEditText);
+        mPhoneEditText.setDeleteButtonVisible(true);
         mPhoneEditText.setOnFocusChangeListener(this);
-        mPhoneEditText.setOnTouchListener(this);
 
         View confirmView = view.findViewById(R.id.confirmView);
         confirmView.setOnClickListener(this);
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
-        mEmailEditText = (EditText) mEmailLayout.findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyEditText) mEmailLayout.findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(true);
         mEmailEditText.setOnFocusChangeListener(this);
-        mEmailEditText.setOnTouchListener(this);
 
         mNameView = mNameLayout.findViewById(R.id.nameView);
-        mNameEditText = (EditText) mNameLayout.findViewById(R.id.nameEditText);
+        mNameEditText = (DailyEditText) mNameLayout.findViewById(R.id.nameEditText);
+        mNameEditText.setDeleteButtonVisible(true);
         mNameEditText.setOnFocusChangeListener(this);
-        mNameEditText.setOnTouchListener(this);
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
-        mBirthdayEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText.setDeleteButtonVisible(true);
         mBirthdayEditText.setOnFocusChangeListener(this);
-        mBirthdayEditText.setOnTouchListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
-        mRecommenderEditText = (EditText) view.findViewById(R.id.recommenderEditText);
+        mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
+        mRecommenderEditText.setDeleteButtonVisible(true);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.
@@ -321,41 +321,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         }
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
-
-            if (event.getRawX() >= (editText.getRight() - withDrawable))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
-    }
-
     public void setCountryCode(String countryCode)
     {
         if (Util.isTextEmpty(countryCode) == true)
@@ -445,8 +410,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -455,8 +418,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 }

@@ -1,9 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -13,16 +11,17 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 /**
  * Created by android_sam on 2016. 9. 19..
  */
-public class RegisterCouponLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
+public class RegisterCouponLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
 {
     private View mTitleView;
     private View mCompleteView;
-    private EditText mCouponEditText;
+    private DailyEditText mCouponEditText;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -41,8 +40,8 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
 
         mTitleView = view.findViewById(R.id.couponTitleView);
         mCompleteView = view.findViewById(R.id.registerCouponCompleteView);
-        mCouponEditText = (EditText) view.findViewById(R.id.couponEditText);
-        mCouponEditText.setOnTouchListener(this);
+        mCouponEditText = (DailyEditText) view.findViewById(R.id.couponEditText);
+        mCouponEditText.setDeleteButtonVisible(true);
         mCouponEditText.setOnFocusChangeListener(this);
 
         mCouponEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -104,41 +103,6 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
-
-            if (event.getRawX() >= (editText.getRight() - withDrawable))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
-    }
-
     private void showKeyboard(View view)
     {
         if (view == null)
@@ -168,8 +132,6 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -178,8 +140,6 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 }

@@ -2,10 +2,8 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -22,17 +20,18 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Calendar;
 
-public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
+public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
-    private EditText mEmailEditText, mNameEditText, mPasswordEditText;
-    private EditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
+    private DailyEditText mEmailEditText, mNameEditText, mPasswordEditText;
+    private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
     private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
@@ -85,14 +84,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
 
         mEmailView = view.findViewById(R.id.emailView);
-        mEmailEditText = (EditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyEditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(true);
         mEmailEditText.setOnFocusChangeListener(this);
-        mEmailEditText.setOnTouchListener(this);
 
         mNameView = view.findViewById(R.id.nameView);
-        mNameEditText = (EditText) view.findViewById(R.id.nameEditText);
+        mNameEditText = (DailyEditText) view.findViewById(R.id.nameEditText);
+        mNameEditText.setDeleteButtonVisible(true);
         mNameEditText.setOnFocusChangeListener(this);
-        mNameEditText.setOnTouchListener(this);
 
         mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -113,26 +112,26 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         });
 
         mPasswordView = view.findViewById(R.id.passwordView);
-        mPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        mPasswordEditText = (DailyEditText) view.findViewById(R.id.passwordEditText);
+        mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
-        mPasswordEditText.setOnTouchListener(this);
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
-        mConfirmPasswordEditText = (EditText) view.findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText.setDeleteButtonVisible(true);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
-        mConfirmPasswordEditText.setOnTouchListener(this);
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
-        mBirthdayEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText.setDeleteButtonVisible(true);
         mBirthdayEditText.setOnFocusChangeListener(this);
-        mBirthdayEditText.setOnTouchListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
-        mRecommenderEditText = (EditText) view.findViewById(R.id.recommenderEditText);
+        mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
+        mRecommenderEditText.setDeleteButtonVisible(true);
         mRecommenderEditText.setOnFocusChangeListener(this);
-        mRecommenderEditText.setOnTouchListener(this);
 
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(mContext);
@@ -335,49 +334,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         }
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
-
-            if (event.getRawX() >= (editText.getRight() - withDrawable))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
-    }
-
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
         if (hasFocus == true)
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -386,8 +348,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 }

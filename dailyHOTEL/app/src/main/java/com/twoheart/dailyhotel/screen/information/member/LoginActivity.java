@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -45,6 +43,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -56,10 +55,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
-    private EditText mEmailEditText, mPasswordEditText;
+    private DailyEditText mEmailEditText, mPasswordEditText;
     private TextView mLoginView;
     private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
@@ -145,14 +144,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initEditTextsLayout()
     {
         mEmailView = findViewById(R.id.emailView);
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(true);
         mEmailEditText.setOnFocusChangeListener(this);
-        mEmailEditText.setOnTouchListener(this);
 
         mPasswordView = findViewById(R.id.passwordView);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
-        mPasswordEditText.setOnTouchListener(this);
 
         mEmailEditText.requestFocus();
 
@@ -350,39 +349,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 setFocusLabelView(mPasswordView, mPasswordEditText, hasFocus);
                 break;
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if (v instanceof EditText == false)
-        {
-            return false;
-        }
-
-        EditText editText = (EditText) v;
-
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            Drawable[] drawables = editText.getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                return false;
-            }
-
-            if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
-            {
-                editText.setText(null);
-            }
-        }
-
-        return false;
     }
 
     private void processSignin()
@@ -638,8 +604,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             labelView.setActivated(false);
             labelView.setSelected(true);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
             if (editText.length() > 0)
@@ -648,8 +612,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
 
             labelView.setSelected(false);
-
-            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 

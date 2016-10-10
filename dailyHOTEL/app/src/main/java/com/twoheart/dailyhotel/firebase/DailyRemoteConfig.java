@@ -257,7 +257,7 @@ public class DailyRemoteConfig
 
             String version = jsonObject.getString("version");
 
-            if(Util.isTextEmpty(version) == false //
+            if (Util.isTextEmpty(version) == false //
                 && version.equalsIgnoreCase(DailyPreference.getInstance(context).getRemoteConfigTextVersion()) == false)
             {
                 String loginText01 = jsonObject.getString("loginText01");
