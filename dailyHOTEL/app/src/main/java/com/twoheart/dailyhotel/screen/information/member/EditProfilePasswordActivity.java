@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -32,7 +33,7 @@ import java.util.Map;
 public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private View mPasswordView, mConfirmPasswordView;
-    private EditText mPasswordEditText, mConfirmPasswordEditText;
+    private DailyEditText mPasswordEditText, mConfirmPasswordEditText;
     private View mConfirmView;
 
     public static Intent newInstance(Context context)
@@ -71,11 +72,13 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     private void initLayout()
     {
         mPasswordView = findViewById(R.id.passwordView);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
 
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
-        mConfirmPasswordEditText = (EditText) findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText = (DailyEditText) findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText.setDeleteButtonVisible(true);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
         mConfirmPasswordEditText.addTextChangedListener(new TextWatcher()
         {
@@ -177,29 +180,16 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
-        {
-            return;
-        }
-
-        resetFocus();
-
         switch (v.getId())
         {
             case R.id.passwordEditText:
-                mPasswordView.setSelected(true);
+                setFocusLabelView(mPasswordView, mPasswordEditText, hasFocus);
                 break;
 
             case R.id.confirmPasswordEditText:
-                mConfirmPasswordView.setSelected(true);
+                setFocusLabelView(mConfirmPasswordView, mConfirmPasswordEditText, hasFocus);
                 break;
         }
-    }
-
-    private void resetFocus()
-    {
-        mPasswordView.setSelected(false);
-        mConfirmPasswordView.setSelected(false);
     }
 
     @Override
@@ -208,6 +198,23 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

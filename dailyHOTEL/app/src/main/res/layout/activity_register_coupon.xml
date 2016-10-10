@@ -17,7 +17,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="16dp"
         android:text="@string/register_coupon_title"
-        android:textColor="@color/dh_theme_color"
+        android:textColor="@color/selector_label_textcolor"
         android:textSize="12dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyEditText
@@ -37,16 +37,6 @@
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"
         android:theme="@style/EditTextTheme"/>
-
-    <ImageView
-        android:id="@+id/deleteView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/couponEditText"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="13dp"
-        android:padding="2dp"
-        app:srcCompat="@drawable/search_ic_01_delete"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/registerCouponCompleteView"

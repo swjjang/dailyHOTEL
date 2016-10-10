@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/label_country"
-                    android:textColor="@drawable/selector_label_textcolor"
+                    android:textColor="@color/selector_label_textcolor"
                     android:textSize="12dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyEditText
@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/label_phone_number_special_except"
-                    android:textColor="@drawable/selector_label_textcolor"
+                    android:textColor="@color/selector_label_textcolor"
                     android:textSize="12dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyEditText
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_certification_number_ndigit"
-                android:textColor="@drawable/selector_label_textcolor"
+                android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText

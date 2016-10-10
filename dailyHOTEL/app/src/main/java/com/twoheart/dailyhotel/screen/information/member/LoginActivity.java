@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -57,7 +58,7 @@ import java.util.Map;
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
-    private EditText mEmailEditText, mPasswordEditText;
+    private DailyEditText mEmailEditText, mPasswordEditText;
     private TextView mLoginView;
     private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
@@ -143,11 +144,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initEditTextsLayout()
     {
         mEmailView = findViewById(R.id.emailView);
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(true);
         mEmailEditText.setOnFocusChangeListener(this);
 
         mPasswordView = findViewById(R.id.passwordView);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
 
         mEmailEditText.requestFocus();
@@ -172,6 +175,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initButtonsLayout()
     {
         mLoginView = (TextView) findViewById(R.id.signinView);
+
+        String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
+
+        if (Util.isTextEmpty(signupMessage) == false)
+        {
+            TextView signupMessageView = (TextView) findViewById(R.id.signupMessageView);
+            signupMessageView.setText(signupMessage);
+        }
 
         mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
@@ -328,32 +339,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
-        {
-            return;
-        }
-
-        setFocusTextView(v.getId());
-    }
-
-    private void resetFocus()
-    {
-        mEmailView.setSelected(false);
-        mPasswordView.setSelected(false);
-    }
-
-    private void setFocusTextView(int id)
-    {
-        resetFocus();
-
-        switch (id)
+        switch (v.getId())
         {
             case R.id.emailEditText:
-                mEmailView.setSelected(true);
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
                 break;
 
             case R.id.passwordEditText:
-                mPasswordView.setSelected(true);
+                setFocusLabelView(mPasswordView, mPasswordEditText, hasFocus);
                 break;
         }
     }
@@ -602,6 +595,23 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
             setResult(RESULT_OK);
             finish();
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
         }
     }
 

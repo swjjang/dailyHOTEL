@@ -19,15 +19,17 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener
+public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
-    private EditText mEmailEditText;
+    private View mEmailView;
+    private DailyEditText mEmailEditText;
     private String mEmail;
 
     @Override
@@ -41,15 +43,15 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         initToolbar();
 
-        View emailView = findViewById(R.id.emailView);
-        emailView.setSelected(true);
-
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailView = findViewById(R.id.emailView);
+        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
 
         final View forgotView = findViewById(R.id.btn_forgot_pwd);
         forgotView.setOnClickListener(this);
 
         mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
             @Override
@@ -124,6 +126,34 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        switch (v.getId())
+        {
+            case R.id.emailEditText:
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
+                break;
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
