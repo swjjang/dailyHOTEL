@@ -675,6 +675,11 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        if (Util.isTextEmpty(isShowOriginalPrice) == false)
+        {
+            isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
+        }
+
         event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
 
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
@@ -819,7 +824,7 @@ public class AdjustManager extends BaseAnalyticsManager
             event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
-//        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        //        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
         String lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
         event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
 
@@ -857,6 +862,10 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(Key.RATING, rating);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        if (Util.isTextEmpty(isShowOriginalPrice) == false)
+        {
+            isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
+        }
         event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
 
         String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
