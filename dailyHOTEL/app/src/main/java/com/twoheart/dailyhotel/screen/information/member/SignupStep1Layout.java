@@ -2,9 +2,13 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,11 +18,15 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
+import java.util.Calendar;
+
+public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
@@ -32,9 +40,10 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onValidation(String email, String name, String password1, String confirmPassword, String recommender);
+        void onValidation(String email, String name, String password1, String confirmPassword, String recommender, String birthday);
 
         void showTermOfService();
+
 
         void showTermOfPrivacy();
 
@@ -70,42 +79,58 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = (EditText) view.findViewById(R.id.emailEditText);
         mEmailEditText.setOnFocusChangeListener(this);
+        mEmailEditText.setOnTouchListener(this);
 
         mNameView = view.findViewById(R.id.nameView);
         mNameEditText = (EditText) view.findViewById(R.id.nameEditText);
         mNameEditText.setOnFocusChangeListener(this);
+        mNameEditText.setOnTouchListener(this);
 
-        mNameView.setNextFocusDownId(R.id.fakeBirthdayView);
-        mNameView.setNextFocusForwardId(R.id.fakeBirthdayView);
+        mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    mNameEditText.requestFocus();
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(mNameEditText.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mPasswordView = view.findViewById(R.id.passwordView);
         mPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         mPasswordEditText.setOnFocusChangeListener(this);
+        mPasswordEditText.setOnTouchListener(this);
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (EditText) view.findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
+        mConfirmPasswordEditText.setOnTouchListener(this);
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (EditText) view.findViewById(R.id.birthdayEditText);
         mBirthdayEditText.setOnFocusChangeListener(this);
-
-        mBirthdayEditText.setFocusable(false);
-
-        View fakeBirthdayView = view.findViewById(R.id.fakeBirthdayView);
-        fakeBirthdayView.setFocusable(true);
-        fakeBirthdayView.setOnFocusChangeListener(this);
-        fakeBirthdayView.setOnClickListener(this);
+        mBirthdayEditText.setOnTouchListener(this);
+        mBirthdayEditText.setKeyListener(null);
+        mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (EditText) view.findViewById(R.id.recommenderEditText);
         mRecommenderEditText.setOnFocusChangeListener(this);
+        mRecommenderEditText.setOnTouchListener(this);
 
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(mContext);
@@ -162,9 +187,13 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         return mBenefitCheckBox.isChecked();
     }
 
-    public void setBirthdayText(String text)
+    public void setBirthdayText(int year, int month, int dayOfMonth)
     {
-        mBirthdayEditText.setText(text);
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.set(year, month, dayOfMonth, 0, 0);
+
+        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setTag(calendar);
     }
 
     public void setRecommenderText(String recommender)
@@ -185,8 +214,23 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         String passwordText = mPasswordEditText.getText().toString();
         String confirmPasswordText = mConfirmPasswordEditText.getText().toString();
         String recommender = mRecommenderEditText.getText().toString().trim();
+        // 생일
+        String birthday = mBirthdayEditText.getText().toString().trim();
 
-        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender);
+        if (Util.isTextEmpty(birthday) == false)
+        {
+            Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+            if (calendar == null)
+            {
+                birthday = null;
+            } else
+            {
+                birthday = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            }
+        }
+
+        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender, birthday);
     }
 
     @Override
@@ -236,14 +280,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 break;
             }
 
-            case R.id.fakeBirthdayView:
-                if (mBirthdayView.isSelected() == true)
-                {
-                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
-                } else
-                {
-                    onFocusChange(v, true);
-                }
+            case R.id.birthdayEditText:
+                onFocusChange(mBirthdayEditText, true);
                 break;
         }
     }
@@ -251,12 +289,71 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
+        switch (v.getId())
         {
-            return;
+            case R.id.emailEditText:
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
+                break;
+
+            case R.id.nameEditText:
+                setFocusLabelView(mNameView, mNameEditText, hasFocus);
+                break;
+
+            case R.id.passwordEditText:
+                setFocusLabelView(mPasswordView, mPasswordEditText, hasFocus);
+                break;
+
+            case R.id.confirmPasswordEditText:
+                setFocusLabelView(mConfirmPasswordView, mConfirmPasswordEditText, hasFocus);
+                break;
+
+            case R.id.birthdayEditText:
+                setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
+
+                if (hasFocus == true)
+                {
+                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                }
+                break;
+
+            case R.id.recommenderEditText:
+                setFocusLabelView(mRecommenderView, mRecommenderEditText, hasFocus);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        if (v instanceof EditText == false)
+        {
+            return false;
         }
 
-        setFocusTextView(v.getId());
+        EditText editText = (EditText) v;
+
+        final int DRAWABLE_LEFT = 0;
+        final int DRAWABLE_TOP = 1;
+        final int DRAWABLE_RIGHT = 2;
+        final int DRAWABLE_BOTTOM = 3;
+
+        if (event.getAction() == MotionEvent.ACTION_UP)
+        {
+            Drawable[] drawables = editText.getCompoundDrawables();
+
+            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            {
+                return false;
+            }
+
+            if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+            {
+                editText.setText(null);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void resetFocus()
@@ -267,40 +364,26 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mConfirmPasswordView.setSelected(false);
         mRecommenderView.setSelected(false);
         mBirthdayView.setSelected(false);
-        mBirthdayEditText.setSelected(false);
     }
 
-    private void setFocusTextView(int id)
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
-        resetFocus();
-
-        switch (id)
+        if (hasFocus == true)
         {
-            case R.id.emailEditText:
-                mEmailView.setSelected(true);
-                break;
+            labelView.setActivated(false);
+            labelView.setSelected(true);
 
-            case R.id.nameEditText:
-                mNameView.setSelected(true);
-                break;
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
 
-            case R.id.passwordEditText:
-                mPasswordView.setSelected(true);
-                break;
+            labelView.setSelected(false);
 
-            case R.id.confirmPasswordEditText:
-                mConfirmPasswordView.setSelected(true);
-                break;
-
-            case R.id.fakeBirthdayView:
-                mBirthdayEditText.setSelected(true);
-                mBirthdayView.setSelected(true);
-                ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
-                break;
-
-            case R.id.recommenderEditText:
-                mRecommenderView.setSelected(true);
-                break;
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 }

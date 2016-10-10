@@ -1,14 +1,15 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -167,7 +168,7 @@ public class SignupStep1Activity extends BaseActivity
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()
     {
         @Override
-        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender)
+        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday)
         {
             if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -227,6 +228,11 @@ public class SignupStep1Activity extends BaseActivity
             if (Util.isTextEmpty(recommender) == false)
             {
                 mSignupParams.put("recommender", recommender);
+            }
+
+            if (Util.isTextEmpty(birthday) == false)
+            {
+                mSignupParams.put("birthday", birthday);
             }
 
             mSignupParams.put("market_type", RELEASE_STORE.getName());
@@ -314,11 +320,21 @@ public class SignupStep1Activity extends BaseActivity
                         dialog.dismiss();
                     }
 
-                    mSignupStep1Layout.setBirthdayText(String.format("%4d.%2d.%2d", datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
+                    mSignupStep1Layout.setBirthdayText(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
                 }
             });
 
             dialog.setCancelable(true);
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                }
+            });
+
+            // 생일 화면 부터는 키패드를 나오지 않게 한다.
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
             try
             {

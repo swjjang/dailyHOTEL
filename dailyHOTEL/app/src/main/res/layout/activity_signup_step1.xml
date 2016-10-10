@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -39,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_email"
-                android:textColor="@drawable/selector_label_textcolor"
+                android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
@@ -50,8 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/selector_edittext_background"
+                android:drawablePadding="2dp"
                 android:hint="@string/label_necessary"
                 android:inputType="textEmailAddress"
                 android:maxLength="50"
@@ -59,7 +61,8 @@
                 android:textColor="@color/default_text_c323232"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
-                android:theme="@style/EditTextTheme"/>
+                android:theme="@style/EditTextTheme"
+                app:drawableCompatRight="@drawable/search_ic_01_delete"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,7 +85,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@string/label_password_4over"
-                        android:textColor="@drawable/selector_label_textcolor"
+                        android:textColor="@color/selector_label_textcolor"
                         android:textSize="12dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyEditText
@@ -121,7 +124,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@string/label_confirm_password_4over"
-                        android:textColor="@drawable/selector_label_textcolor"
+                        android:textColor="@color/selector_label_textcolor"
                         android:textSize="12dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyEditText
@@ -150,7 +153,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_name"
-                android:textColor="@drawable/selector_label_textcolor"
+                android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
@@ -165,6 +168,7 @@
                 android:inputType="text"
                 android:maxLength="20"
                 android:singleLine="true"
+                android:imeOptions="actionDone"
                 android:textColor="@color/default_text_c323232"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
@@ -178,37 +182,26 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_birthday"
-                android:textColor="@drawable/selector_label_textcolor"
+                android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
-            <FrameLayout
-                android:id="@+id/birthdayLayout"
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/birthdayEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.twoheart.dailyhotel.widget.DailyEditText
-                    android:id="@+id/birthdayEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/selector_edittext_background"
-                    android:cursorVisible="false"
-                    android:hint="@string/label_option_benefit"
-                    android:inputType="text"
-                    android:maxLength="20"
-                    android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
-                    android:textColorHint="@color/search_hint_text"
-                    android:textSize="16dp"
-                    android:theme="@style/EditTextTheme"/>
-
-                <View
-                    android:id="@+id/fakeBirthdayView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </FrameLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/selector_edittext_background"
+                android:cursorVisible="false"
+                android:hint="@string/label_option_benefit"
+                android:inputType="text"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/search_hint_text"
+                android:textSize="16dp"
+                android:theme="@style/EditTextTheme"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/recommenderView"
@@ -218,7 +211,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_recommender_code"
-                android:textColor="@drawable/selector_label_textcolor"
+                android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
