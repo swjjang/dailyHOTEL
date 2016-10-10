@@ -259,6 +259,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mSelectedSimpleCardLayout.setVisibility(View.GONE);
 
         mEmptySimpleCardLayout.setOnClickListener(this);
+        mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
     }
@@ -744,6 +745,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
             case R.id.emptySimpleCardLayout:
                 ((OnEventListener) mOnEventListener).startCreditCardManager(true);
+                break;
+
+            case R.id.selectedSimpleCardLayout:
+                ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
                 break;
         }
     }
