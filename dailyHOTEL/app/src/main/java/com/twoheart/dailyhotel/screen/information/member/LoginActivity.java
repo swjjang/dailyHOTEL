@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -54,7 +56,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
 {
     public CallbackManager mCallbackManager;
     private EditText mEmailEditText, mPasswordEditText;
@@ -145,10 +147,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
         mEmailEditText.setOnFocusChangeListener(this);
+        mEmailEditText.setOnTouchListener(this);
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
         mPasswordEditText.setOnFocusChangeListener(this);
+        mPasswordEditText.setOnTouchListener(this);
 
         mEmailEditText.requestFocus();
 
@@ -172,6 +176,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initButtonsLayout()
     {
         mLoginView = (TextView) findViewById(R.id.signinView);
+
+        String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
+
+        if (Util.isTextEmpty(signupMessage) == false)
+        {
+            TextView signupMessageView = (TextView) findViewById(R.id.signupMessageView);
+            signupMessageView.setText(signupMessage);
+        }
 
         mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
@@ -328,34 +340,49 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
-        {
-            return;
-        }
-
-        setFocusTextView(v.getId());
-    }
-
-    private void resetFocus()
-    {
-        mEmailView.setSelected(false);
-        mPasswordView.setSelected(false);
-    }
-
-    private void setFocusTextView(int id)
-    {
-        resetFocus();
-
-        switch (id)
+        switch (v.getId())
         {
             case R.id.emailEditText:
-                mEmailView.setSelected(true);
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
                 break;
 
             case R.id.passwordEditText:
-                mPasswordView.setSelected(true);
+                setFocusLabelView(mPasswordView, mPasswordEditText, hasFocus);
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        if (v instanceof EditText == false)
+        {
+            return false;
+        }
+
+        EditText editText = (EditText) v;
+
+        final int DRAWABLE_LEFT = 0;
+        final int DRAWABLE_TOP = 1;
+        final int DRAWABLE_RIGHT = 2;
+        final int DRAWABLE_BOTTOM = 3;
+
+        if (event.getAction() == MotionEvent.ACTION_UP)
+        {
+            Drawable[] drawables = editText.getCompoundDrawables();
+
+            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            {
+                return false;
+            }
+
+            if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+            {
+                editText.setText(null);
+            }
+        }
+
+        return false;
     }
 
     private void processSignin()
@@ -602,6 +629,27 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
             setResult(RESULT_OK);
             finish();
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 
