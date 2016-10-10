@@ -3,10 +3,12 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -29,12 +31,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditProfileEmailActivity extends BaseActivity implements OnClickListener
+public class EditProfileEmailActivity extends BaseActivity implements OnClickListener, View.OnTouchListener, View.OnFocusChangeListener
 {
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
 
     private EditText mEmailEditText;
-    private View mConfirmView;
+    private View mConfirmView, mEmailView;
     private String mUserIndex;
 
     public static Intent newInstance(Context context, String userIndex)
@@ -77,7 +79,11 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
     private void initLayout()
     {
+        mEmailView = findViewById(R.id.emailView);
+
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailEditText.setOnTouchListener(this);
+        mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -181,6 +187,73 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        switch (v.getId())
+        {
+            case R.id.emailEditText:
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        if (v instanceof EditText == false)
+        {
+            return false;
+        }
+
+        EditText editText = (EditText) v;
+
+        final int DRAWABLE_LEFT = 0;
+        final int DRAWABLE_TOP = 1;
+        final int DRAWABLE_RIGHT = 2;
+        final int DRAWABLE_BOTTOM = 3;
+
+        if (event.getAction() == MotionEvent.ACTION_UP)
+        {
+            Drawable[] drawables = editText.getCompoundDrawables();
+
+            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            {
+                return false;
+            }
+
+            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
+
+            if (event.getRawX() >= (editText.getRight() - withDrawable))
+            {
+                editText.setText(null);
+            }
+        }
+
+        return false;
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

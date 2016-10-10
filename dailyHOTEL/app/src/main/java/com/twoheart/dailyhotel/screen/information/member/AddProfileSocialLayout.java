@@ -2,9 +2,11 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -16,22 +18,27 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class AddProfileSocialLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
+import java.util.Calendar;
+
+public class AddProfileSocialLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener, View.OnTouchListener
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mPhoneLayout, mEmailLayout, mNameLayout;
-    private View mEmailView, mNameView, mRecommenderView;
-    private EditText mEmailEditText, mNameEditText, mRecommenderEditText;
+    private View mEmailView, mNameView, mBirthdayView, mRecommenderView;
+    private EditText mEmailEditText, mNameEditText, mBirthdayEditText, mRecommenderEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
+    private CheckBox mBenefitCheckBox;
 
     private View mPhoneView;
     private EditText mCountryEditText, mPhoneEditText;
@@ -45,7 +52,9 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showCountryCodeList();
 
-        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender);
+        void showBirthdayDatePicker();
+
+        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday);
     }
 
     public AddProfileSocialLayout(Context context, OnEventListener mOnEventListener)
@@ -99,6 +108,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mPhoneView = mPhoneLayout.findViewById(R.id.phoneView);
         mPhoneEditText = (EditText) mPhoneLayout.findViewById(R.id.phoneEditText);
         mPhoneEditText.setOnFocusChangeListener(this);
+        mPhoneEditText.setOnTouchListener(this);
 
         View confirmView = view.findViewById(R.id.confirmView);
         confirmView.setOnClickListener(this);
@@ -106,10 +116,19 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
         mEmailEditText = (EditText) mEmailLayout.findViewById(R.id.emailEditText);
         mEmailEditText.setOnFocusChangeListener(this);
+        mEmailEditText.setOnTouchListener(this);
 
         mNameView = mNameLayout.findViewById(R.id.nameView);
         mNameEditText = (EditText) mNameLayout.findViewById(R.id.nameEditText);
         mNameEditText.setOnFocusChangeListener(this);
+        mNameEditText.setOnTouchListener(this);
+
+        mBirthdayView = view.findViewById(R.id.birthdayView);
+        mBirthdayEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText.setOnFocusChangeListener(this);
+        mBirthdayEditText.setOnTouchListener(this);
+        mBirthdayEditText.setKeyListener(null);
+        mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (EditText) view.findViewById(R.id.recommenderEditText);
@@ -134,10 +153,20 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
+        mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
         mAllAgreementCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
+        mBenefitCheckBox.setOnClickListener(this);
+
+        if (DailyPreference.getInstance(mContext).isUserBenefitAlarm() == true)
+        {
+            mBenefitCheckBox.setVisibility(View.GONE);
+        } else
+        {
+            mBenefitCheckBox.setVisibility(View.VISIBLE);
+        }
 
         TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -159,6 +188,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 String email = null;
                 String name = null;
                 String recommender = mRecommenderEditText.getText().toString().trim();
+                String birthday = mBirthdayEditText.getText().toString().trim();
 
                 if (mPhoneLayout.getVisibility() == View.VISIBLE)
                 {
@@ -191,7 +221,20 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     name = mNameEditText.getText().toString().trim();
                 }
 
-                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name, recommender);
+                if (Util.isTextEmpty(birthday) == false)
+                {
+                    Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+                    if (calendar == null)
+                    {
+                        birthday = null;
+                    } else
+                    {
+                        birthday = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+                    }
+                }
+
+                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name, recommender, birthday);
                 break;
             }
 
@@ -212,21 +255,39 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
+
+                if (mBenefitCheckBox.getVisibility() == View.VISIBLE)
+                {
+                    mBenefitCheckBox.setChecked(isChecked);
+                }
                 break;
             }
 
             case R.id.personalCheckBox:
             case R.id.termsCheckBox:
+            case R.id.benefitCheckBox:
             {
                 InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
 
-                if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
+                if (mBenefitCheckBox.getVisibility() == View.VISIBLE)
                 {
-                    mAllAgreementCheckBox.setChecked(true);
+                    if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
+                    {
+                        mAllAgreementCheckBox.setChecked(true);
+                    } else
+                    {
+                        mAllAgreementCheckBox.setChecked(false);
+                    }
                 } else
                 {
-                    mAllAgreementCheckBox.setChecked(false);
+                    if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
+                    {
+                        mAllAgreementCheckBox.setChecked(true);
+                    } else
+                    {
+                        mAllAgreementCheckBox.setChecked(false);
+                    }
                 }
                 break;
             }
@@ -236,12 +297,63 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
+        switch (v.getId())
         {
-            return;
+            case R.id.phoneEditText:
+                setFocusLabelView(mPhoneView, mPhoneEditText, hasFocus);
+                break;
+
+            case R.id.emailEditText:
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
+                break;
+
+            case R.id.nameEditText:
+                setFocusLabelView(mNameView, mNameEditText, hasFocus);
+                break;
+
+            case R.id.birthdayEditText:
+                setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
+                break;
+
+            case R.id.recommenderEditText:
+                setFocusLabelView(mRecommenderView, mRecommenderEditText, hasFocus);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        if (v instanceof EditText == false)
+        {
+            return false;
         }
 
-        setFocusTextView(v.getId());
+        EditText editText = (EditText) v;
+
+        final int DRAWABLE_LEFT = 0;
+        final int DRAWABLE_TOP = 1;
+        final int DRAWABLE_RIGHT = 2;
+        final int DRAWABLE_BOTTOM = 3;
+
+        if (event.getAction() == MotionEvent.ACTION_UP)
+        {
+            Drawable[] drawables = editText.getCompoundDrawables();
+
+            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            {
+                return false;
+            }
+
+            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + editText.getCompoundDrawablePadding();
+
+            if (event.getRawX() >= (editText.getRight() - withDrawable))
+            {
+                editText.setText(null);
+            }
+        }
+
+        return false;
     }
 
     public void setCountryCode(String countryCode)
@@ -318,35 +430,33 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mNameLayout.setVisibility(View.GONE);
     }
 
-    private void resetFocus()
+    public void setBirthdayText(int year, int month, int dayOfMonth)
     {
-        mPhoneView.setSelected(false);
-        mEmailView.setSelected(false);
-        mNameView.setSelected(false);
-        mRecommenderView.setSelected(false);
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.set(year, month, dayOfMonth, 0, 0);
+
+        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setTag(calendar);
     }
 
-    private void setFocusTextView(int id)
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
     {
-        resetFocus();
-
-        switch (id)
+        if (hasFocus == true)
         {
-            case R.id.phoneEditText:
-                mPhoneView.setSelected(true);
-                break;
+            labelView.setActivated(false);
+            labelView.setSelected(true);
 
-            case R.id.emailEditText:
-                mEmailView.setSelected(true);
-                break;
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
 
-            case R.id.nameEditText:
-                mNameView.setSelected(true);
-                break;
+            labelView.setSelected(false);
 
-            case R.id.recommenderEditText:
-                mRecommenderView.setSelected(true);
-                break;
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 }

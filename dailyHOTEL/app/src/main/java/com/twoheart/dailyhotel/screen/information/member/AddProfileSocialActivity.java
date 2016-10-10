@@ -1,8 +1,17 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -11,6 +20,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -81,13 +91,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hideEmailLayout();
         }
 
-        if (Util.isTextEmpty(mCustomer.getName()) == true)
-        {
-            mAddProfileSocialLayout.showNameLayout();
-        } else
-        {
-            mAddProfileSocialLayout.hideNameLayout();
-        }
+        mAddProfileSocialLayout.showNameLayout();
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
     }
@@ -172,7 +176,89 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender)
+        public void showBirthdayDatePicker()
+        {
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
+
+            final Dialog dialog = new Dialog(AddProfileSocialActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.setCanceledOnTouchOutside(false);
+
+            final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+
+            datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+            {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+                {
+
+                }
+            });
+
+            // 상단
+            TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+            titleTextView.setVisibility(View.VISIBLE);
+            titleTextView.setText("생일 선택");
+
+            // 버튼
+            View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+            View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+            negativeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            positiveTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+
+                    mAddProfileSocialLayout.setBirthdayText(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                }
+            });
+
+            dialog.setCancelable(true);
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                }
+            });
+
+            // 생일 화면 부터는 키패드를 나오지 않게 한다.
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+            try
+            {
+                dialog.setContentView(dialogView);
+                dialog.show();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        @Override
+        public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday)
         {
             // 전화번호가 없거나 잘못 된경우
             if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
@@ -236,7 +322,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 return;
             }
 
-            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender);
+            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender, birthday);
         }
 
         @Override

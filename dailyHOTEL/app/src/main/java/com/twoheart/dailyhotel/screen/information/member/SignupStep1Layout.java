@@ -45,7 +45,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         void showTermOfService();
 
-
         void showTermOfPrivacy();
 
         void showBirthdayDatePicker();

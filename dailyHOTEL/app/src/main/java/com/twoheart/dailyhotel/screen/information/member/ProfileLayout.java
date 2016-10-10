@@ -147,7 +147,13 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 이름
-        mNameTextView.setText(name);
+        if (Util.isTextEmpty(name) == true)
+        {
+            mNameTextView.setText(null);
+        } else
+        {
+            mNameTextView.setText(name);
+        }
 
         // 휴대폰 번호
         mPhoneTextView.setText(phone);
