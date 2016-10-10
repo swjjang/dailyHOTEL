@@ -8,17 +8,20 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -297,6 +300,13 @@ public class CouponListActivity extends BaseActivity
 
                 AnalyticsManager.getInstance(CouponListActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
                     , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "CouponBox-" + coupon.title, paramsMap);
+            } catch (ParseException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log("Coupon List::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                }
+                ExLog.d(e.toString());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

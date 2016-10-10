@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
+
 public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
@@ -89,6 +91,14 @@ public class ProfileNetworkController extends BaseNetworkController
                 {
                     mOnNetworkControllerListener.onError(null);
                 }
+            } catch (ParseException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log("Url: " + url);
+                }
+
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

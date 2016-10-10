@@ -549,6 +549,14 @@ public class MainNetworkController extends BaseNetworkController
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
                 }
+//            } catch (ParseException e)
+//            {
+//                if (Constants.DEBUG == false)
+//                {
+//                    Crashlytics.log("Url: " + url);
+//                }
+//
+//                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
