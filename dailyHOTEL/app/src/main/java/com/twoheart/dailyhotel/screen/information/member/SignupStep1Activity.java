@@ -100,6 +100,13 @@ public class SignupStep1Activity extends BaseActivity
             mSignupStep1Layout.setRecommenderText(recommender);
         }
 
+        String signUpText = DailyPreference.getInstance(this).getRemoteConfigTextSignUpText01();
+
+        if(Util.isTextEmpty(signUpText) == false)
+        {
+            mSignupStep1Layout.signUpBalloonsTextView(signUpText);
+        }
+
         //        Intent intentPermission = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
         //        startActivityForResult(intentPermission, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }

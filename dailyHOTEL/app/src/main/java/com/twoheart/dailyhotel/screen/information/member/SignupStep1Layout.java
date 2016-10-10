@@ -33,6 +33,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
     private EditText mEmailEditText, mNameEditText, mPasswordEditText;
     private EditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
+    private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
@@ -81,6 +82,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     {
         final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
 
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = (EditText) view.findViewById(R.id.emailEditText);
@@ -205,6 +208,17 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         mRecommenderEditText.setText(recommender);
     }
+
+    public void signUpBalloonsTextView(String text)
+    {
+        if (mSignupBalloonsTextView == null)
+        {
+            return;
+        }
+
+        mSignupBalloonsTextView.setText(text);
+    }
+
 
     private void nextStep()
     {
