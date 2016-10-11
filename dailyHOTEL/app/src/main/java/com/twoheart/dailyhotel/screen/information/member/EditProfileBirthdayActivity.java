@@ -200,7 +200,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 {
                     Map<String, String> params = new HashMap<>();
                     params.put("user_idx", mUserIndex);
-                    params.put("user_birthday", birthday);
+                    params.put("birthday", birthday);
 
                     DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
                 }
