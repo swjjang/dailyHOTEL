@@ -307,7 +307,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         boolean isBenefit = Util.isTextEmpty(gourmetDetail.benefit) == false;
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, ticketInformation//
-            , saleTime, imageUrl, gourmetDetail.category, gourmetDetail.index, isBenefit, mProvince, mArea);
+            , saleTime, imageUrl, gourmetDetail.category, gourmetDetail.index, isBenefit //
+            , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
+            , gourmetDetail.isDailyChoice, gourmetDetail.ratingValue);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }

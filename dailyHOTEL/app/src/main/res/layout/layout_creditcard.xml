@@ -48,12 +48,12 @@
 
         <RelativeLayout
             android:id="@+id/emptyCardLayout"
-            android:layout_width="300dp"
-            android:layout_height="188dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
             android:visibility="gone">
 

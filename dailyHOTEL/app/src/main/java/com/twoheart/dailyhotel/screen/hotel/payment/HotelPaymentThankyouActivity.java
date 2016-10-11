@@ -148,7 +148,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     @Override
     protected void onCouponUsedPurchase(boolean isFirstStayPurchase, boolean isFirstGourmetPurchase, String paymentType, Map<String, String> params)
     {
-        params.put(AnalyticsManager.KeyType.FIRST_PURCHASE, isFirstGourmetPurchase ? "y" : "n");
+        params.put(AnalyticsManager.KeyType.FIRST_PURCHASE, isFirstStayPurchase ? "y" : "n");
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
         params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, paymentType);
         AnalyticsManager.getInstance(this).purchaseWithCoupon(params);

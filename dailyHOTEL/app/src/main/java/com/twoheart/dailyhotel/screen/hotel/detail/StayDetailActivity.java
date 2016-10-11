@@ -320,7 +320,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         roomInformation.categoryCode = stayDetail.categoryCode;
 
         Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, roomInformation//
-            , saleTime, imageUrl, stayDetail.index, !Util.isTextEmpty(stayDetail.benefit), mProvince, mArea);
+            , saleTime, imageUrl, stayDetail.index, !Util.isTextEmpty(stayDetail.benefit) //
+            , mProvince, mArea, stayDetail.isShowOriginalPrice, stayDetail.entryPosition //
+            , stayDetail.isDailyChoice, stayDetail.ratingValue);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
