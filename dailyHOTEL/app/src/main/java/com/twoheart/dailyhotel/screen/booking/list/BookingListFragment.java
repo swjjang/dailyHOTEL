@@ -65,6 +65,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private PinnedSectionListView mListView;
     private View btnLogin;
     private long mCurrentTime;
+    private boolean mDontReload;
 
     public interface OnUserActionListener
     {
@@ -215,9 +216,15 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             updateLayout(false, null);
         } else
         {
-            lockUI();
+            if (mDontReload == true)
+            {
+                mDontReload = false;
+            } else
+            {
+                lockUI();
 
-            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener);
+                DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener);
+            }
         }
     }
 
@@ -363,7 +370,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         @Override
         public void delete(final Booking booking)
         {
-            if (isLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -374,8 +381,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 return;
             }
-
-            lockUI();
 
             View.OnClickListener posListener = new View.OnClickListener()
             {
@@ -405,12 +410,26 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 }
             };
 
-            baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null, null, new DialogInterface.OnDismissListener()
+            baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mDontReload = true;
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    mDontReload = true;
+                }
+            }, new DialogInterface.OnDismissListener()
             {
                 @Override
                 public void onDismiss(DialogInterface dialog)
                 {
-                    unLockUI();
+                    releaseUiComponent();
                 }
             }, true);
         }
