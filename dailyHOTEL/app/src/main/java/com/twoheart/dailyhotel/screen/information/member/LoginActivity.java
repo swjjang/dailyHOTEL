@@ -189,7 +189,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         });
 
         mCallbackManager = CallbackManager.Factory.create();
-        mFacebookLoginView.registerCallback(mCallbackManager, facebookCallback);
+        mFacebookLoginView.registerCallback(mCallbackManager, mFacebookCallback);
 
         FontManager.apply(mFacebookLoginView, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
@@ -646,7 +646,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private FacebookCallback facebookCallback = new FacebookCallback<com.facebook.login.LoginResult>()
+    private FacebookCallback mFacebookCallback = new FacebookCallback<com.facebook.login.LoginResult>()
     {
         @Override
         public void onSuccess(LoginResult result)
@@ -705,6 +705,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         @Override
         public void onError(FacebookException error)
         {
+            showSimpleDialog(null, getString(R.string.message_error_facebook_login), getString(R.string.dialog_btn_text_confirm), null);
         }
     };
 
