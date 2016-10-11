@@ -131,14 +131,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initTopLayout()
     {
-        TextView signupView = (TextView) findViewById(R.id.signupView);
-        TextView findPasswordView = (TextView) findViewById(R.id.findPasswordView);
+        TextView signUpView = (TextView) findViewById(R.id.signUpView);
+        signUpView.setOnClickListener(this);
 
-        signupView.setPaintFlags(signupView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        findPasswordView.setPaintFlags(findPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
 
-        signupView.setOnClickListener(this);
-        findPasswordView.setOnClickListener(this);
+        if (Util.isTextEmpty(signupMessage) == false)
+        {
+            TextView signUpTextView = (TextView) findViewById(R.id.signUpTextView);
+            signUpTextView.setText(signupMessage);
+        }
     }
 
     private void initEditTextsLayout()
@@ -152,8 +154,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
         mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
-
-        mEmailEditText.requestFocus();
 
         mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
@@ -176,13 +176,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mLoginView = (TextView) findViewById(R.id.signinView);
 
-        String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
-
-        if (Util.isTextEmpty(signupMessage) == false)
-        {
-            TextView signupMessageView = (TextView) findViewById(R.id.signupMessageView);
-            signupMessageView.setText(signupMessage);
-        }
+        TextView findPasswordView = (TextView) findViewById(R.id.findPasswordView);
+        findPasswordView.setPaintFlags(findPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        findPasswordView.setOnClickListener(this);
 
         mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
@@ -312,7 +308,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         switch (v.getId())
         {
-            case R.id.signupView:
+            case R.id.signUpView:
             {
                 Intent intent = SignupStep1Activity.newInstance(this, mCallByScreen);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
