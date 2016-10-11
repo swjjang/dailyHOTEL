@@ -105,7 +105,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         {
             try
             {
-                mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.mm.dd"));
+                mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
                 mBirthdayEditText.setTag(birthday);
             } catch (Exception e)
             {
