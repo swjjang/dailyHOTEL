@@ -12,11 +12,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -95,6 +97,17 @@ public class CreditCardLayout extends FrameLayout
 
         View emptyCardLayout = view.findViewById(R.id.emptyCardLayout);
         emptyCardLayout.setOnClickListener(mAddCreditCardClickListener);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) emptyCardLayout.getLayoutParams();
+
+        if (layoutParams == null)
+        {
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(Util.dpToPx(context, 30), Util.dpToPx(context, 24), Util.dpToPx(context, 30), 0);
+        }
+
+        layoutParams.height = (Util.getLCDWidth(context) - Util.dpToPx(context, 60)) * 9 / 16;
+        emptyCardLayout.setLayoutParams(layoutParams);
     }
 
     public void setUserActionListener(CreditCardListActivity.OnUserActionListener listener)
@@ -186,6 +199,7 @@ public class CreditCardLayout extends FrameLayout
     {
         private ArrayList<CreditCard> mArrayList;
 
+        private Context mContext;
         private boolean mIsPickMode;
         private CreditCard mSelectedCreditCard;
 
@@ -193,6 +207,7 @@ public class CreditCardLayout extends FrameLayout
         {
             super(context, textViewResourceId, arrayList);
 
+            mContext = context;
             mArrayList = new ArrayList<>();
 
             addAll(arrayList);
@@ -262,6 +277,19 @@ public class CreditCardLayout extends FrameLayout
                 view = inflater.inflate(R.layout.list_row_creditcard, null);
             }
 
+            View cardLayout = view.findViewById(R.id.cardLayout);
+
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) cardLayout.getLayoutParams();
+
+            if (layoutParams == null)
+            {
+                layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(Util.dpToPx(mContext, 30), Util.dpToPx(mContext, 24), Util.dpToPx(mContext, 30), 0);
+            }
+
+            layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+            cardLayout.setLayoutParams(layoutParams);
+
             final CreditCard card = getItem(position);
 
             DailyTextView logoTextView = (DailyTextView) view.findViewById(R.id.logoTextView);
@@ -284,7 +312,6 @@ public class CreditCardLayout extends FrameLayout
                     }
                 };
 
-                View cardLayout = view.findViewById(R.id.cardLayout);
                 cardLayout.setOnClickListener(onClickListener);
 
                 if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(card.billingkey) == true)
