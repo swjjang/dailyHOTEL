@@ -454,6 +454,7 @@
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_invalid_verification">다른 기기에서 휴대폰 번호가 인증처리되었습니다.\n내정보에서 휴대폰 번호를 다시 확인해주세요.</string>
+    <string name="message_error_facebook_login">페이스북 앱 연결시 오류가 발생했습니다.\n다시 로그인을 시도하거나 페이스북 앱이 최신 버전인지 확인해 주세요.</string>
 
     <!-- Booking Activity -->
     <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다.</string>

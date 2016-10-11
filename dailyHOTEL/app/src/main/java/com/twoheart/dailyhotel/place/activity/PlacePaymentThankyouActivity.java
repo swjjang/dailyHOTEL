@@ -168,12 +168,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         {
             boolean isFirstStayPurchase = hotelPaymentCompletedCount == 1 ? true : false;
             boolean isFirstGourmetPurchase = gourmetPaymentCompletedCount == 1 ? true : false;
-
-            if (isFirstStayPurchase == true || isFirstGourmetPurchase == true)
-            {
-                PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
-            }
-
             boolean isCouponUsed = false;
 
             if (mParams != null && mParams.containsKey(AnalyticsManager.KeyType.COUPON_REDEEM) == true)
@@ -187,9 +181,14 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 }
             }
 
-            if (isCouponUsed == true)
+            if (isFirstStayPurchase == true || isFirstGourmetPurchase == true)
             {
-                PlacePaymentThankyouActivity.this.onCouponUsedPurchase(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
+                PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
+
+                if (isCouponUsed == true)
+                {
+                    PlacePaymentThankyouActivity.this.onCouponUsedPurchase(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
+                }
             }
         }
 
