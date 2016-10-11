@@ -42,7 +42,10 @@ public class RecentPlaces
         {
             try
             {
-                mPlaceIndexList.add(placeIndex);
+                if (Util.isTextEmpty(placeIndex) == false && Util.isTextEmpty(placeIndex.trim()) == false)
+                {
+                    mPlaceIndexList.add(placeIndex);
+                }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -66,10 +69,10 @@ public class RecentPlaces
 
             if (mPlaceIndexList.size() == MAX_RECENT_PLACE_COUNT)
             {
-                mPlaceIndexList.remove(0);
+                mPlaceIndexList.remove(mPlaceIndexList.size() - 1);
             }
 
-            mPlaceIndexList.add(checkString);
+            mPlaceIndexList.add(0, checkString);
         }
     }
 
