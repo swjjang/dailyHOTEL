@@ -56,12 +56,6 @@ public class AdjustManager extends BaseAnalyticsManager
         // change the log level
         config.setLogLevel(LogLevel.VERBOSE);
 
-        // set default tracker
-        //        config.setDefaultTracker("https://app.adjust.com/qbwmpi");
-
-        // set process name
-        //        config.setProcessName("com.twoheart.dailyhotel");
-
         // set attribution delegate
         config.setOnAttributionChangedListener(new OnAttributionChangedListener()
         {
@@ -424,12 +418,12 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.SEARCH.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND.equalsIgnoreCase(category) == true //
-                || AnalyticsManager.Action.AROUND_SEARCH_CLICKED.equalsIgnoreCase(category) == true //
-                || AnalyticsManager.Action.KEYWORD_NOT_FOUND.equalsIgnoreCase(category) == true //
-                || AnalyticsManager.Action.KEYWORD.equalsIgnoreCase(category) == true //
-                || AnalyticsManager.Action.RECENT_KEYWORD.equalsIgnoreCase(category) == true //
-                || AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND.equalsIgnoreCase(category) == true)
+            if (AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.AROUND_SEARCH_CLICKED.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.KEYWORD_NOT_FOUND.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.KEYWORD.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.RECENT_KEYWORD.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND.equalsIgnoreCase(action) == true)
             {
                 event = getSearchEvent(EventToken.SEARCH_RESULT, params);
             }
@@ -691,6 +685,8 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(Key.LIST_INDEX, listIndex);
 
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        dBenefit = getYnType(dBenefit);
+
         event.addPartnerParameter(Key.DBENEFIT, dBenefit);
 
         String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX); // product_id
@@ -720,6 +716,12 @@ public class AdjustManager extends BaseAnalyticsManager
 
         String nrd = params.get(AnalyticsManager.KeyType.NRD); // nrd
         event.addPartnerParameter(AnalyticsManager.KeyType.NRD, nrd);
+
+        String rating = params.get(AnalyticsManager.KeyType.RATING);
+        event.addPartnerParameter(Key.RATING, rating);
+
+        String isDailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE);
+        event.addPartnerParameter(AnalyticsManager.KeyType.DAILYCHOICE, isDailyChoice);
 
         // 결제시에만 들어가는 부분
         if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
@@ -880,6 +882,7 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
 
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        dBenefit = getYnType(dBenefit);
         event.addPartnerParameter(Key.DBENEFIT, dBenefit);
 
         String checkIn = null;
@@ -948,6 +951,28 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(AnalyticsManager.KeyType.SEARCH_RESULT, searchResult);
 
         return event;
+    }
+
+    private String getYnType(String ynString)
+    {
+        if (Util.isTextEmpty(ynString) == true)
+        {
+            ynString = "n";
+        } else
+        {
+            ynString = ynString.toLowerCase();
+            if (ynString.equalsIgnoreCase("yes") == true //
+                || ynString.equalsIgnoreCase("y") == true //
+                || ynString.equalsIgnoreCase("true") == true //
+                || ynString.equalsIgnoreCase("1") == true)
+            {
+                ynString = "y";
+            } else
+            {
+                ynString = "n";
+            }
+        }
+        return ynString;
     }
 
     private class DailyAdjustEvent extends AdjustEvent

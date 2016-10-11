@@ -10,6 +10,10 @@ public abstract class PlacePaymentInformation implements Parcelable
     public DiscountType discountType; // 할인 타입!
     public PaymentType paymentType; //
     public boolean isDBenefit;
+    public int ratingValue;
+    public String isShowOriginalPrice;
+    public int entryPosition;
+    public boolean isDailyChoice;
 
     private Customer mCustomer;
     private Guest mGuest;
