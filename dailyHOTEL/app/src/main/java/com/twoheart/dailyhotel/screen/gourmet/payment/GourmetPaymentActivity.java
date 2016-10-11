@@ -73,7 +73,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private Dialog mTimeDialog;
 
     public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
-        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit, Province province, String area)
+        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit//
+        , Province province, String area, String isShowOriginalPrice, int entryPosition//
+        , boolean isDailyChoice, int ratingValue)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
@@ -85,6 +87,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, ratingValue);
 
         return intent;
     }
@@ -128,6 +134,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+        gourmetPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
+        gourmetPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        gourmetPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        gourmetPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         if (gourmetPaymentInformation.getTicketInformation() == null)
         {
@@ -846,6 +856,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
 
             if (mProvince == null)
             {
@@ -903,6 +917,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
             params.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
             params.put(AnalyticsManager.KeyType.VISIT_HOUR, Long.toString(gourmetPaymentInformation.ticketTime));
+
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
 
             if (mProvince == null)
             {

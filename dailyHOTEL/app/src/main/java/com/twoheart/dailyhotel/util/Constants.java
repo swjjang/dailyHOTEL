@@ -199,6 +199,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_LIST_COUNT = "listCount";
     public static final String NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
     public static final String NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE = "dailychoice";
+    public static final String NAME_INTENT_EXTRA_DATA_RATING_VALUE = "ratingValue";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
