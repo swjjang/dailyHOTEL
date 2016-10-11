@@ -884,10 +884,10 @@
     <string name="message_select_coupon_download">다운로드하기</string>
     <string name="message_please_download_coupon">할인쿠폰을 다운로드해주세요.</string>
     <string name="message_downloaded_all_coupon">할인쿠폰을 모두 다운로드했습니다.</string>
-    <string name="coupon_list_register_coupon">할인쿠폰 등록하기</string>
+    <string name="coupon_list_register_coupon">할인쿠폰 코드로 등록하기</string>
     <string name="register_coupon_title">쿠폰 등록</string>
     <string name="register_coupon_edittext_hint">할인쿠폰 코드 입력</string>
-    <string name="register_coupon_complete">할인쿠폰 코드 등록하기</string>
+    <string name="register_coupon_complete">할인쿠폰 등록 완료</string>
     <string name="register_coupon_policy_1">할인쿠폰은 데일리호텔 가입 회원에 한해 발급해드립니다.</string>
     <string name="register_coupon_policy_2">발급한 할인쿠폰은 \'더보기 > 할인쿠폰함\' 에서 확인 할 수 있습니다.</string>
     <string name="register_coupon_policy_3">할인쿠폰에 따라 최소 구매 금액이나 최대 할인 금액 제한이 있을 수 있으며, 1회 결제시 1매만 사용할 수 있습니다.</string>
