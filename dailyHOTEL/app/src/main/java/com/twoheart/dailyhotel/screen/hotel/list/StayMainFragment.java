@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
@@ -324,6 +325,8 @@ public class StayMainFragment extends PlaceMainFragment
         {
             return;
         }
+
+        new RecentPlaces("ddddd");
 
         Map<String, String> params = new HashMap<>();
 
