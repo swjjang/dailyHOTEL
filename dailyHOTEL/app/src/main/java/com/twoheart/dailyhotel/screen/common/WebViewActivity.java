@@ -158,26 +158,28 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
             } else if (url.startsWith(INTENT_PROTOCOL_START))
             {
-                final int customUrlStartIndex = INTENT_PROTOCOL_START.length();
-                final int customUrlEndIndex = url.indexOf(INTENT_PROTOCOL_INTENT);
-                if (customUrlEndIndex < 0)
+                if (Util.isOverAPI19() == true)
                 {
-                    return false;
+                    final int customUrlStartIndex = INTENT_PROTOCOL_START.length();
+                    final int customUrlEndIndex = url.indexOf(INTENT_PROTOCOL_INTENT);
+                    if (customUrlEndIndex < 0)
+                    {
+                        return false;
+                    } else
+                    {
+                        final String customUrl = url.substring(customUrlStartIndex, customUrlEndIndex);
+                        try
+                        {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(customUrl)));
+                        } catch (ActivityNotFoundException e)
+                        {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.kakao.talk")));
+                        }
+                        return true;
+                    }
                 } else
                 {
-                    final String customUrl = url.substring(customUrlStartIndex, customUrlEndIndex);
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(customUrl)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        final int packageStartIndex = customUrlEndIndex + INTENT_PROTOCOL_INTENT.length();
-                        final int packageEndIndex = url.indexOf(INTENT_PROTOCOL_END);
-
-                        final String packageName = url.substring(packageStartIndex, packageEndIndex < 0 ? url.length() : packageEndIndex);
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_STORE_PREFIX + packageName)));
-                    }
-                    return true;
+                    return false;
                 }
             } else
             {
