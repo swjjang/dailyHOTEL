@@ -7,6 +7,22 @@
 
     <include layout="@layout/toolbar_default"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원가입을 하시고 적립금, 이벤트 등 다양한 혜택을 누려보세요!"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:/>
+
+    </RelativeLayout>
+
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/emailView"
         android:layout_width="match_parent"
