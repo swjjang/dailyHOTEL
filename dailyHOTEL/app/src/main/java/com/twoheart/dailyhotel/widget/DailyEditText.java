@@ -76,7 +76,7 @@ public class DailyEditText extends AppCompatEditText
         final int DRAWABLE_RIGHT = 2;
         final int DRAWABLE_BOTTOM = 3;
 
-        if (event.getAction() == MotionEvent.ACTION_UP)
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
         {
             Drawable[] drawables = getCompoundDrawables();
 
@@ -90,6 +90,7 @@ public class DailyEditText extends AppCompatEditText
             if (event.getRawX() >= (getRight() - withDrawable))
             {
                 setText(null);
+                return false;
             }
         }
 

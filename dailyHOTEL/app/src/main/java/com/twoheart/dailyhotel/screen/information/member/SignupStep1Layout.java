@@ -191,7 +191,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     public void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.set(year, month, dayOfMonth, 0, 0);
+        calendar.set(year, month, dayOfMonth, 0, 0, 0);
 
         mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(calendar);

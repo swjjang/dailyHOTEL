@@ -96,6 +96,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
         mBirthdayEditText.setDeleteButtonVisible(true);
         mBirthdayEditText.setOnFocusChangeListener(this);
+        mBirthdayEditText.setOnClickListener(this);
 
         if (Util.isTextEmpty(birthday) == true)
         {
@@ -168,6 +169,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         switch (v.getId())
         {
             case R.id.confirmView:
+            {
                 String birthday = mBirthdayEditText.getText().toString();
 
                 if (Util.isTextEmpty(birthday) == true)
@@ -203,6 +205,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
                 }
                 break;
+            }
 
             case R.id.birthdayEditText:
                 onFocusChange(mBirthdayEditText, true);
@@ -223,8 +226,13 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     {
         switch (v.getId())
         {
-            case R.id.nameEditText:
+            case R.id.birthdayEditText:
                 setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
+
+                if (hasFocus == true)
+                {
+                    showBirthdayDatePicker();
+                }
                 break;
         }
     }
@@ -232,10 +240,10 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     private void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.set(year, month, dayOfMonth, 0, 0);
+        calendar.set(year, month, dayOfMonth, 0, 0, 0);
 
         mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
-        mBirthdayEditText.setTag(calendar);
+        mBirthdayEditText.setTag(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
     }
 
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
