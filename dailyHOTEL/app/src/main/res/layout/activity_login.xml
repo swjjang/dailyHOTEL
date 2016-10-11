@@ -14,7 +14,9 @@
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="회원가입을 하시고 적립금, 이벤트 등 다양한 혜택을 누려보세요!"/>
+            android:text="회원가입을 하시고 적립금, 이벤트 등 다양한 혜택을 누려보세요!"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="15dp"/>
 
         <ImageView
             android:layout_width="wrap_content"
