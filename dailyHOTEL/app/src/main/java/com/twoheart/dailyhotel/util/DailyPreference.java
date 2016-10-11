@@ -60,6 +60,9 @@ public class DailyPreference
 
     private static final String KEY_SELECTED_SIMPLE_CARD = "204"; // 마지막으로 간편결제된 카드
 
+    private static final String KEY_STAY_RECENT_PLACES = "210";
+    private static final String KEY_GOURMET_RECENT_PLACES = "211";
+
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
 
@@ -643,6 +646,22 @@ public class DailyPreference
     public String getGourmetRecentSearches()
     {
         return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
+    }
+
+    public void setStayRecentPlaces(String recentPlaces) {
+        setValue(mEditor, KEY_STAY_RECENT_PLACES, recentPlaces);
+    }
+
+    public String getStayRecentPlaces() {
+        return getValue(mPreferences, KEY_STAY_RECENT_PLACES, null);
+    }
+
+    public void setGourmetRecentPlaces(String recentPlaces) {
+        setValue(mEditor, KEY_GOURMET_RECENT_PLACES, recentPlaces);
+    }
+
+    public String getGourmetRecentPlaces() {
+        return getValue(mPreferences, KEY_GOURMET_RECENT_PLACES, null);
     }
 
     public void setTermsOfLocation(boolean value)

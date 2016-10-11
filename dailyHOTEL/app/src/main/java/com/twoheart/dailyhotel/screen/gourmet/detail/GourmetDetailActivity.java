@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
@@ -175,6 +176,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
 
         mPlaceDetail = createPlaceDetail(intent);
+
+        // 최근 본 업장 저장
+        String preferenceRecentPlaces = DailyPreference.getInstance(this).getGourmetRecentPlaces();
+        RecentPlaces recentPlaces = new RecentPlaces(preferenceRecentPlaces);
+        recentPlaces.add(mPlaceDetail.index);
+        DailyPreference.getInstance(this).setGourmetRecentPlaces(recentPlaces.toString());
 
         if (mSaleTime == null || mPlaceDetail == null)
         {
