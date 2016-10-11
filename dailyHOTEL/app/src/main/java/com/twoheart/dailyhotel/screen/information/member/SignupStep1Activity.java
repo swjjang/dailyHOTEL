@@ -175,7 +175,7 @@ public class SignupStep1Activity extends BaseActivity
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()
     {
         @Override
-        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday)
+        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday, final boolean isBebefit)
         {
             if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -245,6 +245,9 @@ public class SignupStep1Activity extends BaseActivity
             mSignupParams.put("market_type", RELEASE_STORE.getName());
 
             DailyNetworkAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationListener);
+
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, isBebefit ? AnalyticsManager.Label.SIGNUP_ON : AnalyticsManager.Label.SIGNUP_OFF, null);
         }
 
         @Override

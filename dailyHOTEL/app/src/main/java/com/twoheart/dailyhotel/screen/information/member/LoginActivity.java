@@ -325,6 +325,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 Intent intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
+
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOST_PASSWORD_CLICKED, null, null);
                 break;
             }
 

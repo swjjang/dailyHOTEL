@@ -40,7 +40,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onValidation(String email, String name, String password1, String confirmPassword, String recommender, String birthday);
+        void onValidation(String email, String name, String password1, String confirmPassword, String recommender, String birthday, boolean isBenefit);
 
         void showTermOfService();
 
@@ -242,7 +242,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             }
         }
 
-        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender, birthday);
+        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked());
     }
 
     @Override
