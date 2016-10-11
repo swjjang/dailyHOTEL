@@ -450,7 +450,7 @@
     <string name="message_edit_phone_social_guide">휴대폰 번호를 입력한 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_name_guide">상품 예약 확인 시 필요한 정보이므로 실명으로 입력한 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_password_guide">4자 이상 비밀번호를 입력한 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
-    <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해주세요.</string>
+    <string name="message_add_profile_guide">신속한 예약 확인을 위해 정확한 정보를 등록해주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_invalid_verification">다른 기기에서 휴대폰 번호가 인증처리되었습니다.\n내정보에서 휴대폰 번호를 다시 확인해주세요.</string>
@@ -561,6 +561,7 @@
     <string name="label_country">국가</string>
     <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
     <string name="label_certification_number_ndigit">인증번호</string>
+    <string name="label_notification_on_option">혜택 알림 받기 (선택)</string>
 
     <string name="act_signup_phone">필수. 휴대폰 번호 (예약시 사용)</string>
     <string name="act_signup_email">필수. 이메일</string>
@@ -780,7 +781,6 @@
     <string name="label_friday">금</string>
     <string name="label_saturday">토</string>
     <string name="label_sunday">일</string>
-
 
     <!-- Curation Activity -->
     <string name="label_double">더블</string>

@@ -284,6 +284,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
             }
         });
 
+        datePicker.setMaxDate(DailyCalendar.getInstance().getTimeInMillis());
+
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);

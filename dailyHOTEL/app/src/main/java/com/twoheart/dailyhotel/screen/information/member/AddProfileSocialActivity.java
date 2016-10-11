@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -197,6 +198,8 @@ public class AddProfileSocialActivity extends BaseActivity
                 }
             });
 
+            datePicker.setMaxDate(DailyCalendar.getInstance().getTimeInMillis());
+
             // 상단
             TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
             titleTextView.setVisibility(View.VISIBLE);
@@ -258,7 +261,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday)
+        public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
         {
             // 전화번호가 없거나 잘못 된경우
             if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
@@ -322,7 +325,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 return;
             }
 
-            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender, birthday);
+            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender, birthday, isBenefit);
         }
 
         @Override

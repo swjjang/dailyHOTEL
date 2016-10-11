@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -295,6 +296,8 @@ public class SignupStep1Activity extends BaseActivity
 
                 }
             });
+
+            datePicker.setMaxDate(DailyCalendar.getInstance().getTimeInMillis());
 
             // 상단
             TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
