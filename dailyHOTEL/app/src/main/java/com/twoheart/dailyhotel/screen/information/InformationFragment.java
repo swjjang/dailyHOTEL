@@ -262,6 +262,10 @@ public class InformationFragment extends BaseFragment implements Constants
         public void startSignUp()
         {
             InformationFragment.this.startSignUp(null);
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.REGISTRATION_CLICKED, AnalyticsManager.Label.MENU_REGISTER_ACCOUNT, null);
         }
 
         @Override

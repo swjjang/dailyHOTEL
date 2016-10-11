@@ -158,6 +158,7 @@
     <string name="actionbar_title_event_list_frag">이벤트</string>
     <string name="actionbar_title_edit_email">이메일 설정</string>
     <string name="actionbar_title_edit_name">이름 설정</string>
+    <string name="actionbar_title_edit_birthday">생일 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
     <string name="actionbar_title_coupon_list">할인쿠폰함</string>
@@ -435,9 +436,11 @@
     <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
     <string name="act_profile_input_contact">휴대폰 번호를 등록해주세요.</string>
     <string name="act_profile_input_email">이메일을 등록해주세요.</string>
+    <string name="act_profile_input_birthday">생일 정보를 입력해주세요.</string>
     <string name="label_confirm_phone">이메일 설정 완료</string>
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
     <string name="label_confirm_name">이름 설정 완료</string>
+    <string name="label_confirm_birthday">생일 설정 완료</string>
     <string name="label_confirm_password">비밀번호 설정 완료</string>
     <string name="label_confirm_profile">비밀번호 설정 완료</string>
     <string name="label_dont_verification">(인증필요)</string>
@@ -451,6 +454,7 @@
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_invalid_verification">다른 기기에서 휴대폰 번호가 인증처리되었습니다.\n내정보에서 휴대폰 번호를 다시 확인해주세요.</string>
+    <string name="message_error_facebook_login">페이스북 앱 연결시 오류가 발생했습니다.\n다시 로그인을 시도하거나 페이스북 앱이 최신 버전인지 확인해 주세요.</string>
 
     <!-- Booking Activity -->
     <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다.</string>
@@ -547,9 +551,11 @@
     <!-- Signup Activity -->
     <string name="label_necessary">필수</string>
     <string name="label_name">이름</string>
+    <string name="label_birthday">생일</string>
     <string name="label_password_4over">비밀번호 (4자이상)</string>
     <string name="label_confirm_password_4over">비밀번호 확인 (4자이상)</string>
     <string name="label_necessary_reservation">필수 (예약시 사용)</string>
+    <string name="label_option_benefit">선택 (추후 혜택 제공시 사용)</string>
     <string name="label_recommender_code">추천인 코드</string>
     <string name="label_select">선택</string>
     <string name="label_country">국가</string>
@@ -888,7 +894,7 @@
     <string name="coupon_list_register_coupon">할인쿠폰 등록하기</string>
     <string name="register_coupon_title">쿠폰 등록</string>
     <string name="register_coupon_edittext_hint">할인쿠폰 코드 입력</string>
-    <string name="register_coupon_complete">할인쿠폰 등록 완료</string>
+    <string name="register_coupon_complete">할인쿠폰 코드 등록하기</string>
     <string name="register_coupon_policy_1">할인쿠폰은 데일리호텔 가입 회원에 한해 발급해드립니다.</string>
     <string name="register_coupon_policy_2">발급한 할인쿠폰은 \'더보기 > 할인쿠폰함\' 에서 확인 할 수 있습니다.</string>
     <string name="register_coupon_policy_3">할인쿠폰에 따라 최소 구매 금액이나 최대 할인 금액 제한이 있을 수 있으며, 1회 결제시 1매만 사용할 수 있습니다.</string>

@@ -22,27 +22,29 @@
             android:background="@drawable/bg_comment"
             android:gravity="left|center_vertical"
             android:lineSpacingExtra="-2dp"
-            android:text="@string/message_edit_email_guide"
+            android:text="@string/message_edit_name_guide"
             android:textColor="@color/default_text_c323232"
             android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/emailView"
+            android:id="@+id/birthdayView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="@string/label_email"
+            android:text="@string/label_birthday"
             android:textColor="@color/selector_label_textcolor"
             android:textSize="12dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyEditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/birthdayEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/selector_edittext_background"
-            android:inputType="textEmailAddress"
-            android:maxLength="50"
+            android:cursorVisible="false"
+            android:hint="@string/label_option_benefit"
+            android:inputType="text"
+            android:maxLength="20"
             android:singleLine="true"
             android:textColor="@color/default_text_c323232"
             android:textColorHint="@color/search_hint_text"
@@ -54,12 +56,12 @@
         android:id="@+id/confirmView"
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:background="@drawable/selector_button_default_background"
         android:gravity="center"
-        android:text="@string/label_confirm_phone"
+        android:text="@string/label_confirm_birthday"
         android:textColor="@drawable/selector_button_default_text_color"
         android:textSize="17dp"
-        dailyFont:style="Medium"
-        android:layout_alignParentBottom="true"/>
+        dailyFont:style="Medium"/>
 </RelativeLayout>

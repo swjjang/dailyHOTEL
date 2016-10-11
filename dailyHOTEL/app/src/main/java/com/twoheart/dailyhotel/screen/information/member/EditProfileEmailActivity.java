@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -29,12 +30,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditProfileEmailActivity extends BaseActivity implements OnClickListener
+public class EditProfileEmailActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
 
-    private EditText mEmailEditText;
-    private View mConfirmView;
+    private DailyEditText mEmailEditText;
+    private View mConfirmView, mEmailView;
     private String mUserIndex;
 
     public static Intent newInstance(Context context, String userIndex)
@@ -77,7 +78,11 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
     private void initLayout()
     {
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailView = findViewById(R.id.emailView);
+
+        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -181,6 +186,34 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        switch (v.getId())
+        {
+            case R.id.emailEditText:
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
+                break;
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

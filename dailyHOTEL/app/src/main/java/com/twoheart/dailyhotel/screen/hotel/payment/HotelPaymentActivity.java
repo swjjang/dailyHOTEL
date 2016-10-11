@@ -85,7 +85,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private String mArea; // Analytics용 소지역
 
     public static Intent newInstance(Context context, RoomInformation roomInformation//
-        , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit, Province province, String area)
+        , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
+        , Province province, String area, String isShowOriginalPrice, int entryPosition //
+        , boolean isDailyChoice, int ratingValue)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -96,6 +98,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, ratingValue);
 
         return intent;
     }
@@ -138,6 +144,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         hotelPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+        hotelPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
+        hotelPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        hotelPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        hotelPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         if (hotelPaymentInformation.getSaleRoomInformation() == null)
         {
@@ -997,6 +1007,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().averageDiscount));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().totalDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().nights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().nights));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
 
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelPaymentInformation.getSaleRoomInformation().nights);
@@ -1012,6 +1023,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
 
             if (mProvince == null)
             {
@@ -1058,6 +1073,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(roomInformation.averageDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(roomInformation.nights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(roomInformation.nights));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(roomInformation.totalDiscount));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, roomInformation.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomInformation.roomIndex));
@@ -1068,6 +1084,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(hotelPaymentInformation.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, hotelPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(hotelPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, hotelPaymentInformation.isDailyChoice ? "y" : "n");
 
             switch (hotelPaymentInformation.discountType)
             {
@@ -1130,6 +1153,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, hotelPaymentInformation.paymentType.getName());
             params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
 
             if (mProvince == null)
             {

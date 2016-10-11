@@ -801,6 +801,18 @@ public class MainActivity extends BaseActivity implements Constants
                 if (placeType != null)
                 {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
+                    String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
+                    String currentAppVersion = Util.getAppVersion(MainActivity.this);
+
+                    if (Util.isTextEmpty(realProvinceName) == true)
+                    {
+                        if (Util.isTextEmpty(preferenceVersion) == true //
+                            || (Util.isTextEmpty(currentAppVersion) == false && currentAppVersion.equalsIgnoreCase(preferenceVersion) == true))
+                        {
+                            realProvinceName = "서울";
+                        }
+                    }
+
                     boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
                     String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
 
@@ -836,6 +848,18 @@ public class MainActivity extends BaseActivity implements Constants
                 if (placeType != null)
                 {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
+                    String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
+                    String currentAppVersion = Util.getAppVersion(MainActivity.this);
+
+                    if (Util.isTextEmpty(realProvinceName) == true)
+                    {
+                        if (Util.isTextEmpty(preferenceVersion) == true //
+                            || (Util.isTextEmpty(currentAppVersion) == false && currentAppVersion.equalsIgnoreCase(preferenceVersion) == true))
+                        {
+                            realProvinceName = "서울";
+                        }
+                    }
+
                     boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
                     String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
 
@@ -866,15 +890,16 @@ public class MainActivity extends BaseActivity implements Constants
                     });
 
                     // 헤택이 Off 되어있는 경우 On으로 수정
-                    if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == false//
+                    boolean isUserBenefitAlarm = DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm();
+                    if (isUserBenefitAlarm == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
                         mNetworkController.requestNoticeAgreement();
-                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(false, null);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(isUserBenefitAlarm, null);
                     } else
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
-                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(true, null);
+                        AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(isUserBenefitAlarm, null);
                     }
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();

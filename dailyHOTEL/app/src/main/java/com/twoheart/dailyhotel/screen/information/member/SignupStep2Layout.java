@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class SignupStep2Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
@@ -25,7 +26,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     private View mVerificationLayout, mSignUpView, mCertificationNumberView;
     private View mPhoneView, mVerificationView;
-    private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
+    private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextWatcher mTextWatcher;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -65,7 +66,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
-        mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
+        mCountryEditText = (DailyEditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
@@ -78,7 +79,8 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         });
 
         mPhoneView = view.findViewById(R.id.phoneView);
-        mPhoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText.setDeleteButtonVisible(true);
         mPhoneEditText.setOnFocusChangeListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -131,7 +133,8 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mVerificationLayout.setVisibility(View.INVISIBLE);
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
-        mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText.setDeleteButtonVisible(true);
         mVerificationEditText.setOnFocusChangeListener(this);
 
         mVerificationEditText.addTextChangedListener(new TextWatcher()
@@ -246,12 +249,16 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
+        switch (v.getId())
         {
-            return;
-        }
+            case R.id.phoneEditText:
+                setFocusLabelView(mPhoneView, mPhoneEditText, hasFocus);
+                break;
 
-        setFocusTextView(v.getId());
+            case R.id.verificationEditText:
+                setFocusLabelView(mVerificationView, mVerificationEditText, hasFocus);
+                break;
+        }
     }
 
     public void showVerificationVisible()
@@ -267,38 +274,11 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mPhoneEditText.setText(null);
     }
 
-    public void resetVerificationNumber()
-    {
-        mVerificationEditText.setText(null);
-    }
-
     private void doSignUp()
     {
         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
         ((OnEventListener) mOnEventListener).doSignUp(verificationNumber, getPhoneNumber());
-    }
-
-    private void resetFocus()
-    {
-        mPhoneView.setSelected(false);
-        mVerificationView.setSelected(false);
-    }
-
-    private void setFocusTextView(int id)
-    {
-        resetFocus();
-
-        switch (id)
-        {
-            case R.id.phoneEditText:
-                mPhoneView.setSelected(true);
-                break;
-
-            case R.id.verificationEditText:
-                mVerificationView.setSelected(true);
-                break;
-        }
     }
 
     public String getPhoneNumber()
@@ -336,6 +316,23 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         {
             mCertificationNumberView.setEnabled(false);
             return false;
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
         }
     }
 }

@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/label_email"
-            android:textColor="@drawable/selector_label_textcolor"
+            android:textColor="@color/selector_label_textcolor"
             android:textSize="12dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyEditText

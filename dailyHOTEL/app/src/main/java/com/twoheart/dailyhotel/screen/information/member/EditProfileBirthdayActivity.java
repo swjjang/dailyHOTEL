@@ -1,15 +1,19 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +24,9 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
@@ -29,24 +35,25 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditProfileNameActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
+public class EditProfileBirthdayActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
-    private static final String INTENT_EXTRA_DATA_NAME = "name";
+    private static final String INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
 
-    private DailyEditText mNameEditText;
-    private View mConfirmView, mNameView;
+    private DailyEditText mBirthdayEditText;
+    private View mConfirmView, mBirthdayView;
     private String mUserIndex;
 
-    public static Intent newInstance(Context context, String userIndex, String name)
+    public static Intent newInstance(Context context, String userIndex, String birthday)
     {
-        Intent intent = new Intent(context, EditProfileNameActivity.class);
+        Intent intent = new Intent(context, EditProfileBirthdayActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_NAME, name);
+        intent.putExtra(INTENT_EXTRA_DATA_BIRTHDAY, birthday);
 
         return intent;
     }
@@ -58,11 +65,11 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit_name);
+        setContentView(R.layout.activity_edit_birthday);
 
         Intent intent = getIntent();
         mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
-        String name = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
+        String name = intent.getStringExtra(INTENT_EXTRA_DATA_BIRTHDAY);
 
         initToolbar();
         initLayout(name);
@@ -72,7 +79,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_edit_name), new OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_edit_birthday), new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -82,23 +89,33 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         });
     }
 
-    private void initLayout(String name)
+    private void initLayout(String birthday)
     {
-        mNameView = findViewById(R.id.nameView);
+        mBirthdayView = findViewById(R.id.birthdayView);
 
-        mNameEditText = (DailyEditText) findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true);
-        mNameEditText.setOnFocusChangeListener(this);
+        mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
+        mBirthdayEditText.setDeleteButtonVisible(true);
+        mBirthdayEditText.setOnFocusChangeListener(this);
+        mBirthdayEditText.setOnClickListener(this);
 
-        if (Util.isTextEmpty(name) == true)
+        if (Util.isTextEmpty(birthday) == true)
         {
-            mNameEditText.setText(null);
+            mBirthdayEditText.setText(null);
         } else
         {
-            mNameEditText.setText(name);
+            try
+            {
+                mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.mm.dd"));
+                mBirthdayEditText.setTag(birthday);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+
+                mBirthdayEditText.setText(null);
+            }
         }
 
-        mNameEditText.addTextChangedListener(new TextWatcher()
+        mBirthdayEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -125,26 +142,9 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             }
         });
 
-        mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                switch (actionId)
-                {
-                    case EditorInfo.IME_ACTION_DONE:
-                        mConfirmView.performClick();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
-
         mConfirmView = findViewById(R.id.confirmView);
 
-        if (Util.isTextEmpty(name) == true)
+        if (Util.isTextEmpty(birthday) == true)
         {
             mConfirmView.setEnabled(false);
         } else
@@ -158,7 +158,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfileNameActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_NAME);
+        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY);
 
         super.onStart();
     }
@@ -169,11 +169,12 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         switch (v.getId())
         {
             case R.id.confirmView:
-                String name = mNameEditText.getText().toString();
+            {
+                String birthday = mBirthdayEditText.getText().toString();
 
-                if (Util.isTextEmpty(name) == true)
+                if (Util.isTextEmpty(birthday) == true)
                 {
-                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -184,18 +185,30 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 lockUI();
 
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileNameActivity.this).getUserType()) == true)
+                birthday = (String) mBirthdayEditText.getTag();
+
+                if (Util.isTextEmpty(birthday) == true)
                 {
-                    Map<String, String> params = Collections.singletonMap("name", name);
+                    return;
+                }
+
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileBirthdayActivity.this).getUserType()) == true)
+                {
+                    Map<String, String> params = Collections.singletonMap("birthday", birthday);
                     DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener);
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
                     params.put("user_idx", mUserIndex);
-                    params.put("user_name", name);
+                    params.put("birthday", birthday);
 
                     DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
                 }
+                break;
+            }
+
+            case R.id.birthdayEditText:
+                onFocusChange(mBirthdayEditText, true);
                 break;
         }
     }
@@ -213,10 +226,24 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     {
         switch (v.getId())
         {
-            case R.id.nameEditText:
-                setFocusLabelView(mNameView, mNameEditText, hasFocus);
+            case R.id.birthdayEditText:
+                setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
+
+                if (hasFocus == true)
+                {
+                    showBirthdayDatePicker();
+                }
                 break;
         }
+    }
+
+    private void setBirthdayText(int year, int month, int dayOfMonth)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.set(year, month, dayOfMonth, 0, 0, 0);
+
+        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setTag(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
     }
 
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
@@ -233,6 +260,87 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             }
 
             labelView.setSelected(false);
+        }
+    }
+
+    private void showBirthdayDatePicker()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+
+        datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+        {
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            {
+
+            }
+        });
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText("생일 선택");
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                setBirthdayText(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+            }
+        });
+
+        dialog.setCancelable(true);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+            }
+        });
+
+        // 생일 화면 부터는 키패드를 나오지 않게 한다.
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 
@@ -256,7 +364,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 if (result == true)
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -276,19 +384,19 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                 } else
                 {
                     String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-                            mNameEditText.setText(null);
+                            mBirthdayEditText.setText(null);
                         }
                     }, new DialogInterface.OnCancelListener()
                     {
                         @Override
                         public void onCancel(DialogInterface dialog)
                         {
-                            mNameEditText.setText(null);
+                            mBirthdayEditText.setText(null);
                         }
                     });
                 }
@@ -304,7 +412,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            EditProfileNameActivity.this.onErrorResponse(volleyError);
+            EditProfileBirthdayActivity.this.onErrorResponse(volleyError);
         }
     };
 
@@ -330,7 +438,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 if (result == true)
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -350,19 +458,19 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                 } else
                 {
                     String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-                            mNameEditText.setText(null);
+                            mBirthdayEditText.setText(null);
                         }
                     }, new DialogInterface.OnCancelListener()
                     {
                         @Override
                         public void onCancel(DialogInterface dialog)
                         {
-                            mNameEditText.setText(null);
+                            mBirthdayEditText.setText(null);
                         }
                     });
                 }

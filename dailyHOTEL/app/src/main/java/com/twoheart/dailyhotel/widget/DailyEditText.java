@@ -2,12 +2,14 @@ package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
@@ -17,6 +19,7 @@ import com.twoheart.dailyhotel.util.Util;
 public class DailyEditText extends AppCompatEditText
 {
     private boolean mUsedImeActionSend;
+    private boolean mHasDeleteButton;
 
     public DailyEditText(Context context)
     {
@@ -46,6 +49,57 @@ public class DailyEditText extends AppCompatEditText
         setFontStyle(context, attrs);
 
         setUsedImeActionSend(false);
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect)
+    {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+
+        if (mHasDeleteButton == true)
+        {
+            if (focused == true)
+            {
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+            } else
+            {
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        final int DRAWABLE_LEFT = 0;
+        final int DRAWABLE_TOP = 1;
+        final int DRAWABLE_RIGHT = 2;
+        final int DRAWABLE_BOTTOM = 3;
+
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+        {
+            Drawable[] drawables = getCompoundDrawables();
+
+            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            {
+                return super.onTouchEvent(event);
+            }
+
+            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
+
+            if (event.getRawX() >= (getRight() - withDrawable))
+            {
+                setText(null);
+                return false;
+            }
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    public void setDeleteButtonVisible(boolean visible)
+    {
+        mHasDeleteButton = visible;
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)

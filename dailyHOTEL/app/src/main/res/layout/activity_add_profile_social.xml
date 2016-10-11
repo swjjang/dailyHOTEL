@@ -12,14 +12,12 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="28dp">
+            android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
@@ -44,7 +42,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="14dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -53,7 +51,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/label_country"
-                        android:textColor="@drawable/selector_label_textcolor"
+                        android:textColor="@color/selector_label_textcolor"
                         android:textSize="12dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyEditText
@@ -81,7 +79,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="14dp"
                     android:layout_weight="2.7"
                     android:orientation="vertical">
 
@@ -90,7 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/label_phone_number_special_except"
-                        android:textColor="@drawable/selector_label_textcolor"
+                        android:textColor="@color/selector_label_textcolor"
                         android:textSize="12dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyEditText
@@ -123,9 +121,9 @@
                     android:id="@+id/emailView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="14dp"
                     android:text="@string/label_email"
-                    android:textColor="@drawable/selector_label_textcolor"
+                    android:textColor="@color/selector_label_textcolor"
                     android:textSize="12dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyEditText
@@ -156,9 +154,9 @@
                     android:id="@+id/nameView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="14dp"
                     android:text="@string/label_name"
-                    android:textColor="@drawable/selector_label_textcolor"
+                    android:textColor="@color/selector_label_textcolor"
                     android:textSize="12dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyEditText
@@ -168,6 +166,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/selector_edittext_background"
                     android:hint="@string/label_necessary_reservation"
+                    android:imeOptions="actionDone"
                     android:inputType="text"
                     android:maxLength="20"
                     android:singleLine="true"
@@ -178,14 +177,43 @@
             </LinearLayout>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/birthdayView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="14dp"
+                android:text="@string/label_birthday"
+                android:textColor="@color/selector_label_textcolor"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/birthdayEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/selector_edittext_background"
+                android:cursorVisible="false"
+                android:hint="@string/label_option_benefit"
+                android:inputType="text"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/search_hint_text"
+                android:textSize="16dp"
+                android:theme="@style/EditTextTheme"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/recommenderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/label_recommender_code"
-                android:textColor="@drawable/selector_label_textcolor"
+                android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
@@ -216,90 +244,121 @@
                 android:text="@string/label_signup_allagreement"
                 android:textColor="@color/information_title"
                 android:textSize="12dp"
-                android:theme="@style/CheckBoxTheme"/>
+                android:theme="@style/CheckBoxTheme"
+                dailyFont:style="Medium"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="15dp">
+
+                    <com.twoheart.dailyhotel.widget.DailyCheckBox
+                        android:id="@+id/termsCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:gravity="center"
+                        android:text="@string/act_signup_terms"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="12dp"
+                        android:theme="@style/CheckBoxTheme"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/termsContentView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:text="@string/label_view_content"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="12dp"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="15dp">
+
+                    <com.twoheart.dailyhotel.widget.DailyCheckBox
+                        android:id="@+id/personalCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="31dp"
+                        android:gravity="center"
+                        android:text="@string/act_signup_privacy"
+                        android:textColor="@color/information_title"
+                        android:textSize="12dp"
+                        android:theme="@style/CheckBoxTheme"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/personalContentView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:text="@string/label_view_content"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="12dp"/>
+                </RelativeLayout>
 
                 <com.twoheart.dailyhotel.widget.DailyCheckBox
-                    android:id="@+id/termsCheckBox"
+                    android:id="@+id/benefitCheckBox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="31dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
-                    android:text="@string/act_signup_terms"
+                    android:text="@string/frag_push_alert"
                     android:textColor="@color/information_title"
                     android:textSize="12dp"
                     android:theme="@style/CheckBoxTheme"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/termsContentView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:paddingLeft="20dp"
-                    android:text="@string/label_view_content"
-                    android:textColor="@color/information_title"
-                    android:textSize="12dp"/>
-            </RelativeLayout>
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="-6dp"
+                    android:text="@string/frag_push_alert_subtext"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="9dp"/>
+            </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp">
-
-                <com.twoheart.dailyhotel.widget.DailyCheckBox
-                    android:id="@+id/personalCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/act_signup_privacy"
-                    android:textColor="@color/information_title"
-                    android:textSize="12dp"
-                    android:theme="@style/CheckBoxTheme"/>
+                android:layout_alignParentBottom="true"
+                android:background="@color/white">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/personalContentView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
+                    android:id="@+id/confirmView"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/btn_normal_gradation"
                     android:gravity="center"
-                    android:paddingLeft="20dp"
-                    android:text="@string/label_view_content"
-                    android:textColor="@color/information_title"
-                    android:textSize="12dp"/>
+                    android:text="@string/act_signup_btn_update"
+                    android:textColor="@color/white"
+                    android:textSize="17dp"
+                    dailyFont:style="Medium"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/default_line_ce7e7e7"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/confirmView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_normal_gradation"
-            android:gravity="center"
-            android:text="@string/act_signup_btn_update"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            dailyFont:style="Medium"/>
-    </RelativeLayout>
 </RelativeLayout>

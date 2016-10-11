@@ -26,7 +26,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender)
+    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender, String birthday)
     {
         Map<String, String> params = new HashMap<>();
         params.put("user_idx", userIndex);
@@ -44,6 +44,11 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         if (Util.isTextEmpty(phoneNumber) == false)
         {
             params.put("user_phone", phoneNumber.replaceAll("-", ""));
+        }
+
+        if (Util.isTextEmpty(birthday) == false)
+        {
+            params.put("birthday", birthday);
         }
 
         if (Util.isTextEmpty(recommender) == false)

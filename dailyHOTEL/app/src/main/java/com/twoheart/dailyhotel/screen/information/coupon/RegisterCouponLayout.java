@@ -1,8 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -13,17 +11,17 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 /**
  * Created by android_sam on 2016. 9. 19..
  */
-public class RegisterCouponLayout extends BaseLayout implements View.OnClickListener
+public class RegisterCouponLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
 {
     private View mTitleView;
-    private View mDeleteView;
     private View mCompleteView;
-    private EditText mCouponEditText;
+    private DailyEditText mCouponEditText;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -40,37 +38,11 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
     {
         initToolbar(view);
 
-        mDeleteView = view.findViewById(R.id.deleteView);
         mTitleView = view.findViewById(R.id.couponTitleView);
         mCompleteView = view.findViewById(R.id.registerCouponCompleteView);
-        mCouponEditText = (EditText) view.findViewById(R.id.couponEditText);
-
-        mCouponEditText.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-                if (s.length() > 0)
-                {
-                    mDeleteView.setVisibility(View.VISIBLE);
-                } else
-                {
-                    mDeleteView.setVisibility(View.GONE);
-                }
-            }
-        });
+        mCouponEditText = (DailyEditText) view.findViewById(R.id.couponEditText);
+        mCouponEditText.setDeleteButtonVisible(true);
+        mCouponEditText.setOnFocusChangeListener(this);
 
         mCouponEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -90,10 +62,6 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
         });
 
         mCompleteView.setOnClickListener(this);
-
-        int length = mCouponEditText.getText().length();
-        mDeleteView.setVisibility(length > 0 ? View.VISIBLE : View.GONE);
-        mDeleteView.setOnClickListener(this);
     }
 
     private void initToolbar(View view)
@@ -121,12 +89,16 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
 
                 hideKeyboard(v);
                 break;
+        }
+    }
 
-            case R.id.deleteView:
-                if (mCouponEditText != null)
-                {
-                    mCouponEditText.setText("");
-                }
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        switch (v.getId())
+        {
+            case R.id.couponEditText:
+                setFocusLabelView(mTitleView, mCouponEditText, hasFocus);
                 break;
         }
     }
@@ -152,5 +124,22 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
 
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+        }
     }
 }
