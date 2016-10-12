@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
@@ -92,6 +93,8 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
 
             DailyDeepLink.getInstance().clear();
         }
+
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICEDETAILVIEW);
     }
 
 
