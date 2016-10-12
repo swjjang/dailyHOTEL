@@ -708,8 +708,12 @@ public class AdjustManager extends BaseAnalyticsManager
             event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
-        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
+            || EventToken.STAY_PURCHASE.equalsIgnoreCase(eventToken) == true)
+        {
+            String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        }
 
         String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD); // card_registration
         event.addPartnerParameter(Key.REGISTERED_SIMPLE_CARD, registeredSimpleCard);

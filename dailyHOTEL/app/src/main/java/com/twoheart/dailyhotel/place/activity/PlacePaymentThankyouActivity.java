@@ -185,10 +185,11 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             {
                 PlacePaymentThankyouActivity.this.onFirstPurchaseSuccess(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
 
-                if (isCouponUsed == true)
-                {
-                    PlacePaymentThankyouActivity.this.onCouponUsedPurchase(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
-                }
+            }
+
+            if (isCouponUsed == true)
+            {
+                PlacePaymentThankyouActivity.this.onCouponUsedPurchase(isFirstStayPurchase, isFirstGourmetPurchase, mPaymentType, mParams);
             }
         }
 
