@@ -29,7 +29,7 @@
             android:id="@+id/emailView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             android:text="@string/label_email"
             android:textColor="@color/selector_label_textcolor"
             android:textSize="12dp"/>
@@ -38,7 +38,7 @@
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:background="@drawable/selector_edittext_background"
             android:hint="@string/label_necessary"
             android:inputType="textEmailAddress"

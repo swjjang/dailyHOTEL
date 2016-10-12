@@ -183,6 +183,7 @@
     <string name="toast_msg_profile_success_edit_name">이름 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_password">비밀번호 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_email">이메일 설정을 완료했습니다.</string>
+    <string name="toast_msg_profile_success_edit_birthday">생일 설정을 완료했습니다.</string>
 
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인했습니다.</string>

@@ -366,7 +366,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (result == true)
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -440,7 +440,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (result == true)
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)

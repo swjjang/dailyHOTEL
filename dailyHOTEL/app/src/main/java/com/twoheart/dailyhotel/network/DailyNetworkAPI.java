@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.net.URLEncoder;
@@ -154,7 +155,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
-        
+
         mQueue.add(dailyHotelJsonRequest);
     }
 
