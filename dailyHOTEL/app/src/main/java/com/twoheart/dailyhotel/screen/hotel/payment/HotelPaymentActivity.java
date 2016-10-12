@@ -1023,10 +1023,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.RATING, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(hotelPaymentInformation.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, hotelPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(hotelPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, hotelPaymentInformation.isDailyChoice ? "y" : "n");
 
             if (mProvince == null)
             {
