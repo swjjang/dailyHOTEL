@@ -257,6 +257,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         } else
                         {
                             mDontReload = false;
+
+                            changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, null);
                         }
                         return;
 
