@@ -75,6 +75,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startAbout();
 
+        void startRecentPlaces();
+
         void onPushClick();
 
         void startFacebook();
@@ -123,6 +125,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
+        View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
 
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
@@ -130,6 +133,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
+        recentPlacesLayout.setOnClickListener(this);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
@@ -558,6 +562,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
 
             case R.id.aboutLayout:
+                ((OnEventListener) mOnEventListener).startAbout();
+                break;
+
+            case R.id.recentPlacesLayout:
                 ((OnEventListener) mOnEventListener).startAbout();
                 break;
 
