@@ -199,8 +199,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
             event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
 
             if (DEBUG == true)
@@ -209,8 +210,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
             event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
 
             if (DEBUG == true)
@@ -219,8 +221,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
             event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.LIST);
 
             if (DEBUG == true)
@@ -229,8 +232,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
             event = getListEvent(EventToken.VIEW_LIST, params);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
             event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
 
             if (DEBUG == true)
@@ -239,8 +243,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
             event = getDetailEvent(EventToken.VIEW_DETAIL, params);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
             if (DEBUG == true)
             {
@@ -248,8 +253,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
             event = getDetailEvent(EventToken.VIEW_DETAIL, params);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
             if (DEBUG == true)
             {
@@ -717,10 +723,21 @@ public class AdjustManager extends BaseAnalyticsManager
         String service = params.get(Key.SERVICE);
         event.addPartnerParameter(Key.SERVICE, service);
 
-        if (AnalyticsManager.ValueType.HOTEL.equalsIgnoreCase(service) == true)
+        if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(service) == false)
         {
-            String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-            event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+            String lengthOfStay = null;
+            if (params.containsKey(AnalyticsManager.KeyType.QUANTITY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            } else if (params.containsKey(AnalyticsManager.KeyType.LENGTH_OF_STAY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
+            }
+
+            if (Util.isTextEmpty(lengthOfStay) == false)
+            {
+                event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
+            }
         }
 
         String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD); // card_registration
@@ -843,9 +860,25 @@ public class AdjustManager extends BaseAnalyticsManager
             event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
-        //        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        String lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
-        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
+        String service = params.get(Key.SERVICE);
+        event.addPartnerParameter(Key.SERVICE, service);
+
+        if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(service) == false)
+        {
+            String lengthOfStay = null;
+            if (params.containsKey(AnalyticsManager.KeyType.QUANTITY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            } else if (params.containsKey(AnalyticsManager.KeyType.LENGTH_OF_STAY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
+            }
+
+            if (Util.isTextEmpty(lengthOfStay) == false)
+            {
+                event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
+            }
+        }
 
         String filter = params.get(AnalyticsManager.KeyType.FILTER); // filter
         event.addPartnerParameter(AnalyticsManager.KeyType.FILTER, filter);
@@ -913,8 +946,25 @@ public class AdjustManager extends BaseAnalyticsManager
             event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
-        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        String service = params.get(Key.SERVICE);
+        event.addPartnerParameter(Key.SERVICE, service);
+
+        if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(service) == false)
+        {
+            String lengthOfStay = null;
+            if (params.containsKey(AnalyticsManager.KeyType.QUANTITY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            } else if (params.containsKey(AnalyticsManager.KeyType.LENGTH_OF_STAY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
+            }
+
+            if (Util.isTextEmpty(lengthOfStay) == false)
+            {
+                event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
+            }
+        }
 
         return event;
     }
