@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_email"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -72,7 +72,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -111,7 +111,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_name"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_birthday"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -207,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_recommender_code"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
