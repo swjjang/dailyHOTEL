@@ -431,7 +431,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         if (mIsUsedAccept == true)
         {
             map.put("Accept", "application/json;charset=UTF-8");
-            map.put("Content-type", "application/json");
+            map.put("Content-type", "application/json;charset=UTF-8");
         }
 
         if (DailyHotel.isLogin() == true)
