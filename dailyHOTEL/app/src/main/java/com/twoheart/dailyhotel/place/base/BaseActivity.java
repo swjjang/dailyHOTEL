@@ -388,6 +388,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         if (DEBUG == false && e != null)
         {
             Crashlytics.logException(e);
+        } else
+        {
+            if (e != null)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         onError();

@@ -77,8 +77,13 @@ public class ProfileNetworkController extends BaseNetworkController
                     {
                         //                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
                         //                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
-
-                        verifiedDate = DailyCalendar.convertDateFormatString(jsonObject.getString("phoneVerifiedAt"), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                        try
+                        {
+                            verifiedDate = DailyCalendar.convertDateFormatString(jsonObject.getString("phoneVerifiedAt"), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                        } catch (NullPointerException e)
+                        {
+                            verifiedDate = null;
+                        }
                     } else if (isVerified == false && isPhoneVerified == true)
                     {
                         verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";

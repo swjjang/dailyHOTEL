@@ -105,7 +105,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         {
             try
             {
-                mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.mm.dd"));
+                mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
                 mBirthdayEditText.setTag(birthday);
             } catch (Exception e)
             {
@@ -284,6 +284,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
             }
         });
 
+        datePicker.setMaxDate(DailyCalendar.getInstance().getTimeInMillis());
+
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
@@ -364,7 +366,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (result == true)
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -438,7 +440,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (result == true)
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)

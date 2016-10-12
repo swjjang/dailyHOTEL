@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_email"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -72,7 +72,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -90,7 +90,7 @@
                         android:id="@+id/passwordEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:background="@drawable/selector_edittext_background"
                         android:hint="@string/label_necessary"
                         android:inputType="textPassword"
@@ -111,7 +111,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -129,7 +129,7 @@
                         android:id="@+id/confirmPasswordEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:background="@drawable/selector_edittext_background"
                         android:hint="@string/label_necessary"
                         android:inputType="textPassword"
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_name"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_necessary_reservation"
                 android:imeOptions="actionDone"
@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_birthday"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -189,7 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/selector_edittext_background"
                 android:cursorVisible="false"
                 android:hint="@string/label_option_benefit"
@@ -207,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/label_recommender_code"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
@@ -218,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_select"
                 android:inputType="text"
@@ -319,7 +319,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="15dp"
                     android:gravity="center"
-                    android:text="@string/frag_push_alert"
+                    android:text="@string/label_notification_on_option"
                     android:textColor="@color/information_title"
                     android:textSize="12dp"
                     android:theme="@style/CheckBoxTheme"/>

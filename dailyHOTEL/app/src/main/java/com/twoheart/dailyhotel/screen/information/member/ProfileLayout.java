@@ -120,7 +120,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         {
             try
             {
-                mBirthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.mm.dd"));
+                mBirthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
                 mBirthdayTextView.setTag(birthday);
             } catch (Exception e)
             {
@@ -192,7 +192,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         {
             try
             {
-                mBirthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.mm.dd"));
+                mBirthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
                 mBirthdayTextView.setTag(birthday);
             } catch (Exception e)
             {

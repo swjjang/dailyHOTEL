@@ -26,7 +26,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender, String birthday)
+    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
     {
         Map<String, String> params = new HashMap<>();
         params.put("user_idx", userIndex);
