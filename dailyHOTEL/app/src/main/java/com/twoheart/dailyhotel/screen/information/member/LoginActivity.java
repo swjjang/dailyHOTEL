@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ import com.twoheart.dailyhotel.screen.information.ForgotPasswordActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -58,6 +63,7 @@ import java.util.Map;
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
+    private ScrollView mScrollView;
     private DailyEditText mEmailEditText, mPasswordEditText;
     private TextView mLoginView;
     private View mEmailView, mPasswordView;
@@ -70,6 +76,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private SessionCallback mKakaoSessionCallback;
     private boolean mIsSocialSignUp;
     private boolean mCertifyingTermination;
+
+    //
+    private boolean mIsKeypadOpend;
+    private boolean mScrollToEmailView;
 
     private String mCallByScreen;
 
@@ -131,6 +141,19 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initTopLayout()
     {
+        mScrollView = (ScrollView) findViewById(R.id.scrollView);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, getResources().getColor(R.color.default_over_scroll_edge));
+
+        if (Util.isOverAPI16() == true)
+        {
+            mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
+        } else
+        {
+            mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        }
+
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
+
         TextView signUpView = (TextView) findViewById(R.id.signUpView);
         signUpView.setOnClickListener(this);
 
@@ -149,11 +172,47 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(true);
         mEmailEditText.setOnFocusChangeListener(this);
+        mEmailEditText.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getActionMasked())
+                {
+                    case MotionEvent.ACTION_UP:
+                        if (mIsKeypadOpend == false)
+                        {
+                            mScrollToEmailView = true;
+                        }
+                        break;
+                }
+
+                return false;
+            }
+        });
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
         mPasswordEditText.setDeleteButtonVisible(true);
         mPasswordEditText.setOnFocusChangeListener(this);
+        mPasswordEditText.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getActionMasked())
+                {
+                    case MotionEvent.ACTION_UP:
+                        if (mIsKeypadOpend == false)
+                        {
+                            mScrollToEmailView = true;
+                        }
+                        break;
+                }
+
+                return false;
+            }
+        });
 
         mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
@@ -235,6 +294,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         super.onDestroy();
 
         Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
+
+        if (Util.isOverAPI16() == true)
+        {
+            mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
+        } else
+        {
+            mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+        }
     }
 
     private void registerFacebookUser(String id, String name, String email, String gender)
@@ -649,6 +716,40 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             unLockUI();
         }
     }
+
+    private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener()
+    {
+        @Override
+        public void onGlobalLayout()
+        {
+            Rect rect = new Rect();
+            mScrollView.getWindowVisibleDisplayFrame(rect);
+            int screenHeight = mScrollView.getRootView().getHeight();
+            int keypadHeight = screenHeight - rect.bottom;
+
+            if (keypadHeight > screenHeight * 0.15)
+            {
+                mIsKeypadOpend = true;
+
+                if (mScrollToEmailView == true)
+                {
+                    mScrollToEmailView = false;
+
+                    mScrollView.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mScrollView.scrollTo(0, mEmailView.getTop());
+                        }
+                    });
+                }
+            } else
+            {
+                mIsKeypadOpend = false;
+            }
+        }
+    };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener

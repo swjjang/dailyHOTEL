@@ -1,20 +1,24 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
@@ -28,6 +32,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     private View mPhoneView, mVerificationView;
     private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextWatcher mTextWatcher;
+    private ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -66,6 +71,9 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
         mCountryEditText = (DailyEditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
@@ -267,6 +275,40 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mSignUpView.setVisibility(View.VISIBLE);
 
         mVerificationEditText.requestFocus();
+
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                Rect rect = new Rect();
+                mScrollView.getWindowVisibleDisplayFrame(rect);
+                int screenHeight = mScrollView.getRootView().getHeight();
+                int keypadHeight = screenHeight - rect.bottom;
+
+                if (keypadHeight > screenHeight * 0.15)
+                {
+                    mScrollView.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mScrollView.fullScroll(View.FOCUS_DOWN);
+
+                            mVerificationEditText.requestFocus();
+                        }
+                    });
+
+                    if (Util.isOverAPI16() == true)
+                    {
+                        mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else
+                    {
+                        mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                }
+            }
+        });
     }
 
     public void resetPhoneNumber()
