@@ -384,7 +384,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         return false;
     }
 
-    private void setPaymentTypeEnabled(View view, boolean enabled)
+    private void setPaymentTypeEnabled(final View view, boolean enabled)
     {
         if (view == null)
         {
@@ -398,10 +398,16 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         } else
         {
             view.setVisibility(View.VISIBLE);
-
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            layoutParams.height = ((View)view.getParent()).getHeight();
-            view.setLayoutParams(layoutParams);
+            view.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                    layoutParams.height = ((View) view.getParent()).getHeight();
+                    view.setLayoutParams(layoutParams);
+                }
+            });
 
             view.setOnClickListener(new OnClickListener()
             {
