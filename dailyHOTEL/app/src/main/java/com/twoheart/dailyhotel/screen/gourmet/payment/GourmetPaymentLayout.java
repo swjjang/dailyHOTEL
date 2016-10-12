@@ -337,7 +337,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         return false;
     }
 
-    private void setPaymentTypeEnabled(View view, boolean enabled)
+    private void setPaymentTypeEnabled(final View view, boolean enabled)
     {
         if (view == null)
         {
@@ -351,10 +351,16 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         } else
         {
             view.setVisibility(View.VISIBLE);
-
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            layoutParams.height = ((View)view.getParent()).getHeight();
-            view.setLayoutParams(layoutParams);
+            view.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                    layoutParams.height = ((View) view.getParent()).getHeight();
+                    view.setLayoutParams(layoutParams);
+                }
+            });
 
             view.setOnClickListener(new View.OnClickListener()
             {
