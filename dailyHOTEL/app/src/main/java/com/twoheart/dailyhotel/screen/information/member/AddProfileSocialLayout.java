@@ -5,8 +5,10 @@ import android.graphics.Paint;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -53,7 +55,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showBirthdayDatePicker();
 
-        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday);
+        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit);
     }
 
     public AddProfileSocialLayout(Context context, OnEventListener mOnEventListener)
@@ -85,7 +87,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutForm(View view)
     {
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPhoneLayout = view.findViewById(R.id.phoneLayout);
@@ -121,6 +123,24 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mNameEditText = (DailyEditText) mNameLayout.findViewById(R.id.nameEditText);
         mNameEditText.setDeleteButtonVisible(true);
         mNameEditText.setOnFocusChangeListener(this);
+
+        mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    mNameEditText.requestFocus();
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(mNameEditText.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
@@ -234,7 +254,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     }
                 }
 
-                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name, recommender, birthday);
+                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name, recommender, birthday, mBenefitCheckBox.isChecked());
                 break;
             }
 
@@ -291,6 +311,10 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 }
                 break;
             }
+
+            case R.id.birthdayEditText:
+                onFocusChange(mBirthdayEditText, true);
+                break;
         }
     }
 
@@ -313,6 +337,11 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
             case R.id.birthdayEditText:
                 setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
+
+                if (hasFocus == true)
+                {
+                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                }
                 break;
 
             case R.id.recommenderEditText:

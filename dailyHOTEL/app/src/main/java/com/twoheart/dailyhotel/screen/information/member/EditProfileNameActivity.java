@@ -247,14 +247,9 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         {
             try
             {
-                boolean result = false;
+                int msgCode = response.getInt("msgCode");
 
-                if (response.has("success") == true)
-                {
-                    result = response.getBoolean("success");
-                }
-
-                if (result == true)
+                if (msgCode == 100)
                 {
                     showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
                     {
@@ -275,22 +270,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     setResult(RESULT_OK);
                 } else
                 {
-                    String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            mNameEditText.setText(null);
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            mNameEditText.setText(null);
-                        }
-                    });
+                    onErrorPopupMessage(msgCode, response.getString("msg"), null);
                 }
             } catch (Exception e)
             {

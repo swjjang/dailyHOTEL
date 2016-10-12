@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -291,8 +292,21 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mPhoneLayout.setOnClickListener(this);
         mTransferLayout.setOnClickListener(this);
 
-        mEmptySimpleCardLayout = view.findViewById(R.id.emptySimpleCardLayout);
-        mSelectedSimpleCardLayout = view.findViewById(R.id.selectedSimpleCardLayout);
+        View simpleCreditCardLayout = view.findViewById(R.id.simpleCreditCardLayout);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) simpleCreditCardLayout.getLayoutParams();
+
+        if (layoutParams == null)
+        {
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
+        }
+
+        layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+        simpleCreditCardLayout.setLayoutParams(layoutParams);
+
+        mEmptySimpleCardLayout = simpleCreditCardLayout.findViewById(R.id.emptySimpleCardLayout);
+        mSelectedSimpleCardLayout = simpleCreditCardLayout.findViewById(R.id.selectedSimpleCardLayout);
         mSimpleCardLogoTextView = (TextView) mSelectedSimpleCardLayout.findViewById(R.id.logoTextView);
         mSimpleCardNumberTextView = (TextView) mSelectedSimpleCardLayout.findViewById(R.id.numberTextView);
 
@@ -370,7 +384,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         return false;
     }
 
-    private void setPaymentTypeEnabled(View view, boolean enabled)
+    private void setPaymentTypeEnabled(final View view, boolean enabled)
     {
         if (view == null)
         {
@@ -384,6 +398,17 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         } else
         {
             view.setVisibility(View.VISIBLE);
+            view.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                    layoutParams.height = ((View) view.getParent()).getHeight();
+                    view.setLayoutParams(layoutParams);
+                }
+            });
+
             view.setOnClickListener(new OnClickListener()
             {
                 @Override

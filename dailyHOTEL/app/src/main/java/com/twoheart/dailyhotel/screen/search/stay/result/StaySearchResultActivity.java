@@ -624,6 +624,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                             {
                                 params.put(AnalyticsManager.KeyType.CHECK_IN, mStaySearchCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
                                 params.put(AnalyticsManager.KeyType.CHECK_OUT, mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+                                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mStaySearchCuration.getNights()));
 
                                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
                                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);
@@ -848,6 +849,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 params.put(AnalyticsManager.KeyType.CHECK_IN, mStaySearchCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
                 params.put(AnalyticsManager.KeyType.CHECK_OUT, mStaySearchCuration.getCheckOutSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mStaySearchCuration.getNights()));
 
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);

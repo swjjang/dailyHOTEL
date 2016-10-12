@@ -104,8 +104,7 @@
             android:text="@string/coupon_list_register_coupon"
             android:textColor="@color/white"
             android:textSize="17dp"
-            dailyFont:style="Medium"
-            />
+            dailyFont:style="Medium"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -114,8 +113,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/registerCouponLayout"
         android:layout_below="@+id/couponLayout"
-        android:scrollbars="vertical"
-        />
+        android:scrollbars="vertical"/>
 
     <RelativeLayout
         android:id="@+id/emptyView"

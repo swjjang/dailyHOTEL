@@ -179,8 +179,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
         if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
             event = getPaymentEvent(EventToken.GOURMET_FIRST_PURCHASE, params, false);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
             if (DEBUG == true)
             {
@@ -188,8 +189,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
             event = getPaymentEvent(EventToken.STAY_FIRST_PURCHASE, params, false);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
             if (DEBUG == true)
             {
@@ -255,8 +257,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
             event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params, false);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
             if (DEBUG == true)
             {
@@ -264,8 +267,9 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
             event = getPaymentEvent(EventToken.VIEW_BOOKING_INITIALISE, params, false);
-            event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
             if (DEBUG == true)
             {
@@ -548,8 +552,9 @@ public class AdjustManager extends BaseAnalyticsManager
             return;
         }
 
+        params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
         DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params, true);
-        event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
         Adjust.trackEvent(event);
     }
@@ -562,8 +567,9 @@ public class AdjustManager extends BaseAnalyticsManager
             return;
         }
 
+        params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
         DailyAdjustEvent event = getPaymentEvent(EventToken.GOURMET_PURCHASE, params, true);
-        event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
         Adjust.trackEvent(event);
     }
@@ -708,8 +714,14 @@ public class AdjustManager extends BaseAnalyticsManager
             event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
         }
 
-        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
-        event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        String service = params.get(Key.SERVICE);
+        event.addPartnerParameter(Key.SERVICE, service);
+
+        if (AnalyticsManager.ValueType.HOTEL.equalsIgnoreCase(service) == true)
+        {
+            String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
+        }
 
         String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD); // card_registration
         event.addPartnerParameter(Key.REGISTERED_SIMPLE_CARD, registeredSimpleCard);
@@ -935,7 +947,7 @@ public class AdjustManager extends BaseAnalyticsManager
         String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE); // service == placeType
         event.addPartnerParameter(Key.SERVICE, placeType);
 
-        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+        String quantity = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
         event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, quantity);
 
         String searchWord = params.get(AnalyticsManager.KeyType.SEARCH_WORD); // 입력어

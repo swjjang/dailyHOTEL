@@ -153,6 +153,7 @@ public class DailyNetworkAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/update" : "NTAkNTkkNDgkNjEkNCQ1OSQzNSQzNiQ0OCQ3MyQzOCQ1JDE4JDkxJDcxJDY0JA==$MkU3NBMUY5RERCRDhDQQTJFN0REQkI3OTI1QzXPEZ2OTY5MTQ2NZDYwJOEBFBNEYD2CQjEQFVCNTg1DNzFFNkJDRDJDRTIUzMjU2RQ==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }

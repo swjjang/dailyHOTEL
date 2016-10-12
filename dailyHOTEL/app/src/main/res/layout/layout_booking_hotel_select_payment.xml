@@ -132,7 +132,8 @@
                 android:background="@color/default_line_ce8e8e9"/>
 
             <RelativeLayout
-                android:layout_width="300dp"
+                android:id="@+id/simpleCreditCardLayout"
+                android:layout_width="match_parent"
                 android:layout_height="188dp"
                 android:layout_below="@+id/simpleCardLayout"
                 android:layout_centerInParent="true"
@@ -142,7 +143,7 @@
                     android:id="@+id/emptySimpleCardLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/shape_fillrect_le6e6e7_bf6f6f8"
+                    android:background="@drawable/shape_fillrect_le6e6e7_bffffff"
                     android:visibility="visible">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
@@ -209,7 +210,7 @@
             <View
                 android:id="@+id/disableSimpleCardView"
                 android:layout_width="match_parent"
-                android:layout_height="274dp"
+                android:layout_height="match_parent"
                 android:background="@color/default_background_disable_cccffffff"
                 android:visibility="gone"/>
         </RelativeLayout>
