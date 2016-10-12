@@ -162,7 +162,17 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             @Override
             public void afterTextChanged(Editable s)
             {
-                if (s.length() >= VERIFICATION_NUMBER_LENGTH)
+                int length = s.length();
+
+                if (length == 0)
+                {
+                    mSignUpView.setEnabled(false);
+                } else if (length > 0)
+                {
+                    mSignUpView.setEnabled(true);
+                }
+
+                if (length >= VERIFICATION_NUMBER_LENGTH)
                 {
                     InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(mVerificationEditText.getWindowToken(), 0);
@@ -187,6 +197,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mSignUpView = view.findViewById(R.id.signUpView);
         mSignUpView.setOnClickListener(this);
         mSignUpView.setVisibility(View.INVISIBLE);
+        mSignUpView.setEnabled(false);
 
         mPhoneEditText.requestFocus();
     }
@@ -272,9 +283,9 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     public void showVerificationVisible()
     {
         mVerificationLayout.setVisibility(View.VISIBLE);
-        mSignUpView.setVisibility(View.VISIBLE);
-
         mVerificationEditText.requestFocus();
+
+        mSignUpView.setVisibility(View.VISIBLE);
 
         mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {

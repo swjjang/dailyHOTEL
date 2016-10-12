@@ -1,15 +1,18 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
@@ -34,6 +38,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextView mGuideTextView;
     private TextWatcher mTextWatcher;
+    private ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -74,6 +79,9 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutForm(View view)
     {
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
         mGuideTextView = (TextView) view.findViewById(R.id.guideTextView);
         mCountryEditText = (DailyEditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
@@ -168,6 +176,16 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
             @Override
             public void afterTextChanged(Editable s)
             {
+                int length = s.length();
+
+                if (length == 0)
+                {
+                    mConfirm.setEnabled(false);
+                } else if (length > 0)
+                {
+                    mConfirm.setEnabled(true);
+                }
+
                 if (s.length() >= VERIFICATION_NUMBER_LENGTH)
                 {
                     InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -201,6 +219,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         });
 
         mConfirm = view.findViewById(R.id.confirmView);
+        mConfirm.setVisibility(View.INVISIBLE);
         mConfirm.setEnabled(false);
         mConfirm.setOnClickListener(this);
 
@@ -349,7 +368,41 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationLayout.setVisibility(View.VISIBLE);
         mVerificationEditText.requestFocus();
 
-        mConfirm.setEnabled(true);
+        mConfirm.setVisibility(View.VISIBLE);
+
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                Rect rect = new Rect();
+                mScrollView.getWindowVisibleDisplayFrame(rect);
+                int screenHeight = mScrollView.getRootView().getHeight();
+                int keypadHeight = screenHeight - rect.bottom;
+
+                if (keypadHeight > screenHeight * 0.15)
+                {
+                    mScrollView.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mScrollView.fullScroll(View.FOCUS_DOWN);
+
+                            mVerificationEditText.requestFocus();
+                        }
+                    });
+
+                    if (Util.isOverAPI16() == true)
+                    {
+                        mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else
+                    {
+                        mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                }
+            }
+        });
     }
 
     public void showKeyPad()
