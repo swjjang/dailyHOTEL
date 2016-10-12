@@ -566,7 +566,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
 
             case R.id.recentPlacesLayout:
-                ((OnEventListener) mOnEventListener).startAbout();
+                ((OnEventListener) mOnEventListener).startRecentPlaces();
                 break;
 
             case R.id.pushBenefitLayout:
