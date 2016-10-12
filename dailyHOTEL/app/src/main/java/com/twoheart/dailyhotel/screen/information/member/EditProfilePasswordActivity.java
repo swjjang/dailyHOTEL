@@ -228,14 +228,9 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         {
             try
             {
-                boolean result = false;
+                int msgCode = response.getInt("msgCode");
 
-                if (response.has("success") == true)
-                {
-                    result = response.getBoolean("success");
-                }
-
-                if (result == true)
+                if (msgCode == 100)
                 {
                     showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_password), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
                     {
