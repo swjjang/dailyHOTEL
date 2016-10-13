@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 /**
@@ -71,6 +73,13 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
                 }
             }
         });
+
+        StringFilter stringFilter = new StringFilter(mContext);
+        InputFilter[] allowRegisterCouponFilters = new InputFilter[2];
+        allowRegisterCouponFilters[0] = stringFilter.allowRegisterCouponFilter;
+        allowRegisterCouponFilters[1] = new InputFilter.LengthFilter(20);
+
+        mCouponEditText.setFilters(allowRegisterCouponFilters);
 
         mCouponEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
