@@ -24,7 +24,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
     {
         void onVerification(String message);
 
-        void onSignUp(int notificationUid, String gcmRegisterId, String updateDate);
+        void onSignUp(int notificationUid, String gcmRegisterId);
 
         void onLogin(String authorization, String userIndex, String email, String name, String recommender, String userType, String phoneNumber, boolean isBenefit);
 
@@ -65,7 +65,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener);
     }
 
-    public void requestGoogleCloudMessagingId(final String updateDate)
+    public void requestGoogleCloudMessagingId()
     {
         Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
         {
@@ -79,7 +79,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         @Override
                         public void onErrorResponse(VolleyError volleyError)
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null, updateDate);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null);
                         }
 
                         @Override
@@ -102,12 +102,12 @@ public class SignupStep2NetworkController extends BaseNetworkController
                                 ExLog.d(e.toString());
                             }
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(uid, registrationId, updateDate);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(uid, registrationId);
                         }
                     });
                 } else
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null, updateDate);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null);
                 }
             }
         });
@@ -227,11 +227,10 @@ public class SignupStep2NetworkController extends BaseNetworkController
                     JSONObject jsonObject = response.getJSONObject("data");
 
                     boolean isSignup = jsonObject.getBoolean("is_signup");
-                    String updateDate = jsonObject.getString("updateDate");
 
                     if (isSignup == true)
                     {
-                        requestGoogleCloudMessagingId(updateDate);
+                        requestGoogleCloudMessagingId();
                         return;
                     }
                 }

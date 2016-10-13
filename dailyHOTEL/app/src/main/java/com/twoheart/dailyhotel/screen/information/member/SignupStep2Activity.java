@@ -17,12 +17,15 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import java.text.ParseException;
 
 public class SignupStep2Activity extends BaseActivity
 {
@@ -32,6 +35,7 @@ public class SignupStep2Activity extends BaseActivity
     private static final String INTENT_EXTRA_DATA_EMAIL = "email";
     private static final String INTENT_EXTRA_DATA_PASSWORD = "password";
     private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
+    private static final String INTENT_EXTRA_DATA_AGREED_BENEFIT_DATE = "agreedBenefitDate";
 
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
@@ -40,17 +44,20 @@ public class SignupStep2Activity extends BaseActivity
     private String mCountryCode;
     private String mSignupKey, mEmail, mPassword, mRecommender;
     private String mCallByScreen;
+    private String mAgreedBenefitDate;
     private int mRequestVerficationCount;
 
     private Handler mRetryHandler;
 
-    public static Intent newInstance(Context context, String singupKey, String email, String password, String recommmender, String callByScreen)
+    public static Intent newInstance(Context context, String singupKey, String email, String password,//
+                                     String recommmender, String agreedBenefitDate, String callByScreen)
     {
         Intent intent = new Intent(context, SignupStep2Activity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_SIGNUPKEY, singupKey);
         intent.putExtra(INTENT_EXTRA_DATA_EMAIL, email);
         intent.putExtra(INTENT_EXTRA_DATA_PASSWORD, password);
+        intent.putExtra(INTENT_EXTRA_DATA_AGREED_BENEFIT_DATE, agreedBenefitDate);
 
         if (Util.isTextEmpty(recommmender) == true)
         {
@@ -93,6 +100,7 @@ public class SignupStep2Activity extends BaseActivity
         mSignupKey = intent.getStringExtra(INTENT_EXTRA_DATA_SIGNUPKEY);
         mEmail = intent.getStringExtra(INTENT_EXTRA_DATA_EMAIL);
         mPassword = intent.getStringExtra(INTENT_EXTRA_DATA_PASSWORD);
+        mAgreedBenefitDate = intent.getStringExtra(INTENT_EXTRA_DATA_AGREED_BENEFIT_DATE);
         mRecommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
@@ -174,16 +182,46 @@ public class SignupStep2Activity extends BaseActivity
 
         messageTextView01.setText(DailyPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
 
+        try
+        {
+            updateDate = DailyCalendar.convertDateFormatString(updateDate,DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+        } catch (ParseException e)
+        {
+            updateDate = null;
+        }
+
         if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
         {
             messageTextView02.setVisibility(View.VISIBLE);
 
-            String message = getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+            String message = null;
+            try
+            {
+                message = getString(R.string.message_benefit_alarm_on_confirm_format,//
+                    );
+            } catch (ParseException e)
+            {
+
+            }
+
             messageTextView02.setText(message);
         } else
         {
             messageTextView02.setVisibility(View.GONE);
         }
+
+        TextView confirmTextView = (TextView) dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
         {
@@ -266,8 +304,6 @@ public class SignupStep2Activity extends BaseActivity
 
     private SignupStep2NetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new SignupStep2NetworkController.OnNetworkControllerListener()
     {
-        private String mBenefitUpdateDate;
-
         @Override
         public void onVerification(String message)
         {
@@ -293,7 +329,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onSignUp(int notificationUid, String gcmRegisterId, String benefitUpdateDate)
+        public void onSignUp(int notificationUid, String gcmRegisterId)
         {
             DailyPreference.getInstance(SignupStep2Activity.this).setVerification(true);
 
@@ -306,8 +342,6 @@ public class SignupStep2Activity extends BaseActivity
             {
                 DailyPreference.getInstance(SignupStep2Activity.this).setGCMRegistrationId(gcmRegisterId);
             }
-
-            mBenefitUpdateDate = benefitUpdateDate;
 
             mNetworkController.requestLogin(mEmail, mPassword);
         }
@@ -334,7 +368,7 @@ public class SignupStep2Activity extends BaseActivity
                 userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
 
-            showCompletedSignupDialog(isBenefit, mBenefitUpdateDate);
+            showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
         }
 
         @Override

@@ -384,9 +384,10 @@ public class SignupStep1Activity extends BaseActivity
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     String signupKey = dataJSONObject.getString("signup_key");
+                    String serverDate = dataJSONObject.getString("serverDate");
 
                     Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
-                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), //
+                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
                         mSignupParams.get("recommender"), mCallByScreen);
                     startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 } else

@@ -139,6 +139,75 @@ public class AddProfileSocialActivity extends BaseActivity
         }
     }
 
+    private void showCompletedSignupDialog(boolean isBenefit, String updateDate)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_signup_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setText(getString(R.string.dialog_notice2));
+
+        // 메시지
+        TextView messageTextView01 = (TextView) dialogView.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = (TextView) dialogView.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(DailyPreference.getInstance(this).getRemoteConfigTextSignUpText02());
+
+        if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
+        {
+            messageTextView02.setVisibility(View.VISIBLE);
+
+            String message = getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+            messageTextView02.setText(message);
+        } else
+        {
+            messageTextView02.setVisibility(View.GONE);
+        }
+
+        TextView confirmTextView = (TextView) dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     private AddProfileSocialLayout.OnEventListener mOnEventListener = new AddProfileSocialLayout.OnEventListener()
     {
         @Override
@@ -341,17 +410,18 @@ public class AddProfileSocialActivity extends BaseActivity
     private AddProfileSocialNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new AddProfileSocialNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUpdateSocialUserInformation(String message)
+        public void onUpdateSocialUserInformation(String message, String agreedDate)
         {
             if (Util.isTextEmpty(message) == true)
             {
-                DailyPreference.getInstance(AddProfileSocialActivity.this).setUserBenefitAlarm(mAddProfileSocialLayout.isCheckedBenefit());
-                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setPushEnabled(mAddProfileSocialLayout.isCheckedBenefit(), AnalyticsManager.ValueType.OTHER);
+                boolean isBenefit = mAddProfileSocialLayout.isCheckedBenefit();
+
+                DailyPreference.getInstance(AddProfileSocialActivity.this).setUserBenefitAlarm(isBenefit);
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
 
                 AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);
 
-                setResult(RESULT_OK);
-                finish();
+                showCompletedSignupDialog(isBenefit, agreedDate);
             } else
             {
                 DailyToast.showToast(AddProfileSocialActivity.this, message, Toast.LENGTH_SHORT);
