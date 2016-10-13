@@ -416,7 +416,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
                     //					ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
 
-                    mWebView.loadUrl("https://pggw.kcp.co.kr/app.do?ActionResult=app&approval_key=" + strApprovalKey);
+                    mWebView.loadUrl("https://smpay.kcp.co.kr/app.do?ActionResult=app&approval_key=" + strApprovalKey);
 
                 } else if (strResCD.equals("3001") == true)
                 {
