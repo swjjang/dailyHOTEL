@@ -183,7 +183,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         return mTermsOfPrivacyCheckBox.isChecked();
     }
 
-    public boolean isBenefitCheckBox()
+    public boolean isCheckedBenefit()
     {
         return mBenefitCheckBox.isChecked();
     }

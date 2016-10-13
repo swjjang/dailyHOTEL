@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/popup_bg_white_full"
+              android:orientation="vertical"
+              android:paddingBottom="10dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="24dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_d_benefit"
+        android:layout_gravity="center"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/messageTextView01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/messageTextView02"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:id="@+id/oneButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_dialog_button01"
+            android:gravity="center"
+            android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            android:text="@string/dialog_btn_text_confirm"
+            dailyFont:style="Medium"/>
+    </LinearLayout>
+</LinearLayout>

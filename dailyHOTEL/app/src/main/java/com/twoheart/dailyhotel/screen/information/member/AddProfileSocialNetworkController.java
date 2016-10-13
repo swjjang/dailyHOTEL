@@ -56,6 +56,8 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
             params.put("recommendation_code", recommender);
         }
 
+        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
         DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener);
     }
 

@@ -261,11 +261,13 @@ public class DailyRemoteConfig
                 && version.equalsIgnoreCase(DailyPreference.getInstance(context).getRemoteConfigTextVersion()) == false)
             {
                 String loginText01 = jsonObject.getString("loginText01");
-                String signupText01sion = jsonObject.getString("signupText01");
+                String signupText01 = jsonObject.getString("signupText01");
+                String signupText02 = jsonObject.getString("signupText02");
 
                 DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
                 DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(loginText01);
-                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText01sion);
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText01);
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText02);
             }
         } catch (Exception e)
         {

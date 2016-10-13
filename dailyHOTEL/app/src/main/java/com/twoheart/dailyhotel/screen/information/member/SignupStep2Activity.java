@@ -1,11 +1,16 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -144,6 +149,61 @@ public class SignupStep2Activity extends BaseActivity
         finish();
     }
 
+    private void showCompletedSignupDialog(boolean isBenefit, String updateDate)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_signup_layout, null, false);
+
+        final Dialog dialog = new Dialog(SignupStep2Activity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setText(getString(R.string.dialog_notice2));
+
+        // 메시지
+        TextView messageTextView01 = (TextView) dialogView.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = (TextView) dialogView.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(DailyPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
+
+        if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
+        {
+            messageTextView02.setVisibility(View.VISIBLE);
+
+            String message = getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+            messageTextView02.setText(message);
+        } else
+        {
+            messageTextView02.setVisibility(View.GONE);
+        }
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                signupAndFinish();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     private SignupStep2Layout.OnEventListener mOnEventListener = new SignupStep2Layout.OnEventListener()
     {
         @Override
@@ -206,6 +266,8 @@ public class SignupStep2Activity extends BaseActivity
 
     private SignupStep2NetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new SignupStep2NetworkController.OnNetworkControllerListener()
     {
+        private String mBenefitUpdateDate;
+
         @Override
         public void onVerification(String message)
         {
@@ -231,7 +293,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onSignUp(int notificationUid, String gcmRegisterId)
+        public void onSignUp(int notificationUid, String gcmRegisterId, String benefitUpdateDate)
         {
             DailyPreference.getInstance(SignupStep2Activity.this).setVerification(true);
 
@@ -245,32 +307,34 @@ public class SignupStep2Activity extends BaseActivity
                 DailyPreference.getInstance(SignupStep2Activity.this).setGCMRegistrationId(gcmRegisterId);
             }
 
+            mBenefitUpdateDate = benefitUpdateDate;
+
             mNetworkController.requestLogin(mEmail, mPassword);
         }
 
         @Override
-        public void onLogin(String authorization, final String userIndex, final String email, final String name, String recommender, String userType, final String phoneNumber)
+        public void onLogin(String authorization, final String userIndex, final String email, //
+                            final String name, String recommender, String userType, final String phoneNumber, boolean isBenefit)
         {
             unLockUI();
 
             DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
             DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
 
+            // 혜택 알림 체크
+            DailyPreference.getInstance(SignupStep2Activity.this).setUserBenefitAlarm(isBenefit);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
+
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserInformation(userIndex, userType);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
 
-            showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
-                        userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender, mCallByScreen);
+            // 이미 가입된것이기 때문에 미리 Analytics 넣음
+            AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
+                userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
-                    signupAndFinish();
-                }
-            });
+
+            showCompletedSignupDialog(isBenefit, mBenefitUpdateDate);
         }
 
         @Override
