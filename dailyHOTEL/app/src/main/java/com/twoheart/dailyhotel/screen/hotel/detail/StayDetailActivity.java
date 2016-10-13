@@ -946,7 +946,15 @@ public class StayDetailActivity extends PlaceDetailActivity
         public void onErrorPopupMessage(int msgCode, String message)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+
+            // 판매 마감시
+            if (msgCode == 5)
+            {
+                StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+            } else
+            {
+                StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+            }
         }
 
         @Override
