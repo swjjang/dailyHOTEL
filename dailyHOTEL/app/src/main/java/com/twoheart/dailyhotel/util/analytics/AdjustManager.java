@@ -46,11 +46,6 @@ public class AdjustManager extends BaseAnalyticsManager
     {
         mContext = context;
 
-        Adjust.resetSessionCallbackParameters();
-        Adjust.resetSessionPartnerParameters();
-
-        setUserInformation(null, null);
-
         AdjustConfig config = new AdjustConfig(context, APPLICATION_TOKEN, ENVIRONMENT);
 
         // change the log level
@@ -146,6 +141,11 @@ public class AdjustManager extends BaseAnalyticsManager
 
         // disable the SDK
         //        Adjust.setEnabled(true);
+
+        Adjust.resetSessionCallbackParameters();
+        Adjust.resetSessionPartnerParameters();
+
+        setUserInformation(null, null);
     }
 
     @Override
