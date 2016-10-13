@@ -37,7 +37,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCommonDateTime(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * 나의 정보를 요청한다

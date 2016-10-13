@@ -177,7 +177,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected void requestCommonDatetime()
     {
-        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, JSONObject response)

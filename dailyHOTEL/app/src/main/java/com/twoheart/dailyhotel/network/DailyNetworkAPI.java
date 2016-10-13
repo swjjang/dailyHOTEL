@@ -115,7 +115,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener)
+    public void requestCommonDateTime(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/common/datetime" : "MTEkNDgkNDAkMCQ1MyQzMSQ0MyQ5MCQ5MSQxMiQ5NyQxOCQyMCQ2NyQ4MSQyOSQ=$NNTM1NzY2OTVBGERkFSEDMkU0N0FGSQjYyNWEVDNjFGMUIBQxM0Y2MEIC3RBDlGOTJCMMDdDNTU0RjJEMkOE5OTZEOEI0Q0NHVFOQ=Q=$";
 
