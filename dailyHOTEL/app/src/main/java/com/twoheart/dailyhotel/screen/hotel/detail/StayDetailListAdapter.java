@@ -478,12 +478,12 @@ public class StayDetailListAdapter extends BaseAdapter
         {
             benefitTitleTextView.setText(mBenefitInformation.title);
 
+            benefitMessagesLayout.removeAllViews();
+
             List<String> arrayList = mBenefitInformation.getContentsList();
 
             if (arrayList != null)
             {
-                benefitMessagesLayout.removeAllViews();
-
                 for (String information : arrayList)
                 {
                     ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail_benefit_text, benefitMessagesLayout, false);
