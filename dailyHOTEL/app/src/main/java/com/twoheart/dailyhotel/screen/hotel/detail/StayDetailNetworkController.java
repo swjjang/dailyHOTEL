@@ -69,6 +69,8 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
 
                     case 5:
                     {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStaytDetailInformation(dataJSONObject);
+
                         if (response.has("msg") == true)
                         {
                             String msg = response.getString("msg");

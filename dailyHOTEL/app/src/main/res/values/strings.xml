@@ -202,6 +202,7 @@
     <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_numeric">숫자만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_register_coupon">할인쿠폰 코드를 정확하게 입력했는지 다시 확인해주세요.</string>
     <string name="toast_msg_no_call">전화기능을 사용할 수 없는 기기입니다.\n데일리고객센터 전화번호는 1800–9120입니다.</string>
     <string name="toast_msg_no_hotel_call">전화기능을 사용할 수 없는 기기입니다.\n호텔 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_gourmet_call">전화기능을 사용할 수 없는 기기입니다.\n레스토랑 전화번호는 %1$s입니다.</string>
@@ -346,6 +347,7 @@
     <string name="frag_faqs">자주 묻는 질문</string>
     <string name="frag_info">소개</string>
     <string name="frag_about">데일리호텔 소개</string>
+    <string name="frag_terms_and_policy">약관 및 정책</string>
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
@@ -364,13 +366,13 @@
     <string name="frag_count_decimal_format">(###,##0개)</string>
     <string name="frag_currency_decimal_format">(###,##0원)</string>
     <string name="frag_recommend_text">친구 추천하고 5,000원 받기</string>
-    <string name="frag_about_business_license01">(주)데일리 ㅣ 대표 %1$s ㅣ 사업자등록번호 : %2$sㅣ 대표연락처 : %3$s</string>
-    <string name="frag_about_business_license02">통신판매업 신고번호 : %1$s</string>
-    <string name="frag_about_business_license03">개인정보담당자 : %1$s</string>
+    <string name="frag_about_business_license01">(주)데일리 ㅣ 대표 %1$s ㅣ 대표연락처 : %2$s</string>
+    <string name="frag_about_business_license02">사업자등록번호 : %1$s</string>
+    <string name="frag_about_business_license03">통신판매업 신고번호 : %1$s</string>
+    <string name="frag_about_business_license04">개인정보담당자 : %1$s</string>
     <string name="frag_recent_places">최근 확인한 호텔/고메</string>
     <string name="message_empty_notice">공지사항이 없습니다.</string>
-    <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다.\</string>
-    <string name="message_alarm_benefit_off02">여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
+    <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
 
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
@@ -839,8 +841,8 @@
     <string name="label_product_type">상품 타입</string>
     <string name="label_use_day">이용일</string>
     <string name="label_check_booking_history">예약내역 확인하기</string>
-    <string name="message_completed_payment_format">%1$s님의\n결제가 완료되었습니다.</string>
-    <string name="message_completed_payment_default">결제가 완료되었습니다.</string>
+    <string name="message_completed_payment_format">%1$s님의\n결제가 완료되었습니다!</string>
+    <string name="message_completed_payment_default">결제가 완료되었습니다!</string>
     <string name="label_receipt_save_calendar">캘린더에 저장하기</string>
     <string name="label_product_count">상품 수량</string>
 
@@ -883,6 +885,7 @@
     <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
     <string name="coupon_list_empty_message">사용 할 수 있는 할인 쿠폰이 없습니다.</string>
     <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다</string>
+    <string name="coupon_history_header_sub_description">(단, 유효기간이 만료된 쿠폰은 만료 후 1개월 간 정보가 제공됩니다)</string>
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>

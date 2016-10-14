@@ -7,26 +7,43 @@
     android:layout_height="match_parent"
     android:background="@color/information_background">
 
-    <include layout="@layout/toolbar_default"/>
+    <!--<include layout="@layout/toolbar_default"/>-->
 
     <RelativeLayout
         android:id="@+id/couponHistoryLayout"
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="90dp"
         android:layout_below="@id/toolbar"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/white">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawablePadding="4dp"
-            app:drawableCompatTop="@drawable/more_ic_coupon_01"
-            android:text="@string/coupon_history_header_text"
-            android:textColor="@color/information_title"
-            android:textSize="12dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawablePadding="4dp"
+                app:drawableCompatTop="@drawable/more_ic_coupon_01"
+                android:text="@string/coupon_history_header_text"
+                android:textColor="@color/information_title"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/coupon_history_header_sub_description"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="11dp"
+                />
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

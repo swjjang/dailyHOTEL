@@ -571,6 +571,9 @@ public class AnalyticsManager
         public static final String DAILY_GOURMET_FIRST_PURCHASE_SUCCESS = "DailyGourmet_FirstPurchaseSuccess";
         //
         public static final String APP_LAUNCHED = "app_launched";
+        //
+        public static final String MENU_NOTICELIST = "Menu_NoticeList";
+        public static final String MENU_NOTICEDETAILVIEW = "Menu_NoticeDetailView";
     }
 
     public static class Action

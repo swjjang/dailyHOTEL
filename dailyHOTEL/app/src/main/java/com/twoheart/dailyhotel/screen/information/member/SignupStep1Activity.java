@@ -176,7 +176,7 @@ public class SignupStep1Activity extends BaseActivity
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()
     {
         @Override
-        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday, final boolean isBebefit)
+        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday, final boolean isBenefit)
         {
             if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -244,11 +244,12 @@ public class SignupStep1Activity extends BaseActivity
             }
 
             mSignupParams.put("market_type", RELEASE_STORE.getName());
+            mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
             DailyNetworkAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationListener);
 
             AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, isBebefit ? AnalyticsManager.Label.SIGNUP_ON : AnalyticsManager.Label.SIGNUP_OFF, null);
+                AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, isBenefit ? AnalyticsManager.Label.SIGNUP_ON : AnalyticsManager.Label.SIGNUP_OFF, null);
         }
 
         @Override
@@ -383,9 +384,10 @@ public class SignupStep1Activity extends BaseActivity
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     String signupKey = dataJSONObject.getString("signup_key");
+                    String serverDate = dataJSONObject.getString("serverDate");
 
                     Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
-                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), //
+                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
                         mSignupParams.get("recommender"), mCallByScreen);
                     startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 } else

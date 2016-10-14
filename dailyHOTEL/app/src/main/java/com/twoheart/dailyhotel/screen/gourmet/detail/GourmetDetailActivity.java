@@ -849,7 +849,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         public void onErrorPopupMessage(int msgCode, String message)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
-            GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
+
+            // 판매 마감시
+            if (msgCode == 5)
+            {
+                GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+            } else
+            {
+                GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
+            }
+
         }
 
         @Override

@@ -214,15 +214,16 @@ public class StayListAdapter extends PlaceListAdapter
         TextView hotelGradeView;
         TextView satisfactionView;
         View averageView;
-        TextView dBenefitTextView;
         TextView distanceTextView;
         View dBenefitLayout;
+        TextView dBenefitTextView;
 
         public HotelViewHolder(View itemView)
         {
             super(itemView);
 
             dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
+            dBenefitTextView = (TextView) dBenefitLayout.findViewById(R.id.dBenefitTextView);
             gradientView = itemView.findViewById(R.id.gradientView);
             hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
@@ -232,7 +233,6 @@ public class StayListAdapter extends PlaceListAdapter
             hotelSoldOutView = itemView.findViewById(R.id.soldoutView);
             hotelAddressView = (TextView) itemView.findViewById(R.id.addressTextView);
             hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
-            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 

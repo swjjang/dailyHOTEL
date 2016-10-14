@@ -150,10 +150,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/update" : "NTAkNTkkNDgkNjEkNCQ1OSQzNSQzNiQ0OCQ3MyQzOCQ1JDE4JDkxJDcxJDY0JA==$MkU3NBMUY5RERCRDhDQQTJFN0REQkI3OTI1QzXPEZ2OTY5MTQ2NZDYwJOEBFBNEYD2CQjEQFVCNTg1DNzFFNkJDRDJDRTIUzMjU2RQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/profile" : "MzEkNTAkNzMkMzAkMzgkNDQkMTckMzIkNjMkOTIkNjAkNzMkOCQ1MiQ1JDM3JA==$RTZGMNDc1TMjhGQTA2QXzM3MTQ3MzY1OTTPVJMFNjJBXOUVGQXTY5NJjg2MUzg5NCDQ3WNDdGQUFFCRjdDOEVODODQ5MTk5MjcO0OA==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -995,11 +994,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/keyword" : "NzUkMzEkMjAkOCQyJDAkNDkkNjEkMiQxOSQ5MCQ2MiQxMiQxNiQzMCQxNSQ=$NNTzJk1NTVDRKNDBdUGMzQX1RkMxFNjTU4OUY2NUEXzRUVCRTk1REUyUOEU0REY0QjHNLFRUIzQzc3RTlCMTRBQUMT0QzNFNNTNGNg==$\n";
 
-        //        Map<String, String> params = Collections.singletonMap("keyword", keyword);
-        String params = String.format("?keyword=%s", keyword);
+        Map<String, String> params = Collections.singletonMap("keyword", keyword);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }

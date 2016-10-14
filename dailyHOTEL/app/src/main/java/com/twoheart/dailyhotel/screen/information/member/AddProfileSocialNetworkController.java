@@ -18,7 +18,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUpdateSocialUserInformation(String message);
+        void onUpdateSocialUserInformation(String message, String agreedDate);
     }
 
     public AddProfileSocialNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -56,6 +56,8 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
             params.put("recommendation_code", recommender);
         }
 
+        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
         DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener);
     }
 
@@ -76,21 +78,28 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         {
             try
             {
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                boolean result = jsonObject.getBoolean("is_success");
-
-                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                 int msgCode = response.getInt("msg_code");
 
-                if (result == true)
+                if (msgCode == 100)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(null);
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    boolean result = jsonObject.getBoolean("is_success");
+                    String serverDate = jsonObject.getString("serverDate");
+
+                    if (result == true)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(null, serverDate);
+                    } else
+                    {
+                        String message = response.getString("msg");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(message, null);
+                    }
                 } else
                 {
                     String message = response.getString("msg");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(message);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(message, null);
                 }
             } catch (Exception e)
             {

@@ -117,6 +117,9 @@ public interface Constants
     public static final String URL_WEB_COMMON_COUPON_TERMS = UNENCRYPTED_URL ? "http://dailyhotel.kr/webview_cnote/coupon" : "NzgkNjIkNSQ3NCQxMTkkMjAkMTIxJDU4JDM1JDE4JDM0JDk3JDExOCQxMTckMzUkMTM0JA==$RTNFOTDlCM0Q5RTkzRZUEJ3RTE0RDMzRjMTD3RZjE1Q0MxNTc1MTdGRDc0NTA3OQjAzNDPIyNTAxN0NFLMTZDNTIcwQTI1QUMzFRkZBNzU4QTQ0NDQyQTENwBRUVFMjISJxQjgG4MDVBMzdF$";
     public static final String URL_WEB_EACH_COUPON_TERMS = UNENCRYPTED_URL ? "http://dailyhotel.kr/webview_coupon_note/" : "ODYkMTckMTIxJDI5JDEwNSQ3MSQ0MCQyMiQ0JDkyJDgxJDg4JDQwJDYxJDk3JDMwJA==$QzFCKQzI3NzRDODI5RHEM5OIERDQkIR3GREY3Q0I3RNkWQ0NjgyOThBNEVDMTgW5N0JDRjNEQzFBMW0U2M0EIwMzdCRVTE2MzHYPkxNTAwMUI1NjlFREAZEMkREQjFCQjVBREYG5MEU0QjRB$";
 
+    // 테스트 서버
+    public static final String URL_WEB_EACH_COUPON_TERMS_DEV = UNENCRYPTED_URL ? "http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/" : "NjMkMjkkOTAkMTYwJDEyNiQ0MSQxMDAkMTQyJDEwMCQxNDMkOTUkMTY3JDEwNyQzNSQ5MCQ5NCQ=$Q0VEQUNEOTlEOUM4RTdBQTk5NEQxNCUE4RUNRDMzY1DNTRERDY3QjJDRjJCNTIwQzMYzQ0YzNzY0MzA2NzMzMkZCMUCQ0QROEUXxNUVFJTRjAxZMTE4OTdGREM1NEI3NUJDODIJ3ODU4NkUyQzk1KMQUI2RUUwQ0M5MTEzRjI1NTOUE1OEE0M0U4RUI=$";
+
     // Payment App GoogleStore URL
     public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
     public static final String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
@@ -242,6 +245,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_NOTICELIST = 44;
     public static final int CODE_REQUEST_ACTIVITY_REGISTER_COUPON = 45;
     public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 46;
+    public static final int CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY = 47;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -282,6 +286,7 @@ public interface Constants
     public static final int REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE = 11;
 
     public static final int REQUEST_CODE_APPLICATION_DETAILS_SETTINGS = 1000;
+
 
     // 리스트 페이지 사이즈
     public static final int PAGENATION_LIST_SIZE = 200;

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -374,6 +375,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String checkOutDate = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         int nights = hotelPaymentInformation.nights;
         String userName = hotelPaymentInformation.getCustomer() == null ? "" : hotelPaymentInformation.getCustomer().getName();
+
+        if (Util.isTextEmpty(userName) == true)
+        {
+            try
+            {
+                String message = "Empty UserName :: placeIndex:" + hotelPaymentInformation.placeIndex //
+                    + ",roomIndex:" + roomInformation.roomIndex + ",checkIn:" + checkInDate//
+                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",paytype:" + paymentInformation.paymentType;
+                Crashlytics.logException(new NullPointerException(message));
+            } catch (Exception e)
+            {
+            }
+        }
 
         Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
 

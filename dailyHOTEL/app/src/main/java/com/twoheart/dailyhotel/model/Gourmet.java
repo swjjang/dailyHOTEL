@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 public class Gourmet extends Place
 {
+    public String dBenefitText;
     public int persons;
     public String category;
     public int categoryCode;
@@ -45,6 +46,7 @@ public class Gourmet extends Place
     {
         super.writeToParcel(dest, flags);
 
+        dest.writeString(dBenefitText);
         dest.writeInt(persons);
         dest.writeSerializable(grade);
     }
@@ -53,6 +55,7 @@ public class Gourmet extends Place
     {
         super.readFromParcel(in);
 
+        dBenefitText = in.readString();
         persons = in.readInt();
         grade = (Grade) in.readSerializable();
     }
@@ -115,6 +118,14 @@ public class Gourmet extends Place
                 } catch (JSONException e)
                 {
                 }
+            }
+
+            if (jsonObject.has("benefit") == true)
+            {
+                dBenefitText = jsonObject.getString("benefit");
+            } else
+            {
+                dBenefitText = null;
             }
         } catch (JSONException e)
         {

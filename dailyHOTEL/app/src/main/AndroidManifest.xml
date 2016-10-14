@@ -164,7 +164,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
-            android:windowSoftInputMode="stateAlwaysVisible"/>
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"/>
         <activity
             android:name=".screen.information.ForgotPasswordActivity"
             android:launchMode="singleTop"
@@ -183,6 +183,10 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.information.terms.ProtectYouthTermsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.information.terms.TermsNPolicyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -234,7 +238,8 @@
             android:name=".screen.information.member.EditProfilePhoneActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".screen.information.member.EditProfilePasswordActivity"
             android:launchMode="singleTop"

@@ -62,6 +62,8 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 
                     case 5:
                     {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
+
                         if (response.has("msg") == true)
                         {
                             String msg = response.getString("msg");

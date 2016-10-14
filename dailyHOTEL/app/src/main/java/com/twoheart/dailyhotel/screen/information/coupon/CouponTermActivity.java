@@ -71,7 +71,14 @@ public class CouponTermActivity extends WebViewActivity
             setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
         {
-            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+            // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
+            if (DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+            {
+                setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+            } else
+            {
+                setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_DEV) + mCouponIdx);
+            }
         }
 
         initToolbar();

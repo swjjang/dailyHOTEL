@@ -52,45 +52,56 @@ public class DailyEditText extends AppCompatEditText
     }
 
     @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter)
+    {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+
+        if (mHasDeleteButton == true && isFocused() == true && lengthAfter > 0)
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+    }
+
+    @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect)
     {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
 
-        if (mHasDeleteButton == true)
+        if (focused == false)
         {
-            if (focused == true)
-            {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
-            } else
-            {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            }
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-
-        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+        if (mHasDeleteButton == true)
         {
-            Drawable[] drawables = getCompoundDrawables();
+            final int DRAWABLE_LEFT = 0;
+            final int DRAWABLE_TOP = 1;
+            final int DRAWABLE_RIGHT = 2;
+            final int DRAWABLE_BOTTOM = 3;
 
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
             {
-                return super.onTouchEvent(event);
-            }
+                Drawable[] drawables = getCompoundDrawables();
 
-            int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
+                if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+                {
+                    return super.onTouchEvent(event);
+                }
 
-            if (event.getRawX() >= (getRight() - withDrawable))
-            {
-                setText(null);
-                return false;
+                int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
+
+                if (event.getRawX() >= (getRight() - withDrawable))
+                {
+                    setText(null);
+                    return false;
+                }
             }
         }
 

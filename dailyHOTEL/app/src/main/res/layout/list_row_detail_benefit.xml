@@ -4,7 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@color/white"
-              android:minHeight="82dp"
               android:orientation="vertical">
 
     <View
@@ -18,37 +17,28 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:paddingBottom="20dp"
         android:background="@drawable/shape_detail_benefit_background"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
+            android:id="@+id/benefitTitleTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/label_hoteldetail_dbenefit"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="17dp"
+            android:gravity="center_horizontal"
             android:textColor="@color/dh_theme_color"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/benefitTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:ellipsize="end"
-            android:freezesText="true"
-            android:gravity="center_horizontal"
-            android:maxLines="2"
-            android:textColor="@color/dh_theme_color"
-            android:textSize="12dp"/>
-
-        <View
+        <LinearLayout
+            android:id="@+id/benefitMessagesLayout"
             android:layout_width="match_parent"
-            android:layout_height="19dp"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"/>
 </LinearLayout>

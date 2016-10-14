@@ -156,12 +156,6 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="false"
-            android:src="@drawable/dbenefit_left"/>
-
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/dBenefitTextView"
             android:layout_width="match_parent"
