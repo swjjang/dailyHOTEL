@@ -132,9 +132,26 @@ public class StayDetail extends PlaceDetail
             }
         }
 
+        // benefit
         if (jsonObject.has("benefit") == true)
         {
             benefit = jsonObject.getString("benefit");
+
+            if(jsonObject.has("benefitContents") == true)
+            {
+                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
+                int length = benefitJSONArray.length();
+
+                if(length > 0)
+                {
+                    mBenefitInformation = new ArrayList<>(length);
+
+                    for(int i = 0; i < length; i++)
+                    {
+                        mBenefitInformation.add(benefitJSONArray.getString(i));
+                    }
+                }
+            }
         }
 
         // Detail

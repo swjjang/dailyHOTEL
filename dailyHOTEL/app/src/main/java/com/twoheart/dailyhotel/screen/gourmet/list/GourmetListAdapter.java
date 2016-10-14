@@ -200,6 +200,15 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
+        if (Util.isTextEmpty(gourmet.dBenefitText) == false)
+        {
+            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setText(gourmet.dBenefitText);
+        } else
+        {
+            holder.dBenefitLayout.setVisibility(View.GONE);
+        }
+
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
@@ -223,11 +232,15 @@ public class GourmetListAdapter extends PlaceListAdapter
         TextView satisfactionView;
         TextView personsTextView;
         TextView distanceTextView;
+        View dBenefitLayout;
+        TextView dBenefitTextView;
 
         public GourmetViewHolder(View itemView)
         {
             super(itemView);
 
+            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
+            dBenefitTextView = (TextView) dBenefitLayout.findViewById(R.id.dBenefitTextView);
             gradientView = itemView.findViewById(R.id.gradientView);
             gourmetImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             nameView = (TextView) itemView.findViewById(R.id.nameTextView);

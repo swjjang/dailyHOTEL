@@ -150,7 +150,7 @@ public class StayDetailListAdapter extends BaseAdapter
                 mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getDetailBenefitView(mDeatilViews[4], mStayDetail);
+            getDetailBenefitView(layoutInflater, mDeatilViews[4], mStayDetail);
             linearLayout.addView(mDeatilViews[4]);
         } else
         {
@@ -459,18 +459,35 @@ public class StayDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getDetailBenefitView(View view, StayDetail stayDetail)
+    private View getDetailBenefitView(LayoutInflater layoutInflater, View view, StayDetail stayDetail)
     {
         if (view == null || stayDetail == null)
         {
             return view;
         }
 
-        final TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
+        final TextView benefitTitleTextView = (TextView) view.findViewById(R.id.benefitTitleTextView);
+        final LinearLayout benefitMessagesLayout = (LinearLayout) view.findViewById(R.id.benefitMessagesLayout);
 
         final String benefit = stayDetail.benefit;
+        benefitTitleTextView.setText(benefit);
 
-        benefitTextView.setText(benefit);
+        List<String> mBenefitInformation = stayDetail.getBenefitInformation();
+
+        if (mBenefitInformation != null)
+        {
+            benefitMessagesLayout.removeAllViews();
+
+            for (String information : mBenefitInformation)
+            {
+                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail_benefit_text, benefitMessagesLayout, false);
+                TextView textView = (TextView) childGroup.findViewById(R.id.textView);
+                textView.setText(information);
+
+                benefitMessagesLayout.addView(childGroup);
+            }
+        }
+
         return view;
     }
 

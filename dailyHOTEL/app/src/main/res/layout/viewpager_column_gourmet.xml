@@ -126,15 +126,30 @@
         android:textSize="12dp"
         dailyFont:style="DemiLight"/>
 
-    <ImageView
-        android:id="@+id/dBenefitImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/gradeTextView"
-        android:layout_marginBottom="8dp"
+    <LinearLayout
+        android:id="@+id/dBenefitLayout"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
         android:layout_marginLeft="11dp"
-        android:src="@drawable/map_d_benefit"
-        android:visibility="gone"/>
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/closeImageVIew"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/dBenefitTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/d_benefit"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="11dp"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/closeImageVIew"
