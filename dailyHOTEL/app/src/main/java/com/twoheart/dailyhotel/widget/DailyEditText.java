@@ -52,19 +52,27 @@ public class DailyEditText extends AppCompatEditText
     }
 
     @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter)
+    {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+
+        if (mHasDeleteButton == true && isFocused() == true && lengthAfter > 0)
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+    }
+
+    @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect)
     {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
 
-        if (mHasDeleteButton == true)
+        if (focused == false)
         {
-            if (focused == true)
-            {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
-            } else
-            {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            }
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 
