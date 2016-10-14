@@ -216,7 +216,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         {
             if (mViewPager != null)
             {
-                mViewPager.setCurrentItem(tab.getPosition());
+                mViewPager.setCurrentItem(tab.getPosition(), true);
             }
         }
 
@@ -279,13 +279,13 @@ public class RecentPlacesTabActivity extends BaseActivity
                         RecentPlacesListFragment fragment = mFragmentList.get(i);
                         if (fragment instanceof RecentGourmetListFragment)
                         {
-                            mViewPager.setCurrentItem(i);
+                            mViewPager.setCurrentItem(i, false);
                             break;
                         }
                     }
                 } else
                 {
-                    mViewPager.setCurrentItem(0);
+                    mViewPager.setCurrentItem(0, false);
                 }
             }
 
