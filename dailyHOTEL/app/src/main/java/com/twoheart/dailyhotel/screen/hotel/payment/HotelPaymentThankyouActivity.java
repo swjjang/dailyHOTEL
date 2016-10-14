@@ -60,6 +60,9 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 
         View dateLayout = findViewById(R.id.dateInformationLayout);
         initDateLayout(dateLayout, checkInDate, checkOutDate, nights);
+
+        View textLayout = findViewById(R.id.textInformationLayout);
+        initTextLayout(textLayout);
     }
 
     private void initDateLayout(View view, String checkInDate, String checkOutDate, int nights)

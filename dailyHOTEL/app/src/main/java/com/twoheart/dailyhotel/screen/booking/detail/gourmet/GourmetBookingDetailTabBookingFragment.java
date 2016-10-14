@@ -174,7 +174,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             } else
             {
                 // 당일
-                remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
+                remainedDayText = context.getString(R.string.frag_booking_today_type_gourmet);
             }
 
             if (Util.isTextEmpty(remainedDayText) == true)
