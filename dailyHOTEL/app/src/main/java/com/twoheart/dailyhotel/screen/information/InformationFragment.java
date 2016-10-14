@@ -412,6 +412,12 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
+        public void startFAQ()
+        {
+
+        }
+
+        @Override
         public void startEmail()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
