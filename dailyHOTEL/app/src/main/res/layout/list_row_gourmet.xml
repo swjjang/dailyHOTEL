@@ -165,6 +165,17 @@
         app:srcCompat="@drawable/soldout"/>
 
     <View
+        android:id="@+id/deleteView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_delete_white_shadow"
+        android:visibility="gone"/>
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"

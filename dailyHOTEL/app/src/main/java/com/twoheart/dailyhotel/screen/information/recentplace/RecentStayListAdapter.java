@@ -39,7 +39,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position)
     {
         Place item = getItem(position);
         if (item == null)
@@ -139,6 +139,20 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         {
             holder.distanceTextView.setVisibility(View.GONE);
         }
+
+        holder.deleteView.setVisibility(View.VISIBLE);
+        holder.deleteView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mListener != null)
+                {
+                    mListener.onDeleteClick(v, position);
+
+                }
+            }
+        });
     }
 
     private class StayViewHolder extends RecyclerView.ViewHolder
@@ -156,6 +170,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         TextView dBenefitTextView;
         TextView distanceTextView;
         View dBenefitLayout;
+        View deleteView;
 
         public StayViewHolder(View itemView)
         {
@@ -174,6 +189,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            deleteView = itemView.findViewById(R.id.deleteView);
 
             itemView.setOnClickListener(new View.OnClickListener()
             {

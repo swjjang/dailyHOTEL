@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.recentplace;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
@@ -125,13 +128,33 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemClick(int position)
         {
+            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            {
+                return;
+            }
+
             Stay stay = (Stay) mListLayout.getItem(position);
+
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
+                mSaleTime, stay, 0);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }
 
         @Override
         public void onListItemDeleteClick(int position)
         {
+            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            {
+                return;
+            }
+
             Stay stay = (Stay) mListLayout.getItem(position);
+            mRecentPlaces.remove(stay.index);
+
+            boolean isRemove = mListLayout.removeItem(stay);
+            ExLog.d("isRemove : " + isRemove);
+
+            mListLayout.notifyDataSetChanged();
         }
 
         @Override

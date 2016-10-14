@@ -71,6 +71,28 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         return mList.get(position);
     }
 
+    public boolean removeItem(Place place) {
+        if (mList == null || mList.size() == 0)
+        {
+            return false;
+        }
+
+        if (mList.contains(place) == true) {
+            return mList.remove(place);
+        }
+
+        return false;
+    }
+
+    public Place removeItem(int position) {
+        if (mList == null || mList.size() == 0)
+        {
+            return null;
+        }
+
+        return mList.remove(position);
+    }
+
     @Override
     public int getItemCount()
     {
