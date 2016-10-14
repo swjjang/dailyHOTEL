@@ -117,7 +117,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
-        View policyLayout = view.findViewById(R.id.policyLayout);
+        View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
 
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
@@ -125,7 +125,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
-        policyLayout.setOnClickListener(this);
+        termsNpolicyLayout.setOnClickListener(this);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
@@ -138,7 +138,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
-        initTermsLayout(baseActivity, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
@@ -165,12 +164,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(linkAlarmTextView.getText());
 
         spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c323232)), //
-            0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannableStringBuilder.setSpan(new UnderlineSpan(), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(new UnderlineSpan(), 52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c900034)), //
-            7, 17, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            59, 69, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         linkAlarmTextView.setText(spannableStringBuilder);
         linkAlarmTextView.setOnClickListener(this);
@@ -236,50 +235,23 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
         TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
         TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
+        TextView business4TextView = (TextView) view.findViewById(R.id.business4TextView);
+        TextView business5TextView = (TextView) view.findViewById(R.id.business5TextView);
 
         business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
             , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyBizRegNumber()//
             , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber()));
 
-        if (Util.getLCDWidth(baseActivity) < 720)
-        {
-            String text = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress() + '\n'//
-                + mContext.getResources().getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber());
+        business2TextView.setText(DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress());
 
-            business2TextView.setText(text);
-        } else
-        {
-            String text = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress() + " | "//
-                + mContext.getResources().getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber());
+        business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license02//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyBizRegNumber()));
 
-            business2TextView.setText(text);
-        }
+        business4TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber()));
 
-        business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
+        business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
             , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPrivacyEmail()));
-    }
-
-    private void initTermsLayout(BaseActivity baseActivity, View view)
-    {
-        LinearLayout termsLayout = (LinearLayout) view.findViewById(R.id.termsLayout);
-
-        if (Util.getLCDWidth(baseActivity) < 720)
-        {
-            termsLayout.setOrientation(LinearLayout.VERTICAL);
-        }
-
-        View termsView = view.findViewById(R.id.termsView);
-        View personalView = view.findViewById(R.id.personalView);
-        View locationTermsView = view.findViewById(R.id.locationTermsView);
-        View protectChildTermsView = view.findViewById(R.id.protectChildTermsView);
-
-        termsView.setOnClickListener(this);
-        personalView.setOnClickListener(this);
-        locationTermsView.setOnClickListener(this);
-        protectChildTermsView.setOnClickListener(this);
     }
 
     public void updatePushIcon(boolean onOff)
@@ -577,20 +549,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 ((OnEventListener) mOnEventListener).startYouTube();
                 break;
 
-            case R.id.termsView:
-                ((OnEventListener) mOnEventListener).startTerms();
-                break;
-
-            case R.id.personalView:
-                ((OnEventListener) mOnEventListener).startPersonal();
-                break;
-
-            case R.id.locationTermsView:
-                ((OnEventListener) mOnEventListener).startLocationTerms();
-                break;
-
-            case R.id.protectChildTermsView:
-                ((OnEventListener) mOnEventListener).startProtectChildTerms();
+            case R.id.termsNpolicyLayout:
+                ((OnEventListener) mOnEventListener).startTermsNPolicy();
                 break;
 
             case R.id.linkAlarmTextView:

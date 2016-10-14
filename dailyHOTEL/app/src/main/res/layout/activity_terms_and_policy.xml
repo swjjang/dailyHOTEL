@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/toolbar_default"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/termsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/dailyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@+id/view"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/view"
+            android:gravity="center_vertical"
+            android:text="@string/actionbar_title_term_activity"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"/>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/personalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/actionbar_title_privacy_activity"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"
+            dailyFont:style="Medium"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/locationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/actionbar_title_locationterms_activity"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/youthtermsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/actionbar_title_protectyouthterms_activity"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"/>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_cf0f0f0"/>
+    </RelativeLayout>
+</LinearLayout>
