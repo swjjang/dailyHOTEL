@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
@@ -137,23 +138,21 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         {
             if (position < 0 || mRecentPlaces.size() - 1 < position)
             {
+                ExLog.d("position Error Stay");
                 return;
             }
 
-            Stay stay = (Stay) mListLayout.getItem(position);
-            mRecentPlaces.remove(stay.index);
+            mRecentPlaces.remove(position);
 
-            boolean isRemove = mListLayout.removeItem(stay);
-            ExLog.d("isRemove : " + isRemove);
+            Place place = mListLayout.removeItem(position);
+            ExLog.d("isRemove : " + (place != null));
 
-            if (isRemove == true)
+            if (place != null)
             {
                 DailyPreference.getInstance(mBaseActivity).setStayRecentPlaces(mRecentPlaces.toString());
             }
 
             mListLayout.setData(mListLayout.getList());
-            mListLayout.notifyDataSetChanged();
-
             mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mRecentPlaces);
         }
 

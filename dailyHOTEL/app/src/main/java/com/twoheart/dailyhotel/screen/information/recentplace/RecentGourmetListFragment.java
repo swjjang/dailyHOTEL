@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -65,7 +66,6 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         // Test Code
 
         ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
-//        DailyToast.showToast(mBaseActivity, "recent gourmet", Toast.LENGTH_SHORT);
     }
 
     private RecentGourmetListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentGourmetListNetworkController.OnNetworkControllerListener()
@@ -137,19 +137,17 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
-            mRecentPlaces.remove(gourmet.index);
+            mRecentPlaces.remove(position);
 
-            boolean isRemove = mListLayout.removeItem(gourmet);
-            ExLog.d("isRemove : " + isRemove);
+            Place place = mListLayout.removeItem(position);
+            ExLog.d("isRemove : " + (place != null));
 
-            if (isRemove == true)
+            if (place != null)
             {
                 DailyPreference.getInstance(mBaseActivity).setGourmetRecentPlaces(mRecentPlaces.toString());
             }
 
-            mListLayout.notifyDataSetChanged();
-
+            mListLayout.setData(mListLayout.getList());
             mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.FNB, mRecentPlaces);
         }
 

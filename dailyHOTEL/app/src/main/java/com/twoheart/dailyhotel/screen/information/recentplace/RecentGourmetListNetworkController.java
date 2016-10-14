@@ -36,7 +36,6 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
 
     public void requestRecentGourmetList(GourmetSearchParams params)
     {
-        //        ((RecentGourmetListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentGourmetList();
         if (params == null)
         {
             return;
@@ -69,7 +68,6 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
                         gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                     }
 
-                    //                    int page;
                     String imageUrl;
 
                     ArrayList<Gourmet> gourmetList;
@@ -82,16 +80,6 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
                     {
                         gourmetList = new ArrayList<>();
                     }
-
-                    //                    try
-                    //                    {
-                    //                        Uri uri = Uri.parse(url);
-                    //                        String pageString = uri.getQueryParameter("page");
-                    //                        page = Integer.parseInt(pageString);
-                    //                    } catch (Exception e)
-                    //                    {
-                    //                        page = 0;
-                    //                    }
 
                     ((RecentGourmetListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentGourmetList(gourmetList);
                 } else

@@ -148,7 +148,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             holder.distanceTextView.setVisibility(View.GONE);
         }
 
-
         holder.deleteView.setVisibility(View.VISIBLE);
         holder.deleteView.setOnClickListener(new View.OnClickListener()
         {
@@ -158,7 +157,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
                 if (mListener != null)
                 {
                     mListener.onDeleteClick(v, position);
-
                 }
             }
         });

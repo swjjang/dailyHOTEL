@@ -33,10 +33,10 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/emptyView"
+        android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@+id/toolbar"
         android:background="@color/information_background"
         android:visibility="gone">
 

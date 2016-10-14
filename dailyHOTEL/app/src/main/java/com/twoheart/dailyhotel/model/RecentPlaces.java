@@ -76,19 +76,14 @@ public class RecentPlaces
         }
     }
 
-    public void remove(int placeIndex)
+    public void remove(int position)
     {
         if (mPlaceIndexList == null || mPlaceIndexList.size() == 0)
         {
             return;
         }
 
-        String checkString = Integer.toString(placeIndex);
-
-        if (mPlaceIndexList.contains(checkString) == true)
-        {
-            mPlaceIndexList.remove(checkString);
-        }
+        mPlaceIndexList.remove(position);
     }
 
     public String toString()

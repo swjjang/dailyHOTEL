@@ -78,11 +78,6 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         return mListAdapter != null ? mListAdapter.getItem(position) : null;
     }
 
-    public boolean removeItem(Place place)
-    {
-        return mListAdapter != null ? mListAdapter.removeItem(place) : false;
-    }
-
     public Place removeItem(int position)
     {
         return mListAdapter != null ? mListAdapter.removeItem(position) : null;

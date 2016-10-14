@@ -149,7 +149,6 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 if (mListener != null)
                 {
                     mListener.onDeleteClick(v, position);
-
                 }
             }
         });

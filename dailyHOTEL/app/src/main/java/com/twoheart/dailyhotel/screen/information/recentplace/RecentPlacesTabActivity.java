@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -36,7 +35,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private RecentPlacesNetworkController mNetworkController;
 
-    private ViewPager mViewPager;
+    private DailyViewPager mViewPager;
     private TabLayout mTabLayout;
     private View mEmptyView;
 
@@ -159,22 +158,26 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             setTabLayoutVisibility(View.GONE);
             setEmptyViewVisibility(View.VISIBLE);
+
+            unLockUI();
             return;
         }
 
-        mViewPager.setOffscreenPageLimit(fragmentList.size() - 1 > 0 ? fragmentList.size() - 1 : 1);
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mPageAdapter);
+        mViewPager.clearOnPageChangeListeners();
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         setEmptyViewVisibility(View.GONE);
 
         if (fragmentList.size() >= 2)
         {
             mTabLayout.setVisibility(View.VISIBLE);
-            mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
         } else
         {
             mTabLayout.setVisibility(View.GONE);
-            mTabLayout.setOnTabSelectedListener(null);
         }
     }
 
@@ -235,49 +238,58 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces)
         {
-            if (mFragmentList == null)
-            {
-                setTabLayout(null);
-                return;
-            }
-
             if (PlaceType.FNB.equals(placeType) == true)
             {
                 mRecentGourmetPlaces = recentPlaces;
-
-                if (recentPlaces == null || recentPlaces.size() == 0)
-                {
-                    for (int i = mFragmentList.size() - 1; i >= 0; i--)
-                    {
-                        RecentPlacesListFragment fragment = mFragmentList.get(i);
-                        if (fragment instanceof RecentGourmetListFragment)
-                        {
-                            mFragmentList.remove(i);
-                            break;
-                        }
-                    }
-                }
             }
 
             if (PlaceType.HOTEL.equals(placeType) == true)
             {
                 mRecentStayPlaces = recentPlaces;
+            }
 
-                if (recentPlaces == null || recentPlaces.size() == 0)
+            int stayCount = mRecentStayPlaces.size();
+            int gourmetCount = mRecentGourmetPlaces.size();
+            boolean isPagingEnabled;
+
+            if (stayCount == 0 && gourmetCount == 0)
+            {
+                // 둘다 없을때
+                setTabLayoutVisibility(View.GONE);
+                setEmptyViewVisibility(View.VISIBLE);
+                isPagingEnabled = false;
+            } else if (stayCount > 0 && gourmetCount > 0)
+            {
+                // 둘다 있을때
+                setTabLayoutVisibility(View.VISIBLE);
+                setEmptyViewVisibility(View.GONE);
+                isPagingEnabled = true;
+            } else
+            {
+                // 둘중에 하나만 있을때
+                setTabLayoutVisibility(View.GONE);
+                setEmptyViewVisibility(View.GONE);
+                isPagingEnabled = false;
+
+                if (gourmetCount > 0)
                 {
+                    // 고메의 경우 기존에 stay가 있을수도 없을수도 있음으로 계산함
                     for (int i = mFragmentList.size() - 1; i >= 0; i--)
                     {
                         RecentPlacesListFragment fragment = mFragmentList.get(i);
-                        if (fragment instanceof RecentStayListFragment)
+                        if (fragment instanceof RecentGourmetListFragment)
                         {
-                            mFragmentList.remove(i);
+                            mViewPager.setCurrentItem(i);
                             break;
                         }
                     }
+                } else
+                {
+                    mViewPager.setCurrentItem(0);
                 }
             }
 
-            setTabLayout(mFragmentList);
+            mViewPager.setPagingEnabled(isPagingEnabled);
         }
     };
 
