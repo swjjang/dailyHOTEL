@@ -85,13 +85,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startYouTube();
 
-        void startTerms();
-
-        void startPersonal();
-
-        void startLocationTerms();
-
-        void startProtectChildTerms();
+        void startTermsNPolicy();
 
         void startSettingAlarm();
     }
@@ -123,6 +117,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
+        View policyLayout = view.findViewById(R.id.policyLayout);
 
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
@@ -130,6 +125,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
+        policyLayout.setOnClickListener(this);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
