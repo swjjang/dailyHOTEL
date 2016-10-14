@@ -267,7 +267,7 @@ public class DailyRemoteConfig
                 DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
                 DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(loginText01);
                 DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText01);
-                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText02);
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(signupText02);
             }
         } catch (Exception e)
         {

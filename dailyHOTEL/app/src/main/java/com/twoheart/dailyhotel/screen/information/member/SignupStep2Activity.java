@@ -25,8 +25,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.text.ParseException;
-
 public class SignupStep2Activity extends BaseActivity
 {
     public static final int VERIFY_PHONE_NUMBER_COUNT = 4;
@@ -184,8 +182,8 @@ public class SignupStep2Activity extends BaseActivity
 
         try
         {
-            updateDate = DailyCalendar.convertDateFormatString(updateDate,DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
-        } catch (ParseException e)
+            updateDate = DailyCalendar.convertDateFormatString(updateDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+        } catch (Exception e)
         {
             updateDate = null;
         }
@@ -193,18 +191,7 @@ public class SignupStep2Activity extends BaseActivity
         if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
         {
             messageTextView02.setVisibility(View.VISIBLE);
-
-            String message = null;
-            try
-            {
-                message = getString(R.string.message_benefit_alarm_on_confirm_format,//
-                    );
-            } catch (ParseException e)
-            {
-
-            }
-
-            messageTextView02.setText(message);
+            messageTextView02.setText(getString(R.string.message_benefit_alarm_on_confirm_format, updateDate));
         } else
         {
             messageTextView02.setVisibility(View.GONE);
