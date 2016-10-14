@@ -475,6 +475,31 @@
 
                 <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/termsNpolicyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/frag_terms_and_policy"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/default_line_cf0f0f0"/>
@@ -487,7 +512,7 @@
             <RelativeLayout
                 android:id="@+id/pushBenefitLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="68dp"
                 android:background="@color/white">
 
                 <View
@@ -532,14 +557,14 @@
                     android:gravity="center_vertical"
                     android:text="@string/frag_push_alert_subtext"
                     android:textColor="@color/information_push_subtext"
-                    android:textSize="9dp"/>
+                    android:textSize="10dp"/>
 
                 <View
                     android:id="@+id/bottomBenefitLineView"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@id/pushBenefitTextView"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="8dp"
                     android:background="@color/default_line_cf0f0f0"/>
             </RelativeLayout>
 
@@ -547,45 +572,40 @@
                 android:id="@+id/linkAlarmLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="6dp">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="7dp"
-                    android:drawablePadding="3dp"
-                    android:text="@string/message_alarm_benefit_off01"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="9dp"
-                    app:drawableCompatLeft="@drawable/ic_notice"/>
+                    android:layout_marginTop="2dp"
+                    app:srcCompat="@drawable/ic_notice"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/linkAlarmTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="29dp"
-                    android:layout_marginRight="15dp"
-                    android:text="@string/message_alarm_benefit_off02"
+                    android:layout_marginLeft="3dp"
+                    android:text="@string/message_alarm_benefit_off01"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="9dp"/>
+                    android:textSize="10dp"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/dailyInformationView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:minHeight="185dp"
                 android:orientation="vertical"
-                android:paddingBottom="45dp"
-                android:paddingTop="45dp">
+                android:paddingBottom="44dp"
+                android:paddingTop="44dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -593,6 +613,7 @@
                         android:id="@+id/facebookLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingRight="8dp"
                         app:srcCompat="@drawable/more_sns_01"/>
 
                     <ImageView
@@ -600,6 +621,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         app:srcCompat="@drawable/more_sns_02"/>
 
                     <ImageView
@@ -607,6 +630,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
                         app:srcCompat="@drawable/more_sns_03"/>
 
                     <ImageView
@@ -614,6 +639,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:paddingLeft="8dp"
                         app:srcCompat="@drawable/more_sns_04"/>
                 </LinearLayout>
 
@@ -621,106 +647,54 @@
                     android:id="@+id/business1TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/frag_about_business_license01"
                     android:textColor="@color/setting_business_license"
-                    android:textSize="8dp"/>
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/business2TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
                     android:text="@string/frag_about_business_license02"
                     android:textColor="@color/setting_business_license"
-                    android:textSize="8dp"/>
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/business3TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/frag_about_business_license02"
+                    android:textColor="@color/setting_business_license"
+                    android:textSize="11dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/business4TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
                     android:text="@string/frag_about_business_license03"
                     android:textColor="@color/setting_business_license"
-                    android:textSize="8dp"/>
+                    android:textSize="11dp"/>
 
-                <LinearLayout
-                    android:id="@+id/termsLayout"
-                    android:layout_width="match_parent"
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/business5TextView"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/termsView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:background="@drawable/more_btn"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:text="@string/actionbar_title_term_activity"
-                        android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"/>
-
-                    <View
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/personalView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:background="@drawable/more_btn"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:text="@string/actionbar_title_privacy_activity"
-                        android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"
-                        dailyFont:style="Bold"/>
-
-                    <View
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/locationTermsView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:background="@drawable/more_btn"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:text="@string/label_terms_location"
-                        android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"/>
-
-                    <View
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/protectChildTermsView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:background="@drawable/more_btn"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:text="@string/label_terms_protectchild"
-                        android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"/>
-                </LinearLayout>
+                    android:layout_marginTop="1dp"
+                    android:text="@string/frag_about_business_license04"
+                    android:textColor="@color/setting_business_license"
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/versionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
+                    android:layout_marginTop="8dp"
                     android:textColor="@color/setting_business_license"
-                    android:textSize="8dp"/>
+                    android:textSize="11dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

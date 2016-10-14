@@ -31,10 +31,7 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
-import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
-import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
-import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
-import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
+import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -600,7 +597,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startTerms()
+        public void startTermsNPolicy()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -610,54 +607,9 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, TermActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent(baseActivity, TermsNPolicyActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
-        }
-
-        @Override
-        public void startPersonal()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, PrivacyActivity.class);
-            startActivity(intent);
-        }
-
-        @Override
-        public void startLocationTerms()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
-            startActivity(intent);
-        }
-
-        @Override
-        public void startProtectChildTerms()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, ProtectYouthTermsActivity.class);
-            startActivity(intent);
         }
 
         @Override

@@ -346,21 +346,18 @@ public class SelectCouponDialogActivity extends BaseActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             SelectCouponDialogActivity.this.onErrorResponse(volleyError);
-            finish();
         }
 
         @Override
         public void onError(Exception e)
         {
             SelectCouponDialogActivity.this.onError(e);
-            finish();
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             SelectCouponDialogActivity.this.onErrorPopupMessage(msgCode, message);
-            finish();
         }
 
         @Override
