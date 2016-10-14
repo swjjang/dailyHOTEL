@@ -56,6 +56,10 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         makeShaderFactory();
     }
 
+    public ArrayList<? extends Place> getList() {
+        return mList != null ? mList : null;
+    }
+
     public void setData(ArrayList<? extends Place> list)
     {
         mList = list;

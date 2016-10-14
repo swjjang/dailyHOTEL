@@ -40,7 +40,7 @@ public class RecentStayListNetworkController extends BaseNetworkController
         {
             return;
         }
-//        ((RecentStayListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentStayList();
+        //        ((RecentStayListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentStayList();
 
         DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
     }
@@ -69,7 +69,7 @@ public class RecentStayListNetworkController extends BaseNetworkController
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                     }
 
-//                    int page;
+                    //                    int page;
                     String imageUrl;
 
                     ArrayList<Stay> stayList;
@@ -84,16 +84,16 @@ public class RecentStayListNetworkController extends BaseNetworkController
                         stayList = new ArrayList<>();
                     }
 
-//                    try
-//                    {
-//                        Uri uri = Uri.parse(url);
-//                        String pageString = uri.getQueryParameter("page");
-//                        page = Integer.parseInt(pageString);
-//
-//                    } catch (Exception e)
-//                    {
-//                        page = 0;
-//                    }
+                    //                    try
+                    //                    {
+                    //                        Uri uri = Uri.parse(url);
+                    //                        String pageString = uri.getQueryParameter("page");
+                    //                        page = Integer.parseInt(pageString);
+                    //
+                    //                    } catch (Exception e)
+                    //                    {
+                    //                        page = 0;
+                    //                    }
 
                     ((RecentStayListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentStayList(stayList);
 

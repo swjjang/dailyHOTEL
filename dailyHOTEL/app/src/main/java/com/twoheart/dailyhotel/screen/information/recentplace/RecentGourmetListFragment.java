@@ -1,15 +1,22 @@
 package com.twoheart.dailyhotel.screen.information.recentplace;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
+import com.twoheart.dailyhotel.model.GourmetSearchParams;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
+
+import java.util.ArrayList;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -39,16 +46,41 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     protected void requestRecentPlacesList()
     {
         lockUI();
-        ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList();
-        DailyToast.showToast(mBaseActivity, "recent gourmet", Toast.LENGTH_SHORT);
+
+        int count = mRecentPlaces != null ? mRecentPlaces.size() : 0;
+        if (count == 0)
+        {
+            unLockUI();
+            return;
+        }
+
+        // Test Code
+
+        GourmetSearchCuration gourmetSearchCuration = new GourmetSearchCuration();
+        gourmetSearchCuration.setKeyword(new Keyword(0, "서울"));
+        gourmetSearchCuration.setSaleTime(mSaleTime);
+
+        GourmetSearchParams params = (GourmetSearchParams) gourmetSearchCuration.toPlaceParams(1, count, true);
+
+        // Test Code
+
+        ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
+//        DailyToast.showToast(mBaseActivity, "recent gourmet", Toast.LENGTH_SHORT);
     }
 
     private RecentGourmetListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentGourmetListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRecentGourmetList()
+        public void onRecentGourmetList(ArrayList<Gourmet> list)
         {
             unLockUI();
+
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            mListLayout.setData(list);
         }
 
         @Override
@@ -85,13 +117,40 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemClick(int position)
         {
+            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            {
+                return;
+            }
+
             Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
+
+            Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
+                mSaleTime, gourmet, 0);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }
 
         @Override
         public void onListItemDeleteClick(int position)
         {
+            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            {
+                return;
+            }
+
             Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
+            mRecentPlaces.remove(gourmet.index);
+
+            boolean isRemove = mListLayout.removeItem(gourmet);
+            ExLog.d("isRemove : " + isRemove);
+
+            if (isRemove == true)
+            {
+                DailyPreference.getInstance(mBaseActivity).setGourmetRecentPlaces(mRecentPlaces.toString());
+            }
+
+            mListLayout.notifyDataSetChanged();
+
+            mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.FNB, mRecentPlaces);
         }
 
         @Override

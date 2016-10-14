@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -16,7 +15,6 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
 
@@ -70,7 +68,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         // Test Code!
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(staySearchParams);
-        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
+//        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
     }
 
     private RecentStayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentStayListNetworkController.OnNetworkControllerListener()
@@ -82,17 +80,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             if (isFinishing() == true)
             {
-                unLockUI();
                 return;
             }
 
-
             mListLayout.setData(list);
-
-
-            unLockUI();
-
-
         }
 
         @Override
@@ -160,7 +151,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 DailyPreference.getInstance(mBaseActivity).setStayRecentPlaces(mRecentPlaces.toString());
             }
 
+            mListLayout.setData(mListLayout.getList());
             mListLayout.notifyDataSetChanged();
+
+            mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mRecentPlaces);
         }
 
         @Override

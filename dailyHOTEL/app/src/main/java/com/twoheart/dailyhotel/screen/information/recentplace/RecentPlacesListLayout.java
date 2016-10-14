@@ -68,6 +68,11 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         }
     }
 
+    public ArrayList<? extends Place> getList()
+    {
+        return mListAdapter != null ? mListAdapter.getList() : null;
+    }
+
     public Place getItem(int position)
     {
         return mListAdapter != null ? mListAdapter.getItem(position) : null;

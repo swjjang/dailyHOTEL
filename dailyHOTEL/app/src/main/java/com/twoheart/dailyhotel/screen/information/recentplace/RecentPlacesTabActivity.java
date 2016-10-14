@@ -25,8 +25,8 @@ import java.util.ArrayList;
 
 public class RecentPlacesTabActivity extends BaseActivity
 {
-    private RecentPlaces mStayRecentPlaces;
-    private RecentPlaces mGourmetRecentPlaces;
+    private RecentPlaces mRecentStayPlaces;
+    private RecentPlaces mRecentGourmetPlaces;
     private ArrayList<RecentPlacesListFragment> mFragmentList;
 
     private RecentStayListFragment mRecentStayListFragment;
@@ -54,10 +54,10 @@ public class RecentPlacesTabActivity extends BaseActivity
         mNetworkController = new RecentPlacesNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         String stayString = DailyPreference.getInstance(this).getStayRecentPlaces();
-        mStayRecentPlaces = new RecentPlaces(stayString);
+        mRecentStayPlaces = new RecentPlaces(stayString);
 
         String gourmetString = DailyPreference.getInstance(this).getGourmetRecentPlaces();
-        mGourmetRecentPlaces = new RecentPlaces(gourmetString);
+        mRecentGourmetPlaces = new RecentPlaces(gourmetString);
 
         initLayout();
     }
@@ -92,18 +92,20 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mFragmentList = new ArrayList<>();
 
-        if (mStayRecentPlaces.size() > 0)
+        if (mRecentStayPlaces.size() > 0)
         {
             mRecentStayListFragment = new RecentStayListFragment();
-            mRecentStayListFragment.setRecentPlaces(mStayRecentPlaces);
+            mRecentStayListFragment.setRecentPlaces(mRecentStayPlaces);
+            mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
             mFragmentList.add(mRecentStayListFragment);
         }
 
-        if (mGourmetRecentPlaces.size() > 0)
+        if (mRecentGourmetPlaces.size() > 0)
         {
             mRecentGourmetListFragment = new RecentGourmetListFragment();
-            mRecentGourmetListFragment.setRecentPlaces(mStayRecentPlaces);
+            mRecentGourmetListFragment.setRecentPlaces(mRecentGourmetPlaces);
+            mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
             mFragmentList.add(mRecentGourmetListFragment);
         }
@@ -228,6 +230,57 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
     };
 
+    private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
+    {
+        @Override
+        public void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces)
+        {
+            if (mFragmentList == null)
+            {
+                setTabLayout(null);
+                return;
+            }
+
+            if (PlaceType.FNB.equals(placeType) == true)
+            {
+                mRecentGourmetPlaces = recentPlaces;
+
+                if (recentPlaces == null || recentPlaces.size() == 0)
+                {
+                    for (int i = mFragmentList.size() - 1; i >= 0; i--)
+                    {
+                        RecentPlacesListFragment fragment = mFragmentList.get(i);
+                        if (fragment instanceof RecentGourmetListFragment)
+                        {
+                            mFragmentList.remove(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (PlaceType.HOTEL.equals(placeType) == true)
+            {
+                mRecentStayPlaces = recentPlaces;
+
+                if (recentPlaces == null || recentPlaces.size() == 0)
+                {
+                    for (int i = mFragmentList.size() - 1; i >= 0; i--)
+                    {
+                        RecentPlacesListFragment fragment = mFragmentList.get(i);
+                        if (fragment instanceof RecentStayListFragment)
+                        {
+                            mFragmentList.remove(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            setTabLayout(mFragmentList);
+        }
+    };
+
     private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
     {
         @Override
@@ -238,11 +291,6 @@ public class RecentPlacesTabActivity extends BaseActivity
             saleTime.setDailyTime(dailyDateTime);
             saleTime.setOffsetDailyDay(0);
 
-            //            int stayCount = mStayRecentPlaces != null ? mStayRecentPlaces.size() : 0;
-            //            int gourmetCount = mGourmetRecentPlaces != null ? mGourmetRecentPlaces.size() : 0;
-            //            setEmptyViewVisibility(stayCount == 0 && gourmetCount == 0 ? View.VISIBLE : View.GONE);
-
-            // TODO : 전달 받은 서버타임을 각 프래그먼트에 전달하고 탭을 셋팅한다.
             if (mFragmentList != null)
             {
                 for (RecentPlacesListFragment fragment : mFragmentList)

@@ -38,7 +38,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position)
     {
         Place item = getItem(position);
         if (item == null)
@@ -147,6 +147,21 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         {
             holder.distanceTextView.setVisibility(View.GONE);
         }
+
+
+        holder.deleteView.setVisibility(View.VISIBLE);
+        holder.deleteView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mListener != null)
+                {
+                    mListener.onDeleteClick(v, position);
+
+                }
+            }
+        });
     }
 
     private class GourmetViewHolder extends RecyclerView.ViewHolder
@@ -162,6 +177,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         TextView satisfactionView;
         TextView personsTextView;
         TextView distanceTextView;
+        View deleteView;
 
         public GourmetViewHolder(View itemView)
         {
@@ -178,6 +194,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             gradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            deleteView = itemView.findViewById(R.id.deleteView);
 
             itemView.setOnClickListener(new View.OnClickListener()
             {

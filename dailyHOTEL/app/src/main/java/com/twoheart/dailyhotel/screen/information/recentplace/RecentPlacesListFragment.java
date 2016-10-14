@@ -24,12 +24,23 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     protected SaleTime mSaleTime;
     protected RecentPlaces mRecentPlaces;
+    protected OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener;
 
     protected abstract RecentPlacesListLayout getListLayout();
 
     protected abstract BaseNetworkController getNetworkController();
 
     protected abstract void requestRecentPlacesList();
+
+    public interface OnRecentPlaceListFragmentListener
+    {
+        void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces);
+    }
+
+    public void setRecentPlaceListFragmentListener(OnRecentPlaceListFragmentListener listener)
+    {
+        mRecentPlaceListFragmentListener = listener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
