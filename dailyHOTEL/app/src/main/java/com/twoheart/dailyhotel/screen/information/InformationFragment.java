@@ -48,6 +48,7 @@ public class InformationFragment extends BaseFragment implements Constants
     private InformationNetworkController mNetworkController;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
+    private boolean mDontReload;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -128,24 +129,30 @@ public class InformationFragment extends BaseFragment implements Constants
 
         registerReceiver();
 
-        if (DailyHotel.isLogin() == true)
+        if (mDontReload == true)
         {
-            // 적립금 및 쿠폰 개수 가져와야 함
-            lockUI();
-
-            mNetworkController.requestUserProfile();
+            mDontReload = false;
         } else
         {
-            // 비로그인 상태
-            unLockUI();
+            if (DailyHotel.isLogin() == true)
+            {
+                // 적립금 및 쿠폰 개수 가져와야 함
+                lockUI();
 
-            mInformationLayout.updateLoginLayout(false, false);
-            mInformationLayout.updateAccountLayout(false, 0, 0);
-            mInformationLayout.setLinkAlarmVisible(false);
+                mNetworkController.requestUserProfile();
+            } else
+            {
+                // 비로그인 상태
+                unLockUI();
+
+                mInformationLayout.updateLoginLayout(false, false);
+                mInformationLayout.updateAccountLayout(false, 0, 0);
+                mInformationLayout.setLinkAlarmVisible(false);
+            }
+
+            // 혜택 알림 메세지 가져오기
+            mNetworkController.requestPushBenefitText();
         }
-
-        // 혜택 알림 메세지 가져오기
-        mNetworkController.requestPushBenefitText();
     }
 
     @Override
@@ -160,6 +167,8 @@ public class InformationFragment extends BaseFragment implements Constants
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
 
         switch (requestCode)
         {
@@ -184,6 +193,11 @@ public class InformationFragment extends BaseFragment implements Constants
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+            case CODE_REQUEST_ACTIVITY_FAQ:
+                mDontReload = false;
+                break;
         }
     }
 
@@ -409,6 +423,20 @@ public class InformationFragment extends BaseFragment implements Constants
             showCallDialog(baseActivity);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CLICK, null);
+        }
+
+        @Override
+        public void startFAQ()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivityForResult(new Intent(baseActivity, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
         }
 
         @Override

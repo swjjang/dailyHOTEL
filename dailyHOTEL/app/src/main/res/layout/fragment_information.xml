@@ -401,17 +401,41 @@
                 android:layout_height="10dp"/>
 
             <RelativeLayout
-                android:id="@+id/callLayout"
+                android:id="@+id/faqLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:background="@color/white"
-                >
+                android:background="@color/white">
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentTop="true"
                     android:background="@color/default_line_cf0f0f0"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/frag_faqs"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/callLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
