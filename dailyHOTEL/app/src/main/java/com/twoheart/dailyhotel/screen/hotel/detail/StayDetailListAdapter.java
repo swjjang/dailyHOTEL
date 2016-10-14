@@ -470,24 +470,28 @@ public class StayDetailListAdapter extends BaseAdapter
         final LinearLayout benefitMessagesLayout = (LinearLayout) view.findViewById(R.id.benefitMessagesLayout);
 
         final String benefit = stayDetail.benefit;
+        benefitTitleTextView.setText(benefit);
 
         DetailInformation mBenefitInformation = stayDetail.getBenefitInformation();
 
-        benefitTitleTextView.setText(mBenefitInformation.title);
-
-        List<String> arrayList = mBenefitInformation.getContentsList();
-
-        if (arrayList != null)
+        if (mBenefitInformation != null)
         {
-            benefitMessagesLayout.removeAllViews();
+            benefitTitleTextView.setText(mBenefitInformation.title);
 
-            for (String information : arrayList)
+            List<String> arrayList = mBenefitInformation.getContentsList();
+
+            if (arrayList != null)
             {
-                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail_benefit_text, benefitMessagesLayout, false);
-                TextView textView = (TextView) childGroup.findViewById(R.id.textView);
-                textView.setText(information);
+                benefitMessagesLayout.removeAllViews();
 
-                benefitMessagesLayout.addView(childGroup);
+                for (String information : arrayList)
+                {
+                    ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail_benefit_text, benefitMessagesLayout, false);
+                    TextView textView = (TextView) childGroup.findViewById(R.id.textView);
+                    textView.setText(information);
+
+                    benefitMessagesLayout.addView(childGroup);
+                }
             }
         }
 

@@ -13,19 +13,17 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="15dp"
-            android:layout_marginLeft="19dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="9dp"
             app:srcCompat="@drawable/ic_check_xs"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
             android:freezesText="true"
             android:lineSpacingExtra="-2dp"
             android:textColor="@color/default_background_section_c323232"
-            android:textSize="13dp"/>
+            android:textSize="12dp"/>
     </LinearLayout>
 </FrameLayout>
