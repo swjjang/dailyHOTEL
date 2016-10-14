@@ -164,12 +164,18 @@ public class AddProfileSocialActivity extends BaseActivity
 
         messageTextView01.setText(DailyPreference.getInstance(this).getRemoteConfigTextSignUpText02());
 
+        try
+        {
+            updateDate = DailyCalendar.convertDateFormatString(updateDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+        } catch (Exception e)
+        {
+            updateDate = null;
+        }
+
         if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
         {
             messageTextView02.setVisibility(View.VISIBLE);
-
-            String message = getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
-            messageTextView02.setText(message);
+            messageTextView02.setText(getString(R.string.message_benefit_alarm_on_confirm_format, updateDate));
         } else
         {
             messageTextView02.setVisibility(View.GONE);
