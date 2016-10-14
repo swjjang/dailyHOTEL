@@ -247,6 +247,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_REGISTER_COUPON = 45;
     public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 46;
     public static final int CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY = 47;
+    public static final int CODE_REQUEST_ACTIVITY_FAQ = 48;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

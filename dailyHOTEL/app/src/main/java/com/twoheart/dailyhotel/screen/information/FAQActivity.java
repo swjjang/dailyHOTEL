@@ -22,6 +22,8 @@ public class FAQActivity extends WebViewActivity
 
         initToolbar();
         initLayout((DailyWebView) webView);
+
+        setEnabledProgress(false);
     }
 
     private void initToolbar()
