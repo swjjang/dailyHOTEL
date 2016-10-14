@@ -81,6 +81,7 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_TEXT_VERSION = "100";
     private static final String KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01 = "101";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01 = "102";
+    private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT02 = "103";
 
     private static final String KEY_REMOTE_CONFIG_COMPANY_NAME = "200";
     private static final String KEY_REMOTE_CONFIG_COMPANY_CEO = "201";
@@ -803,6 +804,16 @@ public class DailyPreference
     public String getRemoteConfigTextSignUpText01()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01, null);
+    }
+
+    public void setRemoteConfigTextSignUpText02(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT02, value);
+    }
+
+    public String getRemoteConfigTextSignUpText02()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT02, null);
     }
 
     public void setRemoteConfigCompanyInformation(String name, String ceo, String bizRegNumber//

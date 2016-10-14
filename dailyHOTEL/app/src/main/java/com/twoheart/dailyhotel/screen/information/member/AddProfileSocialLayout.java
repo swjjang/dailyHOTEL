@@ -394,6 +394,11 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         return mTermsOfPrivacyCheckBox.isChecked();
     }
 
+    public boolean isCheckedBenefit()
+    {
+        return mBenefitCheckBox.isChecked();
+    }
+
     public void showPhoneLayout()
     {
         mPhoneLayout.setVisibility(View.VISIBLE);
