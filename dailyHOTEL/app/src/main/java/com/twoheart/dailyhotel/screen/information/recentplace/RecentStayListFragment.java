@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -153,6 +154,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             boolean isRemove = mListLayout.removeItem(stay);
             ExLog.d("isRemove : " + isRemove);
+
+            if (isRemove == true)
+            {
+                DailyPreference.getInstance(mBaseActivity).setStayRecentPlaces(mRecentPlaces.toString());
+            }
 
             mListLayout.notifyDataSetChanged();
         }
