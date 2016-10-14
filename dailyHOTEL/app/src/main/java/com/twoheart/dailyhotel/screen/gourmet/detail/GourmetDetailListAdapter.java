@@ -153,7 +153,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
                 mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getBenefitView(mDeatilViews[4], mGourmetDetail);
+            getBenefitView(layoutInflater, mDeatilViews[4], mGourmetDetail);
             linearLayout.addView(mDeatilViews[4]);
         } else
         {
@@ -443,18 +443,37 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getBenefitView(View view, PlaceDetail placeDetail)
+    private View getBenefitView(LayoutInflater layoutInflater, View view, PlaceDetail placeDetail)
     {
         if (view == null || placeDetail == null)
         {
             return view;
         }
 
-        final TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
+        final TextView benefitTitleTextView = (TextView) view.findViewById(R.id.benefitTitleTextView);
+        final LinearLayout benefitMessagesLayout = (LinearLayout) view.findViewById(R.id.benefitMessagesLayout);
 
         final String benefit = placeDetail.benefit;
 
-        benefitTextView.setText(benefit);
+        DetailInformation mBenefitInformation = placeDetail.getBenefitInformation();
+
+        benefitTitleTextView.setText(mBenefitInformation.title);
+
+        List<String> arrayList = mBenefitInformation.getContentsList();
+
+        if (arrayList != null)
+        {
+            benefitMessagesLayout.removeAllViews();
+
+            for (String information : arrayList)
+            {
+                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail_benefit_text, benefitMessagesLayout, false);
+                TextView textView = (TextView) childGroup.findViewById(R.id.textView);
+                textView.setText(information);
+
+                benefitMessagesLayout.addView(childGroup);
+            }
+        }
 
         return view;
     }
