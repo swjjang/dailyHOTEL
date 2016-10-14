@@ -25,7 +25,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
 
     protected Context mContext;
     protected LayoutInflater mInflater;
-    private ArrayList<Place> mList;
+    private ArrayList<? extends Place> mList;
     protected OnRecentPlacesItemListener mListener;
 
     private Constants.SortType mSortType;
@@ -39,7 +39,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         void onDeleteClick(View view, int position);
     }
 
-    public RecentPlacesListAdapter(Context context, ArrayList<Place> list, OnRecentPlacesItemListener listener)
+    public RecentPlacesListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
     {
         mContext = context;
 
@@ -56,7 +56,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         makeShaderFactory();
     }
 
-    public void setData(ArrayList<Place> list)
+    public void setData(ArrayList<? extends Place> list)
     {
         mList = list;
     }

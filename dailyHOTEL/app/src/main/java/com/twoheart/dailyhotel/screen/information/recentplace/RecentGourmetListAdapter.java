@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class RecentGourmetListAdapter extends RecentPlacesListAdapter
 {
-    public RecentGourmetListAdapter(Context context, ArrayList<Place> list, OnRecentPlacesItemListener listener)
+    public RecentGourmetListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
     {
         super(context, list, listener);
     }

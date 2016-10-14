@@ -7,9 +7,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StaySearchCuration;
+import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import java.util.ArrayList;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -40,16 +45,50 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     protected void requestRecentPlacesList()
     {
         lockUI();
-        ((RecentStayListNetworkController) mNetworkController).requestRecentStayList();
+
+        int nights = 1;
+        int count = mRecentPlaces != null ? mRecentPlaces.size() : 0;
+        if (count == 0)
+        {
+            unLockUI();
+            return;
+        }
+
+        // Test Code!
+        StaySearchCuration staySearchCuration = new StaySearchCuration();
+        staySearchCuration.setKeyword(new Keyword(0, "서울"));
+        staySearchCuration.setCheckInSaleTime(mSaleTime);
+        staySearchCuration.setCheckOutSaleTime(mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights));
+
+        StaySearchParams staySearchParams = new StaySearchParams(staySearchCuration);
+        staySearchParams.setPageInformation(1, count, true);
+
+        // Test Code!
+
+        ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(staySearchParams);
         DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
     }
 
     private RecentStayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentStayListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRecentStayList()
+        public void onRecentStayList(ArrayList<Stay> list)
         {
             unLockUI();
+
+            if (isFinishing() == true)
+            {
+                unLockUI();
+                return;
+            }
+
+
+            mListLayout.setData(list);
+
+
+            unLockUI();
+
+
         }
 
         @Override

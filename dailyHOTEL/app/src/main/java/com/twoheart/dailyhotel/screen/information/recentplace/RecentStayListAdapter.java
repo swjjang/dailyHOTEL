@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class RecentStayListAdapter extends RecentPlacesListAdapter
 {
 
-    public RecentStayListAdapter(Context context, ArrayList<Place> list, OnRecentPlacesItemListener listener)
+    public RecentStayListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
     {
         super(context, list, listener);
     }

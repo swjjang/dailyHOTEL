@@ -30,7 +30,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
     }
 
     protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
-        , ArrayList<Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
+        , ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
 
     public RecentPlacesListLayout(Context context, OnBaseEventListener listener)
     {
@@ -50,7 +50,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<Place> list)
+    public void setData(ArrayList<? extends Place> list)
     {
         if (list == null || list.size() == 0)
         {
@@ -60,6 +60,11 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         if (mListAdapter == null)
         {
             mListAdapter = getRecentPlacesListAdapter(mContext, list, mItemListener);
+            mRecyclerView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData(list);
+            mListAdapter.notifyDataSetChanged();
         }
     }
 

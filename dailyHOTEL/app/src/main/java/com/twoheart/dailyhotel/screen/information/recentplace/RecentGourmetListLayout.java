@@ -19,7 +19,7 @@ public class RecentGourmetListLayout extends RecentPlacesListLayout
     }
 
     @Override
-    protected RecentPlacesListAdapter getRecentPlacesListAdapter(Context context, ArrayList<Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener)
+    protected RecentPlacesListAdapter getRecentPlacesListAdapter(Context context, ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener)
     {
         return new RecentGourmetListAdapter(context, list, listener);
     }
