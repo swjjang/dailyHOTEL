@@ -48,7 +48,7 @@ public class SignupStep2Activity extends BaseActivity
     private Handler mRetryHandler;
 
     public static Intent newInstance(Context context, String singupKey, String email, String password,//
-                                     String recommmender, String agreedBenefitDate, String callByScreen)
+                                     String agreedBenefitDate, String recommmender, String callByScreen)
     {
         Intent intent = new Intent(context, SignupStep2Activity.class);
 
@@ -172,13 +172,10 @@ public class SignupStep2Activity extends BaseActivity
 
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setText(getString(R.string.dialog_notice2));
+        titleTextView.setText(DailyPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
 
         // 메시지
-        TextView messageTextView01 = (TextView) dialogView.findViewById(R.id.messageTextView01);
-        TextView messageTextView02 = (TextView) dialogView.findViewById(R.id.messageTextView02);
-
-        messageTextView01.setText(DailyPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
+        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
 
         try
         {
@@ -190,11 +187,11 @@ public class SignupStep2Activity extends BaseActivity
 
         if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
         {
-            messageTextView02.setVisibility(View.VISIBLE);
-            messageTextView02.setText(getString(R.string.message_benefit_alarm_on_confirm_format, updateDate));
+            messageTextView.setVisibility(View.VISIBLE);
+            messageTextView.setText(getString(R.string.message_benefit_alarm_on_confirm_format, updateDate));
         } else
         {
-            messageTextView02.setVisibility(View.GONE);
+            messageTextView.setVisibility(View.GONE);
         }
 
         TextView confirmTextView = (TextView) dialogView.findViewById(R.id.confirmTextView);
