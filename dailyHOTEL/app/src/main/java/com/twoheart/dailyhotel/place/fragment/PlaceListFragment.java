@@ -120,7 +120,11 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public void clearList()
     {
         mPlaceCount = 0;
-        mPlaceListLayout.clearList();
+
+        if (mPlaceListLayout != null)
+        {
+            mPlaceListLayout.clearList();
+        }
     }
 
     public void refreshList(boolean isShowProgress)
