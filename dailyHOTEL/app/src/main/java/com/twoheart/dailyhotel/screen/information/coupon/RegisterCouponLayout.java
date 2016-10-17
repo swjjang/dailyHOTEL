@@ -162,4 +162,8 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    public String getInputText() {
+        return mCouponEditText != null ? mCouponEditText.getText().toString() : "";
+    }
 }
