@@ -273,6 +273,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
     {
         mSelectedCreditCard = creditCard;
+
+        if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
+            creditCard != null && Util.isTextEmpty(creditCard.billingkey) == false)
+        {
+            DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(creditCard.billingkey));
+        }
+
         mOnEventListener.changedPaymentType(paymentType);
     }
 
