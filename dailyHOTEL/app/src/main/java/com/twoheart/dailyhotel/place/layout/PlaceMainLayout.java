@@ -151,7 +151,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void setToolbarDateText(String text)
     {
-        int viewWidth = Util.dpToPx(mContext, 87d);
+        int viewWidth = mDateTextView.getWidth() - (mDateTextView.getCompoundDrawablePadding() * 2) - mDateTextView.getCompoundDrawables()[0].getIntrinsicWidth() - mDateTextView.getCompoundDrawables()[2].getIntrinsicWidth();
+
         final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
         final float width = Util.getTextWidth(mContext, text, 12d, typeface);
 
