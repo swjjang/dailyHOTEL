@@ -21,6 +21,13 @@ public class DailyEditText extends AppCompatEditText
     private boolean mUsedImeActionSend;
     private boolean mHasDeleteButton;
 
+    private OnDeleteTextClickListener mOnDeleteTextClickListener;
+
+    public interface OnDeleteTextClickListener
+    {
+        void onDelete(DailyEditText dailyEditText);
+    }
+
     public DailyEditText(Context context)
     {
         super(context);
@@ -77,6 +84,27 @@ public class DailyEditText extends AppCompatEditText
     }
 
     @Override
+    public void setText(CharSequence text, BufferType type)
+    {
+        super.setText(text, type);
+
+        if (mHasDeleteButton == true && text != null && Util.isTextEmpty(text.toString()) == false)
+        {
+            final int DRAWABLE_LEFT = 0;
+            final int DRAWABLE_TOP = 1;
+            final int DRAWABLE_RIGHT = 2;
+            final int DRAWABLE_BOTTOM = 3;
+
+            Drawable[] drawables = getCompoundDrawables();
+
+            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+            {
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+            }
+        }
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event)
     {
         if (mHasDeleteButton == true)
@@ -100,6 +128,11 @@ public class DailyEditText extends AppCompatEditText
                 if (event.getRawX() >= (getRight() - withDrawable))
                 {
                     setText(null);
+
+                    if (mOnDeleteTextClickListener != null)
+                    {
+                        mOnDeleteTextClickListener.onDelete(this);
+                    }
                     return false;
                 }
             }
@@ -108,9 +141,10 @@ public class DailyEditText extends AppCompatEditText
         return super.onTouchEvent(event);
     }
 
-    public void setDeleteButtonVisible(boolean visible)
+    public void setDeleteButtonVisible(boolean visible, OnDeleteTextClickListener listener)
     {
         mHasDeleteButton = visible;
+        mOnDeleteTextClickListener = listener;
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)

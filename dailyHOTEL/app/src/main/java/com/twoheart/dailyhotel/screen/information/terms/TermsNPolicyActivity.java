@@ -41,11 +41,13 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
         View personalLayout = findViewById(R.id.personalLayout);
         View locationLayout = findViewById(R.id.locationLayout);
         View youthtermsLayout = findViewById(R.id.youthtermsLayout);
+        View licenseLayout = findViewById(R.id.licenseLayout);
 
         termsLayout.setOnClickListener(this);
         personalLayout.setOnClickListener(this);
         locationLayout.setOnClickListener(this);
         youthtermsLayout.setOnClickListener(this);
+        licenseLayout.setOnClickListener(this);
     }
 
     @Override
@@ -113,6 +115,20 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
                 lockUiComponent();
 
                 Intent intent = new Intent(this, ProtectYouthTermsActivity.class);
+                startActivity(intent);
+                break;
+            }
+
+            case R.id.licenseLayout:
+            {
+                if (isLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
+                Intent intent = new Intent(this, LicenseActivity.class);
                 startActivity(intent);
                 break;
             }

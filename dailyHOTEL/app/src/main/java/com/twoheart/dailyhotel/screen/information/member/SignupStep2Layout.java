@@ -88,7 +88,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         mPhoneView = view.findViewById(R.id.phoneView);
         mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
-        mPhoneEditText.setDeleteButtonVisible(true);
+        mPhoneEditText.setDeleteButtonVisible(true, null);
         mPhoneEditText.setOnFocusChangeListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -142,7 +142,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
         mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
-        mVerificationEditText.setDeleteButtonVisible(true);
+        mVerificationEditText.setDeleteButtonVisible(true, null);
         mVerificationEditText.setOnFocusChangeListener(this);
 
         mVerificationEditText.addTextChangedListener(new TextWatcher()

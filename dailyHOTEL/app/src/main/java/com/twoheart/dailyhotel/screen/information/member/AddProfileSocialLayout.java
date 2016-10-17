@@ -108,7 +108,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mPhoneView = mPhoneLayout.findViewById(R.id.phoneView);
         mPhoneEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.phoneEditText);
-        mPhoneEditText.setDeleteButtonVisible(true);
+        mPhoneEditText.setDeleteButtonVisible(true, null);
         mPhoneEditText.setOnFocusChangeListener(this);
 
         View confirmView = view.findViewById(R.id.confirmView);
@@ -116,12 +116,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
         mEmailEditText = (DailyEditText) mEmailLayout.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
 
         mNameView = mNameLayout.findViewById(R.id.nameView);
         mNameEditText = (DailyEditText) mNameLayout.findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true);
+        mNameEditText.setDeleteButtonVisible(true, null);
         mNameEditText.setOnFocusChangeListener(this);
 
         mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -144,14 +144,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true);
+        mBirthdayEditText.setDeleteButtonVisible(true, null);
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(true);
+        mRecommenderEditText.setDeleteButtonVisible(true, null);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.
