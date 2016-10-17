@@ -348,6 +348,7 @@
     <string name="frag_info">소개</string>
     <string name="frag_about">데일리호텔 소개</string>
     <string name="frag_terms_and_policy">약관 및 정책</string>
+    <string name="frag_opensource_license">오픈소스 라이센스</string>
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
