@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -137,16 +138,17 @@ public class StayDetail extends PlaceDetail
         {
             benefit = jsonObject.getString("benefit");
 
-            if(jsonObject.has("benefitContents") == true)
+            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
             {
                 JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
+
                 int length = benefitJSONArray.length();
 
-                if(length > 0)
+                if (length > 0)
                 {
                     mBenefitInformation = new ArrayList<>(length);
 
-                    for(int i = 0; i < length; i++)
+                    for (int i = 0; i < length; i++)
                     {
                         mBenefitInformation.add(benefitJSONArray.getString(i));
                     }
