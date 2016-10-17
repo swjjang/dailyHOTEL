@@ -212,6 +212,9 @@ public class RegisterCouponActivity extends BaseActivity
                 });
 
             Map<String, String> params = new HashMap<>();
+            // 현재 request방식이 post방식으로 변경되어 editText의 스트링을 가져오도록 수정 - 추후 수정 예정
+            couponCode = mRegisterCouponLayout != null ? mRegisterCouponLayout.getInputText() : "";
+
             params.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
             params.put(AnalyticsManager.KeyType.STATUS_CODE, Integer.toString(msgCode));
 

@@ -151,4 +151,8 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
             labelView.setSelected(false);
         }
     }
+
+    public String getInputText() {
+        return mCouponEditText != null ? mCouponEditText.getText().toString() : "";
+    }
 }
