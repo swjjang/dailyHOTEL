@@ -141,7 +141,7 @@
     <string name="actionbar_title_login_activity">회원가입 및 로그인</string>
     <string name="actionbar_title_notice_activity">공지사항</string>
     <string name="actionbar_title_payment_activity">결제하기</string>
-    <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
+    <string name="actionbar_title_privacy_activity">개인정보 처리 방침</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_protectyouthterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">내정보</string>
@@ -214,7 +214,7 @@
     <string name="toast_msg_input_error_phonenumber">휴대폰 번호를 다시 확인해주세요.</string>
     <string name="toast_msg_confirm_mobilenumber">전화번호를 확인해주세요.</string>
     <string name="toast_msg_terms_agreement">이용약관 항목을 체크해주세요.</string>
-    <string name="toast_msg_personal_agreement">개인정보취급방침 항목을 체크해주세요.</string>
+    <string name="toast_msg_personal_agreement">개인정보 처리 방침 항목을 체크해주세요.</string>
     <string name="toast_message_failed_install">앱 설치 요청을 할 수 없습니다. 구글 플레이 스토어를 설치하고 사용해주세요.</string>
     <string name="toast_msg_dont_support_service_phone">해당 기기는 서비스를 지원하지 않습니다. 다른 기기를 이용해 주세요.</string>
     <string name="toast_msg_dont_support_googleplay">연결 가능한 앱이 없습니다.\n구글 플레이 스토어 앱 설치를 확인해 주세요.</string>
@@ -576,7 +576,7 @@
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>
     <string name="label_signup_allagreement">전체동의</string>
-    <string name="act_signup_privacy">개인정보취급방침 동의 (필수)</string>
+    <string name="act_signup_privacy">개인정보 처리 방침 동의 (필수)</string>
     <string name="message_signup_inputmobile">신속한 예약확인 및 안내를 위해 고객님의\n정확한 연락처를 등록해주세요.</string>
     <string name="label_inputmobile">휴대폰 번호 입력</string>
     <string name="label_registeration_mobile">연락처 등록</string>
