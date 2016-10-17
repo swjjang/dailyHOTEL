@@ -94,7 +94,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
             DailyDeepLink.getInstance().clear();
         }
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICEDETAILVIEW);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICELIST);
     }
 
 

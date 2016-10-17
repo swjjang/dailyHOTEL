@@ -61,7 +61,7 @@ public class NoticeWebActivity extends WebViewActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICELIST);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICEDETAILVIEW);
     }
 
     private void initToolbar(String title)
