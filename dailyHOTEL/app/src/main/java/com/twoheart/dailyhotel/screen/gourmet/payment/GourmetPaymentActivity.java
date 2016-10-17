@@ -342,7 +342,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         int productCount = gourmetPaymentInformation.ticketCount;
 
         String date = gourmetPaymentInformation.checkInTime;
-        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
+        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT"));
 
         String userName = gourmetPaymentInformation.getCustomer().getName();
 
