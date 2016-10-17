@@ -65,9 +65,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     public CallbackManager mCallbackManager;
     private ScrollView mScrollView;
     private DailyEditText mEmailEditText, mPasswordEditText;
-    private TextView mLoginView;
+    private TextView mLoginView, mFindPasswordView;
     private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
+    private View mSnsLoginLayout;
 
     private Map<String, String> mStoreParams;
 
@@ -235,14 +236,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mLoginView = (TextView) findViewById(R.id.signinView);
 
-        TextView findPasswordView = (TextView) findViewById(R.id.findPasswordView);
-        findPasswordView.setPaintFlags(findPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        findPasswordView.setOnClickListener(this);
+        mFindPasswordView = (TextView) findViewById(R.id.findPasswordView);
+        mFindPasswordView.setPaintFlags(mFindPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        mFindPasswordView.setOnClickListener(this);
 
-        mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
+        mSnsLoginLayout = findViewById(R.id.snsLoginLayout);
+
+        mFacebookLoginView = (com.facebook.login.widget.LoginButton) mSnsLoginLayout.findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
 
-        View facebookLoginView = findViewById(R.id.facebookLoginView);
+        View facebookLoginView = mSnsLoginLayout.findViewById(R.id.facebookLoginView);
         facebookLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -259,8 +262,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         FontManager.apply(mFacebookLoginView, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
-        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) findViewById(R.id.kakaoLoginButton);
-        View kakaoLoginView = findViewById(R.id.kakaoLoginView);
+        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) mSnsLoginLayout.findViewById(R.id.kakaoLoginButton);
+        View kakaoLoginView = mSnsLoginLayout.findViewById(R.id.kakaoLoginView);
         kakaoLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -722,7 +725,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         @Override
         public void onGlobalLayout()
         {
-            Rect rect = new Rect();
+            final Rect rect = new Rect();
             mScrollView.getWindowVisibleDisplayFrame(rect);
             int screenHeight = mScrollView.getRootView().getHeight();
             int keypadHeight = screenHeight - rect.bottom;
@@ -740,7 +743,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         @Override
                         public void run()
                         {
-                            mScrollView.scrollTo(0, mEmailView.getTop());
+                            mScrollView.scrollTo(0, Math.abs(mFindPasswordView.getBottom() - mScrollView.getHeight()));
                         }
                     });
                 }
