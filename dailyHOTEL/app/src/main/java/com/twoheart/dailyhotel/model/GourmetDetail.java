@@ -125,16 +125,16 @@ public class GourmetDetail extends PlaceDetail
         {
             benefit = jsonObject.getString("benefit");
 
-            if(jsonObject.has("benefitContents") == true)
+            if (jsonObject.has("benefitContents") == true)
             {
                 JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
                 int length = benefitJSONArray.length();
 
-                if(length > 0)
+                if (length > 0)
                 {
                     mBenefitInformation = new ArrayList<>(length);
 
-                    for(int i = 0; i < length; i++)
+                    for (int i = 0; i < length; i++)
                     {
                         mBenefitInformation.add(benefitJSONArray.getString(i));
                     }

@@ -8,7 +8,6 @@ import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 

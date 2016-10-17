@@ -6,7 +6,6 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
