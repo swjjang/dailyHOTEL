@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar"
         android:fadingEdge="none">
 
@@ -18,9 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:paddingLeft="7dp"
             android:paddingRight="7dp"
-            android:paddingLeft="7dp">
+            android:paddingTop="8dp">
 
             <!-- 예약 세부정보 -->
 
@@ -527,4 +528,29 @@
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/sendEmailView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_normal_gradation"
+            android:gravity="center"
+            android:text="@string/label_send_email"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
 </RelativeLayout>

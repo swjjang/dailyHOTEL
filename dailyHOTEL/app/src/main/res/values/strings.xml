@@ -752,6 +752,9 @@
     <string name="label_receipt_address">주소 | %1$s</string>
     <string name="label_receipt_phone">전화번호 | %1$s</string>
     <string name="label_receipt_fax">팩스 | %1$s</string>
+    <string name="label_send_email">이메일로 발송하기</string>
+    <string name="label_receipt_email">영수증 이메일 발송</string>
+    <string name="message_send_email">아래 이메일 주소로\n영수증을 전송할까요?</string>
 
     <!-- Area -->
     <string name="label_selectarea_stay_area">호텔 지역 선택</string>

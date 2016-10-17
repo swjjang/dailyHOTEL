@@ -170,7 +170,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnTouchListener(new View.OnTouchListener()
         {
@@ -193,7 +193,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true);
+        mPasswordEditText.setDeleteButtonVisible(true, null);
         mPasswordEditText.setOnFocusChangeListener(this);
         mPasswordEditText.setOnTouchListener(new View.OnTouchListener()
         {

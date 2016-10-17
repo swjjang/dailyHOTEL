@@ -50,7 +50,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         forgotView.setOnClickListener(this);
 
         mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
