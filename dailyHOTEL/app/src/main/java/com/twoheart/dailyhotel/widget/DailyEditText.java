@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
@@ -18,6 +17,11 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class DailyEditText extends AppCompatEditText
 {
+    private final int DRAWABLE_LEFT = 0;
+    private final int DRAWABLE_TOP = 1;
+    private final int DRAWABLE_RIGHT = 2;
+    private final int DRAWABLE_BOTTOM = 3;
+
     private boolean mUsedImeActionSend;
     private boolean mHasDeleteButton;
 
@@ -65,7 +69,7 @@ public class DailyEditText extends AppCompatEditText
 
         if (mHasDeleteButton == true && isFocused() == true && lengthAfter > 0)
         {
-            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+            setDeleteDrawable();
         } else
         {
             setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -90,17 +94,7 @@ public class DailyEditText extends AppCompatEditText
 
         if (mHasDeleteButton == true && text != null && Util.isTextEmpty(text.toString()) == false)
         {
-            final int DRAWABLE_LEFT = 0;
-            final int DRAWABLE_TOP = 1;
-            final int DRAWABLE_RIGHT = 2;
-            final int DRAWABLE_BOTTOM = 3;
-
-            Drawable[] drawables = getCompoundDrawables();
-
-            if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
-            {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
-            }
+            setDeleteDrawable();
         }
     }
 
@@ -109,11 +103,6 @@ public class DailyEditText extends AppCompatEditText
     {
         if (mHasDeleteButton == true)
         {
-            final int DRAWABLE_LEFT = 0;
-            final int DRAWABLE_TOP = 1;
-            final int DRAWABLE_RIGHT = 2;
-            final int DRAWABLE_BOTTOM = 3;
-
             if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
             {
                 Drawable[] drawables = getCompoundDrawables();
@@ -139,6 +128,16 @@ public class DailyEditText extends AppCompatEditText
         }
 
         return super.onTouchEvent(event);
+    }
+
+    private void setDeleteDrawable()
+    {
+        Drawable[] drawables = getCompoundDrawables();
+
+        if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        }
     }
 
     public void setDeleteButtonVisible(boolean visible, OnDeleteTextClickListener listener)
@@ -311,64 +310,6 @@ public class DailyEditText extends AppCompatEditText
             }
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
-        }
-    }
-
-    public void setDrawableVectorTintList(int id)
-    {
-        Drawable[] drawables = getCompoundDrawables();
-
-        if (drawables == null)
-        {
-            return;
-        }
-
-        for (Drawable drawable : drawables)
-        {
-            if (drawable == null)
-            {
-                continue;
-            }
-
-            if (drawable instanceof VectorDrawableCompat)
-            {
-                ((VectorDrawableCompat) drawable).setTintList(getResources().getColorStateList(id));
-            } else
-            {
-                if (Util.isOverAPI21() == true)
-                {
-                    drawable.setTintList(getResources().getColorStateList(id));
-                }
-            }
-        }
-    }
-
-    public void setDrawableVectorTint(int id)
-    {
-        Drawable[] drawables = getCompoundDrawables();
-
-        if (drawables == null)
-        {
-            return;
-        }
-
-        for (Drawable drawable : drawables)
-        {
-            if (drawable == null)
-            {
-                continue;
-            }
-
-            if (drawable instanceof VectorDrawableCompat)
-            {
-                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
-            } else
-            {
-                if (Util.isOverAPI21() == true)
-                {
-                    drawable.setTint(getResources().getColor(id));
-                }
-            }
         }
     }
 }
