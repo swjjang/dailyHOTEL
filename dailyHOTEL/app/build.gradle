@@ -76,8 +76,8 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.14.1'
     compile 'com.facebook.fresco:drawee:0.14.1'
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.14.1'
-    compile 'com.kakao.sdk:kakaolink:1.1.22'
-    compile 'com.kakao.sdk:kakaotalk:1.1.22'
+    compile 'com.kakao.sdk:kakaolink:1.1.24'
+    compile 'com.kakao.sdk:kakaotalk:1.1.24'
     compile 'com.appboy:android-sdk-ui:1.15.+'
     compile 'com.adjust.sdk:adjust-android:4.10.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
