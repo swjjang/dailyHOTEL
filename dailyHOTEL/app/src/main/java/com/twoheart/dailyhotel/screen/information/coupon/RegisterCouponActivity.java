@@ -49,6 +49,10 @@ public class RegisterCouponActivity extends BaseActivity
         mNetworkController = new RegisterCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mRegisterCouponLayout.onCreateView(R.layout.activity_register_coupon));
+
+        AnalyticsManager.getInstance(RegisterCouponActivity.this).recordEvent(//
+            AnalyticsManager.Category.COUPON_BOX, AnalyticsManager.Action.REGISTRATION_CLICKED,//
+            mCallByScreen, null);
     }
 
     @Override
@@ -174,10 +178,6 @@ public class RegisterCouponActivity extends BaseActivity
             }
 
             mNetworkController.requestRegisterCoupon(couponCode);
-
-            AnalyticsManager.getInstance(RegisterCouponActivity.this).recordEvent(//
-                AnalyticsManager.Category.COUPON_BOX, AnalyticsManager.Action.REGISTRATION_CLICKED,//
-                mCallByScreen, null);
         }
 
         @Override
