@@ -120,9 +120,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             @Override
             public void run()
             {
-                Rect rect = new Rect();
-                mBottomOptionLayout.getGlobalVisibleRect(rect);
-                mBottomOptionLayout.setTag(Util.getLCDHeight(mContext) - rect.top);
+                mBottomOptionLayout.setTag(((View)mBottomOptionLayout.getParent()).getBottom() - mBottomOptionLayout.getTop());
             }
         });
 
