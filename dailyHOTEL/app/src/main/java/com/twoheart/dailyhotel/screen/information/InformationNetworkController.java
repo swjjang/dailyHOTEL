@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Map;
 
 /**
  * Created by Sam Lee on 2016. 5. 19..
@@ -63,7 +64,7 @@ public class InformationNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -101,7 +102,7 @@ public class InformationNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -140,7 +141,7 @@ public class InformationNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mBenefitMessageJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -173,7 +174,7 @@ public class InformationNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUpdateBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

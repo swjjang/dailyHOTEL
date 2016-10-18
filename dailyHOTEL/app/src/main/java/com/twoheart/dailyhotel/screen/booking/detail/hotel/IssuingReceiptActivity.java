@@ -28,6 +28,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
@@ -410,7 +412,7 @@ public class IssuingReceiptActivity extends BaseActivity
     private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {

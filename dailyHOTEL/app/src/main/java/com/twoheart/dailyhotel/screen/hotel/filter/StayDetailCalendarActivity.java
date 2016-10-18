@@ -154,7 +154,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             int saleRoomCount = 0;
             String message = null;

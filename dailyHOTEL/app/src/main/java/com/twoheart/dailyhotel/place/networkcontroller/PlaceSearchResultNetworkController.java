@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -66,7 +67,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (response == null)
             {
@@ -274,7 +275,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
         {
             if (mListener != null)
             {
-                mListener.onResponse(mUrl, jsonObject);
+                mListener.onResponse(mUrl, null, jsonObject);
             }
         }
     }

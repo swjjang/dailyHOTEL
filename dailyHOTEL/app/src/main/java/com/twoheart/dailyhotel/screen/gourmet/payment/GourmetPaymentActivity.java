@@ -1291,7 +1291,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1356,7 +1356,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mGourmetPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1454,7 +1454,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1509,7 +1509,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1616,7 +1616,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mCheckAvailableTicketJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1649,7 +1649,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

@@ -442,7 +442,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private DailyHotelJsonResponseListener mReservationListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -471,10 +471,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                         updateLayout(true, bookingArrayList);
 
-                        Map<String, String> params = new HashMap<>();
-                        params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
+                        Map<String, String> analyticsParams = new HashMap<>();
+                        analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
 
-                        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, params);
+                        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, analyticsParams);
                     }
 
                     // 사용자 정보 요청.
@@ -591,7 +591,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -629,7 +629,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private DailyHotelJsonResponseListener mReservationHiddenJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -772,7 +772,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

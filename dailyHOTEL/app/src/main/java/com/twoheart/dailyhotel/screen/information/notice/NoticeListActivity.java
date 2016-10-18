@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class NoticeListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
@@ -157,7 +158,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     private DailyHotelJsonResponseListener mNoticeListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

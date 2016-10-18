@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StayMainNetworkController extends PlaceMainNetworkController
 {
@@ -52,7 +53,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -143,7 +144,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(response);
 

@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Map;
 
 public class ProfileNetworkController extends BaseNetworkController
 {
@@ -48,7 +49,7 @@ public class ProfileNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -126,7 +127,7 @@ public class ProfileNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

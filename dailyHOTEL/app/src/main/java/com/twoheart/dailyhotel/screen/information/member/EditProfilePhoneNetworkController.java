@@ -60,7 +60,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mDailUserVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -128,7 +128,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mDailyserUpdateVerificationPhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -187,7 +187,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserUpdateSocialJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

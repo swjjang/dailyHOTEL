@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class MainNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
@@ -74,7 +76,7 @@ public class MainNetworkController extends BaseNetworkController
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -123,7 +125,7 @@ public class MainNetworkController extends BaseNetworkController
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -170,7 +172,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -209,7 +211,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -247,7 +249,7 @@ public class MainNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -293,7 +295,7 @@ public class MainNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -323,7 +325,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -359,7 +361,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -397,7 +399,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -458,7 +460,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -492,7 +494,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -525,7 +527,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

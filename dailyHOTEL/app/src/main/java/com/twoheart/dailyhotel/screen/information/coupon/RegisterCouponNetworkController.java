@@ -13,6 +13,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by android_sam on 2016. 9. 20..
  */
@@ -43,7 +45,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
     DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
