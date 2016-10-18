@@ -120,7 +120,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             @Override
             public void run()
             {
-                mBottomOptionLayout.setTag(((View)mBottomOptionLayout.getParent()).getBottom() - mBottomOptionLayout.getTop());
+                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
             }
         });
 
