@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -67,6 +68,8 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
         mEmptyView = findViewById(R.id.emptyLayout);
         mListView = (ListView) findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
+
+        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     @Override
