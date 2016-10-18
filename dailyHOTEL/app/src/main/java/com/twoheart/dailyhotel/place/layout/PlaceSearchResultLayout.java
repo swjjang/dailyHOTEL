@@ -195,9 +195,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             @Override
             public void run()
             {
-                Rect rect = new Rect();
-                mBottomOptionLayout.getGlobalVisibleRect(rect);
-                mBottomOptionLayout.setTag(Util.getLCDHeight(mContext) - rect.top);
+                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
             }
         });
 
