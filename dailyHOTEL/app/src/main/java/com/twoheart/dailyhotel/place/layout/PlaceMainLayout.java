@@ -164,7 +164,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             float scaleX = 1f;
             float scaleWidth;
 
-            for (int i = 99; i >= 80; i--)
+            for (int i = 99; i >= 70; i--)
             {
                 scaleX = (float) i / 100;
                 scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
