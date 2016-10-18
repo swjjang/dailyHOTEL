@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 신용카드 등록하기.
@@ -280,7 +281,7 @@ public class CreditCardListActivity extends BaseActivity
     private DailyHotelJsonResponseListener mCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -379,7 +380,7 @@ public class CreditCardListActivity extends BaseActivity
     private DailyHotelJsonResponseListener mDeleteCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

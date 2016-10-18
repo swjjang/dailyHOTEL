@@ -15,6 +15,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
     private void makeLayout(JSONObject jsonObject) throws Exception
@@ -198,7 +200,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {

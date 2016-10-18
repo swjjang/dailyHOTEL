@@ -243,7 +243,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -297,7 +297,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

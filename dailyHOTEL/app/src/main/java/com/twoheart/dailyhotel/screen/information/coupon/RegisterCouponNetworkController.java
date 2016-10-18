@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -12,6 +11,8 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 9. 20..
@@ -43,7 +44,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
     DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -51,8 +52,9 @@ public class RegisterCouponNetworkController extends BaseNetworkController
                 boolean isSuccess = msgCode == 100 ? true : false;
                 String message = response.getString("msg");
 
-                Uri uri = Uri.parse(url);
-                String userCouponCode = uri.getQueryParameter("keyword");
+//                Uri uri = Uri.parse(url);
+//                String userCouponCode = uri.getQueryParameter("keyword");
+                String userCouponCode = params != null ? params.get("keyword") : "";
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, isSuccess, msgCode, message);
             } catch (Exception e)

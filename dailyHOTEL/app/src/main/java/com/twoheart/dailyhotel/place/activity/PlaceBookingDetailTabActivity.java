@@ -20,6 +20,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
     protected static final int TAB_COUNT = 1;
@@ -180,7 +182,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {

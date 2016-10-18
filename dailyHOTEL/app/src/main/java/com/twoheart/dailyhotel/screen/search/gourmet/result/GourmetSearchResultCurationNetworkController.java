@@ -12,6 +12,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class GourmetSearchResultCurationNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
@@ -46,7 +48,7 @@ public class GourmetSearchResultCurationNetworkController extends BaseNetworkCon
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             int totalCount = 0;
             int maxCount = 0;

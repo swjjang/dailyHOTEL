@@ -12,6 +12,8 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 {
     public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
@@ -33,7 +35,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

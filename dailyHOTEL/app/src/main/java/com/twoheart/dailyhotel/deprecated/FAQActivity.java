@@ -85,7 +85,7 @@ public class FAQActivity extends BaseActivity
     //        }
     //
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //
     //            mList = new ArrayList<>();

@@ -566,7 +566,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -824,7 +824,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mSocialUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -847,32 +847,32 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
                         AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
 
-                        HashMap<String, String> params = new HashMap<>();
+                        HashMap<String, String> analyticsParams = new HashMap<>();
 
                         if (mStoreParams.containsKey("email") == true)
                         {
-                            params.put("email", mStoreParams.get("email"));
+                            analyticsParams.put("email", mStoreParams.get("email"));
                         }
 
                         if (mStoreParams.containsKey("pw") == true)
                         {
-                            params.put("pw", mStoreParams.get("pw"));
+                            analyticsParams.put("pw", mStoreParams.get("pw"));
                         }
 
                         if (mStoreParams.containsKey("social_id") == true)
                         {
-                            params.put("social_id", mStoreParams.get("social_id"));
+                            analyticsParams.put("social_id", mStoreParams.get("social_id"));
                         }
 
                         mStoreParams.put("new_user", "1");
 
                         if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginJsonResponseListener);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
                         } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginJsonResponseListener);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                         }
 
@@ -911,7 +911,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -966,7 +966,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mSocialUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1033,7 +1033,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

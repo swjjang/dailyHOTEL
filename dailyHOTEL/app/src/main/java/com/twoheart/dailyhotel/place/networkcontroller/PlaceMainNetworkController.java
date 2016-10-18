@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class PlaceMainNetworkController extends BaseNetworkController
 {
@@ -47,7 +48,7 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             long currentDateTime;
             long dailyDateTime;
@@ -80,7 +81,7 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
     //        }
     //
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(response);
     //
