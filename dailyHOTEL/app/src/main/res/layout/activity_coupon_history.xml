@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/information_background">
 
-    <!--<include layout="@layout/toolbar_default"/>-->
+    <include layout="@layout/toolbar_default"/>
 
     <RelativeLayout
         android:id="@+id/couponHistoryLayout"
