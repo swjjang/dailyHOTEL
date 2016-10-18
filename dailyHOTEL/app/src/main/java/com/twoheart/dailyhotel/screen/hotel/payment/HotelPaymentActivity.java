@@ -389,7 +389,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 String message = "Empty UserName :: placeIndex:" + hotelPaymentInformation.placeIndex //
                     + ",roomIndex:" + roomInformation.roomIndex + ",checkIn:" + checkInDate//
-                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",paytype:" + paymentInformation.paymentType;
+                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
             {

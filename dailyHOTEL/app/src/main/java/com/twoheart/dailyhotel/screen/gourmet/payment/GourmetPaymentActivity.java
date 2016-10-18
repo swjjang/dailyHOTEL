@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -344,7 +345,20 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String date = gourmetPaymentInformation.checkInTime;
         String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT"));
 
-        String userName = gourmetPaymentInformation.getCustomer().getName();
+        String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
+
+        if (Util.isTextEmpty(userName) == true)
+        {
+            try
+            {
+                String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
+                    + ",tiketIndex:" + ticketInformation.index + ",checkIn:" + date//
+                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
+                Crashlytics.logException(new NullPointerException(message));
+            } catch (Exception e)
+            {
+            }
+        }
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
