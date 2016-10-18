@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.ParseException;
@@ -148,12 +149,24 @@ public class SelectCouponDialogActivity extends BaseActivity
         {
             case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
             {
+                if (Util.isTextEmpty(mCheckInDate, mCheckOutDate) == true)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
                 mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
                 break;
             }
 
             case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
             {
+                if (Util.isTextEmpty(mCheckInDate) == true)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
                 mNetworkController.requestCouponList(mHotelIdx, mCheckInDate, mNights);
                 break;
             }
@@ -330,12 +343,24 @@ public class SelectCouponDialogActivity extends BaseActivity
             {
                 case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
                 {
+                    if (Util.isTextEmpty(mCheckInDate, mCheckOutDate) == true)
+                    {
+                        Util.restartApp(SelectCouponDialogActivity.this);
+                        return;
+                    }
+
                     mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
                     break;
                 }
 
                 case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
                 {
+                    if (Util.isTextEmpty(mCheckInDate) == true)
+                    {
+                        Util.restartApp(SelectCouponDialogActivity.this);
+                        return;
+                    }
+
                     mNetworkController.requestCouponList(mHotelIdx, mCheckInDate, mNights);
                     break;
                 }
