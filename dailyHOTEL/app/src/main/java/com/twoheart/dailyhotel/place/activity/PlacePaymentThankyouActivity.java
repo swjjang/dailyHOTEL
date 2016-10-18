@@ -139,7 +139,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     private void initLayout(String imageUrl, String place, String placeType, String userName)
     {
-        if (Util.isTextEmpty(place, placeType, userName) == true)
+        if (Util.isTextEmpty(place, placeType) == true)
         {
             Util.restartApp(this);
             return;
