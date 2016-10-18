@@ -13,7 +13,7 @@ import java.util.List;
 public class RecentPlaces
 {
     public static final int MAX_RECENT_PLACE_COUNT = 30;
-    public static final String RECENT_PLACE_DELIMITER = "\n";
+    public static final String RECENT_PLACE_DELIMITER = ",";
 
     private List<String> mPlaceIndexList;
 

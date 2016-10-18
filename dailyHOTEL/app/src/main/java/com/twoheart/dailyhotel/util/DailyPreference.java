@@ -239,6 +239,9 @@ public class DailyPreference
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
 
+        String stayRecentPlace = getStayRecentPlaces();
+        String gourmetRecentPlace = getGourmetRecentPlaces();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -253,6 +256,9 @@ public class DailyPreference
 
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
+
+        setStayRecentPlaces(stayRecentPlace);
+        setGourmetRecentPlaces(gourmetRecentPlace);
 
         DailyHotel.AUTHORIZATION = null;
     }
