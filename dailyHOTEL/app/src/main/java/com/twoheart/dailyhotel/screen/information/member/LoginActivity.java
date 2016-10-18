@@ -68,7 +68,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private TextView mLoginView, mFindPasswordView;
     private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
-    private View mSnsLoginLayout;
 
     private Map<String, String> mStoreParams;
 
@@ -240,12 +239,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mFindPasswordView.setPaintFlags(mFindPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mFindPasswordView.setOnClickListener(this);
 
-        mSnsLoginLayout = findViewById(R.id.snsLoginLayout);
+        View snsLoginLayout = findViewById(R.id.snsLoginLayout);
 
-        mFacebookLoginView = (com.facebook.login.widget.LoginButton) mSnsLoginLayout.findViewById(R.id.facebookLoginButton);
+        mFacebookLoginView = (com.facebook.login.widget.LoginButton) snsLoginLayout.findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
 
-        View facebookLoginView = mSnsLoginLayout.findViewById(R.id.facebookLoginView);
+        View facebookLoginView = snsLoginLayout.findViewById(R.id.facebookLoginView);
         facebookLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -262,8 +261,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         FontManager.apply(mFacebookLoginView, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
-        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) mSnsLoginLayout.findViewById(R.id.kakaoLoginButton);
-        View kakaoLoginView = mSnsLoginLayout.findViewById(R.id.kakaoLoginView);
+        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) snsLoginLayout.findViewById(R.id.kakaoLoginButton);
+        View kakaoLoginView = snsLoginLayout.findViewById(R.id.kakaoLoginView);
         kakaoLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override

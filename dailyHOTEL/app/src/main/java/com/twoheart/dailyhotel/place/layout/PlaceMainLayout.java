@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.place.layout;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;

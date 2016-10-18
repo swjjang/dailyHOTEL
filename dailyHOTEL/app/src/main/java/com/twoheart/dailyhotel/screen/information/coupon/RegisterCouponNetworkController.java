@@ -52,8 +52,8 @@ public class RegisterCouponNetworkController extends BaseNetworkController
                 boolean isSuccess = msgCode == 100 ? true : false;
                 String message = response.getString("msg");
 
-//                Uri uri = Uri.parse(url);
-//                String userCouponCode = uri.getQueryParameter("keyword");
+                //                Uri uri = Uri.parse(url);
+                //                String userCouponCode = uri.getQueryParameter("keyword");
                 String userCouponCode = params != null ? params.get("keyword") : "";
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, isSuccess, msgCode, message);

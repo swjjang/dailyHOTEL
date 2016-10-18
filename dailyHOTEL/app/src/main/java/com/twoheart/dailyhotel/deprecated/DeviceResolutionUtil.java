@@ -22,7 +22,6 @@ public class DeviceResolutionUtil
 
     public static HashMap<Integer, Integer> getDeviceResolution(Activity act)
     {
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         act.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 

@@ -27,7 +27,6 @@ public class EditProfilePhoneActivity extends BaseActivity
     private EditProfilePhoneNetworkController mNetworkController;
     private String mCountryCode;
     private String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
-    private Type mType;
     private int mRequestVerficationCount;
 
     public enum Type
@@ -67,9 +66,11 @@ public class EditProfilePhoneActivity extends BaseActivity
         Intent intent = getIntent();
         mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
+        Type type = null;
+
         try
         {
-            mType = Type.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_TYPE));
+            type = Type.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_TYPE));
         } catch (Exception e)
         {
             Util.restartApp(this);
@@ -85,7 +86,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         mCountryCode = Util.getCountryNameNCode(this);
         mEditProfilePhoneLayout.setCountryCode(mCountryCode);
 
-        switch (mType)
+        switch (type)
         {
             case EDIT_PROFILE:
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(this).getUserType()) == true)

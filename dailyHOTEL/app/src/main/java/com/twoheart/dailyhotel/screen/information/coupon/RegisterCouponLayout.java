@@ -152,7 +152,8 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    public String getInputText() {
+    public String getInputText()
+    {
         return mCouponEditText != null ? mCouponEditText.getText().toString() : "";
     }
 }
