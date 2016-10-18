@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -53,8 +52,9 @@ public class RegisterCouponNetworkController extends BaseNetworkController
                 boolean isSuccess = msgCode == 100 ? true : false;
                 String message = response.getString("msg");
 
-                Uri uri = Uri.parse(url);
-                String userCouponCode = uri.getQueryParameter("keyword");
+//                Uri uri = Uri.parse(url);
+//                String userCouponCode = uri.getQueryParameter("keyword");
+                String userCouponCode = params != null ? params.get("keyword") : "";
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(userCouponCode, isSuccess, msgCode, message);
             } catch (Exception e)
