@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -225,15 +226,23 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mContext, coupon.stayFrom, coupon.stayTo);
             }
 
-            final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-            final float textWidth = Util.getTextWidth(mContext, lastLineText, 11d, typeface);
-
-            if (minPriceTextView.getWidth() <= textWidth)
+            int viewWidth = minPriceTextView.getWidth() - minPriceTextView.getPaddingLeft() - minPriceTextView.getPaddingRight();
+            if (viewWidth == 0)
             {
-                lastLineText = lastLineText.replace(", ", ",\n");
+                final String lineText = lastLineText;
+                minPriceTextView.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        int viewWidth = minPriceTextView.getWidth() - minPriceTextView.getPaddingLeft() - minPriceTextView.getPaddingRight();
+                        setMinPriceText(position, viewWidth, lineText);
+                    }
+                });
+            } else
+            {
+                setMinPriceText(position, viewWidth, lastLineText);
             }
-
-            minPriceTextView.setText(lastLineText);
 
             if (coupon.isDownloaded == true)
             {
@@ -272,6 +281,29 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mListener.onDownloadClick(v, position);
                 }
             });
+        }
+
+        private void setMinPriceText(int position, int viewWidth, String lastLineText)
+        {
+            if (Util.isTextEmpty(lastLineText) == true)
+            {
+                lastLineText = "";
+            }
+
+            final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
+            final float textWidth = Util.getTextWidth(mContext, lastLineText, 11d, typeface);
+
+            ExLog.d("index : " + position + " , viewWidth : " + viewWidth + " , getWidth() : "//
+                + minPriceTextView.getWidth() + " , getPaddingLeft() : " + minPriceTextView.getPaddingLeft() //
+                + " , getPaddingRight() : " + minPriceTextView.getPaddingRight() //
+                + " , textWidth : " + textWidth + " , gap : " + (textWidth - viewWidth));
+
+            if (viewWidth <= textWidth)
+            {
+                lastLineText = lastLineText.replace(", ", ",\n");
+            }
+
+            minPriceTextView.setText(lastLineText);
         }
     }
 
