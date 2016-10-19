@@ -94,6 +94,7 @@ public class DailyDeepLink
     private static final String V5 = "5";
     private static final String V6 = "6";
     private static final String V7 = "7";
+    private static final String V8 = "8";
 
     private static DailyDeepLink mInstance;
 
@@ -149,29 +150,41 @@ public class DailyDeepLink
 
         if (Util.isTextEmpty(versionCode) == false)
         {
-            if (V3.equalsIgnoreCase(versionCode) == true)
+            switch (versionCode)
             {
-                mVersionCode = 3;
-                decodingLinkV3(uri);
-            } else if (V4.equalsIgnoreCase(versionCode) == true)
-            {
-                mVersionCode = 4;
-                decodingLinkV4(uri);
-            } else if (V5.equalsIgnoreCase(versionCode) == true)
-            {
-                mVersionCode = 5;
-                decodingLinkV5(uri);
-            } else if (V6.equalsIgnoreCase(versionCode) == true)
-            {
-                mVersionCode = 6;
-                decodingLinkV6(uri);
-            } else if (V7.equalsIgnoreCase(versionCode) == true)
-            {
-                mVersionCode = 7;
-                decodingLinkV7(uri);
-            } else
-            {
-                clear();
+                case V3:
+                    mVersionCode = 3;
+                    decodingLinkV3(uri);
+                    break;
+
+                case V4:
+                    mVersionCode = 4;
+                    decodingLinkV4(uri);
+                    break;
+
+                case V5:
+                    mVersionCode = 5;
+                    decodingLinkV5(uri);
+                    break;
+
+                case V6:
+                    mVersionCode = 6;
+                    decodingLinkV6(uri);
+                    break;
+
+                case V7:
+                    mVersionCode = 7;
+                    decodingLinkV7(uri);
+                    break;
+
+                case V8:
+                    mVersionCode = 8;
+                    decodingLinkV8(uri);
+                    break;
+
+                default:
+                    clear();
+                    break;
             }
         } else
         {
@@ -921,6 +934,16 @@ public class DailyDeepLink
         }
 
         return noticeIndex;
+    }
+
+    private boolean decodingLinkV8(Uri uri)
+    {
+        if (decodingLinkV7(uri) == false)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private boolean decodingLinkV7(Uri uri)
