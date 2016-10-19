@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -422,7 +423,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
                 Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
                     , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas//
-                    , null, null, null);
+                    , AnalyticsManager.Category.HOTEL_BOOKINGS//
+                    , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
+                    , null);
                 break;
             }
 
