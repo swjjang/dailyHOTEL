@@ -58,6 +58,8 @@
     <string name="label_card_payment">일반 카드결제</string>
     <string name="label_nights">%1$d박</string>
     <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
+    <string name="label_sender">보낸사람</string>
+    <string name="label_send_mail">메일 발송하기</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -92,7 +94,8 @@
     <string name="message_detail_copy_address">주소가 복사되었습니다.</string>
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
     <string name="message_no_more_list">마지막 목록입니다.</string>
-    <string name="message_recent_place_tooltip">최근 확인한 호텔/레스토랑을 \'더보기\' 메뉴에서 확인해보세요! </string>
+    <string name="message_recent_place_tooltip">최근 확인한 호텔/레스토랑을 \'더보기\' 메뉴에서 확인해보세요!</string>
+    <string name="message_feedback_dailyhotel">데일리호텔에 문의합니다.</string>
 
     <!-- Stay Grade -->
     <string name="grade_special">특급</string>
