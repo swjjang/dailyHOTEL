@@ -125,13 +125,14 @@ public class InformationFragment extends BaseFragment implements Constants
             } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
             {
                 mOnEventListener.startTermsNPolicy();
-            } else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
-            {
-                return;
-            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
-            {
-                return;
             }
+//            else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
+//            {
+//                return;
+//            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
+//            {
+//                return;
+//            }
 
             DailyDeepLink.getInstance().clear();
         }
