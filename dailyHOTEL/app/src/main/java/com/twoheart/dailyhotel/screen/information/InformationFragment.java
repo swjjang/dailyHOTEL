@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationManagerCompat;
@@ -214,6 +213,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             case CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
             case CODE_REQUEST_ACTIVITY_FAQ:
+            case CODE_REQUEST_ACTIVITY_FEEDBACK:
                 mDontReload = false;
                 break;
         }
@@ -467,12 +467,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
             lockUiComponent();
 
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc, DailyHotel.VERSION, Build.VERSION.RELEASE));
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivityForResult(new Intent(baseActivity, FeedbackMailActivity.class), CODE_REQUEST_ACTIVITY_FEEDBACK);
 
             //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
 
