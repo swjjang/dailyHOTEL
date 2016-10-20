@@ -114,6 +114,24 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startNotice();
                 return;
+            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
+            {
+                return;
+            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
+            {
+                return;
+            } else if (DailyDeepLink.getInstance().isFAQView() == true)
+            {
+                mOnEventListener.startFAQ();
+            } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
+            {
+                mOnEventListener.startTermsNPolicy();
+            } else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
+            {
+                return;
+            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
+            {
+                return;
             }
 
             DailyDeepLink.getInstance().clear();
