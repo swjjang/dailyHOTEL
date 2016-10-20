@@ -95,7 +95,6 @@
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
     <string name="message_no_more_list">마지막 목록입니다.</string>
     <string name="message_recent_place_tooltip">최근 확인한 호텔/레스토랑을 \'더보기\' 메뉴에서 확인해보세요!</string>
-    <string name="message_feedback_dailyhotel">데일리호텔에 문의합니다.</string>
 
     <!-- Stay Grade -->
     <string name="grade_special">특급</string>
@@ -325,8 +324,8 @@
 
     <!-- Mail Text -->
     <string name="mail_text_dialog_title">이메일 선택</string>
-    <string name="mail_text_subject">데일리호텔에 문의합니다</string>
-    <string name="mail_text_desc">데일리호텔(v%1$s)의 안드로이드(%2$s) 어플리케이션에 관한 문의입니다.</string>
+    <string name="mail_text_subject">데일리호텔에 문의합니다.</string>
+    <string name="mail_text_desc">데일리호텔 안드로이드 어플리케이션에 관한 문의입니다.\n(%1$s)</string>
 
     <!-- Prefix Text -->
     <string name="prefix_expire_time">유효기간</string>

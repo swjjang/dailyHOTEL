@@ -5,11 +5,13 @@
                 android:layout_height="match_parent"
                 android:background="@color/white">
 
+    <include layout="@layout/toolbar_default"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
         android:layout_above="@+id/sendFeedbackView"
+        android:layout_below="@+id/toolbar"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:orientation="vertical">
@@ -48,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="41dp"
             android:gravity="center_vertical"
-            android:text="@string/message_feedback_dailyhotel"
+            android:text="@string/mail_text_subject"
             android:textColor="@color/default_text_c323232"
             android:textSize="16dp"
             dailyFont:style="Medium"/>
@@ -59,10 +61,13 @@
             android:background="@color/default_background_cd1d1d1"/>
 
         <com.twoheart.dailyhotel.widget.DailyEditText
+            android:id="@+id/messageEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="top"
+            android:padding="10dp"
+            android:background="@null"
             android:textColor="@color/default_text_c323232"
-            android:padding="15dp"
             android:textSize="16dp"/>
     </LinearLayout>
 
