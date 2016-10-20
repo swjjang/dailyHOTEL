@@ -153,6 +153,16 @@ public class StayDetail extends PlaceDetail
                         mBenefitInformation.add(benefitJSONArray.getString(i));
                     }
                 }
+
+                if (jsonObject.has("benefitWarning") == true && jsonObject.isNull("benefitWarning") == false)
+                {
+                    String benefitWarning = jsonObject.getString("benefitWarning");
+
+                    if (Util.isTextEmpty(benefitWarning) == false)
+                    {
+                        mBenefitInformation.add(benefitWarning);
+                    }
+                }
             }
         }
 
