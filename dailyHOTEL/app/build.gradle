@@ -80,7 +80,6 @@ dependencies {
     compile 'com.kakao.sdk:kakaotalk:1.1.24'
     compile 'com.appboy:android-sdk-ui:1.15.+'
     compile 'com.adjust.sdk:adjust-android:4.10.2'
-    compile 'com.google.code.gson:gson:2.7'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
