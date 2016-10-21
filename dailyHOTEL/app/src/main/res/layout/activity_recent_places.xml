@@ -46,7 +46,7 @@
             android:layout_centerInParent="true"
             android:drawablePadding="20dp"
             android:gravity="center"
-            android:text="@string/recent_places_empty_list_message"
+            android:text="@string/recent_places_list_empty_message"
             android:textColor="@color/information_title"
             android:textSize="18dp"
             app:drawableCompatTop="@drawable/no_event_ic"

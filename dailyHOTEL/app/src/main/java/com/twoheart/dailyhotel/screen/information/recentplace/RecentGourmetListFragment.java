@@ -52,6 +52,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         if (count == 0)
         {
             unLockUI();
+
+            if (mListLayout != null && isFinishing() == false)
+            {
+                mListLayout.setData(null);
+            }
             return;
         }
 

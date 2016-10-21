@@ -91,23 +91,17 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mFragmentList = new ArrayList<>();
 
-        if (mRecentStayPlaces.size() > 0)
-        {
-            mRecentStayListFragment = new RecentStayListFragment();
-            mRecentStayListFragment.setRecentPlaces(mRecentStayPlaces);
-            mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
+        mRecentStayListFragment = new RecentStayListFragment();
+        mRecentStayListFragment.setRecentPlaces(mRecentStayPlaces);
+        mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
-            mFragmentList.add(mRecentStayListFragment);
-        }
+        mFragmentList.add(mRecentStayListFragment);
 
-        if (mRecentGourmetPlaces.size() > 0)
-        {
-            mRecentGourmetListFragment = new RecentGourmetListFragment();
-            mRecentGourmetListFragment.setRecentPlaces(mRecentGourmetPlaces);
-            mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
+        mRecentGourmetListFragment = new RecentGourmetListFragment();
+        mRecentGourmetListFragment.setRecentPlaces(mRecentGourmetPlaces);
+        mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
-            mFragmentList.add(mRecentGourmetListFragment);
-        }
+        mFragmentList.add(mRecentGourmetListFragment);
 
         mPageAdapter = new RecentPlacesFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList);
 
@@ -133,7 +127,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_restaurant));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
@@ -163,22 +157,13 @@ public class RecentPlacesTabActivity extends BaseActivity
             return;
         }
 
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        setTabLayoutVisibility(View.VISIBLE);
+        setEmptyViewVisibility(View.GONE);
 
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-
-        setEmptyViewVisibility(View.GONE);
-
-        if (fragmentList.size() >= 2)
-        {
-            mTabLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            mTabLayout.setVisibility(View.GONE);
-        }
     }
 
     private void setTabLayoutVisibility(int visibility)
@@ -195,7 +180,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         } else
         {
             mTabLayout.setVisibility(View.VISIBLE);
-            mTabLayout.setOnTabSelectedListener(null);
+            mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
         }
     }
 
@@ -250,46 +235,23 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             int stayCount = mRecentStayPlaces.size();
             int gourmetCount = mRecentGourmetPlaces.size();
-            boolean isPagingEnabled;
+//            boolean isPagingEnabled;
 
             if (stayCount == 0 && gourmetCount == 0)
             {
                 // 둘다 없을때
                 setTabLayoutVisibility(View.GONE);
                 setEmptyViewVisibility(View.VISIBLE);
-                isPagingEnabled = false;
-            } else if (stayCount > 0 && gourmetCount > 0)
-            {
-                // 둘다 있을때
-                setTabLayoutVisibility(View.VISIBLE);
-                setEmptyViewVisibility(View.GONE);
-                isPagingEnabled = true;
+//                isPagingEnabled = false;
             } else
             {
                 // 둘중에 하나만 있을때
-                setTabLayoutVisibility(View.GONE);
+                setTabLayoutVisibility(View.VISIBLE);
                 setEmptyViewVisibility(View.GONE);
-                isPagingEnabled = false;
-
-                if (gourmetCount > 0)
-                {
-                    // 고메의 경우 기존에 stay가 있을수도 없을수도 있음으로 계산함
-                    for (int i = mFragmentList.size() - 1; i >= 0; i--)
-                    {
-                        RecentPlacesListFragment fragment = mFragmentList.get(i);
-                        if (fragment instanceof RecentGourmetListFragment)
-                        {
-                            mViewPager.setCurrentItem(i, false);
-                            break;
-                        }
-                    }
-                } else
-                {
-                    mViewPager.setCurrentItem(0, false);
-                }
+//                isPagingEnabled = true;
             }
 
-            mViewPager.setPagingEnabled(isPagingEnabled);
+//            mViewPager.setPagingEnabled(isPagingEnabled);
         }
     };
 

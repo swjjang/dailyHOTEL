@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 public abstract class RecentPlacesListLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
+    private View mEmptyLayout;
+    private DailyTextView mEmptyTextView;
     private RecentPlacesListAdapter mListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -28,6 +31,10 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 
         void onListItemDeleteClick(int position);
     }
+
+    protected abstract int getEmptyTextResId();
+
+    protected abstract int getEmptyImageResId();
 
     protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
         , ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
@@ -40,6 +47,20 @@ public abstract class RecentPlacesListLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
+        mEmptyLayout = view.findViewById(R.id.emptyLayout);
+        setEmptyViewVisibility(View.GONE);
+
+        mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
+        mEmptyTextView.setText(getEmptyTextResId());
+
+        int topDrawableResId = getEmptyImageResId();
+        if (topDrawableResId <= 0)
+        {
+            topDrawableResId = R.drawable.no_event_ic;
+        }
+
+        mEmptyTextView.setCompoundDrawablesWithIntrinsicBounds(0, topDrawableResId, 0, 0);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -55,6 +76,11 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         if (list == null || list.size() == 0)
         {
             list = new ArrayList<>();
+
+            setEmptyViewVisibility(View.VISIBLE);
+        } else
+        {
+            setEmptyViewVisibility(View.GONE);
         }
 
         if (mListAdapter == null)
@@ -88,6 +114,14 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         if (mListAdapter != null)
         {
             mListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void setEmptyViewVisibility(int visibility)
+    {
+        if (mEmptyLayout != null)
+        {
+            mEmptyLayout.setVisibility(visibility);
         }
     }
 

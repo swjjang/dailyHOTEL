@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 
@@ -22,5 +23,17 @@ public class RecentStayListLayout extends RecentPlacesListLayout
     protected RecentPlacesListAdapter getRecentPlacesListAdapter(Context context, ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener)
     {
         return new RecentStayListAdapter(context, list, listener);
+    }
+
+    @Override
+    protected int getEmptyTextResId()
+    {
+        return R.string.recent_stay_list_empty_message;
+    }
+
+    @Override
+    protected int getEmptyImageResId()
+    {
+        return 0;
     }
 }

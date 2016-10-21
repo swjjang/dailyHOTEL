@@ -54,6 +54,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         if (count == 0)
         {
             unLockUI();
+
+            if (mListLayout != null && isFinishing() == false)
+            {
+                mListLayout.setData(null);
+            }
             return;
         }
 
@@ -69,7 +74,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         // Test Code!
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(staySearchParams);
-//        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
+        //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
     }
 
     private RecentStayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentStayListNetworkController.OnNetworkControllerListener()
