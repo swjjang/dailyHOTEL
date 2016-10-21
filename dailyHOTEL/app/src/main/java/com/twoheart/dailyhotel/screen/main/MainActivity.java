@@ -52,7 +52,7 @@ public class MainActivity extends BaseActivity implements Constants
     private MainFragmentManager mMainFragmentManager;
     private MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
-    private View mSplashLayout;
+    private View mSplashLayout, mTooltipLayout;
 
     private boolean mIsInitialization;
     private boolean mIsBenefitAlarm;
@@ -179,6 +179,25 @@ public class MainActivity extends BaseActivity implements Constants
 
         loadSplash(mSplashLayout);
 
+        mTooltipLayout = findViewById(R.id.tooltipLayout);
+
+        if (DailyPreference.getInstance(this).isViewRecentPlaceTooltip() == true)
+        {
+            mTooltipLayout.setVisibility(View.GONE);
+        } else
+        {
+            DailyPreference.getInstance(this).setIsViewRecentPlaceTooltip(true);
+            mTooltipLayout.setVisibility(View.VISIBLE);
+            mTooltipLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    view.setVisibility(View.GONE);
+                }
+            });
+        }
+
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
 
@@ -203,7 +222,7 @@ public class MainActivity extends BaseActivity implements Constants
 
     private void loadSplash(View splashLayout)
     {
-        String splashVersion = DailyPreference.getInstance(this).getIntroImageVersion();
+        String splashVersion = DailyPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
         ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
 
@@ -222,7 +241,7 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (file.exists() == false)
             {
-                DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                 imageView.setImageResource(R.drawable.img_splash_logo);
             } else
             {
@@ -233,7 +252,7 @@ public class MainActivity extends BaseActivity implements Constants
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception e)
                 {
-                    DailyPreference.getInstance(this).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                    DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                     imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
                     imageView.setScaleType(ImageView.ScaleType.CENTER);
                     imageView.setImageResource(R.drawable.img_splash_logo);
@@ -778,7 +797,14 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isInformationView() == true //
                     || DailyDeepLink.getInstance().isRecommendFriendView() == true //
                     || DailyDeepLink.getInstance().isRegisterCouponView() == true //
-                    || DailyDeepLink.getInstance().isNoticeDetailView() == true)
+                    || DailyDeepLink.getInstance().isNoticeDetailView() == true//
+                    || DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true//
+                    || DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true//
+                    || DailyDeepLink.getInstance().isFAQView() == true//
+                    || DailyDeepLink.getInstance().isTermsNPolicyView() == true//
+//                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
+//                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
+                    )
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
@@ -904,6 +930,19 @@ public class MainActivity extends BaseActivity implements Constants
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();
                 }
+
+                // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
+                mDelayTimeHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        if (mTooltipLayout.getVisibility() != View.GONE)
+                        {
+                            mTooltipLayout.setVisibility(View.GONE);
+                        }
+                    }
+                }, 10000);
             }
         }
 

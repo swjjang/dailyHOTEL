@@ -920,10 +920,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     private void setAvailabledDefaultPaymentType()
     {
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isStayCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isStayPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isStayVirtualPaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayVirtualPaymentEnabled();
 
         StringBuilder guideMemo = new StringBuilder();
 
@@ -1292,12 +1292,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else
         {
-            if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true)
+            if (DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true)
             {
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, true);
             }
 
-            if (DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true)
+            if (DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true)
             {
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, true);
             }
@@ -1313,7 +1313,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
             } else
             {
-                if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true)
+                if (DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true)
                 {
                     mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
                 }
@@ -1334,19 +1334,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
     {
-        if (DailyPreference.getInstance(this).isStaySimpleCardPaymentEnabled() == true &&//
+        if (DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(this).isStayCardPaymentEnabled() == true &&//
+        } else if (DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(this).isStayPhonePaymentEnabled() == true &&//
+        } else if (DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY) == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(this).isStayVirtualPaymentEnabled() == true &&//
+        } else if (DailyPreference.getInstance(this).isRemoteConfigStayVirtualPaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK) == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;
@@ -1844,7 +1844,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1964,7 +1964,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mHotelPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -2095,7 +2095,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             hidePorgressDialog();
 
@@ -2137,7 +2137,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -2248,7 +2248,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -2310,7 +2310,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mMessageDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {

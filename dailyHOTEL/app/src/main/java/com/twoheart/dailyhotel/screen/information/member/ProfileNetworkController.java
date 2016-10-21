@@ -15,12 +15,13 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Map;
 
 public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserProfile(String userIndex, String email, String name, String phoneNumber//
+        void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
             , boolean isVerified, boolean isPhoneVerified, String verifiedDate);
 
         void onUserProfileBenefit(boolean isExceedBonus);
@@ -48,7 +49,7 @@ public class ProfileNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -64,6 +65,12 @@ public class ProfileNetworkController extends BaseNetworkController
                     String userIndex = jsonObject.getString("userIdx");
                     boolean isVerified = jsonObject.getBoolean("verified");
                     boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+                    String birthday = null;
+
+                    if (jsonObject.has("birthday") == true)
+                    {
+                        birthday = jsonObject.getString("birthday");
+                    }
 
                     String verifiedDate = null;
 
@@ -71,7 +78,6 @@ public class ProfileNetworkController extends BaseNetworkController
                     {
                         //                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
                         //                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
-
                         try
                         {
                             verifiedDate = DailyCalendar.convertDateFormatString(jsonObject.getString("phoneVerifiedAt"), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
@@ -92,7 +98,7 @@ public class ProfileNetworkController extends BaseNetworkController
                     }
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
-                        , email, name, phone, isVerified, isPhoneVerified, verifiedDate);
+                        , email, name, phone, birthday, isVerified, isPhoneVerified, verifiedDate);
                 } else
                 {
                     mOnNetworkControllerListener.onError(null);
@@ -121,7 +127,7 @@ public class ProfileNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

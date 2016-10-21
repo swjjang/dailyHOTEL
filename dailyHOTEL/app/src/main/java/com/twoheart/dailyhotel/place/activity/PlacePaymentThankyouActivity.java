@@ -11,12 +11,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -82,12 +84,13 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         initToolbar();
         initLayout(imageUrl, placeName, placeType, userName);
 
-        final View informationLayout = findViewById(R.id.informationLayout);
+        final ScrollView informationLayout = (ScrollView) findViewById(R.id.informationLayout);
         informationLayout.setVisibility(View.GONE);
+        EdgeEffectColor.setEdgeGlowColor(informationLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(informationLayout //
             , PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.0f) //
-            ,PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f) //
         );
 
         objectAnimator.setDuration(800);

@@ -1,8 +1,17 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -13,7 +22,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -90,6 +101,13 @@ public class SignupStep1Activity extends BaseActivity
             mSignupStep1Layout.setRecommenderText(recommender);
         }
 
+        String signUpText = DailyPreference.getInstance(this).getRemoteConfigTextSignUpText01();
+
+        if (Util.isTextEmpty(signUpText) == false)
+        {
+            mSignupStep1Layout.signUpBalloonsTextView(signUpText);
+        }
+
         //        Intent intentPermission = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
         //        startActivityForResult(intentPermission, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
@@ -158,7 +176,7 @@ public class SignupStep1Activity extends BaseActivity
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()
     {
         @Override
-        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender)
+        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday, final boolean isBenefit)
         {
             if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -220,9 +238,18 @@ public class SignupStep1Activity extends BaseActivity
                 mSignupParams.put("recommender", recommender);
             }
 
+            if (Util.isTextEmpty(birthday) == false)
+            {
+                mSignupParams.put("birthday", birthday);
+            }
+
             mSignupParams.put("market_type", RELEASE_STORE.getName());
+            mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
             DailyNetworkAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationListener);
+
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, isBenefit ? AnalyticsManager.Label.SIGNUP_ON : AnalyticsManager.Label.SIGNUP_OFF, null);
         }
 
         @Override
@@ -250,6 +277,90 @@ public class SignupStep1Activity extends BaseActivity
         }
 
         @Override
+        public void showBirthdayDatePicker()
+        {
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
+
+            final Dialog dialog = new Dialog(SignupStep1Activity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.setCanceledOnTouchOutside(false);
+
+            final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+
+            datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+            {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+                {
+
+                }
+            });
+
+            datePicker.setMaxDate(DailyCalendar.getInstance().getTimeInMillis());
+
+            // 상단
+            TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+            titleTextView.setVisibility(View.VISIBLE);
+            titleTextView.setText("생일 선택");
+
+            // 버튼
+            View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+            View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+            negativeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            positiveTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+
+                    mSignupStep1Layout.setBirthdayText(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                }
+            });
+
+            dialog.setCancelable(true);
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                }
+            });
+
+            // 생일 화면 부터는 키패드를 나오지 않게 한다.
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+            try
+            {
+                dialog.setContentView(dialogView);
+                dialog.show();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        @Override
         public void finish()
         {
             SignupStep1Activity.this.finish();
@@ -263,7 +374,7 @@ public class SignupStep1Activity extends BaseActivity
     private DailyHotelJsonResponseListener mSignupValidationListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -273,9 +384,10 @@ public class SignupStep1Activity extends BaseActivity
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     String signupKey = dataJSONObject.getString("signup_key");
+                    String serverDate = dataJSONObject.getString("serverDate");
 
                     Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
-                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), //
+                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
                         mSignupParams.get("recommender"), mCallByScreen);
                     startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 } else

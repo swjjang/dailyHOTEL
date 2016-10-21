@@ -18,6 +18,8 @@ public abstract class PlaceDetail
     public double longitude;
     protected ArrayList<ImageInformation> mImageInformationList;
     protected ArrayList<DetailInformation> mInformationList;
+    protected ArrayList<String> mBenefitInformation;
+
     // GA용
     public int entryPosition;
     public String isShowOriginalPrice; // "Y", "N", empty
@@ -33,5 +35,10 @@ public abstract class PlaceDetail
     public ArrayList<DetailInformation> getInformation()
     {
         return mInformationList;
+    }
+
+    public ArrayList<String> getBenefitInformation()
+    {
+        return mBenefitInformation;
     }
 }

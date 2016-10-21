@@ -2,12 +2,13 @@ package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
@@ -16,7 +17,20 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class DailyEditText extends AppCompatEditText
 {
+    private final int DRAWABLE_LEFT = 0;
+    private final int DRAWABLE_TOP = 1;
+    private final int DRAWABLE_RIGHT = 2;
+    private final int DRAWABLE_BOTTOM = 3;
+
     private boolean mUsedImeActionSend;
+    private boolean mHasDeleteButton;
+
+    private OnDeleteTextClickListener mOnDeleteTextClickListener;
+
+    public interface OnDeleteTextClickListener
+    {
+        void onDelete(DailyEditText dailyEditText);
+    }
 
     public DailyEditText(Context context)
     {
@@ -46,6 +60,90 @@ public class DailyEditText extends AppCompatEditText
         setFontStyle(context, attrs);
 
         setUsedImeActionSend(false);
+    }
+
+    @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter)
+    {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+
+        if (mHasDeleteButton == true && isFocused() == true && lengthAfter > 0)
+        {
+            setDeleteDrawable();
+        } else
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect)
+    {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+
+        if (focused == false)
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type)
+    {
+        super.setText(text, type);
+
+        if (mHasDeleteButton == true && text != null && Util.isTextEmpty(text.toString()) == false)
+        {
+            setDeleteDrawable();
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        if (mHasDeleteButton == true)
+        {
+            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                Drawable[] drawables = getCompoundDrawables();
+
+                if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+                {
+                    return super.onTouchEvent(event);
+                }
+
+                int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
+
+                if (event.getRawX() >= (getRight() - withDrawable))
+                {
+                    setText(null);
+
+                    if (mOnDeleteTextClickListener != null)
+                    {
+                        mOnDeleteTextClickListener.onDelete(this);
+                    }
+                    return false;
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    private void setDeleteDrawable()
+    {
+        Drawable[] drawables = getCompoundDrawables();
+
+        if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+        {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        }
+    }
+
+    public void setDeleteButtonVisible(boolean visible, OnDeleteTextClickListener listener)
+    {
+        mHasDeleteButton = visible;
+        mOnDeleteTextClickListener = listener;
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)
@@ -212,64 +310,6 @@ public class DailyEditText extends AppCompatEditText
             }
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
-        }
-    }
-
-    public void setDrawableVectorTintList(int id)
-    {
-        Drawable[] drawables = getCompoundDrawables();
-
-        if (drawables == null)
-        {
-            return;
-        }
-
-        for (Drawable drawable : drawables)
-        {
-            if (drawable == null)
-            {
-                continue;
-            }
-
-            if (drawable instanceof VectorDrawableCompat)
-            {
-                ((VectorDrawableCompat) drawable).setTintList(getResources().getColorStateList(id));
-            } else
-            {
-                if (Util.isOverAPI21() == true)
-                {
-                    drawable.setTintList(getResources().getColorStateList(id));
-                }
-            }
-        }
-    }
-
-    public void setDrawableVectorTint(int id)
-    {
-        Drawable[] drawables = getCompoundDrawables();
-
-        if (drawables == null)
-        {
-            return;
-        }
-
-        for (Drawable drawable : drawables)
-        {
-            if (drawable == null)
-            {
-                continue;
-            }
-
-            if (drawable instanceof VectorDrawableCompat)
-            {
-                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
-            } else
-            {
-                if (Util.isOverAPI21() == true)
-                {
-                    drawable.setTint(getResources().getColor(id));
-                }
-            }
         }
     }
 }

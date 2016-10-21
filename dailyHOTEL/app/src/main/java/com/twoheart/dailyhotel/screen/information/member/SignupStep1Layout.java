@@ -3,8 +3,10 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 import android.graphics.Paint;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,27 +16,37 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import java.util.Calendar;
 
 public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
-    private View mEmailView, mNameView, mPasswordView, mConfirmPasswordView, mRecommenderView;
-    private EditText mEmailEditText, mNameEditText, mPasswordEditText, mConfirmPasswordEditText, mRecommenderEditText;
+    private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
+    private DailyEditText mEmailEditText, mNameEditText, mPasswordEditText;
+    private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
+    private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
+    private CheckBox mBenefitCheckBox;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onValidation(String email, String name, String password1, String confirmPassword, String recommender);
+        void onValidation(String email, String name, String password1, String confirmPassword, String recommender, String birthday, boolean isBenefit);
 
         void showTermOfService();
 
         void showTermOfPrivacy();
+
+        void showBirthdayDatePicker();
     }
 
     public SignupStep1Layout(Context context, OnEventListener mOnEventListener)
@@ -66,27 +78,59 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
+        mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
+
         mEmailView = view.findViewById(R.id.emailView);
-        mEmailEditText = (EditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyEditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
 
         mNameView = view.findViewById(R.id.nameView);
-        mNameEditText = (EditText) view.findViewById(R.id.nameEditText);
+        mNameEditText = (DailyEditText) view.findViewById(R.id.nameEditText);
+        mNameEditText.setDeleteButtonVisible(true, null);
         mNameEditText.setOnFocusChangeListener(this);
 
+        mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    mNameEditText.requestFocus();
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(mNameEditText.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         mPasswordView = view.findViewById(R.id.passwordView);
-        mPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+        mPasswordEditText = (DailyEditText) view.findViewById(R.id.passwordEditText);
+        mPasswordEditText.setDeleteButtonVisible(true, null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
-        mConfirmPasswordEditText = (EditText) view.findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText.setDeleteButtonVisible(true, null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
 
+        mBirthdayView = view.findViewById(R.id.birthdayView);
+        mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText.setDeleteButtonVisible(true, null);
+        mBirthdayEditText.setOnFocusChangeListener(this);
+        mBirthdayEditText.setKeyListener(null);
+        mBirthdayEditText.setOnClickListener(this);
+
         mRecommenderView = view.findViewById(R.id.recommenderView);
-        mRecommenderEditText = (EditText) view.findViewById(R.id.recommenderEditText);
+        mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
+        mRecommenderEditText.setDeleteButtonVisible(true, null);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.
@@ -113,10 +157,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
+        mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
         mAllAgreementCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
+        mBenefitCheckBox.setOnClickListener(this);
 
         TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -137,6 +183,20 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         return mTermsOfPrivacyCheckBox.isChecked();
     }
 
+    public boolean isCheckedBenefit()
+    {
+        return mBenefitCheckBox.isChecked();
+    }
+
+    public void setBirthdayText(int year, int month, int dayOfMonth)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.set(year, month, dayOfMonth, 0, 0, 0);
+
+        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setTag(calendar);
+    }
+
     public void setRecommenderText(String recommender)
     {
         if (mRecommenderEditText == null)
@@ -147,6 +207,17 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mRecommenderEditText.setText(recommender);
     }
 
+    public void signUpBalloonsTextView(String text)
+    {
+        if (mSignupBalloonsTextView == null)
+        {
+            return;
+        }
+
+        mSignupBalloonsTextView.setText(text);
+    }
+
+
     private void nextStep()
     {
         String emailText = mEmailEditText.getText().toString().trim();
@@ -155,8 +226,23 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         String passwordText = mPasswordEditText.getText().toString();
         String confirmPasswordText = mConfirmPasswordEditText.getText().toString();
         String recommender = mRecommenderEditText.getText().toString().trim();
+        // 생일
+        String birthday = mBirthdayEditText.getText().toString().trim();
 
-        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender);
+        if (Util.isTextEmpty(birthday) == false)
+        {
+            Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+            if (calendar == null)
+            {
+                birthday = null;
+            } else
+            {
+                birthday = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            }
+        }
+
+        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked());
     }
 
     @Override
@@ -185,16 +271,18 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
+                mBenefitCheckBox.setChecked(isChecked);
                 break;
             }
 
             case R.id.personalCheckBox:
             case R.id.termsCheckBox:
+            case R.id.benefitCheckBox:
             {
                 InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
 
-                if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
+                if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
                 {
                     mAllAgreementCheckBox.setChecked(true);
                 } else
@@ -203,54 +291,63 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 }
                 break;
             }
+
+            case R.id.birthdayEditText:
+                onFocusChange(mBirthdayEditText, true);
+                break;
         }
     }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
-        {
-            return;
-        }
-
-        setFocusTextView(v.getId());
-    }
-
-    private void resetFocus()
-    {
-        mEmailView.setSelected(false);
-        mNameView.setSelected(false);
-        mPasswordView.setSelected(false);
-        mConfirmPasswordView.setSelected(false);
-        mRecommenderView.setSelected(false);
-    }
-
-    private void setFocusTextView(int id)
-    {
-        resetFocus();
-
-        switch (id)
+        switch (v.getId())
         {
             case R.id.emailEditText:
-                mEmailView.setSelected(true);
+                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
                 break;
 
             case R.id.nameEditText:
-                mNameView.setSelected(true);
+                setFocusLabelView(mNameView, mNameEditText, hasFocus);
                 break;
 
             case R.id.passwordEditText:
-                mPasswordView.setSelected(true);
+                setFocusLabelView(mPasswordView, mPasswordEditText, hasFocus);
                 break;
 
             case R.id.confirmPasswordEditText:
-                mConfirmPasswordView.setSelected(true);
+                setFocusLabelView(mConfirmPasswordView, mConfirmPasswordEditText, hasFocus);
+                break;
+
+            case R.id.birthdayEditText:
+                setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
+
+                if (hasFocus == true)
+                {
+                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                }
                 break;
 
             case R.id.recommenderEditText:
-                mRecommenderView.setSelected(true);
+                setFocusLabelView(mRecommenderView, mRecommenderEditText, hasFocus);
                 break;
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
         }
     }
 }

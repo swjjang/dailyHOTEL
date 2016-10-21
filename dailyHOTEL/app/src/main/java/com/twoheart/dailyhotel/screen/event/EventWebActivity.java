@@ -207,7 +207,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -649,7 +649,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -767,11 +767,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         break;
                     }
-
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=hsr&dp=2&n=1&w=라마다";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=hsr&d=20160825&n=1&w=라마다";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=gsr&dp=2&w=뷔페";
-                    //                    uri = "dailyhotel://dailyhotel.co.kr?vc=6&v=gsr&d=20160825&w=뷔페";
 
                     DailyDeepLink.getInstance().setDeepLink(Uri.parse(uri));
 
@@ -893,7 +888,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         DailyNetworkAPI.getInstance(EventWebActivity.this).requestUpdateBenefitAgreement(mNetworkTag, true, new DailyHotelJsonResponseListener()
                         {
                             @Override
-                            public void onResponse(String url, JSONObject response)
+                            public void onResponse(String url, Map<String, String> params, JSONObject response)
                             {
                                 unLockUI();
 
@@ -943,12 +938,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                                     showSimpleDialog(title, message, positive, null);
 
-                                    //                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-                                    //                                        AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
-                                } else
-                                {
-                                    //                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-                                    //                                        AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
+                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                                        AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
                                 }
                             }
 

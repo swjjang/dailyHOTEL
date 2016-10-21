@@ -8,6 +8,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -53,6 +54,14 @@ public class NoticeWebActivity extends WebViewActivity
 
         initToolbar(title);
         initLayout((DailyWebView) webView);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICEDETAILVIEW);
     }
 
     private void initToolbar(String title)

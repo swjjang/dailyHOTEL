@@ -57,7 +57,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
     {
         if (mListener != null)
         {
-            mListener.onResponse(getUrl(), response);
+            mListener.onResponse(getUrl(), getParams(), response);
         }
     }
 

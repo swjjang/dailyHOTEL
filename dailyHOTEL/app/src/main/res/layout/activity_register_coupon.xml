@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
@@ -15,9 +15,9 @@
         android:layout_below="@id/toolbar"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:text="@string/register_coupon_title"
-        android:textColor="@color/dh_theme_color"
+        android:textColor="@color/selector_label_textcolor"
         android:textSize="12dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyEditText
@@ -25,9 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/couponTitleView"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/selector_edittext_background"
         android:hint="@string/register_coupon_edittext_hint"
         android:inputType="text"
@@ -37,16 +37,6 @@
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"
         android:theme="@style/EditTextTheme"/>
-
-    <ImageView
-        android:id="@+id/deleteView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/couponEditText"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="13dp"
-        android:padding="2dp"
-        app:srcCompat="@drawable/search_ic_01_delete"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/registerCouponCompleteView"
@@ -63,112 +53,121 @@
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
-    <LinearLayout
-        android:id="@+id/policyLayout1"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/registerCouponCompleteView"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_below="@id/registerCouponCompleteView">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:layout_marginTop="8dp"
-            app:srcCompat="@drawable/info_ic_text_dot_black"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:freezesText="true"
-            android:lineSpacingExtra="-2dp"
-            android:layout_marginRight="15dp"
-            android:text="@string/register_coupon_policy_1"
-            android:textColor="@color/default_background_section_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/policyLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/policyLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/policyLayout1"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:layout_marginTop="8dp"
-            app:srcCompat="@drawable/info_ic_text_dot_black"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:freezesText="true"
+                    android:lineSpacingExtra="-2dp"
+                    android:text="@string/register_coupon_policy_1"
+                    android:textColor="@color/default_background_section_c323232"
+                    android:textSize="13dp"/>
+            </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:freezesText="true"
-            android:lineSpacingExtra="-2dp"
-            android:layout_marginRight="15dp"
-            android:text="@string/register_coupon_policy_2"
-            android:textColor="@color/default_background_section_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/policyLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/policyLayout1"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/policyLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/policyLayout2"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:layout_marginTop="8dp"
-            app:srcCompat="@drawable/info_ic_text_dot_black"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:freezesText="true"
+                    android:lineSpacingExtra="-2dp"
+                    android:text="@string/register_coupon_policy_2"
+                    android:textColor="@color/default_background_section_c323232"
+                    android:textSize="13dp"/>
+            </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:freezesText="true"
-            android:lineSpacingExtra="-2dp"
-            android:layout_marginRight="15dp"
-            android:text="@string/register_coupon_policy_3"
-            android:textColor="@color/default_background_section_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/policyLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/policyLayout2"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/policyLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/policyLayout3"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:layout_marginTop="8dp"
-            app:srcCompat="@drawable/info_ic_text_dot_black"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:freezesText="true"
+                    android:lineSpacingExtra="-2dp"
+                    android:text="@string/register_coupon_policy_3"
+                    android:textColor="@color/default_background_section_c323232"
+                    android:textSize="13dp"/>
+            </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:freezesText="true"
-            android:lineSpacingExtra="-2dp"
-            android:layout_marginRight="15dp"
-            android:text="@string/register_coupon_policy_4"
-            android:textColor="@color/default_background_section_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/policyLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/policyLayout3"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:freezesText="true"
+                    android:lineSpacingExtra="-2dp"
+                    android:text="@string/register_coupon_policy_4"
+                    android:textColor="@color/default_background_section_c323232"
+                    android:textSize="13dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

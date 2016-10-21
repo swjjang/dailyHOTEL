@@ -363,7 +363,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 {
                     try
                     {
-                        String phone = DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber();
+                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
 
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
                     } catch (ActivityNotFoundException e)
@@ -407,7 +407,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
                     if (Util.isTextEmpty(mBookingDetail.gourmetPhone) == true)
                     {
-                        phone = DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber();
+                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
                     }
 
                     try

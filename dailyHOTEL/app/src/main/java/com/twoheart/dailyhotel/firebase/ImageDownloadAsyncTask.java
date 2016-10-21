@@ -41,8 +41,8 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
         File downloadedFile = null;
         BufferedSink bufferedSink = null;
 
-        DailyPreference.getInstance(mContext).setIntroImageNewUrl(url);
-        DailyPreference.getInstance(mContext).setIntroImageNewVersion(version);
+        DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(url);
+        DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(version);
 
         try
         {
@@ -89,12 +89,12 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
     {
         if (result == true)
         {
-            String currentVersion = DailyPreference.getInstance(mContext).getIntroImageVersion();
-            String newVersion = DailyPreference.getInstance(mContext).getIntroImageNewVersion();
+            String currentVersion = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageVersion();
+            String newVersion = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageNewVersion();
 
-            DailyPreference.getInstance(mContext).setIntroImageVersion(newVersion);
-            DailyPreference.getInstance(mContext).setIntroImageNewUrl(null);
-            DailyPreference.getInstance(mContext).setIntroImageNewVersion(null);
+            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(newVersion);
+            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(null);
+            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(null);
 
             // 파일 삭제
             if (Util.isTextEmpty(currentVersion) == false)

@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public abstract class PlaceDetailNetworkController extends BaseNetworkController
 {
     public PlaceDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -48,7 +50,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -72,7 +74,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -128,7 +130,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

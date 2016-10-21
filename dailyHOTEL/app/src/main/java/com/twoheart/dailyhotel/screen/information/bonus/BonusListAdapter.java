@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.bonus;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         mBonusList = list;
     }
 
-    public void addAll(Collection<? extends Bonus> collection)
+    public void addAll(@NonNull Collection<? extends Bonus> collection)
     {
         if (collection == null)
         {

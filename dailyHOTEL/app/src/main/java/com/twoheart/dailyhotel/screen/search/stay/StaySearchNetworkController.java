@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StaySearchNetworkController extends PlaceSearchNetworkController
 {
@@ -41,7 +42,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
     private DailyHotelJsonResponseListener mHotelSearchAutoCompleteListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             int startIndex = url.lastIndexOf('=');
 

@@ -9,24 +9,28 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ProfileLayout extends BaseLayout implements OnClickListener
 {
-    private TextView mEmailTextView, mNameTextView, mPhoneTextView, mPhoneVerifyView;
+    private TextView mEmailTextView, mNameTextView, mPhoneTextView, mBirthdayTextView, mPhoneVerifyView;
     private View mEmailLayout, mPasswordLayout;
     private View mPasswordUnderLine;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void showEditEmail();
+        void startEditEmail();
 
-        void showEditName(String name);
+        void startEditName(String name);
 
-        void showEditPhone();
+        void startEditPhone();
 
-        void showEditPassword();
+        void startEditPassword();
+
+        void startEditBirthday(String birthday);
 
         void doSignOut();
     }
@@ -59,38 +63,45 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
     private void initLayoutForm(View view)
     {
-        mEmailTextView = (TextView) view.findViewById(R.id.emailTextView);
-        mNameTextView = (TextView) view.findViewById(R.id.nameTextView);
-        mPhoneTextView = (TextView) view.findViewById(R.id.phoneTextView);
-        mPhoneVerifyView = (TextView) view.findViewById(R.id.phoneVerifyView);
-        mPasswordUnderLine = view.findViewById(R.id.passwordUnderLine);
-
         mEmailLayout = view.findViewById(R.id.emailLayout);
+        mEmailTextView = (TextView) mEmailLayout.findViewById(R.id.emailTextView);
 
         View nameLayout = view.findViewById(R.id.nameLayout);
         nameLayout.setOnClickListener(this);
 
+        mNameTextView = (TextView) nameLayout.findViewById(R.id.nameTextView);
+
         View phoneLayout = view.findViewById(R.id.phoneLayout);
         phoneLayout.setOnClickListener(this);
 
+        mPhoneTextView = (TextView) phoneLayout.findViewById(R.id.phoneTextView);
+        mPhoneVerifyView = (TextView) phoneLayout.findViewById(R.id.phoneVerifyView);
+
+        View birthdayLayout = view.findViewById(R.id.birthdayLayout);
+        birthdayLayout.setOnClickListener(this);
+
+        mBirthdayTextView = (TextView) birthdayLayout.findViewById(R.id.birthdayTextView);
+
         mPasswordLayout = view.findViewById(R.id.passwordLayout);
+
+        mPasswordUnderLine = view.findViewById(R.id.passwordUnderLine);
 
         View logoutView = view.findViewById(R.id.logoutView);
         logoutView.setOnClickListener(this);
     }
 
-    public void updateUserInformation(String userType, String email, String name, String phone, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+    public void updateUserInformation(String userType, String email, String name, String phone, String birthday, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
     {
         if (Constants.DAILY_USER.equalsIgnoreCase(userType) == true)
         {
-            updateDailyUserInformation(email, name, phone, isPhoneVerified, verifiedDate);
+            updateDailyUserInformation(email, name, phone, birthday, isPhoneVerified, verifiedDate);
         } else
         {
-            updateSocialUserInformation(userType, email, name, phone);
+            updateSocialUserInformation(userType, email, name, phone, birthday);
         }
     }
 
-    private void updateDailyUserInformation(String email, String name, String phone, boolean isPhoneVerified, String verifiedDate)
+    private void updateDailyUserInformation(String email, String name, String phone, String birthday, boolean isPhoneVerified, String verifiedDate)
     {
         // 이메일
         mEmailLayout.setOnClickListener(null);
@@ -100,6 +111,24 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         // 이름
         mNameTextView.setText(name);
+
+        // 생일
+        if (Util.isTextEmpty(birthday) == true)
+        {
+            mBirthdayTextView.setText(null);
+        } else
+        {
+            try
+            {
+                mBirthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                mBirthdayTextView.setTag(birthday);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+
+                mBirthdayTextView.setText(null);
+            }
+        }
 
         // 휴대폰
         mPhoneVerifyView.setVisibility(View.VISIBLE);
@@ -122,7 +151,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mPasswordLayout.setOnClickListener(this);
     }
 
-    private void updateSocialUserInformation(String userType, String email, String name, String phone)
+    private void updateSocialUserInformation(String userType, String email, String name, String phone, String birthday)
     {
         // 이메일
         if (Util.isTextEmpty(email) == true)
@@ -147,7 +176,31 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 이름
-        mNameTextView.setText(name);
+        if (Util.isTextEmpty(name) == true)
+        {
+            mNameTextView.setText(null);
+        } else
+        {
+            mNameTextView.setText(name);
+        }
+
+        // 생일
+        if (Util.isTextEmpty(birthday) == true)
+        {
+            mBirthdayTextView.setText(null);
+        } else
+        {
+            try
+            {
+                mBirthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                mBirthdayTextView.setTag(birthday);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+
+                mBirthdayTextView.setText(null);
+            }
+        }
 
         // 휴대폰 번호
         mPhoneTextView.setText(phone);
@@ -164,19 +217,29 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         switch (v.getId())
         {
             case R.id.emailLayout:
-                ((OnEventListener) mOnEventListener).showEditEmail();
+                ((OnEventListener) mOnEventListener).startEditEmail();
                 break;
 
             case R.id.nameLayout:
-                ((OnEventListener) mOnEventListener).showEditName(mNameTextView.getText().toString());
+                ((OnEventListener) mOnEventListener).startEditName(mNameTextView.getText().toString());
+                break;
+
+            case R.id.birthdayLayout:
+                if (Util.isTextEmpty(mBirthdayTextView.getText().toString()) == false)
+                {
+                    ((OnEventListener) mOnEventListener).startEditBirthday((String) mNameTextView.getTag());
+                } else
+                {
+                    ((OnEventListener) mOnEventListener).startEditBirthday(null);
+                }
                 break;
 
             case R.id.phoneLayout:
-                ((OnEventListener) mOnEventListener).showEditPhone();
+                ((OnEventListener) mOnEventListener).startEditPhone();
                 break;
 
             case R.id.passwordLayout:
-                ((OnEventListener) mOnEventListener).showEditPassword();
+                ((OnEventListener) mOnEventListener).startEditPassword();
                 break;
 
             case R.id.logoutView:

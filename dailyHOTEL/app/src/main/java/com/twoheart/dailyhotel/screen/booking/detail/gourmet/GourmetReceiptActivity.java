@@ -15,6 +15,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
     private void makeLayout(JSONObject jsonObject) throws Exception
@@ -121,13 +123,13 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         JSONObject providerJSONObject = jsonObject.getJSONObject("provider");
 
-        String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyPhoneNumber();
-        String fax = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyFax();
+        String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
+        String fax = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyFax();
         String memo = providerJSONObject.getString("memo");
-        String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyAddress();
-        String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyCEO();
-        String registrationNo = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyBizRegNumber();
-        String companyName = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyName();
+        String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyAddress();
+        String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyCEO();
+        String registrationNo = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
+        String companyName = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyName();
 
         View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 
@@ -198,7 +200,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {

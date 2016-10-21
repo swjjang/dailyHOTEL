@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -190,7 +191,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         {
             try
             {
-                String phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getCompanyPhoneNumber();
+                String phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
 
                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
             } catch (ActivityNotFoundException e)
@@ -234,7 +235,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
             if (Util.isTextEmpty(mHotelBookingDetail.hotelPhone) == true)
             {
-                phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getCompanyPhoneNumber();
+                phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
             }
 
             try
@@ -259,7 +260,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

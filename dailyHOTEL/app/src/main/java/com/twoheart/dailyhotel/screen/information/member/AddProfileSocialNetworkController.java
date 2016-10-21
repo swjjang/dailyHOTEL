@@ -18,7 +18,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUpdateSocialUserInformation(String message);
+        void onUpdateSocialUserInformation(String message, String agreedDate);
     }
 
     public AddProfileSocialNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -26,7 +26,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender)
+    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
     {
         Map<String, String> params = new HashMap<>();
         params.put("user_idx", userIndex);
@@ -46,10 +46,17 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
             params.put("user_phone", phoneNumber.replaceAll("-", ""));
         }
 
+        if (Util.isTextEmpty(birthday) == false)
+        {
+            params.put("birthday", birthday);
+        }
+
         if (Util.isTextEmpty(recommender) == false)
         {
             params.put("recommendation_code", recommender);
         }
+
+        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
         DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener);
     }
@@ -67,25 +74,32 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                boolean result = jsonObject.getBoolean("is_success");
-
-                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                 int msgCode = response.getInt("msg_code");
 
-                if (result == true)
+                if (msgCode == 100)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(null);
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    boolean result = jsonObject.getBoolean("is_success");
+                    String serverDate = jsonObject.getString("serverDate");
+
+                    if (result == true)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(null, serverDate);
+                    } else
+                    {
+                        String message = response.getString("msg");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(message, null);
+                    }
                 } else
                 {
                     String message = response.getString("msg");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(message);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUpdateSocialUserInformation(message, null);
                 }
             } catch (Exception e)
             {
@@ -97,7 +111,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            unLockUI();
     //
@@ -131,7 +145,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -153,7 +167,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -203,7 +217,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {

@@ -1,15 +1,18 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +21,10 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -30,9 +35,10 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     private View mCertificationLayout;
     private View mVerificationLayout, mConfirm, mCertificationNumberView;
     private View mPhoneView, mVerificationView;
-    private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
+    private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextView mGuideTextView;
     private TextWatcher mTextWatcher;
+    private ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -73,8 +79,11 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutForm(View view)
     {
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
         mGuideTextView = (TextView) view.findViewById(R.id.guideTextView);
-        mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
+        mCountryEditText = (DailyEditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
@@ -87,7 +96,8 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         });
 
         mPhoneView = view.findViewById(R.id.phoneView);
-        mPhoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText.setDeleteButtonVisible(true, null);
         mPhoneEditText.setOnFocusChangeListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -145,7 +155,8 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationLayout.setVisibility(View.INVISIBLE);
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
-        mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText.setDeleteButtonVisible(true, null);
         mVerificationEditText.setOnFocusChangeListener(this);
 
         mVerificationEditText.addTextChangedListener(new TextWatcher()
@@ -165,6 +176,16 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
             @Override
             public void afterTextChanged(Editable s)
             {
+                int length = s.length();
+
+                if (length == 0)
+                {
+                    mConfirm.setEnabled(false);
+                } else if (length > 0)
+                {
+                    mConfirm.setEnabled(true);
+                }
+
                 if (s.length() >= VERIFICATION_NUMBER_LENGTH)
                 {
                     InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -198,6 +219,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         });
 
         mConfirm = view.findViewById(R.id.confirmView);
+        mConfirm.setVisibility(View.INVISIBLE);
         mConfirm.setEnabled(false);
         mConfirm.setOnClickListener(this);
 
@@ -314,12 +336,16 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if (hasFocus == false)
+        switch (v.getId())
         {
-            return;
-        }
+            case R.id.phoneEditText:
+                setFocusLabelView(mPhoneView, mPhoneEditText, hasFocus);
+                break;
 
-        setFocusTextView(v.getId());
+            case R.id.verificationEditText:
+                setFocusLabelView(mVerificationView, mVerificationEditText, hasFocus);
+                break;
+        }
     }
 
     private boolean isUsedVerification()
@@ -342,7 +368,41 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationLayout.setVisibility(View.VISIBLE);
         mVerificationEditText.requestFocus();
 
-        mConfirm.setEnabled(true);
+        mConfirm.setVisibility(View.VISIBLE);
+
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                Rect rect = new Rect();
+                mScrollView.getWindowVisibleDisplayFrame(rect);
+                int screenHeight = mScrollView.getRootView().getHeight();
+                int keypadHeight = screenHeight - rect.bottom;
+
+                if (keypadHeight > screenHeight * 0.15)
+                {
+                    mScrollView.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mScrollView.fullScroll(View.FOCUS_DOWN);
+
+                            mVerificationEditText.requestFocus();
+                        }
+                    });
+
+                    if (Util.isOverAPI16() == true)
+                    {
+                        mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else
+                    {
+                        mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                }
+            }
+        });
     }
 
     public void showKeyPad()
@@ -359,28 +419,6 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     public void resetVerificationNumber()
     {
         mVerificationEditText.setText(null);
-    }
-
-    private void resetFocus()
-    {
-        mPhoneView.setSelected(false);
-        mVerificationView.setSelected(false);
-    }
-
-    private void setFocusTextView(int id)
-    {
-        resetFocus();
-
-        switch (id)
-        {
-            case R.id.phoneEditText:
-                mPhoneView.setSelected(true);
-                break;
-
-            case R.id.verificationEditText:
-                mVerificationView.setSelected(true);
-                break;
-        }
     }
 
     public String getPhoneNumber()
@@ -422,6 +460,23 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         } else
         {
             mConfirm.setEnabled(enabled);
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
         }
     }
 }

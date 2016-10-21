@@ -10,6 +10,8 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class PlacePaymentThankyouNetworkController extends BaseNetworkController
 {
     public PlacePaymentThankyouNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -30,7 +32,7 @@ public class PlacePaymentThankyouNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

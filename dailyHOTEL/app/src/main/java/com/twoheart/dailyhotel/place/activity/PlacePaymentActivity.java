@@ -48,6 +48,8 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public abstract class PlacePaymentActivity extends BaseActivity
 {
     protected static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
@@ -657,7 +659,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected DailyHotelJsonResponseListener mUserCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -758,7 +760,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     private DailyHotelJsonResponseListener mPaymentAfterRegisterCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

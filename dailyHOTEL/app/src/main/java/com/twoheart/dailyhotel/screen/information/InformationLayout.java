@@ -1,10 +1,13 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -40,6 +43,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mAccountInfoLayout;
     private View mNewEventIconView, mNewNoticeIconView;
     private View mNewCouponIconView;
+    private View mlinkAlarmLayoutView;
 
     private TextView mPushTextView;
     private TextView mPushBenefitTextView;
@@ -66,6 +70,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startCall();
 
+        void startFAQ();
+
         void startEmail();
 
         void startAbout();
@@ -80,14 +86,9 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startYouTube();
 
-        void startTerms();
+        void startTermsNPolicy();
 
-        void startPersonal();
-
-        void startLocationTerms();
-
-        void startProtectChildTerms();
-
+        void startSettingAlarm();
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -115,15 +116,19 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View noticeLayout = view.findViewById(R.id.noticeLayout);
         View recommendLayout = view.findViewById(R.id.recommendLayout);
         View callLayout = view.findViewById(R.id.callLayout);
+        View faqLayout = view.findViewById(R.id.faqLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
+        View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
 
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
         recommendLayout.setOnClickListener(this);
         callLayout.setOnClickListener(this);
+        faqLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
+        termsNpolicyLayout.setOnClickListener(this);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
@@ -136,7 +141,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
-        initTermsLayout(baseActivity, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
@@ -155,6 +159,25 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
+
+        mlinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
+
+        TextView linkAlarmTextView = (TextView) mlinkAlarmLayoutView.findViewById(R.id.linkAlarmTextView);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(linkAlarmTextView.getText());
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c323232)), //
+            52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new UnderlineSpan(), 52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c900034)), //
+            59, 69, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        linkAlarmTextView.setText(spannableStringBuilder);
+        linkAlarmTextView.setOnClickListener(this);
+
+        setLinkAlarmVisible(false);
     }
 
     private void initToolbar(Context context, View view)
@@ -215,50 +238,23 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
         TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
         TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
+        TextView business4TextView = (TextView) view.findViewById(R.id.business4TextView);
+        TextView business5TextView = (TextView) view.findViewById(R.id.business5TextView);
 
         business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(baseActivity).getCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()//
-            , DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber()));
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyCEO()//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber()));
 
-        if (Util.getLCDWidth(baseActivity) < 720)
-        {
-            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + '\n'//
-                + mContext.getResources().getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
+        business2TextView.setText(DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress());
 
-            business2TextView.setText(text);
-        } else
-        {
-            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + " | "//
-                + mContext.getResources().getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
+        business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license02//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyBizRegNumber()));
 
-            business2TextView.setText(text);
-        }
+        business4TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber()));
 
-        business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(baseActivity).getCompanyPrivacyEmail()));
-    }
-
-    private void initTermsLayout(BaseActivity baseActivity, View view)
-    {
-        LinearLayout termsLayout = (LinearLayout) view.findViewById(R.id.termsLayout);
-
-        if (Util.getLCDWidth(baseActivity) < 720)
-        {
-            termsLayout.setOrientation(LinearLayout.VERTICAL);
-        }
-
-        View termsView = view.findViewById(R.id.termsView);
-        View personalView = view.findViewById(R.id.personalView);
-        View locationTermsView = view.findViewById(R.id.locationTermsView);
-        View protectChildTermsView = view.findViewById(R.id.protectChildTermsView);
-
-        termsView.setOnClickListener(this);
-        personalView.setOnClickListener(this);
-        locationTermsView.setOnClickListener(this);
-        protectChildTermsView.setOnClickListener(this);
+        business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
+            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPrivacyEmail()));
     }
 
     public void updatePushIcon(boolean onOff)
@@ -466,6 +462,23 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushBenefitTextView.setText(message);
     }
 
+    public void setLinkAlarmVisible(boolean visible)
+    {
+        if (visible == true)
+        {
+            if (mlinkAlarmLayoutView.getVisibility() != View.VISIBLE)
+            {
+                mlinkAlarmLayoutView.setVisibility(View.VISIBLE);
+            }
+        } else
+        {
+            if (mlinkAlarmLayoutView.getVisibility() != View.GONE)
+            {
+                mlinkAlarmLayoutView.setVisibility(View.GONE);
+            }
+        }
+    }
+
     @Override
     public void onClick(View v)
     {
@@ -511,6 +524,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 ((OnEventListener) mOnEventListener).startCall();
                 break;
 
+            case R.id.faqLayout:
+                ((OnEventListener) mOnEventListener).startFAQ();
+                break;
+
             case R.id.mailLayout:
                 ((OnEventListener) mOnEventListener).startEmail();
                 break;
@@ -539,20 +556,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 ((OnEventListener) mOnEventListener).startYouTube();
                 break;
 
-            case R.id.termsView:
-                ((OnEventListener) mOnEventListener).startTerms();
+            case R.id.termsNpolicyLayout:
+                ((OnEventListener) mOnEventListener).startTermsNPolicy();
                 break;
 
-            case R.id.personalView:
-                ((OnEventListener) mOnEventListener).startPersonal();
-                break;
-
-            case R.id.locationTermsView:
-                ((OnEventListener) mOnEventListener).startLocationTerms();
-                break;
-
-            case R.id.protectChildTermsView:
-                ((OnEventListener) mOnEventListener).startProtectChildTerms();
+            case R.id.linkAlarmTextView:
+                ((OnEventListener) mOnEventListener).startSettingAlarm();
                 break;
 
             default:

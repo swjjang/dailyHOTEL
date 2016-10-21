@@ -7,8 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,10 +30,7 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
-import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
-import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
-import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
-import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
+import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -49,6 +47,7 @@ public class InformationFragment extends BaseFragment implements Constants
     private InformationNetworkController mNetworkController;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
+    private boolean mDontReload;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -114,7 +113,26 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startNotice();
                 return;
+            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
+            {
+                return;
+            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
+            {
+                return;
+            } else if (DailyDeepLink.getInstance().isFAQView() == true)
+            {
+                mOnEventListener.startFAQ();
+            } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
+            {
+                mOnEventListener.startTermsNPolicy();
             }
+//            else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
+//            {
+//                return;
+//            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
+//            {
+//                return;
+//            }
 
             DailyDeepLink.getInstance().clear();
         }
@@ -129,25 +147,30 @@ public class InformationFragment extends BaseFragment implements Constants
 
         registerReceiver();
 
-        if (DailyHotel.isLogin() == true)
+        if (mDontReload == true)
         {
-            // 적립금 및 쿠폰 개수 가져와야 함
-            lockUI();
-
-            mNetworkController.requestUserProfile();
-
+            mDontReload = false;
         } else
         {
-            // 비로그인 상태
-            unLockUI();
+            if (DailyHotel.isLogin() == true)
+            {
+                // 적립금 및 쿠폰 개수 가져와야 함
+                lockUI();
 
-            mInformationLayout.updateLoginLayout(false, false);
-            mInformationLayout.updateAccountLayout(false, 0, 0);
+                mNetworkController.requestUserProfile();
+            } else
+            {
+                // 비로그인 상태
+                unLockUI();
+
+                mInformationLayout.updateLoginLayout(false, false);
+                mInformationLayout.updateAccountLayout(false, 0, 0);
+                mInformationLayout.setLinkAlarmVisible(false);
+            }
+
+            // 혜택 알림 메세지 가져오기
+            mNetworkController.requestPushBenefitText();
         }
-
-        // 혜택 알림 메세지 가져오기
-        mNetworkController.requestPushBenefitText();
-
     }
 
     @Override
@@ -163,12 +186,37 @@ public class InformationFragment extends BaseFragment implements Constants
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_REQEUST_ACTIVITY_SIGNUP:
             {
                 break;
             }
+
+            case Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS:
+            {
+                if (Util.isOverAPI19() == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == true)
+                    {
+
+                    } else
+                    {
+
+                    }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+            case CODE_REQUEST_ACTIVITY_FAQ:
+            case CODE_REQUEST_ACTIVITY_FEEDBACK:
+                mDontReload = false;
+                break;
         }
     }
 
@@ -244,6 +292,10 @@ public class InformationFragment extends BaseFragment implements Constants
         public void startSignUp()
         {
             InformationFragment.this.startSignUp(null);
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.REGISTRATION_CLICKED, AnalyticsManager.Label.MENU_REGISTER_ACCOUNT, null);
         }
 
         @Override
@@ -393,6 +445,20 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
+        public void startFAQ()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivityForResult(new Intent(baseActivity, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
+        }
+
+        @Override
         public void startEmail()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
@@ -402,12 +468,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
             lockUiComponent();
 
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc, DailyHotel.VERSION, Build.VERSION.RELEASE));
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivityForResult(new Intent(baseActivity, FeedbackMailActivity.class), CODE_REQUEST_ACTIVITY_FEEDBACK);
 
             //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
 
@@ -578,7 +640,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startTerms()
+        public void startTermsNPolicy()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -588,54 +650,17 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, TermActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent(baseActivity, TermsNPolicyActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
         }
 
         @Override
-        public void startPersonal()
+        public void startSettingAlarm()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, PrivacyActivity.class);
-            startActivity(intent);
-        }
-
-        @Override
-        public void startLocationTerms()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
-            startActivity(intent);
-        }
-
-        @Override
-        public void startProtectChildTerms()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, ProtectYouthTermsActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+            startActivityForResult(intent, Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS);
         }
 
         @Override
@@ -756,6 +781,19 @@ public class InformationFragment extends BaseFragment implements Constants
                 AnalyticsManager.getInstance(getContext()).setPushEnabled(isAgreedBenefit, null);
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
+
+                if (Util.isOverAPI19() == true && isAgreedBenefit == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == false)
+                    {
+                        mInformationLayout.setLinkAlarmVisible(true);
+                    } else
+                    {
+                        mInformationLayout.setLinkAlarmVisible(false);
+                    }
+                }
             }
 
             mNetworkController.requestUserProfileBenefit();
@@ -815,6 +853,19 @@ public class InformationFragment extends BaseFragment implements Constants
                     }
                 }, true);
 
+                if (Util.isOverAPI19() == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == false)
+                    {
+                        mInformationLayout.setLinkAlarmVisible(true);
+                    } else
+                    {
+                        mInformationLayout.setLinkAlarmVisible(false);
+                    }
+                }
+
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
             } else
@@ -832,6 +883,8 @@ public class InformationFragment extends BaseFragment implements Constants
                         releaseUiComponent();
                     }
                 }, true);
+
+                mInformationLayout.setLinkAlarmVisible(false);
 
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);

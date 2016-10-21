@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:app="http://schemas.android.com/apk/res-auto">
+    <shortcut
+        android:shortcutId="searchStay"
+        android:enabled="true"
+        android:icon="@drawable/tapbar_ic_01_hotel"
+        android:shortcutShortLabel="@string/label_hotel"
+        android:shortcutLongLabel="@string/label_hotel"
+        android:shortcutDisabledMessage="@string/label_hotel">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.twoheart.dailyhotel"
+            android:targetClass="com.twoheart.dailyhotel.screen.search.SearchActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list is what the user sees when they
+             launch this shortcut. -->
+        <!--<categories android:name="android.shortcut.conversation" />-->
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="searchGourmet"
+        android:enabled="true"
+        android:icon="@drawable/tapbar_ic_02_gourmet"
+        android:shortcutShortLabel="@string/label_fnb"
+        android:shortcutLongLabel="@string/label_fnb"
+        android:shortcutDisabledMessage="@string/label_fnb">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.twoheart.dailyhotel"
+            android:targetClass="com.twoheart.dailyhotel.screen.search.SearchActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list is what the user sees when they
+             launch this shortcut. -->
+        <!--<categories android:name="android.shortcut.conversation" />-->
+    </shortcut>
+</shortcuts>

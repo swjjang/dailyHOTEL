@@ -93,7 +93,7 @@ public class ProfileActivity extends BaseActivity
     private ProfileLayout.OnEventListener mOnEventListener = new ProfileLayout.OnEventListener()
     {
         @Override
-        public void showEditEmail()
+        public void startEditEmail()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -105,7 +105,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void showEditName(String name)
+        public void startEditName(String name)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -117,7 +117,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void showEditPhone()
+        public void startEditPhone()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -129,7 +129,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void showEditPassword()
+        public void startEditPassword()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -137,6 +137,18 @@ public class ProfileActivity extends BaseActivity
             }
 
             Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
+        }
+
+        @Override
+        public void startEditBirthday(String birthday)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = EditProfileBirthdayActivity.newInstance(ProfileActivity.this, mUserIndex, birthday);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -206,13 +218,13 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserProfile(String userIndex, String email, String name, String phoneNumber//
+        public void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
             , boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), isVerified, isPhoneVerified, verifiedDate);
+            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), birthday, isVerified, isPhoneVerified, verifiedDate);
 
             if (isVerified == true)
             {

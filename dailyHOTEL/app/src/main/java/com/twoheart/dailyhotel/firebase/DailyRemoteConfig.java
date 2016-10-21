@@ -48,7 +48,7 @@ public class DailyRemoteConfig
 
     public void requestRemoteConfig(final OnCompleteListener listener)
     {
-        if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getCompanyName()) == true)
+        if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
         {
             writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
         }
@@ -71,6 +71,7 @@ public class DailyRemoteConfig
                 String companyInfo = mFirebaseRemoteConfig.getString("companyInfo");
                 String androidSplashImageUrl = mFirebaseRemoteConfig.getString("androidSplashImageLink");
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
+                String androidText = mFirebaseRemoteConfig.getString("androidText");
 
                 if (Constants.DEBUG == true)
                 {
@@ -81,6 +82,7 @@ public class DailyRemoteConfig
                         ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
                         ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
                         ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
+                        ExLog.d("androidText : " + new JSONObject(androidText).toString());
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -119,6 +121,7 @@ public class DailyRemoteConfig
 
                 writeCompanyInformation(mContext, companyInfo);
                 writePaymentType(mContext, androidPaymentType);
+                writeText(mContext, androidText);
 
                 // 이미지 로딩 관련(추후 진행)
                 processIntroImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
@@ -176,15 +179,15 @@ public class DailyRemoteConfig
             // 아직은 고려하지 않도록 한다."default"
             //            String defaultType = imageUrlJSONObject.getString("default");
             String url = imageUrlJSONObject.getJSONObject("image").getString(dpi);
-            String currentVersion = DailyPreference.getInstance(context).getIntroImageVersion();
+            String currentVersion = DailyPreference.getInstance(context).getRemoteConfigIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");
 
             if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
-                DailyPreference.getInstance(context).setIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+                DailyPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
             } else if (Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
-                DailyPreference.getInstance(context).setIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                DailyPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
             } else
             {
                 // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
@@ -214,7 +217,7 @@ public class DailyRemoteConfig
             String fax = jsonObject.getString("fax1");
             String privacyEmail = jsonObject.getString("privacyManager");
 
-            DailyPreference.getInstance(context).setCompanyInformation(companyName//
+            DailyPreference.getInstance(context).setRemoteConfigCompanyInformation(companyName//
                 , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
         } catch (Exception e)
         {
@@ -229,17 +232,43 @@ public class DailyRemoteConfig
             JSONObject jsonObject = new JSONObject(androidPaymentType);
             JSONObject stayJSONObject = jsonObject.getJSONObject("stay");
 
-            DailyPreference.getInstance(context).setStaySimpleCardPaymentEnabled(stayJSONObject.getBoolean("easyCard"));
-            DailyPreference.getInstance(context).setStayCardPaymentEnabled(stayJSONObject.getBoolean("card"));
-            DailyPreference.getInstance(context).setStayPhonePaymentEnabled(stayJSONObject.getBoolean("phoneBill"));
-            DailyPreference.getInstance(context).setStayVirtualPaymentEnabled(stayJSONObject.getBoolean("virtualAccount"));
+            DailyPreference.getInstance(context).setRemoteConfigStaySimpleCardPaymentEnabled(stayJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setRemoteConfigStayCardPaymentEnabled(stayJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setRemoteConfigStayPhonePaymentEnabled(stayJSONObject.getBoolean("phoneBill"));
+            DailyPreference.getInstance(context).setRemoteConfigStayVirtualPaymentEnabled(stayJSONObject.getBoolean("virtualAccount"));
 
             JSONObject gourmetJSONObject = jsonObject.getJSONObject("gourmet");
 
-            DailyPreference.getInstance(context).setGourmetSimpleCardPaymentEnabled(gourmetJSONObject.getBoolean("easyCard"));
-            DailyPreference.getInstance(context).setGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
-            DailyPreference.getInstance(context).setGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
-            DailyPreference.getInstance(context).setGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
+            DailyPreference.getInstance(context).setRemoteConfigGourmetSimpleCardPaymentEnabled(gourmetJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setRemoteConfigGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setRemoteConfigGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
+            DailyPreference.getInstance(context).setRemoteConfigGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void writeText(Context context, String textInfo)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(textInfo);
+
+            String version = jsonObject.getString("version");
+
+            if (Util.isTextEmpty(version) == false //
+                && version.equalsIgnoreCase(DailyPreference.getInstance(context).getRemoteConfigTextVersion()) == false)
+            {
+                String loginText01 = jsonObject.getString("loginText01");
+                String signupText01 = jsonObject.getString("signupText01");
+                String signupText02 = jsonObject.getString("signupText02");
+
+                DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
+                DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(loginText01);
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText01);
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(signupText02);
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());

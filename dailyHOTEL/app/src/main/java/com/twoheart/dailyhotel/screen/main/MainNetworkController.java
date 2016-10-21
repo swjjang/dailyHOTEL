@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.main;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -18,7 +17,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
+import java.util.Map;
 
 public class MainNetworkController extends BaseNetworkController
 {
@@ -77,7 +76,7 @@ public class MainNetworkController extends BaseNetworkController
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -126,7 +125,7 @@ public class MainNetworkController extends BaseNetworkController
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -173,7 +172,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -212,7 +211,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -250,7 +249,7 @@ public class MainNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -296,7 +295,7 @@ public class MainNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -326,7 +325,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -362,7 +361,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -400,7 +399,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -461,7 +460,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -495,7 +494,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -528,7 +527,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -552,14 +551,14 @@ public class MainNetworkController extends BaseNetworkController
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
                 }
-            } catch (ParseException e)
-            {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log("Url: " + url);
-                }
-
-                mOnNetworkControllerListener.onError(e);
+                //            } catch (ParseException e)
+                //            {
+                //                if (Constants.DEBUG == false)
+                //                {
+                //                    Crashlytics.log("Url: " + url);
+                //                }
+                //
+                //                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

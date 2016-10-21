@@ -86,7 +86,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-    private static String getUrlEncoder(final String url)
+    public static String getUrlEncoder(final String url)
     {
         StringBuilder encodeUrl = new StringBuilder();
         StringBuilder seedLocationNumber = new StringBuilder();
@@ -430,8 +430,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
         if (mIsUsedAccept == true)
         {
-            map.put("accept", "application/json");
-            map.put("content-type", "application/json");
+            map.put("Accept", "application/json;charset=UTF-8");
+            map.put("Content-type", "application/json;charset=UTF-8");
         }
 
         if (DailyHotel.isLogin() == true)
@@ -445,10 +445,5 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     public void setIsUsedAccept(boolean isUsed)
     {
         mIsUsedAccept = isUsed;
-    }
-
-    public static void makeUrlEncoder()
-    {
-        DailyHotelRequest.getUrlEncoder("");
     }
 }

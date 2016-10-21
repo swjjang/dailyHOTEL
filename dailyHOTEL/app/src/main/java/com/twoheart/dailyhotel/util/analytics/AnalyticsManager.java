@@ -546,6 +546,7 @@ public class AnalyticsManager
         public static final String MENU_REGISTRATION_PHONENUMBERVERIFICATION = "Menu_Registration_PhoneNumberVerification";
         public static final String MENU_SETPROFILE_EMAILACCOUNT = "Menu_SetProfileEmailAccount";
         public static final String MENU_SETPROFILE_NAME = "Menu_SetProfileName";
+        public static final String MENU_SET_MY_BIRTHDAY = "Menu_SetMyBirthday";
         public static final String MENU_SETPROFILE_PASSWORD = "Menu_SetProfilePassword";
         public static final String MENU_SETPROFILE_PHONENUMBER = "Menu_SetProfilePhoneNumber";
         public static final String MENU_COUPON_BOX = "Menu_CouponBox";
@@ -570,6 +571,9 @@ public class AnalyticsManager
         public static final String DAILY_GOURMET_FIRST_PURCHASE_SUCCESS = "DailyGourmet_FirstPurchaseSuccess";
         //
         public static final String APP_LAUNCHED = "app_launched";
+        //
+        public static final String MENU_NOTICELIST = "Menu_NoticeList";
+        public static final String MENU_NOTICEDETAILVIEW = "Menu_NoticeDetailView";
     }
 
     public static class Action
@@ -712,6 +716,8 @@ public class AnalyticsManager
         public static final String MENU = "Menu";
         public static final String DEPOSIT_WAITING = "DepositWaiting";
         public static final String BOOKING_INITIALISE = "BookingInitialise";
+        //
+        public static final String LOST_PASSWORD_CLICKED = "LostPasswordClicked";
     }
 
     public static class Category
@@ -849,6 +855,10 @@ public class AnalyticsManager
         public static final String KAKAO = "Kakao";
         public static final String DIRECT_CALL = "DirectCall";
         public static final String CLICK = "Click";
+        //
+        public static final String MENU_REGISTER_ACCOUNT = "Menu_RegisterAccount";
+        public static final String SIGNUP_ON = "Signup_On";
+        public static final String SIGNUP_OFF = "Signup_Off";
     }
 
     public static class UserType

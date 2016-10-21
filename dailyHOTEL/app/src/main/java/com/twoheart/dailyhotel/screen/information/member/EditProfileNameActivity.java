@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -32,13 +33,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditProfileNameActivity extends BaseActivity implements OnClickListener
+public class EditProfileNameActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
 
-    private EditText mNameEditText;
-    private View mConfirmView;
+    private DailyEditText mNameEditText;
+    private View mConfirmView, mNameView;
     private String mUserIndex;
 
     public static Intent newInstance(Context context, String userIndex, String name)
@@ -83,8 +84,20 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
     private void initLayout(String name)
     {
-        mNameEditText = (EditText) findViewById(R.id.nameEditText);
-        mNameEditText.setText(name);
+        mNameView = findViewById(R.id.nameView);
+
+        mNameEditText = (DailyEditText) findViewById(R.id.nameEditText);
+        mNameEditText.setDeleteButtonVisible(true, null);
+        mNameEditText.setOnFocusChangeListener(this);
+
+        if (Util.isTextEmpty(name) == true)
+        {
+            mNameEditText.setText(null);
+        } else
+        {
+            mNameEditText.setText(name);
+        }
+
         mNameEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -195,6 +208,34 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        switch (v.getId())
+        {
+            case R.id.nameEditText:
+                setFocusLabelView(mNameView, mNameEditText, hasFocus);
+                break;
+        }
+    }
+
+    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
+    {
+        if (hasFocus == true)
+        {
+            labelView.setActivated(false);
+            labelView.setSelected(true);
+        } else
+        {
+            if (editText.length() > 0)
+            {
+                labelView.setActivated(true);
+            }
+
+            labelView.setSelected(false);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,18 +243,13 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
-                boolean result = false;
+                int msgCode = response.getInt("msgCode");
 
-                if (response.has("success") == true)
-                {
-                    result = response.getBoolean("success");
-                }
-
-                if (result == true)
+                if (msgCode == 100)
                 {
                     showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
                     {
@@ -234,22 +270,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     setResult(RESULT_OK);
                 } else
                 {
-                    String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            mNameEditText.setText(null);
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            mNameEditText.setText(null);
-                        }
-                    });
+                    onErrorPopupMessage(msgCode, response.getString("msg"), null);
                 }
             } catch (Exception e)
             {
@@ -276,7 +297,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
