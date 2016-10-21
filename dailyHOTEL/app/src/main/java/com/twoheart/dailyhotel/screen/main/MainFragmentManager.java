@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.screen.common.ErrorFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -128,8 +129,10 @@ public class MainFragmentManager
             mFragmentManager.beginTransaction().replace(mContentLayout.getId(), fragment, tag).commitAllowingStateLoss();
         } catch (IllegalStateException e)
         {
-            Crashlytics.log("StayListLayout");
-            Crashlytics.logException(e);
+            if (Constants.DEBUG == false) {
+                Crashlytics.log("StayListLayout");
+                Crashlytics.logException(e);
+            }
         } catch (Exception e)
         {
             // 에러가 나는 경우 앱을 재부팅 시킨다.
