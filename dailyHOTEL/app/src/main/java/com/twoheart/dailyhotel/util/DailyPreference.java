@@ -262,16 +262,19 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            try
+            if (Constants.DEBUG == false)
             {
-                Object object = sharedPreferences.getAll().get(key);
-                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
-            } catch (Exception e1)
-            {
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
 
+                }
             }
 
             if (sharedPreferences != null)
@@ -362,16 +365,19 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            try
+            if (Constants.DEBUG == false)
             {
-                Object object = sharedPreferences.getAll().get(key);
-                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
-            } catch (Exception e1)
-            {
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
 
+                }
             }
 
             if (sharedPreferences != null)
@@ -407,16 +413,19 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            try
+            if (Constants.DEBUG == false)
             {
-                Object object = sharedPreferences.getAll().get(key);
-                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
-            } catch (Exception e1)
-            {
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
 
+                }
             }
 
             if (sharedPreferences != null)
