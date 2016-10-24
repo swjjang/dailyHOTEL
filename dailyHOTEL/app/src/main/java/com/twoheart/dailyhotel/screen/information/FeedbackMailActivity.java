@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -64,7 +63,6 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
         mMessageEditText = (DailyEditText) findViewById(R.id.messageEditText);
-        mMessageEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
@@ -81,30 +79,18 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
             }
         });
 
-        mMessageEditText.setOnEditorActionListener(new OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent)
-            {
-                switch (actionId)
-                {
-                    case EditorInfo.IME_ACTION_DONE:
-                        sendFeedbackView.performClick();
-                        break;
-                }
-                return false;
-            }
-        });
-
         TextView informationTextView = (TextView) findViewById(R.id.informationTextView);
         String formText = getString(R.string.mail_text_desc, String.format("Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersion(this)));
         informationTextView.setText(formText);
+
+        // 기본 정보를 태그에 넣음.
+        mMessageEditText.setTag(formText);
     }
 
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.FORGOTPASSWORD);
+        //        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.FORGOTPASSWORD);
 
         super.onStart();
     }
@@ -143,6 +129,9 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         }
 
         lockUI();
+
+        String information = (String) mMessageEditText.getTag();
+        message = information + "\n" + message;
 
         boolean result = Appboy.getInstance(this).submitFeedback(email, message, false);
 
