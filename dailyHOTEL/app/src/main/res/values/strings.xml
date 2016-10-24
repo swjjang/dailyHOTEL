@@ -59,7 +59,7 @@
     <string name="label_nights">%1$d박</string>
     <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
     <string name="label_sender">보낸사람</string>
-    <string name="label_send_mail">메일 발송하기</string>
+    <string name="label_send_mail">문의하기</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -376,6 +376,8 @@
     <string name="frag_about_business_license04">개인정보담당자 : %1$s</string>
     <string name="message_empty_notice">공지사항이 없습니다.</string>
     <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
+    <string name="message_input_email">이메일 주소를 입력해 주세요.</string>
+    <string name="message_input_email_body">이메일 내용을 입력해 주세요.</string>
 
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
