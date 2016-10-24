@@ -684,7 +684,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-                msg = getString(R.string.act_toast_payment_account_duplicate);
+                msg = getString(R.string.act_toast_payment_account_duplicate_type_gourmet);
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
