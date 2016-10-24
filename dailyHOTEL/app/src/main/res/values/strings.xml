@@ -44,7 +44,6 @@
     <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>
-    <string name="label_restaurant_information">레스토랑 정보</string>
     <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">카드변경/관리하기</string>
     <string name="label_search">검색</string>
@@ -116,21 +115,7 @@
     <string name="grade_motel">모텔</string>
     <string name="grade_not_yet">미정</string>
 
-    <!-- IntroActivity Guide Ment -->
-    <string name="guide_title_1">당일 호텔 예약</string>
-    <string name="guide_title_2">엄선된 호텔</string>
-    <string name="guide_title_3">쉽고 빠른 결제</string>
-    <string name="guide_title_4">놀라운 가격</string>
-    <string name="guide_desc_1">사전 예약보다 편리하고 저렴하게\n오늘의 호텔을 예약하세요.</string>
-    <string name="guide_desc_2">고객 만족도와 할인율을 바탕으로,\n가장 매력적인 호텔만을 제시합니다.</string>
-    <string name="guide_desc_3">오전 9시에서 새벽 2시까지\n30초만에 예약하고 바로 체크인하세요.</string>
-    <string name="guide_desc_4">오늘 남은 객실만을 판매하기에\n가장 저렴할 수 밖에 없습니다.\n\n그럼 오늘의 호텔을 만나볼까요?</string>
-    <string name="guide_btn_skip">건너뛰기</string>
-    <string name="guide_btn_start">시작</string>
-
     <!-- Actionbar Titles -->
-    <string name="actionbar_title_hotel_list_frag">데일리호텔</string>
-    <string name="actionbar_title_gourmet_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_invite_friends">친구 초대하기</string>
@@ -601,7 +586,6 @@
     <string name="frag_booking_tab_month">월 </string>
     <string name="frag_booking_tab_day">일 </string>
     <string name="frag_booking_tab_hour">시</string>
-    <string name="frag_booking_tab_hotel_info">호텔 정보</string>
     <string name="frag_booking_tab_location">위치</string>
     <string name="frag_booking_tab_bed_type">객실 타입</string>
     <string name="frag_booking_tab_ticket_type">상품 타입</string>
