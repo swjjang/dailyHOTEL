@@ -292,7 +292,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
+        public void onCommonDateTime(String currentDateTime, String dailyDateTime)
         {
             SaleTime saleTime = new SaleTime();
             saleTime.setCurrentTime(currentDateTime);
