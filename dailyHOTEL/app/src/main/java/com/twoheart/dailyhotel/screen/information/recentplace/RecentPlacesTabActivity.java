@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -11,11 +12,13 @@ import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -145,7 +148,8 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private void setTabLayout(ArrayList<RecentPlacesListFragment> fragmentList)
     {
-        if (fragmentList == null || fragmentList.size() == 0)
+        if (fragmentList == null || fragmentList.size() == 0 //
+            || (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true))
         {
             mViewPager.removeAllViews();
             mViewPager.clearOnPageChangeListeners();
@@ -160,7 +164,27 @@ public class RecentPlacesTabActivity extends BaseActivity
         setTabLayoutVisibility(View.VISIBLE);
         setEmptyViewVisibility(View.GONE);
 
+        int position = 0;
+        if (isEmptyRecentStayPlace() == true)
+        {
+            position = 1;
+        }
+
+        mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
+
+        Class reflectionClass = ViewPager.class;
+
+        try
+        {
+            Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
+            mCurItem.setAccessible(true);
+            mCurItem.setInt(mViewPager, position);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -192,6 +216,16 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
 
         mEmptyView.setVisibility(visibility);
+    }
+
+    private boolean isEmptyRecentStayPlace()
+    {
+        return mRecentStayPlaces == null || mRecentStayPlaces.size() == 0;
+    }
+
+    private boolean isEmptyRecentGourmetPlace()
+    {
+        return mRecentGourmetPlaces == null || mRecentGourmetPlaces.size() == 0;
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
@@ -235,23 +269,23 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             int stayCount = mRecentStayPlaces.size();
             int gourmetCount = mRecentGourmetPlaces.size();
-//            boolean isPagingEnabled;
+            //            boolean isPagingEnabled;
 
             if (stayCount == 0 && gourmetCount == 0)
             {
                 // 둘다 없을때
                 setTabLayoutVisibility(View.GONE);
                 setEmptyViewVisibility(View.VISIBLE);
-//                isPagingEnabled = false;
+                //                isPagingEnabled = false;
             } else
             {
                 // 둘중에 하나만 있을때
                 setTabLayoutVisibility(View.VISIBLE);
                 setEmptyViewVisibility(View.GONE);
-//                isPagingEnabled = true;
+                //                isPagingEnabled = true;
             }
 
-//            mViewPager.setPagingEnabled(isPagingEnabled);
+            //            mViewPager.setPagingEnabled(isPagingEnabled);
         }
     };
 
