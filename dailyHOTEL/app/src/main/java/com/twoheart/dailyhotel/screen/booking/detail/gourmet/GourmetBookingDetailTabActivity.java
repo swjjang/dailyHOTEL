@@ -177,7 +177,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
-    protected void setCurrentDateTime(long currentDateTime, long dailyDateTime)
+    protected void setCurrentDateTime(String currentDateTime, String dailyDateTime)
     {
         mGourmetBookingDetail.currentDateTime = currentDateTime;
         mGourmetBookingDetail.dailyDateTime = dailyDateTime;

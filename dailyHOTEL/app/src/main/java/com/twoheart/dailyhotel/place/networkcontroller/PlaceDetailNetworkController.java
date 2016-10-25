@@ -25,7 +25,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCommonDateTime(long currentDateTime, long dailyDateTime);
+        void onCommonDateTime(String currentDateTime, String dailyDateTime);
 
         void onUserInformation(Customer user, boolean isDailyUser);
 
@@ -54,10 +54,22 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         {
             try
             {
-                long currentDateTime = response.getLong("currentDateTime");
-                long dailyDateTime = response.getLong("dailyDateTime");
+                int msgCode = response.getInt("msgCode");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String currentDateTime = dataJSONObject.getString("currentDateTime");
+                    String dailyDateTime = dataJSONObject.getString("dailyDateTime");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
+                } else
+                {
+                    String message = response.getString("msg");
+
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

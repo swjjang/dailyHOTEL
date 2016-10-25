@@ -2319,38 +2319,51 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             try
             {
-                int openHour = Integer.parseInt(DailyCalendar.format(response.getLong("openDateTime"), "HH", TimeZone.getTimeZone("GMT")));
-                int closeHour = Integer.parseInt(DailyCalendar.format(response.getLong("closeDateTime"), "HH", TimeZone.getTimeZone("GMT")));
-                int currentHour = Integer.parseInt(DailyCalendar.format(response.getLong("currentDateTime"), "HH", TimeZone.getTimeZone("GMT")));
+                int msgCode = response.getInt("msgCode");
 
-                // 당일인지 아닌지
-                if (mCheckInSaleTime.getOffsetDailyDay() == 0)
+                if (msgCode == 100)
                 {
-                    if (currentHour >= openHour && currentHour < 18)
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    int openHour = Integer.parseInt(DailyCalendar.format(dataJSONObject.getString("openDateTime"), "HH"));
+                    int closeHour = Integer.parseInt(DailyCalendar.format(dataJSONObject.getString("closeDateTime"), "HH"));
+                    int currentHour = Integer.parseInt(DailyCalendar.format(dataJSONObject.getString("currentDateTime"), "HH"));
+
+                    // 당일인지 아닌지
+                    if (mCheckInSaleTime.getOffsetDailyDay() == 0)
                     {
-                        mPensionPopupMessageType = 1;
-                    } else if (currentHour >= 18 || currentHour < closeHour)
-                    {
-                        mPensionPopupMessageType = 2;
+                        if (currentHour >= openHour && currentHour < 18)
+                        {
+                            mPensionPopupMessageType = 1;
+                        } else if (currentHour >= 18 || currentHour < closeHour)
+                        {
+                            mPensionPopupMessageType = 2;
+                        } else
+                        {
+                            mPensionPopupMessageType = 3;
+                        }
                     } else
                     {
-                        mPensionPopupMessageType = 3;
+                        if (currentHour >= openHour && currentHour < 22)
+                        {
+                            mPensionPopupMessageType = 10;
+                        } else if (currentHour >= 22)
+                        {
+                            mPensionPopupMessageType = 11;
+                        } else
+                        {
+                            mPensionPopupMessageType = 12;
+                        }
                     }
+
+                    processAgreeTermDialog();
                 } else
                 {
-                    if (currentHour >= openHour && currentHour < 22)
-                    {
-                        mPensionPopupMessageType = 10;
-                    } else if (currentHour >= 22)
-                    {
-                        mPensionPopupMessageType = 11;
-                    } else
-                    {
-                        mPensionPopupMessageType = 12;
-                    }
-                }
+                    String message = response.getString("msg");
+                    onErrorPopupMessage(msgCode, message);
 
-                processAgreeTermDialog();
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                }
             } catch (Exception e)
             {
                 onError(e);

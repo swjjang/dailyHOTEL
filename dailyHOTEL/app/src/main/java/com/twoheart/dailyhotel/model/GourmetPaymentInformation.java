@@ -81,16 +81,8 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         int length = ticketTimes.length;
         String[] times = new String[length];
 
-        //        Calendar calendarTime = DailyCalendar.getInstance();
-        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
         for (int i = 0; i < length; i++)
         {
-            //            calendarTime.setTimeInMillis(ticketTimes[i]);
-            //            times[i] = formatDay.format(calendarTime.getTime());
             times[i] = DailyCalendar.format(ticketTimes[i], "HH:mm", TimeZone.getTimeZone("GMT"));
         }
 

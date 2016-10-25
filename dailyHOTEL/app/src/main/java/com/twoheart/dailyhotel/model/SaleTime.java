@@ -6,17 +6,17 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class SaleTime implements Parcelable
 {
     public static final long MILLISECOND_IN_A_DAY = 3600 * 24 * 1000;
 
-    private Date mCurrentTime;
-    private Date mDailyTime;
+    private Date mCurrentDateTime;
+    private Date mDailyDateTime;
     private int mDayOfDays; // 데이즈 날짜. curentTime으로 부터 몇일.
 
     public SaleTime()
@@ -29,34 +29,15 @@ public class SaleTime implements Parcelable
         readFromParcel(in);
     }
 
-    //    public String toString()
-    //    {
-    //        SimpleDateFormat sFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss", Locale.KOREA);
-    //        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-    //
-    //        StringBuilder stringBuilder = new StringBuilder();
-    //
-    //        stringBuilder.append("currentTime : " + sFormat.format(mCurrentTime));
-    //        stringBuilder.append("\ndailyTime : " + sFormat.format(mDailyTime));
-    //        stringBuilder.append("\nmDayOfDays : " + mDayOfDays));
-    //
-    //        return stringBuilder.toString();
-    //    }
-
-    //    public String getDailyDateFormat(String format)
-    //    {
-    //        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
-    //    }
-
     public Date getDayOfDaysDate()
     {
-        return new Date(mDailyTime.getTime() + MILLISECOND_IN_A_DAY * mDayOfDays);
+        return new Date(mDailyDateTime.getTime() + MILLISECOND_IN_A_DAY * mDayOfDays);
     }
 
     public String getDayOfDaysDateFormat(String format)
     {
         //        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
-        return DailyCalendar.format(getDayOfDaysDate().getTime(), format, TimeZone.getTimeZone("GMT"));
+        return DailyCalendar.format(getDayOfDaysDate(), format);
     }
 
     public SaleTime getClone(int nextDay)
@@ -64,37 +45,42 @@ public class SaleTime implements Parcelable
         SaleTime nextSaleTime = new SaleTime();
 
         nextSaleTime.mDayOfDays = nextDay;
-        nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
-        nextSaleTime.mDailyTime = new Date(mDailyTime.getTime());
+        nextSaleTime.mCurrentDateTime = (Date) mCurrentDateTime.clone();
+        nextSaleTime.mDailyDateTime = (Date) mDailyDateTime.clone();
 
         return nextSaleTime;
     }
 
-    //    public SimpleDateFormat getTimezonedDateFormat(String datePattern)
-    //    {
-    //        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
-    //        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-    //        return sFormat;
-    //    }
-
     public boolean isDayOfDaysDateEquals(SaleTime saleTime)
     {
-        return mDailyTime.getTime() == saleTime.mDailyTime.getTime() && mDayOfDays == saleTime.mDayOfDays;
+        return mDailyDateTime.getTime() == saleTime.mDailyDateTime.getTime() && mDayOfDays == saleTime.mDayOfDays;
     }
 
-    public void setCurrentTime(long currentTime)
+    public void setCurrentTime(String currentDateTime)
     {
-        mCurrentTime = new Date(currentTime);
+        try
+        {
+            mCurrentDateTime = DailyCalendar.convertDate(currentDateTime, DailyCalendar.ISO_8601_FORMAT);
+        } catch (ParseException e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
-    public long getDailyTime()
+    public Date getDailyDateTime()
     {
-        return mDailyTime.getTime();
+        return mDailyDateTime;
     }
 
-    public void setDailyTime(long dailyTime)
+    public void setDailyTime(String dailyDateTime)
     {
-        mDailyTime = new Date(dailyTime);
+        try
+        {
+            mDailyDateTime = DailyCalendar.convertDate(dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+        } catch (ParseException e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     public int getOffsetDailyDay()
@@ -146,25 +132,25 @@ public class SaleTime implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        if (mCurrentTime == null)
+        if (mCurrentDateTime == null)
         {
-            mCurrentTime = new Date();
+            mCurrentDateTime = new Date();
         }
 
-        if (mDailyTime == null)
+        if (mDailyDateTime == null)
         {
-            mDailyTime = new Date();
+            mDailyDateTime = new Date();
         }
 
-        dest.writeLong(mCurrentTime.getTime());
-        dest.writeLong(mDailyTime.getTime());
+        dest.writeLong(mCurrentDateTime.getTime());
+        dest.writeLong(mDailyDateTime.getTime());
         dest.writeInt(mDayOfDays);
     }
 
     private void readFromParcel(Parcel in)
     {
-        mCurrentTime = new Date(in.readLong());
-        mDailyTime = new Date(in.readLong());
+        mCurrentDateTime = new Date(in.readLong());
+        mDailyDateTime = new Date(in.readLong());
         mDayOfDays = in.readInt();
     }
 

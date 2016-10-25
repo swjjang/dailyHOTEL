@@ -14,7 +14,7 @@ public class StayCuration extends PlaceCuration
     protected Category mCategory;
     protected StayCurationOption mStayCurationOption;
 
-    public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
+    public void setCheckInSaleTime(String currentDateTime, String dailyDateTime)
     {
         if (mCheckInSaleTime == null)
         {

@@ -48,7 +48,7 @@ public class GourmetCuration extends PlaceCuration
         return gourmetParams;
     }
 
-    public void setSaleTime(long currentDateTime, long dailyDateTime)
+    public void setSaleTime(String currentDateTime, String dailyDateTime)
     {
         if (mSaleTime == null)
         {
