@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -53,7 +54,7 @@ public class RecentStayListNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

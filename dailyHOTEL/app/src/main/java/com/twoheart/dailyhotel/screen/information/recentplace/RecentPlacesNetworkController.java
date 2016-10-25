@@ -10,6 +10,8 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by android_sam on 2016. 10. 12..
  */
@@ -34,7 +36,7 @@ public class RecentPlacesNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
