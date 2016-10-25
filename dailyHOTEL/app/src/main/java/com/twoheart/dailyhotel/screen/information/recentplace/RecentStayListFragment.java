@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
@@ -79,7 +80,44 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            mListLayout.setData(list);
+            ArrayList<Stay> resultList = new ArrayList<>();
+
+            if (mRecentPlaces != null && list != null && list.size() > 0)
+            {
+                ArrayList<Stay> cloneList = (ArrayList<Stay>) list.clone();
+
+                for (String stringIndex : mRecentPlaces.getList())
+                {
+                    if (Util.isTextEmpty(stringIndex) == true)
+                    {
+                        continue;
+                    }
+
+                    int index = -1;
+                    try
+                    {
+                        index = Integer.parseInt(stringIndex);
+                    } catch (NumberFormatException e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
+
+                    if (index > 0)
+                    {
+                        for (Stay stay : cloneList)
+                        {
+                            if (index == stay.index)
+                            {
+                                resultList.add(stay);
+                                cloneList.remove(stay);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            mListLayout.setData(resultList);
         }
 
         @Override
@@ -125,7 +163,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, stay, 0);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }
 
         @Override

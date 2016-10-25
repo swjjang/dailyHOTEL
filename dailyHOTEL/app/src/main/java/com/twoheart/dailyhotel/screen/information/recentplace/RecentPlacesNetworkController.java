@@ -25,7 +25,7 @@ public class RecentPlacesNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCommonDateTime(String currentDateTime, String dailyDateTime);
+        void onCommonDateTime(long currentDateTime, long dailyDateTime);
     }
 
     public void requestCommonDateTime()
@@ -40,8 +40,8 @@ public class RecentPlacesNetworkController extends BaseNetworkController
         {
             try
             {
-                String currentDateTime = response.getString("currentDateTime");
-                String dailyDateTime = response.getString("dailyDateTime");
+                long currentDateTime = response.getLong("currentDateTime");
+                long dailyDateTime = response.getLong("dailyDateTime");
 
                 ((RecentPlacesNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
             } catch (Exception e)

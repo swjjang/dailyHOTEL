@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
@@ -77,7 +78,44 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            mListLayout.setData(list);
+            ArrayList<Gourmet> resultList = new ArrayList<>();
+
+            if (mRecentPlaces != null && list != null && list.size() > 0)
+            {
+                ArrayList<Gourmet> cloneList = (ArrayList<Gourmet>) list.clone();
+
+                for (String stringIndex : mRecentPlaces.getList())
+                {
+                    if (Util.isTextEmpty(stringIndex) == true)
+                    {
+                        continue;
+                    }
+
+                    int index = -1;
+                    try
+                    {
+                        index = Integer.parseInt(stringIndex);
+                    } catch (NumberFormatException e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
+
+                    if (index > 0)
+                    {
+                        for (Gourmet gourmet : cloneList)
+                        {
+                            if (index == gourmet.index)
+                            {
+                                resultList.add(gourmet);
+                                cloneList.remove(gourmet);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            mListLayout.setData(resultList);
         }
 
         @Override
@@ -123,7 +161,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, gourmet, 0);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }
 
         @Override

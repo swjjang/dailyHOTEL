@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.recentplace;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -228,6 +229,39 @@ public class RecentPlacesTabActivity extends BaseActivity
         return mRecentGourmetPlaces == null || mRecentGourmetPlaces.size() == 0;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            {
+                switch (resultCode)
+                {
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                        mDontReloadAtOnResume = false;
+                        break;
+
+                    default:
+                        mDontReloadAtOnResume = true;
+                        break;
+                }
+                break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
@@ -292,7 +326,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(String currentDateTime, String dailyDateTime)
+        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
         {
             SaleTime saleTime = new SaleTime();
             saleTime.setCurrentTime(currentDateTime);
