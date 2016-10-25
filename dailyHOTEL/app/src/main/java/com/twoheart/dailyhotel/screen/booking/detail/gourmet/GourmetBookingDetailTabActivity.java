@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -259,7 +260,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

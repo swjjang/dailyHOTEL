@@ -187,6 +187,16 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                 {
                     return false;
                 }
+            } else if (url.startsWith("kakaolink://") == true)
+            {
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } catch (ActivityNotFoundException e)
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.kakao.talk")));
+                }
+                return true;
             } else
             {
                 view.loadUrl(url);

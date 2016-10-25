@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -342,9 +343,22 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         int productCount = gourmetPaymentInformation.ticketCount;
 
         String date = gourmetPaymentInformation.checkInTime;
-        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH시 mm분", TimeZone.getTimeZone("GMT"));
+        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT"));
 
-        String userName = gourmetPaymentInformation.getCustomer().getName();
+        String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
+
+        if (Util.isTextEmpty(userName) == true)
+        {
+            try
+            {
+                String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
+                    + ",tiketIndex:" + ticketInformation.index + ",checkIn:" + date//
+                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
+                Crashlytics.logException(new NullPointerException(message));
+            } catch (Exception e)
+            {
+            }
+        }
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
@@ -670,7 +684,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-                msg = getString(R.string.act_toast_payment_account_duplicate);
+                msg = getString(R.string.act_toast_payment_account_duplicate_type_gourmet);
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
@@ -1291,7 +1305,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1356,7 +1370,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mGourmetPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1454,7 +1468,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1509,7 +1523,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1616,7 +1630,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mCheckAvailableTicketJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1649,7 +1663,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

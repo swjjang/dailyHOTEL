@@ -94,7 +94,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         mBirthdayView = findViewById(R.id.birthdayView);
 
         mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true);
+        mBirthdayEditText.setDeleteButtonVisible(true, null);
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setOnClickListener(this);
 
@@ -353,7 +353,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -407,7 +407,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

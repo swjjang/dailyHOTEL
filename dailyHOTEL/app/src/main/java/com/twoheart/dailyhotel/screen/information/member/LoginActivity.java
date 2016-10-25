@@ -65,7 +65,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     public CallbackManager mCallbackManager;
     private ScrollView mScrollView;
     private DailyEditText mEmailEditText, mPasswordEditText;
-    private TextView mLoginView;
+    private TextView mLoginView, mFindPasswordView;
     private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
@@ -170,7 +170,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnTouchListener(new View.OnTouchListener()
         {
@@ -193,7 +193,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true);
+        mPasswordEditText.setDeleteButtonVisible(true, null);
         mPasswordEditText.setOnFocusChangeListener(this);
         mPasswordEditText.setOnTouchListener(new View.OnTouchListener()
         {
@@ -235,14 +235,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mLoginView = (TextView) findViewById(R.id.signinView);
 
-        TextView findPasswordView = (TextView) findViewById(R.id.findPasswordView);
-        findPasswordView.setPaintFlags(findPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        findPasswordView.setOnClickListener(this);
+        mFindPasswordView = (TextView) findViewById(R.id.findPasswordView);
+        mFindPasswordView.setPaintFlags(mFindPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        mFindPasswordView.setOnClickListener(this);
 
-        mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
+        View snsLoginLayout = findViewById(R.id.snsLoginLayout);
+
+        mFacebookLoginView = (com.facebook.login.widget.LoginButton) snsLoginLayout.findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
 
-        View facebookLoginView = findViewById(R.id.facebookLoginView);
+        View facebookLoginView = snsLoginLayout.findViewById(R.id.facebookLoginView);
         facebookLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -259,8 +261,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         FontManager.apply(mFacebookLoginView, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
-        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) findViewById(R.id.kakaoLoginButton);
-        View kakaoLoginView = findViewById(R.id.kakaoLoginView);
+        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) snsLoginLayout.findViewById(R.id.kakaoLoginButton);
+        View kakaoLoginView = snsLoginLayout.findViewById(R.id.kakaoLoginView);
         kakaoLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -563,7 +565,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -722,7 +724,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         @Override
         public void onGlobalLayout()
         {
-            Rect rect = new Rect();
+            final Rect rect = new Rect();
             mScrollView.getWindowVisibleDisplayFrame(rect);
             int screenHeight = mScrollView.getRootView().getHeight();
             int keypadHeight = screenHeight - rect.bottom;
@@ -740,7 +742,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         @Override
                         public void run()
                         {
-                            mScrollView.scrollTo(0, mEmailView.getTop());
+                            mScrollView.scrollTo(0, Math.abs(mFindPasswordView.getBottom() - mScrollView.getHeight()));
                         }
                     });
                 }
@@ -821,7 +823,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mSocialUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -844,32 +846,32 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
                         AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
 
-                        HashMap<String, String> params = new HashMap<>();
+                        HashMap<String, String> analyticsParams = new HashMap<>();
 
                         if (mStoreParams.containsKey("email") == true)
                         {
-                            params.put("email", mStoreParams.get("email"));
+                            analyticsParams.put("email", mStoreParams.get("email"));
                         }
 
                         if (mStoreParams.containsKey("pw") == true)
                         {
-                            params.put("pw", mStoreParams.get("pw"));
+                            analyticsParams.put("pw", mStoreParams.get("pw"));
                         }
 
                         if (mStoreParams.containsKey("social_id") == true)
                         {
-                            params.put("social_id", mStoreParams.get("social_id"));
+                            analyticsParams.put("social_id", mStoreParams.get("social_id"));
                         }
 
                         mStoreParams.put("new_user", "1");
 
                         if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginJsonResponseListener);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
                         } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                         {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginJsonResponseListener);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                         }
 
@@ -908,7 +910,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -963,7 +965,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mSocialUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1030,7 +1032,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

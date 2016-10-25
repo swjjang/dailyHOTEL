@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class NoticeListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
@@ -66,6 +68,8 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
         mEmptyView = findViewById(R.id.emptyLayout);
         mListView = (ListView) findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
+
+        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     @Override
@@ -94,7 +98,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
             DailyDeepLink.getInstance().clear();
         }
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICEDETAILVIEW);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICELIST);
     }
 
 
@@ -157,7 +161,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     private DailyHotelJsonResponseListener mNoticeListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

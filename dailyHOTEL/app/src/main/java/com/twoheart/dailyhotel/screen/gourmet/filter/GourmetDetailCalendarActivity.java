@@ -130,7 +130,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     private DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             int saleTicketCount = 0;
 

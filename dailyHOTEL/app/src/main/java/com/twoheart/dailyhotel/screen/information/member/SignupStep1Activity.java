@@ -374,7 +374,7 @@ public class SignupStep1Activity extends BaseActivity
     private DailyHotelJsonResponseListener mSignupValidationListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

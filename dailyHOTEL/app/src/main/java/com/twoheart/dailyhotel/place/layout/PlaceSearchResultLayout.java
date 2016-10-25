@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -195,9 +194,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             @Override
             public void run()
             {
-                Rect rect = new Rect();
-                mBottomOptionLayout.getGlobalVisibleRect(rect);
-                mBottomOptionLayout.setTag(Util.getLCDHeight(mContext) - rect.top);
+                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
             }
         });
 

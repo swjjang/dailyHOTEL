@@ -1037,15 +1037,35 @@ public class Util implements Constants
                     public void SKPMapApikeySucceed()
                     {
                         //                    ExLog.d("TMap : SKPMapApikeySucceed");
-                        DailyHotel.setIsSuccessTMapAuth(true);
-                        openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+                        if (activity != null)
+                        {
+                            activity.runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    DailyHotel.setIsSuccessTMapAuth(true);
+                                    openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+                                }
+                            });
+                        }
                     }
 
                     @Override
                     public void SKPMapApikeyFailed(String s)
                     {
-                        DailyHotel.setIsSuccessTMapAuth(false);
-                        showFailedTMapNaviDialog(activity);
+                        if (activity != null)
+                        {
+                            activity.runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    DailyHotel.setIsSuccessTMapAuth(false);
+                                    showFailedTMapNaviDialog(activity);
+                                }
+                            });
+                        }
                     }
                 });
             } else

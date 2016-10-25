@@ -95,9 +95,10 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "common/ver_dual" : "NSQxMSQxOSQ0NCQ1JDQyJDckMTIkMzQkMSQxMyQyMCQ0OCQxNiQ1NyQxJA==$QPL0I4OEKADc4MUH0MVFBQMUU5NV0E4MjVCOTZFFQzc3NkYyNEELM2RHkUX=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/version" : "NDIkMzAkNTQkNTgkNjckODAkNjIkOTAkODckMzckMyQ2NCQ1NSQyOSQyMSQyMiQ=$NTJCFOURFNjU4QjdDMzRCDSMEY4OUYyMNTOk5NjdCIMTQ1NjRg2QjE4MUQLxHQUZJFRTXPIzM0VUEQkNGRDlBREVZEQTgxFNjIMyRg==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -117,11 +118,12 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestCommonDateTime(Object tag, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/common/datetime" : "MTEkNDgkNDAkMCQ1MyQzMSQ0MyQ5MCQ5MSQxMiQ5NyQxOCQyMCQ2NyQ4MSQyOSQ=$NNTM1NzY2OTVBGERkFSEDMkU0N0FGSQjYyNWEVDNjFGMUIBQxM0Y2MEIC3RBDlGOTJCMMDdDNTU0RjJEMkOE5OTZEOEI0Q0NHVFOQ=Q=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime" : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
 
         String params = "?timeZone=Asia%2FSeoul";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }

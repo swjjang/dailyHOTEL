@@ -45,7 +45,6 @@
     <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>
-    <string name="label_restaurant_information">레스토랑 정보</string>
     <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">카드변경/관리하기</string>
     <string name="label_search">검색</string>
@@ -59,6 +58,8 @@
     <string name="label_card_payment">일반 카드결제</string>
     <string name="label_nights">%1$d박</string>
     <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
+    <string name="label_sender">보낸사람</string>
+    <string name="label_send_mail">문의하기</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -93,6 +94,7 @@
     <string name="message_detail_copy_address">주소가 복사되었습니다.</string>
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
     <string name="message_no_more_list">마지막 목록입니다.</string>
+    <string name="message_recent_place_tooltip">최근 확인한 호텔/레스토랑을 \'더보기\' 메뉴에서 확인해보세요!</string>
 
     <!-- Stay Grade -->
     <string name="grade_special">특급</string>
@@ -114,21 +116,7 @@
     <string name="grade_motel">모텔</string>
     <string name="grade_not_yet">미정</string>
 
-    <!-- IntroActivity Guide Ment -->
-    <string name="guide_title_1">당일 호텔 예약</string>
-    <string name="guide_title_2">엄선된 호텔</string>
-    <string name="guide_title_3">쉽고 빠른 결제</string>
-    <string name="guide_title_4">놀라운 가격</string>
-    <string name="guide_desc_1">사전 예약보다 편리하고 저렴하게\n오늘의 호텔을 예약하세요.</string>
-    <string name="guide_desc_2">고객 만족도와 할인율을 바탕으로,\n가장 매력적인 호텔만을 제시합니다.</string>
-    <string name="guide_desc_3">오전 9시에서 새벽 2시까지\n30초만에 예약하고 바로 체크인하세요.</string>
-    <string name="guide_desc_4">오늘 남은 객실만을 판매하기에\n가장 저렴할 수 밖에 없습니다.\n\n그럼 오늘의 호텔을 만나볼까요?</string>
-    <string name="guide_btn_skip">건너뛰기</string>
-    <string name="guide_btn_start">시작</string>
-
     <!-- Actionbar Titles -->
-    <string name="actionbar_title_hotel_list_frag">데일리호텔</string>
-    <string name="actionbar_title_gourmet_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_invite_friends">친구 초대하기</string>
@@ -142,7 +130,7 @@
     <string name="actionbar_title_login_activity">회원가입 및 로그인</string>
     <string name="actionbar_title_notice_activity">공지사항</string>
     <string name="actionbar_title_payment_activity">결제하기</string>
-    <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
+    <string name="actionbar_title_privacy_activity">개인정보 처리 방침</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_protectyouthterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">내정보</string>
@@ -215,7 +203,7 @@
     <string name="toast_msg_input_error_phonenumber">휴대폰 번호를 다시 확인해주세요.</string>
     <string name="toast_msg_confirm_mobilenumber">전화번호를 확인해주세요.</string>
     <string name="toast_msg_terms_agreement">이용약관 항목을 체크해주세요.</string>
-    <string name="toast_msg_personal_agreement">개인정보취급방침 항목을 체크해주세요.</string>
+    <string name="toast_msg_personal_agreement">개인정보 처리 방침 항목을 체크해주세요.</string>
     <string name="toast_message_failed_install">앱 설치 요청을 할 수 없습니다. 구글 플레이 스토어를 설치하고 사용해주세요.</string>
     <string name="toast_msg_dont_support_service_phone">해당 기기는 서비스를 지원하지 않습니다. 다른 기기를 이용해 주세요.</string>
     <string name="toast_msg_dont_support_googleplay">연결 가능한 앱이 없습니다.\n구글 플레이 스토어 앱 설치를 확인해 주세요.</string>
@@ -322,8 +310,8 @@
 
     <!-- Mail Text -->
     <string name="mail_text_dialog_title">이메일 선택</string>
-    <string name="mail_text_subject">데일리호텔에 문의합니다</string>
-    <string name="mail_text_desc">데일리호텔(v%1$s)의 안드로이드(%2$s) 어플리케이션에 관한 문의입니다.</string>
+    <string name="mail_text_subject">데일리호텔에 문의합니다.</string>
+    <string name="mail_text_desc">데일리호텔 안드로이드 어플리케이션에 관한 문의입니다.\n(%1$s)</string>
 
     <!-- Prefix Text -->
     <string name="prefix_expire_time">유효기간</string>
@@ -349,6 +337,7 @@
     <string name="frag_info">소개</string>
     <string name="frag_about">데일리호텔 소개</string>
     <string name="frag_terms_and_policy">약관 및 정책</string>
+    <string name="frag_opensource_license">오픈소스 라이센스</string>
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
@@ -374,6 +363,8 @@
     <string name="frag_recent_places">최근 확인한 호텔/고메</string>
     <string name="message_empty_notice">공지사항이 없습니다.</string>
     <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
+    <string name="message_input_email">이메일 주소를 입력해 주세요.</string>
+    <string name="message_input_email_body">이메일 내용을 입력해 주세요.</string>
 
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
@@ -470,7 +461,8 @@
     <string name="act_toast_payment_fail">알 수 없는 오류가 발생했습니다.\n데일리 고객센터로 문의해주세요.</string>
     <string name="act_toast_payment_canceled">결제가 취소되었습니다.</string>
     <string name="act_toast_payment_account_time_error">입금 대기 시간이 초과되었습니다.\n다시 시도해주세요.</string>
-    <string name="act_toast_payment_account_duplicate">이미 입금 대기 중인 호텔입니다.</string>
+    <string name="act_toast_payment_account_duplicate_type_hotel">이미 입금 대기 중인 호텔입니다.</string>
+    <string name="act_toast_payment_account_duplicate_type_gourmet">이미 입금 대기 중인 고메입니다.</string>
     <string name="act_toast_payment_account_timeover">결제 대기시간이 초과되었습니다.\n다시 시도해주세요.</string>
     <string name="act_booking_chkin_info">체크인 정보</string>
     <string name="act_booking_chkin">체크인</string>
@@ -543,8 +535,8 @@
     <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
     <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
-    <string name="message_stay_check_other_user">예약자와 투숙자가 다른 경우 체크해주세요.</string>
-    <string name="message_gourmet_check_other_user">예약자와 방문자가 다른 경우 체크해주세요.</string>
+    <string name="message_stay_check_other_user">예약자와 투숙자가 다를 경우 체크해주세요.</string>
+    <string name="message_gourmet_check_other_user">예약자와 방문자가 다를 경우 체크해주세요.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -577,7 +569,7 @@
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>
     <string name="label_signup_allagreement">전체동의</string>
-    <string name="act_signup_privacy">개인정보취급방침 동의 (필수)</string>
+    <string name="act_signup_privacy">개인정보 처리 방침 동의 (필수)</string>
     <string name="message_signup_inputmobile">신속한 예약확인 및 안내를 위해 고객님의\n정확한 연락처를 등록해주세요.</string>
     <string name="label_inputmobile">휴대폰 번호 입력</string>
     <string name="label_registeration_mobile">연락처 등록</string>
@@ -599,7 +591,6 @@
     <string name="frag_booking_tab_month">월 </string>
     <string name="frag_booking_tab_day">일 </string>
     <string name="frag_booking_tab_hour">시</string>
-    <string name="frag_booking_tab_hotel_info">호텔 정보</string>
     <string name="frag_booking_tab_location">위치</string>
     <string name="frag_booking_tab_bed_type">객실 타입</string>
     <string name="frag_booking_tab_ticket_type">상품 타입</string>
@@ -754,6 +745,9 @@
     <string name="label_receipt_address">주소 | %1$s</string>
     <string name="label_receipt_phone">전화번호 | %1$s</string>
     <string name="label_receipt_fax">팩스 | %1$s</string>
+    <string name="label_send_email">이메일로 발송하기</string>
+    <string name="label_receipt_email">영수증 이메일 발송</string>
+    <string name="message_send_email">아래 이메일 주소로\n영수증을 전송할까요?</string>
 
     <!-- Area -->
     <string name="label_selectarea_stay_area">호텔 지역 선택</string>
@@ -885,8 +879,8 @@
     <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
     <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
     <string name="coupon_list_empty_message">사용 할 수 있는 할인 쿠폰이 없습니다.</string>
-    <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다</string>
-    <string name="coupon_history_header_sub_description">(단, 유효기간이 만료된 쿠폰은 만료 후 1개월 간 정보가 제공됩니다)</string>
+    <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다.</string>
+    <string name="coupon_history_header_sub_description">(단, 유효기간이 만료된 쿠폰은 만료 후 1개월 간 정보가 제공됩니다.)</string>
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>

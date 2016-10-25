@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.Calendar;
@@ -348,7 +349,9 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
                 Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
                     , mBookingDetail.latitude, mBookingDetail.longitude, false//
-                    , null, null, null);
+                    , AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
+                    , null);
                 break;
             }
 

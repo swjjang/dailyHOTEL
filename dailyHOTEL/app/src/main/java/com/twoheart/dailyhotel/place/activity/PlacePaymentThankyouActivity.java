@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -7,12 +10,15 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -78,6 +84,48 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         initToolbar();
         initLayout(imageUrl, placeName, placeType, userName);
 
+        final ScrollView informationLayout = (ScrollView) findViewById(R.id.informationLayout);
+        informationLayout.setVisibility(View.GONE);
+        EdgeEffectColor.setEdgeGlowColor(informationLayout, getResources().getColor(R.color.default_over_scroll_edge));
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(informationLayout //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f) //
+        );
+
+        objectAnimator.setDuration(800);
+        objectAnimator.setStartDelay(250);
+        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                informationLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
+
+
         recordEvent(AnalyticsManager.Action.END_PAYMENT, mPaymentType);
         recordEvent(AnalyticsManager.Action.PAYMENT_USED, discountType);
         recordEvent(AnalyticsManager.Action.PRODUCT_ID, productIndex);
@@ -94,7 +142,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     private void initLayout(String imageUrl, String place, String placeType, String userName)
     {
-        if (Util.isTextEmpty(place, placeType, userName) == true)
+        if (Util.isTextEmpty(place, placeType) == true)
         {
             Util.restartApp(this);
             return;

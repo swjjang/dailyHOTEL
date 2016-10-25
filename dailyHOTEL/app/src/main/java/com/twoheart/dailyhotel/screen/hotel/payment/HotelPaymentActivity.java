@@ -389,7 +389,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 String message = "Empty UserName :: placeIndex:" + hotelPaymentInformation.placeIndex //
                     + ",roomIndex:" + roomInformation.roomIndex + ",checkIn:" + checkInDate//
-                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",paytype:" + paymentInformation.paymentType;
+                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
             {
@@ -726,7 +726,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-                msg = getString(R.string.act_toast_payment_account_duplicate);
+                msg = getString(R.string.act_toast_payment_account_duplicate_type_hotel);
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
@@ -1844,7 +1844,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -1964,7 +1964,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mHotelPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -2095,7 +2095,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             hidePorgressDialog();
 
@@ -2137,7 +2137,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -2248,7 +2248,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -2310,7 +2310,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mMessageDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {

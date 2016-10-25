@@ -49,6 +49,8 @@ public class DailyPreference
     private static final String KEY_FIRST_BUYER = "26";
     private static final String KEY_FIRST_APP_VERSION = "27";
 
+    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28";
+
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
@@ -276,16 +278,19 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            try
+            if (Constants.DEBUG == false)
             {
-                Object object = sharedPreferences.getAll().get(key);
-                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
-            } catch (Exception e1)
-            {
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
 
+                }
             }
 
             if (sharedPreferences != null)
@@ -376,16 +381,19 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            try
+            if (Constants.DEBUG == false)
             {
-                Object object = sharedPreferences.getAll().get(key);
-                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
-            } catch (Exception e1)
-            {
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
 
+                }
             }
 
             if (sharedPreferences != null)
@@ -421,16 +429,19 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            try
+            if (Constants.DEBUG == false)
             {
-                Object object = sharedPreferences.getAll().get(key);
-                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                try
+                {
+                    Object object = sharedPreferences.getAll().get(key);
+                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                Crashlytics.log(msg);
-                Crashlytics.logException(e);
-            } catch (Exception e1)
-            {
+                    Crashlytics.log(msg);
+                    Crashlytics.logException(e);
+                } catch (Exception e1)
+                {
 
+                }
             }
 
             if (sharedPreferences != null)
@@ -739,6 +750,16 @@ public class DailyPreference
     public String getFirstAppVersion()
     {
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
+    }
+
+    public void setIsViewRecentPlaceTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_RECENT_PLACE_TOOLTIP, value);
+    }
+
+    public boolean isViewRecentPlaceTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_RECENT_PLACE_TOOLTIP, false);
     }
 
     public void setStayCategory(String name, String code)

@@ -207,7 +207,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -649,7 +649,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -888,7 +888,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         DailyNetworkAPI.getInstance(EventWebActivity.this).requestUpdateBenefitAgreement(mNetworkTag, true, new DailyHotelJsonResponseListener()
                         {
                             @Override
-                            public void onResponse(String url, JSONObject response)
+                            public void onResponse(String url, Map<String, String> params, JSONObject response)
                             {
                                 unLockUI();
 

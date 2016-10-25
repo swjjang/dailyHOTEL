@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.place.layout;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -120,9 +119,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             @Override
             public void run()
             {
-                Rect rect = new Rect();
-                mBottomOptionLayout.getGlobalVisibleRect(rect);
-                mBottomOptionLayout.setTag(Util.getLCDHeight(mContext) - rect.top);
+                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
             }
         });
 
@@ -151,7 +148,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void setToolbarDateText(String text)
     {
-        int viewWidth = Util.dpToPx(mContext, 87d);
+        int viewWidth = mDateTextView.getWidth() - (mDateTextView.getCompoundDrawablePadding() * 2) - mDateTextView.getCompoundDrawables()[0].getIntrinsicWidth() - mDateTextView.getCompoundDrawables()[2].getIntrinsicWidth();
+
         final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
         final float width = Util.getTextWidth(mContext, text, 12d, typeface);
 
@@ -163,7 +161,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             float scaleX = 1f;
             float scaleWidth;
 
-            for (int i = 99; i >= 80; i--)
+            for (int i = 99; i >= 70; i--)
             {
                 scaleX = (float) i / 100;
                 scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);

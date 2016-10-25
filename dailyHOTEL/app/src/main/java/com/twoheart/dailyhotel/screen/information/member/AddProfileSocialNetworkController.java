@@ -74,7 +74,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -111,7 +111,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            unLockUI();
     //
@@ -145,7 +145,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -167,7 +167,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -217,7 +217,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {

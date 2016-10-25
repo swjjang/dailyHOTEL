@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GourmetSearchResultListNetworkController extends BaseNetworkController
 {
@@ -55,7 +56,7 @@ public class GourmetSearchResultListNetworkController extends BaseNetworkControl
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

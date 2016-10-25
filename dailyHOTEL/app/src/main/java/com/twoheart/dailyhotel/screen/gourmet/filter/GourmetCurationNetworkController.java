@@ -12,6 +12,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by android_sam on 2016. 8. 22..
  */
@@ -50,7 +52,7 @@ public class GourmetCurationNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             int totalCount = 0;
 

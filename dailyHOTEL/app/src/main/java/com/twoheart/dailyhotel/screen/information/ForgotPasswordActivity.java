@@ -26,6 +26,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     private View mEmailView;
@@ -50,7 +52,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         forgotView.setOnClickListener(this);
 
         mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
@@ -163,7 +165,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {
@@ -217,7 +219,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

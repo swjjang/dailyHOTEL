@@ -85,12 +85,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = (DailyEditText) view.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true);
+        mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
 
         mNameView = view.findViewById(R.id.nameView);
         mNameEditText = (DailyEditText) view.findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true);
+        mNameEditText.setDeleteButtonVisible(true, null);
         mNameEditText.setOnFocusChangeListener(this);
 
         mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -113,24 +113,24 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         mPasswordView = view.findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) view.findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true);
+        mPasswordEditText.setDeleteButtonVisible(true, null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
-        mConfirmPasswordEditText.setDeleteButtonVisible(true);
+        mConfirmPasswordEditText.setDeleteButtonVisible(true, null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true);
+        mBirthdayEditText.setDeleteButtonVisible(true, null);
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(true);
+        mRecommenderEditText.setDeleteButtonVisible(true, null);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.

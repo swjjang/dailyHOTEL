@@ -1,74 +1,33 @@
-package com.twoheart.dailyhotel.screen.information.notice;
+package com.twoheart.dailyhotel.screen.information.terms;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
-public class NoticeWebActivity extends WebViewActivity
+public class LicenseActivity extends WebViewActivity
 {
-    private static final String INTENT_EXTRA_DATA_TITLE = "title";
-    private static final String INTENT_EXTRA_DATA_URL = "url";
-
-    public static Intent newInstance(Context context, String title, String url)
-    {
-        Intent intent = new Intent(context, NoticeWebActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
-        intent.putExtra(INTENT_EXTRA_DATA_URL, url);
-        return intent;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_license);
+        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_LICNESE));
 
-        Intent intent = getIntent();
-
-        if (intent == null)
-        {
-            finish();
-            return;
-        }
-
-        String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
-        String url = intent.getStringExtra(INTENT_EXTRA_DATA_URL);
-
-        if (Util.isTextEmpty(url) == true)
-        {
-            finish();
-            return;
-        } else
-        {
-            setWebView(url);
-        }
-
-        initToolbar(title);
+        initToolbar();
         initLayout((DailyWebView) webView);
     }
 
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_NOTICEDETAILVIEW);
-    }
-
-    private void initToolbar(String title)
+    private void initToolbar()
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.frag_opensource_license), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

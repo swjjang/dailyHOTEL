@@ -1,10 +1,16 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -14,17 +20,22 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
     private boolean mIsFullscreen;
     private DailyToolbarLayout mDailyToolbarLayout;
+    private View mBottomLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,6 +61,8 @@ public class IssuingReceiptActivity extends BaseActivity
         }
 
         mIsFullscreen = false;
+
+        initLayout();
     }
 
     private void initToolbar()
@@ -62,6 +75,20 @@ public class IssuingReceiptActivity extends BaseActivity
             public void onClick(View v)
             {
                 finish();
+            }
+        });
+    }
+
+    private void initLayout()
+    {
+        mBottomLayout = findViewById(R.id.bottomLayout);
+        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        sendEmailView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSendEmailDialog();
             }
         });
     }
@@ -100,6 +127,81 @@ public class IssuingReceiptActivity extends BaseActivity
         } else
         {
             super.onBackPressed();
+        }
+    }
+
+    private void showSendEmailDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_email_layout, null, false);
+
+        final Dialog dialog = new Dialog(IssuingReceiptActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        emailEditTExt.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(dailyEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        emailEditTExt.setText(DailyPreference.getInstance(this).getUserEmail());
+        emailEditTExt.setSelection(emailEditTExt.length());
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+        twoButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                // 이메일로 영수증 전송하기
+            }
+        });
+
+        dialog.setCancelable(true);
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 
@@ -290,12 +392,16 @@ public class IssuingReceiptActivity extends BaseActivity
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+            mBottomLayout.setVisibility(View.GONE);
         } else
         {
             mDailyToolbarLayout.setToolbarVisibility(true, false);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            mBottomLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -306,7 +412,7 @@ public class IssuingReceiptActivity extends BaseActivity
     private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             if (isFinishing() == true)
             {

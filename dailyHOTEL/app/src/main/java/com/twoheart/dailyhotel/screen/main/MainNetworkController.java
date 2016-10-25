@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class MainNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
@@ -74,7 +76,7 @@ public class MainNetworkController extends BaseNetworkController
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -123,7 +125,7 @@ public class MainNetworkController extends BaseNetworkController
             }
 
             @Override
-            public void onResponse(String url, JSONObject response)
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
             {
                 try
                 {
@@ -170,7 +172,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -209,28 +211,40 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
-                String maxVersionName;
-                String minVersionName;
+                int msgCode = response.getInt("msgCode");
 
-                switch (Constants.RELEASE_STORE)
+                if(msgCode == 100)
                 {
-                    case T_STORE:
-                        maxVersionName = response.getString("tstore_max");
-                        minVersionName = response.getString("tstore_min");
-                        break;
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    case PLAY_STORE:
-                    default:
-                        maxVersionName = response.getString("play_max");
-                        minVersionName = response.getString("play_min");
-                        break;
+                    String maxVersionName;
+                    String minVersionName;
+
+                    switch (Constants.RELEASE_STORE)
+                    {
+                        case T_STORE:
+                            maxVersionName = dataJSONObject.getString("tstoreMax");
+                            minVersionName = dataJSONObject.getString("tstoreMin");
+                            break;
+
+                        case PLAY_STORE:
+                        default:
+                            maxVersionName = dataJSONObject.getString("playMax");
+                            minVersionName = dataJSONObject.getString("playMin");
+                            break;
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
+                } else
+                {
+                    String message = response.getString("msg");
+
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
@@ -247,7 +261,7 @@ public class MainNetworkController extends BaseNetworkController
     //    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     //    {
     //        @Override
-    //        public void onResponse(String url, JSONObject response)
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
     //        {
     //            try
     //            {
@@ -293,7 +307,7 @@ public class MainNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -305,11 +319,11 @@ public class MainNetworkController extends BaseNetworkController
 
                 if (msgCode == 100)
                 {
-                    JSONObject datJSONObject = response.getJSONObject("data");
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    isExistNewEvent = datJSONObject.getBoolean("isExistNewEvent");
-                    isExistNewCoupon = datJSONObject.getBoolean("isExistNewCoupon");
-                    isExistNewNotices = datJSONObject.getBoolean("isExistNewNotices");
+                    isExistNewEvent = dataJSONObject.getBoolean("isExistNewEvent");
+                    isExistNewCoupon = dataJSONObject.getBoolean("isExistNewCoupon");
+                    isExistNewNotices = dataJSONObject.getBoolean("isExistNewNotices");
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isExistNewEvent, isExistNewCoupon, isExistNewNotices);
@@ -323,7 +337,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -359,7 +373,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -397,7 +411,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -458,7 +472,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -492,7 +506,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
@@ -525,7 +539,7 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {

@@ -91,7 +91,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private View mDisableTransferView;
 
     private View mCardManagerLayout;
-    private TextView mCardManagerTextView;
     private TextView mGuidePaymentMemoView;
 
     private View mEmptySimpleCardLayout;
@@ -275,7 +274,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mDisableSimpleCardView = view.findViewById(R.id.disableSimpleCardView);
 
         mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
-        mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
 
         mCardLayout = view.findViewById(R.id.cardLayout);
         mDisableCardView = mCardLayout.findViewById(R.id.disableCardView);
