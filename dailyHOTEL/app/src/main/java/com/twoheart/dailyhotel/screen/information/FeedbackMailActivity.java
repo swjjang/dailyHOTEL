@@ -6,7 +6,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -17,16 +16,13 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class FeedbackMailActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
+public class FeedbackMailActivity extends BaseActivity implements Constants, OnClickListener
 {
-    private View mEmailView;
     private DailyEditText mEmailEditText, mMessageEditText;
-    private String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,42 +53,44 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
 
     private void initLayout()
     {
-        mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
         mEmailEditText.setText(DailyPreference.getInstance(this).getUserEmail());
 
         final View sendFeedbackView = findViewById(R.id.sendFeedbackView);
         sendFeedbackView.setOnClickListener(this);
 
-        mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mEmailEditText.setDeleteButtonVisible(true, null);
-        mEmailEditText.setOnFocusChangeListener(this);
+        mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+        mMessageEditText = (DailyEditText) findViewById(R.id.messageEditText);
+
         mEmailEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
             {
                 switch (actionId)
                 {
-                    case EditorInfo.IME_ACTION_DONE:
-                        sendFeedbackView.performClick();
+                    case EditorInfo.IME_ACTION_NEXT:
+                        mMessageEditText.requestFocus();
                         break;
                 }
                 return false;
             }
         });
 
-        mMessageEditText = (DailyEditText) findViewById(R.id.messageEditText);
-
+        TextView informationTextView = (TextView) findViewById(R.id.informationTextView);
         String formText = getString(R.string.mail_text_desc, String.format("Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersion(this)));
+        informationTextView.setText(formText);
 
-        mMessageEditText.setText(formText);
+        // 기본 정보를 태그에 넣음.
+        mMessageEditText.setTag(formText);
     }
 
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.FORGOTPASSWORD);
+        //        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.FORGOTPASSWORD);
 
         super.onStart();
     }
@@ -107,33 +105,39 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
 
         lockUiComponent();
 
-        mEmail = mEmailEditText.getText().toString().trim();
+        String email = mEmailEditText.getText().toString().trim();
+        String message = mMessageEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(mEmail) == true)
+        if (Util.isTextEmpty(email) == true)
         {
             releaseUiComponent();
 
-            DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+            DailyToast.showToast(this, R.string.message_input_email, Toast.LENGTH_SHORT);
             return;
-        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
+        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
         {
             releaseUiComponent();
 
             DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
+        } else if (Util.isTextEmpty(message) == true)
+        {
+            releaseUiComponent();
+
+            DailyToast.showToast(this, R.string.message_input_email_body, Toast.LENGTH_SHORT);
+            return;
         }
 
         lockUI();
 
-        String message = mMessageEditText.getText().toString();
-        String email = mEmail;
+        String information = (String) mMessageEditText.getTag();
+        message = information + "\n" + message;
 
         boolean result = Appboy.getInstance(this).submitFeedback(email, message, false);
 
         if (result == true)
         {
             // 성공멘트
-
             finish();
         } else
         {
@@ -147,33 +151,5 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus)
-    {
-        switch (v.getId())
-        {
-            case R.id.emailEditText:
-                setFocusLabelView(mEmailView, mEmailEditText, hasFocus);
-                break;
-        }
-    }
-
-    private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)
-    {
-        if (hasFocus == true)
-        {
-            labelView.setActivated(false);
-            labelView.setSelected(true);
-        } else
-        {
-            if (editText.length() > 0)
-            {
-                labelView.setActivated(true);
-            }
-
-            labelView.setSelected(false);
-        }
     }
 }
