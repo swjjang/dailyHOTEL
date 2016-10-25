@@ -576,7 +576,7 @@ public class StayMainFragment extends PlaceMainFragment
     private PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onDateTime(String currentDateTime, String dailyDateTime)
+        public void onDateTime(long currentDateTime, long dailyDateTime)
         {
             if (isFinishing() == true)
             {

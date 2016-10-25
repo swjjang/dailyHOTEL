@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -162,7 +163,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         {
             Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
 
-            int dayOfDays = (int) ((getCompareDate(checkInDate) - getCompareDate(DailyCalendar.convertDate(bookingDetail.currentDateTime, DailyCalendar.ISO_8601_FORMAT)) / SaleTime.MILLISECOND_IN_A_DAY));
+            int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(bookingDetail.currentDateTime)) / SaleTime.MILLISECOND_IN_A_DAY);
             if (dayOfDays < 0 || dayOfDays > 3)
             {
                 remainedDayText = null;
@@ -246,7 +247,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
             Date checkOutDate = DailyCalendar.convertDate(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
 
-            int nights = (int) ((getCompareDate(checkOutDate) - getCompareDate(checkInDate)) / SaleTime.MILLISECOND_IN_A_DAY);
+            int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
             nightsTextView.setText(context.getString(R.string.label_nights, nights));
         } catch (Exception e)
         {
@@ -501,10 +502,11 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
     }
 
-    private long getCompareDate(Date date)
+    private long getCompareDate(long timeInMillis)
     {
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
 
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);

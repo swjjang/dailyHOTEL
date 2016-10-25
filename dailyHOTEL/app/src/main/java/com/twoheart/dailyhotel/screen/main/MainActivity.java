@@ -38,7 +38,9 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -800,8 +802,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true//
                     || DailyDeepLink.getInstance().isFAQView() == true//
                     || DailyDeepLink.getInstance().isTermsNPolicyView() == true//
-                    //                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
-                    //                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
+//                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
+//                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
                     )
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
@@ -1043,14 +1045,21 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onCommonDateTime(String currentDateTime, String openDateTime, String closeDateTime)
+        public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
         {
             try
             {
                 // 요청하면서 CS운영시간도 같이 받아온다.
+                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                //                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                //
+                //                String text = getString(R.string.dialog_message_cs_operating_time //
+                //                    , Integer.parseInt(simpleDateFormat.format(new Date(openDateTime))) //
+                //                    , Integer.parseInt(simpleDateFormat.format(new Date(closeDateTime))));
+
                 String text = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(DailyCalendar.format(openDateTime, "HH")) //
-                    , Integer.parseInt(DailyCalendar.format(closeDateTime, "HH")));
+                    , Integer.parseInt(DailyCalendar.format(openDateTime, "HH", TimeZone.getTimeZone("GMT"))) //
+                    , Integer.parseInt(DailyCalendar.format(closeDateTime, "HH", TimeZone.getTimeZone("GMT"))));
 
                 DailyPreference.getInstance(MainActivity.this).setOperationTimeMessage(text);
             } catch (Exception e)
@@ -1062,9 +1071,18 @@ public class MainActivity extends BaseActivity implements Constants
             String viewedCouponTime = DailyPreference.getInstance(MainActivity.this).getViewedCouponTime();
             String viewedNoticeTime = DailyPreference.getInstance(MainActivity.this).getViewedNoticeTime();
 
-            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(currentDateTime);
-            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(currentDateTime);
-            DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(currentDateTime);
+            currentDateTime -= 3600 * 1000 * 9;
+
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+            calendar.setTimeInMillis(currentDateTime);
+
+            //            String lastestTime = Util.getISO8601String(calendar.getTime());
+            String lastestTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(lastestTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(lastestTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(lastestTime);
 
             if (Util.isTextEmpty(viewedEventTime) == true)
             {

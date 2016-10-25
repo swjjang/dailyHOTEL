@@ -129,8 +129,7 @@ public class MainFragmentManager
             mFragmentManager.beginTransaction().replace(mContentLayout.getId(), fragment, tag).commitAllowingStateLoss();
         } catch (IllegalStateException e)
         {
-            if (Constants.DEBUG == false)
-            {
+            if (Constants.DEBUG == false) {
                 Crashlytics.log("StayListLayout");
                 Crashlytics.logException(e);
             }

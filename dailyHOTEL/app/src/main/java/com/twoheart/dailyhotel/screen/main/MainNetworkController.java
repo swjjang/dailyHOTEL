@@ -39,7 +39,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onNoticeAgreementResult(String agreeMessage, String cancelMessage);
 
-        void onCommonDateTime(String currentDateTime, String openDateTime, String closeDateTime);
+        void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -80,21 +80,12 @@ public class MainNetworkController extends BaseNetworkController
             {
                 try
                 {
-                    int msgCode = response.getInt("msgCode");
+                    long currentDateTime = response.getLong("currentDateTime");
+                    long openDateTime = response.getLong("openDateTime");
+                    long closeDateTime = response.getLong("closeDateTime");
 
-                    if (msgCode == 100)
-                    {
-                        JSONObject dataJSONObject = response.getJSONObject("data");
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
 
-                        String currentDateTime = dataJSONObject.getString("currentDateTime");
-                        String openDateTime = dataJSONObject.getString("openDateTime");
-                        String closeDateTime = dataJSONObject.getString("closeDateTime");
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
-                    } else
-                    {
-                        String message = response.getString("msg");
-                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -226,7 +217,7 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                if(msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 

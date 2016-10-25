@@ -36,10 +36,8 @@ import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetai
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.HotelBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -51,13 +49,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -70,7 +64,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private RelativeLayout mEmptyLayout;
     private PinnedSectionListView mListView;
     private View btnLogin;
-    private String mCurrentTime;
+    private long mCurrentTime;
     private boolean mDontReload;
 
     public interface OnUserActionListener
@@ -547,13 +541,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 {
                     case CODE_PAY_TYPE_CARD_COMPLETE:
                     case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-                        try
-                        {
-                            booking.isUsed = (booking.checkoutTime - DailyCalendar.NINE_HOUR_MILLISECOND) < DailyCalendar.convertDate(mCurrentTime, DailyCalendar.ISO_8601_FORMAT).getTime();
-                        } catch (ParseException e)
-                        {
-                            ExLog.d(e.toString());
-                        }
+                        booking.isUsed = booking.checkoutTime < mCurrentTime;
 
                         if (booking.isUsed)
                         {
@@ -614,21 +602,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             try
             {
-                int msgCode = response.getInt("msgCode");
+                mCurrentTime = response.getLong("currentDateTime");
 
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    mCurrentTime = dataJSONObject.getString("currentDateTime");
-
-                    DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    onErrorPopupMessage(msgCode, message);
-                }
+                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
             } catch (Exception e)
             {
                 onError(e);

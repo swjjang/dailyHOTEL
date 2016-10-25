@@ -15,11 +15,9 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -30,12 +28,12 @@ import static com.twoheart.dailyhotel.util.DailyCalendar.format;
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
-    private String mCurrentTime;
+    private long mCurrentTime;
     private ArrayList<Booking> mBookingList;
     private Context mContext;
     private BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items, String currentTime)
+    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items, long currentTime)
     {
         super(context, resourceId, items);
 
@@ -265,15 +263,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             {
                 String text;
 
-                int dayOfDays = 0;
-                try
-                {
-                    dayOfDays = (int) ((getCompareDate(booking.checkinTime - DailyCalendar.NINE_HOUR_MILLISECOND) - getCompareDate(DailyCalendar.convertDate(mCurrentTime, DailyCalendar.ISO_8601_FORMAT).getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
-                } catch (ParseException e)
-                {
-                    ExLog.d(e.toString());
-                }
-
+                int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(mCurrentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
                 if (dayOfDays < 0 || dayOfDays > 3)
                 {
                     text = null;

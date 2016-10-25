@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
@@ -729,14 +730,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(String currentDateTime, String dailyDateTime)
+        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
         {
             if (mIsDeepLink == true)
             {
                 mSaleTime.setCurrentTime(currentDateTime);
+                long shareDailyTime = mSaleTime.getDayOfDaysDate().getTime();
 
-                int shareDailyDay = Integer.parseInt(DailyCalendar.format(mSaleTime.getDayOfDaysDate(), "yyyyMMdd"));
-                int todayDailyDay = Integer.parseInt(DailyCalendar.format(dailyDateTime, "yyyyMMdd"));
+                int shareDailyDay = Integer.parseInt(DailyCalendar.format(shareDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
+                int todayDailyDay = Integer.parseInt(DailyCalendar.format(dailyDateTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
 
                 // 지난 날의 호텔인 경우.
                 if (shareDailyDay < todayDailyDay)
