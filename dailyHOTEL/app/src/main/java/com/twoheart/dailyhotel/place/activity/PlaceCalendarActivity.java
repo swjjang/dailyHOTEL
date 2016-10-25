@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
@@ -89,8 +88,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected void makeCalendar(SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(dailyTime.getDailyTime());
+        calendar.setTime(dailyTime.getDailyDateTime());
 
         int maxMonth = getMonthInterval(calendar, dayCountOfMax);
         int maxDay = dayCountOfMax;
@@ -140,11 +138,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
         android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
 
-        //        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("yyyy.MM", Locale.KOREA);
-        //        simpleDayFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        monthTextView.setText(simpleDayFormat.format(calendar.getTime()));
-        monthTextView.setText(DailyCalendar.format(calendar.getTimeInMillis(), "yyyy.MM", TimeZone.getTimeZone("GMT")));
+        monthTextView.setText(DailyCalendar.format(calendar.getTime(), "yyyy.MM"));
 
         // day
         final int day = calendar.get(Calendar.DAY_OF_MONTH);

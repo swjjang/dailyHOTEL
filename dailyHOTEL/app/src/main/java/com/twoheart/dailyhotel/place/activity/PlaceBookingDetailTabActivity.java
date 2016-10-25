@@ -36,7 +36,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected abstract void requestPlaceBookingDetail(int reservationIndex);
 
-    protected abstract void setCurrentDateTime(long currentDateTime, long dailyDateTime);
+    protected abstract void setCurrentDateTime(String currentDateTime, String dailyDateTime);
 
     protected abstract void showCallDialog();
 
@@ -186,13 +186,25 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             {
                 try
                 {
-                    long currentDateTime = response.getLong("currentDateTime");
-                    long dailyDateTime = response.getLong("dailyDateTime");
+                    int msgCode = response.getInt("msgCode");
 
-                    setCurrentDateTime(currentDateTime, dailyDateTime);
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    // 호텔 정보를 가져온다.
-                    requestPlaceBookingDetail(mReservationIndex);
+                        String currentDateTime = dataJSONObject.getString("currentDateTime");
+                        String dailyDateTime = dataJSONObject.getString("dailyDateTime");
+
+                        setCurrentDateTime(currentDateTime, dailyDateTime);
+
+                        // 호텔 정보를 가져온다.
+                        requestPlaceBookingDetail(mReservationIndex);
+                    } else
+                    {
+                        String message = response.getString("msg");
+
+                        PlaceBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());

@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 public class DailyCalendar
 {
+    public static final long NINE_HOUR_MILLISECOND = 3600 * 9 * 1000;
+
     public static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     // 하단에 나오는 포맷이외에는 지원하지 않음. 추가적으로 필요한 포맷은 동일한 포맷터 위치 뒤로 이동한다. 갯수가 많은것 부터 작은것 순서대로 넣는다. (yyyy -> yy, MM -> M)
@@ -88,6 +90,21 @@ public class DailyCalendar
         }
 
         return simpleDateFormat.parse(dateString);
+    }
+
+    public static String format(String dateString, String format)
+    {
+        String convertString = null;
+
+        try
+        {
+            convertString = format(DailyCalendar.convertDate(dateString, DailyCalendar.ISO_8601_FORMAT).getTime(), format, TimeZone.getTimeZone("GMT+09:00"));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return convertString;
     }
 
     public static String format(Date date, final String format)

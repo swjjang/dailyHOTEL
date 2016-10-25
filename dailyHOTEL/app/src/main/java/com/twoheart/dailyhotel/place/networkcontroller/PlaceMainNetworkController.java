@@ -20,7 +20,7 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onDateTime(long currentDateTime, long dailyDateTime);
+        void onDateTime(String currentDateTime, String dailyDateTime);
 
         void onEventBanner(List<EventBanner> eventBannerList);
 
@@ -50,15 +50,25 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
-            long currentDateTime;
-            long dailyDateTime;
-
             try
             {
-                currentDateTime = response.getLong("currentDateTime");
-                dailyDateTime = response.getLong("dailyDateTime");
+                int msgCode = response.getInt("msgCode");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDateTime(currentDateTime, dailyDateTime);
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String currentDateTime = dataJSONObject.getString("currentDateTime");
+                    String dailyDateTime = dataJSONObject.getString("dailyDateTime");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onDateTime(currentDateTime, dailyDateTime);
+
+                } else
+                {
+                    String message = response.getString("msg");
+
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
