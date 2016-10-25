@@ -211,16 +211,27 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 try
                 {
-                    long currentDateTime = response.getLong("currentDateTime");
-                    long dailyDateTime = response.getLong("dailyDateTime");
+                    int msgCode = response.getInt("msgCode");
 
-                    if (mSaleTime == null)
+                    if (msgCode == 100)
                     {
-                        mSaleTime = new SaleTime();
-                    }
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    mSaleTime.setCurrentTime(currentDateTime);
-                    mSaleTime.setDailyTime(dailyDateTime);
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        if (mSaleTime == null)
+                        {
+                            mSaleTime = new SaleTime();
+                        }
+
+                        mSaleTime.setCurrentTime(currentDateTime);
+                        mSaleTime.setDailyTime(dailyDateTime);
+                    } else
+                    {
+                        String message = response.getString("msg");
+
+                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());

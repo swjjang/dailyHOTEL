@@ -80,12 +80,22 @@ public class MainNetworkController extends BaseNetworkController
             {
                 try
                 {
-                    long currentDateTime = response.getLong("currentDateTime");
-                    long openDateTime = response.getLong("openDateTime");
-                    long closeDateTime = response.getLong("closeDateTime");
+                    int msgCode = response.getInt("msgCode");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
+                    } else
+                    {
+                        String message = response.getString("msg");
+
+                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -217,7 +227,7 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
