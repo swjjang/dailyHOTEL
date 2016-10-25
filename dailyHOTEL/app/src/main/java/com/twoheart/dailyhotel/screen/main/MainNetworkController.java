@@ -86,11 +86,9 @@ public class MainNetworkController extends BaseNetworkController
                     {
                         JSONObject dataJSONObject = response.getJSONObject("data");
 
-                        long currentDateTime = DailyCalendar.convertDate(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
-                        long openDateTime = DailyCalendar.convertDate(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
-                        long closeDateTime = DailyCalendar.convertDate(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
-
-                        ExLog.d("currentDateTime : " + currentDateTime + ", openDateTime : " + openDateTime + ", closeDateTime : " + closeDateTime);
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
                     } else
@@ -98,15 +96,6 @@ public class MainNetworkController extends BaseNetworkController
                         String message = response.getString("msg");
 
                     }
-
-
-
-                        long currentDateTime = response.getLong("currentDateTime");
-                    long openDateTime = response.getLong("openDateTime");
-                    long closeDateTime = response.getLong("closeDateTime");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
-
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -238,7 +227,7 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
