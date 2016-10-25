@@ -74,6 +74,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             outTransitionSet.setDuration(200);
 
+            Transition transition  = new FadeTransition();
+
             getWindow().setSharedElementReturnTransition(outTransitionSet);
             getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
             {
