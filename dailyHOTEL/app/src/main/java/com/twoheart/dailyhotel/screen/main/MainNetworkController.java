@@ -80,6 +80,7 @@ public class MainNetworkController extends BaseNetworkController
             {
                 try
                 {
+                    // test
                     long currentDateTime = response.getLong("currentDateTime");
                     long openDateTime = response.getLong("openDateTime");
                     long closeDateTime = response.getLong("closeDateTime");
