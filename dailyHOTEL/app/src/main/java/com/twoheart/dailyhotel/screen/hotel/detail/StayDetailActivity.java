@@ -81,6 +81,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
 
         String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
@@ -150,6 +151,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade());
 
         String isShowOriginalPrice;
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
@@ -192,8 +194,8 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsDeepLink = true;
-
-            initLayout(null, null);
+            mDontReloadAtOnResume = false;
+            initLayout(null, null, null);
 
             if (isShowCalendar == true)
             {
@@ -216,8 +218,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+            Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
 
-            initLayout(placeName, mDefaultImageUrl);
+            initLayout(placeName, mDefaultImageUrl, grade);
 
             if (isShowCalendar == true)
             {
@@ -226,17 +229,29 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl)
+    private void initLayout(String placeName, String imageUrl, Stay.Grade grade)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        mPlaceDetailLayout.setDefaultImage(imageUrl);
+        ininTransLayout(placeName, imageUrl, grade);
+
         mPlaceDetailLayout.setStatusBarHeight(this);
 
         setLockUICancelable(true);
         initToolbar(placeName);
 
         mOnEventListener.hideActionBar(false);
+    }
+
+    private void ininTransLayout(String placeName, String imageUrl, Stay.Grade grade)
+    {
+        if (Util.isTextEmpty(placeName, imageUrl) == true && grade != null)
+        {
+            return;
+        }
+
+        mPlaceDetailLayout.setTransImageView(imageUrl);
+        mPlaceDetailLayout.setTitleText(grade, placeName);
     }
 
     @Override

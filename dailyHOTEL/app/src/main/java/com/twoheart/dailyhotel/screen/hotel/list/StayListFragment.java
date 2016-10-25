@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
@@ -29,7 +30,7 @@ public class StayListFragment extends PlaceListFragment
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onStayClick(PlaceViewItem placeViewItem, int listCount);
+        void onStayClick(View view, PlaceViewItem placeViewItem, int listCount);
     }
 
     @Override
@@ -176,9 +177,9 @@ public class StayListFragment extends PlaceListFragment
     protected StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
     {
         @Override
-        public void onPlaceClick(PlaceViewItem placeViewItem)
+        public void onPlaceClick(View view, PlaceViewItem placeViewItem)
         {
-            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem, getPlaceCount());
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
         @Override

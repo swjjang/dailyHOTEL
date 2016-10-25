@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -35,7 +39,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsDeepLink;
     protected String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
-    private boolean mDontReloadAtOnResume;
+    protected boolean mDontReloadAtOnResume;
 
     protected Province mProvince;
     protected String mArea; // Analytics용 소지역
@@ -60,7 +64,58 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        if (Util.isOverAPI21() == true)
+        {
+            mDontReloadAtOnResume = true;
+
+            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            getWindow().setSharedElementEnterTransition(intransitionSet);
+
+            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            outTransitionSet.setDuration(200);
+
+            getWindow().setSharedElementReturnTransition(outTransitionSet);
+            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
+            {
+                @Override
+                public void onTransitionStart(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition)
+                {
+                    mPlaceDetailLayout.setTransImageVisibility(false);
+                    mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
+
+                    // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
+                    lockUI();
+                    mPlaceDetailNetworkController.requestCommonDatetime();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition)
+                {
+
+                }
+            });
+        } else
+        {
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
 
         super.onCreate(savedInstanceState);
 
@@ -92,7 +147,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -151,7 +206,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        if (Util.isOverAPI21() == false)
+        {
+            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        }
     }
 
     @Override
@@ -159,6 +217,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mPlaceDetailLayout != null)
         {
+            if (Util.isOverAPI21() == true)
+            {
+                mPlaceDetailLayout.setTransImageVisibility(true);
+            }
+
             switch (mPlaceDetailLayout.getBookingStatus())
             {
                 case StayDetailLayout.STATUS_BOOKING:
@@ -192,6 +255,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                             break;
 
                         case CODE_RESULT_ACTIVITY_REFRESH:
+                        case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
                             mDontReloadAtOnResume = false;
                             break;
 

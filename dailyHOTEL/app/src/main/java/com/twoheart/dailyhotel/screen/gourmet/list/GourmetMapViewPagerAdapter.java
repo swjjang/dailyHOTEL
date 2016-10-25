@@ -156,7 +156,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(gourmet);
+                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(v, gourmet);
                 }
             }
         });

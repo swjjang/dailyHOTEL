@@ -693,7 +693,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, int listCount)
+        public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {

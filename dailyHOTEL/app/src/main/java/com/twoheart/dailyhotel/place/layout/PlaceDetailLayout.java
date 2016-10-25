@@ -23,11 +23,13 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -75,6 +77,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private AlphaAnimation mAlphaAnimation;
     private int mStatusBarHeight;
 
+    private com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
+    private TextView mTransTotelGradeTextView, mTransPlacelNameTextView;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void showActionBar(boolean isAnimation);
@@ -120,6 +125,25 @@ public abstract class PlaceDetailLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
+        mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
+
+        View transTitleLayout = view.findViewById(R.id.transTitleLayout);
+        mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transTotelGradeTextView);
+        mTransPlacelNameTextView = (TextView) transTitleLayout.findViewById(R.id.transHotelNameTextView);
+
+        if (Util.isOverAPI21() == true)
+        {
+            setTransImageVisibility(true);
+            transTitleLayout.setVisibility(View.VISIBLE);
+
+            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransSimpleDraweeView.setTransitionName("placeImage");
+        } else
+        {
+            setTransImageVisibility(false);
+            transTitleLayout.setVisibility(View.GONE);
+        }
+
         mListView = (DailyPlaceDetailListView) view.findViewById(R.id.placeListView);
         mListView.setOnScrollListener(mOnScrollListener);
 
@@ -139,6 +163,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mImageHeight = Util.getLCDWidth(mContext);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
+        mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
 
@@ -178,6 +203,29 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setBookingStatus(STATUS_NONE);
         hideProductInformationLayout();
+    }
+
+    public void setTitleText(Stay.Grade grade, String placeName)
+    {
+        mTransTotelGradeTextView.setText(grade.getName(mContext));
+        mTransTotelGradeTextView.setBackgroundResource(grade.getColorResId());
+        mTransTotelGradeTextView.setTransitionName("gradeText");
+
+        mTransPlacelNameTextView.setText(placeName);
+        mTransPlacelNameTextView.setTransitionName("placeText");
+    }
+
+    public void setTransImageVisibility(boolean isVisibility)
+    {
+        mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.GONE);
+    }
+
+    public void setTransImageView(String url)
+    {
+        if (mTransSimpleDraweeView.getVisibility() == View.VISIBLE)
+        {
+            Util.requestImageResize(mContext, mTransSimpleDraweeView, url);
+        }
     }
 
     public void setDefaultImage(String url)

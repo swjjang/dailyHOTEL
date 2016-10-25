@@ -29,6 +29,7 @@ import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -95,7 +96,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         onBackPressed();
 
-        if (this instanceof MainActivity == false && isFinishing() == false)
+        if (this instanceof PlaceDetailActivity == true)
+        {
+
+        } else if (this instanceof MainActivity == false && isFinishing() == false)
         {
             finish();
         }

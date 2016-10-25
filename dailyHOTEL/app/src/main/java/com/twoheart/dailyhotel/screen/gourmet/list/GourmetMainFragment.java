@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -763,7 +764,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     private GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
+        public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {

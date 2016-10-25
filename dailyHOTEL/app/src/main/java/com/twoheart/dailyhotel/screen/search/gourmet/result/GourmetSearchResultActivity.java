@@ -665,7 +665,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
+        public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {

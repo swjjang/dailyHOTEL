@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -862,7 +864,7 @@ public class StayMainFragment extends PlaceMainFragment
     private StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, int listCount)
+        public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -892,7 +894,22 @@ public class StayMainFragment extends PlaceMainFragment
                     Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
                         mStayCuration.getCheckInSaleTime(), province, stay, listCount);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                    if (Util.isOverAPI21() == true)
+                    {
+                        View simpleDraweeView = view.findViewById(R.id.imageView);
+                        View gradeTextView = view.findViewById(R.id.gradeTextView);
+                        View nameTextView = view.findViewById(R.id.nameTextView);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, "placeImage"),//
+                            android.support.v4.util.Pair.create(gradeTextView, "gradeText"),//
+                            android.support.v4.util.Pair.create(nameTextView, "placeText"));
+
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+                    } else
+                    {
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                    }
 
                     if (mViewType == ViewType.LIST)
                     {
