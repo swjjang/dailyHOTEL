@@ -585,4 +585,20 @@ interface IDailyNetwork
     void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener);
 
     void requestNoticeList(Object tag, DailyHotelJsonResponseListener listener);
+
+    /**
+     * /api/v3/hotels/sales
+     * RecentStay 리스트를 요청한다
+     *
+     * @return
+     */
+    void requestRecentStayList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
+
+    /**
+     * api/fnb/sale/list
+     * RecentGourmet 리스트 요청
+     *
+     * @return
+     */
+    void requestRecentGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
 }

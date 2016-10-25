@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.GourmetSearchCuration;
-import com.twoheart.dailyhotel.model.GourmetSearchParams;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -60,15 +58,9 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return;
         }
 
-        // Test Code
-
-        GourmetSearchCuration gourmetSearchCuration = new GourmetSearchCuration();
-        gourmetSearchCuration.setKeyword(new Keyword(0, "서울"));
-        gourmetSearchCuration.setSaleTime(mSaleTime);
-
-        GourmetSearchParams params = (GourmetSearchParams) gourmetSearchCuration.toPlaceParams(1, count, true);
-
-        // Test Code
+        RecentGourmetParams params = new RecentGourmetParams();
+        params.setSaleTime(mSaleTime);
+        params.setTargetIndices(mRecentPlaces.toString());
 
         ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
     }

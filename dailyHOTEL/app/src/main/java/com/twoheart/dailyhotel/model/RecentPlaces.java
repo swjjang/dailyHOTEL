@@ -99,6 +99,12 @@ public class RecentPlaces
             builder.append(text).append(RECENT_PLACE_DELIMITER);
         }
 
+        int length = builder.length();
+        if (builder.charAt(length - 1) == ',')
+        {
+            builder.setLength(length - 1);
+        }
+
         return builder.toString();
     }
 

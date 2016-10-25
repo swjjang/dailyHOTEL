@@ -1035,4 +1035,44 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestRecentStayList(Object tag, String stayParams, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
+
+        String params;
+
+        if (Util.isTextEmpty(stayParams) == false)
+        {
+            params = "?" + stayParams;
+        } else
+        {
+            return;
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestRecentGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
+
+        String params;
+
+        if (Util.isTextEmpty(gourmetParams) == false)
+        {
+            params = "?" + gourmetParams;
+        } else
+        {
+            return;
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

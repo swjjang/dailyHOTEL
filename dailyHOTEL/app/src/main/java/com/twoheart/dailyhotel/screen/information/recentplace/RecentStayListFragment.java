@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StaySearchCuration;
-import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -49,7 +47,6 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        int nights = 1;
         int count = mRecentPlaces != null ? mRecentPlaces.size() : 0;
         if (count == 0)
         {
@@ -62,18 +59,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        // Test Code!
-        StaySearchCuration staySearchCuration = new StaySearchCuration();
-        staySearchCuration.setKeyword(new Keyword(0, "서울"));
-        staySearchCuration.setCheckInSaleTime(mSaleTime);
-        staySearchCuration.setCheckOutSaleTime(mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights));
+        RecentStayParams recentStayParams = new RecentStayParams();
+        recentStayParams.setCheckInTime(mSaleTime);
+        recentStayParams.setTargetIndices(mRecentPlaces.toString());
 
-        StaySearchParams staySearchParams = new StaySearchParams(staySearchCuration);
-        staySearchParams.setPageInformation(1, count, true);
-
-        // Test Code!
-
-        ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(staySearchParams);
+        ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
         //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
     }
 

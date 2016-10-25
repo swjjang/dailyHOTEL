@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -34,15 +34,14 @@ public class RecentStayListNetworkController extends BaseNetworkController
         void onRecentStayList(ArrayList<Stay> list);
     }
 
-    public void requestRecentStayList(StayParams params)
+    public void requestRecentStayList(RecentStayParams params)
     {
         if (params == null)
         {
             return;
         }
-        //        ((RecentStayListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentStayList();
 
-        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestRecentStayList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mRecentListJsonResponseListener = new DailyHotelJsonResponseListener()

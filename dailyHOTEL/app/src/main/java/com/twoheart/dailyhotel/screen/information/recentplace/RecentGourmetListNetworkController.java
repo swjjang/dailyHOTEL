@@ -5,7 +5,7 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.GourmetSearchParams;
+import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -34,14 +34,14 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
         void onRecentGourmetList(ArrayList<Gourmet> list);
     }
 
-    public void requestRecentGourmetList(GourmetSearchParams params)
+    public void requestRecentGourmetList(RecentGourmetParams params)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestRecentGourmetList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mRecentListJsonResponseListener = new DailyHotelJsonResponseListener()
