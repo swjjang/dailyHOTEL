@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -163,6 +164,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, gourmet, 0);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+                gourmet.name, null);
         }
 
         @Override
@@ -185,6 +191,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             mListLayout.setData(mListLayout.getList());
             mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.FNB, mRecentPlaces);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+                place.name, null);
         }
 
         @Override

@@ -15,12 +15,14 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -89,7 +91,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     private void initIntent(Intent intent)
@@ -184,6 +186,8 @@ public class RecentPlacesTabActivity extends BaseActivity
             setEmptyViewVisibility(View.VISIBLE);
 
             unLockUI();
+
+            AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
             return;
         }
 
@@ -199,6 +203,9 @@ public class RecentPlacesTabActivity extends BaseActivity
             {
                 position = 1;
             }
+
+            // deeplink 로 인한 처리 후 초기화
+            mPlaceType = null;
         } else
         {
             if (isEmptyRecentStayPlace() == true)
@@ -227,6 +234,14 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+        String placeTypeString = position == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.STAY;
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
+        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
+
+        AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
     }
 
     private void setTabLayoutVisibility(int visibility)
@@ -309,6 +324,11 @@ public class RecentPlacesTabActivity extends BaseActivity
             {
                 mViewPager.setCurrentItem(tab.getPosition(), true);
             }
+
+            AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.RECENT_VIEW_TAB_CHANGE, //
+                tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
         }
 
         @Override
@@ -341,23 +361,20 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             int stayCount = mRecentStayPlaces.size();
             int gourmetCount = mRecentGourmetPlaces.size();
-            //            boolean isPagingEnabled;
 
             if (stayCount == 0 && gourmetCount == 0)
             {
                 // 둘다 없을때
                 setTabLayoutVisibility(View.GONE);
                 setEmptyViewVisibility(View.VISIBLE);
-                //                isPagingEnabled = false;
+
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
             } else
             {
-                // 둘중에 하나만 있을때
+                // 둘중에 하나라도 있을때
                 setTabLayoutVisibility(View.VISIBLE);
                 setEmptyViewVisibility(View.GONE);
-                //                isPagingEnabled = true;
             }
-
-            //            mViewPager.setPagingEnabled(isPagingEnabled);
         }
     };
 
