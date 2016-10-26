@@ -5,12 +5,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -41,6 +46,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.TextTransition;
 
 import org.json.JSONObject;
 
@@ -151,7 +157,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
 
         String isShowOriginalPrice;
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
@@ -170,6 +176,68 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        if (Util.isOverAPI21() == true)
+        {
+            mDontReloadAtOnResume = true;
+
+            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
+                , 17, 18, new LinearInterpolator());
+            inTextTransition.addTarget(getString(R.string.transition_place_name));
+            intransitionSet.addTransition(inTextTransition);
+
+            getWindow().setSharedElementEnterTransition(intransitionSet);
+
+            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            Transition outTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
+                , 18, 17, new LinearInterpolator());
+            outTextTransition.addTarget(getString(R.string.transition_place_name));
+            outTransitionSet.addTransition(outTextTransition);
+            outTransitionSet.setDuration(200);
+
+            getWindow().setSharedElementReturnTransition(outTransitionSet);
+            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
+            {
+                @Override
+                public void onTransitionStart(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition)
+                {
+                    mPlaceDetailLayout.setTransImageVisibility(false);
+                    mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
+
+                    // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
+                    lockUI();
+                    mPlaceDetailNetworkController.requestCommonDatetime();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition)
+                {
+
+                }
+            });
+        } else
+        {
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -251,7 +319,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
-        mPlaceDetailLayout.setTitleText(grade, placeName);
+        ((StayDetailLayout)mPlaceDetailLayout).setTitleText(grade, placeName);
     }
 
     @Override

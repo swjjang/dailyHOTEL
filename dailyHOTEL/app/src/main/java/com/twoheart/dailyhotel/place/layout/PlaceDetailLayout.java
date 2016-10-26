@@ -77,8 +77,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private AlphaAnimation mAlphaAnimation;
     private int mStatusBarHeight;
 
-    private com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
-    private TextView mTransTotelGradeTextView, mTransPlacelNameTextView;
+    protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
+    protected TextView mTransTotelGradeTextView, mTransPlacelNameTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -128,8 +128,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
 
         View transTitleLayout = view.findViewById(R.id.transTitleLayout);
-        mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transTotelGradeTextView);
-        mTransPlacelNameTextView = (TextView) transTitleLayout.findViewById(R.id.transHotelNameTextView);
+        mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
+        mTransPlacelNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
 
         if (Util.isOverAPI21() == true)
         {
@@ -137,7 +137,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             transTitleLayout.setVisibility(View.VISIBLE);
 
             mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
-            mTransSimpleDraweeView.setTransitionName("placeImage");
+            mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
         } else
         {
             setTransImageVisibility(false);
@@ -203,16 +203,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setBookingStatus(STATUS_NONE);
         hideProductInformationLayout();
-    }
-
-    public void setTitleText(Stay.Grade grade, String placeName)
-    {
-        mTransTotelGradeTextView.setText(grade.getName(mContext));
-        mTransTotelGradeTextView.setBackgroundResource(grade.getColorResId());
-        mTransTotelGradeTextView.setTransitionName("gradeText");
-
-        mTransPlacelNameTextView.setText(placeName);
-        mTransPlacelNameTextView.setTransitionName("placeText");
     }
 
     public void setTransImageVisibility(boolean isVisibility)

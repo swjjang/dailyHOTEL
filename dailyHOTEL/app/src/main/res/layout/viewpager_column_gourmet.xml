@@ -10,6 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:transitionName="@string/transition_place_image"
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
@@ -46,7 +47,8 @@
         android:paddingRight="5.5dp"
         android:paddingTop="2px"
         android:textColor="@color/white"
-        android:textSize="11dp"/>
+        android:textSize="11dp"
+        android:transitionName="@string/transition_place_grade"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/satisfactionView"
@@ -109,6 +111,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="17dp"
+        android:transitionName="@string/transition_place_name"
         dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView

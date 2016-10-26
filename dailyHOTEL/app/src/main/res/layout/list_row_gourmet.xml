@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:transitionName="@string/transition_place_image"
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
@@ -31,22 +32,28 @@
         android:textSize="12dp"
         dailyFont:style="DemiLight"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/gradeTextView"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/nameTextView"
-        android:layout_alignParentLeft="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="12dp"
-        android:background="@drawable/shape_rect_whitecolor"
-        android:gravity="center"
-        android:paddingBottom="1px"
-        android:paddingLeft="5.5dp"
-        android:paddingRight="5.5dp"
-        android:paddingTop="2px"
-        android:textColor="@color/white"
-        android:textSize="11dp"/>
+        android:background="@drawable/shape_rect_whitecolor">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/gradeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:paddingBottom="1px"
+            android:paddingLeft="5.5dp"
+            android:paddingRight="5.5dp"
+            android:paddingTop="2px"
+            android:textColor="@color/white"
+            android:textSize="11dp"
+            android:transitionName="@string/transition_place_grade"/>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -128,6 +135,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="17dp"
+        android:transitionName="@string/transition_place_name"
         dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView

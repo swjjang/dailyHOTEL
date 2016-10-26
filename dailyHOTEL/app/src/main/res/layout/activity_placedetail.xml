@@ -117,20 +117,19 @@
 
     <LinearLayout
         android:id="@+id/transTitleLayout"
-        android:layout_below="@+id/defaultImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_below="@+id/defaultImageLayout"
         android:layout_marginTop="-1dp"
+        android:orientation="vertical"
         android:paddingBottom="16dp"
         android:paddingTop="19dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/transTotelGradeTextView"
+            android:id="@+id/transGradeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:background="@color/black"
             android:gravity="center"
             android:paddingBottom="1px"
             android:paddingLeft="5.5dp"
@@ -140,16 +139,14 @@
             android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/transHotelNameTextView"
+            android:id="@+id/transNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="7dp"
-            android:ellipsize="marquee"
             android:freezesText="true"
             android:gravity="center_vertical"
-            android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"

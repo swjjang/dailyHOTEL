@@ -5,11 +5,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -36,7 +41,9 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.BackgroundColorTransition;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.TextTransition;
 
 import org.json.JSONObject;
 
@@ -161,6 +168,77 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        if (Util.isOverAPI21() == true)
+        {
+            mDontReloadAtOnResume = true;
+
+            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            Transition inNameTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
+                , 17, 18, new LinearInterpolator());
+            inNameTextTransition.addTarget(getString(R.string.transition_place_name));
+            intransitionSet.addTransition(inNameTextTransition);
+
+            Transition inGradeTextTransition = new BackgroundColorTransition(0, getResources().getColor(R.color.default_background_c929292), new LinearInterpolator());
+            inGradeTextTransition.addTarget(getString(R.string.transition_place_grade));
+            intransitionSet.addTransition(inGradeTextTransition);
+
+            getWindow().setSharedElementEnterTransition(intransitionSet);
+
+            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            Transition outNameTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
+                , 18, 17, new LinearInterpolator());
+            outNameTextTransition.addTarget(getString(R.string.transition_place_name));
+            outTransitionSet.addTransition(outNameTextTransition);
+
+            Transition outGradeTextTransition = new BackgroundColorTransition(getResources().getColor(R.color.default_background_c929292), 0, new LinearInterpolator());
+            outGradeTextTransition.addTarget(getString(R.string.transition_place_grade));
+            intransitionSet.addTransition(outGradeTextTransition);
+
+            outTransitionSet.setDuration(200);
+
+            getWindow().setSharedElementReturnTransition(outTransitionSet);
+            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
+            {
+                @Override
+                public void onTransitionStart(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition)
+                {
+                    mPlaceDetailLayout.setTransImageVisibility(false);
+                    mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
+
+                    // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
+                    lockUI();
+                    mPlaceDetailNetworkController.requestCommonDatetime();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition)
+                {
+
+                }
+            });
+        } else
+        {
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -185,8 +263,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsDeepLink = true;
-
-            initLayout(null, null);
+            mDontReloadAtOnResume = false;
+            initLayout(null, null, null);
 
             if (isShowCalendar == true)
             {
@@ -210,7 +288,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
 
-            initLayout(placeName, mDefaultImageUrl);
+            initLayout(placeName, mDefaultImageUrl, ((GourmetDetail) mPlaceDetail).category);
 
             if (isShowCalendar == true)
             {
@@ -219,17 +297,29 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl)
+    private void initLayout(String placeName, String imageUrl, String cateogry)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        mPlaceDetailLayout.setDefaultImage(imageUrl);
+        ininTransLayout(placeName, imageUrl, cateogry);
+
         mPlaceDetailLayout.setStatusBarHeight(this);
 
         setLockUICancelable(true);
         initToolbar(placeName);
 
         mOnEventListener.hideActionBar(false);
+    }
+
+    private void ininTransLayout(String placeName, String imageUrl, String category)
+    {
+        if (Util.isTextEmpty(placeName, imageUrl, category) == true)
+        {
+            return;
+        }
+
+        mPlaceDetailLayout.setTransImageView(imageUrl);
+        ((GourmetDetailLayout)mPlaceDetailLayout).setTitleText(category, placeName);
     }
 
     @Override

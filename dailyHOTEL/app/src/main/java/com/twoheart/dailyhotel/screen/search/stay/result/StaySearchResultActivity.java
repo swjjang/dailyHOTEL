@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -702,9 +703,27 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
-            Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
-                mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+
+            if (Util.isOverAPI21() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StaySearchResultActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
+                    mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+            } else
+            {
+                Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
+                    mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
         }
 
         @Override

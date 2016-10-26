@@ -52,6 +52,16 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         return mListAdapter.getTitleLayout();
     }
 
+    public void setTitleText(String category, String placeName)
+    {
+        mTransTotelGradeTextView.setText(category);
+        mTransTotelGradeTextView.setBackgroundColor(mContext.getResources().getColor(R.color.default_background_c929292));
+        mTransTotelGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
+
+        mTransPlacelNameTextView.setText(placeName);
+        mTransPlacelNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+    }
+
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
     {
         if (gourmetDetail == null)

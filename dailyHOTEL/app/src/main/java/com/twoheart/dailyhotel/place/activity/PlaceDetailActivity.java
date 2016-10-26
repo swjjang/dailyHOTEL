@@ -10,6 +10,7 @@ import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.LinearInterpolator;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -27,6 +28,7 @@ import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivit
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.TextTransition;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
@@ -64,61 +66,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        if (Util.isOverAPI21() == true)
-        {
-            mDontReloadAtOnResume = true;
-
-            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            getWindow().setSharedElementEnterTransition(intransitionSet);
-
-            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            outTransitionSet.setDuration(200);
-
-            Transition transition  = new FadeTransition();
-
-            getWindow().setSharedElementReturnTransition(outTransitionSet);
-            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
-            {
-                @Override
-                public void onTransitionStart(Transition transition)
-                {
-
-                }
-
-                @Override
-                public void onTransitionEnd(Transition transition)
-                {
-                    mPlaceDetailLayout.setTransImageVisibility(false);
-                    mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
-
-                    // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
-                    lockUI();
-                    mPlaceDetailNetworkController.requestCommonDatetime();
-                }
-
-                @Override
-                public void onTransitionCancel(Transition transition)
-                {
-
-                }
-
-                @Override
-                public void onTransitionPause(Transition transition)
-                {
-
-                }
-
-                @Override
-                public void onTransitionResume(Transition transition)
-                {
-
-                }
-            });
-        } else
-        {
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
-
         super.onCreate(savedInstanceState);
 
         mPlaceDetailLayout = getDetailLayout(this);

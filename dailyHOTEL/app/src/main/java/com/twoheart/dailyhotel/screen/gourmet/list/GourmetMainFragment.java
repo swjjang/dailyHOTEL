@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -794,7 +795,22 @@ public class GourmetMainFragment extends PlaceMainFragment
                     Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                         mGourmetCuration.getSaleTime(), province, gourmet, listCount);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                    if (Util.isOverAPI21() == true)
+                    {
+                        View simpleDraweeView = view.findViewById(R.id.imageView);
+                        View gradeTextView = view.findViewById(R.id.gradeTextView);
+                        View nameTextView = view.findViewById(R.id.nameTextView);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                            android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                            android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+                    } else
+                    {
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                    }
 
                     if (mViewType == ViewType.LIST)
                     {

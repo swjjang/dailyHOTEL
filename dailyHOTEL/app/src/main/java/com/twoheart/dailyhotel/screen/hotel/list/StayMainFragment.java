@@ -901,9 +901,9 @@ public class StayMainFragment extends PlaceMainFragment
                         View nameTextView = view.findViewById(R.id.nameTextView);
 
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                            android.support.v4.util.Pair.create(simpleDraweeView, "placeImage"),//
-                            android.support.v4.util.Pair.create(gradeTextView, "gradeText"),//
-                            android.support.v4.util.Pair.create(nameTextView, "placeText"));
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                            android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                            android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
                     } else
