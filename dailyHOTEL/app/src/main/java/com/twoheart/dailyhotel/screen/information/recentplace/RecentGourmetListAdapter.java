@@ -38,7 +38,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position)
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
         Place item = getItem(position);
         if (item == null)
@@ -149,6 +149,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         }
 
         holder.deleteView.setVisibility(View.VISIBLE);
+        holder.deleteView.setTag(position);
         holder.deleteView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -156,7 +157,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             {
                 if (mListener != null)
                 {
-                    mListener.onDeleteClick(v, position);
+                    mListener.onDeleteClick(v, (Integer) v.getTag());
                 }
             }
         });

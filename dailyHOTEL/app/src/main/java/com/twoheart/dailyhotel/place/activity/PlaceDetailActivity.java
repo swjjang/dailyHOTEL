@@ -145,17 +145,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
-    public void finish()
-    {
-        super.finish();
-
-//        if (Util.isOverAPI21() == false || mIsDeepLink == true)
-//        {
-//            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-//        }
-    }
-
-    @Override
     public void onBackPressed()
     {
         if (mPlaceDetailLayout != null)
