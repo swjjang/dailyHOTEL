@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -665,7 +666,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
+        public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -677,7 +678,20 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
                 mGourmetSearchCuration.getSaleTime(), gourmet, listCount);
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            if (Util.isOverAPI21() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetSearchResultActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            }
         }
 
         @Override

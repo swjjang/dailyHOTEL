@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -693,7 +694,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, int listCount)
+        public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -704,7 +705,23 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
                 mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+
+            if (Util.isOverAPI21() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StaySearchResultActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
         }
 
         @Override

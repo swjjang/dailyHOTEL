@@ -35,7 +35,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsDeepLink;
     protected String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
-    private boolean mDontReloadAtOnResume;
+    protected boolean mDontReloadAtOnResume;
 
     protected Province mProvince;
     protected String mArea; // Analytics용 소지역
@@ -60,8 +60,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
         super.onCreate(savedInstanceState);
 
         mPlaceDetailLayout = getDetailLayout(this);
@@ -92,7 +90,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -147,18 +145,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
-    public void finish()
-    {
-        super.finish();
-
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-    }
-
-    @Override
     public void onBackPressed()
     {
         if (mPlaceDetailLayout != null)
         {
+            if (Util.isOverAPI21() == true)
+            {
+                mPlaceDetailLayout.setTransImageVisibility(true);
+            }
+
             switch (mPlaceDetailLayout.getBookingStatus())
             {
                 case StayDetailLayout.STATUS_BOOKING:
@@ -192,6 +187,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                             break;
 
                         case CODE_RESULT_ACTIVITY_REFRESH:
+                        case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
                             mDontReloadAtOnResume = false;
                             break;
 

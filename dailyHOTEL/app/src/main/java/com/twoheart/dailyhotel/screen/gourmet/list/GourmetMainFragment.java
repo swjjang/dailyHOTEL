@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -763,7 +765,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     private GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
+        public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -793,7 +795,22 @@ public class GourmetMainFragment extends PlaceMainFragment
                     Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                         mGourmetCuration.getSaleTime(), province, gourmet, listCount);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                    if (Util.isOverAPI21() == true)
+                    {
+                        View simpleDraweeView = view.findViewById(R.id.imageView);
+                        View nameTextView = view.findViewById(R.id.nameTextView);
+                        View gradientView = view.findViewById(R.id.gradientView);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                            android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                            android.support.v4.util.Pair.create(gradientView, getString(R.string.transition_gradient_view)));
+
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+                    } else
+                    {
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                    }
 
                     if (mViewType == ViewType.LIST)
                     {

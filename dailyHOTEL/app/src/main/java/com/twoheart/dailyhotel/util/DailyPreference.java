@@ -666,19 +666,23 @@ public class DailyPreference
         return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
     }
 
-    public void setStayRecentPlaces(String recentPlaces) {
+    public void setStayRecentPlaces(String recentPlaces)
+    {
         setValue(mEditor, KEY_STAY_RECENT_PLACES, recentPlaces);
     }
 
-    public String getStayRecentPlaces() {
+    public String getStayRecentPlaces()
+    {
         return getValue(mPreferences, KEY_STAY_RECENT_PLACES, null);
     }
 
-    public void setGourmetRecentPlaces(String recentPlaces) {
+    public void setGourmetRecentPlaces(String recentPlaces)
+    {
         setValue(mEditor, KEY_GOURMET_RECENT_PLACES, recentPlaces);
     }
 
-    public String getGourmetRecentPlaces() {
+    public String getGourmetRecentPlaces()
+    {
         return getValue(mPreferences, KEY_GOURMET_RECENT_PLACES, null);
     }
 

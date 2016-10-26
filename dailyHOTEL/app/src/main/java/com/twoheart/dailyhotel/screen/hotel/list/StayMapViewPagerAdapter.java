@@ -41,7 +41,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         return view;
     }
 
-    private void makeLayout(View view, final Stay stay)
+    private void makeLayout(final View view, final Stay stay)
     {
         com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
@@ -138,7 +138,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(stay);
+                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(view, stay);
                 }
             }
         });

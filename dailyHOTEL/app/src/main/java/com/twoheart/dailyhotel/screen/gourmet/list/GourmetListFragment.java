@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
@@ -29,7 +30,7 @@ public class GourmetListFragment extends PlaceListFragment
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onGourmetClick(PlaceViewItem placeViewItem, int listCount);
+        void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount);
 
         void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
     }
@@ -170,9 +171,9 @@ public class GourmetListFragment extends PlaceListFragment
     protected GourmetListLayout.OnEventListener mEventListener = new GourmetListLayout.OnEventListener()
     {
         @Override
-        public void onPlaceClick(PlaceViewItem placeViewItem)
+        public void onPlaceClick(View view, PlaceViewItem placeViewItem)
         {
-            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, getPlaceCount());
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(view, placeViewItem, getPlaceCount());
         }
 
         @Override

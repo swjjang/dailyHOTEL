@@ -56,7 +56,8 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         makeShaderFactory();
     }
 
-    public ArrayList<? extends Place> getList() {
+    public ArrayList<? extends Place> getList()
+    {
         return mList != null ? mList : null;
     }
 
@@ -75,7 +76,8 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         return mList.get(position);
     }
 
-    public Place removeItem(int position) {
+    public Place removeItem(int position)
+    {
         if (mList == null || mList.size() == 0)
         {
             return null;

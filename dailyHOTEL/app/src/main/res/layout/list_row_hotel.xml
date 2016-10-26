@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:transitionName="@string/transition_place_image"
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
         android:id="@+id/gradientView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_gradient_view"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/gradeTextView"
@@ -32,7 +34,8 @@
         android:paddingRight="5.5dp"
         android:paddingTop="2px"
         android:textColor="@color/white"
-        android:textSize="11dp"/>
+        android:textSize="11dp"
+        android:transitionName="@string/transition_place_grade"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -98,6 +101,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="17dp"
+        android:transitionName="@string/transition_place_name"
         dailyFont:style="Medium"/>
 
     <LinearLayout

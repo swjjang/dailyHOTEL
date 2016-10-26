@@ -50,7 +50,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onPlaceClick(PlaceViewItem placeViewItem);
+        void onPlaceClick(View view, PlaceViewItem placeViewItem);
 
         void onEventBannerClick(EventBanner eventBanner);
 
@@ -77,7 +77,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected abstract PlaceViewItem getEventBannerViewItem();
 
-    protected abstract void onInformationClick(PlaceViewItem placeViewItem);
+    protected abstract void onInformationClick(View view, PlaceViewItem placeViewItem);
 
     public PlaceListLayout(Context context, OnEventListener mOnEventListener)
     {
@@ -435,9 +435,9 @@ public abstract class PlaceListLayout extends BaseLayout
                 mPlaceListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
                 {
                     @Override
-                    public void onInformationClick(PlaceViewItem placeViewItem)
+                    public void onInformationClick(View view, PlaceViewItem placeViewItem)
                     {
-                        PlaceListLayout.this.onInformationClick(placeViewItem);
+                        PlaceListLayout.this.onInformationClick(view, placeViewItem);
                     }
                 });
 
@@ -467,7 +467,7 @@ public abstract class PlaceListLayout extends BaseLayout
             int position = mPlaceRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(null);
+                ((OnEventListener) mOnEventListener).onPlaceClick(null, null);
                 return;
             }
 
@@ -475,7 +475,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
+                ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem);
             }
         }
     };

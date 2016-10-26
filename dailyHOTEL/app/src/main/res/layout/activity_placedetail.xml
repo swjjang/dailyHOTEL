@@ -3,6 +3,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -15,6 +16,18 @@
             android:id="@+id/defaulLoopViewPager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/transImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            fresco:actualImageScaleType="centerCrop"/>
+
+        <View
+            android:id="@+id/transGradientView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <View
             android:layout_width="match_parent"
@@ -106,6 +119,46 @@
                 app:srcCompat="@drawable/navibar_ic_share_01_black"/>
         </RelativeLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/transTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/defaultImageLayout"
+        android:layout_marginTop="-1dp"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingTop="19dp">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/transGradeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:gravity="center"
+            android:paddingBottom="1px"
+            android:paddingLeft="5.5dp"
+            android:paddingRight="5.5dp"
+            android:paddingTop="2px"
+            android:textColor="@android:color/white"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/transNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="7dp"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="18dp"
+            dailyFont:style="Medium"/>
+    </LinearLayout>
 
     <com.twoheart.dailyhotel.widget.DailyPlaceDetailListView
         android:id="@+id/placeListView"
@@ -200,9 +253,9 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="12dp"
                 android:text="@string/label_detail_view_price_option"
-                dailyFont:style="DemiLight"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="13dp"/>
+                android:textSize="13dp"
+                dailyFont:style="DemiLight"/>
 
             <RadioGroup
                 android:id="@+id/priceRadioGroup"
