@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -186,13 +187,24 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             {
                 try
                 {
-                    long currentDateTime = response.getLong("currentDateTime");
-                    long dailyDateTime = response.getLong("dailyDateTime");
+                    int msgCode = response.getInt("msgCode");
 
-                    setCurrentDateTime(currentDateTime, dailyDateTime);
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    // 호텔 정보를 가져온다.
-                    requestPlaceBookingDetail(mReservationIndex);
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        setCurrentDateTime(currentDateTime, dailyDateTime);
+
+                        // 호텔 정보를 가져온다.
+                        requestPlaceBookingDetail(mReservationIndex);
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        PlaceBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());

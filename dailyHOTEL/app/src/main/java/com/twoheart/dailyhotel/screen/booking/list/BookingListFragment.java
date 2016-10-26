@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetai
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.HotelBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -602,9 +603,20 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             try
             {
-                mCurrentTime = response.getLong("currentDateTime");
+                int msgCode = response.getInt("msgCode");
 
-                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    mCurrentTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                    DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
+                } else
+                {
+                    String message = response.getString("msg");
+                    onErrorPopupMessage(msgCode, message);
+                }
             } catch (Exception e)
             {
                 onError(e);
