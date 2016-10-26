@@ -52,6 +52,14 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         return mListAdapter.getTitleLayout();
     }
 
+    public void setTitleText(String placeName)
+    {
+        mTransTotelGradeTextView.setVisibility(View.INVISIBLE);
+
+        mTransPlacelNameTextView.setText(placeName);
+        mTransPlacelNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+    }
+
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
     {
         if (gourmetDetail == null)

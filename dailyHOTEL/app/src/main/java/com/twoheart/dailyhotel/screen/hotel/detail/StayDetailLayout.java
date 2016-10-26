@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -61,6 +62,16 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         }
 
         return mListAdapter.getTitleLayout();
+    }
+
+    public void setTitleText(Stay.Grade grade, String placeName)
+    {
+        mTransTotelGradeTextView.setText(grade.getName(mContext));
+        mTransTotelGradeTextView.setBackgroundResource(grade.getColorResId());
+        mTransTotelGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
+
+        mTransPlacelNameTextView.setText(placeName);
+        mTransPlacelNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
     }
 
     public void setDetail(SaleTime saleTime, StayDetail stayDetail, int imagePosition)

@@ -19,7 +19,7 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
 
     public interface OnPlaceMapViewPagerAdapterListener
     {
-        void onInformationClick(Place place);
+        void onInformationClick(View view, Place place);
 
         void onCloseClick();
     }

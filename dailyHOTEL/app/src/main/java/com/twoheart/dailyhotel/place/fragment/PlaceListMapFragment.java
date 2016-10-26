@@ -88,7 +88,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     public interface OnPlaceListMapFragmentListener
     {
-        void onInformationClick(PlaceViewItem placeViewItem);
+        void onInformationClick(View view, PlaceViewItem placeViewItem);
     }
 
     protected abstract PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context);
@@ -1173,7 +1173,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     private PlaceMapViewPagerAdapter.OnPlaceMapViewPagerAdapterListener mOnPlaceMapViewPagerAdapterListener = new PlaceMapViewPagerAdapter.OnPlaceMapViewPagerAdapterListener()
     {
         @Override
-        public void onInformationClick(Place place)
+        public void onInformationClick(View view, Place place)
         {
             if (place == null)
             {
@@ -1195,7 +1195,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     {
 
                         mSelectedPlaceViewItem = placeViewItem;
-                        mOnPlaceListMapFragmentListener.onInformationClick(placeViewItem);
+                        mOnPlaceListMapFragmentListener.onInformationClick(view, placeViewItem);
                     }
                     break;
                 }

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:transitionName="@string/transition_place_image"
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
@@ -128,6 +129,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="17dp"
+        android:transitionName="@string/transition_place_name"
         dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
