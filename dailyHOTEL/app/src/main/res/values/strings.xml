@@ -101,6 +101,7 @@
     <string name="transition_place_image">placeImage</string>
     <string name="transition_place_grade">placeGrade</string>
     <string name="transition_place_name">placeName</string>
+    <string name="transition_gradient_view">gradientView</string>
 
     <!-- Stay Grade -->
     <string name="grade_special">특급</string>
