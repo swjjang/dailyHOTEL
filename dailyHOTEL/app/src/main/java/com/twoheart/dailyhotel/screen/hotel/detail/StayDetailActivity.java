@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
@@ -256,6 +257,10 @@ public class StayDetailActivity extends PlaceDetailActivity
             inTextTransition.addTarget(getString(R.string.transition_place_name));
             intransitionSet.addTransition(inTextTransition);
 
+            Transition inAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            inAlhpaTransition.addTarget(getString(R.string.transition_gradient_view));
+            intransitionSet.addTransition(inAlhpaTransition);
+
             getWindow().setSharedElementEnterTransition(intransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
@@ -263,6 +268,11 @@ public class StayDetailActivity extends PlaceDetailActivity
                 , 18, 17, new LinearInterpolator());
             outTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outTextTransition);
+
+            Transition outAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            outAlhpaTransition.addTarget(getString(R.string.transition_gradient_view));
+            outTransitionSet.addTransition(outAlhpaTransition);
+
             outTransitionSet.setDuration(200);
 
             getWindow().setSharedElementReturnTransition(outTransitionSet);

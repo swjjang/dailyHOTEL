@@ -144,7 +144,7 @@ public class DailyLineIndicator extends View
     {
         super.onDraw(canvas);
 
-        if (isInEditMode() || mTabCount == 0)
+        if (isInEditMode() || mTabCount <= 1)
         {
             return;
         }

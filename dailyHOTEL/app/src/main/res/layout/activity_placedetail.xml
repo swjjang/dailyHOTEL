@@ -25,6 +25,11 @@
             fresco:actualImageScaleType="centerCrop"/>
 
         <View
+            android:id="@+id/transGradientView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignBottom="@id/defaulLoopViewPager"

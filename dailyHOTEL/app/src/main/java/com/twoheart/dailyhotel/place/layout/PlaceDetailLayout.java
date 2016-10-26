@@ -5,7 +5,13 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -78,6 +84,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
     protected TextView mTransTotelGradeTextView, mTransPlacelNameTextView;
+    protected View mTransGradientView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -125,6 +132,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected void initLayout(View view)
     {
         mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
+        mTransGradientView = view.findViewById(R.id.transGradientView);
 
         View transTitleLayout = view.findViewById(R.id.transTitleLayout);
         mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
@@ -137,6 +145,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
             mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
             mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
+
+            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_view));
+            mTransGradientView.setBackground(makeShaderFactory());
         } else
         {
             setTransImageVisibility(false);
@@ -204,9 +216,33 @@ public abstract class PlaceDetailLayout extends BaseLayout
         hideProductInformationLayout();
     }
 
+    private PaintDrawable makeShaderFactory()
+    {
+        // 그라디에이션 만들기.
+        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
+
+        PaintDrawable paintDrawable = new PaintDrawable();
+        paintDrawable.setShape(new RectShape());
+
+        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
+
+        paintDrawable.setShaderFactory(sf);
+
+        return paintDrawable;
+    }
+
     public void setTransImageVisibility(boolean isVisibility)
     {
         mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.GONE);
+        mTransGradientView.setVisibility(isVisibility == true ? View.VISIBLE : View.GONE);
     }
 
     public void setTransImageView(String url)
