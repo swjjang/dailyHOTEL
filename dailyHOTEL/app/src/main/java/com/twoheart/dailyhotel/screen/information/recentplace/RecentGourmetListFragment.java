@@ -2,11 +2,13 @@ package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
@@ -151,7 +153,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
         @Override
-        public void onListItemClick(int position)
+        public void onListItemClick(View view, int position)
         {
             if (position < 0 || mRecentPlaces.size() - 1 < position)
             {
@@ -162,6 +164,22 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, gourmet, 0);
+
+            if (Util.isOverAPI21() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+            } else
+            {
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
+
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }
 

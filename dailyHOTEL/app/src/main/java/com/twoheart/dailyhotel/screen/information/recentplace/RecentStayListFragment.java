@@ -2,11 +2,13 @@ package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
@@ -153,7 +155,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
         @Override
-        public void onListItemClick(int position)
+        public void onListItemClick(View view, int position)
         {
             if (position < 0 || mRecentPlaces.size() - 1 < position)
             {
@@ -164,7 +166,23 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, stay, 0);
-            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+
+            if (Util.isOverAPI21() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+            } else
+            {
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
         }
 
         @Override

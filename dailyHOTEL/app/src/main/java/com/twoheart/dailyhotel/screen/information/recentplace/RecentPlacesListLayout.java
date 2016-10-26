@@ -28,7 +28,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onListItemClick(int position);
+        void onListItemClick(View view, int position);
 
         void onListItemDeleteClick(int position);
 
@@ -149,11 +149,11 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onListItemClick(position);
+                ((OnEventListener) mOnEventListener).onListItemClick(view, position);
                 return;
             }
 
-            ((OnEventListener) mOnEventListener).onListItemClick(position);
+            ((OnEventListener) mOnEventListener).onListItemClick(view, position);
         }
 
         @Override
