@@ -323,6 +323,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (mIsDeepLink == false && Util.isOverAPI21() == true)
         {
             ininTransLayout(placeName, imageUrl, grade);
+        } else
+        {
+            mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
         }
 
         mPlaceDetailLayout.setStatusBarHeight(this);

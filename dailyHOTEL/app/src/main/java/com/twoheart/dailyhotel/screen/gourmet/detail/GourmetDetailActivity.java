@@ -303,6 +303,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         if (mIsDeepLink == false && Util.isOverAPI21() == true)
         {
             ininTransLayout(placeName, imageUrl);
+        } else
+        {
+            mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
         }
 
         mPlaceDetailLayout.setStatusBarHeight(this);
