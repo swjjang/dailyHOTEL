@@ -305,7 +305,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             ininTransLayout(placeName, imageUrl);
         } else
         {
-            mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
+            mPlaceDetailLayout.setDefaultImage(imageUrl);
         }
 
         mPlaceDetailLayout.setStatusBarHeight(this);
