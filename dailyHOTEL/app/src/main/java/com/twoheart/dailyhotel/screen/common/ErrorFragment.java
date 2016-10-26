@@ -100,7 +100,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         {
             if (mMainFragmentManager != null)
             {
-                mMainFragmentManager.select(mMainFragmentManager.getLastIndexFragment(), false);
+                mMainFragmentManager.select(mMainFragmentManager.getLastIndexFragment(), true);
             }
         }
     }
