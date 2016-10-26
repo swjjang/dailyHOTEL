@@ -320,7 +320,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false)
+        if (mIsDeepLink == false && Util.isOverAPI21() == true)
         {
             ininTransLayout(placeName, imageUrl, grade);
         }
