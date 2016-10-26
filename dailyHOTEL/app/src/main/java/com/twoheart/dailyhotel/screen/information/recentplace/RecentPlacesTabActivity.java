@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.recentplace;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -297,16 +298,11 @@ public class RecentPlacesTabActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             {
-                switch (resultCode)
-                {
-                    case CODE_RESULT_ACTIVITY_REFRESH:
-                    case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-                        mDontReloadAtOnResume = false;
-                        break;
+                setResult(resultCode);
 
-                    default:
-                        mDontReloadAtOnResume = true;
-                        break;
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    finish();
                 }
                 break;
             }
