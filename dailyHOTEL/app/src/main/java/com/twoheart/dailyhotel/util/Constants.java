@@ -251,6 +251,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY = 47;
     public static final int CODE_REQUEST_ACTIVITY_FAQ = 48;
     public static final int CODE_REQUEST_ACTIVITY_FEEDBACK = 49;
+    public static final int CODE_REQUEST_ACTIVITY_RECENTPLACE = 50;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -280,6 +281,8 @@ public interface Constants
     public static final int CODE_RESULT_ACTIVITY_HOME = 303;
     public static final int CODE_RESULT_ACTIVITY_SEARCHRESULT_KEYWORD = 304;
     public static final int CODE_RESULT_ACTIVITY_REFRESH = 305;
+    public static final int CODE_RESULT_ACTIVITY_STAY_LIST = 306;
+    public static final int CODE_RESULT_ACTIVITY_GOURMET_LIST = 307;
 
     // 예약 리스트에서
     public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;

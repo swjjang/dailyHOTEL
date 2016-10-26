@@ -199,7 +199,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private void requestCommonDatetime(final String url)
     {
-        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)

@@ -338,6 +338,18 @@ public class MainActivity extends BaseActivity implements Constants
                 mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                 break;
             }
+
+            case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
+                switch (resultCode)
+                {
+                    case CODE_RESULT_ACTIVITY_STAY_LIST:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                        break;
+                    case CODE_RESULT_ACTIVITY_GOURMET_LIST:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+                        break;
+                }
+                break;
         }
     }
 

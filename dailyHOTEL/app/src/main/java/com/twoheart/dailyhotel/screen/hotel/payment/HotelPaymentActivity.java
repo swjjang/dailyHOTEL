@@ -1669,7 +1669,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             {
                                 lockUI();
 
-                                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener);
+                                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeJsonResponseListener);
                             } else
                             {
                                 processAgreeTermDialog();
@@ -1691,7 +1691,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     {
                         lockUI();
 
-                        DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener);
+                        DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeJsonResponseListener);
                     } else
                     {
                         processAgreeTermDialog();

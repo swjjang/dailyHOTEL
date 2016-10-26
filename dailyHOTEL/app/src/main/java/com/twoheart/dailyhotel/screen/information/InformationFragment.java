@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
+import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -116,10 +117,10 @@ public class InformationFragment extends BaseFragment implements Constants
                 return;
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
-                return;
+                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
-                return;
+                mOnEventListener.startRecentPlaces(PlaceType.FNB);
             } else if (DailyDeepLink.getInstance().isFAQView() == true)
             {
                 mOnEventListener.startFAQ();
@@ -499,6 +500,28 @@ public class InformationFragment extends BaseFragment implements Constants
 
             //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
 
+        }
+
+        @Override
+        public void startRecentPlaces(Constants.PlaceType placeType)
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = new Intent(baseActivity, RecentPlacesTabActivity.class);
+
+            if (placeType != null)
+            {
+                intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+            }
+
+            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 
         @Override
