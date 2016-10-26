@@ -68,7 +68,7 @@ public class MainNetworkController extends BaseNetworkController
      */
     protected void requestCommonDatetime()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)

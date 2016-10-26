@@ -17,6 +17,7 @@
     <string name="label_google_map">Google Map</string>
     <string name="label_hotel">호텔</string>
     <string name="label_fnb">고메</string>
+    <string name="label_restaurant">레스토랑</string>
     <string name="label_dailygourmet">DAILYGOURMET</string>
     <string name="label_dailyhotel">DAILYHOTEL</string>
     <string name="label_paradise">PARADISE IS WHERE WE ARE</string>
@@ -360,6 +361,7 @@
     <string name="frag_about_business_license02">사업자등록번호 : %1$s</string>
     <string name="frag_about_business_license03">통신판매업 신고번호 : %1$s</string>
     <string name="frag_about_business_license04">개인정보담당자 : %1$s</string>
+    <string name="frag_recent_places">최근 확인한 호텔/고메</string>
     <string name="message_empty_notice">공지사항이 없습니다.</string>
     <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
     <string name="message_input_email">이메일 주소를 입력해 주세요.</string>
@@ -959,4 +961,11 @@
 
     <string name="message_tmap_navi_failed">T맵 연결이 원활하지 않습니다.\n다른 길찾기 앱을 이용하시거나\n잠시 후 다시 시도해주세요.</string>
     <string name="message_stay_detail_nrd">특가상품으로 설정된 객실은 위 내용과 상관없이 예약의 변경, 취소, 환불이 불가합니다.</string>
+
+    <!-- recent places -->
+    <string name="recent_places_list_empty_message">최근 확인한 호텔/고메가 없습니다.</string>
+    <string name="recent_stay_list_empty_message">최근 확인한 호텔이 없습니다.</string>
+    <string name="recent_gourmet_list_empty_message">최근 확인한 고메가 없습니다.</string>
+    <string name="recent_stay_list_empty_button_message">호텔 보러가기</string>
+    <string name="recent_gourmet_list_empty_button_message">고메 보러가기</string>
 </resources>
