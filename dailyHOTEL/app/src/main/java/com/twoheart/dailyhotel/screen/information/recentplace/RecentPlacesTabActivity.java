@@ -43,6 +43,8 @@ public class RecentPlacesTabActivity extends BaseActivity
     private TabLayout mTabLayout;
     private View mEmptyView;
 
+    private PlaceType mPlaceType;
+
     private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
 
     @Override
@@ -61,6 +63,8 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         String gourmetString = DailyPreference.getInstance(this).getGourmetRecentPlaces();
         mRecentGourmetPlaces = new RecentPlaces(gourmetString);
+
+        initIntent(getIntent());
 
         initLayout();
     }
@@ -86,6 +90,27 @@ public class RecentPlacesTabActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+    }
+
+    private void initIntent(Intent intent)
+    {
+        if (intent == null)
+        {
+            return;
+        }
+
+        String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
+
+        if (Util.isTextEmpty(placeTypeName) == false)
+        {
+            try
+            {
+                mPlaceType = PlaceType.valueOf(placeTypeName);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
+        }
     }
 
     private void initLayout()
@@ -166,13 +191,26 @@ public class RecentPlacesTabActivity extends BaseActivity
         setEmptyViewVisibility(View.GONE);
 
         int position = 0;
-        if (isEmptyRecentStayPlace() == true)
+
+        if (mPlaceType != null)
         {
-            position = 1;
+            // deeplink type
+            if (PlaceType.FNB.equals(mPlaceType) == true)
+            {
+                position = 1;
+            }
+        } else
+        {
+            if (isEmptyRecentStayPlace() == true)
+            {
+                position = 1;
+            }
         }
+
 
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
+
 
         Class reflectionClass = ViewPager.class;
 

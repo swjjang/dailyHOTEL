@@ -117,10 +117,10 @@ public class InformationFragment extends BaseFragment implements Constants
                 return;
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
-                return;
+                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
-                return;
+                mOnEventListener.startRecentPlaces(PlaceType.FNB);
             } else if (DailyDeepLink.getInstance().isFAQView() == true)
             {
                 mOnEventListener.startFAQ();
@@ -503,17 +503,24 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startRecentPlaces()
+        public void startRecentPlaces(Constants.PlaceType placeType)
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
                 return;
             }
 
+
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             Intent intent = new Intent(baseActivity, RecentPlacesTabActivity.class);
+
+            if (placeType != null)
+            {
+                intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+            }
+
             baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 

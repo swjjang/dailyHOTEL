@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
 
@@ -40,10 +41,21 @@ public class RecentPlacesNetworkController extends BaseNetworkController
         {
             try
             {
-                long currentDateTime = response.getLong("currentDateTime");
-                long dailyDateTime = response.getLong("dailyDateTime");
+                int msgCode = response.getInt("msgCode");
 
-                ((RecentPlacesNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                    long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                    ((RecentPlacesNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onError(new RuntimeException(message));
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

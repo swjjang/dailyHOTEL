@@ -76,7 +76,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startAbout();
 
-        void startRecentPlaces();
+        void startRecentPlaces(Constants.PlaceType placeType);
 
         void onPushClick();
 
@@ -541,7 +541,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
 
             case R.id.recentPlacesLayout:
-                ((OnEventListener) mOnEventListener).startRecentPlaces();
+                ((OnEventListener) mOnEventListener).startRecentPlaces(null);
                 break;
 
             case R.id.pushBenefitLayout:
