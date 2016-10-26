@@ -36,4 +36,10 @@ public class RecentStayListLayout extends RecentPlacesListLayout
     {
         return 0;
     }
+
+    @Override
+    protected int getEmptyButtonTextResId()
+    {
+        return R.string.recent_stay_list_empty_button_message;
+    }
 }

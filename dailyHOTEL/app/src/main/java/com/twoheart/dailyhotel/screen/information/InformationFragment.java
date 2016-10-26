@@ -504,7 +504,8 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, RecentPlacesTabActivity.class));
+            Intent intent = new Intent(baseActivity, RecentPlacesTabActivity.class);
+            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 
         @Override

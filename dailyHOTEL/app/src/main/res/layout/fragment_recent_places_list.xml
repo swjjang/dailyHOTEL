@@ -11,12 +11,14 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/information_background"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/emptyTextView"
@@ -29,5 +31,20 @@
             android:textSize="18dp"
             dailyFont:style="Medium"/>
 
-    </RelativeLayout>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/emptyButtonTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_below="@+id/textLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+
+    </LinearLayout>
 </RelativeLayout>

@@ -36,4 +36,10 @@ public class RecentGourmetListLayout extends RecentPlacesListLayout
     {
         return 0;
     }
+
+    @Override
+    protected int getEmptyButtonTextResId()
+    {
+        return R.string.recent_gourmet_list_empty_button_message;
+    }
 }

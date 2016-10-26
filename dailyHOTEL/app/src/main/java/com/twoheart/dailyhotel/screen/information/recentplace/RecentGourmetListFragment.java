@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -187,9 +188,16 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         }
 
         @Override
+        public void onEmptyButtonClick()
+        {
+            mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
+            finish();
+        }
+
+        @Override
         public void finish()
         {
-            finish();
+            mBaseActivity.finish();
         }
     };
 }

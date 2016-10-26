@@ -23,6 +23,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
     private RecyclerView mRecyclerView;
     private View mEmptyLayout;
     private DailyTextView mEmptyTextView;
+    private DailyTextView mEmptyButtonTextView;
     private RecentPlacesListAdapter mListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -30,11 +31,15 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         void onListItemClick(int position);
 
         void onListItemDeleteClick(int position);
+
+        void onEmptyButtonClick();
     }
 
     protected abstract int getEmptyTextResId();
 
     protected abstract int getEmptyImageResId();
+
+    protected abstract int getEmptyButtonTextResId();
 
     protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
         , ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
@@ -52,6 +57,17 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 
         mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
         mEmptyTextView.setText(getEmptyTextResId());
+        mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.emptyButtonTextView);
+        mEmptyButtonTextView.setText(getEmptyButtonTextResId());
+
+        mEmptyButtonTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onEmptyButtonClick();
+            }
+        });
 
         int topDrawableResId = getEmptyImageResId();
         if (topDrawableResId <= 0)
