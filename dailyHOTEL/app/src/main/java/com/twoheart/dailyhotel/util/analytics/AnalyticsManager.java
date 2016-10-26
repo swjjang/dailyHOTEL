@@ -574,6 +574,9 @@ public class AnalyticsManager
         //
         public static final String MENU_NOTICELIST = "Menu_NoticeList";
         public static final String MENU_NOTICEDETAILVIEW = "Menu_NoticeDetailView";
+
+        public static final String MENU_RECENT_VIEW = "Menu_RecentView";
+        public static final String MENU_RECENT_VIEW_EMPTY = "Menu_RecentView_Empty";
     }
 
     public static class Action
@@ -718,6 +721,10 @@ public class AnalyticsManager
         public static final String BOOKING_INITIALISE = "BookingInitialise";
         //
         public static final String LOST_PASSWORD_CLICKED = "LostPasswordClicked";
+
+        public static final String RECENT_VIEW_CLICKED = "RecentViewClicked";
+        public static final String RECENT_VIEW_DELETE = "RecentViewDelete";
+        public static final String RECENT_VIEW_TAB_CHANGE = "RecentViewTabChange";
     }
 
     public static class Category

@@ -161,6 +161,23 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
             recordScreen(screen);
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screen + " | " + screenViewBuilder.build().toString());
+            }
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY.equalsIgnoreCase(screen) == true)
+        {
+            recordScreen(screen);
         }
     }
 

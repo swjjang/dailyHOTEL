@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -176,13 +177,16 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                     android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                     android.support.v4.util.Pair.create(gradientView, getString(R.string.transition_gradient_view)));
 
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
             } else
             {
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
             }
 
-            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+                gourmet.name, null);
         }
 
         @Override
@@ -205,6 +209,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             mListLayout.setData(mListLayout.getList());
             mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.FNB, mRecentPlaces);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+                place.name, null);
         }
 
         @Override
