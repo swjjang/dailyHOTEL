@@ -965,6 +965,6 @@
     <string name="recent_places_list_empty_message">최근 확인한 호텔/고메가 없습니다.</string>
     <string name="recent_stay_list_empty_message">최근 확인한 호텔이 없습니다.</string>
     <string name="recent_gourmet_list_empty_message">최근 확인한 고메가 없습니다.</string>
-    <string name="recent_stay_list_empty_button_message">오늘 날짜 호텔 확인하기</string>
-    <string name="recent_gourmet_list_empty_button_message">오늘 날짜 고메 확인하기</string>
+    <string name="recent_stay_list_empty_button_message">호텔 보러가기</string>
+    <string name="recent_gourmet_list_empty_button_message">고메 보러가기</string>
 </resources>
