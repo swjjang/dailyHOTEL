@@ -91,12 +91,12 @@ dependencies {
     compile files('libs/com.skp.Tmap_1.0.43.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
     compile 'com.android.volley:volley:1.0.19@aar'
-    compile 'com.google.android.gms:play-services-base:9.6.1'
-    compile 'com.google.android.gms:play-services-maps:9.6.1'
-    compile 'com.google.android.gms:play-services-location:9.6.1'
-    compile 'com.google.android.gms:play-services-gcm:9.6.1'
-    compile 'com.google.android.gms:play-services-analytics:9.6.1'
-    compile 'com.google.firebase:firebase-config:9.6.1'
+    compile 'com.google.android.gms:play-services-base:9.8.0'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.google.android.gms:play-services-location:9.8.0'
+    compile 'com.google.android.gms:play-services-gcm:9.8.0'
+    compile 'com.google.android.gms:play-services-analytics:9.8.0'
+    compile 'com.google.firebase:firebase-config:9.8.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

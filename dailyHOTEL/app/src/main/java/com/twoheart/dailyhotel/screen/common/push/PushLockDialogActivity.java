@@ -30,6 +30,15 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
     {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.statusbar_background));
+        }
+
         setContentView(R.layout.activity_push_lock_dialog_gcm);
 
         String title = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_TITLE);
