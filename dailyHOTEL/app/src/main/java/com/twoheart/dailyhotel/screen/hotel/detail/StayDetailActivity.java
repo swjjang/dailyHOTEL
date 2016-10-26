@@ -176,6 +176,69 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            finish();
+            return;
+        }
+
+        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+
+        mPlaceDetail = createPlaceDetail(intent);
+
+        if (mSaleTime == null || mPlaceDetail == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
+        {
+            mIsDeepLink = true;
+            mDontReloadAtOnResume = false;
+
+            initLayout(null, null, null);
+
+            if (isShowCalendar == true)
+            {
+                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, false);
+            }
+        } else
+        {
+            mIsDeepLink = false;
+
+            String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+            mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
+            ((StayDetail) mPlaceDetail).categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
+
+            if (placeName == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+            Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
+
+            initTransition();
+            initLayout(placeName, mDefaultImageUrl, grade);
+
+            if (isShowCalendar == true)
+            {
+                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, true);
+            }
+        }
+    }
+
+    private void initTransition()
+    {
         if (Util.isOverAPI21() == true)
         {
             mDontReloadAtOnResume = true;
@@ -233,67 +296,6 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 }
             });
-        } else
-        {
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
-
-        super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-
-        if (intent == null)
-        {
-            finish();
-            return;
-        }
-
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-
-        mPlaceDetail = createPlaceDetail(intent);
-
-        if (mSaleTime == null || mPlaceDetail == null)
-        {
-            Util.restartApp(this);
-            return;
-        }
-
-        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
-        {
-            mIsDeepLink = true;
-            mDontReloadAtOnResume = false;
-            initLayout(null, null, null);
-
-            if (isShowCalendar == true)
-            {
-                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, false);
-            }
-        } else
-        {
-            mIsDeepLink = false;
-
-            String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
-            mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
-            ((StayDetail) mPlaceDetail).categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
-
-            if (placeName == null)
-            {
-                Util.restartApp(this);
-                return;
-            }
-
-            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
-            Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
-
-            initLayout(placeName, mDefaultImageUrl, grade);
-
-            if (isShowCalendar == true)
-            {
-                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, true);
-            }
         }
     }
 
@@ -301,7 +303,10 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        ininTransLayout(placeName, imageUrl, grade);
+        if(mIsDeepLink == false)
+        {
+            ininTransLayout(placeName, imageUrl, grade);
+        }
 
         mPlaceDetailLayout.setStatusBarHeight(this);
 
@@ -319,7 +324,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
-        ((StayDetailLayout)mPlaceDetailLayout).setTitleText(grade, placeName);
+        ((StayDetailLayout) mPlaceDetailLayout).setTitleText(grade, placeName);
     }
 
     @Override

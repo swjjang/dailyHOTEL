@@ -47,8 +47,7 @@
         android:paddingRight="5.5dp"
         android:paddingTop="2px"
         android:textColor="@color/white"
-        android:textSize="11dp"
-        android:transitionName="@string/transition_place_grade"/>
+        android:textSize="11dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/satisfactionView"

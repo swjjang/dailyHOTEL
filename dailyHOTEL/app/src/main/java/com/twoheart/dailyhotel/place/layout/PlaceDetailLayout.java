@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;

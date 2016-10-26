@@ -5,15 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.transition.Transition;
-import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.LinearInterpolator;
 
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -28,7 +23,6 @@ import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivit
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.TextTransition;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
@@ -155,10 +149,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         super.finish();
 
-        if (Util.isOverAPI21() == false)
-        {
-            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-        }
+//        if (Util.isOverAPI21() == false || mIsDeepLink == true)
+//        {
+//            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+//        }
     }
 
     @Override

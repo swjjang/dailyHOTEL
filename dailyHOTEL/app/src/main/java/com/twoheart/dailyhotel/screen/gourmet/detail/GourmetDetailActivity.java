@@ -41,7 +41,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.BackgroundColorTransition;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
@@ -168,6 +167,67 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            finish();
+            return;
+        }
+
+        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+
+        mPlaceDetail = createPlaceDetail(intent);
+
+        if (mSaleTime == null || mPlaceDetail == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
+        {
+            mIsDeepLink = true;
+            mDontReloadAtOnResume = false;
+            initLayout(null, null);
+
+            if (isShowCalendar == true)
+            {
+                startCalendar(mSaleTime, mPlaceDetail.index, false);
+            }
+        } else
+        {
+            mIsDeepLink = false;
+
+            String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
+            mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
+            ((GourmetDetail) mPlaceDetail).category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
+
+            if (placeName == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+
+            initTransition();
+            initLayout(placeName, mDefaultImageUrl);
+
+            if (isShowCalendar == true)
+            {
+                startCalendar(mSaleTime, mPlaceDetail.index, false);
+            }
+        }
+    }
+
+    private void initTransition()
+    {
         if (Util.isOverAPI21() == true)
         {
             mDontReloadAtOnResume = true;
@@ -178,10 +238,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             inNameTextTransition.addTarget(getString(R.string.transition_place_name));
             intransitionSet.addTransition(inNameTextTransition);
 
-            Transition inGradeTextTransition = new BackgroundColorTransition(0, getResources().getColor(R.color.default_background_c929292), new LinearInterpolator());
-            inGradeTextTransition.addTarget(getString(R.string.transition_place_grade));
-            intransitionSet.addTransition(inGradeTextTransition);
-
             getWindow().setSharedElementEnterTransition(intransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
@@ -189,10 +245,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 , 18, 17, new LinearInterpolator());
             outNameTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outNameTextTransition);
-
-            Transition outGradeTextTransition = new BackgroundColorTransition(getResources().getColor(R.color.default_background_c929292), 0, new LinearInterpolator());
-            outGradeTextTransition.addTarget(getString(R.string.transition_place_grade));
-            intransitionSet.addTransition(outGradeTextTransition);
 
             outTransitionSet.setDuration(200);
 
@@ -234,74 +286,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 }
             });
-        } else
-        {
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
-
-        super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-
-        if (intent == null)
-        {
-            finish();
-            return;
-        }
-
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-
-        mPlaceDetail = createPlaceDetail(intent);
-
-        if (mSaleTime == null || mPlaceDetail == null)
-        {
-            Util.restartApp(this);
-            return;
-        }
-
-        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
-        {
-            mIsDeepLink = true;
-            mDontReloadAtOnResume = false;
-            initLayout(null, null, null);
-
-            if (isShowCalendar == true)
-            {
-                startCalendar(mSaleTime, mPlaceDetail.index, false);
-            }
-        } else
-        {
-            mIsDeepLink = false;
-
-            String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
-            mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
-            ((GourmetDetail) mPlaceDetail).category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
-
-            if (placeName == null)
-            {
-                Util.restartApp(this);
-                return;
-            }
-
-            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
-
-            initLayout(placeName, mDefaultImageUrl, ((GourmetDetail) mPlaceDetail).category);
-
-            if (isShowCalendar == true)
-            {
-                startCalendar(mSaleTime, mPlaceDetail.index, false);
-            }
         }
     }
 
-    private void initLayout(String placeName, String imageUrl, String cateogry)
+    private void initLayout(String placeName, String imageUrl)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        ininTransLayout(placeName, imageUrl, cateogry);
+        if (mIsDeepLink == false)
+        {
+            ininTransLayout(placeName, imageUrl);
+        }
 
         mPlaceDetailLayout.setStatusBarHeight(this);
 
@@ -311,15 +306,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void ininTransLayout(String placeName, String imageUrl, String category)
+    private void ininTransLayout(String placeName, String imageUrl)
     {
-        if (Util.isTextEmpty(placeName, imageUrl, category) == true)
+        if (Util.isTextEmpty(placeName, imageUrl) == true)
         {
             return;
         }
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
-        ((GourmetDetailLayout)mPlaceDetailLayout).setTitleText(category, placeName);
+        ((GourmetDetailLayout) mPlaceDetailLayout).setTitleText(placeName);
     }
 
     @Override

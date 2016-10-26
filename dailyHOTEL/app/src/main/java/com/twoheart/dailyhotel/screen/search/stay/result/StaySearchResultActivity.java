@@ -703,6 +703,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
+            Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
+                mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
 
             if (Util.isOverAPI21() == true)
             {
@@ -715,13 +717,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                     android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
 
-                Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
-                    mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
-                    mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
             }
         }
