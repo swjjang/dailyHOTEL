@@ -340,13 +340,29 @@ public class MainActivity extends BaseActivity implements Constants
             }
 
             case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
                 switch (resultCode)
                 {
+                    case Activity.RESULT_OK:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                        break;
+
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
                         break;
+
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
                         mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+                        break;
+
+                    default:
+                        mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                         break;
                 }
                 break;
