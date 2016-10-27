@@ -682,10 +682,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetSearchResultActivity.this,//
                     android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
             } else

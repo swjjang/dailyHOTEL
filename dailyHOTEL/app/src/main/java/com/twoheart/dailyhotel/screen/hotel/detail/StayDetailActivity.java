@@ -257,9 +257,13 @@ public class StayDetailActivity extends PlaceDetailActivity
             inTextTransition.addTarget(getString(R.string.transition_place_name));
             intransitionSet.addTransition(inTextTransition);
 
-            Transition inAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            inAlhpaTransition.addTarget(getString(R.string.transition_gradient_view));
-            intransitionSet.addTransition(inAlhpaTransition);
+            Transition inBottomAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            inBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            intransitionSet.addTransition(inBottomAlhpaTransition);
+
+            Transition inTopAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            inTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            intransitionSet.addTransition(inTopAlhpaTransition);
 
             getWindow().setSharedElementEnterTransition(intransitionSet);
 
@@ -269,9 +273,13 @@ public class StayDetailActivity extends PlaceDetailActivity
             outTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outTextTransition);
 
-            Transition outAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            outAlhpaTransition.addTarget(getString(R.string.transition_gradient_view));
-            outTransitionSet.addTransition(outAlhpaTransition);
+            Transition outBottomAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            outBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            outTransitionSet.addTransition(outBottomAlhpaTransition);
+
+            Transition outTopAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            outTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            outTransitionSet.addTransition(outTopAlhpaTransition);
 
             outTransitionSet.setDuration(200);
 

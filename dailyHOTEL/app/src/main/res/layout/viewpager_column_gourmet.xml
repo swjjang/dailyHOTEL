@@ -14,10 +14,17 @@
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
+        android:id="@+id/gradientTopView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_gradient_top_view"/>
+
+    <View
         android:id="@+id/gradientView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_a28"/>
+        android:background="@color/black_a28"
+        android:transitionName="@string/transition_gradient_bottom_view"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/priceTextView"
@@ -142,7 +149,7 @@
             android:id="@+id/dBenefitTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/d_benefit"
+            android:background="@drawable/notice"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"

@@ -1,8 +1,12 @@
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -11,7 +15,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
 
 import org.json.JSONObject;
 
@@ -171,6 +177,17 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
                 updateFullscreenStatus(mIsFullscreen);
             }
         });
+
+        mBottomLayout = findViewById(R.id.bottomLayout);
+        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        sendEmailView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSendEmailDialog();
+            }
+        });
     }
 
     protected View getLayout()
@@ -191,6 +208,81 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     protected void requestReceiptDetail(int index)
     {
         DailyNetworkAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservReceiptJsonResponseListener);
+    }
+
+    private void showSendEmailDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_email_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        emailEditTExt.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(dailyEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        emailEditTExt.setText(DailyPreference.getInstance(this).getUserEmail());
+        emailEditTExt.setSelection(emailEditTExt.length());
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+        twoButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                // 이메일로 영수증 전송하기
+            }
+        });
+
+        dialog.setCancelable(true);
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
