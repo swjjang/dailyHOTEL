@@ -524,6 +524,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
+        <activity
+            android:name=".screen.information.wishlist.WishListTabActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"/>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
