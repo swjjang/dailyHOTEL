@@ -210,7 +210,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
 
-            initLayout(null, null, null);
+            initLayout(null, null, null, false);
 
             if (isShowCalendar == true)
             {
@@ -235,8 +235,10 @@ public class StayDetailActivity extends PlaceDetailActivity
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
             Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
 
+            boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
+
             initTransition();
-            initLayout(placeName, mDefaultImageUrl, grade);
+            initLayout(placeName, mDefaultImageUrl, grade, isFromMap);
 
             if (isShowCalendar == true)
             {
@@ -324,13 +326,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl, Stay.Grade grade)
+    private void initLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
         if (mIsDeepLink == false && Util.isOverAPI21() == true)
         {
-            ininTransLayout(placeName, imageUrl, grade);
+            ininTransLayout(placeName, imageUrl, grade, isFromMap);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -344,7 +346,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void ininTransLayout(String placeName, String imageUrl, Stay.Grade grade)
+    private void ininTransLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
     {
         if (Util.isTextEmpty(placeName, imageUrl) == true && grade != null)
         {
@@ -353,6 +355,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
         ((StayDetailLayout) mPlaceDetailLayout).setTitleText(grade, placeName);
+
+        if (isFromMap == true)
+        {
+            mPlaceDetailLayout.setTransBottomGradientBackground(R.color.black_a28);
+        }
     }
 
     @Override
