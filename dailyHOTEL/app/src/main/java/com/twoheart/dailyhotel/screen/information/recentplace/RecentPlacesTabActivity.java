@@ -134,8 +134,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         mFragmentList.add(mRecentGourmetListFragment);
 
         mPageAdapter = new RecentPlacesFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList);
-
-        //        setTabLayout(mFragmentList);
     }
 
     private void initToolbar()
@@ -165,34 +163,14 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mTabLayout.setLayoutParams(layoutParams);
 
-        setTabLayoutVisibility(View.GONE);
-
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
 
         mEmptyView = findViewById(R.id.emptyLayout);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
     }
 
-    private void setTabLayout(ArrayList<RecentPlacesListFragment> fragmentList)
+    private void setTabLayout()
     {
-        if (fragmentList == null || fragmentList.size() == 0 //
-            || (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true))
-        {
-            mViewPager.removeAllViews();
-            mViewPager.clearOnPageChangeListeners();
-
-            setTabLayoutVisibility(View.GONE);
-            setEmptyViewVisibility(View.VISIBLE);
-
-            unLockUI();
-
-            AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
-            return;
-        }
-
-        setTabLayoutVisibility(View.VISIBLE);
-        setEmptyViewVisibility(View.GONE);
-
         int position = 0;
 
         if (mPlaceType != null)
@@ -207,12 +185,14 @@ public class RecentPlacesTabActivity extends BaseActivity
             mPlaceType = null;
         } else
         {
-            if (isEmptyRecentStayPlace() == true)
+            if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
+            {
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+            } else if (isEmptyRecentStayPlace() == true)
             {
                 position = 1;
             }
         }
-
 
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
@@ -230,34 +210,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
 
         AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
-    }
-
-    private void setTabLayoutVisibility(int visibility)
-    {
-        if (mTabLayout == null)
-        {
-            return;
-        }
-
-        if (View.VISIBLE != visibility)
-        {
-            mTabLayout.setVisibility(View.GONE);
-            mTabLayout.setOnTabSelectedListener(null);
-        } else
-        {
-            mTabLayout.setVisibility(View.VISIBLE);
-            mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-        }
-    }
-
-    private void setEmptyViewVisibility(int visibility)
-    {
-        if (mEmptyView == null)
-        {
-            return;
-        }
-
-        mEmptyView.setVisibility(visibility);
     }
 
     private boolean isEmptyRecentStayPlace()
@@ -350,16 +302,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             if (stayCount == 0 && gourmetCount == 0)
             {
-                // 둘다 없을때
-                setTabLayoutVisibility(View.GONE);
-                setEmptyViewVisibility(View.VISIBLE);
-
                 AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
-            } else
-            {
-                // 둘중에 하나라도 있을때
-                setTabLayoutVisibility(View.VISIBLE);
-                setEmptyViewVisibility(View.GONE);
             }
         }
     };
@@ -382,7 +325,7 @@ public class RecentPlacesTabActivity extends BaseActivity
                 }
             }
 
-            setTabLayout(mFragmentList);
+            setTabLayout();
         }
 
         @Override
