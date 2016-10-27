@@ -45,7 +45,8 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:textColor="@color/default_text_c323232"
-        android:textSize="15dp"/>
+        android:textSize="15dp"
+        android:theme="@style/EditTextTheme"/>
 
     <RelativeLayout
         android:id="@+id/buttonLayout"

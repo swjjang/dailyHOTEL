@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.main;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -183,7 +186,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (DailyPreference.getInstance(this).isViewRecentPlaceTooltip() == true)
         {
-            mTooltipLayout.setVisibility(View.GONE);
+            hideAnimationTooltip();
         } else
         {
             DailyPreference.getInstance(this).setIsViewRecentPlaceTooltip(true);
@@ -193,7 +196,7 @@ public class MainActivity extends BaseActivity implements Constants
                 @Override
                 public void onClick(View view)
                 {
-                    view.setVisibility(View.GONE);
+                    hideAnimationTooltip();
                 }
             });
         }
@@ -427,7 +430,51 @@ public class MainActivity extends BaseActivity implements Constants
         }
     }
 
-    public void checkAppVersion(final String currentVersion, final String forceVersion)
+    private void hideAnimationTooltip()
+    {
+        if (mTooltipLayout.getTag() != null)
+        {
+            return;
+        }
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+
+        mTooltipLayout.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                mTooltipLayout.setTag(null);
+                mTooltipLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
+    }
+
+    private void checkAppVersion(final String currentVersion, final String forceVersion)
     {
         if (Util.isTextEmpty(currentVersion, forceVersion) == true)
         {
@@ -967,7 +1014,7 @@ public class MainActivity extends BaseActivity implements Constants
                     {
                         if (mTooltipLayout.getVisibility() != View.GONE)
                         {
-                            mTooltipLayout.setVisibility(View.GONE);
+                            hideAnimationTooltip();
                         }
                     }
                 }, 10000);

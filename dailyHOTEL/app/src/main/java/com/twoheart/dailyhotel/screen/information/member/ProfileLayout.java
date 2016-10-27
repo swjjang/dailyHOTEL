@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 public class ProfileLayout extends BaseLayout implements OnClickListener
 {
     private TextView mEmailTextView, mNameTextView, mPhoneTextView, mBirthdayTextView, mPhoneVerifyView;
+    private TextView mEmailLabelTextView, mNameLabelTextView, mPhoneLabelTextView, mBirthdayLabelTextView;
     private View mEmailLayout, mPasswordLayout;
     private View mPasswordUnderLine;
 
@@ -64,22 +65,26 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     private void initLayoutForm(View view)
     {
         mEmailLayout = view.findViewById(R.id.emailLayout);
+        mEmailLabelTextView = (TextView) mEmailLayout.findViewById(R.id.emailView);
         mEmailTextView = (TextView) mEmailLayout.findViewById(R.id.emailTextView);
 
         View nameLayout = view.findViewById(R.id.nameLayout);
         nameLayout.setOnClickListener(this);
 
+        mNameLabelTextView = (TextView) nameLayout.findViewById(R.id.nameView);
         mNameTextView = (TextView) nameLayout.findViewById(R.id.nameTextView);
 
         View phoneLayout = view.findViewById(R.id.phoneLayout);
         phoneLayout.setOnClickListener(this);
 
+        mPhoneLabelTextView = (TextView) phoneLayout.findViewById(R.id.phoneView);
         mPhoneTextView = (TextView) phoneLayout.findViewById(R.id.phoneTextView);
         mPhoneVerifyView = (TextView) phoneLayout.findViewById(R.id.phoneVerifyView);
 
         View birthdayLayout = view.findViewById(R.id.birthdayLayout);
         birthdayLayout.setOnClickListener(this);
 
+        mBirthdayLabelTextView = (TextView) birthdayLayout.findViewById(R.id.birthdayView);
         mBirthdayTextView = (TextView) birthdayLayout.findViewById(R.id.birthdayTextView);
 
         mPasswordLayout = view.findViewById(R.id.passwordLayout);
@@ -104,17 +109,28 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     private void updateDailyUserInformation(String email, String name, String phone, String birthday, boolean isPhoneVerified, String verifiedDate)
     {
         // 이메일
+        if (Util.isTextEmpty(email) == true)
+        {
+            mEmailLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+
         mEmailLayout.setOnClickListener(null);
         mEmailTextView.setText(email);
         mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_daily_small, 0, 0, 0);
         mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
 
         // 이름
+        if (Util.isTextEmpty(name) == true)
+        {
+            mNameLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+
         mNameTextView.setText(name);
 
         // 생일
         if (Util.isTextEmpty(birthday) == true)
         {
+            mBirthdayLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mBirthdayTextView.setText(null);
         } else
         {
@@ -131,6 +147,11 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 휴대폰
+        if (Util.isTextEmpty(phone) == true)
+        {
+            mPhoneLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+
         mPhoneVerifyView.setVisibility(View.VISIBLE);
         mPhoneTextView.setText(phone);
 
@@ -156,6 +177,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         // 이메일
         if (Util.isTextEmpty(email) == true)
         {
+            mEmailLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mEmailTextView.setText(null);
             mEmailLayout.setOnClickListener(this);
         } else
@@ -178,6 +200,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         // 이름
         if (Util.isTextEmpty(name) == true)
         {
+            mNameLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mNameTextView.setText(null);
         } else
         {
@@ -187,6 +210,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         // 생일
         if (Util.isTextEmpty(birthday) == true)
         {
+            mBirthdayLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mBirthdayTextView.setText(null);
         } else
         {
@@ -203,6 +227,12 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 휴대폰 번호
+        // 휴대폰
+        if (Util.isTextEmpty(phone) == true)
+        {
+            mPhoneLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+
         mPhoneTextView.setText(phone);
         mPhoneVerifyView.setVisibility(View.GONE);
 

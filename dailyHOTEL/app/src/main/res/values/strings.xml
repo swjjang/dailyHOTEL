@@ -593,6 +593,7 @@
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
     <string name="message_signup_step2_check_your_phonenumber">짧은 시간 내 인증번호를\n여러번 요청할 수 없습니다.\n입력하신 전화번호(%1$s)가\n맞는지 확인해주시거나\nSMS 수신이 시간이 걸릴 수 있으니\n잠시만 기다려주세요.</string>
+    <string name="message_signup_completed_alarm_on_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의했습니다.\n%s</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>
