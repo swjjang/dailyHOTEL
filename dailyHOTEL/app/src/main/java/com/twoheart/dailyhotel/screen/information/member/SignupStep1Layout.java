@@ -159,6 +159,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
+        if (Util.isOverAPI21() == false)
+        {
+            mAllAgreementCheckBox.setBackgroundResource(0);
+            mTermsOfPrivacyCheckBox.setBackgroundResource(0);
+            mTermsOfServiceCheckBox.setBackgroundResource(0);
+            mBenefitCheckBox.setBackgroundResource(0);
+        }
+
         mAllAgreementCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
