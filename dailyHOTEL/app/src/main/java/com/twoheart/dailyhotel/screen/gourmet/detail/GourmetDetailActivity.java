@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
@@ -199,7 +200,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
-            initLayout(null, null);
+            initLayout(null, null, false);
 
             if (isShowCalendar == true)
             {
@@ -223,8 +224,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
 
+            boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
+
             initTransition();
-            initLayout(placeName, mDefaultImageUrl);
+            initLayout(placeName, mDefaultImageUrl, isFromMap);
 
             if (isShowCalendar == true)
             {
@@ -245,6 +248,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             inNameTextTransition.addTarget(getString(R.string.transition_place_name));
             intransitionSet.addTransition(inNameTextTransition);
 
+            Transition inBottomAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            inBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            intransitionSet.addTransition(inBottomAlhpaTransition);
+
+            Transition inTopAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            inTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            intransitionSet.addTransition(inTopAlhpaTransition);
+
             getWindow().setSharedElementEnterTransition(intransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
@@ -252,6 +263,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 , 18, 17, new LinearInterpolator());
             outNameTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outNameTextTransition);
+
+            Transition outBottomAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            outBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            outTransitionSet.addTransition(outBottomAlhpaTransition);
+
+            Transition outTopAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            outTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            outTransitionSet.addTransition(outTopAlhpaTransition);
 
             outTransitionSet.setDuration(200);
 
@@ -296,13 +315,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl)
+    private void initLayout(String placeName, String imageUrl, boolean isFromMap)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
         if (mIsDeepLink == false && Util.isOverAPI21() == true)
         {
-            ininTransLayout(placeName, imageUrl);
+            ininTransLayout(placeName, imageUrl, isFromMap);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -316,7 +335,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void ininTransLayout(String placeName, String imageUrl)
+    private void ininTransLayout(String placeName, String imageUrl, boolean isFromMap)
     {
         if (Util.isTextEmpty(placeName, imageUrl) == true)
         {
@@ -325,6 +344,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
         ((GourmetDetailLayout) mPlaceDetailLayout).setTitleText(placeName);
+
+        if (isFromMap == true)
+        {
+            mPlaceDetailLayout.setTransBottomGradientBackground(R.color.black_a28);
+        }
     }
 
     @Override

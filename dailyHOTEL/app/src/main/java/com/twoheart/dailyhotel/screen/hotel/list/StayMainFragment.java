@@ -902,6 +902,13 @@ public class StayMainFragment extends PlaceMainFragment
                         View gradientTopView = view.findViewById(R.id.gradientTopView);
                         View gradientBottomView = view.findViewById(R.id.gradientView);
 
+                        Object mapTag = gradientBottomView.getTag();
+
+                        if (mapTag != null && "map".equals(mapTag) == true)
+                        {
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                        }
+
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
                             android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
                             android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
