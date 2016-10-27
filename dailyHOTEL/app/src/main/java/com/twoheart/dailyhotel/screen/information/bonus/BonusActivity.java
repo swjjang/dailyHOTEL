@@ -21,6 +21,7 @@ import java.util.List;
 public class BonusActivity extends BaseActivity
 {
     private static final int REQUEST_ACTIVITY_INVITEFRIENDS = 10000;
+    private static final int REQUEST_ACTIVITY_TERMS = 10001;
 
     private String mRecommendCode;
     private String mName;
@@ -164,7 +165,7 @@ public class BonusActivity extends BaseActivity
             }
 
             Intent intent = new Intent(BonusActivity.this, BonusTermActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_ACTIVITY_TERMS);
         }
 
         @Override
