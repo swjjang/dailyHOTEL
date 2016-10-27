@@ -14,6 +14,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
     protected boolean mIsFullscreen;
     private int mBookingIndex;
     private DailyToolbarLayout mDailyToolbarLayout;
+    protected View mBottomLayout;
 
     protected abstract void requestReceiptDetail(int index);
 
@@ -90,12 +91,16 @@ public abstract class PlaceReceiptActivity extends BaseActivity
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+            mBottomLayout.setVisibility(View.GONE);
         } else
         {
             mDailyToolbarLayout.setToolbarVisibility(true, false);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            mBottomLayout.setVisibility(View.VISIBLE);
         }
     }
 }
