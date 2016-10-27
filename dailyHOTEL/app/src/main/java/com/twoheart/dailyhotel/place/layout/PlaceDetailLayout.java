@@ -133,6 +133,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
         mTransGradientView = view.findViewById(R.id.transGradientView);
+        View transGradientTopView = view.findViewById(R.id.transGradientTopView);
 
         View transTitleLayout = view.findViewById(R.id.transTitleLayout);
         mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
@@ -147,8 +148,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
 
             mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
-            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_view));
+            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
             mTransGradientView.setBackground(makeShaderFactory());
+
+            transGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
         } else
         {
             setTransImageVisibility(false);

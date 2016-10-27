@@ -15,10 +15,16 @@
         fresco:actualImageScaleType="centerCrop"/>
 
     <View
+        android:id="@+id/gradientTopView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_gradient_top_view"/>
+
+    <View
         android:id="@+id/gradientView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:transitionName="@string/transition_gradient_view"/>
+        android:transitionName="@string/transition_gradient_bottom_view"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/gradeTextView"
