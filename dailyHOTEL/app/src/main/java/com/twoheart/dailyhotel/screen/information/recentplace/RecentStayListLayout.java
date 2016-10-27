@@ -34,7 +34,7 @@ public class RecentStayListLayout extends RecentPlacesListLayout
     @Override
     protected int getEmptyImageResId()
     {
-        return 0;
+        return R.drawable.no_hotel_ic;
     }
 
     @Override
