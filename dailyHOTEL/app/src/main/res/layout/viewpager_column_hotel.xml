@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_a28"
+        android:tag="map"
         android:transitionName="@string/transition_gradient_bottom_view"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
