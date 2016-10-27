@@ -120,6 +120,11 @@ public class MainFragmentManager
      */
     public void replaceFragment(Fragment fragment, String tag)
     {
+        if (mBaseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
         try
         {
             clearFragmentBackStack();
