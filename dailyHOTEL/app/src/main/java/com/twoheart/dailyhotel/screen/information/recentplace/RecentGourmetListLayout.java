@@ -34,7 +34,7 @@ public class RecentGourmetListLayout extends RecentPlacesListLayout
     @Override
     protected int getEmptyImageResId()
     {
-        return 0;
+        return R.drawable.no_gourmet_ic;
     }
 
     @Override

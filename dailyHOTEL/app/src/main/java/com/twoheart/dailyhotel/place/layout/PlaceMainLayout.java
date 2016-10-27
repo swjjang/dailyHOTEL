@@ -166,7 +166,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 scaleX = (float) i / 100;
                 scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
 
-                if (viewWidth >= scaleWidth)
+                if (viewWidth > scaleWidth)
                 {
                     break;
                 }

@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.widget.DailyImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
     private View mEmptyLayout;
+    private DailyImageView mEmptyImageView;
     private DailyTextView mEmptyTextView;
     private DailyTextView mEmptyButtonTextView;
     private RecentPlacesListAdapter mListAdapter;
@@ -55,9 +57,10 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 
+        mEmptyImageView = (DailyImageView) view.findViewById(R.id.emptyImageView);
         mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
         mEmptyTextView.setText(getEmptyTextResId());
-        mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.emptyButtonTextView);
+        mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.buttonView);
         mEmptyButtonTextView.setText(getEmptyButtonTextResId());
 
         mEmptyButtonTextView.setOnClickListener(new View.OnClickListener()
@@ -69,13 +72,13 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             }
         });
 
-        int topDrawableResId = getEmptyImageResId();
-        if (topDrawableResId <= 0)
+        int imageResId = getEmptyImageResId();
+        if (imageResId <= 0)
         {
-            topDrawableResId = R.drawable.no_event_ic;
+            imageResId = R.drawable.no_event_ic;
         }
 
-        mEmptyTextView.setCompoundDrawablesWithIntrinsicBounds(0, topDrawableResId, 0, 0);
+        mEmptyImageView.setVectorImageResource(imageResId);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
