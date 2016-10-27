@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -190,6 +191,10 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
             deleteView = itemView.findViewById(R.id.deleteView);
+
+            RelativeLayout.LayoutParams dBenefitLayoutParams = (RelativeLayout.LayoutParams) dBenefitLayout.getLayoutParams();
+            dBenefitLayoutParams.rightMargin = Util.dpToPx(mContext, 4);
+            dBenefitLayout.setLayoutParams(dBenefitLayoutParams);
 
             itemView.setOnClickListener(new View.OnClickListener()
             {
