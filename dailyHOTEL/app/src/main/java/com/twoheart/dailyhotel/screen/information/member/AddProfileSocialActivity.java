@@ -172,7 +172,7 @@ public class AddProfileSocialActivity extends BaseActivity
         if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
         {
             messageTextView.setVisibility(View.VISIBLE);
-            messageTextView.setText(getString(R.string.message_benefit_alarm_on_confirm_format, updateDate));
+            messageTextView.setText(getString(R.string.message_signup_completed_alarm_on_format, updateDate));
         } else
         {
             messageTextView.setVisibility(View.GONE);
