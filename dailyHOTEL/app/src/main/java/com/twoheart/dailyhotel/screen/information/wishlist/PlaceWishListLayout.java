@@ -43,7 +43,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
 
     protected abstract int getEmptyButtonTextResId();
 
-    protected abstract PlaceWishListAdapter getWishListListAdapter(Context context//
+    protected abstract PlaceWishListAdapter getWishListAdapter(Context context//
         , ArrayList<? extends Place> list, PlaceWishListAdapter.OnWishListItemListener listener);
 
     public PlaceWishListLayout(Context context, OnBaseEventListener listener)
@@ -104,7 +104,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = getWishListListAdapter(mContext, list, mItemListener);
+            mListAdapter = getWishListAdapter(mContext, list, mItemListener);
             mRecyclerView.setAdapter(mListAdapter);
         } else
         {

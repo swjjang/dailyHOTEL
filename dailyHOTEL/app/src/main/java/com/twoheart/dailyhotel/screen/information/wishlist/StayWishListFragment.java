@@ -48,7 +48,7 @@ public class StayWishListFragment extends PlaceWishListFragment
     }
 
     @Override
-    protected void requestWishListList()
+    protected void requestWishList()
     {
         lockUI();
 
@@ -66,7 +66,6 @@ public class StayWishListFragment extends PlaceWishListFragment
 
         RecentStayParams recentStayParams = new RecentStayParams();
         recentStayParams.setCheckInTime(mSaleTime);
-        recentStayParams.setTargetIndices(mWishList.toString());
 
         ((StayWishListNetworkController) mNetworkController).requestStayWishList(recentStayParams);
     }
@@ -83,44 +82,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            ArrayList<Stay> resultList = new ArrayList<>();
-
-            if (mWishList != null && list != null && list.size() > 0)
-            {
-                ArrayList<Stay> cloneList = (ArrayList<Stay>) list.clone();
-
-                for (String stringIndex : mWishList.getList())
-                {
-                    if (Util.isTextEmpty(stringIndex) == true)
-                    {
-                        continue;
-                    }
-
-                    int index = -1;
-                    try
-                    {
-                        index = Integer.parseInt(stringIndex);
-                    } catch (NumberFormatException e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
-                    if (index > 0)
-                    {
-                        for (Stay stay : cloneList)
-                        {
-                            if (index == stay.index)
-                            {
-                                resultList.add(stay);
-                                cloneList.remove(stay);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            mListLayout.setData(resultList);
+            mListLayout.setData(list);
         }
 
         @Override
@@ -197,24 +159,19 @@ public class StayWishListFragment extends PlaceWishListFragment
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mWishList.size() - 1 < position)
+            ArrayList<Stay> stayList = (ArrayList<Stay>) mListLayout.getList();
+
+            if (position < 0 || stayList == null || stayList.size() - 1 < position)
             {
                 ExLog.d("position Error Stay");
                 return;
             }
 
-            mWishList.remove(position);
-
             Place place = mListLayout.removeItem(position);
             ExLog.d("isRemove : " + (place != null));
 
-            if (place != null)
-            {
-                DailyPreference.getInstance(mBaseActivity).setStayRecentPlaces(mWishList.toString());
-            }
-
             mListLayout.setData(mListLayout.getList());
-            mWishListListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mWishList);
+            mWishListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mWishList);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, //

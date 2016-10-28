@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -24,26 +23,22 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     protected SaleTime mSaleTime;
 
-    /**
-     * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수 또는 서버 전달 데이터 갯수로 판단해야 합니다.
-     */
-    protected RecentPlaces mWishList;
-    protected OnRecentPlaceListFragmentListener mWishListListFragmentListener;
+    protected OnWishListFragmentListener mWishListFragmentListener;
 
     protected abstract PlaceWishListLayout getListLayout();
 
     protected abstract BaseNetworkController getNetworkController();
 
-    protected abstract void requestWishListList();
+    protected abstract void requestWishList();
 
-    public interface OnRecentPlaceListFragmentListener
+    public interface OnWishListFragmentListener
     {
-        void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces);
+        void onDeleteItemClick(PlaceType placeType, int position);
     }
 
-    public void setWishListListFragmentListener(OnRecentPlaceListFragmentListener listener)
+    public void setWishListListFragmentListener(OnWishListFragmentListener listener)
     {
-        mWishListListFragmentListener = listener;
+        mWishListFragmentListener = listener;
     }
 
     @Override
@@ -61,7 +56,7 @@ public abstract class PlaceWishListFragment extends BaseFragment
     {
         super.onResume();
 
-        requestWishListList();
+        requestWishList();
     }
 
     public void setSaleTime(SaleTime saleTime)

@@ -132,6 +132,9 @@ public class RecentPlacesTabActivity extends BaseActivity
         initToolbar();
         initTabLayout();
 
+        mEmptyView = findViewById(R.id.emptyLayout);
+        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
@@ -177,9 +180,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         mTabLayout.setLayoutParams(layoutParams);
 
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
-
-        mEmptyView = findViewById(R.id.emptyLayout);
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
     }
 
     private void setTabLayout()

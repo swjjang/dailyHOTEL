@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -22,9 +21,9 @@ import java.util.ArrayList;
  * Created by android_sam on 2016. 10. 13..
  */
 
-public class GourmetWishListAdapter extends RecentPlacesListAdapter
+public class GourmetWishListAdapter extends PlaceWishListAdapter
 {
-    public GourmetWishListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
+    public GourmetWishListAdapter(Context context, ArrayList<? extends Place> list, OnWishListItemListener listener)
     {
         super(context, list, listener);
     }

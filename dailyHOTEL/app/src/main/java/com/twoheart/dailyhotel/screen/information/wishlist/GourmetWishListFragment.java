@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2016. 10. 12..
  */
 
-public class GourmetWishListFragment extends RecentPlacesListFragment
+public class GourmetWishListFragment extends PlaceWishListFragment
 {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -37,7 +37,7 @@ public class GourmetWishListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected RecentPlacesListLayout getListLayout()
+    protected PlaceWishListLayout getListLayout()
     {
         return new GourmetWishListLayout(mBaseActivity, mEventListener);
     }
@@ -49,25 +49,12 @@ public class GourmetWishListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void requestRecentPlacesList()
+    protected void requestWishList()
     {
         lockUI();
 
-        int count = mRecentPlaces != null ? mRecentPlaces.size() : 0;
-        if (count == 0)
-        {
-            unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
-            {
-                mListLayout.setData(null);
-            }
-            return;
-        }
-
         RecentGourmetParams params = new RecentGourmetParams();
         params.setSaleTime(mSaleTime);
-        params.setTargetIndices(mRecentPlaces.toString());
 
         ((GourmetWishListNetworkController) mNetworkController).requestRecentGourmetList(params);
     }
@@ -84,44 +71,7 @@ public class GourmetWishListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            ArrayList<Gourmet> resultList = new ArrayList<>();
-
-            if (mRecentPlaces != null && list != null && list.size() > 0)
-            {
-                ArrayList<Gourmet> cloneList = (ArrayList<Gourmet>) list.clone();
-
-                for (String stringIndex : mRecentPlaces.getList())
-                {
-                    if (Util.isTextEmpty(stringIndex) == true)
-                    {
-                        continue;
-                    }
-
-                    int index = -1;
-                    try
-                    {
-                        index = Integer.parseInt(stringIndex);
-                    } catch (NumberFormatException e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
-                    if (index > 0)
-                    {
-                        for (Gourmet gourmet : cloneList)
-                        {
-                            if (index == gourmet.index)
-                            {
-                                resultList.add(gourmet);
-                                cloneList.remove(gourmet);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            mListLayout.setData(resultList);
+            mListLayout.setData(list);
         }
 
         @Override
