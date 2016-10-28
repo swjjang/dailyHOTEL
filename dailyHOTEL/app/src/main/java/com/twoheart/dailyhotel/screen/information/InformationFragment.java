@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
 import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
+import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -514,12 +515,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, RecentPlacesTabActivity.class);
-
-            if (placeType != null)
-            {
-                intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-            }
+            Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, placeType);
 
             baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
@@ -693,6 +689,22 @@ public class InformationFragment extends BaseFragment implements Constants
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
             startActivityForResult(intent, Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS);
+        }
+
+        @Override
+        public void startWishList(Constants.PlaceType placeType)
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = WishListTabActivity.newInstance(baseActivity, placeType);
+
+            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 
         @Override

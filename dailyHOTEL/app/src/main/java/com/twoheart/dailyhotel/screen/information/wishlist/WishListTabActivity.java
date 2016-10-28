@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * Created by android_sam on 2016. 10. 27..
@@ -14,8 +15,14 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 public class WishListTabActivity extends BaseActivity
 {
 
-    public static Intent newInstance(Context context) {
+    public static Intent newInstance(Context context, PlaceType placeType)
+    {
         Intent intent = new Intent(context, WishListTabActivity.class);
+
+        if (placeType != null)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        }
         return intent;
     }
 
@@ -32,6 +39,7 @@ public class WishListTabActivity extends BaseActivity
     @Override
     protected void onResume()
     {
+        super.onResume();
     }
 
     @Override

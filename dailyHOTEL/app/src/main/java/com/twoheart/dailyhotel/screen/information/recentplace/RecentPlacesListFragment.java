@@ -25,7 +25,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     protected SaleTime mSaleTime;
 
     /**
-     * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수로 판단해야 합니다.
+     * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수 또는 서버 전달 데이터 갯수로 판단해야 합니다.
      */
     protected RecentPlaces mRecentPlaces;
     protected OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener;
