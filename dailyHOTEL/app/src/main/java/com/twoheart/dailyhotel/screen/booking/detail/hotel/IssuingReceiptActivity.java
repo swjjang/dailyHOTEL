@@ -6,12 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -24,6 +27,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
@@ -145,7 +149,7 @@ public class IssuingReceiptActivity extends BaseActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
         emailEditTExt.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -165,7 +169,7 @@ public class IssuingReceiptActivity extends BaseActivity
         twoButtonLayout.setVisibility(View.VISIBLE);
 
         TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+        final TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -184,12 +188,50 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
-                {
-                    dialog.dismiss();
-                }
+                String email = emailEditTExt.getText().toString();
 
-                // 이메일로 영수증 전송하기
+                if (Util.isTextEmpty(email) == false)
+                {
+                    // 이메일로 영수증 전송하기
+
+                    if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                    {
+                        DailyToast.showToast(IssuingReceiptActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+                }
+            }
+        });
+
+        emailEditTExt.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable == null || editable.length() == 0)
+                {
+                    positiveTextView.setEnabled(false);
+                } else
+                {
+                    positiveTextView.setEnabled(true);
+                }
             }
         });
 

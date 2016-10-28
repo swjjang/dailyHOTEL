@@ -37,20 +37,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:background="@color/information_background"
+        android:background="@color/default_background"
         android:visibility="gone">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <LinearLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/emptyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_places_list_empty_message"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"
+                dailyFont:style="Medium"/>
+
+        </LinearLayout>
+
+        <com.twoheart.dailyhotel.widget.DailyImageView
+            android:id="@+id/emptyImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawablePadding="20dp"
+            android:layout_above="@id/textLayout"
+            android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="@string/recent_places_list_empty_message"
-            android:textColor="@color/information_title"
-            android:textSize="18dp"
-            app:drawableCompatTop="@drawable/no_event_ic"
-            dailyFont:style="Medium"/>
-
+            app:srcCompat="@drawable/no_event_ic"/>
     </RelativeLayout>
 </RelativeLayout>

@@ -3,12 +3,15 @@ package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -18,6 +21,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -225,7 +229,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
         emailEditTExt.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -245,7 +249,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         twoButtonLayout.setVisibility(View.VISIBLE);
 
         TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+        final TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -264,12 +268,45 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             @Override
             public void onClick(View v)
             {
+                String email = emailEditTExt.getText().toString();
+
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                {
+                    DailyToast.showToast(GourmetReceiptActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                    return;
+                }
+
                 if (dialog != null && dialog.isShowing())
                 {
                     dialog.dismiss();
                 }
+            }
+        });
 
-                // 이메일로 영수증 전송하기
+        emailEditTExt.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable == null || editable.length() == 0)
+                {
+                    positiveTextView.setEnabled(false);
+                } else
+                {
+                    positiveTextView.setEnabled(true);
+                }
             }
         });
 
