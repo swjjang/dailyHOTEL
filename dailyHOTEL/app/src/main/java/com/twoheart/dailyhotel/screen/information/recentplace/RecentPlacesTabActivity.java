@@ -188,9 +188,20 @@ public class RecentPlacesTabActivity extends BaseActivity
             if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
             {
                 AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
-            } else if (isEmptyRecentStayPlace() == true)
+            } else
             {
-                position = 1;
+                if (isEmptyRecentStayPlace() == true)
+                {
+                    position = 1;
+                }
+
+                String placeTypeString = position == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.STAY;
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
+                params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
+
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
             }
         }
 
@@ -202,14 +213,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         mViewPager.setCurrentItem(position);
-
-        String placeTypeString = position == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.STAY;
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
-        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
-
-        AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
     }
 
     private boolean isEmptyRecentStayPlace()
