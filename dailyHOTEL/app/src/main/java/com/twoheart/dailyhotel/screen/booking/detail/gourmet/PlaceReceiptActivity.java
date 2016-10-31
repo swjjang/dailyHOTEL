@@ -92,7 +92,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-            mBottomLayout.setVisibility(View.GONE);
+            //            mBottomLayout.setVisibility(View.GONE);
         } else
         {
             mDailyToolbarLayout.setToolbarVisibility(true, false);
@@ -100,7 +100,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            mBottomLayout.setVisibility(View.VISIBLE);
+            //            mBottomLayout.setVisibility(View.VISIBLE);
         }
     }
 }
