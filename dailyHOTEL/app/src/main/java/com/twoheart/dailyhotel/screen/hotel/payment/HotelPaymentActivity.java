@@ -43,7 +43,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -1431,7 +1431,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String hotelName = roomInformation.hotelName;
         String roomPrice = Integer.toString(roomInformation.averageDiscount);
 
-        Intent intent = SelectCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
+        Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
             roomIdx, checkInDate, checkOutDate, categoryCode, hotelName, roomPrice);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 

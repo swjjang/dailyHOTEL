@@ -513,6 +513,8 @@ interface IDailyNetwork
      */
     void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
 
+    void requestCouponList(Object tag, int gourmetIdx, int ticketIdx, String date, DailyHotelJsonResponseListener listener);
+
     /**
      * /api/v3/users/coupons/history
      * 자신이 소유한 Coupon List
@@ -564,7 +566,11 @@ interface IDailyNetwork
 
     void requestHasCoupon(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener);
 
+    void requestHasCoupon(Object tag, int placeIndex, String date, DailyHotelJsonResponseListener listener);
+
     void requestCouponList(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener);
+
+    void requestCouponList(Object tag, int placeIndex, String date, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag

@@ -258,6 +258,28 @@ public class GourmetDetailListAdapter extends BaseAdapter
                 gourmetDetail.ratingValue, decimalFormat.format(gourmetDetail.ratingPersons)));
         }
 
+        // 할인 쿠폰
+        View couponLayout = view.findViewById(R.id.couponLayout);
+
+        if (placeDetail.hasCoupon == true)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+
+            View downloadCouponView = couponLayout.findViewById(R.id.downloadCouponView);
+
+            downloadCouponView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.downloadCoupon();
+                }
+            });
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
         // 날짜
         TextView dayTextView = (TextView) view.findViewById(R.id.dayTextView);
 

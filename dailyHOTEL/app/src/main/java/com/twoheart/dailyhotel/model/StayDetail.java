@@ -19,7 +19,7 @@ public class StayDetail extends PlaceDetail
     private ArrayList<RoomInformation> mSaleRoomList;
     //
     public String categoryCode;
-    public boolean hasCoupon;
+
 
     private ArrayList<Pictogram> mPictogramList;
 

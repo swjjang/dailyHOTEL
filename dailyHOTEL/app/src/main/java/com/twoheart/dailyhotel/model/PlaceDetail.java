@@ -16,6 +16,8 @@ public abstract class PlaceDetail
     public int ratingValue;
     public double latitude;
     public double longitude;
+    public boolean hasCoupon;
+
     protected ArrayList<ImageInformation> mImageInformationList;
     protected ArrayList<DetailInformation> mInformationList;
     protected ArrayList<String> mBenefitInformation;

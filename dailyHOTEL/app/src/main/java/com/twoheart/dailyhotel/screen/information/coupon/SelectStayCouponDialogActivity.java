@@ -25,9 +25,8 @@ import java.util.Map;
 /**
  * Created by android_sam on 2016. 5. 26..
  */
-public class SelectCouponDialogActivity extends BaseActivity
+public class SelectStayCouponDialogActivity extends BaseActivity
 {
-
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
     public static final String INTENT_EXTRA_HOTEL_IDX = "hotelIdx";
     public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
@@ -57,7 +56,7 @@ public class SelectCouponDialogActivity extends BaseActivity
     public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, //
                                      String checkOutDate, String categoryCode, String hotelName, String roomPrice)
     {
-        Intent intent = new Intent(context, SelectCouponDialogActivity.class);
+        Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
         intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
         intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
@@ -73,7 +72,7 @@ public class SelectCouponDialogActivity extends BaseActivity
     public static Intent newInstance(Context context, int hotelIdx, String checkInDate, //
                                      int nights, String categoryCode, String hotelName)
     {
-        Intent intent = new Intent(context, SelectCouponDialogActivity.class);
+        Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
         intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
         intent.putExtra(INTENT_EXTRA_NIGHTS, nights);
@@ -199,11 +198,11 @@ public class SelectCouponDialogActivity extends BaseActivity
                         // empty list
                         String label = mCategoryCode + "-" + mHotelName + "-" + mRoomPrice;
 
-                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
                             AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
                     } else
                     {
-                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
                             AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
                     }
                     break;
@@ -235,10 +234,10 @@ public class SelectCouponDialogActivity extends BaseActivity
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_SELECT_COUPON, coupon);
 
-            SelectCouponDialogActivity.this.setResult(RESULT_OK, intent);
-            SelectCouponDialogActivity.this.finish();
+            SelectStayCouponDialogActivity.this.setResult(RESULT_OK, intent);
+            SelectStayCouponDialogActivity.this.finish();
 
-            AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+            AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
                 AnalyticsManager.Action.HOTEL_COUPON_SELECTED, coupon.title, null);
         }
 
@@ -252,7 +251,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         @Override
         public void finish()
         {
-            SelectCouponDialogActivity.this.finish();
+            SelectStayCouponDialogActivity.this.finish();
         }
     };
 
@@ -289,11 +288,11 @@ public class SelectCouponDialogActivity extends BaseActivity
 
                     if (isEmpty == true)
                     {
-                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
+                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
                             .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
                     } else
                     {
-                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
+                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
                             .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
                     }
                     break;
@@ -345,7 +344,7 @@ public class SelectCouponDialogActivity extends BaseActivity
                 {
                     if (Util.isTextEmpty(mCheckInDate, mCheckOutDate) == true)
                     {
-                        Util.restartApp(SelectCouponDialogActivity.this);
+                        Util.restartApp(SelectStayCouponDialogActivity.this);
                         return;
                     }
 
@@ -357,7 +356,7 @@ public class SelectCouponDialogActivity extends BaseActivity
                 {
                     if (Util.isTextEmpty(mCheckInDate) == true)
                     {
-                        Util.restartApp(SelectCouponDialogActivity.this);
+                        Util.restartApp(SelectStayCouponDialogActivity.this);
                         return;
                     }
 
@@ -370,25 +369,25 @@ public class SelectCouponDialogActivity extends BaseActivity
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            SelectCouponDialogActivity.this.onErrorResponse(volleyError);
+            SelectStayCouponDialogActivity.this.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
-            SelectCouponDialogActivity.this.onError(e);
+            SelectStayCouponDialogActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            SelectCouponDialogActivity.this.onErrorPopupMessage(msgCode, message);
+            SelectStayCouponDialogActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            SelectCouponDialogActivity.this.onErrorToastMessage(message);
+            SelectStayCouponDialogActivity.this.onErrorToastMessage(message);
             finish();
         }
 
@@ -411,7 +410,7 @@ public class SelectCouponDialogActivity extends BaseActivity
                         paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "booking");
                         paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
 
-                        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
+                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
                             , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking-" + coupon.title, paramsMap);
 
                         break;

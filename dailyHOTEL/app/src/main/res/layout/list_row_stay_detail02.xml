@@ -71,7 +71,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id="@+id/couponLayout"
         android:layout_width="match_parent"

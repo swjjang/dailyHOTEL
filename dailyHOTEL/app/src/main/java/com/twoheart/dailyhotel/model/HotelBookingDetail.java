@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity.INTENT_EXTRA_HOTEL_IDX;
+import static com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity.INTENT_EXTRA_HOTEL_IDX;
 
 public class HotelBookingDetail extends PlaceBookingDetail
 {

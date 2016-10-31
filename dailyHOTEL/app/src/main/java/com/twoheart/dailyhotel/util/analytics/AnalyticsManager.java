@@ -619,6 +619,7 @@ public class AnalyticsManager
         public static final String GOURMET_DETAIL_ADDRESS_COPY_CLICKED = "GourmetDetailAddressCopyClicked";
         public static final String GOURMET_DETAIL_NAVIGATION_APP_CLICKED = "GourmetDetailNavigationAppClicked";
         public static final String GOURMET_BOOKING_DATE_CLICKED = "GourmetBookingDateClicked";
+        public static final String GOURMET_COUPON_DOWNLOAD = "GourmetCouponDownload";
         //
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
