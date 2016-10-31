@@ -85,16 +85,18 @@ public class IssuingReceiptActivity extends BaseActivity
 
     private void initLayout()
     {
-        mBottomLayout = findViewById(R.id.bottomLayout);
-        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
-        sendEmailView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                showSendEmailDialog();
-            }
-        });
+        // 영수증 다음 버전으로
+        //        mBottomLayout = findViewById(R.id.bottomLayout);
+        //        mBottomLayout.setVisibility(View.GONE);
+        //        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        //        sendEmailView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                showSendEmailDialog();
+        //            }
+        //        });
     }
 
     @Override
@@ -435,7 +437,7 @@ public class IssuingReceiptActivity extends BaseActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-            mBottomLayout.setVisibility(View.GONE);
+            //            mBottomLayout.setVisibility(View.GONE);
         } else
         {
             mDailyToolbarLayout.setToolbarVisibility(true, false);
@@ -443,7 +445,7 @@ public class IssuingReceiptActivity extends BaseActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            mBottomLayout.setVisibility(View.VISIBLE);
+            //            mBottomLayout.setVisibility(View.VISIBLE);
         }
     }
 

@@ -332,7 +332,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
+            try
+            {
+                DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
+            }catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
