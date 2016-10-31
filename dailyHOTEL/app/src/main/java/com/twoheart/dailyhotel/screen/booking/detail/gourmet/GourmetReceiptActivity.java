@@ -182,16 +182,18 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             }
         });
 
-        mBottomLayout = findViewById(R.id.bottomLayout);
-        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
-        sendEmailView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                showSendEmailDialog();
-            }
-        });
+        // 영수증 다음 버전으로
+        //        mBottomLayout = findViewById(R.id.bottomLayout);
+        //        mBottomLayout.setVisibility(View.GONE);
+        //        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        //        sendEmailView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                showSendEmailDialog();
+        //            }
+        //        });
     }
 
     protected View getLayout()
