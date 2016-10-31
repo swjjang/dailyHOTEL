@@ -76,7 +76,7 @@ public class WishListTabActivity extends BaseActivity
     {
         if (DailyHotel.isLogin() == false)
         {
-            lockUI();
+            unLockUI();
             setNeedLoginViewVisibility(View.VISIBLE);
         } else
         {
@@ -101,6 +101,26 @@ public class WishListTabActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                mDontReloadAtOnResume = false;
+
+//                if (resultCode == Activity.RESULT_OK)
+//                {
+//
+//                }
+                break;
+            }
+        }
     }
 
     private void initIntent(Intent intent) {
@@ -235,7 +255,7 @@ public class WishListTabActivity extends BaseActivity
         {
 //            Intent intent = LoginActivity.newInstance(WishListTabActivity.this, Screen.DAILYHOTEL_DETAIL);
             Intent intent = LoginActivity.newInstance(WishListTabActivity.this);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_WISHLIST);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
         }
     };
 
