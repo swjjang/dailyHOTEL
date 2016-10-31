@@ -15,10 +15,8 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -52,15 +50,14 @@ public class StayWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        int count = mWishList != null ? mWishList.size() : 0;
-        if (count == 0)
+        //        if (mListLayout == null)
+        //        {
+        //            unLockUI();
+        //            return;
+        //        }
+        if (mSaleTime == null)
         {
             unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
-            {
-                mListLayout.setData(null);
-            }
             return;
         }
 
@@ -83,6 +80,12 @@ public class StayWishListFragment extends PlaceWishListFragment
             }
 
             mListLayout.setData(list);
+        }
+
+        @Override
+        public void onDeleteWishItem(int position, int placeIndex)
+        {
+            // TODO : 삭제 처리 서버 결과 도착시 처리 필요.
         }
 
         @Override
@@ -119,7 +122,13 @@ public class StayWishListFragment extends PlaceWishListFragment
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mWishList.size() - 1 < position)
+            if (position < 0 || mListLayout == null)
+            {
+                return;
+            }
+
+            int size = mListLayout.getSize();
+            if (position < 0 || size - 1 < position)
             {
                 return;
             }
@@ -150,33 +159,38 @@ public class StayWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
             }
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-                stay.name, null);
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, //
+            //                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+            //                stay.name, null);
         }
 
         @Override
         public void onListItemDeleteClick(int position)
         {
-            ArrayList<Stay> stayList = (ArrayList<Stay>) mListLayout.getList();
-
-            if (position < 0 || stayList == null || stayList.size() - 1 < position)
+            if (position < 0 || mListLayout == null)
             {
-                ExLog.d("position Error Stay");
                 return;
             }
+
+            int size = mListLayout.getSize();
+            if (position < 0 || size - 1 < position)
+            {
+                return;
+            }
+
+            // TODO : 삭제 API 연동
 
             Place place = mListLayout.removeItem(position);
             ExLog.d("isRemove : " + (place != null));
 
             mListLayout.setData(mListLayout.getList());
-            mWishListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mWishList);
+            mWishListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, position);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-                place.name, null);
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, //
+            //                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+            //                place.name, null);
         }
 
         @Override

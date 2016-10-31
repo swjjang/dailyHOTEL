@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 
 public abstract class PlaceWishListFragment extends BaseFragment
 {
+    private PlaceType mPlaceType;
+
     protected BaseActivity mBaseActivity;
     protected PlaceWishListLayout mListLayout;
     protected BaseNetworkController mNetworkController;
@@ -67,5 +69,15 @@ public abstract class PlaceWishListFragment extends BaseFragment
         }
 
         mSaleTime = saleTime;
+    }
+
+    public void setPlaceType(PlaceType placeType)
+    {
+        mPlaceType = placeType;
+    }
+
+    public PlaceType getPlaceType()
+    {
+        return mPlaceType;
     }
 }

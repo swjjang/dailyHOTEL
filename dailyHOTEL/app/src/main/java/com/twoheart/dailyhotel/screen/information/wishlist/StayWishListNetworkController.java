@@ -33,6 +33,8 @@ public class StayWishListNetworkController extends BaseNetworkController
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onStayWishList(ArrayList<Stay> list);
+
+        void onDeleteWishItem(int position, int placeIndex);
     }
 
     public void requestStayWishList(RecentStayParams params)
@@ -43,6 +45,10 @@ public class StayWishListNetworkController extends BaseNetworkController
         }
 
         DailyNetworkAPI.getInstance(mContext).requestRecentStayList(mNetworkTag, params.toParamsString(), mListJsonResponseListener);
+    }
+
+    public void requestStayWishListItem(int position, int placeIndex) {
+        // TODO : 삭제 request 구현 필요.
     }
 
     private DailyHotelJsonResponseListener mListJsonResponseListener = new DailyHotelJsonResponseListener()

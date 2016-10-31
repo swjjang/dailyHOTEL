@@ -68,5 +68,21 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             app:srcCompat="@drawable/no_wishlist_ic"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/loginButtonView"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_below="@+id/textLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="@string/act_credit_btn_login"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
     </RelativeLayout>
 </RelativeLayout>

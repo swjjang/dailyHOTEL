@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ public abstract class PlaceWishListLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
     private View mEmptyLayout;
-    private DailyImageView mEmptyImageView;
     private DailyTextView mEmptyTextView;
     private DailyTextView mEmptyButtonTextView;
     private PlaceWishListAdapter mListAdapter;
@@ -57,7 +55,6 @@ public abstract class PlaceWishListLayout extends BaseLayout
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 
-        mEmptyImageView = (DailyImageView) view.findViewById(R.id.emptyImageView);
         mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
         mEmptyTextView.setText(getEmptyTextResId());
         mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.buttonView);
@@ -71,14 +68,6 @@ public abstract class PlaceWishListLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onEmptyButtonClick();
             }
         });
-
-        int imageResId = getEmptyImageResId();
-        if (imageResId <= 0)
-        {
-            imageResId = R.drawable.no_wishlist_ic;
-        }
-
-        mEmptyImageView.setVectorImageResource(imageResId);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
@@ -111,6 +100,12 @@ public abstract class PlaceWishListLayout extends BaseLayout
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
         }
+    }
+
+    public int getSize()
+    {
+        ArrayList<? extends Place> list = getList();
+        return list != null ? list.size() : 0;
     }
 
     public ArrayList<? extends Place> getList()

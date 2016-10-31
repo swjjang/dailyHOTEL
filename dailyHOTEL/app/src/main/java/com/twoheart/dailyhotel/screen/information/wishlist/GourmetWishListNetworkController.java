@@ -33,9 +33,11 @@ public class GourmetWishListNetworkController extends BaseNetworkController
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onRecentGourmetList(ArrayList<Gourmet> list);
+
+        void onDeleteWishItem(int position, int placeIndex);
     }
 
-    public void requestRecentGourmetList(RecentGourmetParams params)
+    public void requestGourmetWishList(RecentGourmetParams params)
     {
         if (params == null)
         {
@@ -43,6 +45,10 @@ public class GourmetWishListNetworkController extends BaseNetworkController
         }
 
         DailyNetworkAPI.getInstance(mContext).requestRecentGourmetList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
+    }
+
+    public void requestGourmetWishListItem(int position, int placeIndex) {
+        // TODO : 삭제 request 구현 필요.
     }
 
     private DailyHotelJsonResponseListener mRecentListJsonResponseListener = new DailyHotelJsonResponseListener()

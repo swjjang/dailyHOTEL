@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -37,6 +38,7 @@ public class WishListTabActivity extends BaseActivity
     private WishListTabNetworkController mNetworkController;
 
     private View mNeedLoginView;
+    private View mNeedLoginButtonView;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -139,8 +141,8 @@ public class WishListTabActivity extends BaseActivity
     {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel).setTag(PlaceType.HOTEL));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb).setTag(PlaceType.FNB));
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
@@ -156,17 +158,22 @@ public class WishListTabActivity extends BaseActivity
         initTabLayout();
 
         mNeedLoginView = findViewById(R.id.loginLayout);
+        mNeedLoginButtonView = findViewById(R.id.loginButtonView);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+
+        mNeedLoginButtonView.setOnClickListener(mLoginButtonClickListener);
 
         ArrayList<PlaceWishListFragment> fragmentList = new ArrayList<>();
 
         StayWishListFragment stayWishListFragment = new StayWishListFragment();
         stayWishListFragment.setWishListListFragmentListener(mWishListFragmentListener);
+        stayWishListFragment.setPlaceType(PlaceType.HOTEL);
 
         fragmentList.add(stayWishListFragment);
 
         GourmetWishListFragment gourmetWishListFragment = new GourmetWishListFragment();
         gourmetWishListFragment.setWishListListFragmentListener(mWishListFragmentListener);
+        gourmetWishListFragment.setPlaceType(PlaceType.FNB);
 
         fragmentList.add(gourmetWishListFragment);
 
@@ -218,8 +225,19 @@ public class WishListTabActivity extends BaseActivity
 
     private void setNeedLoginViewVisibility(int visibility)
     {
-        mNeedLoginView.setVisibility(View.VISIBLE != visibility ? View.VISIBLE : View.GONE);
+        mNeedLoginView.setVisibility(View.VISIBLE == visibility ? View.VISIBLE : View.GONE);
     }
+
+    private View.OnClickListener mLoginButtonClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+//            Intent intent = LoginActivity.newInstance(WishListTabActivity.this, Screen.DAILYHOTEL_DETAIL);
+            Intent intent = LoginActivity.newInstance(WishListTabActivity.this);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_WISHLIST);
+        }
+    };
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {

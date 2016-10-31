@@ -14,10 +14,8 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesListFragment;
 import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesListLayout;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -53,10 +51,20 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
+        //        if (mListLayout == null) {
+        //            unLockUI();
+        //            return;
+        //        }
+        if (mSaleTime == null)
+        {
+            unLockUI();
+            return;
+        }
+
         RecentGourmetParams params = new RecentGourmetParams();
         params.setSaleTime(mSaleTime);
 
-        ((GourmetWishListNetworkController) mNetworkController).requestRecentGourmetList(params);
+        ((GourmetWishListNetworkController) mNetworkController).requestGourmetWishList(params);
     }
 
     private GourmetWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetWishListNetworkController.OnNetworkControllerListener()
@@ -72,6 +80,12 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             }
 
             mListLayout.setData(list);
+        }
+
+        @Override
+        public void onDeleteWishItem(int position, int placeIndex)
+        {
+            // TODO : 삭제 처리 서버 결과 도착시 처리 필요.
         }
 
         @Override
@@ -108,7 +122,13 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            if (position < 0 || mListLayout == null)
+            {
+                return;
+            }
+
+            int size = mListLayout.getSize();
+            if (position < 0 || size - 1 < position)
             {
                 return;
             }
@@ -137,32 +157,33 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
             }
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-                gourmet.name, null);
+//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+//                AnalyticsManager.Category.NAVIGATION, //
+//                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+//                gourmet.name, null);
         }
 
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            if (position < 0 || mListLayout == null)
             {
                 return;
             }
 
-            mRecentPlaces.remove(position);
+            int size = mListLayout.getSize();
+            if (position < 0 || size - 1 < position)
+            {
+                return;
+            }
+
+            // TODO : 삭제 API 연동
 
             Place place = mListLayout.removeItem(position);
             ExLog.d("isRemove : " + (place != null));
 
-            if (place != null)
-            {
-                DailyPreference.getInstance(mBaseActivity).setGourmetRecentPlaces(mRecentPlaces.toString());
-            }
-
             mListLayout.setData(mListLayout.getList());
-            mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.FNB, mRecentPlaces);
+            mWishListFragmentListener.onDeleteItemClick(PlaceType.FNB, position);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, //
