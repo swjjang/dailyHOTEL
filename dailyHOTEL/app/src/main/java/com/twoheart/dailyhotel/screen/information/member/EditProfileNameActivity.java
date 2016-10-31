@@ -98,6 +98,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             mNameEditText.setText(name);
         }
 
+        mNameEditText.setSelection(mNameEditText.length());
+
         mNameEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
