@@ -99,6 +99,7 @@ public class EditProfilePhoneActivity extends BaseActivity
                 {
                     mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_social_guide));
                     mEditProfilePhoneLayout.hideCertificationLayout();
+                    mEditProfilePhoneLayout.showConfirmButton();
 
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
