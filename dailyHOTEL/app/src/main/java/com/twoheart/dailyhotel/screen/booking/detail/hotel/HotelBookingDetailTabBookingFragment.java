@@ -429,76 +429,76 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 break;
             }
 
-            case R.id.callDailyView:
-            {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
+//            case R.id.callDailyView:
+//            {
+//                BaseActivity baseActivity = (BaseActivity) getActivity();
+//
+//                if (Util.isTelephonyEnabled(baseActivity) == true)
+//                {
+//                    try
+//                    {
+//                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+//
+//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+//                    } catch (ActivityNotFoundException e)
+//                    {
+//                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+//                    }
+//                } else
+//                {
+//                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+//                }
+//                break;
+//            }
+//
+//            case R.id.kakaoDailyView:
+//            {
+//                try
+//                {
+//                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+//                } catch (ActivityNotFoundException e)
+//                {
+//                    try
+//                    {
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+//                    } catch (ActivityNotFoundException e1)
+//                    {
+//                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+//                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+//                        startActivity(marketLaunch);
+//                    }
+//                }
+//                break;
+//            }
 
-                if (Util.isTelephonyEnabled(baseActivity) == true)
-                {
-                    try
-                    {
-                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
-                break;
-            }
-
-            case R.id.kakaoDailyView:
-            {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-                } catch (ActivityNotFoundException e)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                    } catch (ActivityNotFoundException e1)
-                    {
-                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                        startActivity(marketLaunch);
-                    }
-                }
-                break;
-            }
-
-            case R.id.callPlaceView:
-            {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (Util.isTelephonyEnabled(baseActivity) == true)
-                {
-                    String phone = mBookingDetail.hotelPhone;
-
-                    if (Util.isTextEmpty(mBookingDetail.hotelPhone) == true)
-                    {
-                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-                    }
-
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
-                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
-                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-                }
-                break;
-            }
+//            case R.id.callPlaceView:
+//            {
+//                BaseActivity baseActivity = (BaseActivity) getActivity();
+//
+//                if (Util.isTelephonyEnabled(baseActivity) == true)
+//                {
+//                    String phone = mBookingDetail.hotelPhone;
+//
+//                    if (Util.isTextEmpty(mBookingDetail.hotelPhone) == true)
+//                    {
+//                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+//                    }
+//
+//                    try
+//                    {
+//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+//                    } catch (ActivityNotFoundException e)
+//                    {
+//                        String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
+//                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+//                    }
+//                } else
+//                {
+//                    String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
+//                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+//                }
+//                break;
+//            }
         }
     }
 

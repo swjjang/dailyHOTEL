@@ -23,6 +23,8 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_contact_us);
@@ -62,6 +64,14 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
         super.onResume();
 
         unLockUI();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
