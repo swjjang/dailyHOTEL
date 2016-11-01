@@ -339,8 +339,9 @@
 
     <!-- Setting Fragment -->
     <string name="frag_customer_center">고객센터</string>
-    <string name="frag_call_res_contact">데일리호텔 전화문의</string>
-    <string name="frag_send_mail">데일리호텔 의견메일 보내기</string>
+    <string name="frag_call_res_contact">데일리 고객센터 전화 문의</string>
+    <string name="frag_daily_kakao">데일리 카카오톡 문의</string>
+    <string name="frag_send_mail">데일리 의견 메일 보내기</string>
     <string name="frag_notice">공지사항</string>
     <string name="frag_faqs">자주 묻는 질문</string>
     <string name="frag_info">소개</string>

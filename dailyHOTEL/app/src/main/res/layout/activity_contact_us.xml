@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/toolbar_default"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/kakaoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/dailyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@+id/view"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/view"
+            android:gravity="center_vertical"
+            android:text="@string/frag_daily_kakao"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"/>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/callLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/frag_call_res_contact"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="@color/white">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/frag_send_mail"
+            android:textColor="@color/information_title"
+            android:textSize="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+    </RelativeLayout>
+</LinearLayout>

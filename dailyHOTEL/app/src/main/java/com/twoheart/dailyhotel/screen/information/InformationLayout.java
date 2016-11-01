@@ -68,11 +68,9 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startNotice();
 
-        void startCall();
+        void startContactUs();
 
         void startFAQ();
-
-        void startEmail();
 
         void startAbout();
 
@@ -117,9 +115,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
         View recommendLayout = view.findViewById(R.id.recommendLayout);
-        View callLayout = view.findViewById(R.id.callLayout);
+        View contactUsLayout = view.findViewById(R.id.contactUsLayout);
         View faqLayout = view.findViewById(R.id.faqLayout);
-        View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
         View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
@@ -127,9 +124,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
         recommendLayout.setOnClickListener(this);
-        callLayout.setOnClickListener(this);
+        contactUsLayout.setOnClickListener(this);
         faqLayout.setOnClickListener(this);
-        mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
         termsNpolicyLayout.setOnClickListener(this);
         recentPlacesLayout.setOnClickListener(this);
@@ -524,16 +520,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 ((OnEventListener) mOnEventListener).startInviteFriend();
                 break;
 
-            case R.id.callLayout:
-                ((OnEventListener) mOnEventListener).startCall();
+            case R.id.contactUsLayout:
+                ((OnEventListener) mOnEventListener).startContactUs();
                 break;
 
             case R.id.faqLayout:
                 ((OnEventListener) mOnEventListener).startFAQ();
-                break;
-
-            case R.id.mailLayout:
-                ((OnEventListener) mOnEventListener).startEmail();
                 break;
 
             case R.id.aboutLayout:
