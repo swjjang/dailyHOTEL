@@ -174,13 +174,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mGourmetDetail);
         linearLayout.addView(mDeatilViews[5]);
 
-        // 카카오톡 문의
+        // 문의 하기
         if (mDeatilViews[6] == null)
         {
             mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getKakaoView(mDeatilViews[6]);
+        getConciergeView(mDeatilViews[6]);
         linearLayout.addView(mDeatilViews[6]);
 
         return linearLayout;
@@ -529,12 +529,12 @@ public class GourmetDetailListAdapter extends BaseAdapter
     }
 
     /**
-     * 카톡 실시간 상담
+     * 문의 상담
      *
      * @param view
      * @return
      */
-    private View getKakaoView(View view)
+    private View getConciergeView(View view)
     {
         if (view == null)
         {
@@ -543,16 +543,15 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        // 카톡 1:1 실시간 상담
-        View consultKakaoView = view.findViewById(R.id.kakaoImageView);
-        consultKakaoView.setOnClickListener(new View.OnClickListener()
+        View conciergeLayout = view.findViewById(R.id.conciergeLayout);
+        conciergeLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnEventListener != null)
                 {
-                    mOnEventListener.doKakaotalkConsult();
+                    mOnEventListener.onConciergeClick();
                 }
             }
         });

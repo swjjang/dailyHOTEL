@@ -50,6 +50,7 @@ public class DailyPreference
     private static final String KEY_FIRST_APP_VERSION = "27";
 
     private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28";
+    private static final String KEY_INFORMATION_CS_OPERATION_TIME = "29"; // 운영시간 H,H (앞은 시작 뒤는 끝나는 시간)
 
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
@@ -697,13 +698,23 @@ public class DailyPreference
     }
 
     public String getOperationTimeMessage(Context context)
-    {
-        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
-    }
+{
+    return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
+}
 
     public void setOperationTimeMessage(String text)
     {
         setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, text);
+    }
+
+    public String getOperationTime()
+    {
+        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIME, "9,3");
+    }
+
+    public void setOperationTime(String text)
+    {
+        setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIME, text);
     }
 
     public void setAppVersion(String value)

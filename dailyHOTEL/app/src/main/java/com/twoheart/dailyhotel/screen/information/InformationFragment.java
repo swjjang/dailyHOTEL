@@ -217,6 +217,7 @@ public class InformationFragment extends BaseFragment implements Constants
             case CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
             case CODE_REQUEST_ACTIVITY_FAQ:
             case CODE_REQUEST_ACTIVITY_FEEDBACK:
+            case CODE_REQUEST_ACTIVITY_CONTACT_US:
                 mDontReload = false;
                 break;
         }
@@ -431,7 +432,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startCall()
+        public void startContactUs()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -441,9 +442,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            showCallDialog(baseActivity);
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CLICK, null);
+            startActivityForResult(new Intent(baseActivity, ContactUsActivity.class), CODE_REQUEST_ACTIVITY_CONTACT_US);
         }
 
         @Override
@@ -460,30 +459,7 @@ public class InformationFragment extends BaseFragment implements Constants
             startActivityForResult(new Intent(baseActivity, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
         }
 
-        @Override
-        public void startEmail()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
 
-            lockUiComponent();
-
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc, DailyHotel.VERSION, Build.VERSION.RELEASE));
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
-
-
-            //            BaseActivity baseActivity = (BaseActivity) getActivity();
-            //            startActivityForResult(new Intent(baseActivity, FeedbackMailActivity.class), CODE_REQUEST_ACTIVITY_FEEDBACK);
-
-            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
-
-        }
 
         @Override
         public void startAbout()
@@ -701,53 +677,6 @@ public class InformationFragment extends BaseFragment implements Constants
             //do nothing.
         }
     };
-
-    private void showCallDialog(final BaseActivity baseActivity)
-    {
-        View.OnClickListener positiveListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(baseActivity) == true)
-                {
-                    try
-                    {
-                        baseActivity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
-            }
-        };
-
-        String operatingTimeMessage = DailyPreference.getInstance(baseActivity).getOperationTimeMessage(baseActivity);
-
-        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage,//
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CANCEL, null);
-                }
-            }, null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
-    }
 
     private void registerReceiver()
     {

@@ -22,57 +22,88 @@
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/contactUs01Layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/callPlaceView"
+            android:id="@+id/contactUs01TextView"
             android:layout_width="match_parent"
             android:layout_height="62dp"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
-            app:drawableCompatLeft="@drawable/popup_ic_ops_01_store_call"
             dailyFont:style="Medium"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_alignBottom="@id/callPlaceView"
             android:background="@color/default_line_cf0f0f0"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contactUs02Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/kakaoDailyView"
+            android:id="@+id/contactUs02TextView"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-            android:layout_below="@id/callPlaceView"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:text="@string/label_daily_kakaotalk"
             android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
-            app:drawableCompatLeft="@drawable/popup_ic_ops_02_daily_kakao"
             dailyFont:style="Medium"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_alignBottom="@id/kakaoDailyView"
             android:background="@color/default_line_cf0f0f0"/>
+    </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/callDailyView"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_below="@id/kakaoDailyView"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/label_daily_customer_service"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="14dp"
-            app:drawableCompatLeft="@drawable/popup_ic_ops_03_daily_call"
-            dailyFont:style="Medium"/>
-    </RelativeLayout>
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/kakaoDailyView"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/label_daily_kakaotalk"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="14dp"
+        app:drawableCompatLeft="@drawable/popup_ic_ops_04_daily_kakao"
+        dailyFont:style="Medium"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/callDailyView"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/label_daily_customer_service"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="14dp"
+        app:drawableCompatLeft="@drawable/popup_ic_ops_06_daily_call"
+        dailyFont:style="Medium"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/closeView"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_dialog_button02"
+        android:gravity="center"
+        android:text="@string/dialog_btn_text_close"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="14dp"
+        dailyFont:style="Medium"/>
 </LinearLayout>

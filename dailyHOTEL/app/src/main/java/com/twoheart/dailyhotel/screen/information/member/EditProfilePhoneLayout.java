@@ -363,6 +363,11 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mCertificationLayout.setVisibility(View.VISIBLE);
     }
 
+    public void showConfirmButton()
+    {
+        mConfirm.setVisibility(View.VISIBLE);
+    }
+
     public void showVerificationVisible()
     {
         mVerificationLayout.setVisibility(View.VISIBLE);

@@ -88,7 +88,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
