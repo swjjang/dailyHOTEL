@@ -320,6 +320,23 @@ public class PaymentWaitActivity extends BaseActivity
 
         mDailyTextView.setText(jsonObject.getString("name"));
 
+        if (jsonObject.has("couponAmount") == true && jsonObject.isNull("couponAmount") == false)
+        {
+            int coupon = jsonObject.getInt("couponAmount");
+
+            if (coupon > 0)
+            {
+                mCouponLayout.setVisibility(View.VISIBLE);
+                mCouponTextView.setText("- " + Util.getPriceFormat(this, coupon, false));
+            } else
+            {
+                mCouponLayout.setVisibility(View.GONE);
+            }
+        } else
+        {
+            mCouponLayout.setVisibility(View.GONE);
+        }
+
         int paymetPrice = jsonObject.getInt("amt");
         mPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
 
