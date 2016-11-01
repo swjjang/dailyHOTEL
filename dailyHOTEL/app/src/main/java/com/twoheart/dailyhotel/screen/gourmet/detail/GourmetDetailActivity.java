@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectGourmetCouponDialogActivity;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -917,7 +916,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                 mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-         }
+        }
 
         @Override
         public void onUserInformation(Customer user, boolean isDailyUser)

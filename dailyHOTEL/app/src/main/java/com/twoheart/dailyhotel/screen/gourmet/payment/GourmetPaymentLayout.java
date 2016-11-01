@@ -10,6 +10,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
     private TextView mAmountNightsTextView;
+    private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private TextView mPlaceNameTextView;
     private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
     private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
@@ -47,10 +49,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mGuestFrameLayout, mGuestLinearLayout;
     private CheckBox mGuestCheckBox;
 
-    private TextView mPriceTextView, mFinalPaymentTextView;
     private View mTicketCountMinusButton, mTicketCountPlusButton;
 
     private DailyToolbarLayout mDailyToolbarLayout;
+
+    // 할인 정보
+    private ImageView mCouponRadioButton;
+    private View mDiscountCouponLayout;
+    private View mUsedCouponLayout;
+    private TextView mUsedCouponTextView;
 
     // 결제 수단 선택
     private View mSimpleCardLayout;
@@ -95,6 +102,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         void showInputMobileNumberDialog(String mobileNumber);
 
         void showCallDialog();
+
+        void onCouponClick(boolean isRadioLayout);
     }
 
     public GourmetPaymentLayout(Context context, OnEventListener mOnEventListener)
@@ -108,7 +117,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         initToolbar(view);
 
         mScrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(mScrollView, view.getResources().getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mBookingLayout = mScrollView.findViewById(R.id.bookingLayout);
 
@@ -224,7 +233,22 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     {
         mAmountNightsTextView = (TextView) view.findViewById(R.id.amountNightsTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
+        mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
+
+        mDiscountPriceTextView.setText(Util.getPriceFormat(mContext, 0, false));
+
+        initDiscountInformation(view);
+    }
+
+    private void initDiscountInformation(View view)
+    {
+        mCouponRadioButton = (ImageView) view.findViewById(R.id.couponRadioButton);
+        mDiscountCouponLayout = view.findViewById(R.id.couponLayout);
+        mUsedCouponLayout = view.findViewById(R.id.usedCouponLayout);
+        mUsedCouponTextView = (TextView) view.findViewById(R.id.usedCouponTextView);
+
+        mDiscountCouponLayout.setOnClickListener(this);
     }
 
     private void initPaymentTypeInformation(View view)
@@ -389,7 +413,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mTicketTypeTextView.setText(ticketInformation.name);
 
         // 날짜
-        mTicketDateTextView.setText(gourmetPaymentInformation.checkInTime);
+        mTicketDateTextView.setText(gourmetPaymentInformation.dateTime);
 
         //
         mPlaceNameTextView.setText(gourmetPaymentInformation.getTicketInformation().placeName);
@@ -473,8 +497,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        setPaymentInformation(gourmetPaymentInformation.getPaymentToPay());
-
         if (creditCard == null)
         {
             mCardManagerLayout.setVisibility(View.GONE);
@@ -501,13 +523,41 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mSimpleCardNumberTextView.setText(creditCard.number);
     }
 
-    public void setPaymentInformation(int price)
+    public void setPaymentInformation(PlacePaymentInformation.DiscountType discountType, int originalPrice, int discountPrice, int payPrice)
     {
         // 결제금액
-        String priceFormat = Util.getPriceFormat(mContext, price, false);
+        mPriceTextView.setText(Util.getPriceFormat(mContext, originalPrice, false));
 
-        mPriceTextView.setText(priceFormat);
-        mFinalPaymentTextView.setText(priceFormat);
+        switch (discountType)
+        {
+            case BONUS:
+            {
+                break;
+            }
+
+            case COUPON:
+            {
+                if (discountPrice == 0)
+                {
+                    mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
+                } else
+                {
+                    String priceFormat = Util.getPriceFormat(mContext, discountPrice, false);
+
+                    mUsedCouponTextView.setText(priceFormat);
+                    mDiscountPriceTextView.setText("- " + priceFormat);
+                }
+                break;
+            }
+
+            default:
+            {
+                mDiscountPriceTextView.setText(Util.getPriceFormat(mContext, 0, false));
+                break;
+            }
+        }
+
+        mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
     }
 
     public void setTicketCount(int count)
@@ -691,6 +741,29 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mScrollView.scrollTo(0, 0);
     }
 
+    public void setCouponSelected(boolean isSelected)
+    {
+        if (isSelected == true)
+        {
+            mCouponRadioButton.setSelected(true);
+            mDiscountCouponLayout.setSelected(true);
+            mDiscountCouponLayout.setOnClickListener(null);
+
+            mUsedCouponLayout.setOnClickListener(this);
+            mUsedCouponLayout.setSelected(true);
+        } else
+        {
+            mCouponRadioButton.setSelected(false);
+            mDiscountCouponLayout.setSelected(false);
+            mDiscountCouponLayout.setOnClickListener(this);
+
+            mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
+
+            mUsedCouponLayout.setOnClickListener(this);
+            mUsedCouponLayout.setSelected(false);
+        }
+    }
+
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
@@ -740,6 +813,14 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
             case R.id.ticketTimeTextView:
                 ((OnEventListener) mOnEventListener).selectTicketTime(mTicketTimeTextView.getText().toString());
+                break;
+
+            case R.id.usedCouponLayout:
+                ((OnEventListener) mOnEventListener).onCouponClick(false);
+                break;
+
+            case R.id.couponLayout:
+                ((OnEventListener) mOnEventListener).onCouponClick(true);
                 break;
 
             case R.id.simpleCardLayout:

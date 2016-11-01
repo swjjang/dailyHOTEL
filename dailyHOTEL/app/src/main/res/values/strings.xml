@@ -524,8 +524,7 @@
     <string name="label_booking_memo">예약시 요청사항</string>
     <string name="label_booking_discount_information">할인 정보</string>
     <string name="label_booking_step1">1. 예약 정보 확인</string>
-    <string name="label_booking_stay_step2">2. 할인수단 선택 및 결제금액</string>
-    <string name="label_booking_gourmet_step2">2. 결제금액</string>
+    <string name="label_booking_step2">2. 할인수단 선택 및 결제금액</string>
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_step4">4. 취소 및 환불 규정</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>

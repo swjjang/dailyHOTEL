@@ -8,8 +8,7 @@ import java.util.TimeZone;
 
 public class GourmetPaymentInformation extends PlacePaymentInformation
 {
-    public String checkInTime;
-    public String checkOutTime;
+    public String dateTime;
     public int ticketCount;
     public int ticketMaxCount; // 최대 결제 가능한 티켓 개수
     public long ticketTime;
@@ -36,8 +35,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeString(checkInTime);
-        dest.writeString(checkOutTime);
+        dest.writeString(dateTime);
         dest.writeInt(ticketCount);
         dest.writeInt(ticketMaxCount);
         dest.writeLong(ticketTime);
@@ -51,8 +49,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     {
         super.readFromParcel(in);
 
-        checkInTime = in.readString();
-        checkOutTime = in.readString();
+        dateTime = in.readString();
         ticketCount = in.readInt();
         ticketMaxCount = in.readInt();
         ticketTime = in.readLong();

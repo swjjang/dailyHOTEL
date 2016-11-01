@@ -678,6 +678,10 @@ public class AnalyticsManager
         public static final String HOTEL_COUPON_SELECTED = "HotelCouponSelected";
         public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
         public static final String HOTEL_COUPON_NOT_FOUND = "HotelCouponNotFound";
+        public static final String GOURMET_USING_COUPON_CLICKED = "GourmetUsingCouponClicked";
+        public static final String GOURMET_COUPON_SELECTED = "GourmetCouponSelected";
+        public static final String GOURMET_USING_COUPON_CANCEL_CLICKED = "GourmetUsingCouponCancelClicked";
+        public static final String GOURMET_COUPON_NOT_FOUND = "GourmetCouponNotFound";
         //
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
         //
@@ -842,6 +846,8 @@ public class AnalyticsManager
         public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
+        public static final String GOURMET_USING_COUPON_CLICKED = "GourmetUsingCouponClicked";
+        public static final String GOURMET_USING_COUPON_CANCEL = "GourmetUsingCouponCancel";
         public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
         //
         public static final String SWITCHING_HOTEL = "SwitchingHotel";

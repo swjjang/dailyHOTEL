@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
@@ -69,6 +70,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private boolean mIsChangedTime;
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
+    private boolean mIsUnderPrice;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
     private Dialog mTimeDialog;
@@ -220,6 +222,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
         params.put("billkey", mSelectedCreditCard.billingkey);
         params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
+
+        switch (paymentInformation.discountType)
+        {
+            case BONUS:
+                break;
+
+            case COUPON:
+                Coupon coupon = paymentInformation.getCoupon();
+                params.put("user_coupon_code", coupon.userCouponCode);
+                break;
+        }
+
         params.put("customer_name", guest.name);
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
@@ -335,7 +349,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             try
             {
                 DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
-            }catch (Exception e)
+            } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
@@ -344,11 +358,23 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
+        String discountType = AnalyticsManager.Label.FULL_PAYMENT;
+
+        switch (paymentInformation.discountType)
+        {
+            case BONUS:
+                break;
+
+            case COUPON:
+                discountType = AnalyticsManager.Label.PAYMENTWITH_COUPON;
+                break;
+        }
+
         String placeName = ticketInformation.placeName;
         String placeType = ticketInformation.name;
         int productCount = gourmetPaymentInformation.ticketCount;
 
-        String date = gourmetPaymentInformation.checkInTime;
+        String date = gourmetPaymentInformation.dateTime;
         String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT"));
 
         String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
@@ -369,7 +395,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
 
         Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-            userName, date, visitTime, productCount, paymentInformation.paymentType.getName(), params);
+            userName, date, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -755,15 +781,57 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void setCoupon(Coupon coupon)
+    protected void setCoupon(final Coupon coupon)
     {
-        // do nothing.
+        final GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+        int originalPrice = gourmetPaymentInformation.getPaymentToPay();
+
+        if (coupon.amount > originalPrice)
+        {
+            String difference = Util.getPriceFormat(this, (coupon.amount - originalPrice), false);
+
+            showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    gourmetPaymentInformation.setCoupon(coupon);
+                    setCouponSelected(true);
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    gourmetPaymentInformation.setCoupon(null);
+                    setCouponSelected(false);
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    gourmetPaymentInformation.setCoupon(null);
+                    setCouponSelected(false);
+                }
+            }, null, true);
+
+        } else
+        {
+            // 호텔 결제 정보에 쿠폰 가격 넣고 텍스트 업데이트 필요
+            gourmetPaymentInformation.setCoupon(coupon);
+            setCouponSelected(true);
+        }
     }
 
     @Override
     protected void setCancelCoupon()
     {
-        // do nothing.
+        // 쿠폰 삭제 - 쿠폰 선택 팝업에서 Cancel 시 처리
+        mPaymentInformation.setCoupon(null);
+        setCouponSelected(false);
     }
 
     private void setAvailabledDefaultPaymentType()
@@ -937,8 +1005,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
             params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
-            params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
@@ -951,6 +1017,45 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
+
+            switch (gourmetPaymentInformation.discountType)
+            {
+                case BONUS:
+                    break;
+
+                case COUPON:
+                {
+                    Coupon coupon = gourmetPaymentInformation.getCoupon();
+                    int payPrice = gourmetPaymentInformation.getPaymentToPay() - coupon.amount;
+
+                    if (payPrice < 0)
+                    {
+                        payPrice = 0;
+                    }
+
+                    params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(payPrice));
+                    params.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                    params.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+                    params.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                    params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+
+                    String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
+                    params.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
+                    break;
+                }
+
+                default:
+                {
+                    params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    params.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    params.put(AnalyticsManager.KeyType.COUPON_CODE, "");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(gourmetPaymentInformation.getPaymentToPay()));
+                    break;
+                }
+            }
 
             if (mProvince == null)
             {
@@ -989,26 +1094,93 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        int payPrice = gourmetPaymentInformation.getPaymentToPay();
+        int originalPrice = gourmetPaymentInformation.getPaymentToPay();
+        int payPrice = originalPrice;
 
-        // 50만원 한도 핸드폰 결제 금지
-        if (payPrice > PHONE_PAYMENT_LIMIT)
+        switch (gourmetPaymentInformation.discountType)
         {
-            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+            case BONUS:
+                break;
+
+            case COUPON:
             {
-                mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
+                Coupon coupon = gourmetPaymentInformation.getCoupon();
+
+                if (coupon == null)
+                {
+                    mGourmetPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.COUPON, originalPrice, 0, payPrice);
+                } else
+                {
+                    int discountPrice = coupon.amount;
+
+                    if (discountPrice < originalPrice)
+                    {
+                        payPrice = originalPrice - discountPrice;
+                    } else
+                    {
+                        payPrice = 0;
+                        discountPrice = originalPrice;
+                    }
+
+                    mGourmetPaymentLayout.setPaymentInformation(PlacePaymentInformation.DiscountType.COUPON, originalPrice, discountPrice, payPrice);
+                }
+                break;
             }
 
-            mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
-        } else
-        {
-            if (DailyPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled() == true)
-            {
-                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
-            }
+            default:
+                mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation.discountType, originalPrice, 0, payPrice);
+                break;
         }
 
-        mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation.getPaymentToPay());
+        // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
+        if (payPrice > 0 && payPrice < 1000)
+        {
+            mIsUnderPrice = true;
+
+            mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, false);
+            mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, false);
+
+            mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+        } else
+        {
+            if (DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true)
+            {
+                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, true);
+            }
+
+            if (DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true)
+            {
+                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, true);
+            }
+
+            // 50만원 한도 핸드폰 결제 금지
+            if (payPrice >= PHONE_PAYMENT_LIMIT)
+            {
+                if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
+                {
+                    mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
+                }
+
+                mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
+            } else
+            {
+                if (DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true)
+                {
+                    mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
+                }
+            }
+
+            // 1000원 이하였다가 되돌아 오는 경우 한번 간편결제로 바꾸어준다.
+            if (mIsUnderPrice == true)
+            {
+                mIsUnderPrice = false;
+
+                mOnEventListener.changedPaymentType(getAvailableDefaultPaymentType());
+            } else
+            {
+                mOnEventListener.changedPaymentType(mPaymentInformation.paymentType);
+            }
+        }
     }
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
@@ -1033,6 +1205,47 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         {
             return null;
         }
+    }
+
+    private void setCouponSelected(boolean isSelected)
+    {
+        mGourmetPaymentLayout.setCouponSelected(isSelected);
+
+        if (isSelected == true)
+        {
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.COUPON;
+        } else
+        {
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
+        }
+
+        setPaymentInformation((GourmetPaymentInformation) mPaymentInformation);
+    }
+
+    private void startCouponPopup(GourmetPaymentInformation gourmetPaymentInformation)
+    {
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+        int placeIndex = gourmetPaymentInformation.placeIndex;
+        int ticketIndex = ticketInformation.index;
+
+        String dateTime = gourmetPaymentInformation.dateTime;
+
+        String placeName = ticketInformation.placeName;
+        String ticketPrice = Integer.toString(ticketInformation.discountPrice);
+
+        Intent intent = SelectGourmetCouponDialogActivity.newInstance(GourmetPaymentActivity.this, placeIndex, //
+            ticketIndex, dateTime, placeName, ticketPrice);
+        startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
+
+        AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+            AnalyticsManager.Action.GOURMET_USING_COUPON_CLICKED, AnalyticsManager.Label.GOURMET_USING_COUPON_CLICKED, null);
+    }
+
+    private void startCancelCouponPopup(View.OnClickListener positiveListener)
+    {
+        showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
+            getString(R.string.dialog_btn_text_no), positiveListener, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1292,6 +1505,46 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
+        public void onCouponClick(boolean isRadioLayout)
+        {
+            switch (mPaymentInformation.discountType)
+            {
+                case BONUS:
+                    break;
+
+                case COUPON:
+                {
+                    if (isRadioLayout == true)
+                    {
+                        setCouponSelected(true);
+                        startCouponPopup((GourmetPaymentInformation) mPaymentInformation);
+                    } else
+                    {
+                        // 쿠폰 삭제
+                        startCancelCouponPopup(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mPaymentInformation.setCoupon(null);
+                                setCouponSelected(false);
+                            }
+                        });
+                    }
+                    break;
+                }
+
+                default:
+                {
+                    // 아무것도 선택 되지 않은 상태 일때 couponLayout 과 동일한 처리
+                    setCouponSelected(true);
+                    startCouponPopup((GourmetPaymentInformation) mPaymentInformation);
+                    break;
+                }
+            }
+        }
+
+        @Override
         public void finish()
         {
             GourmetPaymentActivity.this.finish();
@@ -1348,6 +1601,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
                 gourmetPaymentInformation.bonus = bonus;
+
+                setPaymentInformation(gourmetPaymentInformation);
 
                 Customer buyer = new Customer();
                 buyer.setEmail(email);
@@ -1439,7 +1694,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     gourmetPaymentInformation.getTicketInformation().discountPrice = discountPrice;
                     gourmetPaymentInformation.ticketMaxCount = maxCount;
-                    gourmetPaymentInformation.checkInTime = DailyCalendar.format(sday, "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"));
+                    gourmetPaymentInformation.dateTime = DailyCalendar.format(sday, "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"));
 
                     if (gourmetPaymentInformation.ticketTime == 0)
                     {
@@ -1629,6 +1884,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             } catch (Exception e)
             {
                 onError(e);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
+            } finally
+            {
+                unLockUI();
             }
         }
     };

@@ -176,15 +176,15 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                 {
                     if (mLayout.getCouponCount() == 0)
                     {
-//                        // empty list
-//                        String label = mCategoryCode + "-" + mHotelName + "-" + mRoomPrice;
-//
-//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
-//                            AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
+                        //                        // empty list
+                        //                        String label = mCategoryCode + "-" + mHotelName + "-" + mRoomPrice;
+                        //
+                        //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                        //                            AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
                     } else
                     {
-//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-//                            AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
+                        //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                        //                            AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
                     }
                     break;
                 }
@@ -267,15 +267,15 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                     mLayout.setData(list, true);
 
-//                    if (isEmpty == true)
-//                    {
-//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-//                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
-//                    } else
-//                    {
-//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-//                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
-//                    }
+                    //                    if (isEmpty == true)
+                    //                    {
+                    //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                    //                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
+                    //                    } else
+                    //                    {
+                    //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                    //                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+                    //                    }
                     break;
                 }
 
