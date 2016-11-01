@@ -4,9 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by android_sam on 2016. 10. 12..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class StayWishListNetworkController extends BaseNetworkController
@@ -34,31 +32,21 @@ public class StayWishListNetworkController extends BaseNetworkController
     {
         void onStayWishList(ArrayList<Stay> list);
 
-        void onDeleteWishItem(int position, int placeIndex);
+        void onDeleteStayWishListItem(int position);
     }
 
-    public void requestStayWishList(RecentStayParams params)
+    public void requestStayWishList()
     {
-        if (params == null)
-        {
-            return;
-        }
-
-        DailyNetworkAPI.getInstance(mContext).requestRecentStayList(mNetworkTag, params.toParamsString(), mListJsonResponseListener);
+        ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(null);
     }
 
-    public void requestStayWishListItem(int position, int placeIndex) {
-        // TODO : 삭제 request 구현 필요.
+    public void requestDeleteStayWishListItem() {
+        ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteStayWishListItem(-1);
     }
+
 
     private DailyHotelJsonResponseListener mListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
@@ -102,7 +90,6 @@ public class StayWishListNetworkController extends BaseNetworkController
                     //                    }
 
                     ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(stayList);
-
                 } else
                 {
                     String message = response.getString("msg");
@@ -118,6 +105,12 @@ public class StayWishListNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
@@ -145,6 +138,43 @@ public class StayWishListNetworkController extends BaseNetworkController
             }
 
             return stayList;
+        }
+    };
+
+    DailyHotelJsonResponseListener mDeleteItemJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                if (msgCode == 100)
+                {
+//                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteStayWishListItem(-1);
+                } else
+                {
+                    String message = response.getString("msg");
+
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log(url);
+                    }
+
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

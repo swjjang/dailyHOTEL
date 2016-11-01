@@ -5,8 +5,6 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.RecentGourmetParams;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by android_sam on 2016. 10. 12..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class GourmetWishListNetworkController extends BaseNetworkController
@@ -32,33 +30,23 @@ public class GourmetWishListNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onRecentGourmetList(ArrayList<Gourmet> list);
+        void onGourmetWishList(ArrayList<Gourmet> list);
 
-        void onDeleteWishItem(int position, int placeIndex);
+        void onDeleteGourmetWishListItem(int position);
     }
 
-    public void requestGourmetWishList(RecentGourmetParams params)
+    public void requestGourmetWishList()
     {
-        if (params == null)
-        {
-            return;
-        }
-
-        DailyNetworkAPI.getInstance(mContext).requestRecentGourmetList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
+        ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetWishList(null);
     }
 
-    public void requestGourmetWishListItem(int position, int placeIndex) {
-        // TODO : 삭제 request 구현 필요.
-    }
-
-    private DailyHotelJsonResponseListener mRecentListJsonResponseListener = new DailyHotelJsonResponseListener()
+    public void requestDeleteGourmetWishListItem()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
+        ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteGourmetWishListItem(-1);
+    }
 
+    private DailyHotelJsonResponseListener mListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
@@ -88,7 +76,7 @@ public class GourmetWishListNetworkController extends BaseNetworkController
                         gourmetList = new ArrayList<>();
                     }
 
-                    ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentGourmetList(gourmetList);
+                    ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetWishList(gourmetList);
                 } else
                 {
                     String message = response.getString("msg");
@@ -109,6 +97,12 @@ public class GourmetWishListNetworkController extends BaseNetworkController
 
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -136,6 +130,48 @@ public class GourmetWishListNetworkController extends BaseNetworkController
             }
 
             return gourmetList;
+        }
+    };
+
+    DailyHotelJsonResponseListener mDeleteItemJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                if (msgCode == 100)
+                {
+                    //                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteGourmetWishListItem(-1);
+                } else
+                {
+                    String message = response.getString("msg");
+
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log(url);
+                    }
+
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
+            } catch (Exception e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log(url);
+                }
+
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

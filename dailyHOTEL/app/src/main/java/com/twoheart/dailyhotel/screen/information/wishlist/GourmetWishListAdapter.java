@@ -18,12 +18,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class GourmetWishListAdapter extends PlaceWishListAdapter
 {
-    public GourmetWishListAdapter(Context context, ArrayList<? extends Place> list, OnWishListItemListener listener)
+    public GourmetWishListAdapter(Context context, ArrayList<? extends Place> list, OnPlaceWishListItemListener listener)
     {
         super(context, list, listener);
     }
@@ -35,7 +35,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
         view.setLayoutParams(layoutParams);
 
-        return new GourmetViewHolder(view);
+        return new GourmetWishListViewHolder(view);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         }
 
         final Gourmet gourmet = (Gourmet) item;
-        GourmetViewHolder holder = (GourmetViewHolder) viewHolder;
+        GourmetWishListViewHolder holder = (GourmetWishListViewHolder) viewHolder;
 
         String strPrice = Util.getPriceFormat(mContext, gourmet.price, false);
         String strDiscount = Util.getPriceFormat(mContext, gourmet.discountPrice, false);
@@ -167,14 +167,14 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             {
                 if (mListener != null)
                 {
-                    mListener.onDeleteClick(v, (Integer) v.getTag());
+                    mListener.onDeleteItemClick(v, (Integer) v.getTag());
                 }
             }
         });
     }
 
-    private class GourmetViewHolder extends RecyclerView.ViewHolder
-    {
+
+    private class GourmetWishListViewHolder extends RecyclerView.ViewHolder {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView gourmetImageView;
         TextView nameView;
@@ -190,7 +190,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         TextView dBenefitTextView;
         View deleteView;
 
-        public GourmetViewHolder(View itemView)
+        public GourmetWishListViewHolder(View itemView)
         {
             super(itemView);
 

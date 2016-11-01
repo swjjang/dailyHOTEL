@@ -10,20 +10,16 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesListLayout;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 12..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class GourmetWishListFragment extends PlaceWishListFragment
@@ -43,7 +39,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     @Override
     protected BaseNetworkController getNetworkController()
     {
-        return new GourmetWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        return new GourmetDetailNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -51,31 +47,29 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        //        if (mListLayout == null) {
-        //            unLockUI();
-        //            return;
-        //        }
-        if (mSaleTime == null)
-        {
-            unLockUI();
-            return;
-        }
+        ((GourmetWishListNetworkController) mNetworkController).requestGourmetWishList();
+    }
 
-        RecentGourmetParams params = new RecentGourmetParams();
-        params.setSaleTime(mSaleTime);
+    @Override
+    protected void requestDeleteWishListItem()
+    {
+        lockUI();
 
-        ((GourmetWishListNetworkController) mNetworkController).requestGourmetWishList(params);
+        ((GourmetWishListNetworkController) mNetworkController).requestDeleteGourmetWishListItem();
     }
 
     private GourmetWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetWishListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRecentGourmetList(ArrayList<Gourmet> list)
+        public void onGourmetWishList(ArrayList<Gourmet> list)
         {
             unLockUI();
 
-            if (isFinishing() == true)
-            {
+            if (isFinishing() == true) {
+                return;
+            }
+
+            if (mListLayout == null) {
                 return;
             }
 
@@ -83,9 +77,29 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onDeleteWishItem(int position, int placeIndex)
+        public void onDeleteGourmetWishListItem(int position)
         {
-            // TODO : 삭제 처리 서버 결과 도착시 처리 필요.
+            unLockUI();
+
+            if (isFinishing() == true) {
+                return;
+            }
+
+            if (mListLayout == null) {
+                return;
+            }
+
+            if (position < 0 || position > mListLayout.getItemCount() -1) {
+                return;
+            }
+
+            mListLayout.removeItem(position);
+            mListLayout.notifyDataSetChanged();
+
+//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+//                AnalyticsManager.Category.NAVIGATION, //
+//                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+//                place.name, null);
         }
 
         @Override
@@ -117,18 +131,17 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
     };
 
-    RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
+    private GourmetWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
     {
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mListLayout == null)
+            if (position < 0)
             {
                 return;
             }
 
-            int size = mListLayout.getSize();
-            if (position < 0 || size - 1 < position)
+            if (mListLayout == null)
             {
                 return;
             }
@@ -166,34 +179,28 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mListLayout == null)
+            if (position < 0)
             {
                 return;
             }
 
-            int size = mListLayout.getSize();
-            if (position < 0 || size - 1 < position)
+            if (mListLayout == null)
             {
                 return;
             }
 
-            // TODO : 삭제 API 연동
+            Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
+            if (gourmet == null) {
+                return;
+            }
 
-            Place place = mListLayout.removeItem(position);
-            ExLog.d("isRemove : " + (place != null));
-
-            mListLayout.setData(mListLayout.getList());
-            mWishListFragmentListener.onDeleteItemClick(PlaceType.FNB, position);
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-                place.name, null);
+            GourmetWishListFragment.this.requestDeleteWishListItem();
         }
 
         @Override
         public void onEmptyButtonClick()
         {
+            unLockUI();
             mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
             finish();
         }
@@ -201,6 +208,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         @Override
         public void finish()
         {
+            unLockUI();
             mBaseActivity.finish();
         }
     };

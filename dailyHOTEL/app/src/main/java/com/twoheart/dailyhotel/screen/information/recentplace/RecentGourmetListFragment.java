@@ -221,6 +221,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         @Override
         public void onEmptyButtonClick()
         {
+            unLockUI();
             mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
             finish();
         }
@@ -228,6 +229,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         @Override
         public void finish()
         {
+            unLockUI();
             mBaseActivity.finish();
         }
     };

@@ -17,35 +17,34 @@ import com.twoheart.dailyhotel.util.Constants;
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-
     protected Context mContext;
     protected LayoutInflater mInflater;
-    private ArrayList<? extends Place> mList;
-    protected OnWishListItemListener mListener;
+    protected ArrayList<? extends Place> mList;
+    protected OnPlaceWishListItemListener mListener;
 
-    private Constants.SortType mSortType;
+    private Constants.SortType mSortType; // TODO : 추후 제거 필요!
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
 
-    public interface OnWishListItemListener
+    public interface OnPlaceWishListItemListener
     {
         void onItemClick(View view);
 
-        void onDeleteClick(View view, int position);
+        void onDeleteItemClick(View view, int position);
     }
 
-    public PlaceWishListAdapter(Context context, ArrayList<? extends Place> list, OnWishListItemListener listener)
+    public PlaceWishListAdapter(Context context, ArrayList<? extends Place> list, OnPlaceWishListItemListener listener)
     {
         mContext = context;
 
         if (list == null)
         {
-            throw new IllegalArgumentException("WishList list must not be null");
+            throw new IllegalArgumentException("Wishlist must not be null");
         }
 
         mList = list;
@@ -56,30 +55,24 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         makeShaderFactory();
     }
 
-    public ArrayList<? extends Place> getList()
-    {
+    public ArrayList<? extends Place> getList() {
         return mList != null ? mList : null;
     }
 
-    public void setData(ArrayList<? extends Place> list)
-    {
+    public void setData(ArrayList<? extends Place> list) {
         mList = list;
     }
 
-    public Place getItem(int position)
-    {
-        if (mList == null || mList.size() == 0)
-        {
+    public Place getItem(int position) {
+        if (mList == null || mList.size() == 0) {
             return null;
         }
 
         return mList.get(position);
     }
 
-    public Place removeItem(int position)
-    {
-        if (mList == null || mList.size() == 0)
-        {
+    public Place remove(int position) {
+        if (mList == null || mList.size() == 0) {
             return null;
         }
 

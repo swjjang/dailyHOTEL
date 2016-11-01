@@ -7,21 +7,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 12..
+ * Created by android_sam on 2016. 11. 1..
  */
 
-public class WishListFragmentPagerAdapter extends FragmentPagerAdapter
+public class WishListFragmentPageAdapter extends FragmentPagerAdapter
 {
     private ArrayList<PlaceWishListFragment> mFragmentList;
 
-    public WishListFragmentPagerAdapter(FragmentManager fragmentManager, ArrayList<PlaceWishListFragment> arrayList)
+    public WishListFragmentPageAdapter(FragmentManager fragmentManager, ArrayList<PlaceWishListFragment> fragmentList)
     {
         super(fragmentManager);
 
         mFragmentList = new ArrayList<>();
-        if (arrayList != null)
+
+        if (fragmentList != null)
         {
-            mFragmentList.addAll(arrayList);
+            mFragmentList.addAll(fragmentList);
         }
     }
 

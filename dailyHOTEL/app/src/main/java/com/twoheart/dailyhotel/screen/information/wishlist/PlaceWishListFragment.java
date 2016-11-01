@@ -12,13 +12,11 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 
 /**
- * Created by android_sam on 2016. 10. 10..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public abstract class PlaceWishListFragment extends BaseFragment
 {
-    private PlaceType mPlaceType;
-
     protected BaseActivity mBaseActivity;
     protected PlaceWishListLayout mListLayout;
     protected BaseNetworkController mNetworkController;
@@ -33,12 +31,14 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     protected abstract void requestWishList();
 
+    protected abstract void requestDeleteWishListItem();
+
     public interface OnWishListFragmentListener
     {
         void onDeleteItemClick(PlaceType placeType, int position);
     }
 
-    public void setWishListListFragmentListener(OnWishListFragmentListener listener)
+    public void setWishListFragmentListener(OnWishListFragmentListener listener)
     {
         mWishListFragmentListener = listener;
     }
@@ -50,7 +50,7 @@ public abstract class PlaceWishListFragment extends BaseFragment
         mListLayout = getListLayout();
         mNetworkController = getNetworkController();
 
-        return mListLayout.onCreateView(R.layout.fragment_recent_places_list, container);
+        return mListLayout.onCreateView(R.layout.fragment_wishlist_list, container);
     }
 
     @Override
@@ -69,15 +69,5 @@ public abstract class PlaceWishListFragment extends BaseFragment
         }
 
         mSaleTime = saleTime;
-    }
-
-    public void setPlaceType(PlaceType placeType)
-    {
-        mPlaceType = placeType;
-    }
-
-    public PlaceType getPlaceType()
-    {
-        return mPlaceType;
     }
 }

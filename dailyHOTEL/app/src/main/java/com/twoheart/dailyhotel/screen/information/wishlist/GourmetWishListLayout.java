@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class GourmetWishListLayout extends PlaceWishListLayout
@@ -20,28 +20,20 @@ public class GourmetWishListLayout extends PlaceWishListLayout
     }
 
     @Override
-    protected PlaceWishListAdapter getWishListAdapter(Context context, ArrayList<? extends Place> list, PlaceWishListAdapter.OnWishListItemListener listener)
+    protected PlaceWishListAdapter getWishListAdapter(Context context, ArrayList<? extends Place> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener)
     {
         return new GourmetWishListAdapter(context, list, listener);
     }
 
     @Override
-    protected int getEmptyTextResId()
+    protected int getEmptyMessageResId()
     {
-        return R.string.recent_gourmet_list_empty_message;
-    }
-
-    @Override
-    protected int getEmptyImageResId()
-    {
-        return R.drawable.no_gourmet_ic;
+        return R.string.wishlist_list_empty_message02_gourmet;
     }
 
     @Override
     protected int getEmptyButtonTextResId()
     {
-        return R.string.recent_gourmet_list_empty_button_message;
+        return R.string.wishlist_list_empty_button_message_gourmet;
     }
-
-
 }

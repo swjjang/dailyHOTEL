@@ -165,8 +165,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Stay stay = (Stay) mListLayout.getItem(position);
 
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
-                mSaleTime, stay, 0);
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0);
 
             if (Util.isOverAPI21() == true)
             {
@@ -226,6 +225,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onEmptyButtonClick()
         {
+            unLockUI();
             mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
             finish();
         }

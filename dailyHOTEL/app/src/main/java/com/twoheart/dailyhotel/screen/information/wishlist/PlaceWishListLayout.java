@@ -15,15 +15,15 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public abstract class PlaceWishListLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
     private View mEmptyLayout;
-    private DailyTextView mEmptyTextView;
-    private DailyTextView mEmptyButtonTextView;
+    private DailyTextView mEmptyMessageView;
+    private DailyTextView mEmptyButtonView;
     private PlaceWishListAdapter mListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -35,14 +35,12 @@ public abstract class PlaceWishListLayout extends BaseLayout
         void onEmptyButtonClick();
     }
 
-    protected abstract int getEmptyTextResId();
-
-    protected abstract int getEmptyImageResId();
+    protected abstract int getEmptyMessageResId();
 
     protected abstract int getEmptyButtonTextResId();
 
-    protected abstract PlaceWishListAdapter getWishListAdapter(Context context//
-        , ArrayList<? extends Place> list, PlaceWishListAdapter.OnWishListItemListener listener);
+    protected abstract PlaceWishListAdapter getWishListAdapter(Context context //
+        , ArrayList<? extends Place> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
 
     public PlaceWishListLayout(Context context, OnBaseEventListener listener)
     {
@@ -55,12 +53,13 @@ public abstract class PlaceWishListLayout extends BaseLayout
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 
-        mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
-        mEmptyTextView.setText(getEmptyTextResId());
-        mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.buttonView);
-        mEmptyButtonTextView.setText(getEmptyButtonTextResId());
+        mEmptyMessageView = (DailyTextView) view.findViewById(R.id.messageTextView02);
+        mEmptyButtonView = (DailyTextView) view.findViewById(R.id.buttonView);
 
-        mEmptyButtonTextView.setOnClickListener(new View.OnClickListener()
+        mEmptyMessageView.setText(getEmptyMessageResId());
+        mEmptyButtonView.setText(getEmptyButtonTextResId());
+
+        mEmptyButtonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -102,15 +101,13 @@ public abstract class PlaceWishListLayout extends BaseLayout
         }
     }
 
-    public int getSize()
-    {
-        ArrayList<? extends Place> list = getList();
-        return list != null ? list.size() : 0;
-    }
-
     public ArrayList<? extends Place> getList()
     {
         return mListAdapter != null ? mListAdapter.getList() : null;
+    }
+
+    public int getItemCount() {
+        return mListAdapter != null ? mListAdapter.getItemCount() : null;
     }
 
     public Place getItem(int position)
@@ -120,7 +117,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
 
     public Place removeItem(int position)
     {
-        return mListAdapter != null ? mListAdapter.removeItem(position) : null;
+        return mListAdapter != null ? mListAdapter.remove(position) : null;
     }
 
     public void notifyDataSetChanged()
@@ -131,15 +128,15 @@ public abstract class PlaceWishListLayout extends BaseLayout
         }
     }
 
-    private void setEmptyViewVisibility(int visibility)
+    private void setEmptyViewVisibility(int visiblility)
     {
         if (mEmptyLayout != null)
         {
-            mEmptyLayout.setVisibility(visibility);
+            mEmptyLayout.setVisibility(visiblility);
         }
     }
 
-    private PlaceWishListAdapter.OnWishListItemListener mItemListener = new PlaceWishListAdapter.OnWishListItemListener()
+    private PlaceWishListAdapter.OnPlaceWishListItemListener mItemListener = new PlaceWishListAdapter.OnPlaceWishListItemListener()
     {
         @Override
         public void onItemClick(View view)
@@ -147,7 +144,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
             int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onListItemClick(view, position);
+                //                ((OnEventListener) mOnEventListener).onListItemClick(view, position); // ????
                 return;
             }
 
@@ -155,10 +152,9 @@ public abstract class PlaceWishListLayout extends BaseLayout
         }
 
         @Override
-        public void onDeleteClick(View view, int position)
+        public void onDeleteItemClick(View view, int position)
         {
             ((OnEventListener) mOnEventListener).onListItemDeleteClick(position);
         }
     };
-
 }

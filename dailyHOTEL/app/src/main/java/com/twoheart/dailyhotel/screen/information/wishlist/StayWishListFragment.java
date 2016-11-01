@@ -9,24 +9,20 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 12..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class StayWishListFragment extends PlaceWishListFragment
 {
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -50,21 +46,15 @@ public class StayWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        //        if (mListLayout == null)
-        //        {
-        //            unLockUI();
-        //            return;
-        //        }
-        if (mSaleTime == null)
-        {
-            unLockUI();
-            return;
-        }
+        ((StayWishListNetworkController) mNetworkController).requestStayWishList();
+    }
 
-        RecentStayParams recentStayParams = new RecentStayParams();
-        recentStayParams.setCheckInTime(mSaleTime);
+    @Override
+    protected void requestDeleteWishListItem()
+    {
+        lockUI();
 
-        ((StayWishListNetworkController) mNetworkController).requestStayWishList(recentStayParams);
+        ((StayWishListNetworkController) mNetworkController).requestDeleteStayWishListItem();
     }
 
     private StayWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayWishListNetworkController.OnNetworkControllerListener()
@@ -74,8 +64,11 @@ public class StayWishListFragment extends PlaceWishListFragment
         {
             unLockUI();
 
-            if (isFinishing() == true)
-            {
+            if (isFinishing() == true) {
+                return;
+            }
+
+            if (mListLayout == null) {
                 return;
             }
 
@@ -83,9 +76,29 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onDeleteWishItem(int position, int placeIndex)
+        public void onDeleteStayWishListItem(int position)
         {
-            // TODO : 삭제 처리 서버 결과 도착시 처리 필요.
+            unLockUI();
+
+            if (isFinishing() == true) {
+                return;
+            }
+
+            if (mListLayout == null) {
+                return;
+            }
+
+            if (position < 0 || position > mListLayout.getItemCount() -1) {
+                return;
+            }
+
+            mListLayout.removeItem(position);
+            mListLayout.notifyDataSetChanged();
+
+//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+//                AnalyticsManager.Category.NAVIGATION, //
+//                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+//                place.name, null);
         }
 
         @Override
@@ -117,26 +130,28 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
     };
 
-    PlaceWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
+    StayWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
     {
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mListLayout == null)
+            if (position < 0)
             {
                 return;
             }
 
-            int size = mListLayout.getSize();
-            if (position < 0 || size - 1 < position)
+            if (mListLayout == null)
             {
                 return;
             }
 
             Stay stay = (Stay) mListLayout.getItem(position);
+            if (stay == null)
+            {
+                return;
+            }
 
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
-                mSaleTime, stay, 0);
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0);
 
             if (Util.isOverAPI21() == true)
             {
@@ -163,39 +178,35 @@ public class StayWishListFragment extends PlaceWishListFragment
             //                AnalyticsManager.Category.NAVIGATION, //
             //                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
             //                stay.name, null);
+
         }
 
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mListLayout == null)
+            if (position < 0)
             {
                 return;
             }
 
-            int size = mListLayout.getSize();
-            if (position < 0 || size - 1 < position)
+            if (mListLayout == null)
             {
                 return;
             }
 
-            // TODO : 삭제 API 연동
+            Stay stay = (Stay) mListLayout.getItem(position);
+            if (stay == null)
+            {
+                return;
+            }
 
-            Place place = mListLayout.removeItem(position);
-            ExLog.d("isRemove : " + (place != null));
-
-            mListLayout.setData(mListLayout.getList());
-            mWishListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, position);
-
-            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-            //                AnalyticsManager.Category.NAVIGATION, //
-            //                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-            //                place.name, null);
+            StayWishListFragment.this.requestDeleteWishListItem();
         }
 
         @Override
         public void onEmptyButtonClick()
         {
+            unLockUI();
             mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
             finish();
         }

@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesNetworkController;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
@@ -15,7 +14,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 /**
- * Created by android_sam on 2016. 10. 12..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class WishListTabNetworkController extends BaseNetworkController
@@ -29,7 +28,7 @@ public class WishListTabNetworkController extends BaseNetworkController
     {
         void onCommonDateTime(long currentDateTime, long dailyDateTime);
 
-        void onWishListCount(int stayWishListCount, int gourmetWishListCount);
+        void onWishListCount(int stayCount, int gourmetCount);
     }
 
     public void requestCommonDateTime()
@@ -38,9 +37,7 @@ public class WishListTabNetworkController extends BaseNetworkController
     }
 
     public void requestWishListCount() {
-        //        DailyNetworkAPI.getInstance(mContext).requestWishListCount(mNetworkTag, mCountJsonResponseListener);
-
-        ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(1, 1);
+//        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mWishListCountJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -78,7 +75,7 @@ public class WishListTabNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mCountJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mWishListCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -89,9 +86,12 @@ public class WishListTabNetworkController extends BaseNetworkController
 
                 if (msgCode == 100)
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+//                    JSONObject dataJSONObject = response.getJSONObject("data");
+//
+//                    long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+//                    long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
 
-                    //                    ((RecentPlacesNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(currentDateTime, dailyDateTime);
+                    ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(0, 0);
                 } else
                 {
                     String message = response.getString("msg");

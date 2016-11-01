@@ -152,7 +152,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onListItemClick(view, position);
+//                ((OnEventListener) mOnEventListener).onListItemClick(view, position); // ????
                 return;
             }
 

@@ -18,13 +18,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
 public class StayWishListAdapter extends PlaceWishListAdapter
 {
-
-    public StayWishListAdapter(Context context, ArrayList<? extends Place> list, OnWishListItemListener listener)
+    public StayWishListAdapter(Context context, ArrayList<? extends Place> list, OnPlaceWishListItemListener listener)
     {
         super(context, list, listener);
     }
@@ -36,7 +35,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
         view.setLayoutParams(layoutParams);
 
-        return new StayViewHolder(view);
+        return new StayWishListViewHolder(view);
     }
 
     @Override
@@ -49,7 +48,8 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         }
 
         final Stay stay = (Stay) item;
-        StayViewHolder holder = (StayViewHolder) viewHolder;
+
+        StayWishListViewHolder holder = (StayWishListViewHolder) viewHolder;
 
         String strPrice = Util.getPriceFormat(mContext, stay.price, false);
         String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
@@ -150,13 +150,13 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             {
                 if (mListener != null)
                 {
-                    mListener.onDeleteClick(v, (Integer) v.getTag());
+                    mListener.onDeleteItemClick(v, (Integer) v.getTag());
                 }
             }
         });
     }
 
-    private class StayViewHolder extends RecyclerView.ViewHolder
+    private class StayWishListViewHolder extends RecyclerView.ViewHolder
     {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView hotelImageView;
@@ -173,7 +173,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         View dBenefitLayout;
         View deleteView;
 
-        public StayViewHolder(View itemView)
+        public StayWishListViewHolder(View itemView)
         {
             super(itemView);
 
