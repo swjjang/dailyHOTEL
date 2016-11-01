@@ -33,10 +33,12 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
+import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -88,40 +90,92 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
 
-        Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
 
         // 버튼
-        View callDailyView = dialogView.findViewById(R.id.callDailyView);
-        View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
-        TextView callPlaceView = (TextView) dialogView.findViewById(R.id.callPlaceView);
+        View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
+        View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
 
-        callPlaceView.setText(R.string.label_restaurant_direct_phone);
+        DailyTextView contactUs01TextView = (DailyTextView)contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        contactUs01TextView.setText(R.string.frag_faqs);
+        contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
+
+        contactUs01Layout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startFAQ();
+            }
+        });
+
+        DailyTextView contactUs02TextView = (DailyTextView)contactUs02Layout.findViewById(R.id.contactUs02TextView) ;
+        contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
+        contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
+
+        contactUs02Layout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startGourmetCall();
+            }
+        });
+
+        View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
+        View callDailyView = dialogView.findViewById(R.id.callDailyView);
+
+        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startKakao();
+            }
+        });
 
         callDailyView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                callDaily();
+                if(dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startDailyCall();
             }
         });
-        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+
+        View closeView = dialogView.findViewById(R.id.closeView);
+        closeView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                kakaoDaily();
-            }
-        });
-        callPlaceView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                callGourmet();
+                if(dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -145,30 +199,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_daily_call:
-                callDaily();
-                break;
-
-            case R.id.action_kakaotalk:
-                kakaoDaily();
-                break;
-
-            case R.id.action_direct_call:
-                callGourmet();
-                break;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-        return true;
-    }
-
-    @Override
     protected void requestPlaceBookingDetail(int reservationIndex)
     {
         lockUI();
@@ -183,49 +213,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         mGourmetBookingDetail.dailyDateTime = dailyDateTime;
     }
 
-    private void callDaily()
+    private void startFAQ()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
-
-        if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)
-        {
-            try
-            {
-                String phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
-
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            } catch (ActivityNotFoundException e)
-            {
-                DailyToast.showToast(GourmetBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            }
-        } else
-        {
-            DailyToast.showToast(GourmetBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-        }
+        startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void kakaoDaily()
-    {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
-
-        try
-        {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        } catch (ActivityNotFoundException e)
-        {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
-        }
-    }
-
-    private void callGourmet()
+    private void startGourmetCall()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
 
@@ -250,6 +243,48 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         {
             String message = getString(R.string.toast_msg_no_gourmet_call, mGourmetBookingDetail.gourmetPhone);
             DailyToast.showToast(GourmetBookingDetailTabActivity.this, message, Toast.LENGTH_LONG);
+        }
+    }
+
+    private void startKakao()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
+        }
+    }
+
+    private void startDailyCall()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
+
+        if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)
+        {
+            try
+            {
+                String phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
+
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            } catch (ActivityNotFoundException e)
+            {
+                DailyToast.showToast(GourmetBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            }
+        } else
+        {
+            DailyToast.showToast(GourmetBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
         }
     }
 

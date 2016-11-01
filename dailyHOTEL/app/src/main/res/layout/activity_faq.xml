@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_default"/>
+    <include layout="@layout/toolbar_default_underline_menu"/>
 
     <com.twoheart.dailyhotel.widget.DailyWebView
         android:id="@+id/webView"
