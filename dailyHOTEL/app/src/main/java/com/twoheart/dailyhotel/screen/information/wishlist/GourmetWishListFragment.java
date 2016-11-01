@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -39,7 +39,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     @Override
     protected BaseNetworkController getNetworkController()
     {
-        return new GourmetDetailNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        return new GourmetWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(list);
+            mListLayout.setData(makePlaceViewItemList(list));
         }
 
         @Override
@@ -134,6 +134,24 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
         }
+
+        private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<Gourmet> list)
+        {
+            if (list == null || list.size() == 0)
+            {
+                return null;
+            }
+
+            ArrayList<PlaceViewItem> placeViewItems = new ArrayList<>();
+            for (Gourmet gourmet : list)
+            {
+                placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+            }
+
+            placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+            return placeViewItems;
+        }
     };
 
     private GourmetWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
@@ -151,7 +169,8 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Gourmet gourmet = placeViewItem.getItem();
 
             Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, gourmet, 0);
@@ -194,7 +213,8 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Gourmet gourmet = placeViewItem.getItem();
             if (gourmet == null)
             {
                 return;

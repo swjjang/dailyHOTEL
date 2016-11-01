@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
 {
     protected Context mContext;
     protected LayoutInflater mInflater;
-    protected ArrayList<? extends Place> mList;
+    protected ArrayList<PlaceViewItem> mList;
     protected OnPlaceWishListItemListener mListener;
 
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
@@ -38,7 +38,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         void onDeleteItemClick(View view, int position);
     }
 
-    public PlaceWishListAdapter(Context context, ArrayList<? extends Place> list, OnPlaceWishListItemListener listener)
+    public PlaceWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         mContext = context;
 
@@ -55,17 +55,17 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         makeShaderFactory();
     }
 
-    public ArrayList<? extends Place> getList()
+    public ArrayList<PlaceViewItem> getList()
     {
         return mList != null ? mList : null;
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<PlaceViewItem> list)
     {
         mList = list;
     }
 
-    public Place getItem(int position)
+    public PlaceViewItem getItem(int position)
     {
         if (mList == null || mList.size() == 0)
         {
@@ -75,7 +75,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         return mList.get(position);
     }
 
-    public Place remove(int position)
+    public PlaceViewItem remove(int position)
     {
         if (mList == null || mList.size() == 0)
         {
@@ -88,7 +88,14 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public int getItemCount()
     {
-        return mList != null ? mList.size() : 0;
+        // PlaceViewItem 이기에 footer개수 만큼 빼줌
+        return mList != null && mList.size() > 0 ? mList.size() - 1 : 0;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return mList.get(position).mType;
     }
 
     private void makeShaderFactory()

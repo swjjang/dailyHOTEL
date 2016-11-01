@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -40,7 +40,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
     protected abstract int getEmptyButtonTextResId();
 
     protected abstract PlaceWishListAdapter getWishListAdapter(Context context //
-        , ArrayList<? extends Place> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
+        , ArrayList<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
 
     public PlaceWishListLayout(Context context, OnBaseEventListener listener)
     {
@@ -78,7 +78,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<PlaceViewItem> list)
     {
         if (list == null || list.size() == 0)
         {
@@ -101,7 +101,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
         }
     }
 
-    public ArrayList<? extends Place> getList()
+    public ArrayList<PlaceViewItem> getList()
     {
         return mListAdapter != null ? mListAdapter.getList() : null;
     }
@@ -111,12 +111,12 @@ public abstract class PlaceWishListLayout extends BaseLayout
         return mListAdapter != null ? mListAdapter.getItemCount() : null;
     }
 
-    public Place getItem(int position)
+    public PlaceViewItem getItem(int position)
     {
         return mListAdapter != null ? mListAdapter.getItem(position) : null;
     }
 
-    public Place removeItem(int position)
+    public PlaceViewItem removeItem(int position)
     {
         return mListAdapter != null ? mListAdapter.remove(position) : null;
     }

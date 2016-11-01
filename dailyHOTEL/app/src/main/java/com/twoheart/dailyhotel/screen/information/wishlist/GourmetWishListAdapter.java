@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class GourmetWishListAdapter extends PlaceWishListAdapter
 {
-    public GourmetWishListAdapter(Context context, ArrayList<? extends Place> list, OnPlaceWishListItemListener listener)
+    public GourmetWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         super(context, list, listener);
     }
@@ -31,24 +31,50 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
-        view.setLayoutParams(layoutParams);
+        switch (viewType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+            {
+                View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                view.setLayoutParams(layoutParams);
 
-        return new GourmetWishListViewHolder(view);
+                return new GourmetWishListViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_wishlist_footer, parent, false);
+                return new FooterViewHolder(view);
+            }
+        }
+
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
-        Place item = getItem(position);
+        PlaceViewItem item = getItem(position);
         if (item == null)
         {
             return;
         }
 
-        final Gourmet gourmet = (Gourmet) item;
-        GourmetWishListViewHolder holder = (GourmetWishListViewHolder) viewHolder;
+        switch (item.mType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+                onBindViewHolder((GourmetWishListViewHolder) viewHolder, item, position);
+                break;
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+                break;
+        }
+    }
+
+    private void onBindViewHolder(GourmetWishListViewHolder holder, PlaceViewItem placeViewItem, int position)
+    {
+        final Gourmet gourmet = placeViewItem.getItem();
 
         String strPrice = Util.getPriceFormat(mContext, gourmet.price, false);
         String strDiscount = Util.getPriceFormat(mContext, gourmet.discountPrice, false);
@@ -173,6 +199,13 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         });
     }
 
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
+        }
+    }
 
     private class GourmetWishListViewHolder extends RecyclerView.ViewHolder
     {

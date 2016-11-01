@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -74,7 +75,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(list);
+            mListLayout.setData(makePlaceViewItemList(list));
         }
 
         @Override
@@ -133,6 +134,24 @@ public class StayWishListFragment extends PlaceWishListFragment
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
         }
+
+        private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<Stay> list)
+        {
+            if (list == null || list.size() == 0)
+            {
+                return null;
+            }
+
+            ArrayList<PlaceViewItem> placeViewItems = new ArrayList<>();
+            for (Stay stay : list)
+            {
+                placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            }
+
+            placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+            return placeViewItems;
+        }
     };
 
     StayWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
@@ -150,7 +169,8 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            Stay stay = (Stay) mListLayout.getItem(position);
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Stay stay = placeViewItem.getItem();
             if (stay == null)
             {
                 return;
@@ -199,7 +219,8 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            Stay stay = (Stay) mListLayout.getItem(position);
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Stay stay = placeViewItem.getItem();
             if (stay == null)
             {
                 return;

@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class StayWishListAdapter extends PlaceWishListAdapter
 {
-    public StayWishListAdapter(Context context, ArrayList<? extends Place> list, OnPlaceWishListItemListener listener)
+    public StayWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         super(context, list, listener);
     }
@@ -31,25 +31,50 @@ public class StayWishListAdapter extends PlaceWishListAdapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
-        view.setLayoutParams(layoutParams);
+        switch (viewType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+            {
+                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                view.setLayoutParams(layoutParams);
 
-        return new StayWishListViewHolder(view);
+                return new StayWishListViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_wishlist_footer, parent, false);
+                return new FooterViewHolder(view);
+            }
+        }
+
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
-        Place item = getItem(position);
+        PlaceViewItem item = getItem(position);
         if (item == null)
         {
             return;
         }
 
-        final Stay stay = (Stay) item;
+        switch (item.mType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+                onBindViewHolder((StayWishListViewHolder) viewHolder, item, position);
+                break;
 
-        StayWishListViewHolder holder = (StayWishListViewHolder) viewHolder;
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+                break;
+        }
+    }
+
+    private void onBindViewHolder(StayWishListViewHolder holder, PlaceViewItem placeViewItem, int position)
+    {
+        final Stay stay = placeViewItem.getItem();
 
         String strPrice = Util.getPriceFormat(mContext, stay.price, false);
         String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
@@ -154,6 +179,14 @@ public class StayWishListAdapter extends PlaceWishListAdapter
                 }
             }
         });
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
+        }
     }
 
     private class StayWishListViewHolder extends RecyclerView.ViewHolder

@@ -39,6 +39,7 @@ public class WishListTabNetworkController extends BaseNetworkController
     public void requestWishListCount()
     {
         //        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mWishListCountJsonResponseListener);
+        ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(1, 1);
     }
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()

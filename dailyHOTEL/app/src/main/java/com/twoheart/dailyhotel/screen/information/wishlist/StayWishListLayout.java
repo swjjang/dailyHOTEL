@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.information.wishlist;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class StayWishListLayout extends PlaceWishListLayout
     }
 
     @Override
-    protected PlaceWishListAdapter getWishListAdapter(Context context, ArrayList<? extends Place> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener)
+    protected PlaceWishListAdapter getWishListAdapter(Context context, ArrayList<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener)
     {
         return new StayWishListAdapter(context, list, listener);
     }

@@ -982,8 +982,8 @@
     <!-- wishList -->
     <string name="wishlist_need_login_message">로그인하여 위시리스트를 확인하세요.</string>
     <string name="wishlist_list_empty_message01">저장된 위시리스트가 없습니다.</string>
-    <string name="wishlist_list_empty_message02_stay">원하는 호텔 상세 화면에서 하트 아이콘을 눌러 위시리스트를 만들어보세요.</string>
-    <string name="wishlist_list_empty_message02_gourmet">원하는 고메 상세 화면에서 하트 아이콘을 눌러 위시리스트를 만들어보세요.</string>
+    <string name="wishlist_list_empty_message02_stay">원하는 호텔 상세 화면에서\n하트 아이콘을 눌러 위시리스트를 만들어보세요.</string>
+    <string name="wishlist_list_empty_message02_gourmet">원하는 고메 상세 화면에서\n하트 아이콘을 눌러 위시리스트를 만들어보세요.</string>
     <string name="wishlist_list_empty_button_message_stay">호텔 보러가기</string>
     <string name="wishlist_list_empty_button_message_gourmet">고메 보러가기</string>
     <string name="wishlist_list_bottom_notice_message">판매 사정에 따라 위시리스트 목록에서 삭제될 수 있습니다.</string>
