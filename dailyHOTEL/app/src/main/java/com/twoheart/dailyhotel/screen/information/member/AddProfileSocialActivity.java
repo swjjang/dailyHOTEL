@@ -94,6 +94,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         mAddProfileSocialLayout.showNameLayout();
+        mAddProfileSocialLayout.setNameText(mCustomer.getName());
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
     }

@@ -429,6 +429,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mNameLayout.setVisibility(View.GONE);
     }
 
+    public void setNameText(String name)
+    {
+        mNameEditText.setText(name);
+        mNameEditText.setSelection(mNameEditText.length());
+    }
+
     public void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
