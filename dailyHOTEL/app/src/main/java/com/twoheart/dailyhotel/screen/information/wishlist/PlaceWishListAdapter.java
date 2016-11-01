@@ -55,24 +55,30 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         makeShaderFactory();
     }
 
-    public ArrayList<? extends Place> getList() {
+    public ArrayList<? extends Place> getList()
+    {
         return mList != null ? mList : null;
     }
 
-    public void setData(ArrayList<? extends Place> list) {
+    public void setData(ArrayList<? extends Place> list)
+    {
         mList = list;
     }
 
-    public Place getItem(int position) {
-        if (mList == null || mList.size() == 0) {
+    public Place getItem(int position)
+    {
+        if (mList == null || mList.size() == 0)
+        {
             return null;
         }
 
         return mList.get(position);
     }
 
-    public Place remove(int position) {
-        if (mList == null || mList.size() == 0) {
+    public Place remove(int position)
+    {
+        if (mList == null || mList.size() == 0)
+        {
             return null;
         }
 

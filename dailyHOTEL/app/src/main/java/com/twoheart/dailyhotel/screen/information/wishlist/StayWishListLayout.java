@@ -22,7 +22,7 @@ public class StayWishListLayout extends PlaceWishListLayout
     @Override
     protected PlaceWishListAdapter getWishListAdapter(Context context, ArrayList<? extends Place> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener)
     {
-        return new StayWishListAdapter(context, list , listener);
+        return new StayWishListAdapter(context, list, listener);
     }
 
     @Override

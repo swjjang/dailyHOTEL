@@ -65,11 +65,13 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         {
             unLockUI();
 
-            if (isFinishing() == true) {
+            if (isFinishing() == true)
+            {
                 return;
             }
 
-            if (mListLayout == null) {
+            if (mListLayout == null)
+            {
                 return;
             }
 
@@ -81,25 +83,28 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         {
             unLockUI();
 
-            if (isFinishing() == true) {
+            if (isFinishing() == true)
+            {
                 return;
             }
 
-            if (mListLayout == null) {
+            if (mListLayout == null)
+            {
                 return;
             }
 
-            if (position < 0 || position > mListLayout.getItemCount() -1) {
+            if (position < 0 || position > mListLayout.getItemCount() - 1)
+            {
                 return;
             }
 
             mListLayout.removeItem(position);
             mListLayout.notifyDataSetChanged();
 
-//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-//                AnalyticsManager.Category.NAVIGATION, //
-//                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-//                place.name, null);
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, //
+            //                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+            //                place.name, null);
         }
 
         @Override
@@ -170,10 +175,10 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
             }
 
-//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-//                AnalyticsManager.Category.NAVIGATION, //
-//                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-//                gourmet.name, null);
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, //
+            //                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+            //                gourmet.name, null);
         }
 
         @Override
@@ -190,7 +195,8 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             }
 
             Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
-            if (gourmet == null) {
+            if (gourmet == null)
+            {
                 return;
             }
 

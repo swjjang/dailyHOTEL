@@ -40,7 +40,8 @@ public class StayWishListNetworkController extends BaseNetworkController
         ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(null);
     }
 
-    public void requestDeleteStayWishListItem() {
+    public void requestDeleteStayWishListItem()
+    {
         ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteStayWishListItem(-1);
     }
 
@@ -151,7 +152,7 @@ public class StayWishListNetworkController extends BaseNetworkController
                 int msgCode = response.getInt("msgCode");
                 if (msgCode == 100)
                 {
-//                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    //                    JSONObject dataJSONObject = response.getJSONObject("data");
 
                     ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteStayWishListItem(-1);
                 } else

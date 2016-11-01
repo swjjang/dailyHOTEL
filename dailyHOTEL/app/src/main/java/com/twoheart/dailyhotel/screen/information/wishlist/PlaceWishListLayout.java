@@ -106,7 +106,8 @@ public abstract class PlaceWishListLayout extends BaseLayout
         return mListAdapter != null ? mListAdapter.getList() : null;
     }
 
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return mListAdapter != null ? mListAdapter.getItemCount() : null;
     }
 

@@ -174,7 +174,8 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
     }
 
 
-    private class GourmetWishListViewHolder extends RecyclerView.ViewHolder {
+    private class GourmetWishListViewHolder extends RecyclerView.ViewHolder
+    {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView gourmetImageView;
         TextView nameView;

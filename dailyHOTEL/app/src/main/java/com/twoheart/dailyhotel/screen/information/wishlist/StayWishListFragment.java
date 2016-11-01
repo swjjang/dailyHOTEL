@@ -64,11 +64,13 @@ public class StayWishListFragment extends PlaceWishListFragment
         {
             unLockUI();
 
-            if (isFinishing() == true) {
+            if (isFinishing() == true)
+            {
                 return;
             }
 
-            if (mListLayout == null) {
+            if (mListLayout == null)
+            {
                 return;
             }
 
@@ -80,25 +82,28 @@ public class StayWishListFragment extends PlaceWishListFragment
         {
             unLockUI();
 
-            if (isFinishing() == true) {
+            if (isFinishing() == true)
+            {
                 return;
             }
 
-            if (mListLayout == null) {
+            if (mListLayout == null)
+            {
                 return;
             }
 
-            if (position < 0 || position > mListLayout.getItemCount() -1) {
+            if (position < 0 || position > mListLayout.getItemCount() - 1)
+            {
                 return;
             }
 
             mListLayout.removeItem(position);
             mListLayout.notifyDataSetChanged();
 
-//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-//                AnalyticsManager.Category.NAVIGATION, //
-//                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-//                place.name, null);
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, //
+            //                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+            //                place.name, null);
         }
 
         @Override
