@@ -1,32 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="38dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="14dp">
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/default_background"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:layout_marginTop="14dp"
             android:text="@string/message_consult_kakao"
             android:textColor="@color/hoteldetail_title_text"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 
-        <ImageView
-            android:id="@+id/kakaoImageView"
-            android:layout_width="wrap_content"
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/info_btn_kakao"/>
-    </RelativeLayout>
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="@string/message_consult01"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="13dp"
+            dailyFont:style="DemiLight"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/onciergeTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="@string/message_consult02"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="13dp"
+            dailyFont:style="DemiLight"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="13dp"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <FrameLayout
+            android:id="@+id/conciergeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="4dp"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:text="@string/label_daily_concierge_to_call"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                app:drawableCompatLeft="@drawable/popup_ic_ops_03_daily_call"/>
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/default_background"/>
+    </LinearLayout>
 </FrameLayout>

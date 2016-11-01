@@ -60,6 +60,7 @@
     <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
     <string name="label_sender">보낸사람</string>
     <string name="label_send_mail">문의하기</string>
+    <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -627,6 +628,8 @@
     <string name="label_booking_payment_information">2. 결제 금액 정보</string>
     <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
+    <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
+    <string name="message_consult02">(상담 시간: 아침 %1$s시 ~ 익일 새벽 %2$s시)</string>
     <string name="message_booking_refund_product">변경, 취소, 환불이 불가한 특가 할인 상품입니다.</string>
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 [결제하기] 버튼을 눌러주세요.</string>
     <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>

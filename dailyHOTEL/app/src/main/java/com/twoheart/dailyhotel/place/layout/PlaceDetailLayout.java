@@ -97,7 +97,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onSelectedImagePosition(int position);
 
-        void doKakaotalkConsult();
+        void onConciergeClick();
 
         void showProductInformationLayout();
 

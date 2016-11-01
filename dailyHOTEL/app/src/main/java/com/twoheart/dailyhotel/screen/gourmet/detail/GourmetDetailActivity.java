@@ -700,7 +700,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void doKakaotalkConsult()
+        public void onConciergeClick()
         {
             if (isLockUiComponent() == true || isFinishing() == true)
             {
@@ -709,17 +709,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94"));
-            if (intent.resolveActivity(getPackageManager()) == null)
-            {
-                Util.installPackage(GourmetDetailActivity.this, "com.kakao.talk");
-            } else
-            {
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
-            }
-
-            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.KAKAO_INQUIRY_CLICKED, mPlaceDetail.name, null);
+            showCallDialog();
         }
 
         @Override

@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -177,7 +178,7 @@ public class StayDetailListAdapter extends BaseAdapter
             mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getKakaoView(mDeatilViews[6]);
+        getConciergeView(mDeatilViews[6]);
         linearLayout.addView(mDeatilViews[6]);
 
         return linearLayout;
@@ -536,11 +537,11 @@ public class StayDetailListAdapter extends BaseAdapter
     }
 
     /**
-     * 카톡 실시간 상담
+     * 문의하기
      *
      * @return
      */
-    private View getKakaoView(View view)
+    private View getConciergeView(View view)
     {
         if (view == null)
         {
@@ -549,16 +550,24 @@ public class StayDetailListAdapter extends BaseAdapter
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        // 카톡 1:1 실시간 상담
-        View consultKakaoView = view.findViewById(R.id.kakaoImageView);
-        consultKakaoView.setOnClickListener(new OnClickListener()
+        TextView onciergeTimeTextView = (TextView)view.findViewById(R.id.onciergeTimeTextView);
+
+        String[] hour = DailyPreference.getInstance(mContext).getOperationTime().split("\\,");
+
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        onciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
+
+        View conciergeLayout = view.findViewById(R.id.conciergeLayout);
+        conciergeLayout.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnEventListener != null)
                 {
-                    mOnEventListener.doKakaotalkConsult();
+                    mOnEventListener.onConciergeClick();
                 }
             }
         });
