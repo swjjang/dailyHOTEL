@@ -257,7 +257,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
             case R.id.birthdayLayout:
                 if (Util.isTextEmpty(mBirthdayTextView.getText().toString()) == false)
                 {
-                    ((OnEventListener) mOnEventListener).startEditBirthday((String) mNameTextView.getTag());
+                    ((OnEventListener) mOnEventListener).startEditBirthday((String) mBirthdayTextView.getTag());
                 } else
                 {
                     ((OnEventListener) mOnEventListener).startEditBirthday(null);

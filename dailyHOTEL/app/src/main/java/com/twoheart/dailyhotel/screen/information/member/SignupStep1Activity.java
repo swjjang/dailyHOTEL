@@ -277,7 +277,7 @@ public class SignupStep1Activity extends BaseActivity
         }
 
         @Override
-        public void showBirthdayDatePicker()
+        public void showBirthdayDatePicker(int year, int month, int day)
         {
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
@@ -289,7 +289,14 @@ public class SignupStep1Activity extends BaseActivity
 
             final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
 
-            datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+            if (year < 0 || month < 0 || day < 0)
+            {
+                year = 2000;
+                month = 0;
+                day = 1;
+            }
+
+            datePicker.init(year, month, day, new DatePicker.OnDateChangedListener()
             {
                 @Override
                 public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)

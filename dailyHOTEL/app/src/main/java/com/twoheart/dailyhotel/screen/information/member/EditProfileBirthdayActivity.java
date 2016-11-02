@@ -35,8 +35,10 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +96,14 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         mBirthdayView = findViewById(R.id.birthdayView);
 
         mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, null);
+        mBirthdayEditText.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                dailyEditText.setTag(null);
+            }
+        });
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setOnClickListener(this);
 
@@ -174,7 +183,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (Util.isTextEmpty(birthday) == true)
                 {
-                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.act_profile_input_birthday, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -189,6 +198,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (Util.isTextEmpty(birthday) == true)
                 {
+                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.act_profile_input_birthday, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -231,7 +241,24 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (hasFocus == true)
                 {
-                    showBirthdayDatePicker();
+                    String birthday = (String) mBirthdayEditText.getTag();
+
+                    if (Util.isTextEmpty(birthday) == false)
+                    {
+                        try
+                        {
+                            Date date = DailyCalendar.convertDate(birthday, DailyCalendar.ISO_8601_FORMAT);
+                            Calendar calendar = DailyCalendar.getInstance();
+                            calendar.setTime(date);
+                            showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                        } catch (Exception e)
+                        {
+                            showBirthdayDatePicker(-1, -1, -1);
+                        }
+                    } else
+                    {
+                        showBirthdayDatePicker(-1, -1, -1);
+                    }
                 }
                 break;
         }
@@ -263,7 +290,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         }
     }
 
-    private void showBirthdayDatePicker()
+    private void showBirthdayDatePicker(int year, int month, int day)
     {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
@@ -275,7 +302,14 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
 
-        datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+        if (year < 0 || month < 0 || day < 0)
+        {
+            year = 2000;
+            month = 0;
+            day = 1;
+        }
+
+        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener()
         {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
@@ -378,6 +412,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     });
 
                     setResult(RESULT_OK);
+
+                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday((String) mBirthdayEditText.getTag());
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"), null);
@@ -437,6 +473,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     });
 
                     setResult(RESULT_OK);
+
+                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday((String) mBirthdayEditText.getTag());
                 } else
                 {
                     String message = response.getString("msg");

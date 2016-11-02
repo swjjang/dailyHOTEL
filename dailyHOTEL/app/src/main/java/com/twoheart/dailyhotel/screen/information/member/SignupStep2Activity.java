@@ -331,8 +331,8 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onLogin(String authorization, final String userIndex, final String email, //
-                            final String name, String recommender, String userType, final String phoneNumber, boolean isBenefit)
+        public void onLogin(String authorization, final String userIndex, final String email, final String name,//
+                            String birthday, String recommender, String userType, final String phoneNumber, boolean isBenefit)
         {
             unLockUI();
 
@@ -349,8 +349,7 @@ public class SignupStep2Activity extends BaseActivity
 
             // 이미 가입된것이기 때문에 미리 Analytics 넣음
             AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
-                userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender, mCallByScreen);
-
+                userIndex, email, name, phoneNumber, birthday, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
         }

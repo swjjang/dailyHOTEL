@@ -23,6 +23,10 @@ public abstract class BaseAnalyticsManager
 
     abstract void setUserInformation(String index, String userType);
 
+    abstract void setUserBirthday(String birthday);
+
+    abstract void setUserName(String name);
+
     abstract void setExceedBonus(boolean isExceedBonus);
 
     abstract void onStart(Activity activity);
@@ -41,7 +45,7 @@ public abstract class BaseAnalyticsManager
 
     abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen);
 
-    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen);
+    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen);
 
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 
