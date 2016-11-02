@@ -1,11 +1,14 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -33,7 +36,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     private List<Coupon> mList;
     private OnCouponItemListener mListener;
     private int mSelectPosition = -1;
-    private boolean mIsSelected;
+    private boolean mIsSelectedMode;
 
     public interface OnCouponItemListener
     {
@@ -49,7 +52,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         mContext = context;
         mList = list;
         mListener = listener;
-        setSelected(true);
+        setSelectedMode(true);
     }
 
     @Override
@@ -138,15 +141,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         }
 
         // 스테이, 고메 쿠폰인지
-        if(coupon.isStay == true)
-        {
-            holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_on);
-        } else
-        {
-            holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_off);
-        }
-
-        if(coupon.isGourmet == true)
+        if (coupon.isStay == true)
         {
             holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_on);
         } else
@@ -154,10 +149,20 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_off);
         }
 
+        if (coupon.isGourmet == true)
+        {
+            holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_on);
+        } else
+        {
+            holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_off);
+        }
+
         setDownLoadLayout(holder, coupon.isDownloaded);
 
-        if (mIsSelected == true)
+        if (mIsSelectedMode == true)
         {
+            setSelectedLayout(holder, mSelectPosition == position);
+
             holder.couponLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -201,9 +206,9 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         addAll(list);
     }
 
-    public void setSelected(boolean selected)
+    public void setSelectedMode(boolean selected)
     {
-        mIsSelected = selected;
+        mIsSelectedMode = selected;
     }
 
     public Coupon getCoupon(String userCouponCode)
@@ -229,6 +234,25 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         return mSelectPosition;
     }
 
+    private void setSelectedLayout(SelectViewHolder holder, boolean isSelected)
+    {
+        if (isSelected == true)
+        {
+            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+            holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_s, 0);
+
+            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+        } else
+        {
+            holder.couponLayout.setBackgroundResource(0);
+
+            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
+            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+    }
+
     private void setDownLoadLayout(SelectViewHolder holder, boolean isDownload)
     {
         if (isDownload == true)
@@ -238,8 +262,8 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
             holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
 
-            holder.hotelIconView.setAlpha(0);
-            holder.gourmetIconView.setAlpha(0);
+            holder.hotelIconView.setAlpha(1.0f);
+            holder.gourmetIconView.setAlpha(1.0f);
             holder.downloadCouponView.setVisibility(View.GONE);
 
         } else

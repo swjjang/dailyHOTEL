@@ -128,12 +128,12 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         if (mListAdapter == null)
         {
             mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
-            mListAdapter.setSelected(isSelected);
+            mListAdapter.setSelectedMode(isSelected);
             mListView.setAdapter(mListAdapter);
         } else
         {
             mListAdapter.setData(list);
-            mListAdapter.setSelected(isSelected);
+            mListAdapter.setSelectedMode(isSelected);
             mListAdapter.notifyDataSetChanged();
         }
     }
