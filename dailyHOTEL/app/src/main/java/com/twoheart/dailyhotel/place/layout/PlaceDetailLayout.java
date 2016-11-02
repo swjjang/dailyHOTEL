@@ -742,12 +742,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
 
             ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
-                , PropertyValuesHolder.ofFloat("scaleX", 0.5f, 0.8f, 1.1f, 1.2f, 1.1f, 1.08f, 1.06f,1.04f, 1.02f, 1.01f, 1.0f, 0.8f) //
-                , PropertyValuesHolder.ofFloat("scaleY", 0.5f, 0.8f, 1.1f, 1.2f, 1.1f, 1.08f, 1.06f,1.04f, 1.02f, 1.01f, 1.0f, 0.8f) //
-                , PropertyValuesHolder.ofFloat("alpha", 0.0f, 0.7f, 1.0f, 1.1f, 1.05f, 1.0f, 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.1f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
             );
 
-            objectAnimator.setDuration(1000);
+            objectAnimator.setDuration(2000);
             objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
             objectAnimator.addListener(new Animator.AnimatorListener()
             {
