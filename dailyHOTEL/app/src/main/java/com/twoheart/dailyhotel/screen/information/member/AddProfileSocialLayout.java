@@ -419,6 +419,18 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailLayout.setVisibility(View.GONE);
     }
 
+    public void showBirthdaylLayout()
+    {
+        mBirthdayView.setVisibility(View.VISIBLE);
+        mBirthdayEditText.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBirthdayLayout()
+    {
+        mBirthdayView.setVisibility(View.GONE);
+        mBirthdayEditText.setVisibility(View.GONE);
+    }
+
     public void showNameLayout()
     {
         mNameLayout.setVisibility(View.VISIBLE);
@@ -427,6 +439,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     public void hideNameLayout()
     {
         mNameLayout.setVisibility(View.GONE);
+    }
+
+    public void setNameText(String name)
+    {
+        mNameEditText.setText(name);
+        mNameEditText.setSelection(mNameEditText.length());
     }
 
     public void setBirthdayText(int year, int month, int dayOfMonth)

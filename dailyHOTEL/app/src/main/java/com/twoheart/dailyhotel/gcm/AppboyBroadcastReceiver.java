@@ -60,7 +60,7 @@ public class AppboyBroadcastReceiver extends BroadcastReceiver
                     {
                         Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLink));
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-//                        stackBuilder.addNextIntent(getStartActivityIntent(context, null));
+                        //                        stackBuilder.addNextIntent(getStartActivityIntent(context, null));
                         stackBuilder.addNextIntent(uriIntent);
                         try
                         {
@@ -73,7 +73,7 @@ public class AppboyBroadcastReceiver extends BroadcastReceiver
                     {
                         Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLink)).putExtras(extras);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-//                        stackBuilder.addNextIntent(getStartActivityIntent(context, extras));
+                        //                        stackBuilder.addNextIntent(getStartActivityIntent(context, extras));
                         stackBuilder.addNextIntent(uriIntent);
                         try
                         {

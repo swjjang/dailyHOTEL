@@ -263,9 +263,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
         finish();
     }
 
-    protected void moveToAddSocialUserInformation(Customer user)
+    protected void moveToAddSocialUserInformation(Customer user, String birthday)
     {
-        Intent intent = AddProfileSocialActivity.newInstance(this, user);
+        Intent intent = AddProfileSocialActivity.newInstance(this, user, birthday);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 

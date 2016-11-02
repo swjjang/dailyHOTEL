@@ -335,7 +335,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             try
             {
                 DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
-            }catch (Exception e)
+            } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
