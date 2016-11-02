@@ -880,6 +880,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         }
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
+                        AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
                         return;
                     }
                 }

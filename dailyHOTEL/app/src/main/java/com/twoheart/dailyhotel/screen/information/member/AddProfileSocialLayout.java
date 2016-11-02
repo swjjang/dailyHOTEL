@@ -447,6 +447,11 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mNameEditText.setSelection(mNameEditText.length());
     }
 
+    public String getName()
+    {
+        return mNameEditText.getText().toString();
+    }
+
     public void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
@@ -454,6 +459,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(calendar);
+    }
+
+    public Calendar getBirthday()
+    {
+        Object object = mBirthdayEditText.getTag();
+        return object != null ? (Calendar) object : null;
     }
 
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)

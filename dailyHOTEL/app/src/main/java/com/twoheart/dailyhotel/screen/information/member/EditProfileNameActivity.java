@@ -270,6 +270,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     });
 
                     setResult(RESULT_OK);
+
+                    AnalyticsManager.getInstance(EditProfileNameActivity.this).setUserName(mNameEditText.getText().toString());
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"), null);
@@ -329,6 +331,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     });
 
                     setResult(RESULT_OK);
+
+                    AnalyticsManager.getInstance(EditProfileNameActivity.this).setUserName(mNameEditText.getText().toString());
                 } else
                 {
                     String message = response.getString("msg");

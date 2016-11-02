@@ -26,7 +26,8 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
         void onSignUp(int notificationUid, String gcmRegisterId);
 
-        void onLogin(String authorization, String userIndex, String email, String name, String recommender, String userType, String phoneNumber, boolean isBenefit);
+        void onLogin(String authorization, String userIndex, String email, String name, String birthday,//
+                     String recommender, String userType, String phoneNumber, boolean isBenefit);
 
         void onAlreadyVerification(String phoneNumber);
 
@@ -331,10 +332,17 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         String rndnum = userJSONObject.getString("rndnum");
                         String userType = userJSONObject.getString("userType");
                         String phoneNumber = userJSONObject.getString("phone");
+                        String birthday = null;
+
+                        if(userJSONObject.has("birthday") == true && userJSONObject.isNull("birthday") == false)
+                        {
+                            birthday = userJSONObject.getString("birthday");
+                        }
+
                         boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken),//
-                            userIndex, email, name, rndnum, userType, phoneNumber, isAgreedBenefit);
+                            userIndex, email, name, birthday, rndnum, userType, phoneNumber, isAgreedBenefit);
                         return;
                     }
                 }

@@ -174,7 +174,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (Util.isTextEmpty(birthday) == true)
                 {
-                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.act_profile_input_birthday, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -189,6 +189,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (Util.isTextEmpty(birthday) == true)
                 {
+                    DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.act_profile_input_birthday, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -378,6 +379,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     });
 
                     setResult(RESULT_OK);
+
+                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday((String) mBirthdayEditText.getTag());
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"), null);
@@ -437,6 +440,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     });
 
                     setResult(RESULT_OK);
+
+                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday((String) mBirthdayEditText.getTag());
                 } else
                 {
                     String message = response.getString("msg");
