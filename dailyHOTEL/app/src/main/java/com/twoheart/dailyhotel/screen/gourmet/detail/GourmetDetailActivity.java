@@ -837,6 +837,20 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             startCalendar(mSaleTime, mPlaceDetail.index, true);
         }
+
+        @Override
+        public void setWishList(boolean isAdded)
+        {
+            mPlaceDetailLayout.setWishListButtonSelected(isAdded);
+            // TODO : 서버 연결 해야 함! 현재는 단순 동작 확인용도!
+            if (isAdded == true)
+            {
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+            } else
+            {
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+            }
+        }
     };
 
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()

@@ -60,6 +60,7 @@
     <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
     <string name="label_sender">보낸사람</string>
     <string name="label_send_mail">문의하기</string>
+    <string name="label_wishlist">위시리스트</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -987,4 +988,7 @@
     <string name="wishlist_list_empty_button_message_stay">호텔 보러가기</string>
     <string name="wishlist_list_empty_button_message_gourmet">고메 보러가기</string>
     <string name="wishlist_list_bottom_notice_message">판매 사정에 따라 위시리스트 목록에서 삭제될 수 있습니다.</string>
+    <string name="wishlist_detail_add_message">더보기 메뉴의 위시리스트에\n추가되었습니다.</string>
+    <string name="wishlist_detail_delete_message">더보기 메뉴의 위시리스트에\n추가되었습니다.</string>
+    <string name="wishlist_count_over_10_thousand">만명 이상</string>
 </resources>
