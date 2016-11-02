@@ -27,6 +27,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.Calendar;
+
 public class AddProfileSocialActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
@@ -453,6 +455,18 @@ public class AddProfileSocialActivity extends BaseActivity
             {
                 DailyToast.showToast(AddProfileSocialActivity.this, message, Toast.LENGTH_SHORT);
             }
+
+            Calendar calendar = mAddProfileSocialLayout.getBirthday();
+
+            if (calendar != null)
+            {
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
+            } else
+            {
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(null);
+            }
+
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserName(mAddProfileSocialLayout.getName());
         }
 
         @Override

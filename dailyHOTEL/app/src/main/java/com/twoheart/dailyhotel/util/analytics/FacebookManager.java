@@ -277,6 +277,18 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setUserBirthday(String birthday)
+    {
+
+    }
+
+    @Override
+    void setUserName(String name)
+    {
+
+    }
+
+    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
 
@@ -351,7 +363,8 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
+                         String birthday, String userType, String recommender, String callByScreen)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 

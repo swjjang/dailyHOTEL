@@ -5,15 +5,18 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.appboy.Appboy;
+import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -593,6 +596,40 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setUserBirthday(String birthday)
+    {
+        if (Util.isTextEmpty(birthday) == true)
+        {
+            mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, false);
+            return;
+        }
+
+        try
+        {
+            Date birthdayDate = DailyCalendar.convertDate(birthday, DailyCalendar.ISO_8601_FORMAT);
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(birthdayDate);
+
+            mAppboy.getCurrentUser().setDateOfBirth(calendar.get(Calendar.YEAR), Month.getMonth(calendar.get(Calendar.MONTH)), calendar.get(Calendar.DAY_OF_MONTH));
+            mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, true);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    void setUserName(String name)
+    {
+        if (Util.isTextEmpty(name) == true)
+        {
+            return;
+        }
+
+        mAppboy.getCurrentUser().setFirstName(name);
+    }
+
+    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
         mAppboy.getCurrentUser().setCustomUserAttribute("credit_limit_over", isExceedBonus);
@@ -675,7 +712,8 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber,//
+                          String userType, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -709,13 +747,17 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
+                         String birthday, String userType, String recommender, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, userIndex);
         appboyProperties.addProperty(AnalyticsManager.KeyType.TYPE_OF_REGISTRATION, AnalyticsManager.UserType.EMAIL);
         appboyProperties.addProperty(AnalyticsManager.KeyType.REGISTRATION_DATE, new Date());
+
+        setUserName(name);
+        setUserBirthday(birthday);
 
         if (Util.isTextEmpty(recommender) == true)
         {
