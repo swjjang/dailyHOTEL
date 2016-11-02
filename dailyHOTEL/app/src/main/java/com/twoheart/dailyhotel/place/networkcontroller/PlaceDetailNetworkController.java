@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -28,9 +26,9 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     {
         void onCommonDateTime(long currentDateTime, long dailyDateTime);
 
-        void onUserInformation(Customer user, boolean isDailyUser);
+        //        void onUserInformation(Customer user, String birthday, boolean isDailyUser);
 
-        void onUserProfile(Customer user, boolean isVerified, boolean isPhoneVerified);
+        void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified);
     }
 
     public void requestCommonDatetime()
@@ -38,10 +36,10 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeJsonResponseListener);
     }
 
-    public void requestUserInformationEx()
-    {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener);
-    }
+    //    public void requestUserInformationEx()
+    //    {
+    //        DailyNetworkAPI.getInstance(mContext).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener);
+    //    }
 
     public void requestProfile()
     {
@@ -83,61 +81,63 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            try
-            {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    Customer user = new Customer();
-                    user.setEmail(jsonObject.getString("email"));
-                    user.setName(jsonObject.getString("name"));
-                    user.setPhone(jsonObject.getString("phone"));
-                    user.setUserIdx(jsonObject.getString("idx"));
-
-                    // 추천인
-                    //                    int recommender = jsonObject.getInt("recommender_code");
-                    boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(user, isDailyUser);
-                } else
-                {
-                    String msg = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorToastMessage(msg);
-                }
-            } catch (Exception e)
-            {
-                if (Constants.DEBUG == false)
-                {
-                    String logString = url + " | " + DailyHotel.AUTHORIZATION;
-                    if (response == null)
-                    {
-                        logString += " | empty response";
-                    } else if (response.has("data") == false)
-                    {
-                        logString += " | empty data";
-                    }
-
-                    Crashlytics.log(logString);
-                }
-
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-    };
+    //    private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                int msgCode = response.getInt("msg_code");
+    //
+    //                if (msgCode == 0)
+    //                {
+    //                    JSONObject jsonObject = response.getJSONObject("data");
+    //
+    //                    Customer user = new Customer();
+    //                    user.setEmail(jsonObject.getString("email"));
+    //                    user.setName(jsonObject.getString("name"));
+    //                    user.setPhone(jsonObject.getString("phone"));
+    //                    user.setUserIdx(jsonObject.getString("idx"));
+    //
+    //                    String birthday = jsonObject.getString("birthday");
+    //
+    //                    // 추천인
+    //                    //                    int recommender = jsonObject.getInt("recommender_code");
+    //                    boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
+    //
+    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(user, birthday, isDailyUser);
+    //                } else
+    //                {
+    //                    String msg = response.getString("msg");
+    //                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+    //                }
+    //            } catch (Exception e)
+    //            {
+    //                if (Constants.DEBUG == false)
+    //                {
+    //                    String logString = url + " | " + DailyHotel.AUTHORIZATION;
+    //                    if (response == null)
+    //                    {
+    //                        logString += " | empty response";
+    //                    } else if (response.has("data") == false)
+    //                    {
+    //                        logString += " | empty data";
+    //                    }
+    //
+    //                    Crashlytics.log(logString);
+    //                }
+    //
+    //                mOnNetworkControllerListener.onError(e);
+    //            }
+    //        }
+    //
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //            mOnNetworkControllerListener.onErrorResponse(volleyError);
+    //        }
+    //    };
 
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -158,10 +158,20 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
                     user.setPhone(jsonObject.getString("phone"));
                     user.setUserIdx(jsonObject.getString("userIdx"));
 
+                    String birthday = null;
+
+                    if (jsonObject.has("birthday") == true && jsonObject.isNull("birthday") == false)
+                    {
+                        birthday = jsonObject.getString("birthday");
+                    }
+
+                    String userType = jsonObject.getString("userType");
+                    boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(userType);
+
                     boolean isVerified = jsonObject.getBoolean("verified");
                     boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(user, isVerified, isPhoneVerified);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(user, birthday, isDailyUser, isVerified, isPhoneVerified);
                 } else
                 {
                     String msg = response.getString("msg");

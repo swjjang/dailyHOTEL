@@ -39,11 +39,12 @@ public class AddProfileSocialActivity extends BaseActivity
     private AddProfileSocialLayout mAddProfileSocialLayout;
     private AddProfileSocialNetworkController mAddProfileSocialNetworkController;
 
-    public static Intent newInstance(Context context, Customer customer)
+    public static Intent newInstance(Context context, Customer customer, String birthday)
     {
         Intent intent = new Intent(context, AddProfileSocialActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, customer);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BIRTHDAY, birthday);
 
         return intent;
     }
@@ -72,6 +73,20 @@ public class AddProfileSocialActivity extends BaseActivity
 
         mCustomer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
+        String birthday = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_BIRTHDAY);
+        boolean hasBirthday = false;
+
+        try
+        {
+            if (DailyCalendar.convertDate(birthday, DailyCalendar.ISO_8601_FORMAT) != null)
+            {
+                hasBirthday = true;
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         mUserIdx = mCustomer.getUserIdx();
 
         if (Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
@@ -95,6 +110,14 @@ public class AddProfileSocialActivity extends BaseActivity
 
         mAddProfileSocialLayout.showNameLayout();
         mAddProfileSocialLayout.setNameText(mCustomer.getName());
+
+        if (hasBirthday == true)
+        {
+            mAddProfileSocialLayout.hideBirthdayLayout();
+        } else
+        {
+            mAddProfileSocialLayout.showBirthdaylLayout();
+        }
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
     }
