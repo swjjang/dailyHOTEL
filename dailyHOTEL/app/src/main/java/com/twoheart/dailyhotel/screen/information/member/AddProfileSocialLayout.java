@@ -53,7 +53,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showCountryCodeList();
 
-        void showBirthdayDatePicker();
+        void showBirthdayDatePicker(int year, int month, int day);
 
         void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit);
     }
@@ -144,7 +144,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, null);
+        mBirthdayEditText.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                dailyEditText.setTag(null);
+            }
+        });
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
@@ -340,7 +347,15 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
                 if (hasFocus == true)
                 {
-                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                    Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+                    if (calendar == null)
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(-1, -1, -1);
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                    }
                 }
                 break;
 
