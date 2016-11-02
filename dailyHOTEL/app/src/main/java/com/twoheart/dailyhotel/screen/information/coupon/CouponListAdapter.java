@@ -28,6 +28,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 {
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_ITEM = 2;
+    private static final int VIEW_TYPE_FOOTER = 3;
 
     private static final int HEADER_COUNT = 1;
 

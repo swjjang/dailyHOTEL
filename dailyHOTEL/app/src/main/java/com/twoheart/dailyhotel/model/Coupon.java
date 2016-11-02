@@ -23,6 +23,9 @@ public class Coupon implements Parcelable
     public String stayFrom; // 투숙일 정보 - 시작일
     public String stayTo; // 투숙일 정보 - 종료일
 
+    public boolean isStay; // 스테이 쿠폰인지
+    public boolean isGourmet; // 고메 쿠폰인지
+
 
     public Coupon(Parcel in)
     {
@@ -68,6 +71,8 @@ public class Coupon implements Parcelable
         dest.writeString(couponCode);
         dest.writeString(stayFrom);
         dest.writeString(stayTo);
+        dest.writeInt(isStay == true ? 1 : 0);
+        dest.writeInt(isGourmet == true ? 1 : 0);
     }
 
     public void readFromParcel(Parcel in)
@@ -84,6 +89,8 @@ public class Coupon implements Parcelable
         couponCode = in.readString();
         stayFrom = in.readString();
         stayTo = in.readString();
+        isStay = in.readInt() == 1;
+        isGourmet = in.readInt() == 1;
     }
 
     @Override

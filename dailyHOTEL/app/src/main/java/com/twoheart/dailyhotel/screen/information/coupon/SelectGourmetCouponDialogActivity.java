@@ -247,61 +247,36 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         {
             boolean isEmpty = (list == null || list.size() == 0);
 
-            mLayout.setVisibility(true);
-
             switch (mCallByScreen)
             {
                 case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
                 {
-                    mLayout.setTitle(R.string.label_select_coupon);
-
                     if (isEmpty == true)
                     {
-                        mLayout.setMessage(R.string.message_select_coupon_empty);
-                        mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_confirm);
+                        mLayout.setVisibility(false);
+                        showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
+                            getString(R.string.dialog_btn_text_confirm), null);
+
+//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+//                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
                     } else
                     {
-                        mLayout.setMessage(R.string.message_select_coupon_selected);
+                        mLayout.setVisibility(true);
+                        mLayout.setTitle(R.string.label_select_coupon);
                         mLayout.setTwoButtonLayout(true, R.string.dialog_btn_text_select, R.string.dialog_btn_text_cancel);
+
+                        mLayout.setData(list, true);
+
+//                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
+//                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
                     }
-
-                    mLayout.setData(list, true);
-
-                    //                    if (isEmpty == true)
-                    //                    {
-                    //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-                    //                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
-                    //                    } else
-                    //                    {
-                    //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-                    //                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
-                    //                    }
                     break;
                 }
 
                 case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
                 {
+                    mLayout.setVisibility(false);
                     mLayout.setTitle(R.string.coupon_download_coupon);
-
-                    boolean isDownloadedAll = true;
-
-                    for (Coupon coupon : list)
-                    {
-                        if (coupon.isDownloaded == false)
-                        {
-                            isDownloadedAll = false;
-                            break;
-                        }
-                    }
-
-                    if (isDownloadedAll == true)
-                    {
-                        mLayout.setMessage(R.string.message_downloaded_all_coupon);
-                    } else
-                    {
-                        mLayout.setMessage(R.string.message_please_download_coupon);
-                    }
-
                     mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_close);
                     mLayout.setData(list, false);
                     break;

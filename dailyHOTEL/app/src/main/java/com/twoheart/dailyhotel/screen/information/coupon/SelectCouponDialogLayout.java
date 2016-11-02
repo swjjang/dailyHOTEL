@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ import java.util.List;
  */
 public class SelectCouponDialogLayout extends BaseLayout implements View.OnClickListener
 {
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void setResult(Coupon coupon);
@@ -28,9 +26,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     }
 
     private View mDialogLayout;
-    private DailyTextView mMessageTextView;
     private TextView mTitleTextView;
-    private View mListLayout;
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
     private TextView mPositiveTextView, mNegativeTextView, mConfirmTextView;
@@ -52,8 +48,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mDialogLayout = view.findViewById(R.id.dialogLayout);
 
         mTitleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        mMessageTextView = (DailyTextView) view.findViewById(R.id.messageTextView);
-        mListLayout = view.findViewById(R.id.listLayout);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);
         mTwoButtonLayout = view.findViewById(R.id.twoButtonLayout);
         mNegativeTextView = (TextView) mTwoButtonLayout.findViewById(R.id.negativeTextView);
@@ -71,7 +65,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private void initListView(View view)
     {
-        mListView = (ListView) view.findViewById(R.id.list);
+        mListView = (ListView) view.findViewById(R.id.listView);
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
@@ -124,21 +118,12 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mTitleTextView.setText(resid);
     }
 
-    public void setMessage(int messageResId)
+    public void setData(List<Coupon> list, boolean isSelected)
     {
-        if (mMessageTextView == null)
+        if (isEmpty(list) == true)
         {
             return;
         }
-
-        mMessageTextView.setText(messageResId);
-    }
-
-    public void setData(List<Coupon> list, boolean isSelected)
-    {
-        boolean isEmpty = isEmpty(list) == true;
-
-        mListLayout.setVisibility((isEmpty == true) ? View.GONE : View.VISIBLE);
 
         if (mListAdapter == null)
         {
