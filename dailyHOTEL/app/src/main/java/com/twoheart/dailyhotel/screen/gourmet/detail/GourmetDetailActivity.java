@@ -238,7 +238,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isOverAPI21() == true)
+        if (Util.isUsedMutilTransition() == true)
         {
             mDontReloadAtOnResume = true;
 

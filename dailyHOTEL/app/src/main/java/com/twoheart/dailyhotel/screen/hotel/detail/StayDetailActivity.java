@@ -249,7 +249,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isOverAPI21() == true)
+        if (Util.isUsedMutilTransition() == true)
         {
             mDontReloadAtOnResume = true;
 
@@ -330,7 +330,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isOverAPI21() == true)
+        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
         {
             ininTransLayout(placeName, imageUrl, grade, isFromMap);
         } else

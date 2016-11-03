@@ -244,8 +244,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setTransImageVisibility(boolean isVisibility)
     {
-        mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.GONE);
-        mTransGradientView.setVisibility(isVisibility == true ? View.VISIBLE : View.GONE);
+        mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);
+        mTransGradientView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void setTransBottomGradientBackground(int resId)
