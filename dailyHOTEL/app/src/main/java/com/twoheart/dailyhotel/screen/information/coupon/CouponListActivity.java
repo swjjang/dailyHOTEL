@@ -35,6 +35,10 @@ public class CouponListActivity extends BaseActivity
     private CouponListLayout mCouponListLayout;
     private CouponListNetworkController mCouponListNetworkController;
 
+    public enum CouponSortType {
+        ALL, STAY, GOURMET
+    }
+
     public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, CouponListActivity.class);
@@ -226,6 +230,13 @@ public class CouponListActivity extends BaseActivity
         {
             // 리스트 아이템 쿠폰 다운로드
             mCouponListNetworkController.requestDownloadCoupon(coupon);
+        }
+
+        @Override
+        public void onSortingButtonClick(CouponSortType sortType)
+        {
+            // TODO : Sorting buttonClick 시 이벤트 처리
+
         }
 
         @Override

@@ -9,6 +9,7 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -150,6 +151,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView useIconView;
         TextView downloadIconView;
         TextView noticeTextView;
+        ImageView useStayIconView;
+        ImageView useGourmetIconView;
 
         public ItemViewHolder(View itemView)
         {
@@ -165,6 +168,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             useIconView = (TextView) itemView.findViewById(R.id.useIconView);
             downloadIconView = (TextView) itemView.findViewById(R.id.downloadIconView);
             noticeTextView = (TextView) itemView.findViewById(R.id.noticeTextView);
+            useStayIconView = (ImageView) itemView.findViewById(R.id.useableStayImageView);
+            useGourmetIconView = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
         }
 
         public void onBindViewHolder(final int position)
@@ -260,6 +265,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 listItemLayout.setBackgroundResource(R.drawable.more_coupon_download_bg);
                 noticeTextView.setTextColor(mContext.getResources().getColor(R.color.white_a80));
             }
+
+            useStayIconView.setImageResource(coupon.isStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+            useGourmetIconView.setImageResource(coupon.isGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
 
             CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
             SpannableString spannableString = new SpannableString(charSequence);

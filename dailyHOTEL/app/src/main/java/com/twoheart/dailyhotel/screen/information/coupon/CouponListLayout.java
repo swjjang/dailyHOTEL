@@ -38,6 +38,8 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         void showListItemNotice(Coupon coupon);
 
         void onListItemDownLoadClick(Coupon coupon);
+
+        void onSortingButtonClick(CouponListActivity.CouponSortType sortType);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -53,10 +55,14 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
 
-        View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
-        couponHistoryView.setOnClickListener(this);
+        View couponSortingButton = view.findViewById(R.id.couponSortingButton);
+        if (couponSortingButton.getTag() == null)
+        {
+            couponSortingButton.setTag(CouponListActivity.CouponSortType.ALL);
+        }
+        couponSortingButton.setOnClickListener(this);
 
-        View registerCouponView = view.findViewById(R.id.registerCouponLayout);
+        View registerCouponView = view.findViewById(R.id.registerCouponView);
         registerCouponView.setOnClickListener(this);
 
         updateHeaderTextView(0);
@@ -119,13 +125,19 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
     {
         switch (v.getId())
         {
-            case R.id.couponHistoryTextView:
-                ((OnEventListener) mOnEventListener).startCouponHistory();
+            case R.id.couponSortingButton:
+                //                ((OnEventListener) mOnEventListener).startCouponHistory();
+                if (v.getTag() == null)
+                {
+                    v.setTag(CouponListActivity.CouponSortType.ALL);
+                }
+
+                ((OnEventListener) mOnEventListener).onSortingButtonClick((CouponListActivity.CouponSortType) v.getTag());
                 break;
 
-            case R.id.registerCouponLayout:
-                ((OnEventListener) mOnEventListener).startRegisterCoupon();
-                break;
+//            case R.id.registerCouponLayout:
+//                ((OnEventListener) mOnEventListener).startRegisterCoupon();
+//                break;
         }
     }
 
