@@ -92,6 +92,8 @@ public class DailyDeepLink
     private static final String RECENTLY_WATCH_HOTEL_V8 = "rwh"; // 최근 본 호텔
     private static final String RECENTLY_WATCH_GOURMET_V8 = "rwg"; // 최근 본 고메
     private static final String FAQ_V8 = "faq"; // 자주 묻는 질문
+    private static final String PROFILE_V8 = "pr"; // 프로필 화면
+    private static final String PROFILE_BIRTHDAY_V8 = "prbd"; // 프로픨 화면 생일 정보 입력
     private static final String TERMS_N_POLICY_V8 = "tnp"; // 약관 및 정책
     //    private static final String WISHLIST_HOTEL_V8 = "wlh"; // 위시리스트 호텔
     //    private static final String WISHLIST_GOURMET_V8 = "wlg"; // 위시리스트 고메
@@ -614,6 +616,32 @@ public class DailyDeepLink
         if (mVersionCode >= 8)
         {
             return TERMS_N_POLICY_V8.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
+    public boolean isProfileView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 8)
+        {
+            return PROFILE_V8.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
+    public boolean isProfileBirthdayView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 8)
+        {
+            return PROFILE_BIRTHDAY_V8.equalsIgnoreCase(view);
         } else
         {
             return false;
