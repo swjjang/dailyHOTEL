@@ -127,6 +127,13 @@ public class InformationFragment extends BaseFragment implements Constants
             } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
             {
                 mOnEventListener.startTermsNPolicy();
+            } else if (DailyDeepLink.getInstance().isProfileView() == true)
+            {
+                mOnEventListener.startEditProfile();
+            } else if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+            {
+                mOnEventListener.startEditProfile();
+                return;
             }
             //            else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
             //            {
@@ -731,9 +738,9 @@ public class InformationFragment extends BaseFragment implements Constants
         = new InformationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserProfile(String type, String email, String name, String recommender, boolean isAgreedBenefit)
+        public void onUserProfile(String type, String email, String name, String birthday, String recommender, boolean isAgreedBenefit)
         {
-            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
+            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, birthday, recommender);
 
             boolean isLogin = DailyHotel.isLogin();
             if (isLogin == true)

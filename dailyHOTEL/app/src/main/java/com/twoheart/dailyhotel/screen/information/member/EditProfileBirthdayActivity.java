@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -35,7 +36,6 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -112,16 +112,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
             mBirthdayEditText.setText(null);
         } else
         {
-            try
-            {
-                mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
-                mBirthdayEditText.setTag(birthday);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-
-                mBirthdayEditText.setText(null);
-            }
+            setBirthdayText(birthday);
         }
 
         mBirthdayEditText.addTextChangedListener(new TextWatcher()
@@ -170,6 +161,15 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY);
 
         super.onStart();
+
+        if (DailyHotel.isLogin() == false)
+        {
+            lockUI();
+            showLoginDialog();
+        } else
+        {
+            setResult(RESULT_OK);
+        }
     }
 
     @Override
@@ -224,6 +224,31 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        unLockUI();
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                setResult(resultCode);
+
+                if (resultCode == RESULT_OK)
+                {
+                    setBirthdayText(DailyPreference.getInstance(this).getUserBirthday());
+                } else
+                {
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -237,6 +262,12 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         switch (v.getId())
         {
             case R.id.birthdayEditText:
+            {
+                if (DailyHotel.isLogin() == false)
+                {
+                    return;
+                }
+
                 setFocusLabelView(mBirthdayView, mBirthdayEditText, hasFocus);
 
                 if (hasFocus == true)
@@ -261,7 +292,51 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     }
                 }
                 break;
+            }
         }
+    }
+
+    private void showLoginDialog()
+    {
+        // 로그인 필요
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                lockUI();
+                startLogin();
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                EditProfileBirthdayActivity.this.finish();
+            }
+        };
+
+        String title = this.getResources().getString(R.string.dialog_notice2);
+        String message = this.getResources().getString(R.string.dialog_message_profile_birthday_login);
+        String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
+        String negative = this.getResources().getString(R.string.dialog_btn_text_no);
+
+        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                EditProfileBirthdayActivity.this.finish();
+            }
+        }, null, true);
+    }
+
+    private void startLogin()
+    {
+        Intent intent = LoginActivity.newInstance(this);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
     private void setBirthdayText(int year, int month, int dayOfMonth)
@@ -271,6 +346,20 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
+    }
+
+    private void setBirthdayText(String birthday)
+    {
+        try
+        {
+            mBirthdayEditText.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            mBirthdayEditText.setTag(birthday);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            mBirthdayEditText.setText(null);
+        }
     }
 
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)

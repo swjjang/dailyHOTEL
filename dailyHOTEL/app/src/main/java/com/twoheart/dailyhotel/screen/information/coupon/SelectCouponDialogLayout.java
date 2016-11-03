@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 

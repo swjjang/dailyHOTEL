@@ -24,7 +24,7 @@ public class InformationNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserProfile(String type, String email, String name, String recommender, boolean isAgreedBenefit);
+        void onUserProfile(String type, String email, String name, String birthday, String recommender, boolean isAgreedBenefit);
 
         void onUserProfileBenefit(int bonus, int couponTotalCount, boolean isExceedBonus);
 
@@ -76,11 +76,12 @@ public class InformationNetworkController extends BaseNetworkController
 
                     String email = jsonObject.getString("email");
                     String name = jsonObject.getString("name");
+                    String birthday = jsonObject.getString("birthday");
                     String referralCode = jsonObject.getString("referralCode"); // 자신의 추천 번호
                     String userType = jsonObject.getString("userType");
                     boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userType, email, name, referralCode, isAgreedBenefit);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userType, email, name, birthday, referralCode, isAgreedBenefit);
                 } else
                 {
                     String msg = response.getString("msg");

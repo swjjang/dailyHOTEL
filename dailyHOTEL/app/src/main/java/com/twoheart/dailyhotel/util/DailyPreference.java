@@ -169,6 +169,7 @@ public class DailyPreference
     private static final String KEY_USER_RECOMMENDER = "2004";
     private static final String KEY_USER_BENEFIT_ALARM = "2005";
     private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
+    private static final String KEY_USER_BIRTHDAY = "2007";
 
     // Payment
     private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
@@ -241,6 +242,7 @@ public class DailyPreference
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
+        boolean isShowTooltop = isViewRecentPlaceTooltip();
 
         String stayRecentPlace = getStayRecentPlaces();
         String gourmetRecentPlace = getGourmetRecentPlaces();
@@ -259,6 +261,7 @@ public class DailyPreference
 
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
+        setIsViewRecentPlaceTooltip(isShowTooltop);
 
         setStayRecentPlaces(stayRecentPlace);
         setGourmetRecentPlaces(gourmetRecentPlace);
@@ -1251,6 +1254,11 @@ public class DailyPreference
         return getValue(mPreferences, KEY_USER_EMAIL, null);
     }
 
+    public String getUserBirthday()
+    {
+        return getValue(mPreferences, KEY_USER_BIRTHDAY, null);
+    }
+
     public String getUserRecommender()
     {
         return getValue(mPreferences, KEY_USER_RECOMMENDER, null);
@@ -1276,13 +1284,14 @@ public class DailyPreference
         setValue(mEditor, KEY_USER_IS_EXCEED_BONUS, value);
     }
 
-    public void setUserInformation(String type, String email, String name, String recommender)
+    public void setUserInformation(String type, String email, String name, String birthday, String recommender)
     {
         if (mEditor != null)
         {
             mEditor.putString(KEY_USER_TYPE, type);
             mEditor.putString(KEY_USER_EMAIL, email);
             mEditor.putString(KEY_USER_NAME, name);
+            mEditor.putString(KEY_USER_BIRTHDAY, birthday);
             mEditor.putString(KEY_USER_RECOMMENDER, recommender);
             mEditor.apply();
         }
@@ -1397,9 +1406,11 @@ public class DailyPreference
 
                 if (mOldPreferences.contains(KEY_OLD_USER_TYPE) == true)
                 {
+                    // 새로 API가 변경되면서 생일 정보는 기존의 것에서 받도록 한다.
                     setUserInformation(getValue(mOldPreferences, KEY_OLD_USER_TYPE, null), //
                         getValue(mOldPreferences, KEY_OLD_USER_EMAIL, null), //
                         getValue(mOldPreferences, KEY_OLD_USER_NAME, null), //
+                        getValue(mPreferences, KEY_USER_BIRTHDAY, null), //
                         getValue(mOldPreferences, KEY_OLD_USER_RECOMMENDER, null));
                 }
 
