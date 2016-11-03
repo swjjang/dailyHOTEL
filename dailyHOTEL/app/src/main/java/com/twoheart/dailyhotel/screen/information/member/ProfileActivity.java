@@ -18,8 +18,10 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -30,6 +32,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 public class ProfileActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_EDIT_PROFILE = 1;
+    private static final int REQUEST_CODE_EDIT_PROFILE_BIRTHDAY = 2;
 
     private ProfileLayout mProfileLayout;
     private ProfileNetworkController mNetworkController;
@@ -53,10 +56,6 @@ public class ProfileActivity extends BaseActivity
         mNetworkController = new ProfileNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setContentView(mProfileLayout.onCreateView(R.layout.activity_profile));
-
-        lockUI();
-
-        mNetworkController.requestUserProfile();
     }
 
     @Override
@@ -65,6 +64,36 @@ public class ProfileActivity extends BaseActivity
         AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE);
 
         super.onStart();
+
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+            {
+                mOnEventListener.startEditBirthday(null);
+            }
+
+            DailyDeepLink.getInstance().clear();
+        } else
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                lockUI();
+                showLoginDialog();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (DailyHotel.isLogin() == true)
+        {
+            lockUI();
+
+            mNetworkController.requestUserProfile();
+        }
     }
 
     @Override
@@ -74,11 +103,41 @@ public class ProfileActivity extends BaseActivity
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_EDIT_PROFILE && resultCode == RESULT_OK)
+        switch (requestCode)
         {
-            lockUI();
+            case REQUEST_CODE_EDIT_PROFILE:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    lockUI();
 
-            mNetworkController.requestUserProfile();
+                    mNetworkController.requestUserProfile();
+                }
+                break;
+            }
+
+            case REQUEST_CODE_EDIT_PROFILE_BIRTHDAY:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    lockUI();
+
+                    mNetworkController.requestUserProfile();
+                } else
+                {
+                    finish();
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode != RESULT_OK)
+                {
+                    finish();
+                }
+                break;
+            }
         }
     }
 
@@ -88,6 +147,49 @@ public class ProfileActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    private void showLoginDialog()
+    {
+        // 로그인 필요
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                lockUI();
+                startLogin();
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ProfileActivity.this.finish();
+            }
+        };
+
+        String title = this.getResources().getString(R.string.dialog_notice2);
+        String message = this.getResources().getString(R.string.dialog_message_profile_login);
+        String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
+        String negative = this.getResources().getString(R.string.dialog_btn_text_no);
+
+        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                ProfileActivity.this.finish();
+            }
+        }, null, true);
+    }
+
+    private void startLogin()
+    {
+        Intent intent = LoginActivity.newInstance(this);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
     private ProfileLayout.OnEventListener mOnEventListener = new ProfileLayout.OnEventListener()
@@ -149,7 +251,7 @@ public class ProfileActivity extends BaseActivity
             }
 
             Intent intent = EditProfileBirthdayActivity.newInstance(ProfileActivity.this, mUserIndex, birthday);
-            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE_BIRTHDAY);
         }
 
         @Override

@@ -877,6 +877,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true//
                     || DailyDeepLink.getInstance().isFAQView() == true//
                     || DailyDeepLink.getInstance().isTermsNPolicyView() == true//
+                    || DailyDeepLink.getInstance().isProfileView() == true//
+                    || DailyDeepLink.getInstance().isProfileBirthdayView() == true//
                     //                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
                     //                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
                     )
