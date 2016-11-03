@@ -678,7 +678,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
                 mGourmetSearchCuration.getSaleTime(), gourmet, listCount);
 
-            if (Util.isOverAPI21() == true)
+            if (Util.isUsedMutilTransition() == true)
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
