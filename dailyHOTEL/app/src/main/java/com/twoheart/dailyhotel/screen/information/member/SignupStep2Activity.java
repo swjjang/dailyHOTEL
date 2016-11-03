@@ -337,7 +337,7 @@ public class SignupStep2Activity extends BaseActivity
             unLockUI();
 
             DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
-            DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
+            DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, birthday, recommender);
 
             // 혜택 알림 체크
             DailyPreference.getInstance(SignupStep2Activity.this).setUserBenefitAlarm(isBenefit);
