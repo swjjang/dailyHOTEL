@@ -102,6 +102,7 @@
             android:layout_marginRight="15dp"/>
 
         <View
+            android:id="@+id/underLineView"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
