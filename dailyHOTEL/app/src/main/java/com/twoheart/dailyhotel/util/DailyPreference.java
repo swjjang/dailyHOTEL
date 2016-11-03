@@ -242,6 +242,7 @@ public class DailyPreference
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
+        boolean isShowTooltop = isViewRecentPlaceTooltip();
 
         String stayRecentPlace = getStayRecentPlaces();
         String gourmetRecentPlace = getGourmetRecentPlaces();
@@ -260,6 +261,7 @@ public class DailyPreference
 
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
+        setIsViewRecentPlaceTooltip(isShowTooltop);
 
         setStayRecentPlaces(stayRecentPlace);
         setGourmetRecentPlaces(gourmetRecentPlace);
