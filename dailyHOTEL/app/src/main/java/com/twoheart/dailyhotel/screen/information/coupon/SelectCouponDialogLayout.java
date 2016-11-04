@@ -1,8 +1,16 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -11,6 +19,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
@@ -60,6 +69,17 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mNegativeTextView.setOnClickListener(this);
         mPositiveTextView.setOnClickListener(this);
         mConfirmTextView.setOnClickListener(this);
+
+        View puchMaskLayout = view.findViewById(R.id.puchMaskLayout);
+
+        if (Util.isOverAPI16() == true)
+        {
+            puchMaskLayout.setBackground(new BackgroundDrawable(mContext, puchMaskLayout));
+        } else
+        {
+            puchMaskLayout.setBackgroundDrawable(new BackgroundDrawable(mContext, puchMaskLayout));
+        }
+
 
         setVisibility(false);
     }
@@ -195,4 +215,55 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
             }
         }
     };
+
+    private class BackgroundDrawable extends Drawable
+    {
+        private View mView;
+        private Paint mPaint;
+        private Paint mOverPaint;
+        private Bitmap mCircleBitmap;
+
+        public BackgroundDrawable(Context context, View view)
+        {
+            mView = view;
+            mCircleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.circle);
+
+            mPaint = new Paint();
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
+            mOverPaint = new Paint();
+            mOverPaint.setAlpha(0x99);
+        }
+
+        @Override
+        public void draw(Canvas canvas)
+        {
+            float cY = 0;
+            float cX = mView.getX() - mCircleBitmap.getWidth() / 2;
+
+            canvas.drawBitmap(mCircleBitmap, cX, cY, mPaint);
+            canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mPaint);
+
+            canvas.drawBitmap(mCircleBitmap, cX, cY, mOverPaint);
+            canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mOverPaint);
+        }
+
+        @Override
+        public void setAlpha(int alpha)
+        {
+
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter colorFilter)
+        {
+
+        }
+
+        @Override
+        public int getOpacity()
+        {
+            return PixelFormat.TRANSPARENT;
+        }
+    }
 }
