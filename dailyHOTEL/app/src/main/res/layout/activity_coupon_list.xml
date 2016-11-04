@@ -80,7 +80,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/shape_coupon_sorting_button_backround"
             android:gravity="left|center_vertical"
-            android:drawableRight="@drawable/navibar_m_ic_v_gray"
+            app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"
             android:paddingRight="9dp"
             android:paddingLeft="9dp"
             android:drawablePadding="2dp"

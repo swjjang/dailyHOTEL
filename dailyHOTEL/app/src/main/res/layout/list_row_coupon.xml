@@ -9,13 +9,13 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentTop="true"/>
 
     <RelativeLayout
         android:id="@+id/listItemLayout"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_above="@id/bottomDivider"
+        android:layout_below="@id/bottomDivider"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/more_coupon_bg">

@@ -892,6 +892,7 @@
     <string name="coupon_min_price_text">%1$s 이상 구매시 사용 가능</string>
     <string name="coupon_header_text">사용 할 수 있는 쿠폰이 %1$d장 있습니다.</string>
     <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
+    <string name="coupon_history_text">사용 내역</string>
     <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
     <string name="coupon_list_empty_message">사용 할 수 있는 할인 쿠폰이 없습니다.</string>
     <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다.</string>

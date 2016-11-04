@@ -179,6 +179,11 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         }
 
         @Override
+        public void startCouponHistory() {
+            ((OnEventListener) mOnEventListener).startCouponHistory();
+        }
+
+        @Override
         public void showNotice(View view, int position)
         {
             Coupon coupon = mListAdapter.getItem(position);
