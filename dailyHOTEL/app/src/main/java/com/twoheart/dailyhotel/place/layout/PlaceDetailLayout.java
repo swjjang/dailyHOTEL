@@ -729,23 +729,45 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mWishListPopupTextView.setVisibility(View.GONE);
         } else
         {
+
+            ObjectAnimator objectAnimator;
+
             if (WishListPopupState.ADD == state)
             {
                 mWishListPopupTextView.setText(R.string.wishlist_detail_add_message);
                 mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
                 mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+
+
+                objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                    , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
+                    , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
+                    , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
+                );
             } else
             {
                 mWishListPopupTextView.setText(R.string.wishlist_detail_delete_message);
                 mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
                 mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+
+                objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                    , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f) //
+                    , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f) //
+                    , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f) //
+                );
             }
 
-            ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
-                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f) //
-                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f) //
-                , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.1f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
-            );
+//            ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+//                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
+//                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
+//                , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
+//            );
+//
+//            ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+//                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f) //
+//                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f) //
+//                , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
+//            );
 
             objectAnimator.setDuration(2000);
             objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
