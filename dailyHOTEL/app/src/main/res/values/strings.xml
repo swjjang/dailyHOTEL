@@ -988,7 +988,7 @@
     <string name="wishlist_list_empty_button_message_stay">호텔 보러가기</string>
     <string name="wishlist_list_empty_button_message_gourmet">고메 보러가기</string>
     <string name="wishlist_list_bottom_notice_message">판매 사정에 따라 위시리스트 목록에서 삭제될 수 있습니다.</string>
-    <string name="wishlist_detail_add_message">위시리스트에\n추가되었습니다.</string>
-    <string name="wishlist_detail_delete_message">위시리스트에서\n삭제되었습니다.</string>
+    <string name="wishlist_detail_add_message">위시리스트에\n추가하였습니다.</string>
+    <string name="wishlist_detail_delete_message">위시리스트에서\n삭제하였습니다.</string>
     <string name="wishlist_count_over_10_thousand">만명 이상</string>
 </resources>
