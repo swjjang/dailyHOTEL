@@ -749,7 +749,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f) //
             );
             objectAnimator1.setInterpolator(new AccelerateInterpolator());
-            objectAnimator1.setDuration(400);
+            objectAnimator1.setDuration(300);
 
 
             ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
