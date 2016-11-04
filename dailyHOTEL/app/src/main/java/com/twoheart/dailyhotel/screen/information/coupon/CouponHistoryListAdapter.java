@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -120,6 +121,9 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
 
         holder.expireTextView.setText(strExpire + builder.toString());
+
+        holder.useableStayIcon.setImageResource(coupon.isStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+        holder.useableGourmetIcon.setImageResource(coupon.isGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder
@@ -130,6 +134,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         TextView descriptionTextView;
         TextView expireTextView;
         TextView stateTextView;
+        ImageView useableStayIcon;
+        ImageView useableGourmetIcon;
         View upperLine;
         View lastBottomLine;
 
@@ -142,6 +148,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
+            useableStayIcon = (ImageView) itemView.findViewById(R.id.useableStayImageView);
+            useableGourmetIcon = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
             upperLine = itemView.findViewById(R.id.upperLineView);
             lastBottomLine = itemView.findViewById(R.id.lastBottomLine);
         }

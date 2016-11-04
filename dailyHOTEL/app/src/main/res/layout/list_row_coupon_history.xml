@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="88dp"
@@ -40,16 +41,38 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/priceTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:gravity="left|center_vertical"
-            android:singleLine="true"
-            android:textColor="@color/information_title"
-            android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            android:orientation="horizontal">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/information_title"
+                android:textSize="13dp"
+                dailyFont:style="Bold"/>
+
+            <ImageView
+                android:id="@+id/useableStayImageView"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="4dp"
+                app:srcCompat="@drawable/ic_badge_hotel_off"/>
+
+            <ImageView
+                android:id="@+id/useableGourmetImageView"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="3dp"
+                app:srcCompat="@drawable/ic_badge_gourmet_off"/>
+
+        </LinearLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/descriptionTextView"
@@ -85,7 +108,7 @@
         android:id="@+id/lastBottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:background="@color/default_line_cf0f0f0"/>
+        android:background="@color/default_line_cf0f0f0"
+        android:visibility="gone"/>
 </RelativeLayout>
