@@ -69,7 +69,13 @@ public class ProfileActivity extends BaseActivity
         {
             if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
             {
-                mOnEventListener.startEditBirthday(null);
+                if (DailyHotel.isLogin() == true)
+                {
+                    mOnEventListener.startEditBirthday(DailyPreference.getInstance(this).getUserBirthday());
+                } else
+                {
+                    mOnEventListener.startEditBirthday(null);
+                }
             }
 
             DailyDeepLink.getInstance().clear();
