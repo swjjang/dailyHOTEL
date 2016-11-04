@@ -71,10 +71,10 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         Intent intent = getIntent();
         mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
-        String name = intent.getStringExtra(INTENT_EXTRA_DATA_BIRTHDAY);
+        String birthday = intent.getStringExtra(INTENT_EXTRA_DATA_BIRTHDAY);
 
         initToolbar();
-        initLayout(name);
+        initLayout(birthday);
     }
 
     private void initToolbar()
