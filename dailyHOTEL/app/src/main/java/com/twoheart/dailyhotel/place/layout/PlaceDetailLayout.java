@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.layout;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
@@ -24,7 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -730,36 +731,45 @@ public abstract class PlaceDetailLayout extends BaseLayout
         } else
         {
 
-            ObjectAnimator objectAnimator;
-
             if (WishListPopupState.ADD == state)
             {
                 mWishListPopupTextView.setText(R.string.wishlist_detail_add_message);
                 mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
                 mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
-
-
-                objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
-                    , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
-                    , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
-                    , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
-                );
             } else
             {
                 mWishListPopupTextView.setText(R.string.wishlist_detail_delete_message);
                 mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
                 mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
-
-                objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
-                    , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
-                    , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.8f) //
-                    , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.5f, 0.0f) //
-                );
             }
 
-            objectAnimator.setDuration(1200);
-            objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            objectAnimator.addListener(new Animator.AnimatorListener()
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f) //
+            );
+            objectAnimator1.setInterpolator(new AccelerateInterpolator());
+            objectAnimator1.setDuration(400);
+
+
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha",  1.0f, 1.0f) //
+            );
+            objectAnimator2.setDuration(600);
+
+
+            ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("alpha",  1.0f, 0.0f) //
+            );
+            objectAnimator3.setDuration(200);
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+            animatorSet.addListener(new Animator.AnimatorListener()
             {
                 @Override
                 public void onAnimationStart(Animator animation)
@@ -786,7 +796,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 }
             });
 
-            objectAnimator.start();
+            animatorSet.start();
         }
     }
 
