@@ -44,6 +44,11 @@
                 android:divider="@null"
                 android:paddingTop="5dp"/>
 
+            <View
+                android:id="@+id/puchMaskLayout"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
             <LinearLayout
                 android:id="@+id/buttonLayout"
                 android:layout_width="312dp"

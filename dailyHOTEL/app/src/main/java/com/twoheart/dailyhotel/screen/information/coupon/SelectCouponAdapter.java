@@ -1,15 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,14 +154,6 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_off);
         }
 
-        if (Util.isOverAPI16() == true)
-        {
-            holder.underLineView.setBackground(new UnderLineDrawable(holder.couponLayout, holder.underLineView));
-        } else
-        {
-            holder.underLineView.setBackgroundDrawable(new UnderLineDrawable(holder.couponLayout, holder.underLineView));
-        }
-
         setDownLoadLayout(holder, coupon.isDownloaded);
 
         if (mIsSelectedMode == true && coupon.isDownloaded == true)
@@ -252,13 +235,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     {
         if (isSelected == true)
         {
-            if (Util.isOverAPI16() == true)
-            {
-                holder.couponLayout.setBackground(new BackgroundDrawable(holder.couponLayout));
-            } else
-            {
-                holder.couponLayout.setBackgroundDrawable(new BackgroundDrawable(holder.couponLayout));
-            }
+            holder.couponLayout.setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
 
             holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
             holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_s, 0);
@@ -314,132 +291,5 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         DailyImageView gourmetIconView;
         View downloadCouponView;
         View underLineView;
-    }
-
-    class BackgroundDrawable extends Drawable
-    {
-        private View mView;
-        private Paint mPaint;
-        private float mMarginTop;
-        private Paint mOverPaint;
-        private Bitmap mCircleBitmap;
-
-        public BackgroundDrawable(View view)
-        {
-            mView = view;
-            mMarginTop = Util.dpToPx(view.getContext(), 10);
-
-            mCircleBitmap = BitmapFactory.decodeResource(mView.getResources(), R.drawable.circle);
-
-            mPaint = new Paint();
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-
-            mOverPaint = new Paint();
-            mOverPaint.setAlpha(0x99);
-        }
-
-        @Override
-        public void draw(Canvas canvas)
-        {
-            float y = mView.getY();
-
-            canvas.drawColor(mView.getResources().getColor(R.color.default_background_cfafafb));
-
-            if (y <= mMarginTop)
-            {
-                float cY = Math.abs(mMarginTop - y) - mCircleBitmap.getWidth() / 2 - mMarginTop / 2;
-                float cX = mView.getX() - mCircleBitmap.getWidth() / 2;
-
-                canvas.drawBitmap(mCircleBitmap, cX, cY, mPaint);
-                canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mPaint);
-
-                canvas.drawBitmap(mCircleBitmap, cX, cY, mOverPaint);
-                canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mOverPaint);
-            }
-
-            invalidateSelf();
-        }
-
-        @Override
-        public void setAlpha(int alpha)
-        {
-
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter colorFilter)
-        {
-
-        }
-
-        @Override
-        public int getOpacity()
-        {
-            return PixelFormat.TRANSPARENT;
-        }
-    }
-
-    class UnderLineDrawable extends Drawable
-    {
-        private View mView, mUnderLineView;
-        private Paint mPaint;
-        private float mMarginTop;
-        private Paint mOverPaint;
-        private Bitmap mCircleBitmap;
-
-        public UnderLineDrawable(View view, View underLineView)
-        {
-            mView = view;
-            mUnderLineView = underLineView;
-            mMarginTop = Util.dpToPx(view.getContext(), 10);
-
-            mCircleBitmap = BitmapFactory.decodeResource(mView.getResources(), R.drawable.circle);
-
-            mPaint = new Paint();
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-
-            mOverPaint = new Paint();
-            mOverPaint.setAlpha(0x99);
-        }
-
-        @Override
-        public void draw(Canvas canvas)
-        {
-            float y = mView.getY();
-
-            canvas.drawColor(mView.getResources().getColor(R.color.default_line_cdcdcdd));
-
-            if (y <= mMarginTop)
-            {
-                float cY = Math.abs(mMarginTop - y) - mCircleBitmap.getWidth() / 2 - mMarginTop / 2 - mUnderLineView.getY();
-                float cX = mView.getX() - mCircleBitmap.getWidth() / 2;
-
-                canvas.drawBitmap(mCircleBitmap, cX, cY, mPaint);
-                canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mPaint);
-
-                canvas.drawBitmap(mCircleBitmap, cX, cY, mOverPaint);
-                canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mOverPaint);
-            }
-
-            invalidateSelf();
-        }
-
-        @Override
-        public void setAlpha(int alpha)
-        {
-
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter colorFilter)
-        {
-
-        }
-
-        @Override
-        public int getOpacity()
-        {
-            return PixelFormat.TRANSPARENT;
-        }
     }
 }
