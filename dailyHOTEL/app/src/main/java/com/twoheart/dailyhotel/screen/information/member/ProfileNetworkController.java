@@ -22,7 +22,7 @@ public class ProfileNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
-            , boolean isVerified, boolean isPhoneVerified, String verifiedDate);
+            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate);
 
         void onUserProfileBenefit(boolean isExceedBonus);
     }
@@ -72,6 +72,8 @@ public class ProfileNetworkController extends BaseNetworkController
                         birthday = jsonObject.getString("birthday");
                     }
 
+                    String referralCode = jsonObject.getString("referralCode");
+
                     String verifiedDate = null;
 
                     if (isVerified == true && isPhoneVerified == true)
@@ -98,7 +100,7 @@ public class ProfileNetworkController extends BaseNetworkController
                     }
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
-                        , email, name, phone, birthday, isVerified, isPhoneVerified, verifiedDate);
+                        , email, name, phone, birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
                 } else
                 {
                     mOnNetworkControllerListener.onError(null);

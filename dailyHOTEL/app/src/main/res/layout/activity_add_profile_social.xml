@@ -210,7 +210,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="14dp"
-                android:text="@string/label_recommender_code"
+                android:text="@string/label_recommender_code_ex"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 

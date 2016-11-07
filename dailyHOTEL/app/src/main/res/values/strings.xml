@@ -410,6 +410,7 @@
     <string name="act_credit_kakao">카카오톡으로 친구 초대하기</string>
     <string name="label_invite_friends">친구 초대하기</string>
     <string name="label_copy">복사</string>
+    <string name="label_code_copy">코드복사</string>
     <string name="label_my_code">내 추천인 코드</string>
     <string name="label_bonus_guide">적립금 사용시 유의사항 안내</string>
     <string name="message_no_history_bonus">적립금 내역이 없습니다.</string>
@@ -559,26 +560,21 @@
     <string name="act_payment_chk_contain">취소</string>
 
     <!-- Signup Activity -->
-    <string name="label_necessary">필수</string>
+    <string name="label_necessary">필수 입력</string>
     <string name="label_name">이름</string>
     <string name="label_birthday">생일</string>
     <string name="label_password_4over">비밀번호 (4자이상)</string>
     <string name="label_confirm_password_4over">비밀번호 확인 (4자이상)</string>
-    <string name="label_necessary_reservation">필수 (예약시 사용)</string>
-    <string name="label_option_benefit">선택 (추후 혜택 제공시 사용)</string>
+    <string name="label_necessary_reservation">필수 입력 (예약시 사용)</string>
+    <string name="label_option_benefit">선택 입력 (추후 혜택 제공시 사용)</string>
+    <string name="label_recommender_code_ex">추천인 코드 (예시:123456789)</string>
     <string name="label_recommender_code">추천인 코드</string>
-    <string name="label_select">선택</string>
+    <string name="label_select">선택 입력</string>
     <string name="label_country">국가</string>
     <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
     <string name="label_certification_number_ndigit">인증번호</string>
     <string name="label_notification_on_option">혜택 알림 받기 (선택)</string>
 
-    <string name="act_signup_phone">필수. 휴대폰 번호 (예약시 사용)</string>
-    <string name="act_signup_email">필수. 이메일</string>
-    <string name="act_signup_name">필수. 이름 (예약시 사용)</string>
-    <string name="act_signup_pwd">필수. 비밀번호 (4자이상)</string>
-    <string name="act_signup_confirm_password">필수. 비밀번호 확인 (4자이상)</string>
-    <string name="act_signup_code">선택. 추천인 코드</string>
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>
     <string name="label_signup_allagreement">전체동의</string>

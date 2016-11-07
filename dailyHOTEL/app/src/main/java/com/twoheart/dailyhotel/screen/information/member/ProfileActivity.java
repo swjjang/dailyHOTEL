@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -317,6 +318,14 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
+        public void doCodeCopy(String code)
+        {
+            Util.clipText(ProfileActivity.this, code);
+
+            DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+        }
+
+        @Override
         public void finish()
         {
             ProfileActivity.this.finish();
@@ -327,12 +336,12 @@ public class ProfileActivity extends BaseActivity
     {
         @Override
         public void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
-            , boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), birthday, isVerified, isPhoneVerified, verifiedDate);
+            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
 
             if (isVerified == true)
             {
