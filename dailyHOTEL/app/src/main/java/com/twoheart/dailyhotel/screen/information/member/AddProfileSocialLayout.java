@@ -53,7 +53,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showCountryCodeList();
 
-        void showBirthdayDatePicker();
+        void showBirthdayDatePicker(int year, int month, int day);
 
         void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit);
     }
@@ -144,7 +144,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, null);
+        mBirthdayEditText.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                dailyEditText.setTag(null);
+            }
+        });
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
@@ -340,7 +347,15 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
                 if (hasFocus == true)
                 {
-                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                    Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+                    if (calendar == null)
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(-1, -1, -1);
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                    }
                 }
                 break;
 
@@ -419,6 +434,18 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailLayout.setVisibility(View.GONE);
     }
 
+    public void showBirthdaylLayout()
+    {
+        mBirthdayView.setVisibility(View.VISIBLE);
+        mBirthdayEditText.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBirthdayLayout()
+    {
+        mBirthdayView.setVisibility(View.GONE);
+        mBirthdayEditText.setVisibility(View.GONE);
+    }
+
     public void showNameLayout()
     {
         mNameLayout.setVisibility(View.VISIBLE);
@@ -429,6 +456,17 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mNameLayout.setVisibility(View.GONE);
     }
 
+    public void setNameText(String name)
+    {
+        mNameEditText.setText(name);
+        mNameEditText.setSelection(mNameEditText.length());
+    }
+
+    public String getName()
+    {
+        return mNameEditText.getText().toString();
+    }
+
     public void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
@@ -436,6 +474,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(calendar);
+    }
+
+    public Calendar getBirthday()
+    {
+        Object object = mBirthdayEditText.getTag();
+        return object != null ? (Calendar) object : null;
     }
 
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)

@@ -1,12 +1,15 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -47,6 +50,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
@@ -249,7 +253,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isOverAPI21() == true)
+        if (Util.isUsedMutilTransition() == true)
         {
             mDontReloadAtOnResume = true;
 
@@ -330,7 +334,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isOverAPI21() == true)
+        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
         {
             ininTransLayout(placeName, imageUrl, grade, isFromMap);
         } else
@@ -737,7 +741,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void doKakaotalkConsult()
+        public void onConciergeClick()
         {
             if (isLockUiComponent() == true || isFinishing() == true)
             {
@@ -746,17 +750,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"));
-            if (intent.resolveActivity(getPackageManager()) == null)
-            {
-                Util.installPackage(StayDetailActivity.this, "com.kakao.talk");
-            } else
-            {
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
-            }
-
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , Action.KAKAO_INQUIRY_CLICKED, mPlaceDetail.name, null);
+            showCallDialog();
         }
 
         @Override
@@ -909,7 +903,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             } else
             {
                 lockUI();
-                mPlaceDetailNetworkController.requestUserInformationEx();
+                mPlaceDetailNetworkController.requestProfile();
             }
 
             String label = String.format("%s-%s", mPlaceDetail.name, mSelectedRoomInformation.roomName);
@@ -975,40 +969,56 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
         }
 
+        //        @Override
+        //        public void onUserInformation(Customer user, String birthday, boolean isDailyUser)
+        //        {
+        //            if (isDailyUser == true)
+        //            {
+        //                mPlaceDetailNetworkController.requestProfile();
+        //            } else
+        //            {
+        //                // 입력된 정보가 부족해.
+        //                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
+        //                {
+        //                    moveToAddSocialUserInformation(user, birthday);
+        //                } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+        //                {
+        //                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+        //                } else
+        //                {
+        //                    processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);
+        //                }
+        //            }
+        //        }
+
         @Override
-        public void onUserInformation(Customer user, boolean isDailyUser)
+        public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
         {
             if (isDailyUser == true)
             {
-                mPlaceDetailNetworkController.requestProfile();
+                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                {
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                } else
+                {
+                    // 기존에 인증이 되었는데 인증이 해지되었다.
+                    if (isVerified == true && isPhoneVerified == false)
+                    {
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                    } else
+                    {
+                        processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);
+                    }
+                }
             } else
             {
                 // 입력된 정보가 부족해.
                 if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
                 {
-                    moveToAddSocialUserInformation(user);
+                    moveToAddSocialUserInformation(user, birthday);
                 } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {
                     moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-                } else
-                {
-                    processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);
-                }
-            }
-        }
-
-        @Override
-        public void onUserProfile(Customer user, boolean isVerified, boolean isPhoneVerified)
-        {
-            if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-            {
-                moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
-            } else
-            {
-                // 기존에 인증이 되었는데 인증이 해지되었다.
-                if (isVerified == true && isPhoneVerified == false)
-                {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
                 } else
                 {
                     processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);

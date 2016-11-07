@@ -1,13 +1,17 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -18,10 +22,14 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
+import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -255,9 +263,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
         finish();
     }
 
-    protected void moveToAddSocialUserInformation(Customer user)
+    protected void moveToAddSocialUserInformation(Customer user, String birthday)
     {
-        Intent intent = AddProfileSocialActivity.newInstance(this, user);
+        Intent intent = AddProfileSocialActivity.newInstance(this, user, birthday);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
@@ -265,6 +273,150 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+    }
+
+    public void showCallDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
+        View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
+        contactUs02Layout.setVisibility(View.GONE);
+
+        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        contactUs01TextView.setText(R.string.frag_faqs);
+        contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
+
+        contactUs01Layout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startFAQ();
+            }
+        });
+
+        View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
+        View callDailyView = dialogView.findViewById(R.id.callDailyView);
+
+        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startKakao();
+            }
+        });
+
+        callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startDailyCall();
+            }
+        });
+
+        View closeView = dialogView.findViewById(R.id.closeView);
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void startFAQ()
+    {
+        startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
+    }
+
+    private void startKakao()
+    {
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
+        }
+    }
+
+    private void startDailyCall()
+    {
+        if (Util.isTelephonyEnabled(this) == true)
+        {
+            try
+            {
+                String phone = DailyPreference.getInstance(this).getRemoteConfigCompanyPhoneNumber();
+
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            } catch (ActivityNotFoundException e)
+            {
+                DailyToast.showToast(this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            }
+        } else
+        {
+            DailyToast.showToast(this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

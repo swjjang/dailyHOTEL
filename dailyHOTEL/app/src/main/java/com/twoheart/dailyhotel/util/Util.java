@@ -397,6 +397,20 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    public static boolean isOverAPI25()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
+
+    /**
+     * 현재 Fresco 라이브러리 버그로 인해서 7.0 이상 단말이에서 사용금지.
+     * @return
+     */
+    public static boolean isUsedMutilTransition()
+    {
+        return isOverAPI21() == true && isOverAPI25() == false;
+    }
+
     public static boolean isTelephonyEnabled(Context context)
     {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);

@@ -706,7 +706,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
                 mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
 
-            if (Util.isOverAPI21() == true)
+            if (Util.isUsedMutilTransition() == true)
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);

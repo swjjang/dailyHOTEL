@@ -27,6 +27,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.Calendar;
+
 public class AddProfileSocialActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
@@ -39,11 +41,12 @@ public class AddProfileSocialActivity extends BaseActivity
     private AddProfileSocialLayout mAddProfileSocialLayout;
     private AddProfileSocialNetworkController mAddProfileSocialNetworkController;
 
-    public static Intent newInstance(Context context, Customer customer)
+    public static Intent newInstance(Context context, Customer customer, String birthday)
     {
         Intent intent = new Intent(context, AddProfileSocialActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, customer);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BIRTHDAY, birthday);
 
         return intent;
     }
@@ -72,6 +75,20 @@ public class AddProfileSocialActivity extends BaseActivity
 
         mCustomer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
+        String birthday = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_BIRTHDAY);
+        boolean hasBirthday = false;
+
+        try
+        {
+            if (DailyCalendar.convertDate(birthday, DailyCalendar.ISO_8601_FORMAT) != null)
+            {
+                hasBirthday = true;
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         mUserIdx = mCustomer.getUserIdx();
 
         if (Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
@@ -94,6 +111,15 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         mAddProfileSocialLayout.showNameLayout();
+        mAddProfileSocialLayout.setNameText(mCustomer.getName());
+
+        if (hasBirthday == true)
+        {
+            mAddProfileSocialLayout.hideBirthdayLayout();
+        } else
+        {
+            mAddProfileSocialLayout.showBirthdaylLayout();
+        }
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
     }
@@ -250,7 +276,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void showBirthdayDatePicker()
+        public void showBirthdayDatePicker(int year, int month, int day)
         {
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
@@ -262,7 +288,14 @@ public class AddProfileSocialActivity extends BaseActivity
 
             final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
 
-            datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+            if (year < 0 || month < 0 || day < 0)
+            {
+                year = 2000;
+                month = 0;
+                day = 1;
+            }
+
+            datePicker.init(year, month, day, new DatePicker.OnDateChangedListener()
             {
                 @Override
                 public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
@@ -429,6 +462,18 @@ public class AddProfileSocialActivity extends BaseActivity
             {
                 DailyToast.showToast(AddProfileSocialActivity.this, message, Toast.LENGTH_SHORT);
             }
+
+            Calendar calendar = mAddProfileSocialLayout.getBirthday();
+
+            if (calendar != null)
+            {
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
+            } else
+            {
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(null);
+            }
+
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserName(mAddProfileSocialLayout.getName());
         }
 
         @Override

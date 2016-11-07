@@ -27,9 +27,9 @@
     <string name="label_question">문의</string>
     <string name="label_sort">정렬</string>
     <string name="label_daily_customer_service">데일리 고객센터 전화</string>
-    <string name="label_daily_kakaotalk">데일리 카톡 문의</string>
-    <string name="label_restaurant_direct_phone">레스토랑 직접 전화연결</string>
-    <string name="label_hotel_direct_phone">호텔 직접 전화연결</string>
+    <string name="label_daily_kakaotalk">데일리 카카오톡 문의</string>
+    <string name="label_restaurant_direct_phone">레스토랑 직접 전화 문의</string>
+    <string name="label_hotel_direct_phone">호텔 직접 전화 문의</string>
     <string name="label_friend">친구</string>
     <string name="label_domestic">국내</string>
     <string name="label_global">해외</string>
@@ -60,6 +60,7 @@
     <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
     <string name="label_sender">보낸사람</string>
     <string name="label_send_mail">문의하기</string>
+    <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>
     <string name="label_wishlist">위시리스트</string>
 
     <string name="label_cardcd01">외환</string>
@@ -136,7 +137,7 @@
     <string name="actionbar_title_booking_tab_activity">예약확인</string>
     <string name="actionbar_title_faq_activity">자주 묻는 질문</string>
     <string name="actionbar_title_forgot_pwd_activity">비밀번호 찾기</string>
-    <string name="actionbar_title_login_activity">회원가입 및 로그인</string>
+    <string name="actionbar_title_login_activity">로그인</string>
     <string name="actionbar_title_notice_activity">공지사항</string>
     <string name="actionbar_title_payment_activity">결제하기</string>
     <string name="actionbar_title_privacy_activity">개인정보 처리 방침</string>
@@ -309,6 +310,8 @@
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
     <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침%1$d시부터 다음 날 새벽%2$d시까지입니다.</string>
     <string name="dialog_message_coupon_list_login">로그인 후 할인 쿠폰함을 확인할 수 있습니다.\n로그인 할까요?</string>
+    <string name="dialog_message_profile_login">로그인 후 내정보를 확인할 수 있습니다.\n로그인 할까요?</string>
+    <string name="dialog_message_profile_birthday_login">로그인 후 생일정보를 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_message_register_coupon_login">로그인 후 할인쿠폰 등록을 확인할 수 있습니다.\n로그인 할까요?</string>
 
     <!-- Main Drawer Menu Titles -->
@@ -341,8 +344,9 @@
 
     <!-- Setting Fragment -->
     <string name="frag_customer_center">고객센터</string>
-    <string name="frag_call_res_contact">데일리호텔 전화문의</string>
-    <string name="frag_send_mail">데일리호텔 의견메일 보내기</string>
+    <string name="frag_call_res_contact">데일리 고객센터 전화 문의</string>
+    <string name="frag_daily_kakao">데일리 카카오톡 문의</string>
+    <string name="frag_send_mail">데일리 의견 메일 보내기</string>
     <string name="frag_notice">공지사항</string>
     <string name="frag_faqs">자주 묻는 질문</string>
     <string name="frag_info">소개</string>
@@ -595,7 +599,7 @@
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
     <string name="message_signup_step2_check_your_phonenumber">짧은 시간 내 인증번호를\n여러번 요청할 수 없습니다.\n입력하신 전화번호(%1$s)가\n맞는지 확인해주시거나\nSMS 수신이 시간이 걸릴 수 있으니\n잠시만 기다려주세요.</string>
-    <string name="message_signup_completed_alarm_on_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의했습니다.\n%s</string>
+    <string name="message_signup_completed_alarm_on_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보, 예약 알림 등\n혜택 알림 수신에 동의하였습니다.\n%s</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>
@@ -628,6 +632,8 @@
     <string name="label_booking_payment_information">2. 결제 금액 정보</string>
     <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
+    <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
+    <string name="message_consult02">(상담 시간: 아침 %1$s시 ~ 익일 새벽 %2$s시)</string>
     <string name="message_booking_refund_product">변경, 취소, 환불이 불가한 특가 할인 상품입니다.</string>
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 [결제하기] 버튼을 눌러주세요.</string>
     <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>

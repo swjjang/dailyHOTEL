@@ -13,6 +13,8 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_terms_and_policy);
@@ -56,6 +58,14 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
         super.onResume();
 
         unLockUI();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override

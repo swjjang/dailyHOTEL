@@ -207,6 +207,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_RATING_VALUE = "ratingValue";
     public static final String NAME_INTENT_EXTRA_DATA_GRADE = "grade";
     public static final String NAME_INTENT_EXTRA_DATA_FROM_MAP = "fromMap";
+    public static final String NAME_INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
@@ -253,6 +254,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_FAQ = 48;
     public static final int CODE_REQUEST_ACTIVITY_FEEDBACK = 49;
     public static final int CODE_REQUEST_ACTIVITY_RECENTPLACE = 50;
+    public static final int CODE_REQUEST_ACTIVITY_CONTACT_US = 51;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

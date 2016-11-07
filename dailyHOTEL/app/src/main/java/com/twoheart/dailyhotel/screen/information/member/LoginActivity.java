@@ -488,9 +488,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String recommender = userJSONObject.getString("rndnum");
         String userType = userJSONObject.getString("userType");
         //        String phoneNumber = userJSONObject.getString("phone");
+        String birthday = userJSONObject.getString("birthday");
 
         DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
-        DailyPreference.getInstance(this).setUserInformation(userType, email, name, recommender);
+        DailyPreference.getInstance(this).setUserInformation(userType, email, name, birthday, recommender);
 
         AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);
 
@@ -880,6 +881,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         }
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
+                        AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
                         return;
                     }
                 }
