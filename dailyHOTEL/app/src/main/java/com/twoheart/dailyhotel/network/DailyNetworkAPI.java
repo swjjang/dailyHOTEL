@@ -1090,4 +1090,53 @@ public class DailyNetworkAPI implements IDailyNetwork
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestWishListCount(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes" : "";
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestWishList(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}" : "";
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "GOURMET" : "HOTEL");
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestAddWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/add/{itemIdx}" : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "GOURMET" : "HOTEL");
+        urlParams.put("{itemIdx}", Integer.toString(placeIndex));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "GOURMET" : "HOTEL");
+        urlParams.put("{itemIdx}", Integer.toString(placeIndex));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

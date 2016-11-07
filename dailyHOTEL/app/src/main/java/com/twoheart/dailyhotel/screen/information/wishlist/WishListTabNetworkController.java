@@ -38,8 +38,8 @@ public class WishListTabNetworkController extends BaseNetworkController
 
     public void requestWishListCount()
     {
-        //        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mWishListCountJsonResponseListener);
-        ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(1, 1);
+                DailyNetworkAPI.getInstance(mContext).requestWishListCount(mNetworkTag, mWishListCountJsonResponseListener);
+//        ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(1, 1);
     }
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -93,7 +93,11 @@ public class WishListTabNetworkController extends BaseNetworkController
                     //                    long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
                     //                    long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
 
-                    ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(0, 0);
+                    int userIndex = response.getInt("userIdx");
+                    int stayWishCount = response.getInt("wishHotelCount");
+                    int gourmetWishCount = response.getInt("wishGourmetCount");
+
+                    ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(stayWishCount, gourmetWishCount);
                 } else
                 {
                     String message = response.getString("msg");
