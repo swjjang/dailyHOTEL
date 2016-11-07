@@ -84,6 +84,12 @@ public class DailyEditText extends AppCompatEditText
         if (focused == false)
         {
             setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        } else
+        {
+            if (getText().length() > 0)
+            {
+                setDeleteDrawable();
+            }
         }
     }
 
