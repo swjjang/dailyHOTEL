@@ -47,4 +47,27 @@
             android:textColor="@color/default_background_section_c323232"
             android:textSize="13dp"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/buttonTextView"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="13dp"
+            android:textColor="@color/default_text_c323232"/>
+    </LinearLayout>
 </LinearLayout>
