@@ -37,6 +37,7 @@ import java.util.Map;
 public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
+    private String mReservationIndex;
     private boolean mIsFullscreen;
     private DailyToolbarLayout mDailyToolbarLayout;
     private View mBottomLayout;
@@ -86,17 +87,16 @@ public class IssuingReceiptActivity extends BaseActivity
     private void initLayout()
     {
         // 영수증 다음 버전으로
-        //        mBottomLayout = findViewById(R.id.bottomLayout);
-        //        mBottomLayout.setVisibility(View.GONE);
-        //        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
-        //        sendEmailView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                showSendEmailDialog();
-        //            }
-        //        });
+        mBottomLayout = findViewById(R.id.bottomLayout);
+        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        sendEmailView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSendEmailDialog();
+            }
+        });
     }
 
     @Override
@@ -206,6 +206,8 @@ public class IssuingReceiptActivity extends BaseActivity
                     {
                         dialog.dismiss();
                     }
+
+                    DailyNetworkAPI.getInstance(IssuingReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "stay", mReservationIndex, email, mReceiptByEmilJsonResponseListener);
                 }
             }
         });
@@ -256,7 +258,7 @@ public class IssuingReceiptActivity extends BaseActivity
             // 영숭증
             JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
-            String reservationIndex = jsonObject.getString("reservation_idx");
+            mReservationIndex = jsonObject.getString("reservation_idx");
             String userName = receiptJSONObject.getString("user_name");
             String userPhone = receiptJSONObject.getString("user_phone");
             String checkin = receiptJSONObject.getString("checkin");
@@ -281,7 +283,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 예약 번호
             TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-            registerationTextView.setText(reservationIndex);
+            registerationTextView.setText(mReservationIndex);
 
             // 호텔명
             TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -437,7 +439,7 @@ public class IssuingReceiptActivity extends BaseActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-            //            mBottomLayout.setVisibility(View.GONE);
+            mBottomLayout.setVisibility(View.GONE);
         } else
         {
             mDailyToolbarLayout.setToolbarVisibility(true, false);
@@ -445,7 +447,7 @@ public class IssuingReceiptActivity extends BaseActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            //            mBottomLayout.setVisibility(View.VISIBLE);
+            mBottomLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -511,7 +513,39 @@ public class IssuingReceiptActivity extends BaseActivity
                 }
             } catch (Exception e)
             {
-                // 서버 정보를 파싱하다가 에러가 남.
+                IssuingReceiptActivity.this.onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            IssuingReceiptActivity.this.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mReceiptByEmilJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                String msg = response.getString("msg");
+
+                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null);
+            } catch (Exception e)
+            {
+                IssuingReceiptActivity.this.onError(e);
             } finally
             {
                 unLockUI();

@@ -607,4 +607,6 @@ interface IDailyNetwork
      * @return
      */
     void requestRecentGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
+
+    void requestReceiptByEmail(Object tag, String placeType, String reservationIdx, String email, DailyHotelJsonResponseListener listener);
 }

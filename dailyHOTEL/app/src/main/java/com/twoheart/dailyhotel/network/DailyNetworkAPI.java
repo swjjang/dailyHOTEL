@@ -1120,4 +1120,19 @@ public class DailyNetworkAPI implements IDailyNetwork
         dailyHotelJsonRequest.setIsUsedAccept(true);
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestReceiptByEmail(Object tag, String placeType, String reservationIdx, String email, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/reservations/{kind}/{reservationIdx}/receipts" : "ODQkOTgkMTY5JDckNTYkNjkkNTkkOTUkNjQkMTczJDEyOCQ3NiQ0NCQ0NCQ3OSQxMTEk$OUIxOEUQwMUJFREVGQkMwOENEOEE5MkY5REY2NjE0QTcFC2REU0RDk2MzEVyOZURCMXDQ1Q0UOzRUEPYzOENFMzZGREMwNQUEwQUHFDNkVDQRzIQxRjFBNzJGQUQwQTJCMDg5NOEU2NTc1QzgyRkE1QkFCQ0E0NzQ0ODlBRTYzN0ZGMjhFMYzFMDMDQ=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{kind}", placeType);
+        urlParams.put("{reservationIdx}", reservationIdx);
+
+        String params = String.format("?emails=%s", URLEncoder.encode(email));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }
