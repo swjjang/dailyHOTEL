@@ -1,15 +1,11 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,7 +46,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
@@ -920,7 +915,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void setWishList(boolean isAdded)
         {
-            mPlaceDetailLayout.setWishListButtonSelected(isAdded);
+//            mPlaceDetailLayout.setWishListButtonSelected(isAdded); // setWishListPopup() 에서 처리 함
 
             // TODO : 서버 연결 해야 함! 현재는 단순 동작 확인용도!
             if (isAdded == true)

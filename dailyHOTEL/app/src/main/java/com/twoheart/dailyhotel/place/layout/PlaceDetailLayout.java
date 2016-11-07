@@ -85,6 +85,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
+    private AnimatorSet mWishListAnmatorSet;
     private int mStatusBarHeight;
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
@@ -723,13 +724,26 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mWishListButtonTextView.setText(buttonText);
     }
 
-    public void setWishListPopup(WishListPopupState state)
+    public void setWishListPopup(final WishListPopupState state)
     {
+
+
         if (WishListPopupState.GONE == state)
         {
             mWishListPopupTextView.setVisibility(View.GONE);
+
+            if (mWishListAnmatorSet != null)
+            {
+                mWishListAnmatorSet.cancel();
+                mWishListAnmatorSet.removeAllListeners();
+                mWishListAnmatorSet = null;
+            }
         } else
         {
+            if (mWishListAnmatorSet != null && mWishListAnmatorSet.isRunning() == true) {
+                ExLog.d("WishList Popup is Already running");
+                return;
+            }
 
             if (WishListPopupState.ADD == state)
             {
@@ -746,7 +760,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
                 , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
                 , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
-                , PropertyValuesHolder.ofFloat("alpha",  0.5f, 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
             );
             objectAnimator1.setInterpolator(new AccelerateInterpolator());
             objectAnimator1.setDuration(300);
@@ -755,7 +769,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
                 , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
                 , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
-                , PropertyValuesHolder.ofFloat("alpha",  1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
             );
             objectAnimator2.setDuration(600);
 
@@ -763,13 +777,13 @@ public abstract class PlaceDetailLayout extends BaseLayout
             ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
                 , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
                 , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
-                , PropertyValuesHolder.ofFloat("alpha",  1.0f, 0.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
             );
             objectAnimator3.setDuration(200);
 
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
-            animatorSet.addListener(new Animator.AnimatorListener()
+            mWishListAnmatorSet = new AnimatorSet();
+            mWishListAnmatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+            mWishListAnmatorSet.addListener(new Animator.AnimatorListener()
             {
                 @Override
                 public void onAnimationStart(Animator animation)
@@ -780,13 +794,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mWishListPopupTextView.setVisibility(View.GONE);
+                    PlaceDetailLayout.this.setWishListButtonSelected(WishListPopupState.ADD == state ? true : false);
+                    mWishListPopupTextView.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
-                    mWishListPopupTextView.setVisibility(View.GONE);
+                    mWishListPopupTextView.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -796,7 +811,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 }
             });
 
-            animatorSet.start();
+            mWishListAnmatorSet.start();
         }
     }
 
