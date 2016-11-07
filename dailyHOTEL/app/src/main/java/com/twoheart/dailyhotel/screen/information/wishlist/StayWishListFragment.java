@@ -43,6 +43,12 @@ public class StayWishListFragment extends PlaceWishListFragment
     }
 
     @Override
+    protected PlaceType getPlaceType()
+    {
+        return PlaceType.HOTEL;
+    }
+
+    @Override
     protected void requestWishList()
     {
         lockUI();

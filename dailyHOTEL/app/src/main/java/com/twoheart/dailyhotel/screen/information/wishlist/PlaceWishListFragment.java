@@ -17,11 +17,15 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 
 public abstract class PlaceWishListFragment extends BaseFragment
 {
+    private int mWishListCount;
+
     protected BaseActivity mBaseActivity;
     protected PlaceWishListLayout mListLayout;
     protected BaseNetworkController mNetworkController;
 
     protected SaleTime mSaleTime;
+
+    protected boolean mDontReloadAtOnResume;
 
     protected OnWishListFragmentListener mWishListFragmentListener;
 
@@ -32,6 +36,8 @@ public abstract class PlaceWishListFragment extends BaseFragment
     protected abstract void requestWishList();
 
     protected abstract void requestDeleteWishListItem();
+
+    protected abstract PlaceType getPlaceType();
 
     public interface OnWishListFragmentListener
     {
@@ -58,7 +64,32 @@ public abstract class PlaceWishListFragment extends BaseFragment
     {
         super.onResume();
 
-        requestWishList();
+        if (mDontReloadAtOnResume == true)
+        {
+            mDontReloadAtOnResume = false;
+        } else
+        {
+            if (mWishListCount == 0)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                if (mListLayout == null)
+                {
+                    return;
+                }
+
+                mListLayout.setData(null);
+            } else
+            {
+                requestWishList();
+            }
+
+        }
     }
 
     public void setSaleTime(SaleTime saleTime)
@@ -69,5 +100,20 @@ public abstract class PlaceWishListFragment extends BaseFragment
         }
 
         mSaleTime = saleTime;
+    }
+
+    public void setDontReloadAtOnResume(boolean dontReloadAtOnResume)
+    {
+        mDontReloadAtOnResume = dontReloadAtOnResume;
+    }
+
+    public void setWishListCount(int count)
+    {
+        mWishListCount = count;
+    }
+
+    public int getWishListCount()
+    {
+        return mWishListCount < 0 ? 0 : mWishListCount;
     }
 }

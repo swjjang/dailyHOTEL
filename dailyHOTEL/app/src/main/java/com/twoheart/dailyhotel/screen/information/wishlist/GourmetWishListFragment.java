@@ -43,6 +43,12 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     }
 
     @Override
+    protected PlaceType getPlaceType()
+    {
+        return PlaceType.FNB;
+    }
+
+    @Override
     protected void requestWishList()
     {
         lockUI();

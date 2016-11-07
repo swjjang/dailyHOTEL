@@ -186,6 +186,20 @@ public class WishListTabActivity extends BaseActivity
     {
         int position = 0;
 
+        if (mFragmentList != null)
+        {
+            for (PlaceWishListFragment fragment : mFragmentList)
+            {
+                if (PlaceType.FNB.equals(fragment.getPlaceType()) == true)
+                {
+                    fragment.setWishListCount(gourmetCount);
+                } else
+                {
+                    fragment.setWishListCount(stayCount);
+                }
+            }
+        }
+
         if (mPlaceType != null)
         {
             // deep link
@@ -249,7 +263,7 @@ public class WishListTabActivity extends BaseActivity
             {
                 mDontReloadAtOnResume = false;
 
-//                if (resultCode != Activity.RESULT_OK)
+                //                if (resultCode != Activity.RESULT_OK)
                 //                {
                 //                }
                 break;
