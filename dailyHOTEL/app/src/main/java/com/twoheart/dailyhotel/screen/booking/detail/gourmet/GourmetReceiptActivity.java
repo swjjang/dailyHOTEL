@@ -29,12 +29,14 @@ import java.util.Map;
 
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
+    private String mReservationIndex;
+
     private void makeLayout(JSONObject jsonObject) throws Exception
     {
         JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
         // 영숭증
-        String reservationIndex = jsonObject.getString("reservation_idx");
+        mReservationIndex = jsonObject.getString("reservation_idx");
         String userName = receiptJSONObject.getString("user_name");
         String userPhone = receiptJSONObject.getString("user_phone");
         int ticketCount = receiptJSONObject.getInt("ticket_count");
@@ -57,7 +59,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 예약 번호
         TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-        registerationTextView.setText(reservationIndex);
+        registerationTextView.setText(mReservationIndex);
 
         // 이름
         TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -182,18 +184,16 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             }
         });
 
-        // 영수증 다음 버전으로
-        //        mBottomLayout = findViewById(R.id.bottomLayout);
-        //        mBottomLayout.setVisibility(View.GONE);
-        //        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
-        //        sendEmailView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                showSendEmailDialog();
-        //            }
-        //        });
+        mBottomLayout = findViewById(R.id.bottomLayout);
+        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        sendEmailView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSendEmailDialog();
+            }
+        });
     }
 
     protected View getLayout()
@@ -282,6 +282,8 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
                 {
                     dialog.dismiss();
                 }
+
+                DailyNetworkAPI.getInstance(GourmetReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "gourmet", mReservationIndex, email, mReceiptByEmilJsonResponseListener);
             }
         });
 
@@ -352,6 +354,38 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             } catch (Exception e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetReceiptActivity.this.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mReceiptByEmilJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                String msg = response.getString("msg");
+
+                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null);
+            } catch (Exception e)
+            {
+                GourmetReceiptActivity.this.onError(e);
             } finally
             {
                 unLockUI();
