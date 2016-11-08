@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class StayAutoRefundActivity extends BaseActivity implements Constants, View.OnClickListener
 {
-    public static Intent newInstance(Context context)
+    private static final String INTENT_EXTRA_DATA_BOOKING_DETAIL = "bookingDetail";
+
+    private HotelBookingDetail mHotelBookingDetail;
+
+    public static Intent newInstance(Context context, HotelBookingDetail hotelBookingDetail)
     {
         Intent intent = new Intent(context, StayAutoRefundActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, hotelBookingDetail);
 
         return intent;
     }
@@ -28,6 +34,16 @@ public class StayAutoRefundActivity extends BaseActivity implements Constants, V
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_stay_autorefund);
+
+        Intent intent = getIntent();
+
+        if(intent == null)
+        {
+            finish();
+            return;
+        }
+
+        mHotelBookingDetail = intent.getParcelableExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL);
 
         initToolbar();
         initLayout();

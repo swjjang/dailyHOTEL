@@ -349,8 +349,8 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         View refundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
 
-        if (bookingDetail.isNRD == true)
-        {
+//        if (bookingDetail.isNRD == true)
+//        {
             refundPolicyLayout.setVisibility(View.VISIBLE);
 
             TextView refundPolicyTextView = (TextView) refundPolicyLayout.findViewById(R.id.refundPolicyTextView);
@@ -360,10 +360,18 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             refundPolicyTextView.setText(spannableStringBuilder);
-        } else
-        {
-            refundPolicyLayout.setVisibility(View.GONE);
-        }
+//        } else
+//        {
+//            refundPolicyLayout.setVisibility(View.GONE);
+//        }
+
+        View buttonLayout = refundPolicyLayout.findViewById(R.id.buttonLayout);
+
+        buttonLayout.setVisibility(View.VISIBLE);
+        TextView buttonTextView = (TextView)buttonLayout.findViewById(R.id.buttonTextView);
+        buttonTextView.setText(R.string.label_request_free_refund);
+
+        buttonLayout.setOnClickListener(this);
     }
 
     @Override
@@ -426,6 +434,19 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     , AnalyticsManager.Category.HOTEL_BOOKINGS//
                     , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
                     , null);
+                break;
+            }
+
+            case R.id.buttonLayout:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
                 break;
             }
 

@@ -40,13 +40,13 @@
                 layout="@layout/layout_autorefund_01"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <include
                 layout="@layout/layout_autorefund_02"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <include
                 layout="@layout/layout_autorefund_03"
@@ -73,11 +73,10 @@
                 android:id="@+id/signUpView"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_margin="15dp"
                 android:background="@drawable/selector_button_default_background"
                 android:gravity="center"
-                android:text="@string/label_confirm_signup"
+                android:text="@string/label_request_free_refund"
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 dailyFont:style="Medium"/>
