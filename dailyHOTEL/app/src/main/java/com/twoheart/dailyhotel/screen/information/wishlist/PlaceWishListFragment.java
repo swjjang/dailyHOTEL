@@ -35,13 +35,13 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     protected abstract void requestWishList();
 
-    protected abstract void requestDeleteWishListItem();
+    protected abstract void requestRemoveWishListItem(int placeIndex);
 
     protected abstract PlaceType getPlaceType();
 
     public interface OnWishListFragmentListener
     {
-        void onDeleteItemClick(PlaceType placeType, int position);
+        void onRemoveItemClick(PlaceType placeType, int position);
     }
 
     public void setWishListFragmentListener(OnWishListFragmentListener listener)

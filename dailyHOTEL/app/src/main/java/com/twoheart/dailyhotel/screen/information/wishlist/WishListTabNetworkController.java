@@ -87,14 +87,11 @@ public class WishListTabNetworkController extends BaseNetworkController
 
                 if (msgCode == 100)
                 {
-                    //                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    //
-                    //                    long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                    //                    long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    int userIndex = response.getInt("userIdx");
-                    int stayWishCount = response.getInt("wishHotelCount");
-                    int gourmetWishCount = response.getInt("wishGourmetCount");
+                    int userIndex = dataJSONObject.getInt("userIdx");
+                    int stayWishCount = dataJSONObject.getInt("wishHotelCount");
+                    int gourmetWishCount = dataJSONObject.getInt("wishGourmetCount");
 
                     ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(stayWishCount, gourmetWishCount);
                 } else

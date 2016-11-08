@@ -149,7 +149,6 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         {
             try
             {
-
                 int msgCode = response.getInt("msgCode");
                 boolean isSuccess = msgCode == 100 ? true : false;
 
@@ -180,7 +179,6 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         {
             try
             {
-
                 int msgCode = response.getInt("msgCode");
                 boolean isSuccess = msgCode == 100 ? true : false;
 

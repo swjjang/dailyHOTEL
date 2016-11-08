@@ -262,10 +262,6 @@ public class WishListTabActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_LOGIN:
             {
                 mDontReloadAtOnResume = false;
-
-                //                if (resultCode != Activity.RESULT_OK)
-                //                {
-                //                }
                 break;
             }
 
@@ -335,7 +331,7 @@ public class WishListTabActivity extends BaseActivity
     private PlaceWishListFragment.OnWishListFragmentListener mWishListFragmentListener = new PlaceWishListFragment.OnWishListFragmentListener()
     {
         @Override
-        public void onDeleteItemClick(PlaceType placeType, int position)
+        public void onRemoveItemClick(PlaceType placeType, int position)
         {
             if (mFragmentList == null)
             {

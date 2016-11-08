@@ -35,7 +35,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     {
         void onItemClick(View view);
 
-        void onDeleteItemClick(View view, int position);
+        void onItemRemoveClick(View view, int position);
     }
 
     public PlaceWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)

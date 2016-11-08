@@ -30,7 +30,7 @@ public abstract class PlaceWishListLayout extends BaseLayout
     {
         void onListItemClick(View view, int position);
 
-        void onListItemDeleteClick(int position);
+        void onListItemRemoveClick(int position);
 
         void onEmptyButtonClick();
     }
@@ -153,9 +153,9 @@ public abstract class PlaceWishListLayout extends BaseLayout
         }
 
         @Override
-        public void onDeleteItemClick(View view, int position)
+        public void onItemRemoveClick(View view, int position)
         {
-            ((OnEventListener) mOnEventListener).onListItemDeleteClick(position);
+            ((OnEventListener) mOnEventListener).onListItemRemoveClick(position);
         }
     };
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -57,11 +58,11 @@ public class StayWishListFragment extends PlaceWishListFragment
     }
 
     @Override
-    protected void requestDeleteWishListItem()
+    protected void requestRemoveWishListItem(int placeIndex)
     {
         lockUI();
 
-        ((StayWishListNetworkController) mNetworkController).requestDeleteStayWishListItem();
+        ((StayWishListNetworkController) mNetworkController).requestRemoveStayWishListItem(placeIndex);
     }
 
     private StayWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayWishListNetworkController.OnNetworkControllerListener()
@@ -85,7 +86,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onDeleteStayWishListItem(int position)
+        public void onRemoveStayWishListItem(boolean isSuccess, String message, int placeIndex)
         {
             unLockUI();
 
@@ -99,13 +100,47 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            if (position < 0 || position > mListLayout.getItemCount() - 1)
+            if (placeIndex < 0)
             {
                 return;
             }
 
-            mListLayout.removeItem(position);
-            mListLayout.notifyDataSetChanged();
+            if (isSuccess == false)
+            {
+                mBaseActivity.showSimpleDialog(getResources().getString(R.string.dialog_notice2) //
+                    , message, getResources().getString(R.string.dialog_btn_text_confirm), null);
+                return;
+            }
+
+            int removePosition = -1;
+            int size = mListLayout.getList().size();
+
+            for (int i = 0; i < size; i++)
+            {
+                PlaceViewItem placeViewItem = mListLayout.getItem(i);
+                if (placeViewItem == null)
+                {
+                    continue;
+                }
+
+                Place place = placeViewItem.getItem();
+                if (place == null)
+                {
+                    continue;
+                }
+
+                if (placeIndex == place.index)
+                {
+                    removePosition = i;
+                    break;
+                }
+            }
+
+            if (removePosition != -1)
+            {
+                mListLayout.removeItem(removePosition);
+                mListLayout.notifyDataSetChanged();
+            }
 
             //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
             //                AnalyticsManager.Category.NAVIGATION, //
@@ -213,7 +248,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onListItemDeleteClick(int position)
+        public void onListItemRemoveClick(int position)
         {
             if (position < 0)
             {
@@ -232,7 +267,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            StayWishListFragment.this.requestDeleteWishListItem();
+            StayWishListFragment.this.requestRemoveWishListItem(stay.index);
         }
 
         @Override

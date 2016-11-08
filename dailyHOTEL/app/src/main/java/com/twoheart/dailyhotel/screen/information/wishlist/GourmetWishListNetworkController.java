@@ -1,14 +1,17 @@
 package com.twoheart.dailyhotel.screen.information.wishlist;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,17 +35,18 @@ public class GourmetWishListNetworkController extends BaseNetworkController
     {
         void onGourmetWishList(ArrayList<Gourmet> list);
 
-        void onDeleteGourmetWishListItem(int position);
+        void onRemoveGourmetWishListItem(boolean isSuccess, String message, int placeIndex);
     }
 
     public void requestGourmetWishList()
     {
-        ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetWishList(null);
+        DailyNetworkAPI.getInstance(mContext).requestWishList(mNetworkTag, Constants.PlaceType.FNB, mListJsonResponseListener);
     }
 
-    public void requestDeleteGourmetWishListItem()
+    public void requestRemoveGourmetWishListItem(int placeIndex)
     {
-        ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteGourmetWishListItem(-1);
+        DailyNetworkAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, //
+            Constants.PlaceType.FNB, placeIndex, mRemoveWishListJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mListJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -133,7 +137,7 @@ public class GourmetWishListNetworkController extends BaseNetworkController
         }
     };
 
-    DailyHotelJsonResponseListener mDeleteItemJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mRemoveWishListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -141,29 +145,31 @@ public class GourmetWishListNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                boolean isSuccess = msgCode == 100 ? true : false;
+
+                String message = null;
+                if (response.has("msg") == true)
                 {
-                    //                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onDeleteGourmetWishListItem(-1);
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(url);
-                    }
-
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    message = response.getString("msg");
                 }
+
+                int placeIndex = -1;
+                if (Util.isTextEmpty(url) == false)
+                {
+                    Uri uri = Uri.parse(url);
+                    String indexString = uri.getLastPathSegment();
+
+                    try
+                    {
+                        placeIndex = Integer.parseInt(indexString);
+                    } catch (Exception e)
+                    {
+                    }
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveGourmetWishListItem(isSuccess, message, placeIndex);
             } catch (Exception e)
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(url);
-                }
-
                 mOnNetworkControllerListener.onError(e);
             }
         }

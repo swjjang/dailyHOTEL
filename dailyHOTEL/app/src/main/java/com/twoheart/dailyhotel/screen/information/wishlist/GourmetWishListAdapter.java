@@ -193,7 +193,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             {
                 if (mListener != null)
                 {
-                    mListener.onDeleteItemClick(v, (Integer) v.getTag());
+                    mListener.onItemRemoveClick(v, (Integer) v.getTag());
                 }
             }
         });
