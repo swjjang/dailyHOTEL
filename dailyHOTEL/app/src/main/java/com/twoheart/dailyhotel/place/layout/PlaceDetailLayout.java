@@ -132,7 +132,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void downloadCoupon();
 
-        void setWishList(boolean isAdded);
+        void setWishList(boolean isAdded, int placeIndex);
+
+        void onWishListButtonClick();
     }
 
     protected abstract String getProductTypeTitle();
@@ -247,9 +249,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                boolean isSelected = (boolean) v.getTag();
-                ExLog.d("wishList button click : " + !isSelected);
-                ((OnEventListener) mOnEventListener).setWishList(!isSelected);
+                ((OnEventListener) mOnEventListener).onWishListButtonClick();
             }
         });
     }
@@ -748,6 +748,23 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mWishListButtonTextView.setText(buttonText);
     }
 
+    public void startWishListButtonClick()
+    {
+        if (mWishListButtonTextView == null)
+        {
+            return;
+        }
+
+        Object tag = mWishListButtonTextView.getTag();
+        if (tag != null && tag instanceof Boolean)
+        {
+            boolean isSelected = (boolean) tag;
+            ExLog.d("wishList button click : " + !isSelected);
+            setWishListButtonSelected(!isSelected);
+            ((OnEventListener) mOnEventListener).setWishList(!isSelected, mPlaceDetail.index);
+        }
+    }
+
     public void setWishListPopup(final WishListPopupState state)
     {
 
@@ -764,7 +781,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
         } else
         {
-            if (mWishListAnmatorSet != null && mWishListAnmatorSet.isRunning() == true) {
+            if (mWishListAnmatorSet != null && mWishListAnmatorSet.isRunning() == true)
+            {
                 ExLog.d("WishList Popup is Already running");
                 return;
             }
@@ -818,7 +836,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    PlaceDetailLayout.this.setWishListButtonSelected(WishListPopupState.ADD == state ? true : false);
                     mWishListPopupTextView.setVisibility(View.INVISIBLE);
                 }
 

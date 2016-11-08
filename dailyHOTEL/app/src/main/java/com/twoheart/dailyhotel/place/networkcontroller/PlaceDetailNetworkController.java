@@ -29,6 +29,11 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         //        void onUserInformation(Customer user, String birthday, boolean isDailyUser);
 
         void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified);
+
+        void onAddWishList(boolean isSuccess, String message);
+
+        void onRemoveWishList(boolean isSuccess, String message);
+
     }
 
     public void requestCommonDatetime()
@@ -36,14 +41,19 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeJsonResponseListener);
     }
 
-    //    public void requestUserInformationEx()
-    //    {
-    //        DailyNetworkAPI.getInstance(mContext).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener);
-    //    }
-
     public void requestProfile()
     {
         DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+    }
+
+    public void requestAddWishList(Constants.PlaceType placeType, int placeIndex)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestAddWishList(mNetworkTag, placeType, placeIndex, mAddWishListJsonResponseListener);
+    }
+
+    public void requestRemoveWishList(Constants.PlaceType placeType, int placeIndex)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, placeType, placeIndex, mRemoveWishListJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -80,64 +90,6 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
             mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
-
-    //    private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msgCode = response.getInt("msg_code");
-    //
-    //                if (msgCode == 0)
-    //                {
-    //                    JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                    Customer user = new Customer();
-    //                    user.setEmail(jsonObject.getString("email"));
-    //                    user.setName(jsonObject.getString("name"));
-    //                    user.setPhone(jsonObject.getString("phone"));
-    //                    user.setUserIdx(jsonObject.getString("idx"));
-    //
-    //                    String birthday = jsonObject.getString("birthday");
-    //
-    //                    // 추천인
-    //                    //                    int recommender = jsonObject.getInt("recommender_code");
-    //                    boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
-    //
-    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(user, birthday, isDailyUser);
-    //                } else
-    //                {
-    //                    String msg = response.getString("msg");
-    //                    mOnNetworkControllerListener.onErrorToastMessage(msg);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                if (Constants.DEBUG == false)
-    //                {
-    //                    String logString = url + " | " + DailyHotel.AUTHORIZATION;
-    //                    if (response == null)
-    //                    {
-    //                        logString += " | empty response";
-    //                    } else if (response.has("data") == false)
-    //                    {
-    //                        logString += " | empty data";
-    //                    }
-    //
-    //                    Crashlytics.log(logString);
-    //                }
-    //
-    //                mOnNetworkControllerListener.onError(e);
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onErrorResponse(VolleyError volleyError)
-    //        {
-    //            mOnNetworkControllerListener.onErrorResponse(volleyError);
-    //        }
-    //    };
 
     private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -177,6 +129,68 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
                     String msg = response.getString("msg");
                     mOnNetworkControllerListener.onErrorToastMessage(msg);
                 }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mAddWishListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            try
+            {
+
+                int msgCode = response.getInt("msgCode");
+                boolean isSuccess = msgCode == 100 ? true : false;
+
+                String message = null;
+                if (response.has("msg") == true)
+                {
+                    message = response.getString("msg");
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddWishList(isSuccess, message);
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mRemoveWishListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            try
+            {
+
+                int msgCode = response.getInt("msgCode");
+                boolean isSuccess = msgCode == 100 ? true : false;
+
+                String message = null;
+                if (response.has("msg") == true)
+                {
+                    message = response.getString("msg");
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveWishList(isSuccess, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

@@ -913,17 +913,29 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void setWishList(boolean isAdded)
+        public void setWishList(boolean isAdded, int placeIndex)
         {
-//            mPlaceDetailLayout.setWishListButtonSelected(isAdded); // setWishListPopup() 에서 처리 함
-
-            // TODO : 서버 연결 해야 함! 현재는 단순 동작 확인용도!
             if (isAdded == true)
             {
-                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+                mPlaceDetailNetworkController.requestAddWishList(PlaceType.HOTEL, placeIndex);
             } else
             {
-                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+                mPlaceDetailNetworkController.requestRemoveWishList(PlaceType.HOTEL, placeIndex);
+            }
+        }
+
+        @Override
+        public void onWishListButtonClick()
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                DailyToast.showToast(StayDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+
+                Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
+            } else
+            {
+                mPlaceDetailLayout.startWishListButtonClick();
             }
         }
     };
@@ -963,28 +975,6 @@ public class StayDetailActivity extends PlaceDetailActivity
                 finish();
             }
         }
-
-        //        @Override
-        //        public void onUserInformation(Customer user, String birthday, boolean isDailyUser)
-        //        {
-        //            if (isDailyUser == true)
-        //            {
-        //                mPlaceDetailNetworkController.requestProfile();
-        //            } else
-        //            {
-        //                // 입력된 정보가 부족해.
-        //                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
-        //                {
-        //                    moveToAddSocialUserInformation(user, birthday);
-        //                } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-        //                {
-        //                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-        //                } else
-        //                {
-        //                    processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);
-        //                }
-        //            }
-        //        }
 
         @Override
         public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
@@ -1068,6 +1058,48 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mPlaceDetail.index,//
                 mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), ((StayDetail) mPlaceDetail).nights);
+        }
+
+        @Override
+        public void onAddWishList(boolean isSuccess, String message)
+        {
+            if (isSuccess == true)
+            {
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+
+        @Override
+        public void onRemoveWishList(boolean isSuccess, String message)
+        {
+            if (isSuccess == true)
+            {
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         @Override

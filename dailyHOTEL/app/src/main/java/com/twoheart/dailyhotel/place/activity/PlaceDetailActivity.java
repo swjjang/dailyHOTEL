@@ -248,6 +248,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     break;
                 }
 
+                case CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST:
+                {
+                    mDontReloadAtOnResume = false;
+
+                    if (requestCode == RESULT_OK)
+                    {
+                        if (mPlaceDetailLayout != null)
+                        {
+                            mPlaceDetailLayout.startWishListButtonClick();
+                        }
+                    }
+                }
+
                 case CODE_REQUEST_ACTIVITY_IMAGELIST:
                 case CODE_REQUEST_ACTIVITY_ZOOMMAP:
                 case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
