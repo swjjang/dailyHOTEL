@@ -254,10 +254,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (requestCode == RESULT_OK)
                     {
-                        if (mPlaceDetailLayout != null)
-                        {
-                            mPlaceDetailLayout.startWishListButtonClick();
-                        }
+                        // 호텔 정보  고메 정보를 다시 가져와야 함으로 위시리스트 버튼 클릭 이벤트는 동작하지 않도록 함!
+                        //                        if (mPlaceDetailLayout != null)
+                        //                        {
+                        //                            mPlaceDetailLayout.startWishListButtonClick();
+                        //                        }
                     }
                 }
 

@@ -79,6 +79,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         if (stayDetail == null)
         {
             setLineIndicatorVisible(false);
+            setWishListButtonSelected(false);
+            setWishListButtonCount(0);
             return;
         }
 
@@ -157,6 +159,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mPriceOptionLayout.setVisibility(View.GONE);
             mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
+
+        setWishListButtonSelected(stayDetail.myWish);
+        setWishListButtonCount(stayDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }

@@ -1065,6 +1065,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             if (isSuccess == true)
             {
+                mPlaceDetail.wishCount++;
+                mPlaceDetail.myWish = true;
+
                 mPlaceDetailLayout.setWishListButtonSelected(true);
                 mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
             } else
@@ -1086,6 +1089,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             if (isSuccess == true)
             {
+                mPlaceDetail.wishCount--;
+                mPlaceDetail.myWish = false;
+
                 mPlaceDetailLayout.setWishListButtonSelected(false);
                 mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
             } else

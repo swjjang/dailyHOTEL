@@ -730,6 +730,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
         int imageResId = isSelected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
         mWishListButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
         mWishListButtonTextView.setTag(isSelected);
+
+        if (mPlaceDetail != null && mPlaceDetail.myWish != isSelected)
+        {
+            mPlaceDetail.myWish = isSelected;
+        }
     }
 
     public void setWishListButtonCount(int count)
@@ -737,6 +742,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         String buttonText;
         if (count <= 0)
         {
+            count = 0;
             buttonText = mContext.getResources().getString(R.string.label_wishlist);
         } else if (count > 9999)
         {
@@ -746,6 +752,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
             buttonText = Integer.toString(count);
         }
         mWishListButtonTextView.setText(buttonText);
+
+        if (mPlaceDetail != null && count != mPlaceDetail.wishCount)
+        {
+            mPlaceDetail.wishCount = count;
+        }
     }
 
     public void startWishListButtonClick()
