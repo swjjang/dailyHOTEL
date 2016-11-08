@@ -34,7 +34,7 @@
             android:gravity="center"
             android:layout_marginTop="14dp"
             android:text="@string/message_consult_kakao"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/default_text_c666666"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 
@@ -47,7 +47,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="@string/message_consult01"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/default_text_c666666"
             android:textSize="13dp"
             dailyFont:style="DemiLight"/>
 
@@ -61,9 +61,8 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="@string/message_consult02"
-            android:textColor="@color/hoteldetail_title_text"
-            android:textSize="13dp"
-            dailyFont:style="DemiLight"/>
+            android:textColor="@color/default_text_c929292"
+            android:textSize="12dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -92,7 +91,7 @@
                 android:text="@string/label_daily_concierge_to_call"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/popup_ic_ops_03_daily_call"/>
+                app:drawableCompatLeft="@drawable/ic_detail_ic_ops_help"/>
         </FrameLayout>
 
         <View
