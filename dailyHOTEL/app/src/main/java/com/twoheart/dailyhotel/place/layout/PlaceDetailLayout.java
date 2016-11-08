@@ -277,6 +277,30 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return paintDrawable;
     }
 
+    public void setListScrollTop()
+    {
+        if (mListView == null || mListView.getChildCount() == 0)
+        {
+            return;
+        }
+
+        mListView.smoothScrollBy(0, 0);
+        mListView.setSelection(0);
+    }
+
+    public boolean isListScrollTop()
+    {
+        if (mListView == null || mListView.getChildCount() == 0)
+        {
+            return true;
+        }
+
+        View view = mListView.getChildAt(0);
+        int scrollY = -view.getTop() + mListView.getFirstVisiblePosition() * view.getHeight();
+
+        return scrollY == 0;
+    }
+
     public void setTransImageVisibility(boolean isVisibility)
     {
         mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);

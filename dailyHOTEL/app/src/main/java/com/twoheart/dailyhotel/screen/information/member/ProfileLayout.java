@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 public class ProfileLayout extends BaseLayout implements OnClickListener
 {
     private TextView mEmailTextView, mNameTextView, mPhoneTextView, mBirthdayTextView, mPhoneVerifyView;
-    private TextView mEmailLabelTextView, mNameLabelTextView, mPhoneLabelTextView, mBirthdayLabelTextView;
+    private TextView mEmailLabelTextView, mNameLabelTextView, mPhoneLabelTextView, mBirthdayLabelTextView, mReferralTextView;
     private View mEmailLayout, mPasswordLayout;
     private View mPasswordUnderLine;
 
@@ -34,6 +34,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         void startEditBirthday(String birthday);
 
         void doSignOut();
+
+        void doCodeCopy(String code);
     }
 
     public ProfileLayout(Context context, OnEventListener mOnEventListener)
@@ -91,22 +93,29 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         mPasswordUnderLine = view.findViewById(R.id.passwordUnderLine);
 
+        mReferralTextView = (TextView)view.findViewById(R.id.referralTextView);
+
         View logoutView = view.findViewById(R.id.logoutView);
         logoutView.setOnClickListener(this);
+
+        View codeCopyView = view.findViewById(R.id.codeCopyView);
+        codeCopyView.setOnClickListener(this);
     }
 
-    public void updateUserInformation(String userType, String email, String name, String phone, String birthday, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+    public void updateUserInformation(String userType, String email, String name, String phone, String birthday, //
+        String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
     {
         if (Constants.DAILY_USER.equalsIgnoreCase(userType) == true)
         {
-            updateDailyUserInformation(email, name, phone, birthday, isPhoneVerified, verifiedDate);
+            updateDailyUserInformation(email, name, phone, birthday, referralCode, isPhoneVerified, verifiedDate);
         } else
         {
-            updateSocialUserInformation(userType, email, name, phone, birthday);
+            updateSocialUserInformation(userType, email, name, phone, birthday, referralCode);
         }
     }
 
-    private void updateDailyUserInformation(String email, String name, String phone, String birthday, boolean isPhoneVerified, String verifiedDate)
+    private void updateDailyUserInformation(String email, String name, String phone, String birthday, //
+                                            String referralCode, boolean isPhoneVerified, String verifiedDate)
     {
         // 이메일
         if (Util.isTextEmpty(email) == true)
@@ -170,9 +179,11 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mPasswordLayout.setVisibility(View.VISIBLE);
         mPasswordUnderLine.setVisibility(View.VISIBLE);
         mPasswordLayout.setOnClickListener(this);
+
+        mReferralTextView.setText(referralCode);
     }
 
-    private void updateSocialUserInformation(String userType, String email, String name, String phone, String birthday)
+    private void updateSocialUserInformation(String userType, String email, String name, String phone, String birthday, String referralCode)
     {
         // 이메일
         if (Util.isTextEmpty(email) == true)
@@ -239,6 +250,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         // 패스워드
         mPasswordLayout.setVisibility(View.GONE);
         mPasswordUnderLine.setVisibility(View.GONE);
+
+        mReferralTextView.setText(referralCode);
     }
 
     @Override
@@ -274,6 +287,10 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
             case R.id.logoutView:
                 ((OnEventListener) mOnEventListener).doSignOut();
+                break;
+
+            case R.id.codeCopyView:
+                ((OnEventListener) mOnEventListener).doCodeCopy(mReferralTextView.getText().toString());
                 break;
         }
     }
