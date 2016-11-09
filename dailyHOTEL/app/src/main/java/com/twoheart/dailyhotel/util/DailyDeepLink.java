@@ -56,6 +56,8 @@ public class DailyDeepLink
     private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet
     private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
+    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
+
     private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
     private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
     private static final String VALUE_V4_SORTING_SATISFACTION = "r";
@@ -95,8 +97,9 @@ public class DailyDeepLink
     private static final String PROFILE_V8 = "pr"; // 프로필 화면
     private static final String PROFILE_BIRTHDAY_V8 = "prbd"; // 프로픨 화면 생일 정보 입력
     private static final String TERMS_N_POLICY_V8 = "tnp"; // 약관 및 정책
-    //    private static final String WISHLIST_HOTEL_V8 = "wlh"; // 위시리스트 호텔
-    //    private static final String WISHLIST_GOURMET_V8 = "wlg"; // 위시리스트 고메
+
+    private static final String WISHLIST_HOTEL_V9 = "wlh"; // 위시리스트 호텔
+    private static final String WISHLIST_GOURMET_V9 = "wlg"; // 위시리스트 고메
 
 
     private static final String V3 = "3";
@@ -105,6 +108,7 @@ public class DailyDeepLink
     private static final String V6 = "6";
     private static final String V7 = "7";
     private static final String V8 = "8";
+    private static final String V9 = "9";
 
     private static DailyDeepLink mInstance;
 
@@ -190,6 +194,11 @@ public class DailyDeepLink
                 case V8:
                     mVersionCode = 8;
                     decodingLinkV8(uri);
+                    break;
+
+                case V9:
+                    mVersionCode = 9;
+                    decodingLinkV9(uri);
                     break;
 
                 default:
@@ -648,31 +657,31 @@ public class DailyDeepLink
         }
     }
 
-    //    public boolean isWishlistHotelView()
-    //    {
-    //        String view = getView();
-    //
-    //        if (mVersionCode >= 8)
-    //        {
-    //            return WISHLIST_HOTEL_V8.equalsIgnoreCase(view);
-    //        } else
-    //        {
-    //            return false;
-    //        }
-    //    }
-    //
-    //    public boolean isWishlistGourmetView()
-    //    {
-    //        String view = getView();
-    //
-    //        if (mVersionCode >= 8)
-    //        {
-    //            return WISHLIST_GOURMET_V8.equalsIgnoreCase(view);
-    //        } else
-    //        {
-    //            return false;
-    //        }
-    //    }
+    public boolean isWishlistHotelView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 8)
+        {
+            return WISHLIST_HOTEL_V9.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
+    public boolean isWishlistGourmetView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 8)
+        {
+            return WISHLIST_GOURMET_V9.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
 
     public String getIndex()
     {
@@ -1047,6 +1056,18 @@ public class DailyDeepLink
         }
 
         return noticeIndex;
+    }
+
+    private boolean decodingLinkV9(Uri uri)
+    {
+        if (decodingLinkV8(uri) == false)
+        {
+            return false;
+        }
+
+        putParams(uri, PARAM_V9_QUERY);
+
+        return true;
     }
 
     private boolean decodingLinkV8(Uri uri)
