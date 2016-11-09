@@ -50,6 +50,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
     private Handler mHandler = new Handler();
+    private int mResultCode;
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -161,10 +162,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
      */
     public void setResultCode(int resultCode)
     {
-        if (Util.isUsedMutilTransition() == true && resultCode == CODE_RESULT_ACTIVITY_REFRESH)
-        {
-            getWindow().setSharedElementReturnTransition(null);
-        }
+        mResultCode = resultCode;
 
         setResult(resultCode);
     }
@@ -174,6 +172,20 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mPlaceDetailLayout != null)
         {
+            switch (mPlaceDetailLayout.getBookingStatus())
+            {
+                case StayDetailLayout.STATUS_BOOKING:
+                case StayDetailLayout.STATUS_NONE:
+                    hideProductInformationLayout();
+                    return;
+            }
+
+            if (Util.isUsedMutilTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+            {
+                finish();
+                return;
+            }
+
             if (Util.isOverAPI21() == true)
             {
                 if (mPlaceDetailLayout.isListScrollTop() == true)
@@ -194,14 +206,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     return;
                 }
-            }
-
-            switch (mPlaceDetailLayout.getBookingStatus())
-            {
-                case StayDetailLayout.STATUS_BOOKING:
-                case StayDetailLayout.STATUS_NONE:
-                    hideProductInformationLayout();
-                    return;
             }
         }
 
