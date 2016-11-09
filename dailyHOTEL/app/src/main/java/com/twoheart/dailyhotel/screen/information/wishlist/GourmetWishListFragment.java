@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -114,6 +115,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
 
             int removePosition = -1;
             int size = mListLayout.getList().size();
+            String placeName = "";
 
             for (int i = 0; i < size; i++)
             {
@@ -132,6 +134,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 if (placeIndex == place.index)
                 {
                     removePosition = i;
+                    placeName = place.name;
                     break;
                 }
             }
@@ -142,10 +145,10 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mListLayout.notifyDataSetChanged();
             }
 
-            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-            //                AnalyticsManager.Category.NAVIGATION, //
-            //                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-            //                place.name, null);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.WISHLIST_DELETE, //
+                placeName, null);
         }
 
         @Override
@@ -235,10 +238,10 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
             }
 
-            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-            //                AnalyticsManager.Category.NAVIGATION, //
-            //                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-            //                gourmet.name, null);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.WISHLIST_CLICKED, //
+                gourmet.name, null);
         }
 
         @Override

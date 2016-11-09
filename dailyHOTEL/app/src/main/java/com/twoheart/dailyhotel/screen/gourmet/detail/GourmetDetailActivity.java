@@ -977,6 +977,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishListButtonCount(++mPlaceDetail.wishCount);
                 mPlaceDetailLayout.setWishListButtonSelected(true);
                 mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, null);
             } else
             {
                 mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
@@ -1005,6 +1009,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishListButtonCount(--mPlaceDetail.wishCount);
                 mPlaceDetailLayout.setWishListButtonSelected(false);
                 mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, null);
             } else
             {
                 mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);

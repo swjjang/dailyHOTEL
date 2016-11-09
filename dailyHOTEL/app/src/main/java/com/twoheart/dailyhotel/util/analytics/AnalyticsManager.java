@@ -759,6 +759,13 @@ public class AnalyticsManager
         public static final String RECENT_VIEW_CLICKED = "RecentViewClicked";
         public static final String RECENT_VIEW_DELETE = "RecentViewDelete";
         public static final String RECENT_VIEW_TAB_CHANGE = "RecentViewTabChange";
+
+        public static final String WISHLIST_CLICKED = "WishListClicked";
+        public static final String WISHLIST_DELETE = "WishListDelete";
+        public static final String WISHLIST_TAB_CHANGE = "WishListTabChange";
+        public static final String WISHLIST_ON = "WishListOn";
+        public static final String WISHLIST_OFF = "WishListOff";
+        public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
     }
 
     public static class Category
