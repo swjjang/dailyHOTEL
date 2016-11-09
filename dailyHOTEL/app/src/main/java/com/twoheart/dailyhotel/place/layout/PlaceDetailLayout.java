@@ -135,6 +135,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void setWishList(boolean isAdded, int placeIndex);
 
         void onWishListButtonClick();
+
+        void releaseUiComponent();
     }
 
     protected abstract String getProductTypeTitle();
@@ -759,6 +761,25 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
     }
 
+    public int getWishListButtonCount()
+    {
+        int count = 0;
+
+        if (mWishListButtonTextView != null)
+        {
+            String buttonText = mWishListButtonTextView.getText().toString();
+            try
+            {
+                count = Integer.parseInt(buttonText);
+            } catch (Exception e)
+            {
+                count = 0;
+            }
+        }
+
+        return count;
+    }
+
     public void startWishListButtonClick()
     {
         if (mWishListButtonTextView == null)
@@ -770,7 +791,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
         if (tag != null && tag instanceof Boolean)
         {
             boolean isSelected = (boolean) tag;
+            int wishCount = getWishListButtonCount();
+            wishCount = isSelected == true ? wishCount++ : wishCount--;
+
             ExLog.d("wishList button click : " + !isSelected);
+            setWishListButtonCount(wishCount);
             setWishListButtonSelected(!isSelected);
             ((OnEventListener) mOnEventListener).setWishList(!isSelected, mPlaceDetail.index);
         }
@@ -778,8 +803,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setWishListPopup(final WishListPopupState state)
     {
-
-
         if (WishListPopupState.GONE == state)
         {
             mWishListPopupTextView.setVisibility(View.GONE);
@@ -848,12 +871,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 public void onAnimationEnd(Animator animation)
                 {
                     mWishListPopupTextView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
                     mWishListPopupTextView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
                 @Override

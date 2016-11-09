@@ -851,8 +851,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
             } else
             {
+                if (isLockUiComponent() == true || isFinishing() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
                 mPlaceDetailLayout.startWishListButtonClick();
             }
+        }
+
+        @Override
+        public void releaseUiComponent()
+        {
+            GourmetDetailActivity.this.releaseUiComponent();
         }
     };
 
@@ -958,16 +971,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             if (isSuccess == true)
             {
+                mPlaceDetail.myWish = true;
+                mPlaceDetailLayout.setWishListButtonCount(++mPlaceDetail.wishCount);
                 mPlaceDetailLayout.setWishListButtonSelected(true);
                 mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
             } else
             {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
                 mPlaceDetailLayout.setWishListButtonSelected(false);
 
                 if (Util.isTextEmpty(message) == true)
                 {
                     message = "";
                 }
+
+                releaseUiComponent();
 
                 showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
                     , getResources().getString(R.string.dialog_btn_text_confirm), null);
@@ -979,16 +997,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             if (isSuccess == true)
             {
+                mPlaceDetail.myWish = false;
+                mPlaceDetailLayout.setWishListButtonCount(--mPlaceDetail.wishCount);
                 mPlaceDetailLayout.setWishListButtonSelected(false);
                 mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
             } else
             {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
                 mPlaceDetailLayout.setWishListButtonSelected(true);
 
                 if (Util.isTextEmpty(message) == true)
                 {
                     message = "";
                 }
+
+                releaseUiComponent();
 
                 showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
                     , getResources().getString(R.string.dialog_btn_text_confirm), null);

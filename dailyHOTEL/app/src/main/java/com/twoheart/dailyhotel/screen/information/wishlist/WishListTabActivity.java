@@ -156,7 +156,7 @@ public class WishListTabActivity extends BaseActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.frag_recent_places), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_wishList), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

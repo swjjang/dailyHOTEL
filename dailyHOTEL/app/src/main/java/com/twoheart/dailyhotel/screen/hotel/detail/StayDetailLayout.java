@@ -79,8 +79,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         if (stayDetail == null)
         {
             setLineIndicatorVisible(false);
-            setWishListButtonSelected(false);
             setWishListButtonCount(0);
+            setWishListButtonSelected(false);
             return;
         }
 
