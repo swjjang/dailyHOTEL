@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.information.recentplace;
+package com.twoheart.dailyhotel.screen.information.wishlist;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,41 +11,40 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
-public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-
     protected Context mContext;
     protected LayoutInflater mInflater;
-    private ArrayList<? extends Place> mList;
-    protected OnRecentPlacesItemListener mListener;
+    protected ArrayList<PlaceViewItem> mList;
+    protected OnPlaceWishListItemListener mListener;
 
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
 
-    public interface OnRecentPlacesItemListener
+    public interface OnPlaceWishListItemListener
     {
         void onItemClick(View view);
 
-        void onDeleteClick(View view, int position);
+        void onItemRemoveClick(View view, int position);
     }
 
-    public RecentPlacesListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
+    public PlaceWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         mContext = context;
 
         if (list == null)
         {
-            throw new IllegalArgumentException("Recent Place list must not be null");
+            throw new IllegalArgumentException("Wishlist must not be null");
         }
 
         mList = list;
@@ -56,17 +55,17 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         makeShaderFactory();
     }
 
-    public ArrayList<? extends Place> getList()
+    public ArrayList<PlaceViewItem> getList()
     {
         return mList != null ? mList : null;
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<PlaceViewItem> list)
     {
         mList = list;
     }
 
-    public Place getItem(int position)
+    public PlaceViewItem getItem(int position)
     {
         if (mList == null || mList.size() == 0)
         {
@@ -76,7 +75,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         return mList.get(position);
     }
 
-    public Place removeItem(int position)
+    public PlaceViewItem remove(int position)
     {
         if (mList == null || mList.size() == 0)
         {
@@ -89,7 +88,14 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public int getItemCount()
     {
-        return mList != null ? mList.size() : 0;
+        // PlaceViewItem 이기에 footer개수 만큼 빼줌
+        return mList != null && mList.size() > 0 ? mList.size() - 1 : 0;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return mList.get(position).mType;
     }
 
     private void makeShaderFactory()

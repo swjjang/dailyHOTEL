@@ -473,6 +473,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
+            android:name=".screen.information.wishlist.WishListTabActivity"
+            android:launchMode="singleTop"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"/>
+        <activity
             android:name=".screen.common.ExitActivity"
             android:autoRemoveFromRecents="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -535,7 +541,6 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyACc8hv-TecbnEBvl8Z758hBMP1ssqo4gQ"/>

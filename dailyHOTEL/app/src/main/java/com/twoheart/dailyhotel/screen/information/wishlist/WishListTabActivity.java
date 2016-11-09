@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.information.recentplace;
+package com.twoheart.dailyhotel.screen.information.wishlist;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,12 +9,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -26,33 +26,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by android_sam on 2016. 10. 10..
+ * Created by android_sam on 2016. 11. 1..
  */
 
-public class RecentPlacesTabActivity extends BaseActivity
+public class WishListTabActivity extends BaseActivity
 {
-    private RecentPlaces mRecentStayPlaces;
-    private RecentPlaces mRecentGourmetPlaces;
-    private ArrayList<RecentPlacesListFragment> mFragmentList;
+    private ArrayList<PlaceWishListFragment> mFragmentList;
+    private WishListFragmentPageAdapter mPageAdapter;
 
-    private RecentStayListFragment mRecentStayListFragment;
-    private RecentGourmetListFragment mRecentGourmetListFragment;
-
-    private RecentPlacesFragmentPagerAdapter mPageAdapter;
-
-    private RecentPlacesNetworkController mNetworkController;
+    private WishListTabNetworkController mNetworkController;
 
     private DailyViewPager mViewPager;
     private TabLayout mTabLayout;
-    private View mEmptyView;
+    private View mLoginView;
+    private View mLoginButtonView;
 
     private PlaceType mPlaceType;
 
-    private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
+    private boolean mDontReloadAtOnResume;
 
     public static Intent newInstance(Context context, PlaceType placeType)
     {
-        Intent intent = new Intent(context, RecentPlacesTabActivity.class);
+        Intent intent = new Intent(context, WishListTabActivity.class);
 
         if (placeType != null)
         {
@@ -61,6 +56,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         return intent;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -68,15 +64,9 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_recent_places);
+        setContentView(R.layout.activity_wishlist);
 
-        mNetworkController = new RecentPlacesNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
-
-        String stayString = DailyPreference.getInstance(this).getStayRecentPlaces();
-        mRecentStayPlaces = new RecentPlaces(stayString);
-
-        String gourmetString = DailyPreference.getInstance(this).getGourmetRecentPlaces();
-        mRecentGourmetPlaces = new RecentPlaces(gourmetString);
+        mNetworkController = new WishListTabNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         initIntent(getIntent());
 
@@ -86,14 +76,23 @@ public class RecentPlacesTabActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        if (mDontReloadAtOnResume == true)
+        if (DailyHotel.isLogin() == false)
         {
-            mDontReloadAtOnResume = false;
+            setLoginViewVisibility(View.VISIBLE);
         } else
         {
-            lockUI();
-            mNetworkController.requestCommonDateTime();
+            setLoginViewVisibility(View.GONE);
+
+            if (mDontReloadAtOnResume == true)
+            {
+                mDontReloadAtOnResume = false;
+            } else
+            {
+                lockUI();
+                mNetworkController.requestCommonDateTime();
+            }
         }
+
 
         super.onResume();
     }
@@ -132,31 +131,32 @@ public class RecentPlacesTabActivity extends BaseActivity
         initToolbar();
         initTabLayout();
 
-        mEmptyView = findViewById(R.id.emptyLayout);
+        mLoginView = findViewById(R.id.loginLayout);
+        mLoginButtonView = findViewById(R.id.loginButtonView);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
 
         mFragmentList = new ArrayList<>();
 
-        mRecentStayListFragment = new RecentStayListFragment();
-        mRecentStayListFragment.setRecentPlaces(mRecentStayPlaces);
-        mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
+        StayWishListFragment stayWishListFragment = new StayWishListFragment();
+        stayWishListFragment.setWishListFragmentListener(mWishListFragmentListener);
 
-        mFragmentList.add(mRecentStayListFragment);
+        mFragmentList.add(stayWishListFragment);
 
-        mRecentGourmetListFragment = new RecentGourmetListFragment();
-        mRecentGourmetListFragment.setRecentPlaces(mRecentGourmetPlaces);
-        mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
+        GourmetWishListFragment gourmetWishListFragment = new GourmetWishListFragment();
+        gourmetWishListFragment.setWishListFragmentListener(mWishListFragmentListener);
 
-        mFragmentList.add(mRecentGourmetListFragment);
+        mFragmentList.add(gourmetWishListFragment);
 
-        mPageAdapter = new RecentPlacesFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList);
+        mPageAdapter = new WishListFragmentPageAdapter(getSupportFragmentManager(), mFragmentList);
+
+        mLoginButtonView.setOnClickListener(mLoginButtonClickListener);
     }
 
     private void initToolbar()
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.frag_recent_places), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_wishList), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -182,28 +182,42 @@ public class RecentPlacesTabActivity extends BaseActivity
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
     }
 
-    private void setTabLayout()
+    private void setTabLayout(int stayCount, int gourmetCount)
     {
         int position = 0;
 
+        if (mFragmentList != null)
+        {
+            for (PlaceWishListFragment fragment : mFragmentList)
+            {
+                if (PlaceType.FNB.equals(fragment.getPlaceType()) == true)
+                {
+                    fragment.setWishListCount(gourmetCount);
+                } else
+                {
+                    fragment.setWishListCount(stayCount);
+                }
+            }
+        }
+
         if (mPlaceType != null)
         {
-            // deeplink type
+            // deep link
             if (PlaceType.FNB.equals(mPlaceType) == true)
             {
                 position = 1;
             }
 
-            // deeplink 로 인한 처리 후 초기화
+            // deep link 후 초기화
             mPlaceType = null;
         } else
         {
-            if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
+            if (stayCount == 0 && gourmetCount == 0)
             {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
             } else
             {
-                if (isEmptyRecentStayPlace() == true)
+                if (stayCount == 0)
                 {
                     position = 1;
                 }
@@ -214,7 +228,7 @@ public class RecentPlacesTabActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
 
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
+                //                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
             }
         }
 
@@ -228,14 +242,9 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.setCurrentItem(position);
     }
 
-    private boolean isEmptyRecentStayPlace()
+    private void setLoginViewVisibility(int visibility)
     {
-        return mRecentStayPlaces == null || mRecentStayPlaces.size() == 0;
-    }
-
-    private boolean isEmptyRecentGourmetPlace()
-    {
-        return mRecentGourmetPlaces == null || mRecentGourmetPlaces.size() == 0;
+        mLoginView.setVisibility(visibility);
     }
 
     @Override
@@ -250,6 +259,12 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         switch (requestCode)
         {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                mDontReloadAtOnResume = false;
+                break;
+            }
+
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             {
@@ -260,6 +275,24 @@ public class RecentPlacesTabActivity extends BaseActivity
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     finish();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    PlaceType placeType;
+                    if (requestCode == CODE_REQUEST_ACTIVITY_PLACE_DETAIL)
+                    {
+                        placeType = PlaceType.FNB;
+                    } else
+                    {
+                        placeType = PlaceType.HOTEL;
+                    }
+
+                    for (PlaceWishListFragment fragment : mFragmentList)
+                    {
+                        if (placeType.equals(fragment.getPlaceType()) == true)
+                        {
+                            fragment.forceRefreshList();
+                        }
+                    }
                 }
                 break;
             }
@@ -268,6 +301,21 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void startLogin()
+    {
+        Intent intent = LoginActivity.newInstance(this, null);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+    }
+
+    private View.OnClickListener mLoginButtonClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            startLogin();
+        }
+    };
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
@@ -279,10 +327,10 @@ public class RecentPlacesTabActivity extends BaseActivity
                 mViewPager.setCurrentItem(tab.getPosition(), true);
             }
 
-            AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENT_VIEW_TAB_CHANGE, //
-                tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
+            //            AnalyticsManager.getInstance(WishListTabActivity.this).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, //
+            //                AnalyticsManager.Action.RECENT_VIEW_TAB_CHANGE, //
+            //                tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
         }
 
         @Override
@@ -298,32 +346,35 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
     };
 
-    private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
+    private PlaceWishListFragment.OnWishListFragmentListener mWishListFragmentListener = new PlaceWishListFragment.OnWishListFragmentListener()
     {
         @Override
-        public void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces)
+        public void onRemoveItemClick(PlaceType placeType, int position)
         {
-            if (PlaceType.FNB.equals(placeType) == true)
+            if (mFragmentList == null)
             {
-                mRecentGourmetPlaces = recentPlaces;
+                return;
             }
 
-            if (PlaceType.HOTEL.equals(placeType) == true)
+            int totalCount = 0;
+
+            for (PlaceWishListFragment fragment : mFragmentList)
             {
-                mRecentStayPlaces = recentPlaces;
+                PlaceWishListLayout placeWishListLayout = fragment.getListLayout();
+                if (placeWishListLayout != null)
+                {
+                    totalCount += placeWishListLayout.getItemCount();
+                }
             }
 
-            int stayCount = mRecentStayPlaces.size();
-            int gourmetCount = mRecentGourmetPlaces.size();
-
-            if (stayCount == 0 && gourmetCount == 0)
+            if (totalCount == 0)
             {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+                //                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
             }
         }
     };
 
-    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
+    private WishListTabNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new WishListTabNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onCommonDateTime(long currentDateTime, long dailyDateTime)
@@ -335,38 +386,44 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             if (mFragmentList != null)
             {
-                for (RecentPlacesListFragment fragment : mFragmentList)
+                for (PlaceWishListFragment fragment : mFragmentList)
                 {
                     fragment.setSaleTime(saleTime);
                 }
             }
 
-            setTabLayout();
+            mNetworkController.requestWishListCount();
+        }
+
+        @Override
+        public void onWishListCount(int stayCount, int gourmetCount)
+        {
+            WishListTabActivity.this.setTabLayout(stayCount, gourmetCount);
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            RecentPlacesTabActivity.this.onErrorResponse(volleyError);
+            WishListTabActivity.this.onErrorResponse(volleyError);
             finish();
         }
 
         @Override
         public void onError(Exception e)
         {
-            RecentPlacesTabActivity.this.onError(e);
+            WishListTabActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            RecentPlacesTabActivity.this.onErrorPopupMessage(msgCode, message);
+            WishListTabActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            RecentPlacesTabActivity.this.onErrorToastMessage(message);
+            WishListTabActivity.this.onErrorToastMessage(message);
             finish();
         }
     };

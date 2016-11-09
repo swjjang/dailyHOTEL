@@ -263,6 +263,20 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     break;
                 }
 
+                case CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST:
+                {
+                    mDontReloadAtOnResume = false;
+
+                    if (requestCode == RESULT_OK)
+                    {
+                        // 호텔 정보  고메 정보를 다시 가져와야 함으로 위시리스트 버튼 클릭 이벤트는 동작하지 않도록 함!
+                        //                        if (mPlaceDetailLayout != null)
+                        //                        {
+                        //                            mPlaceDetailLayout.startWishListButtonClick();
+                        //                        }
+                    }
+                }
+
                 case CODE_REQUEST_ACTIVITY_IMAGELIST:
                 case CODE_REQUEST_ACTIVITY_ZOOMMAP:
                 case CODE_REQUEST_ACTIVITY_SHAREKAKAO:

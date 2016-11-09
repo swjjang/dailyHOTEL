@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.information.recentplace;
+package com.twoheart.dailyhotel.screen.information.wishlist;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -6,47 +6,43 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 
 /**
- * Created by android_sam on 2016. 10. 13..
+ * Created by android_sam on 2016. 11. 1..
  */
 
-public abstract class RecentPlacesListLayout extends BaseLayout
+public abstract class PlaceWishListLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
     private View mEmptyLayout;
-    private DailyImageView mEmptyImageView;
-    private DailyTextView mEmptyTextView;
-    private DailyTextView mEmptyButtonTextView;
-    private RecentPlacesListAdapter mListAdapter;
+    private DailyTextView mEmptyMessageView;
+    private DailyTextView mEmptyButtonView;
+    private PlaceWishListAdapter mListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onListItemClick(View view, int position);
 
-        void onListItemDeleteClick(int position);
+        void onListItemRemoveClick(int position);
 
         void onEmptyButtonClick();
     }
 
-    protected abstract int getEmptyTextResId();
-
-    protected abstract int getEmptyImageResId();
+    protected abstract int getEmptyMessageResId();
 
     protected abstract int getEmptyButtonTextResId();
 
-    protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
-        , ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
+    protected abstract PlaceWishListAdapter getWishListAdapter(Context context //
+        , ArrayList<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
 
-    public RecentPlacesListLayout(Context context, OnBaseEventListener listener)
+    public PlaceWishListLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -57,13 +53,13 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 
-        mEmptyImageView = (DailyImageView) view.findViewById(R.id.emptyImageView);
-        mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
-        mEmptyTextView.setText(getEmptyTextResId());
-        mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.buttonView);
-        mEmptyButtonTextView.setText(getEmptyButtonTextResId());
+        mEmptyMessageView = (DailyTextView) view.findViewById(R.id.messageTextView02);
+        mEmptyButtonView = (DailyTextView) view.findViewById(R.id.buttonView);
 
-        mEmptyButtonTextView.setOnClickListener(new View.OnClickListener()
+        mEmptyMessageView.setText(getEmptyMessageResId());
+        mEmptyButtonView.setText(getEmptyButtonTextResId());
+
+        mEmptyButtonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -71,14 +67,6 @@ public abstract class RecentPlacesListLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onEmptyButtonClick();
             }
         });
-
-        int imageResId = getEmptyImageResId();
-        if (imageResId <= 0)
-        {
-            imageResId = R.drawable.no_event_ic;
-        }
-
-        mEmptyImageView.setVectorImageResource(imageResId);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
@@ -90,13 +78,18 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<PlaceViewItem> list)
+    {
+        setData(list, true);
+    }
+
+    public void setData(ArrayList<PlaceViewItem> list, boolean isShowEmpty)
     {
         if (list == null || list.size() == 0)
         {
             list = new ArrayList<>();
 
-            setEmptyViewVisibility(View.VISIBLE);
+            setEmptyViewVisibility(isShowEmpty == true ? View.VISIBLE : View.GONE);
         } else
         {
             setEmptyViewVisibility(View.GONE);
@@ -104,7 +97,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = getRecentPlacesListAdapter(mContext, list, mItemListener);
+            mListAdapter = getWishListAdapter(mContext, list, mItemListener);
             mRecyclerView.setAdapter(mListAdapter);
         } else
         {
@@ -113,19 +106,24 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         }
     }
 
-    public ArrayList<? extends Place> getList()
+    public ArrayList<PlaceViewItem> getList()
     {
         return mListAdapter != null ? mListAdapter.getList() : null;
     }
 
-    public Place getItem(int position)
+    public int getItemCount()
+    {
+        return mListAdapter != null ? mListAdapter.getItemCount() : null;
+    }
+
+    public PlaceViewItem getItem(int position)
     {
         return mListAdapter != null ? mListAdapter.getItem(position) : null;
     }
 
-    public Place removeItem(int position)
+    public PlaceViewItem removeItem(int position)
     {
-        return mListAdapter != null ? mListAdapter.removeItem(position) : null;
+        return mListAdapter != null ? mListAdapter.remove(position) : null;
     }
 
     public void notifyDataSetChanged()
@@ -136,15 +134,15 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         }
     }
 
-    private void setEmptyViewVisibility(int visibility)
+    private void setEmptyViewVisibility(int visiblility)
     {
         if (mEmptyLayout != null)
         {
-            mEmptyLayout.setVisibility(visibility);
+            mEmptyLayout.setVisibility(visiblility);
         }
     }
 
-    private RecentPlacesListAdapter.OnRecentPlacesItemListener mItemListener = new RecentPlacesListAdapter.OnRecentPlacesItemListener()
+    private PlaceWishListAdapter.OnPlaceWishListItemListener mItemListener = new PlaceWishListAdapter.OnPlaceWishListItemListener()
     {
         @Override
         public void onItemClick(View view)
@@ -152,7 +150,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-//                ((OnEventListener) mOnEventListener).onListItemClick(view, position); // ????
+                //                ((OnEventListener) mOnEventListener).onListItemClick(view, position); // ????
                 return;
             }
 
@@ -160,10 +158,9 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         }
 
         @Override
-        public void onDeleteClick(View view, int position)
+        public void onItemRemoveClick(View view, int position)
         {
-            ((OnEventListener) mOnEventListener).onListItemDeleteClick(position);
+            ((OnEventListener) mOnEventListener).onListItemRemoveClick(position);
         }
     };
-
 }
