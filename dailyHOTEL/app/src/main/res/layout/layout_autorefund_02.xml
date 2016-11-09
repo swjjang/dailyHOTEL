@@ -39,9 +39,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_margin="15dp"
         android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
         android:orientation="vertical"
         android:paddingLeft="10dp"

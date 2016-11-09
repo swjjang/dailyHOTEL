@@ -72,7 +72,7 @@
                 android:id="@+id/requestRefundView"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/selector_button_default_background"
                 android:gravity="center"
                 android:text="@string/label_request_free_refund"

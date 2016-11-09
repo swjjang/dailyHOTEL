@@ -1,37 +1,18 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
-import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +34,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
 
     public void requestBankList()
     {
-        final String bankList = "[\n" +
+        final String bankList = "{msgCode=100, data=[\n" +
             "    {\n" +
             "        \"code\" : \"02\",\n" +
             "        \"name\" : \"한국산업은행\"\n" +
@@ -170,7 +151,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
             "        \"code\" : \"88\",\n" +
             "        \"name\" : \"신한은행\"\n" +
             "    }\n" +
-            "]";
+            "]}";
 
 
         try
@@ -186,7 +167,25 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
 
+                JSONArray jsonArray = response.getJSONArray("data");
+                int length = jsonArray.length();
+
+                List<Bank> bankList = new ArrayList<>(length);
+
+                for (int i = 0; i < length; i++)
+                {
+                    bankList.add(new Bank(jsonArray.getJSONObject(i)));
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onBankList(bankList);
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
         }
 
         @Override

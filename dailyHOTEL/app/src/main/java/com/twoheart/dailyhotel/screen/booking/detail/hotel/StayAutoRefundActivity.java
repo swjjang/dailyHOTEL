@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -150,11 +151,6 @@ public class StayAutoRefundActivity extends BaseActivity
 
         final ScrollView scrollView = (ScrollView) dialogView.findViewById(R.id.scrollView);
 
-        // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setVisibility(View.VISIBLE);
-        titleTextView.setText(R.string.label_select_cancel_refund);
-
         //
         final View cancelRefundView01 = dialogView.findViewById(R.id.cancelRefundView01);
         final View cancelRefundView02 = dialogView.findViewById(R.id.cancelRefundView02);
@@ -168,7 +164,7 @@ public class StayAutoRefundActivity extends BaseActivity
         cancelRefundView03.setTag(3);
         cancelRefundView04.setTag(4);
         cancelRefundView05.setTag(5);
-        cancelRefundView05.setTag(6);
+        cancelRefundView06.setTag(6);
 
         final DailyEditText messageEditText = (DailyEditText) dialogView.findViewById(R.id.messageEditText);
         final TextView messageCountTextView = (TextView) dialogView.findViewById(R.id.messageCountTextView);
@@ -390,23 +386,18 @@ public class StayAutoRefundActivity extends BaseActivity
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         mDialog.setCanceledOnTouchOutside(false);
 
-        // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setVisibility(View.VISIBLE);
-        titleTextView.setText(R.string.label_select_cancel_refund);
-
         //
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
-
-        recyclerView.setAdapter(new BankListAdapter(this, bankList));
-
-        recyclerView.add
+        final BankListAdapter bankListAdapter = new BankListAdapter(this, bankList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        bankListAdapter.setSelectedBank(bank);
 
         // 버튼
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
 
         TextView negativeTextView = (TextView) buttonLayout.findViewById(R.id.negativeTextView);
         final TextView positiveTextView = (TextView) buttonLayout.findViewById(R.id.positiveTextView);
+        positiveTextView.setEnabled(false);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -417,8 +408,6 @@ public class StayAutoRefundActivity extends BaseActivity
                 {
                     mDialog.dismiss();
                 }
-
-
             }
         });
 
@@ -432,8 +421,17 @@ public class StayAutoRefundActivity extends BaseActivity
                     mDialog.dismiss();
                 }
 
+                setSelectedBankResult(bankListAdapter.getSelectedBank());
+            }
+        });
 
-//                setSelectedBankResult()
+        recyclerView.setAdapter(bankListAdapter);
+        bankListAdapter.setOnItemClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                positiveTextView.setEnabled(true);
             }
         });
 
