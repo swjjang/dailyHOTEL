@@ -184,12 +184,12 @@ public class MainActivity extends BaseActivity implements Constants
 
         mTooltipLayout = findViewById(R.id.tooltipLayout);
 
-        if (DailyPreference.getInstance(this).isViewRecentPlaceTooltip() == true)
+        if (DailyPreference.getInstance(this).isViewWishListTooltip() == true)
         {
             hideAnimationTooltip();
         } else
         {
-            DailyPreference.getInstance(this).setIsViewRecentPlaceTooltip(true);
+            DailyPreference.getInstance(this).setIsViewWishListTooltip(true);
             mTooltipLayout.setVisibility(View.VISIBLE);
             mTooltipLayout.setOnClickListener(new View.OnClickListener()
             {
