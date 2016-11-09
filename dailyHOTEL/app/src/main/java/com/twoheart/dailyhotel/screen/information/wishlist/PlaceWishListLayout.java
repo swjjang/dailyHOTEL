@@ -80,11 +80,16 @@ public abstract class PlaceWishListLayout extends BaseLayout
 
     public void setData(ArrayList<PlaceViewItem> list)
     {
+        setData(list, true);
+    }
+
+    public void setData(ArrayList<PlaceViewItem> list, boolean isShowEmpty)
+    {
         if (list == null || list.size() == 0)
         {
             list = new ArrayList<>();
 
-            setEmptyViewVisibility(View.VISIBLE);
+            setEmptyViewVisibility(isShowEmpty == true ? View.VISIBLE : View.GONE);
         } else
         {
             setEmptyViewVisibility(View.GONE);

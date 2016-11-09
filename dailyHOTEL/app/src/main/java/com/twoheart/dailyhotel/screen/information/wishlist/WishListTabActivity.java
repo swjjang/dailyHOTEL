@@ -275,6 +275,24 @@ public class WishListTabActivity extends BaseActivity
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     finish();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    PlaceType placeType;
+                    if (requestCode == CODE_REQUEST_ACTIVITY_PLACE_DETAIL)
+                    {
+                        placeType = PlaceType.FNB;
+                    } else
+                    {
+                        placeType = PlaceType.HOTEL;
+                    }
+
+                    for (PlaceWishListFragment fragment : mFragmentList)
+                    {
+                        if (placeType.equals(fragment.getPlaceType()) == true)
+                        {
+                            fragment.forceRefreshList();
+                        }
+                    }
                 }
                 break;
             }

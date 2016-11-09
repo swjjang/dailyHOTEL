@@ -102,9 +102,11 @@ public abstract class PlaceWishListFragment extends BaseFragment
         mSaleTime = saleTime;
     }
 
-    public void setDontReloadAtOnResume(boolean dontReloadAtOnResume)
+    public void forceRefreshList()
     {
-        mDontReloadAtOnResume = dontReloadAtOnResume;
+        mListLayout.setData(null, false);
+        mDontReloadAtOnResume = false;
+        onResume();
     }
 
     public void setWishListCount(int count)
