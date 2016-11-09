@@ -1132,7 +1132,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorResponse(volleyError);
             finish();
         }
@@ -1140,14 +1140,14 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onError(Exception e)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
             // 판매 마감시
             if (msgCode == 5)
@@ -1162,7 +1162,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorToastMessage(String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorToastMessage(message);
             finish();
         }
@@ -1180,7 +1180,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
-                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
                         }
                     });
 
@@ -1210,7 +1210,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     if (hasPrice == false)
                     {
-                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
                         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
                             , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

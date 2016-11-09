@@ -287,6 +287,7 @@ public interface Constants
     public static final int CODE_RESULT_ACTIVITY_REFRESH = 305;
     public static final int CODE_RESULT_ACTIVITY_STAY_LIST = 306;
     public static final int CODE_RESULT_ACTIVITY_GOURMET_LIST = 307;
+    public static final int CODE_RESULT_ACTIVITY_STAY_AUTOREFUND = 308;
 
     // 예약 리스트에서
     public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;

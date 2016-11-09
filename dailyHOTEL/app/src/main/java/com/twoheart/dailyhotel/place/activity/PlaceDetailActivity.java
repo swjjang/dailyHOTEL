@@ -154,6 +154,21 @@ public abstract class PlaceDetailActivity extends BaseActivity
         super.onResume();
     }
 
+    /**
+     * 이전화면이 갱신되어야 하면 Transition 효과를 주지 않도록 한다.
+     *
+     * @param resultCode
+     */
+    public void setResultCode(int resultCode)
+    {
+        if (Util.isUsedMutilTransition() == true && resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+        {
+            getWindow().setSharedElementReturnTransition(null);
+        }
+
+        setResult(resultCode);
+    }
+
     @Override
     public void onBackPressed()
     {
@@ -204,7 +219,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 case CODE_REQUEST_ACTIVITY_BOOKING:
                 {
-                    setResult(resultCode);
+                    setResultCode(resultCode);
 
                     switch (resultCode)
                     {
