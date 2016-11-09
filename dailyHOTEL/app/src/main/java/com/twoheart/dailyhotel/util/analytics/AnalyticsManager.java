@@ -607,6 +607,10 @@ public class AnalyticsManager
 
         public static final String MENU_RECENT_VIEW = "Menu_RecentView";
         public static final String MENU_RECENT_VIEW_EMPTY = "Menu_RecentView_Empty";
+
+        public static final String MENU_WISHLIST = "Menu_WishList";
+        public static final String MENU_WISHLIST_EMPTY = "Menu_WishList_Empty";
+        public static final String MENU_WISHLIST_BEFORELOGIN = "Menu_WishList_BeforeLogin";
     }
 
     public static class Action

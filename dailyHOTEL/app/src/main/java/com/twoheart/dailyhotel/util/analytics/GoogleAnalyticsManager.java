@@ -161,7 +161,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
         {
             recordScreen(screen);
-        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screen) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 

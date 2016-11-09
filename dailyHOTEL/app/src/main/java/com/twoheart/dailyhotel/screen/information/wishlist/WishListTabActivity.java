@@ -214,7 +214,7 @@ public class WishListTabActivity extends BaseActivity
         {
             if (stayCount == 0 && gourmetCount == 0)
             {
-                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST_EMPTY);
             } else
             {
                 if (stayCount == 0)
@@ -228,7 +228,7 @@ public class WishListTabActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
 
-                //                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
+                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST, params);
             }
         }
 
@@ -245,6 +245,11 @@ public class WishListTabActivity extends BaseActivity
     private void setLoginViewVisibility(int visibility)
     {
         mLoginView.setVisibility(visibility);
+
+        if (View.VISIBLE == visibility)
+        {
+            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST_BEFORELOGIN);
+        }
     }
 
     @Override
