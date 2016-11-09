@@ -1076,7 +1076,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onAddWishList(boolean isSuccess, String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
             if (isSuccess == true)
             {
@@ -1104,7 +1104,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onRemoveWishList(boolean isSuccess, String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
             if (isSuccess == true)
             {
