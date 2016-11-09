@@ -78,6 +78,25 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode)
+        {
+            case CODE_RESULT_ACTIVITY_STAY_AUTOREFUND:
+            {
+                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
     protected void showCallDialog()
     {
         if (isFinishing())
