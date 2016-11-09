@@ -879,8 +879,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isTermsNPolicyView() == true//
                     || DailyDeepLink.getInstance().isProfileView() == true//
                     || DailyDeepLink.getInstance().isProfileBirthdayView() == true//
-                    //                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
-                    //                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
+                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
+                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
                     )
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);

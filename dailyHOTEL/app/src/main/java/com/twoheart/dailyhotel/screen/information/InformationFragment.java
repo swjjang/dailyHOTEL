@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationManagerCompat;
@@ -15,7 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -42,7 +40,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class InformationFragment extends BaseFragment implements Constants
 {
@@ -135,14 +132,13 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEditProfile();
                 return;
+            } else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
+            {
+                mOnEventListener.startWishList(PlaceType.HOTEL);
+            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
+            {
+                mOnEventListener.startWishList(PlaceType.FNB);
             }
-            //            else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
-            //            {
-            //                return;
-            //            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
-            //            {
-            //                return;
-            //            }
 
             DailyDeepLink.getInstance().clear();
         }
@@ -466,7 +462,6 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivityForResult(new Intent(baseActivity, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
         }
-
 
 
         @Override
