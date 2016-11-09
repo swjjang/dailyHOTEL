@@ -1,21 +1,46 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class StayAutoRefundActivity extends BaseActivity implements Constants, View.OnClickListener
+import java.util.List;
+
+public class StayAutoRefundActivity extends BaseActivity
 {
     private static final String INTENT_EXTRA_DATA_BOOKING_DETAIL = "bookingDetail";
 
+    protected StayAutoRefundLayout mStayAutoRefundLayout;
+    protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
     private HotelBookingDetail mHotelBookingDetail;
+    private Dialog mDialog;
+
+    private int mSelectedCancelReason;
+    private String mCancelReasonMessage;
+    private Bank mSelectedBank;
+    private List<Bank> mBankList;
 
     public static Intent newInstance(Context context, HotelBookingDetail hotelBookingDetail)
     {
@@ -25,7 +50,6 @@ public class StayAutoRefundActivity extends BaseActivity implements Constants, V
         return intent;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -33,11 +57,14 @@ public class StayAutoRefundActivity extends BaseActivity implements Constants, V
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_stay_autorefund);
+        mStayAutoRefundLayout = new StayAutoRefundLayout(this, mOnEventListener);
+        mStayAutoRefundNetworkController = new StayAutoRefundNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+
+        setContentView(mStayAutoRefundLayout.onCreateView(R.layout.activity_stay_autorefund));
 
         Intent intent = getIntent();
 
-        if(intent == null)
+        if (intent == null)
         {
             finish();
             return;
@@ -46,7 +73,9 @@ public class StayAutoRefundActivity extends BaseActivity implements Constants, V
         mHotelBookingDetail = intent.getParcelableExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL);
 
         initToolbar();
-        initLayout();
+
+        // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
+        mStayAutoRefundLayout.setPlaceBookingDetail(mHotelBookingDetail);
     }
 
     private void initToolbar()
@@ -64,9 +93,26 @@ public class StayAutoRefundActivity extends BaseActivity implements Constants, V
         });
     }
 
-    private void initLayout()
+    @Override
+    protected void onResume()
     {
+        super.onResume();
 
+        lockUI();
+
+        mStayAutoRefundNetworkController.requestBankList();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        if (mDialog != null && mDialog.isShowing())
+        {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -77,10 +123,426 @@ public class StayAutoRefundActivity extends BaseActivity implements Constants, V
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-
-    @Override
-    public void onClick(View v)
+    private void showSelectCancelDialog(int position, String message)
     {
+        if (isFinishing())
+        {
+            return;
+        }
 
+        if (mDialog != null)
+        {
+            if (mDialog.isShowing())
+            {
+                mDialog.dismiss();
+            }
+
+            mDialog = null;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_refund_dialog_layout, null, false);
+
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        final ScrollView scrollView = (ScrollView) dialogView.findViewById(R.id.scrollView);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText(R.string.label_select_cancel_refund);
+
+        //
+        final View cancelRefundView01 = dialogView.findViewById(R.id.cancelRefundView01);
+        final View cancelRefundView02 = dialogView.findViewById(R.id.cancelRefundView02);
+        final View cancelRefundView03 = dialogView.findViewById(R.id.cancelRefundView03);
+        final View cancelRefundView04 = dialogView.findViewById(R.id.cancelRefundView04);
+        final View cancelRefundView05 = dialogView.findViewById(R.id.cancelRefundView05);
+        final View cancelRefundView06 = dialogView.findViewById(R.id.cancelRefundView06);
+
+        cancelRefundView01.setTag(1);
+        cancelRefundView02.setTag(2);
+        cancelRefundView03.setTag(3);
+        cancelRefundView04.setTag(4);
+        cancelRefundView05.setTag(5);
+        cancelRefundView05.setTag(6);
+
+        final DailyEditText messageEditText = (DailyEditText) dialogView.findViewById(R.id.messageEditText);
+        final TextView messageCountTextView = (TextView) dialogView.findViewById(R.id.messageCountTextView);
+        final View messageClickView = dialogView.findViewById(R.id.messageClickView);
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+
+        TextView negativeTextView = (TextView) buttonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = (TextView) buttonLayout.findViewById(R.id.positiveTextView);
+
+        messageEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                messageCountTextView.setText(String.format("(%d/300자)", s.length()));
+            }
+        });
+
+        messageEditText.setText(message);
+        messageEditText.setSelection(messageEditText.length());
+
+        View.OnClickListener onClickListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (v.getId())
+                {
+                    case R.id.cancelRefundView01:
+                    case R.id.cancelRefundView02:
+                    case R.id.cancelRefundView03:
+                    case R.id.cancelRefundView04:
+                    case R.id.cancelRefundView05:
+                    {
+                        messageEditText.setText(null);
+                        messageClickView.setVisibility(View.VISIBLE);
+                        messageClickView.setOnClickListener(this);
+
+                        messageEditText.setCursorVisible(false);
+
+                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                        setSelected(v);
+                        break;
+                    }
+
+                    case R.id.cancelRefundView06:
+                    {
+                        messageClickView.setVisibility(View.GONE);
+                        messageClickView.setOnClickListener(null);
+
+                        messageEditText.setCursorVisible(true);
+
+                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
+
+                        setSelected(v);
+                        break;
+                    }
+
+                    case R.id.messageClickView:
+                        cancelRefundView06.performClick();
+                        break;
+                }
+            }
+
+            private void setSelected(View view)
+            {
+                Object tag = ((View) view.getParent()).getTag();
+
+                if (tag != null && tag instanceof DailyTextView == true)
+                {
+                    ((DailyTextView) tag).setSelected(false);
+                    ((DailyTextView) tag).setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+
+                ((View) view.getParent()).setTag(view);
+                view.setSelected(true);
+                ((DailyTextView) view).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.card_btn_v_select, 0);
+
+                positiveTextView.setEnabled(true);
+            }
+        };
+
+        cancelRefundView01.setOnClickListener(onClickListener);
+        cancelRefundView02.setOnClickListener(onClickListener);
+        cancelRefundView03.setOnClickListener(onClickListener);
+        cancelRefundView04.setOnClickListener(onClickListener);
+        cancelRefundView05.setOnClickListener(onClickListener);
+        cancelRefundView06.setOnClickListener(onClickListener);
+
+        switch (position)
+        {
+            case 1:
+                cancelRefundView01.performClick();
+                break;
+            case 2:
+                cancelRefundView02.performClick();
+                break;
+            case 3:
+                cancelRefundView03.performClick();
+                break;
+            case 4:
+                cancelRefundView04.performClick();
+                break;
+            case 5:
+                cancelRefundView05.performClick();
+                break;
+            case 6:
+                cancelRefundView06.performClick();
+                break;
+
+            default:
+                messageClickView.setVisibility(View.VISIBLE);
+                messageClickView.setOnClickListener(onClickListener);
+
+                messageEditText.setCursorVisible(false);
+                positiveTextView.setEnabled(false);
+                break;
+        }
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+                TextView selectedView = (TextView) ((View) cancelRefundView01.getParent()).getTag();
+
+                if (selectedView != null)
+                {
+                    setCancelReasonResult((Integer) selectedView.getTag(), selectedView.getText().toString(), messageEditText.getText().toString().trim());
+                }
+            }
+        });
+
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mDialog = null;
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            mDialog.setContentView(dialogView);
+            mDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        scrollView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                scrollView.scrollTo(0, 0);
+            }
+        });
     }
+
+    private void showSelectBankListDialog(Bank bank, List<Bank> bankList)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        if (mDialog != null)
+        {
+            if (mDialog.isShowing())
+            {
+                mDialog.dismiss();
+            }
+
+            mDialog = null;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_refund_banklist_dialog_layout, null, false);
+
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText(R.string.label_select_cancel_refund);
+
+        //
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
+
+        recyclerView.setAdapter(new BankListAdapter(this, bankList));
+
+        recyclerView.add
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+
+        TextView negativeTextView = (TextView) buttonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = (TextView) buttonLayout.findViewById(R.id.positiveTextView);
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+
+//                setSelectedBankResult()
+            }
+        });
+
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mDialog = null;
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            mDialog.setContentView(dialogView);
+            mDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void setCancelReasonResult(int position, String reason, String message)
+    {
+        mSelectedCancelReason = position;
+        mCancelReasonMessage = message;
+
+        mStayAutoRefundLayout.setCancelReasonText(reason);
+    }
+
+    private void setSelectedBankResult(Bank bank)
+    {
+        mSelectedBank = bank;
+
+        mStayAutoRefundLayout.setBankText(bank.name);
+    }
+
+    private StayAutoRefundLayout.OnEventListener mOnEventListener = new StayAutoRefundLayout.OnEventListener()
+    {
+        @Override
+        public void showSelectCancelDialog()
+        {
+            StayAutoRefundActivity.this.showSelectCancelDialog(mSelectedCancelReason, mCancelReasonMessage);
+        }
+
+        @Override
+        public void showSelectBankListDialog()
+        {
+            StayAutoRefundActivity.this.showSelectBankListDialog(mSelectedBank, mBankList);
+        }
+
+        @Override
+        public void onClickRefund()
+        {
+
+        }
+
+        @Override
+        public void finish()
+        {
+            StayAutoRefundActivity.this.finish();
+        }
+    };
+
+    private StayAutoRefundNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayAutoRefundNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onBankList(List<Bank> bankList)
+        {
+            unLockUI();
+
+            mBankList = bankList;
+        }
+
+        @Override
+        public void onAuthenticationAccount()
+        {
+
+        }
+
+        @Override
+        public void onRefundResult()
+        {
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            StayAutoRefundActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            StayAutoRefundActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            StayAutoRefundActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            StayAutoRefundActivity.this.onErrorToastMessage(message);
+        }
+    };
 }

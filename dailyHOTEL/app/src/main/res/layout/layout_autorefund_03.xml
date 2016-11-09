@@ -38,6 +38,7 @@
 
 
     <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/selectReasonCancelView"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_margin="15dp"
@@ -82,6 +83,7 @@
             android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/bankNameTextView"
             android:layout_width="120dp"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
@@ -116,7 +118,7 @@
             android:layout_weight="0.7"
             android:gravity="right|center_vertical"
             android:hint="@string/label_input_account_number"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
             android:lines="1"
             android:maxLength="50"
             android:maxLines="1"
@@ -149,7 +151,6 @@
             android:layout_weight="0.7"
             android:gravity="right|center_vertical"
             android:hint="@string/label_booking_input_name"
-            android:inputType="textEmailAddress"
             android:lines="1"
             android:maxLength="50"
             android:maxLines="1"
@@ -160,13 +161,37 @@
             android:theme="@style/EditTextTheme"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/ic_payment_notice"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="@string/message_please_refund_notice"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"/>
+    </LinearLayout>
+
     <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/authenticateAccountView"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/shape_fillrect_l900034_bffffff_r2"
         android:gravity="center"
         android:text="@string/label_authenticate_account"

@@ -330,6 +330,18 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
+            {
+                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    mDontReload = false;
+                } else
+                {
+
+                }
+                break;
+            }
         }
     }
 

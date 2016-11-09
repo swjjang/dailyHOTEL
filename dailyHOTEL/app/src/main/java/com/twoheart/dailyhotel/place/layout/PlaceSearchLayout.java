@@ -380,11 +380,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void onClick(View v)
             {
-                Keyword keyword = (Keyword) v.getTag();
+                Object tag = v.getTag();
 
-                if (keyword != null)
+                if (tag != null && tag instanceof Keyword == true)
                 {
-                    validateKeyword(keyword);
+                    validateKeyword((Keyword) tag);
                 }
             }
         };
@@ -563,7 +563,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 @Override
                 public void onClick(View v)
                 {
-                    validateKeyword((Keyword) v.getTag());
+                    Object tag = v.getTag();
+
+                    if (tag != null && tag instanceof Keyword == true)
+                    {
+                        validateKeyword((Keyword) tag);
+                    }
                 }
             };
 
