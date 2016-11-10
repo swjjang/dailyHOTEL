@@ -20,8 +20,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public Grade grade;
     public String roomName;
     public boolean isNRD;
-    public boolean isRefund;
-    public int paymentType;
+    public String transactionType;
+    public String refundType;
 
     public HotelBookingDetail()
     {
@@ -115,6 +115,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         {
             placeIndex = jsonObject.getInt(INTENT_EXTRA_HOTEL_IDX);
         }
+
+        transactionType = jsonObject.getString("transactionType");
     }
 
     @Override
@@ -131,8 +133,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeInt(bonus);
         dest.writeInt(coupon);
         dest.writeInt(isNRD ? 1 : 0);
-        dest.writeInt(isRefund ? 1 : 0);
-        dest.writeInt(paymentType);
+        dest.writeString(refundType);
+        dest.writeString(transactionType);
     }
 
     public void readFromParcel(Parcel in)
@@ -148,8 +150,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         bonus = in.readInt();
         coupon = in.readInt();
         isNRD = in.readInt() == 1;
-        isRefund = in.readInt() == 1;
-        paymentType = in.readInt();
+        refundType = in.readString();
+        transactionType = in.readString();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

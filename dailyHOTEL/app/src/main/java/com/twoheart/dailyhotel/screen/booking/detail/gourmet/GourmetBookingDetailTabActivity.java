@@ -54,6 +54,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         super.onCreate(savedInstanceState);
 
         mGourmetBookingDetail = new GourmetBookingDetail();
+        mGourmetBookingDetail.reservationIndex = mReservationIndex;
     }
 
     @Override
