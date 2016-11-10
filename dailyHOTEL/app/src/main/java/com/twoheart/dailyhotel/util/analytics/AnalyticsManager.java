@@ -767,7 +767,7 @@ public class AnalyticsManager
         public static final String WISHLIST_OFF = "WishListOff";
         public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
 
-        public static final String REFERRER_CODE = "ReferrerCode";
+        public static final String REFERRAL_CODE = "ReferralCode";
     }
 
     public static class Category

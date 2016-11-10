@@ -356,7 +356,7 @@ public class SignupStep2Activity extends BaseActivity
             if (Util.isTextEmpty(mRecommender) == false)
             {
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
-                    , AnalyticsManager.Action.REFERRER_CODE, AnalyticsManager.Label.SUCCESS, null);
+                    , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
             }
         }
 
