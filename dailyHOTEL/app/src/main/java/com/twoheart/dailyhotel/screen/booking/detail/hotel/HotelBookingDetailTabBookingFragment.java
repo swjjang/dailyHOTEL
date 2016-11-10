@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +43,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private HotelBookingDetail mBookingDetail;
     private int mReservationIndex;
+
+    private View mRefundPolicyLayout, mButtonBottomMarginView;
+    private TextView mRefundPolicyTextView;
 
     public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
@@ -317,6 +320,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
+        mButtonBottomMarginView = confirmView.findViewById(R.id.buttonBottomMarginView);
+
+
         confirmView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -343,40 +349,57 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             return;
         }
 
-        View refundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+        mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+        mRefundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+        mRefundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
 
-        //        if (bookingDetail.isNRD == true)
-        //        {
-        refundPolicyLayout.setVisibility(View.VISIBLE);
+        View buttonLayout = mRefundPolicyLayout.findViewById(R.id.buttonLayout);
 
-        TextView refundPolicyTextView = (TextView) refundPolicyLayout.findViewById(R.id.refundPolicyTextView);
-
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.message_booking_refund_product));
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
-            0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        refundPolicyTextView.setText(spannableStringBuilder);
-        //        } else
-        //        {
-        //            refundPolicyLayout.setVisibility(View.GONE);
-        //        }
-
-        View buttonLayout = refundPolicyLayout.findViewById(R.id.buttonLayout);
-
-        if (bookingDetail.isRefund == true)
+        if (Util.isTextEmpty(bookingDetail.refundType) == false)
         {
-
+            switch (bookingDetail.refundType)
+            {
+                default:
+                    break;
+            }
         } else
         {
-
+            setRefundLayoutVisible(false);
         }
-
 
         buttonLayout.setVisibility(View.VISIBLE);
         TextView buttonTextView = (TextView) buttonLayout.findViewById(R.id.buttonTextView);
         buttonTextView.setText(R.string.label_request_free_refund);
 
         buttonLayout.setOnClickListener(this);
+    }
+
+    public void setRefundLayoutVisible(boolean visible)
+    {
+        if (mRefundPolicyLayout == null)
+        {
+            return;
+        }
+
+        if (visible == true && mRefundPolicyLayout.getVisibility() != View.VISIBLE)
+        {
+            mRefundPolicyLayout.setVisibility(View.VISIBLE);
+            mButtonBottomMarginView.setVisibility(View.GONE);
+        } else if (visible == false && mRefundPolicyLayout.getVisibility() != View.GONE)
+        {
+            mRefundPolicyLayout.setVisibility(View.GONE);
+            mButtonBottomMarginView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setRefundPolicyText(String text)
+    {
+        if (mRefundPolicyTextView == null)
+        {
+            return;
+        }
+
+        mRefundPolicyTextView.setText(Html.fromHtml(text));
     }
 
     @Override

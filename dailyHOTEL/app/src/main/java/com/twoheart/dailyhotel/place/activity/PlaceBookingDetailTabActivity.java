@@ -198,7 +198,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
                         setCurrentDateTime(currentDateTime, dailyDateTime);
 
-                        // 호텔 정보를 가져온다.
                         requestPlaceBookingDetail(mReservationIndex);
                     } else
                     {

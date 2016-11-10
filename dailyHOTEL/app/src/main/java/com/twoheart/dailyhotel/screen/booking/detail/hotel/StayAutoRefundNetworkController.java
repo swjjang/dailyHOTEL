@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Bank;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -22,9 +23,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
     {
         void onBankList(List<Bank> bankList);
 
-        void onAuthenticationAccount();
-
-        void onRefundResult();
+        void onRefundResult(int msgCode, String message);
     }
 
     public StayAutoRefundNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -162,6 +161,20 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
         }
     }
 
+    public void requestRefund(int hotelIdx, String dateCheckIn, String transactionType//
+        , int hotelReservationIdx, String reasonCancel)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestRefund(mNetworkTag, hotelIdx, dateCheckIn, transactionType//
+            , hotelReservationIdx, reasonCancel, null, null, null, mRefundJsonResponseListener);
+    }
+
+    public void requestRefund(int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
+        , String reasonCancel, String accountHolder, String bankAccount, String bankCode)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestRefund(mNetworkTag, hotelIdx, dateCheckIn, transactionType//
+            , hotelReservationIdx, reasonCancel, accountHolder, bankAccount, bankCode, mRefundJsonResponseListener);
+    }
+
     private DailyHotelJsonResponseListener mBankListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -182,6 +195,31 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onBankList(bankList);
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mRefundJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                String message = response.getString("msg");
+
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRefundResult(msgCode, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

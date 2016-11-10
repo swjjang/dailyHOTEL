@@ -2,11 +2,14 @@ package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -29,13 +32,17 @@ import java.util.TimeZone;
 
 public class StayAutoRefundLayout extends BaseLayout implements Constants, View.OnClickListener
 {
-    private TextView mSelectReasonCancelView, mBankNameTextView;
+    private View mRefundAccountLayout, mRequestRefundView;
+    private TextView mSelectReasonCancelTextView, mBankNameTextView;
+    private EditText mAccountNumberEditText, mAccountNameEditText;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void showSelectCancelDialog();
 
         void showSelectBankListDialog();
+
+        void onAccountTextWatcher(int length);
 
         void onClickRefund();
     }
@@ -48,14 +55,66 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
     @Override
     protected void initLayout(View view)
     {
-        mSelectReasonCancelView = (TextView) view.findViewById(R.id.selectReasonCancelView);
-        mSelectReasonCancelView.setOnClickListener(this);
+        mSelectReasonCancelTextView = (TextView) view.findViewById(R.id.selectReasonCancelView);
+        mSelectReasonCancelTextView.setOnClickListener(this);
+
+        initAccountLayout(view);
+
+        mRequestRefundView = view.findViewById(R.id.requestRefundView);
+        mRequestRefundView.setOnClickListener(this);
+    }
+
+    private void initAccountLayout(View view)
+    {
+        mRefundAccountLayout = view.findViewById(R.id.refundAccountLayout);
 
         mBankNameTextView = (TextView) view.findViewById(R.id.bankNameTextView);
         mBankNameTextView.setOnClickListener(this);
 
-        View requestRefundView = view.findViewById(R.id.requestRefundView);
-        requestRefundView.setOnClickListener(this);
+        mAccountNumberEditText = (EditText) view.findViewById(R.id.accountNameEditText);
+        mAccountNameEditText = (EditText) view.findViewById(R.id.accountNameEditText);
+
+        mAccountNumberEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                ((OnEventListener)mOnEventListener).onAccountTextWatcher(s.length());
+            }
+        });
+
+        mAccountNameEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                ((OnEventListener)mOnEventListener).onAccountTextWatcher(s.length());
+            }
+        });
     }
 
     public void setPlaceBookingDetail(HotelBookingDetail hotelBookingDetail)
@@ -197,12 +256,12 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
     public void setCancelReasonText(String reason)
     {
-        if (mSelectReasonCancelView == null)
+        if (mSelectReasonCancelTextView == null)
         {
             return;
         }
 
-        mSelectReasonCancelView.setText(reason);
+        mSelectReasonCancelTextView.setText(reason);
     }
 
     public void setBankText(String bankName)
@@ -213,6 +272,52 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         }
 
         mBankNameTextView.setText(bankName);
+    }
+
+    public void setAccountLayoutVisible(boolean visible)
+    {
+        if (mRefundAccountLayout == null)
+        {
+            return;
+        }
+
+        if (visible == true && mRefundAccountLayout.getVisibility() != View.VISIBLE)
+        {
+            mRefundAccountLayout.setVisibility(View.VISIBLE);
+        } else if (visible == false && mRefundAccountLayout.getVisibility() != View.GONE)
+        {
+            mRefundAccountLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void setRefundButtonEnabled(boolean enabled)
+    {
+        if(mRequestRefundView == null)
+        {
+            return;
+        }
+
+        mRequestRefundView.setEnabled(enabled);
+    }
+
+    public String getAccountNumber()
+    {
+        if(mAccountNumberEditText == null)
+        {
+            return null;
+        }
+
+        return mAccountNumberEditText.getText().toString();
+    }
+
+    public String getAccountName()
+    {
+        if(mAccountNameEditText == null)
+        {
+            return null;
+        }
+
+        return mAccountNameEditText.getText().toString();
     }
 
     private long getCompareDate(long timeInMillis)
