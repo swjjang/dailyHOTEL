@@ -237,15 +237,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
 
-        setBookingStatus(STATUS_NONE);
-        hideProductInformationLayout();
-
         mWishListPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
-        setWishListPopup(WishListPopupState.GONE);
-
         mWishListButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
         mWishListButtonTextView.setTag(false);
-
         mWishListButtonTextView.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -254,6 +248,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onWishListButtonClick();
             }
         });
+
+        setBookingStatus(STATUS_NONE);
+        hideProductInformationLayout();
+        setWishListPopup(WishListPopupState.GONE);
     }
 
     private PaintDrawable makeShaderFactory()

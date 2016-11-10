@@ -219,6 +219,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -226,6 +227,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
@@ -235,6 +237,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.GONE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -244,6 +247,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
