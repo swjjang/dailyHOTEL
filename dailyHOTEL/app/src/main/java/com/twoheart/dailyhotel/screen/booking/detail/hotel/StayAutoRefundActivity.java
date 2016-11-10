@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -32,6 +33,8 @@ import java.util.List;
 public class StayAutoRefundActivity extends BaseActivity
 {
     private static final String INTENT_EXTRA_DATA_BOOKING_DETAIL = "bookingDetail";
+
+    private static final String PAYMENT_TYPE_VBANK = "VBANK_INICIS";
 
     protected StayAutoRefundLayout mStayAutoRefundLayout;
     protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
@@ -75,8 +78,24 @@ public class StayAutoRefundActivity extends BaseActivity
 
         initToolbar();
 
+        mSelectedCancelReason = -1;
+        mStayAutoRefundLayout.setRefundButtonEnabled(false);
+
         // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
         mStayAutoRefundLayout.setPlaceBookingDetail(mHotelBookingDetail);
+
+        // 계좌 이체인 경우
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+        {
+            mStayAutoRefundLayout.setAccountLayoutVisible(true);
+
+            lockUI();
+
+            mStayAutoRefundNetworkController.requestBankList();
+        } else
+        {
+            mStayAutoRefundLayout.setAccountLayoutVisible(false);
+        }
     }
 
     private void initToolbar()
@@ -98,10 +117,6 @@ public class StayAutoRefundActivity extends BaseActivity
     protected void onResume()
     {
         super.onResume();
-
-        lockUI();
-
-        mStayAutoRefundNetworkController.requestBankList();
     }
 
     @Override
@@ -458,9 +473,17 @@ public class StayAutoRefundActivity extends BaseActivity
     private void setCancelReasonResult(int position, String reason, String message)
     {
         mSelectedCancelReason = position;
-        mCancelReasonMessage = message;
+
+        if (Util.isTextEmpty(message) == true)
+        {
+            mCancelReasonMessage = reason;
+        } else
+        {
+            mCancelReasonMessage = reason + "-" + message;
+        }
 
         mStayAutoRefundLayout.setCancelReasonText(reason);
+        mStayAutoRefundLayout.setRefundButtonEnabled(isEnabledRefund());
     }
 
     private void setSelectedBankResult(Bank bank)
@@ -468,6 +491,29 @@ public class StayAutoRefundActivity extends BaseActivity
         mSelectedBank = bank;
 
         mStayAutoRefundLayout.setBankText(bank.name);
+        mStayAutoRefundLayout.setRefundButtonEnabled(isEnabledRefund());
+    }
+
+    private boolean isEnabledRefund()
+    {
+        // 취소 사유 입력
+        if (mSelectedCancelReason < 0)
+        {
+            return false;
+        }
+
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+        {
+            String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+            String accountName = mStayAutoRefundLayout.getAccountName();
+
+            if (mSelectedBank == null || Util.isTextEmpty(accountNumber, accountName) == true)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private StayAutoRefundLayout.OnEventListener mOnEventListener = new StayAutoRefundLayout.OnEventListener()
@@ -485,9 +531,28 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
+        public void onAccountTextWatcher(int length)
+        {
+            mStayAutoRefundLayout.setRefundButtonEnabled(isEnabledRefund());
+        }
+
+        @Override
         public void onClickRefund()
         {
+            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+            {
+                String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                String accountName = mStayAutoRefundLayout.getAccountName();
 
+                mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
+                    , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage//
+                    , accountName, accountNumber, mSelectedBank.code);
+
+            } else
+            {
+                mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
+                    , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
+            }
         }
 
         @Override
@@ -505,12 +570,6 @@ public class StayAutoRefundActivity extends BaseActivity
             unLockUI();
 
             mBankList = bankList;
-        }
-
-        @Override
-        public void onAuthenticationAccount()
-        {
-
         }
 
         @Override

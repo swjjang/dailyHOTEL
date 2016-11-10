@@ -2021,8 +2021,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
 
-                        mHotelPaymentLayout.setRefundPolicyVisibility(roomInformation.isNRD);
-
                         // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                         if (isOnSale == false || availableRooms == 0)
                         {
@@ -2036,8 +2034,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             showStopOnSaleDialog();
                         } else
                         {
-                            // 3. 간편결제 credit card 요청
-                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
+                            // 취소 및 환불 규정
+                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag, hotelPaymentInformation.placeIndex,
+                                roomInformation.roomIndex, hotelPaymentInformation.checkInDateFormat, mPolicyRefundJsonResponseListener);
                         }
                         break;
                     }
@@ -2367,6 +2366,55 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     }
 
                     processAgreeTermDialog();
+                } else
+                {
+                    String message = response.getString("msg");
+                    onErrorPopupMessage(msgCode, message);
+
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
+            } finally
+            {
+                unLockUI();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelPaymentActivity.this.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mPolicyRefundJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String comment = dataJSONObject.getString("comment");
+
+                    mHotelPaymentLayout.setRefundPolicyText(comment);
+
+                    // 3. 간편결제 credit card 요청
+                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
                 } else
                 {
                     String message = response.getString("msg");
