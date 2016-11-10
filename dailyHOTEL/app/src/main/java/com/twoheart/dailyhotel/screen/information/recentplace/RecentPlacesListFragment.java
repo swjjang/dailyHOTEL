@@ -63,6 +63,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
         requestRecentPlacesList();
     }
+
     public void setSaleTime(SaleTime saleTime)
     {
         if (saleTime == null)

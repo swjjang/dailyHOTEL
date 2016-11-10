@@ -131,7 +131,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeInt(bonus);
         dest.writeInt(coupon);
         dest.writeInt(isNRD ? 1 : 0);
-        dest.writeInt(isRefund ? 1: 0);
+        dest.writeInt(isRefund ? 1 : 0);
         dest.writeInt(paymentType);
     }
 

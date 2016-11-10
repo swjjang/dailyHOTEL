@@ -82,7 +82,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode)
+        switch (requestCode)
         {
             case CODE_RESULT_ACTIVITY_STAY_AUTOREFUND:
             {
@@ -125,7 +125,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -143,7 +143,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -160,7 +160,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -174,7 +174,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -189,7 +189,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
