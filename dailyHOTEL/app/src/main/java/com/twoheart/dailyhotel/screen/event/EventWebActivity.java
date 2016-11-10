@@ -326,6 +326,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
+            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
             DailyDeepLink.getInstance().clear();
 
@@ -342,7 +343,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 return false;
             }
 
-            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, isShowCalendar);
+            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 

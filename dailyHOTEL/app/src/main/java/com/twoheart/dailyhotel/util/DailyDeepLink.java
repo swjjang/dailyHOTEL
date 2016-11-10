@@ -57,6 +57,7 @@ public class DailyDeepLink
     private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
     private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
+    private static final String PARAM_V9_OPEN_TICKEt_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
 
     private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
     private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
@@ -657,32 +658,6 @@ public class DailyDeepLink
         }
     }
 
-    public boolean isWishlistHotelView()
-    {
-        String view = getView();
-
-        if (mVersionCode >= 9)
-        {
-            return WISHLIST_HOTEL_V9.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
-    }
-
-    public boolean isWishlistGourmetView()
-    {
-        String view = getView();
-
-        if (mVersionCode >= 9)
-        {
-            return WISHLIST_GOURMET_V9.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
-    }
-
     public String getIndex()
     {
         String value;
@@ -1058,6 +1033,57 @@ public class DailyDeepLink
         return noticeIndex;
     }
 
+    public boolean isWishlistHotelView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 9)
+        {
+            return WISHLIST_HOTEL_V9.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
+    public boolean isWishlistGourmetView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 9)
+        {
+            return WISHLIST_GOURMET_V9.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
+
+    public int getOpenTicketIndex()
+    {
+        int index = 0;
+
+        if (mVersionCode >= 9)
+        {
+            String value = mParams.get(PARAM_V9_OPEN_TICKEt_INDEX);
+
+            if (Util.isTextEmpty(value) == false)
+            {
+                try
+                {
+                    index = Integer.parseInt(value);
+                } catch (NumberFormatException e)
+                {
+                }
+            }
+        }
+
+        return index;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
     private boolean decodingLinkV9(Uri uri)
     {
         if (decodingLinkV8(uri) == false)
@@ -1066,6 +1092,7 @@ public class DailyDeepLink
         }
 
         putParams(uri, PARAM_V9_QUERY);
+        putParams(uri, PARAM_V9_OPEN_TICKEt_INDEX);
 
         return true;
     }

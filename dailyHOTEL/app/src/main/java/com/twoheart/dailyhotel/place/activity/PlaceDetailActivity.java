@@ -49,6 +49,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected Province mProvince;
     protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
+    protected int mOpenTicketIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
+
     private Handler mHandler = new Handler();
     private int mResultCode;
 
