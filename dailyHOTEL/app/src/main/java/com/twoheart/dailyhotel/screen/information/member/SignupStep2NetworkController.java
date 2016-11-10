@@ -334,7 +334,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         String phoneNumber = userJSONObject.getString("phone");
                         String birthday = null;
 
-                        if(userJSONObject.has("birthday") == true && userJSONObject.isNull("birthday") == false)
+                        if (userJSONObject.has("birthday") == true && userJSONObject.isNull("birthday") == false)
                         {
                             birthday = userJSONObject.getString("birthday");
                         }

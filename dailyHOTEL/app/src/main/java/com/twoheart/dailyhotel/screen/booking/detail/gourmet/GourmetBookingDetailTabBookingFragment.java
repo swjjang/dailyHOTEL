@@ -7,7 +7,6 @@
  */
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
@@ -31,12 +29,10 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -355,76 +351,76 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 break;
             }
 
-//            case R.id.callDailyView:
-//            {
-//                BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//                if (Util.isTelephonyEnabled(baseActivity) == true)
-//                {
-//                    try
-//                    {
-//                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-//
-//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-//                    } catch (ActivityNotFoundException e)
-//                    {
-//                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-//                    }
-//                } else
-//                {
-//                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-//                }
-//                break;
-//            }
-//
-//            case R.id.kakaoDailyView:
-//            {
-//                try
-//                {
-//                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-//                } catch (ActivityNotFoundException e)
-//                {
-//                    try
-//                    {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-//                    } catch (ActivityNotFoundException e1)
-//                    {
-//                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-//                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-//                        startActivity(marketLaunch);
-//                    }
-//                }
-//                break;
-//            }
-//
-//            case R.id.callPlaceView:
-//            {
-//                BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//                if (Util.isTelephonyEnabled(baseActivity) == true)
-//                {
-//                    String phone = mBookingDetail.gourmetPhone;
-//
-//                    if (Util.isTextEmpty(mBookingDetail.gourmetPhone) == true)
-//                    {
-//                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-//                    }
-//
-//                    try
-//                    {
-//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-//                    } catch (ActivityNotFoundException e)
-//                    {
-//                        String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
-//                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-//                    }
-//                } else
-//                {
-//                    String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
-//                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-//                }
-//                break;
-//            }
+            //            case R.id.callDailyView:
+            //            {
+            //                BaseActivity baseActivity = (BaseActivity) getActivity();
+            //
+            //                if (Util.isTelephonyEnabled(baseActivity) == true)
+            //                {
+            //                    try
+            //                    {
+            //                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+            //
+            //                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            //                    } catch (ActivityNotFoundException e)
+            //                    {
+            //                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            //                    }
+            //                } else
+            //                {
+            //                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            //                }
+            //                break;
+            //            }
+            //
+            //            case R.id.kakaoDailyView:
+            //            {
+            //                try
+            //                {
+            //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+            //                } catch (ActivityNotFoundException e)
+            //                {
+            //                    try
+            //                    {
+            //                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            //                    } catch (ActivityNotFoundException e1)
+            //                    {
+            //                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+            //                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+            //                        startActivity(marketLaunch);
+            //                    }
+            //                }
+            //                break;
+            //            }
+            //
+            //            case R.id.callPlaceView:
+            //            {
+            //                BaseActivity baseActivity = (BaseActivity) getActivity();
+            //
+            //                if (Util.isTelephonyEnabled(baseActivity) == true)
+            //                {
+            //                    String phone = mBookingDetail.gourmetPhone;
+            //
+            //                    if (Util.isTextEmpty(mBookingDetail.gourmetPhone) == true)
+            //                    {
+            //                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+            //                    }
+            //
+            //                    try
+            //                    {
+            //                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            //                    } catch (ActivityNotFoundException e)
+            //                    {
+            //                        String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
+            //                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+            //                    }
+            //                } else
+            //                {
+            //                    String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
+            //                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+            //                }
+            //                break;
+            //            }
         }
     }
 

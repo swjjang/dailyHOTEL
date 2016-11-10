@@ -533,9 +533,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             // 1. 세션이 살아있는지 검사 시작.
                             DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
-
-                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                                , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
                         }
                     }
                 });
@@ -633,9 +630,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     // 1. 세션이 살아있는지 검사 시작.
                     DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
-
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
 
                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                         , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);

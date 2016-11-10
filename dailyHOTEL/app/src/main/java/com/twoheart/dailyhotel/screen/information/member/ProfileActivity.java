@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -323,6 +322,9 @@ public class ProfileActivity extends BaseActivity
             Util.clipText(ProfileActivity.this, code);
 
             DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+
+            AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+                , AnalyticsManager.Action.REFERRAL_CODE_COPIED, AnalyticsManager.Label.PROFILE_EDITED, null);
         }
 
         @Override

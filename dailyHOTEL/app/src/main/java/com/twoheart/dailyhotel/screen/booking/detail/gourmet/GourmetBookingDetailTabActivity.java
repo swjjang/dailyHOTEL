@@ -18,10 +18,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -100,7 +98,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
         View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
 
-        DailyTextView contactUs01TextView = (DailyTextView)contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
         contactUs01TextView.setText(R.string.frag_faqs);
         contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
 
@@ -109,7 +107,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -118,7 +116,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             }
         });
 
-        DailyTextView contactUs02TextView = (DailyTextView)contactUs02Layout.findViewById(R.id.contactUs02TextView) ;
+        DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
         contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
         contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
 
@@ -127,7 +125,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -144,7 +142,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -158,7 +156,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -173,7 +171,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }

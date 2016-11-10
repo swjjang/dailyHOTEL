@@ -766,6 +766,8 @@ public class AnalyticsManager
         public static final String WISHLIST_ON = "WishListOn";
         public static final String WISHLIST_OFF = "WishListOff";
         public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
+
+        public static final String REFERRER_CODE = "ReferrerCode";
     }
 
     public static class Category
@@ -907,6 +909,10 @@ public class AnalyticsManager
         public static final String MENU_REGISTER_ACCOUNT = "Menu_RegisterAccount";
         public static final String SIGNUP_ON = "Signup_On";
         public static final String SIGNUP_OFF = "Signup_Off";
+
+        public static final String PROFILE_EDITED = "ProfileEdited";
+        public static final String TRY = "Try";
+        public static final String SUCCESS = "Success";
     }
 
     public static class UserType
