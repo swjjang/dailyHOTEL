@@ -44,7 +44,7 @@ public class StayWishListLayout extends PlaceWishListLayout
     {
         if (list == null || list.size() == 0)
         {
-            return null;
+            return new ArrayList<>();
         }
 
         ArrayList<Stay> stayList = (ArrayList<Stay>) list;

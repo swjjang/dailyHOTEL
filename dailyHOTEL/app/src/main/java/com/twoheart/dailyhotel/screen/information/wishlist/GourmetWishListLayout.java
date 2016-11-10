@@ -44,7 +44,7 @@ public class GourmetWishListLayout extends PlaceWishListLayout
     {
         if (list == null || list.size() == 0)
         {
-            return null;
+            return new ArrayList<>();
         }
 
         ArrayList<Gourmet> gourmetList = (ArrayList<Gourmet>) list;
