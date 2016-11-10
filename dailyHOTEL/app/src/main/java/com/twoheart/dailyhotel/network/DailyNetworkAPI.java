@@ -1139,4 +1139,52 @@ public class DailyNetworkAPI implements IDailyNetwork
         dailyHotelJsonRequest.setIsUsedAccept(true);
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
+
+        String params = String.format("?hotelIdx=%d&dateCheckIn=%s", placeIndex, URLEncoder.encode(dateCheckIn));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
+        , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/refund" : "";
+
+
+        Map<String, String> params = new HashMap<>();
+        params.put("hotelIdx", Integer.toString(hotelIdx));
+        params.put("dateCheckIn", URLEncoder.encode(dateCheckIn));
+        params.put("transactionType", transactionType);
+        params.put("hotelReservationIdx", Integer.toString(hotelReservationIdx));
+        params.put("reasonCancel", reasonCancel);
+
+        if (Util.isTextEmpty(accountHolder) == false)
+        {
+            params.put("accountHolder", accountHolder);
+        }
+
+        if (Util.isTextEmpty(bankAccount) == false)
+        {
+            params.put("bankAccount", bankAccount);
+        }
+
+        if (Util.isTextEmpty(bankCode) == false)
+        {
+            params.put("bankCode", bankCode);
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

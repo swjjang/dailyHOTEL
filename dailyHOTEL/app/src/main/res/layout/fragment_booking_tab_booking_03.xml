@@ -43,7 +43,6 @@
             android:layout_marginLeft="5dp"
             android:freezesText="true"
             android:lineSpacingExtra="-2dp"
-            android:text="@string/message_booking_refund_product"
             android:textColor="@color/default_background_section_c323232"
             android:textSize="13dp"/>
     </LinearLayout>

@@ -49,7 +49,7 @@ public class DailyPreference
     private static final String KEY_FIRST_BUYER = "26";
     private static final String KEY_FIRST_APP_VERSION = "27";
 
-//    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28"; // 삭제! - 30 으로 대체 됨
+    //    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28"; // 삭제! - 30 으로 대체 됨
     private static final String KEY_INFORMATION_CS_OPERATION_TIME = "29"; // 운영시간 H,H (앞은 시작 뒤는 끝나는 시간)
     private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
 
@@ -702,9 +702,9 @@ public class DailyPreference
     }
 
     public String getOperationTimeMessage(Context context)
-{
-    return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
-}
+    {
+        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
+    }
 
     public void setOperationTimeMessage(String text)
     {

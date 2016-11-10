@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -47,6 +48,7 @@ import java.util.Map;
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
     public HotelBookingDetail mHotelBookingDetail;
+    public HotelBookingDetailTabBookingFragment mHotelBookingDetailTabBookingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -54,6 +56,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         super.onCreate(savedInstanceState);
 
         mHotelBookingDetail = new HotelBookingDetail();
+        mHotelBookingDetail.reservationIndex = mReservationIndex;
     }
 
     @Override
@@ -70,8 +73,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        BaseFragment baseFragment01 = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
-        fragmentList.add(baseFragment01);
+        mHotelBookingDetailTabBookingFragment = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
+        fragmentList.add(mHotelBookingDetailTabBookingFragment);
 
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(fragmentPagerAdapter);
@@ -82,7 +85,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode)
+        switch (requestCode)
         {
             case CODE_RESULT_ACTIVITY_STAY_AUTOREFUND:
             {
@@ -125,7 +128,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -143,7 +146,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -160,7 +163,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -174,7 +177,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -189,7 +192,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -326,6 +329,13 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         mHotelBookingDetail.setData(jsonObject);
 
                         loadFragments(getViewPager(), mHotelBookingDetail);
+
+                        long checkOutDateTime = DailyCalendar.getTimeGMT9(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+                        if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
+                        {
+                            DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
+                                , mHotelBookingDetail.placeIndex, mReservationIndex, mHotelBookingDetail.checkInDate, mPolicyRefundJsonResponseListener);
+                        }
                         break;
 
                     // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
@@ -347,6 +357,53 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             } catch (Exception e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelBookingDetailTabActivity.this.onErrorResponse(volleyError);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mPolicyRefundJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String comment = dataJSONObject.getString("comment");
+
+                    mHotelBookingDetailTabBookingFragment.setRefundLayoutVisible(true);
+                    mHotelBookingDetailTabBookingFragment.setRefundPolicyText(comment);
+                } else
+                {
+                    String message = response.getString("msg");
+                    onErrorPopupMessage(msgCode, message);
+
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
             } finally
             {
                 unLockUI();

@@ -93,7 +93,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         mPasswordUnderLine = view.findViewById(R.id.passwordUnderLine);
 
-        mReferralTextView = (TextView)view.findViewById(R.id.referralTextView);
+        mReferralTextView = (TextView) view.findViewById(R.id.referralTextView);
 
         View logoutView = view.findViewById(R.id.logoutView);
         logoutView.setOnClickListener(this);
@@ -103,7 +103,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     }
 
     public void updateUserInformation(String userType, String email, String name, String phone, String birthday, //
-        String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+                                      String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
     {
         if (Constants.DAILY_USER.equalsIgnoreCase(userType) == true)
         {

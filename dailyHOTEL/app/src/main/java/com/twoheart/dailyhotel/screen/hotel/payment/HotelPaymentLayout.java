@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
@@ -320,7 +321,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private void initRefundPolicy(View view)
     {
         mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
-        mRefundPolicyLayout.setVisibility(View.GONE);
     }
 
     public void setPaymentMemoTextView(String text, boolean visible)
@@ -661,23 +661,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
     }
 
-    public void setRefundPolicyVisibility(boolean visibility)
+    public void setRefundPolicyText(String text)
     {
-        if (visibility == true)
-        {
-            mRefundPolicyLayout.setVisibility(View.VISIBLE);
-
-            TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
-
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(mContext.getString(R.string.message_booking_refund_product));
-            spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.dh_theme_color)), //
-                0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            refundPolicyTextView.setText(spannableStringBuilder);
-        } else
-        {
-            mRefundPolicyLayout.setVisibility(View.GONE);
-        }
+        TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+        refundPolicyTextView.setText(Html.fromHtml(text));
     }
 
     public Guest getGuest()
