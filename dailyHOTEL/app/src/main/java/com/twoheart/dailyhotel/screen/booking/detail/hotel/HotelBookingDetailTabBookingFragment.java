@@ -441,7 +441,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 saleTime.setCurrentTime(mBookingDetail.currentDateTime);
                 saleTime.setDailyTime(mBookingDetail.dailyDateTime);
 
-                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, false);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, 0, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                 break;
             }

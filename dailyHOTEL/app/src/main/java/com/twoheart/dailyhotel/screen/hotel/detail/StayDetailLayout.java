@@ -281,6 +281,18 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     }
 
     @Override
+    public void setSelectProduct(int index)
+    {
+        if(mRoomTypeListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mRoomTypeListAdapter.setSelectIndex(index);
+        mProductTypeRecyclerView.scrollToPosition(position);
+    }
+
+    @Override
     public void hideAnimationProductInformationLayout()
     {
         super.hideAnimationProductInformationLayout();

@@ -327,7 +327,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 saleTime.setCurrentTime(mBookingDetail.currentDateTime);
                 saleTime.setDailyTime(mBookingDetail.dailyDateTime);
 
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, saleTime, mBookingDetail.placeIndex, false);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, saleTime, mBookingDetail.placeIndex, 0, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                 break;
             }
