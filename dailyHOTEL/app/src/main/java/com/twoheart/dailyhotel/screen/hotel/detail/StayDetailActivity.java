@@ -1054,6 +1054,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                     checkStayRoom(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
                 }
 
+                // 딥링크로 메뉴 오픈 요청
+                if(mIsDeepLink == true && mOpenTicketIndex > 0)
+                {
+                    if (mPlaceDetailLayout != null)
+                    {
+                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                    }
+
+                    mOpenTicketIndex = 0;
+                }
+
                 mIsDeepLink = false;
 
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);

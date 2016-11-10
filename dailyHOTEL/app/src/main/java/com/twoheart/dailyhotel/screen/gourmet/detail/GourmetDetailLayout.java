@@ -250,6 +250,18 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     }
 
     @Override
+    public void setSelectProduct(int index)
+    {
+        if(mTicketTypeListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mTicketTypeListAdapter.setSelectIndex(index);
+        mProductTypeRecyclerView.scrollToPosition(position);
+    }
+
+    @Override
     public void hideAnimationProductInformationLayout()
     {
         super.hideAnimationProductInformationLayout();

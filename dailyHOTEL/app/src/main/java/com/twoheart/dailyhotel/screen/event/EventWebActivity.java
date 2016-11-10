@@ -375,6 +375,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
+            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
             // date가 비어 있는 경우
             if (Util.isTextEmpty(date) == false)
@@ -391,7 +392,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                saleTime, gourmetIndex, isShowCalendar);
+                saleTime, gourmetIndex, ticketIndex, isShowCalendar);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 

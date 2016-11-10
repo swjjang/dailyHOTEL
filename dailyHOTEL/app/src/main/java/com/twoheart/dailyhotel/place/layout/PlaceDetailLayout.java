@@ -145,6 +145,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public abstract void setBookingStatus(int status);
 
+    public abstract void setSelectProduct(int index);
+
     public PlaceDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
@@ -161,7 +163,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
         mTransPlacelNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
 
-        if (Util.isOverAPI21() == true)
+        if (Util.isUsedMutilTransition() == true)
         {
             setTransImageVisibility(true);
             transTitleLayout.setVisibility(View.VISIBLE);
@@ -405,6 +407,42 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mProductTypeBackgroundView.setEnabled(enabled);
     }
 
+    public void showProductInformationLayout(int index)
+    {
+        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        if (mObjectAnimator != null)
+        {
+            if (mObjectAnimator.isRunning() == true)
+            {
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
+            }
+
+            mObjectAnimator = null;
+        }
+
+        mProductTypeBackgroundView.setAnimation(null);
+        mProductTypeLayout.setAnimation(null);
+
+        mProductTypeBackgroundView.setVisibility(View.VISIBLE);
+
+        mProductTypeLayout.setVisibility(View.VISIBLE);
+
+        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+        mAnimationState = Constants.ANIMATION_STATE.END;
+
+        setProductInformationLayoutEnabled(true);
+
+        setBookingStatus(STATUS_BOOKING);
+
+        setSelectProduct(index);
+    }
+
     public void hideProductInformationLayout()
     {
         if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
@@ -438,6 +476,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
 
         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+        mAnimationState = Constants.ANIMATION_STATE.END;
     }
 
     public void showAnimationProductInformationLayout()

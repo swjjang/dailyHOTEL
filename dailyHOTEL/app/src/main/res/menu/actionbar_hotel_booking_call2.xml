@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_daily_call"
         android:orderInCategory="101"
-        android:title="@string/label_daily_customer_service"
+        android:title="@string/frag_call_res_contact"
         app:showAsAction="always"/>
 
     <item
