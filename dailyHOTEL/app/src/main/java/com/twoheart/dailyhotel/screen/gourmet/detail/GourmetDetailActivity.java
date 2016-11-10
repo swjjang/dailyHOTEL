@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivi
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -969,7 +970,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onAddWishList(boolean isSuccess, String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (isSuccess == true)
             {
@@ -1001,7 +1010,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onRemoveWishList(boolean isSuccess, String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (isSuccess == true)
             {

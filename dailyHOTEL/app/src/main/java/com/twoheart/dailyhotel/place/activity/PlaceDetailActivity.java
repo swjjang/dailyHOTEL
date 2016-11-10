@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mViewPrice; // Analytics용 리스트 가격
     private Handler mHandler = new Handler();
     private int mResultCode;
+    protected Intent mResultIntent;
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -164,7 +166,29 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         mResultCode = resultCode;
 
-        setResult(resultCode);
+        if (mResultIntent == null) {
+            mResultIntent = new Intent();
+        }
+
+        setResult(resultCode, mResultIntent);
+    }
+
+    public boolean isSameCallingActivity(String checkClassName)
+    {
+        ComponentName callingActivity = getCallingActivity();
+        if (callingActivity == null || Util.isTextEmpty(checkClassName) == true)
+        {
+            return false;
+        }
+
+        String callingClassName = callingActivity.getClassName();
+        if (checkClassName.equalsIgnoreCase(callingClassName) == true)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 
     @Override

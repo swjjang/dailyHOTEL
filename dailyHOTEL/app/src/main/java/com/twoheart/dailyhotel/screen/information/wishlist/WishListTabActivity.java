@@ -282,20 +282,29 @@ public class WishListTabActivity extends BaseActivity
                     finish();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
                 {
-                    PlaceType placeType;
-                    if (requestCode == CODE_REQUEST_ACTIVITY_PLACE_DETAIL)
+                    boolean isChangeWishList = false;
+                    if (data != null)
                     {
-                        placeType = PlaceType.FNB;
-                    } else
-                    {
-                        placeType = PlaceType.HOTEL;
+                        isChangeWishList = data.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, false);
                     }
 
-                    for (PlaceWishListFragment fragment : mFragmentList)
+                    if (isChangeWishList == true)
                     {
-                        if (placeType.equals(fragment.getPlaceType()) == true)
+                        PlaceType placeType;
+                        if (requestCode == CODE_REQUEST_ACTIVITY_PLACE_DETAIL)
                         {
-                            fragment.forceRefreshList();
+                            placeType = PlaceType.FNB;
+                        } else
+                        {
+                            placeType = PlaceType.HOTEL;
+                        }
+
+                        for (PlaceWishListFragment fragment : mFragmentList)
+                        {
+                            if (placeType.equals(fragment.getPlaceType()) == true)
+                            {
+                                fragment.forceRefreshList();
+                            }
                         }
                     }
                 }

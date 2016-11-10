@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -1076,7 +1077,16 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onAddWishList(boolean isSuccess, String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (isSuccess == true)
             {
@@ -1108,7 +1118,16 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onRemoveWishList(boolean isSuccess, String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (isSuccess == true)
             {

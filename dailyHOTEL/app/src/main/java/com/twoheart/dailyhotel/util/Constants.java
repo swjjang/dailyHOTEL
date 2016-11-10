@@ -208,6 +208,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_GRADE = "grade";
     public static final String NAME_INTENT_EXTRA_DATA_FROM_MAP = "fromMap";
     public static final String NAME_INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
+    public static final String NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST = "isChangeWishList";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
