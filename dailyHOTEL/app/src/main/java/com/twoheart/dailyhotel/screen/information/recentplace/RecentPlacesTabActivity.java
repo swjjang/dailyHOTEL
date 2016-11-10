@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -22,6 +23,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -172,7 +174,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+//        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
         layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
@@ -221,11 +223,31 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
 
+        TabLayout.Tab selectedTab = mTabLayout.getTabAt(position);
+
+        Class reflectionClass = ViewPager.class;
+
+        try
+        {
+            Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
+            mCurItem.setAccessible(true);
+            mCurItem.setInt(mViewPager, position);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        if (selectedTab != null)
+        {
+            selectedTab.select();
+        }
+
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
-        mViewPager.setCurrentItem(position);
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+//        mViewPager.setCurrentItem(position);
     }
 
     private boolean isEmptyRecentStayPlace()
