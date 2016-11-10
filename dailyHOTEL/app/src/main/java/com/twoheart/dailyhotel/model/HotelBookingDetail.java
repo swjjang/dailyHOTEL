@@ -13,6 +13,11 @@ import static com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDial
 
 public class HotelBookingDetail extends PlaceBookingDetail
 {
+    public static final String STATUS_NO_CHARGE_REFUND = "NO_CHARGE_REFUND"; // 무료 환불
+    public static final String STATUS_SURCHARGE_REFUND = "SURCHARGE_REFUND"; // 부분 환불
+    public static final String STATUS_NRD = "NRD";
+    public static final String STATUS_NONE = "NONE";
+
     public boolean isOverseas;
     public String checkInDate;
     public String checkOutDate;
@@ -21,7 +26,11 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public String roomName;
     public boolean isNRD;
     public String transactionType;
-    public String refundType;
+    public String refundPolicy;
+    public boolean readyForRefund; // 환불 대기 상태
+
+    public int roomIndex;
+    public boolean isOverCheckOutDate; // 해당 예약이 체크아웃 시간이 지난 경우
 
     public HotelBookingDetail()
     {
@@ -67,6 +76,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         checkInDate = jsonObject.getString("checkIn");
         checkOutDate = jsonObject.getString("checkOut");
+
+        roomIndex = jsonObject.getInt("roomIdx");
 
         // phone1은 프론트
         String phone1 = jsonObject.getString("hotelPhone1");
@@ -116,6 +127,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
             placeIndex = jsonObject.getInt(INTENT_EXTRA_HOTEL_IDX);
         }
 
+        readyForRefund = jsonObject.getBoolean("readyForRefund");
         transactionType = jsonObject.getString("transactionType");
     }
 
@@ -133,8 +145,11 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeInt(bonus);
         dest.writeInt(coupon);
         dest.writeInt(isNRD ? 1 : 0);
-        dest.writeString(refundType);
+        dest.writeString(refundPolicy);
         dest.writeString(transactionType);
+        dest.writeInt(roomIndex);
+        dest.writeInt(readyForRefund ? 1 : 0);
+        dest.writeInt(isOverCheckOutDate ? 1 : 0);
     }
 
     public void readFromParcel(Parcel in)
@@ -150,8 +165,11 @@ public class HotelBookingDetail extends PlaceBookingDetail
         bonus = in.readInt();
         coupon = in.readInt();
         isNRD = in.readInt() == 1;
-        refundType = in.readString();
+        refundPolicy = in.readString();
         transactionType = in.readString();
+        roomIndex = in.readInt();
+        readyForRefund = in.readInt() == 1;
+        isOverCheckOutDate = in.readInt() == 1;
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

@@ -551,13 +551,13 @@ public class StayAutoRefundActivity extends BaseActivity
                             String accountName = mStayAutoRefundLayout.getAccountName();
 
                             mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage//
+                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.roomIndex, mCancelReasonMessage//
                                 , accountName, accountNumber, mSelectedBank.code);
 
                         } else
                         {
                             mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
+                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.roomIndex, mCancelReasonMessage);
                         }
                     }
                 }, null);

@@ -983,6 +983,8 @@
     <!-- 무료 취소 요청하기 -->
     <string name="label_request_free_refund">무료 취소 요청하기</string>
     <string name="label_contact_refund">환불 문의하기</string>
+    <string name="label_contact_refund_kakao">데일리 카카오톡 환불문의</string>
+    <string name="label_contact_refund_daily">데일리 고객센터 전화 환불문의</string>
     <string name="label_select_reason_for_cancellation">3. 취소 사유 선택 (필수 선택)</string>
     <string name="label_input_refund_account">4. 환불 계좌 정보 입력 (필수 입력)</string>
     <string name="label_select_bank">은행 선택</string>
