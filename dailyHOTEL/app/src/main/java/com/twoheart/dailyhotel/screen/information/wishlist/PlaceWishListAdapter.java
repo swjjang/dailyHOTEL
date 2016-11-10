@@ -88,8 +88,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public int getItemCount()
     {
-        // PlaceViewItem 이기에 footer개수 만큼 빼줌
-        return mList != null && mList.size() > 0 ? mList.size() - 1 : 0;
+        return mList != null && mList.size() > 0 ? mList.size() : 0;
     }
 
     @Override

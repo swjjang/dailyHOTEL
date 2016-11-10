@@ -380,13 +380,13 @@ public class WishListTabActivity extends BaseActivity
                 PlaceWishListLayout placeWishListLayout = fragment.getListLayout();
                 if (placeWishListLayout != null)
                 {
-                    totalCount += placeWishListLayout.getItemCount();
+                    totalCount += placeWishListLayout.getRealItemCount();
                 }
             }
 
             if (totalCount == 0)
             {
-                //                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST_EMPTY);
             }
         }
     };

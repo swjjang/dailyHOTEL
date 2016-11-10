@@ -83,7 +83,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(makePlaceViewItemList(list));
+            mListLayout.setData(list);
         }
 
         @Override
@@ -177,24 +177,6 @@ public class StayWishListFragment extends PlaceWishListFragment
         {
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
-        }
-
-        private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<Stay> list)
-        {
-            if (list == null || list.size() == 0)
-            {
-                return null;
-            }
-
-            ArrayList<PlaceViewItem> placeViewItems = new ArrayList<>();
-            for (Stay stay : list)
-            {
-                placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
-            }
-
-            placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-
-            return placeViewItems;
         }
     };
 

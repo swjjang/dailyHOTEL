@@ -83,7 +83,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(makePlaceViewItemList(list));
+            mListLayout.setData(list);
         }
 
         @Override

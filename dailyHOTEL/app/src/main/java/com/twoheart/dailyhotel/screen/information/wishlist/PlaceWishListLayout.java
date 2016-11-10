@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -38,6 +39,8 @@ public abstract class PlaceWishListLayout extends BaseLayout
     protected abstract int getEmptyMessageResId();
 
     protected abstract int getEmptyButtonTextResId();
+
+    protected abstract ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<? extends Place> list);
 
     protected abstract PlaceWishListAdapter getWishListAdapter(Context context //
         , ArrayList<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
@@ -78,12 +81,12 @@ public abstract class PlaceWishListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<PlaceViewItem> list)
+    public void setData(ArrayList<? extends Place> list)
     {
         setData(list, true);
     }
 
-    public void setData(ArrayList<PlaceViewItem> list, boolean isShowEmpty)
+    public void setData(ArrayList<? extends Place> list, boolean isShowEmpty)
     {
         if (list == null || list.size() == 0)
         {
@@ -95,13 +98,15 @@ public abstract class PlaceWishListLayout extends BaseLayout
             setEmptyViewVisibility(View.GONE);
         }
 
+        ArrayList<PlaceViewItem> viewItemList = makePlaceViewItemList(list);
+
         if (mListAdapter == null)
         {
-            mListAdapter = getWishListAdapter(mContext, list, mItemListener);
+            mListAdapter = getWishListAdapter(mContext, viewItemList, mItemListener);
             mRecyclerView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(list);
+            mListAdapter.setData(viewItemList);
             mListAdapter.notifyDataSetChanged();
         }
     }
@@ -111,9 +116,9 @@ public abstract class PlaceWishListLayout extends BaseLayout
         return mListAdapter != null ? mListAdapter.getList() : null;
     }
 
-    public int getItemCount()
+    public int getRealItemCount()
     {
-        return mListAdapter != null ? mListAdapter.getItemCount() : null;
+        return mListAdapter != null ? mListAdapter.getItemCount() - 1 : null;
     }
 
     public PlaceViewItem getItem(int position)

@@ -60,13 +60,17 @@
             android:paddingLeft="22dp"
             android:paddingRight="22dp"/>
 
+
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/bottomMessageTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
             android:layout_marginBottom="15dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:gravity="center"
             android:textColor="@color/default_text_cc5c5c5"
+            android:background="@drawable/shape_wishlist_footer_textview_background"
             android:text="@string/wishlist_list_bottom_notice_message"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
