@@ -128,7 +128,9 @@ public abstract class PlaceWishListLayout extends BaseLayout
 
     public PlaceViewItem removeItem(int position)
     {
-        return mListAdapter != null ? mListAdapter.remove(position) : null;
+        PlaceViewItem removeItem = mListAdapter != null ? mListAdapter.remove(position) : null;
+        setEmptyViewVisibility(getRealItemCount() <= 0 ? View.VISIBLE : View.GONE);
+        return removeItem;
     }
 
     public void notifyDataSetChanged()
