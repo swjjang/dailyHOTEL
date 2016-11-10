@@ -89,6 +89,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void startTermsNPolicy();
 
         void startSettingAlarm();
+
+        void startWishList(Constants.PlaceType placeType);
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -120,6 +122,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View aboutLayout = view.findViewById(R.id.aboutLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
         View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
+        View wishListLayout = view.findViewById(R.id.wishListLayout);
 
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
@@ -129,6 +132,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         aboutLayout.setOnClickListener(this);
         termsNpolicyLayout.setOnClickListener(this);
         recentPlacesLayout.setOnClickListener(this);
+        wishListLayout.setOnClickListener(this);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
@@ -562,6 +566,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.linkAlarmTextView:
                 ((OnEventListener) mOnEventListener).startSettingAlarm();
+                break;
+
+            case R.id.wishListLayout:
+                ((OnEventListener) mOnEventListener).startWishList(null);
                 break;
 
             default:

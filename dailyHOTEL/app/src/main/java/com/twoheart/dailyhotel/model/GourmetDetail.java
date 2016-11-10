@@ -165,6 +165,16 @@ public class GourmetDetail extends PlaceDetail
         {
             mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
         }
+
+        if (jsonObject.has("myWish") == true)
+        {
+            myWish = jsonObject.getBoolean("myWish");
+        }
+
+        if (jsonObject.has("wishCount") == true)
+        {
+            wishCount = jsonObject.getInt("wishCount");
+        }
     }
 
     public ArrayList<TicketInformation> getTicketInformation()

@@ -404,6 +404,7 @@ public class Util implements Constants
 
     /**
      * 현재 Fresco 라이브러리 버그로 인해서 7.0 이상 단말이에서 사용금지.
+     *
      * @return
      */
     public static boolean isUsedMutilTransition()

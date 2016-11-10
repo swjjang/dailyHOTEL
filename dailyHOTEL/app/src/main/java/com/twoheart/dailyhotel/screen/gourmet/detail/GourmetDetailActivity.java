@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -35,6 +34,7 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -827,6 +827,46 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             startCalendar(mSaleTime, mPlaceDetail.index, true);
         }
+
+        @Override
+        public void setWishList(boolean isAdded, int placeIndex)
+        {
+            if (isAdded == true)
+            {
+                mPlaceDetailNetworkController.requestAddWishList(PlaceType.FNB, placeIndex);
+            } else
+            {
+                mPlaceDetailNetworkController.requestRemoveWishList(PlaceType.FNB, placeIndex);
+            }
+        }
+
+        @Override
+        public void onWishListButtonClick()
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                DailyToast.showToast(GourmetDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+
+                Intent intent = LoginActivity.newInstance(GourmetDetailActivity.this, AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
+            } else
+            {
+                if (isLockUiComponent() == true || isFinishing() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
+                mPlaceDetailLayout.startWishListButtonClick();
+            }
+        }
+
+        @Override
+        public void releaseUiComponent()
+        {
+            GourmetDetailActivity.this.releaseUiComponent();
+        }
     };
 
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
@@ -854,28 +894,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
         }
-
-        //        @Override
-        //        public void onUserInformation(Customer user, String birthday, boolean isDailyUser)
-        //        {
-        //            if (isDailyUser == true)
-        //            {
-        //                mPlaceDetailNetworkController.requestProfile();
-        //            } else
-        //            {
-        //                // 입력된 정보가 부족해.
-        //                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
-        //                {
-        //                    moveToAddSocialUserInformation(user, birthday);
-        //                } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-        //                {
-        //                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-        //                } else
-        //                {
-        //                    processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation);
-        //                }
-        //            }
-        //        }
 
         @Override
         public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
@@ -945,6 +963,70 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             } finally
             {
                 unLockUI();
+            }
+        }
+
+        @Override
+        public void onAddWishList(boolean isSuccess, String message)
+        {
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+
+            if (isSuccess == true)
+            {
+                mPlaceDetail.myWish = true;
+                mPlaceDetailLayout.setWishListButtonCount(++mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, null);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                releaseUiComponent();
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+
+        @Override
+        public void onRemoveWishList(boolean isSuccess, String message)
+        {
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+
+            if (isSuccess == true)
+            {
+                mPlaceDetail.myWish = false;
+                mPlaceDetailLayout.setWishListButtonCount(--mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, null);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                releaseUiComponent();
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
             }
         }
 

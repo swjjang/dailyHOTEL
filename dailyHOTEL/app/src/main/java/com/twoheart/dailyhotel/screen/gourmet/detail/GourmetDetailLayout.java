@@ -65,6 +65,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         if (gourmetDetail == null)
         {
             setLineIndicatorVisible(false);
+            setWishListButtonSelected(false);
+            setWishListButtonCount(0);
             return;
         }
 
@@ -133,6 +135,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             updateTicketInformationLayout(ticketInformationList);
         }
+
+        setWishListButtonSelected(gourmetDetail.myWish);
+        setWishListButtonCount(gourmetDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }

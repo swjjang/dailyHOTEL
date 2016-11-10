@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.place.layout;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -23,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -40,10 +43,12 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 
@@ -80,11 +85,22 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
+    private AnimatorSet mWishListAnmatorSet;
     private int mStatusBarHeight;
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
     protected TextView mTransTotelGradeTextView, mTransPlacelNameTextView;
     protected View mTransGradientView;
+
+    protected DailyTextView mWishListButtonTextView;
+    protected DailyTextView mWishListPopupTextView;
+
+    public enum WishListPopupState
+    {
+        ADD,
+        DELETE,
+        GONE
+    }
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -115,6 +131,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void doBooking();
 
         void downloadCoupon();
+
+        void setWishList(boolean isAdded, int placeIndex);
+
+        void onWishListButtonClick();
+
+        void releaseUiComponent();
     }
 
     protected abstract String getProductTypeTitle();
@@ -217,6 +239,21 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setBookingStatus(STATUS_NONE);
         hideProductInformationLayout();
+
+        mWishListPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
+        setWishListPopup(WishListPopupState.GONE);
+
+        mWishListButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
+        mWishListButtonTextView.setTag(false);
+
+        mWishListButtonTextView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onWishListButtonClick();
+            }
+        });
     }
 
     private PaintDrawable makeShaderFactory()
@@ -688,6 +725,171 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         mMoreIconView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
         mDailyLineIndicator.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setWishListButtonSelected(boolean isSelected)
+    {
+        int imageResId = isSelected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
+        mWishListButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
+        mWishListButtonTextView.setTag(isSelected);
+
+        if (mPlaceDetail != null && mPlaceDetail.myWish != isSelected)
+        {
+            mPlaceDetail.myWish = isSelected;
+        }
+    }
+
+    public void setWishListButtonCount(int count)
+    {
+        String buttonText;
+        if (count <= 0)
+        {
+            count = 0;
+            buttonText = mContext.getResources().getString(R.string.label_wishlist);
+        } else if (count > 9999)
+        {
+            buttonText = mContext.getResources().getString(R.string.wishlist_count_over_10_thousand);
+        } else
+        {
+            buttonText = Integer.toString(count);
+        }
+        mWishListButtonTextView.setText(buttonText);
+
+        if (mPlaceDetail != null && count != mPlaceDetail.wishCount)
+        {
+            mPlaceDetail.wishCount = count;
+        }
+    }
+
+    public int getWishListButtonCount()
+    {
+        int count = 0;
+
+        if (mWishListButtonTextView != null)
+        {
+            String buttonText = mWishListButtonTextView.getText().toString();
+            try
+            {
+                count = Integer.parseInt(buttonText);
+            } catch (Exception e)
+            {
+                count = 0;
+            }
+        }
+
+        return count;
+    }
+
+    public void startWishListButtonClick()
+    {
+        if (mWishListButtonTextView == null)
+        {
+            return;
+        }
+
+        Object tag = mWishListButtonTextView.getTag();
+        if (tag != null && tag instanceof Boolean)
+        {
+            boolean isSelected = (boolean) tag;
+            int wishCount = getWishListButtonCount();
+            wishCount = isSelected == true ? wishCount++ : wishCount--;
+
+            ExLog.d("wishList button click : " + !isSelected);
+            setWishListButtonCount(wishCount);
+            setWishListButtonSelected(!isSelected);
+            ((OnEventListener) mOnEventListener).setWishList(!isSelected, mPlaceDetail.index);
+        }
+    }
+
+    public void setWishListPopup(final WishListPopupState state)
+    {
+        if (WishListPopupState.GONE == state)
+        {
+            mWishListPopupTextView.setVisibility(View.GONE);
+
+            if (mWishListAnmatorSet != null)
+            {
+                mWishListAnmatorSet.cancel();
+                mWishListAnmatorSet.removeAllListeners();
+                mWishListAnmatorSet = null;
+            }
+        } else
+        {
+            if (mWishListAnmatorSet != null && mWishListAnmatorSet.isRunning() == true)
+            {
+                ExLog.d("WishList Popup is Already running");
+                return;
+            }
+
+            if (WishListPopupState.ADD == state)
+            {
+                mWishListPopupTextView.setText(R.string.wishlist_detail_add_message);
+                mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
+                mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+            } else
+            {
+                mWishListPopupTextView.setText(R.string.wishlist_detail_delete_message);
+                mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
+                mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+            }
+
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
+            );
+            objectAnimator1.setInterpolator(new AccelerateInterpolator());
+            objectAnimator1.setDuration(300);
+
+
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
+            );
+            objectAnimator2.setDuration(600);
+
+
+            ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
+            );
+            objectAnimator3.setDuration(200);
+
+            mWishListAnmatorSet = new AnimatorSet();
+            mWishListAnmatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+            mWishListAnmatorSet.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    mWishListPopupTextView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mWishListPopupTextView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).releaseUiComponent();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mWishListPopupTextView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).releaseUiComponent();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mWishListAnmatorSet.start();
+        }
     }
 
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()

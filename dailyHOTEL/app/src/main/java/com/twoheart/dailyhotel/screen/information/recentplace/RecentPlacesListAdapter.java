@@ -28,7 +28,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
     private ArrayList<? extends Place> mList;
     protected OnRecentPlacesItemListener mListener;
 
-    private Constants.SortType mSortType;
+    private Constants.SortType mSortType; // TODO : 추후 제거 필요!
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
 

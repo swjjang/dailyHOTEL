@@ -95,7 +95,7 @@
     <string name="message_detail_copy_address">주소가 복사되었습니다.</string>
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
     <string name="message_no_more_list">마지막 목록입니다.</string>
-    <string name="message_recent_place_tooltip">최근 확인한 호텔/레스토랑을 \'더보기\' 메뉴에서 확인해보세요!</string>
+    <string name="message_wishlist_tooltip">위시리스트, 확인한 호텔/레스토랑을 확인해보세요!</string>
 
 
     <!-- Transition Name -->
@@ -162,6 +162,7 @@
     <string name="actionbar_title_coupon_list">할인쿠폰함</string>
     <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
     <string name="actionbar_title_register_coupon">할인쿠폰 코드 등록</string>
+    <string name="actionbar_title_wishList">위시리스트</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -309,7 +310,7 @@
     <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침%1$d시부터 다음 날 새벽%2$d시까지입니다.</string>
     <string name="dialog_message_coupon_list_login">로그인 후 할인 쿠폰함을 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_message_profile_login">로그인 후 내정보를 확인할 수 있습니다.\n로그인 할까요?</string>
-    <string name="dialog_message_profile_birthday_login">로그인 후 생일 정보를 확인할 수 있습니다.\n로그인 할까요?</string>
+    <string name="dialog_message_profile_birthday_login">로그인 후 생일정보를 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_message_register_coupon_login">로그인 후 할인쿠폰 등록을 확인할 수 있습니다.\n로그인 할까요?</string>
 
     <!-- Main Drawer Menu Titles -->
@@ -999,5 +1000,18 @@
 
     <string name="message_please_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
     <string name="message_please_refund_notice">고객님께서 현금결제 주문을 취소하실 경우 수령하실 계좌이며,\n인증된 환불계좌 정보는 수집하지 않고 환불처리 후 바로 삭제 합니다.</string>
+
+    <!-- wishList -->
+    <string name="label_wishlist">위시리스트</string>
+    <string name="wishlist_need_login_message">로그인하여 위시리스트를 확인하세요.</string>
+    <string name="wishlist_list_empty_message01">저장된 위시리스트가 없습니다.</string>
+    <string name="wishlist_list_empty_message02_stay">원하는 호텔 상세 화면에서\n하트 아이콘을 눌러 위시리스트를 만들어보세요.</string>
+    <string name="wishlist_list_empty_message02_gourmet">원하는 고메 상세 화면에서\n하트 아이콘을 눌러 위시리스트를 만들어보세요.</string>
+    <string name="wishlist_list_empty_button_message_stay">호텔 보러가기</string>
+    <string name="wishlist_list_empty_button_message_gourmet">고메 보러가기</string>
+    <string name="wishlist_list_bottom_notice_message">판매 사정에 따라 위시리스트 목록에서 삭제될 수 있습니다.</string>
+    <string name="wishlist_detail_add_message">위시리스트에\n추가했습니다.</string>
+    <string name="wishlist_detail_delete_message">위시리스트에서\n삭제했습니다.</string>
+    <string name="wishlist_count_over_10_thousand">만명 이상</string>
 
 </resources>

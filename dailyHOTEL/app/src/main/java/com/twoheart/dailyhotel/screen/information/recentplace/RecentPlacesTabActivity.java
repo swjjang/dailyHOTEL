@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,6 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -47,6 +49,17 @@ public class RecentPlacesTabActivity extends BaseActivity
     private PlaceType mPlaceType;
 
     private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
+
+    public static Intent newInstance(Context context, PlaceType placeType)
+    {
+        Intent intent = new Intent(context, RecentPlacesTabActivity.class);
+
+        if (placeType != null)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        }
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -119,6 +132,9 @@ public class RecentPlacesTabActivity extends BaseActivity
         initToolbar();
         initTabLayout();
 
+        mEmptyView = findViewById(R.id.emptyLayout);
+        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
@@ -164,9 +180,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         mTabLayout.setLayoutParams(layoutParams);
 
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
-
-        mEmptyView = findViewById(R.id.emptyLayout);
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
     }
 
     private void setTabLayout()

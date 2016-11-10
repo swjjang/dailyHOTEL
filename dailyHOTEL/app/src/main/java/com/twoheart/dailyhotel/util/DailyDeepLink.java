@@ -661,7 +661,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        if (mVersionCode >= 8)
+        if (mVersionCode >= 9)
         {
             return WISHLIST_HOTEL_V9.equalsIgnoreCase(view);
         } else
@@ -674,7 +674,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        if (mVersionCode >= 8)
+        if (mVersionCode >= 9)
         {
             return WISHLIST_GOURMET_V9.equalsIgnoreCase(view);
         } else
