@@ -23,7 +23,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
     {
         void onBankList(List<Bank> bankList);
 
-        void onRefundResult();
+        void onRefundResult(int msgCode, String message);
     }
 
     public StayAutoRefundNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -216,9 +216,10 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                String message = response.getString("msg");
 
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRefundResult();
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRefundResult(msgCode, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

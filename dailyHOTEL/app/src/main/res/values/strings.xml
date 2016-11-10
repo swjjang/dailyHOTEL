@@ -996,6 +996,7 @@
     <string name="label_select_cancel_refund05">단순 변심</string>
     <string name="label_select_cancel_refund06">기타</string>
     <string name="message_enter_contents">내용을 입력해 주세요.</string>
+    <string name="message_do_cancel_free">무료 취소를 진행할까요?</string>
 
     <string name="message_please_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
     <string name="message_please_refund_notice">고객님께서 현금결제 주문을 취소하실 경우 수령하실 계좌이며,\n인증된 환불계좌 정보는 수집하지 않고 환불처리 후 바로 삭제 합니다.</string>

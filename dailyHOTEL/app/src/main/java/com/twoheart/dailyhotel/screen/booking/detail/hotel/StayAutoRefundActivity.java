@@ -539,20 +539,28 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void onClickRefund()
         {
-            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
-            {
-                String accountNumber = mStayAutoRefundLayout.getAccountNumber();
-                String accountName = mStayAutoRefundLayout.getAccountName();
+            showSimpleDialog(null, getString(R.string.message_do_cancel_free), getString(R.string.dialog_btn_text_yes)//
+                , getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+                        {
+                            String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                            String accountName = mStayAutoRefundLayout.getAccountName();
 
-                mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                    , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage//
-                    , accountName, accountNumber, mSelectedBank.code);
+                            mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
+                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage//
+                                , accountName, accountNumber, mSelectedBank.code);
 
-            } else
-            {
-                mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                    , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
-            }
+                        } else
+                        {
+                            mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
+                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
+                        }
+                    }
+                }, null);
         }
 
         @Override
@@ -573,9 +581,9 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
-        public void onRefundResult()
+        public void onRefundResult(int msgCode, String message)
         {
-
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override
