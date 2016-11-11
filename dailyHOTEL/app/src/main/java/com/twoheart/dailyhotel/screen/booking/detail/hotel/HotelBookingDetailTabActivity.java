@@ -326,7 +326,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         mHotelBookingDetail.setData(jsonObject);
 
                         long checkOutDateTime = DailyCalendar.getTimeGMT9(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
-                        
+
                         if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
                         {
                             mHotelBookingDetail.isOverCheckOutDate = false;
