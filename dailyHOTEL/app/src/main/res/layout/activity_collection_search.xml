@@ -4,19 +4,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_default"/>
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:adjustViewBounds="true"
-        android:transitionName="@string/transition_place_image"
-        fresco:actualImageScaleType="centerCrop"/>
-
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/imageView"/>
+        android:layout_height="match_parent"/>
+
+    <include layout="@layout/toolbar_default"/>
 </RelativeLayout>

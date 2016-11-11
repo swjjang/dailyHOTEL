@@ -258,6 +258,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_RECENTPLACE = 50;
     public static final int CODE_REQUEST_ACTIVITY_CONTACT_US = 51;
     public static final int CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST = 52;
+    public static final int CODE_REQUEST_ACTIVITY_COLLECTION = 53;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
