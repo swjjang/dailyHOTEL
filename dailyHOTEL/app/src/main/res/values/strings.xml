@@ -426,6 +426,7 @@
     <string name="frag_booking_line">당신의 파라다이스가 기다리고 있어요.</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
     <string name="frag_booking_wait_account">입금 대기</string>
+    <string name="frag_booking_wait_refund">무료취소 대기</string>
     <string name="frag_booking_complete_payment">결제 완료</string>
     <string name="frag_booking_use">이용 완료</string>
     <string name="frag_booking_duedate_formet">%d일 남았습니다.</string>
