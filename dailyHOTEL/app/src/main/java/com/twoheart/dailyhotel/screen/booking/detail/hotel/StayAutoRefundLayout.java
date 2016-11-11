@@ -91,7 +91,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             @Override
             public void afterTextChanged(Editable s)
             {
-                ((OnEventListener)mOnEventListener).onAccountTextWatcher(s.length());
+                ((OnEventListener) mOnEventListener).onAccountTextWatcher(s.length());
             }
         });
 
@@ -112,7 +112,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             @Override
             public void afterTextChanged(Editable s)
             {
-                ((OnEventListener)mOnEventListener).onAccountTextWatcher(s.length());
+                ((OnEventListener) mOnEventListener).onAccountTextWatcher(s.length());
             }
         });
     }
@@ -292,7 +292,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
     public void setRefundButtonEnabled(boolean enabled)
     {
-        if(mRequestRefundView == null)
+        if (mRequestRefundView == null)
         {
             return;
         }
@@ -302,7 +302,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
     public String getAccountNumber()
     {
-        if(mAccountNumberEditText == null)
+        if (mAccountNumberEditText == null)
         {
             return null;
         }
@@ -312,7 +312,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
     public String getAccountName()
     {
-        if(mAccountNameEditText == null)
+        if (mAccountNameEditText == null)
         {
             return null;
         }

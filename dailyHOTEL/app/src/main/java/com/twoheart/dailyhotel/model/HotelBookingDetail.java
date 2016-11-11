@@ -9,8 +9,6 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity.INTENT_EXTRA_HOTEL_IDX;
-
 public class HotelBookingDetail extends PlaceBookingDetail
 {
     public static final String STATUS_NO_CHARGE_REFUND = "NO_CHARGE_REFUND"; // 무료 환불
