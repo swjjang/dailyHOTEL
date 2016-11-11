@@ -26,14 +26,18 @@
         android:background="@color/default_line_cf0f0f0"/>
 
     <LinearLayout
+        android:id="@+id/defaultRefundPolicyLayout"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="19dp"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="19dp"
+            android:layout_marginTop="5dp"
             app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -45,6 +49,62 @@
             android:lineSpacingExtra="-2dp"
             android:textColor="@color/default_background_section_c323232"
             android:textSize="13dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/waitRefundPolicyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="19dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="5dp"
+                app:srcCompat="@drawable/info_ic_text_dot_black"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/waitRefundPolicyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="-2dp"
+                android:text="@string/message_please_wait_refund01"
+                android:textColor="@color/default_background_section_c323232"
+                android:textSize="13dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="5dp"
+                app:srcCompat="@drawable/info_ic_text_dot_black"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="-2dp"
+                android:text="@string/message_please_wait_refund02"
+                android:textColor="@color/default_background_section_c323232"
+                android:textSize="13dp"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

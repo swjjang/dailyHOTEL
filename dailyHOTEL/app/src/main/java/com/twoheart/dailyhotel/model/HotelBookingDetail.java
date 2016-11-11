@@ -16,7 +16,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public static final String STATUS_NO_CHARGE_REFUND = "NO_CHARGE_REFUND"; // 무료 환불
     public static final String STATUS_SURCHARGE_REFUND = "SURCHARGE_REFUND"; // 부분 환불
     public static final String STATUS_NRD = "NRD";
-    public static final String STATUS_NONE = "NONE";
+    public static final String STATUS_WAIT_REFUND = "WAIT_REFUND";
 
     public boolean isOverseas;
     public String checkInDate;
@@ -31,6 +31,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
     public int roomIndex;
     public boolean isOverCheckOutDate; // 해당 예약이 체크아웃 시간이 지난 경우
+    public String mRefundComment; // 환분 불가 내용
+    public int reservationIndex;
 
     public HotelBookingDetail()
     {
@@ -122,13 +124,14 @@ public class HotelBookingDetail extends PlaceBookingDetail
             isNRD = false;
         }
 
-        if (jsonObject.has(INTENT_EXTRA_HOTEL_IDX) == true)
+        if (jsonObject.has("hotelIdx") == true)
         {
-            placeIndex = jsonObject.getInt(INTENT_EXTRA_HOTEL_IDX);
+            placeIndex = jsonObject.getInt("hotelIdx");
         }
 
         readyForRefund = jsonObject.getBoolean("readyForRefund");
         transactionType = jsonObject.getString("transactionType");
+        reservationIndex = jsonObject.getInt("hotelReservationIdx");
     }
 
     @Override
@@ -150,6 +153,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeInt(roomIndex);
         dest.writeInt(readyForRefund ? 1 : 0);
         dest.writeInt(isOverCheckOutDate ? 1 : 0);
+        dest.writeString(mRefundComment);
+        dest.writeInt(reservationIndex);
     }
 
     public void readFromParcel(Parcel in)
@@ -170,6 +175,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         roomIndex = in.readInt();
         readyForRefund = in.readInt() == 1;
         isOverCheckOutDate = in.readInt() == 1;
+        mRefundComment = in.readString();
+        reservationIndex = in.readInt();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

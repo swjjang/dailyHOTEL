@@ -2030,7 +2030,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         {
                             // 취소 및 환불 규정
                             DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag, hotelPaymentInformation.placeIndex,
-                                roomInformation.roomIndex, hotelPaymentInformation.checkInDateFormat, mPolicyRefundJsonResponseListener);
+                                roomInformation.roomIndex, hotelPaymentInformation.checkInDateFormat, null, mPolicyRefundJsonResponseListener);
                         }
                         break;
                     }

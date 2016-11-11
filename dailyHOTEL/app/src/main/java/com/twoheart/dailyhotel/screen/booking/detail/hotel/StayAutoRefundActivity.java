@@ -551,13 +551,13 @@ public class StayAutoRefundActivity extends BaseActivity
                             String accountName = mStayAutoRefundLayout.getAccountName();
 
                             mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.roomIndex, mCancelReasonMessage//
+                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage//
                                 , accountName, accountNumber, mSelectedBank.code);
 
                         } else
                         {
                             mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.roomIndex, mCancelReasonMessage);
+                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
                         }
                     }
                 }, null);
@@ -583,7 +583,14 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void onRefundResult(int msgCode, String message)
         {
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    finish();
+                }
+            });
         }
 
         @Override
