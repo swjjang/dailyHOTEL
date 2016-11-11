@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +23,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
     {
         void onBankList(List<Bank> bankList);
 
-        void onRefundResult(int msgCode, String message);
+        void onRefundResult(int msgCode, String message, boolean readyForRefund);
     }
 
     public StayAutoRefundNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -90,11 +91,23 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                String message = null;
+                boolean readyForRefund = false;
 
-                JSONObject dataJSONObject = response.getJSONObject("data");
-                String messageFromPg = dataJSONObject.getString("messageFromPg");
+                if (response.has("data") == true && response.isNull("data") == false)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    message = dataJSONObject.getString("messageFromPg");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRefundResult(msgCode, messageFromPg);
+                    readyForRefund = dataJSONObject.getBoolean("readyForRefund");
+                }
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = response.getString("msg");
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRefundResult(msgCode, message, readyForRefund);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

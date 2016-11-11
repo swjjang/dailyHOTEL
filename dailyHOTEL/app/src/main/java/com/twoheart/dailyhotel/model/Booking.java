@@ -25,6 +25,7 @@ public class Booking implements Parcelable
 
     public String hotelImageUrl;
     public boolean isUsed;
+    public boolean readyForRefund;
     public Constants.PlaceType placeType;
 
     public Booking(String sectionName)
@@ -58,6 +59,8 @@ public class Booking implements Parcelable
             JSONArray jsonArray = jsonObject.getJSONArray("img");
             hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
 
+            readyForRefund = jsonObject.getBoolean("readyForRefund");
+
             placeType = Constants.PlaceType.valueOf(jsonObject.getString("type").toUpperCase());
         } catch (Exception e)
         {
@@ -79,6 +82,7 @@ public class Booking implements Parcelable
         dest.writeLong(checkoutTime);
         dest.writeString(hotelImageUrl);
         dest.writeInt(isUsed ? 1 : 0);
+        dest.writeInt(readyForRefund ? 1 : 0);
         dest.writeString(placeType.name());
     }
 
@@ -95,6 +99,7 @@ public class Booking implements Parcelable
         checkoutTime = in.readLong();
         hotelImageUrl = in.readString();
         isUsed = in.readInt() == 1;
+        readyForRefund = in.readInt() == 1;
         placeType = Constants.PlaceType.valueOf(in.readString());
     }
 

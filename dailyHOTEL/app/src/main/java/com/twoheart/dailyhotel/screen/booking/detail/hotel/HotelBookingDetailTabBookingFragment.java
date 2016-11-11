@@ -53,6 +53,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
     private int mReservationIndex;
 
     private View mRefundPolicyLayout, mButtonBottomMarginView;
+    private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
 
     public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
@@ -250,8 +251,12 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         try
         {
-            Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+            // 날짜로 계산한다. 서버에 체크인시간, 체크아웃시간이 잘못 기록되어있는 경우 발생해서 예외 처리 추가
+            String[] checkInDates = bookingDetail.checkInDate.split("T");
+            String[] checkOutDates = bookingDetail.checkOutDate.split("T");
+
+            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
             int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
             nightsTextView.setText(context.getString(R.string.label_nights, nights));
@@ -365,8 +370,8 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         buttonLayout.setVisibility(View.VISIBLE);
         TextView buttonTextView = (TextView) buttonLayout.findViewById(R.id.buttonTextView);
 
-        View defaultRefundPolicyLayout = view.findViewById(R.id.defaultRefundPolicyLayout);
-        View waitRefundPolicyLayout = view.findViewById(R.id.waitRefundPolicyLayout);
+        mDefaultRefundPolicyLayout = view.findViewById(R.id.defaultRefundPolicyLayout);
+        mWaitRefundPolicyLayout = view.findViewById(R.id.waitRefundPolicyLayout);
 
         // 이미 이용완료가 된경우
         if (bookingDetail.isOverCheckOutDate == true)
@@ -380,8 +385,8 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             {
                 case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
                 {
-                    defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    waitRefundPolicyLayout.setVisibility(View.GONE);
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
 
                     buttonTextView.setText(R.string.label_request_free_refund);
                     break;
@@ -389,10 +394,10 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
                 case HotelBookingDetail.STATUS_WAIT_REFUND:
                 {
-                    defaultRefundPolicyLayout.setVisibility(View.GONE);
-                    waitRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mDefaultRefundPolicyLayout.setVisibility(View.GONE);
+                    mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
 
-                    TextView waitRefundPolicyTextView = (TextView) waitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
+                    TextView waitRefundPolicyTextView = (TextView) mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
                     waitRefundPolicyTextView.setText(Html.fromHtml(getString(R.string.message_please_wait_refund01)));
 
                     buttonTextView.setText(R.string.label_contact_refund);
@@ -401,8 +406,65 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
                 default:
                 {
-                    defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    waitRefundPolicyLayout.setVisibility(View.GONE);
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
+
+                    buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+            }
+
+            buttonLayout.setOnClickListener(this);
+        }
+    }
+
+    public void updateRefundPolicyLayout(PlaceBookingDetail bookingDetail)
+    {
+        mBookingDetail = (HotelBookingDetail)bookingDetail;
+
+        TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+
+        refundPolicyTextView.setText(mBookingDetail.mRefundComment);
+
+        View buttonLayout = mRefundPolicyLayout.findViewById(R.id.buttonLayout);
+        buttonLayout.setVisibility(View.VISIBLE);
+        TextView buttonTextView = (TextView) buttonLayout.findViewById(R.id.buttonTextView);
+
+        // 이미 이용완료가 된경우
+        if (mBookingDetail.isOverCheckOutDate == true)
+        {
+            setRefundLayoutVisible(false);
+        } else
+        {
+            setRefundLayoutVisible(true);
+
+            switch (getRefundPolicyStatus(mBookingDetail))
+            {
+                case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
+
+                    buttonTextView.setText(R.string.label_request_free_refund);
+                    break;
+                }
+
+                case HotelBookingDetail.STATUS_WAIT_REFUND:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.GONE);
+                    mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
+
+                    TextView waitRefundPolicyTextView = (TextView) mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
+                    waitRefundPolicyTextView.setText(Html.fromHtml(getString(R.string.message_please_wait_refund01)));
+
+                    buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+
+                default:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
 
                     buttonTextView.setText(R.string.label_contact_refund);
                     break;
@@ -526,7 +588,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
                     {
                         Intent intent = StayAutoRefundActivity.newInstance(baseActivity, mBookingDetail);
-                        startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+                        baseActivity.startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
                         break;
                     }
 

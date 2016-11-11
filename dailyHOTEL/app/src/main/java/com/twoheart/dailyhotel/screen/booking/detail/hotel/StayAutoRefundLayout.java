@@ -71,7 +71,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         mBankNameTextView = (TextView) view.findViewById(R.id.bankNameTextView);
         mBankNameTextView.setOnClickListener(this);
 
-        mAccountNumberEditText = (EditText) view.findViewById(R.id.accountNameEditText);
+        mAccountNumberEditText = (EditText) view.findViewById(R.id.accountNumberEditText);
         mAccountNameEditText = (EditText) view.findViewById(R.id.accountNameEditText);
 
         mAccountNumberEditText.addTextChangedListener(new TextWatcher()

@@ -68,6 +68,12 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             return;
         }
 
+        if (mHotelBookingDetailTabBookingFragment != null)
+        {
+            mHotelBookingDetailTabBookingFragment.updateRefundPolicyLayout(placeBookingDetail);
+            return;
+        }
+
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
         mHotelBookingDetailTabBookingFragment = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
@@ -86,10 +92,24 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         {
             case CODE_RESULT_ACTIVITY_STAY_AUTOREFUND:
             {
-                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                switch (resultCode)
                 {
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                    finish();
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    {
+                        lockUI();
+
+                        requestCommonDatetime();
+
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        break;
+                    }
+
+                    case RESULT_OK:
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        finish();
+                        break;
+                    }
                 }
                 break;
             }

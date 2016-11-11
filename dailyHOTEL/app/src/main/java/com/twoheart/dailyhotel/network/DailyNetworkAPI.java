@@ -1168,7 +1168,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         Map<String, String> params = new HashMap<>();
         params.put("hotelIdx", Integer.toString(hotelIdx));
-        params.put("dateCheckIn", URLEncoder.encode(dateCheckIn));
+        params.put("dateCheckIn", dateCheckIn);
         params.put("transactionType", transactionType);
         params.put("hotelReservationIdx", Integer.toString(hotelReservationIdx));
         params.put("reasonRefund", reasonCancel);
