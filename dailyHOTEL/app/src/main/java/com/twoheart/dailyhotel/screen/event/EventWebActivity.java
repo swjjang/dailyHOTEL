@@ -608,6 +608,20 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    private boolean moveDeepLinkCollectionView(Context context)
+    {
+        String placeType = DailyDeepLink.getInstance().getPlaceType();
+        String queryType = DailyDeepLink.getInstance().getQueryType();
+        String query = DailyDeepLink.getInstance().getQuery();
+        String title = DailyDeepLink.getInstance().getTitle();
+        String titleImageUrl = DailyDeepLink.getInstance().getTitleImageUrl();
+
+
+
+
+        return true;
+    }
+
     private void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
