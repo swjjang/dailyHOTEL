@@ -144,13 +144,13 @@ public class CouponUtil
         String stayFrom = null;
         String stayTo = null;
         String downloadedAt = null;
-        String disableAt = null;
+        //        String disableAt = null;
         boolean availableInDomestic = false;
         boolean availableInOverseas = false;
         boolean availableInHotel = false;
         boolean availableInGourmet = false;
-        boolean isRedeemed = false;
-        boolean isExpired = false;
+        //        boolean isRedeemed = false;
+        //        boolean isExpired = false;
 
         try
         {
@@ -186,10 +186,10 @@ public class CouponUtil
                 stayTo = jsonObject.getString(Type.DOWNLOADED_AT);
             }
 
-            if (jsonObject.has(Type.DISABLE_AT))
-            {
-                stayTo = jsonObject.getString(Type.DISABLE_AT);
-            }
+            //            if (jsonObject.has(Type.DISABLE_AT))
+            //            {
+            //                disableAt = jsonObject.getString(Type.DISABLE_AT);
+            //            }
 
             if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
             {
@@ -211,21 +211,21 @@ public class CouponUtil
                 availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
             }
 
-            if (jsonObject.has(Type.IS_REDEEMED))
-            {
-                isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED);
-            }
-
-            if (jsonObject.has(Type.IS_EXPIRED))
-            {
-                isExpired = jsonObject.getBoolean(Type.IS_EXPIRED);
-            }
+            //            if (jsonObject.has(Type.IS_REDEEMED))
+            //            {
+            //                isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED);
+            //            }
+            //
+            //            if (jsonObject.has(Type.IS_EXPIRED))
+            //            {
+            //                isExpired = jsonObject.getBoolean(Type.IS_EXPIRED);
+            //            }
 
             coupon = new Coupon(userCouponCode, amount, title, validFrom, //
                 validTo, amountMinimum, isDownloaded, availableItem, //
                 serverDate, couponCode, stayFrom, stayTo, //
-                downloadedAt, disableAt, availableInDomestic, availableInOverseas, //
-                availableInHotel, availableInGourmet, isRedeemed, isExpired);
+                downloadedAt, availableInDomestic, availableInOverseas, //
+                availableInHotel, availableInGourmet);
 
         } catch (Exception e)
         {
@@ -279,6 +279,11 @@ public class CouponUtil
     {
         CouponHistory couponHistory = null;
 
+        boolean availableInDomestic = false;
+        boolean availableInOverseas = false;
+        boolean availableInHotel = false;
+        boolean availableInGourmet = false;
+
         try
         {
             boolean isExpired = jsonObject.getBoolean(Type.IS_EXPIRED); // 유효기간 만료 여부
@@ -292,8 +297,30 @@ public class CouponUtil
             String title = jsonObject.getString(Type.TITLE);
             String disabledAt = jsonObject.getString(Type.DISABLED_AT); // 사용한 날짜 (ISO-8601)
 
+
+            if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
+            {
+                availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
+            {
+                availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
+            {
+                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
+            {
+                availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
+            }
+
             couponHistory = new CouponHistory(amount, title, validFrom, validTo, //
-                amountMinimum, isExpired, isRedeemed, disabledAt);
+                amountMinimum, isExpired, isRedeemed, disabledAt, availableInDomestic, //
+                availableInOverseas, availableInHotel, availableInGourmet);
 
         } catch (Exception e)
         {
