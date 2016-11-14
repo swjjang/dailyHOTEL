@@ -70,6 +70,24 @@ public class CouponUtil
 
         // coupon object type
         public static final String STAY_TO = "stayTo";
+
+        // coupon object type
+        public static final String DOWNLOADED_AT = "downloadedAt";
+
+        // coupon object type
+        public static final String DISABLE_AT = "disableAt";
+
+        // coupon object type
+        public static final String AVAILABLE_IN_DOMESTIC = "availableInDomestic";
+
+        // coupon object type
+        public static final String AVAILABLE_IN_OVERSEAS = "availableInOverseas";
+
+        // coupon object type
+        public static final String AVAILABLE_IN_HOTEL = "availableInHotel";
+
+        // coupon object type
+        public static final String AVAILABLE_IN_GOURMET = "availableInGourmet";
     }
 
     public static ArrayList<Coupon> getCouponList(JSONObject response)
@@ -125,6 +143,14 @@ public class CouponUtil
         String couponCode = null; // 이벤트 웹뷰, 쿠폰사용주의사항 용 쿠폰 코드
         String stayFrom = null;
         String stayTo = null;
+        String downloadedAt = null;
+        String disableAt = null;
+        boolean availableInDomestic = false;
+        boolean availableInOverseas = false;
+        boolean availableInHotel = false;
+        boolean availableInGourmet = false;
+        boolean isRedeemed = false;
+        boolean isExpired = false;
 
         try
         {
@@ -155,8 +181,51 @@ public class CouponUtil
                 stayTo = jsonObject.getString(Type.STAY_TO);
             }
 
-            coupon = new Coupon(userCouponCode, amount, title, validFrom, validTo, amountMinimum, //
-                isDownloaded, availableItem, serverDate, couponCode, stayFrom, stayTo);
+            if (jsonObject.has(Type.DOWNLOADED_AT))
+            {
+                stayTo = jsonObject.getString(Type.DOWNLOADED_AT);
+            }
+
+            if (jsonObject.has(Type.DISABLE_AT))
+            {
+                stayTo = jsonObject.getString(Type.DISABLE_AT);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
+            {
+                availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
+            {
+                availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
+            {
+                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
+            }
+
+            if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
+            {
+                availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
+            }
+
+            if (jsonObject.has(Type.IS_REDEEMED))
+            {
+                isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED);
+            }
+
+            if (jsonObject.has(Type.IS_EXPIRED))
+            {
+                isExpired = jsonObject.getBoolean(Type.IS_EXPIRED);
+            }
+
+            coupon = new Coupon(userCouponCode, amount, title, validFrom, //
+                validTo, amountMinimum, isDownloaded, availableItem, //
+                serverDate, couponCode, stayFrom, stayTo, //
+                downloadedAt, disableAt, availableInDomestic, availableInOverseas, //
+                availableInHotel, availableInGourmet, isRedeemed, isExpired);
 
         } catch (Exception e)
         {

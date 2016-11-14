@@ -122,8 +122,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         holder.expireTextView.setText(strExpire + builder.toString());
 
-        holder.useableStayIcon.setImageResource(coupon.isStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
-        holder.useableGourmetIcon.setImageResource(coupon.isGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
+        holder.useableStayIcon.setImageResource(coupon.availableInHotel == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+        holder.useableGourmetIcon.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder

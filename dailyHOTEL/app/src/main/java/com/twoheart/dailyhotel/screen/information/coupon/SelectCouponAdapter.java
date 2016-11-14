@@ -138,7 +138,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         }
 
         // 스테이, 고메 쿠폰인지
-        if (coupon.isStay == true)
+        if (coupon.availableInHotel == true)
         {
             holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_on);
         } else
@@ -146,7 +146,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_off);
         }
 
-        if (coupon.isGourmet == true)
+        if (coupon.availableInGourmet == true)
         {
             holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_on);
         } else

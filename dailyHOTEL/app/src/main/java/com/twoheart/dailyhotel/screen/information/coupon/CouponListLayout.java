@@ -62,9 +62,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         }
         couponSortingButton.setOnClickListener(this);
 
-        View registerCouponView = view.findViewById(R.id.registerCouponView);
-        registerCouponView.setOnClickListener(this);
-
         updateHeaderTextView(0);
 
         //        setData(new ArrayList<Coupon>());
@@ -144,10 +141,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
                 ((OnEventListener) mOnEventListener).onSortingButtonClick((CouponListActivity.CouponSortType) v.getTag());
                 break;
-
-            //            case R.id.registerCouponLayout:
-            //                ((OnEventListener) mOnEventListener).startRegisterCoupon();
-            //                break;
         }
     }
 
