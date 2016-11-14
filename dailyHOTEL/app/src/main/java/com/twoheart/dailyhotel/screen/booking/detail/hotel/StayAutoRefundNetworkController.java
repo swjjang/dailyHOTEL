@@ -94,17 +94,26 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
                 String message = null;
                 boolean readyForRefund = false;
 
-                if (response.has("data") == true && response.isNull("data") == false)
+                switch (msgCode)
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    message = dataJSONObject.getString("messageFromPg");
+                    case 1014:
+                        message = response.getString("msg");
+                        break;
 
-                    readyForRefund = dataJSONObject.getBoolean("readyForRefund");
-                }
+                    default:
+                        if (response.has("data") == true && response.isNull("data") == false)
+                        {
+                            JSONObject dataJSONObject = response.getJSONObject("data");
+                            message = dataJSONObject.getString("messageFromPg");
 
-                if (Util.isTextEmpty(message) == true)
-                {
-                    message = response.getString("msg");
+                            readyForRefund = dataJSONObject.getBoolean("readyForRefund");
+                        }
+
+                        if (Util.isTextEmpty(message) == true)
+                        {
+                            message = response.getString("msg");
+                        }
+                        break;
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRefundResult(msgCode, message, readyForRefund);
