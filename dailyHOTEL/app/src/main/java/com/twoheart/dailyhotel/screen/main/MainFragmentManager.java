@@ -125,6 +125,14 @@ public class MainFragmentManager
             return;
         }
 
+        if (Util.isOverAPI17() == true)
+        {
+            if (mBaseActivity.isDestroyed() == true)
+            {
+                return;
+            }
+        }
+
         try
         {
             clearFragmentBackStack();

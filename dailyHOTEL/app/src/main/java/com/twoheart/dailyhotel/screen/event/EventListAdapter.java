@@ -85,6 +85,9 @@ public class EventListAdapter extends ArrayAdapter<Event>
         {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_row_event, parent, false);
+
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+            view.setLayoutParams(layoutParams);
         } else
         {
             view = convertView;

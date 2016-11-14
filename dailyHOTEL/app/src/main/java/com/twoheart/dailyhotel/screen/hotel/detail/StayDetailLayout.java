@@ -283,7 +283,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     @Override
     public void setSelectProduct(int index)
     {
-        if(mRoomTypeListAdapter == null)
+        if (mRoomTypeListAdapter == null)
         {
             return;
         }

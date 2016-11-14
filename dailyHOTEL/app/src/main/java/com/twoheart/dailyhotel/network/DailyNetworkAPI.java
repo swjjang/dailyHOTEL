@@ -1146,7 +1146,7 @@ public class DailyNetworkAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
         String params;
 
-        if(Util.isTextEmpty(transactionType) == true)
+        if (Util.isTextEmpty(transactionType) == true)
         {
             params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn));
         } else

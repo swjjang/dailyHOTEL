@@ -61,6 +61,9 @@
     <string name="label_send_mail">문의하기</string>
     <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>
 
+    <string name="label_count_stay">%1$d개의 숙소</string>
+    <string name="label_count_gourmet">%1$d개의 레스토랑</string>
+
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
     <string name="label_cardcd04">현대</string>
