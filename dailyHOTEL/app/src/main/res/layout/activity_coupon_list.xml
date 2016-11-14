@@ -20,15 +20,17 @@
             android:paddingRight="15dp"
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
-        <ImageView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/registerCouponView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            app:srcCompat="@drawable/navibar_ic_coupon"/>
+            android:text="@string/coupon_toolbar_button_text"
+            android:textColor="@color/default_text_c900034"
+            android:textSize="18dp"/>
 
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -41,7 +43,6 @@
             android:ellipsize="end"
             android:gravity="left|center_vertical"
             android:maxLines="1"
-            android:singleLine="true"
             android:textColor="@color/actionbar_title"
             android:textSize="18dp"/>
     </RelativeLayout>
@@ -79,14 +80,14 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:background="@drawable/shape_coupon_sorting_button_backround"
-            android:gravity="left|center_vertical"
-            app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"
-            android:paddingRight="9dp"
-            android:paddingLeft="9dp"
             android:drawablePadding="2dp"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
             android:text="@string/coupon_sort_default_text"
             android:textColor="@color/coupon_history_button_text"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"/>
 
         <View
             android:layout_width="match_parent"

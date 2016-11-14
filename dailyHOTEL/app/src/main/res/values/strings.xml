@@ -897,8 +897,9 @@
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>
     <string name="coupon_do_download_coupon">다운로드 하기</string>
-    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 투숙시 사용가능</string>
+    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 방문시 사용가능</string>
     <string name="coupon_sort_default_text">전체 쿠폰 보기</string>
+    <string name="coupon_toolbar_button_text">쿠폰코드등록</string>
 
     <string name="label_select_coupon">할인쿠폰 선택</string>
     <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
