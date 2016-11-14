@@ -533,8 +533,7 @@
     <string name="label_booking_memo">예약시 요청사항</string>
     <string name="label_booking_discount_information">할인 정보</string>
     <string name="label_booking_step1">1. 예약 정보 확인</string>
-    <string name="label_booking_stay_step2">2. 할인수단 선택 및 결제금액</string>
-    <string name="label_booking_gourmet_step2">2. 결제금액</string>
+    <string name="label_booking_step2">2. 할인수단 선택 및 결제금액</string>
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_step4">4. 취소 및 환불 규정</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
@@ -893,6 +892,7 @@
     <string name="coupon_min_price_text">%1$s 이상 구매시 사용 가능</string>
     <string name="coupon_header_text">사용 할 수 있는 쿠폰이 %1$d장 있습니다.</string>
     <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
+    <string name="coupon_history_text">사용 내역</string>
     <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
     <string name="coupon_list_empty_message">사용 할 수 있는 할인 쿠폰이 없습니다.</string>
     <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다.</string>
@@ -900,14 +900,17 @@
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>
-    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 투숙시 사용가능</string>
+    <string name="coupon_do_download_coupon">다운로드 하기</string>
+    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 방문시 사용가능</string>
+    <string name="coupon_sort_default_text">전체 쿠폰 보기</string>
+    <string name="coupon_toolbar_button_text">쿠폰코드등록</string>
+
     <string name="label_select_coupon">할인쿠폰 선택</string>
     <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
     <string name="message_select_coupon_empty">사용할 수 있는 할인 쿠폰이 없습니다.</string>
     <string name="message_select_coupon_download">다운로드하기</string>
     <string name="message_please_download_coupon">할인쿠폰을 다운로드해주세요.</string>
     <string name="message_downloaded_all_coupon">할인쿠폰을 모두 다운로드했습니다.</string>
-    <string name="coupon_list_register_coupon">할인쿠폰 코드로 등록하기</string>
     <string name="register_coupon_title">쿠폰 등록</string>
     <string name="register_coupon_edittext_hint">할인쿠폰 코드 입력</string>
     <string name="register_coupon_complete">할인쿠폰 등록 완료</string>

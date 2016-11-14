@@ -19,7 +19,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
 {
     public static Intent newInstance(Context context, String imageUrl, String placeName, String placeType, //
                                      String userName, String date, String visitTime, int productCount, //
-                                     String paymentType, Map<String, String> map)
+                                     String paymentType, String discountType, Map<String, String> map)
     {
         Intent intent = new Intent(context, GourmetPaymentThankyouActivity.class);
 
@@ -31,7 +31,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_TIME, visitTime);
         intent.putExtra(INTENT_EXTRA_DATA_PRODUCT_COUNT, productCount);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
-        intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, AnalyticsManager.Label.FULL_PAYMENT);
+        intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, discountType);
 
         intent.putExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM, (Serializable) map);
 

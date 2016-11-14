@@ -34,7 +34,7 @@ import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
@@ -538,7 +538,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            Intent intent = SelectCouponDialogActivity.newInstance(this, mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
+            Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
                 ((StayDetail) mPlaceDetail).nights, ((StayDetail) mPlaceDetail).categoryCode, mPlaceDetail.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
@@ -1082,7 +1082,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onHasCoupon(boolean hasCoupon)
         {
-            ((StayDetail) mPlaceDetail).hasCoupon = hasCoupon;
+            mPlaceDetail.hasCoupon = hasCoupon;
 
             ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mPlaceDetail.index,//
                 mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), ((StayDetail) mPlaceDetail).nights);

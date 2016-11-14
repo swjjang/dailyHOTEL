@@ -32,7 +32,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
@@ -311,7 +311,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                 if (resultCode == Activity.RESULT_OK && intent != null)
                 {
-                    Coupon coupon = intent.getParcelableExtra(SelectCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                    Coupon coupon = intent.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
 
                     setCoupon(coupon);
                 } else

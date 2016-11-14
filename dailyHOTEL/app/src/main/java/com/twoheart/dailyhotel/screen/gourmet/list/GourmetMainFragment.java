@@ -879,7 +879,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 //                {
                 //                    Calendar calendar = DailyCalendar.getInstance();
                 //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-                //                    calendar.setTimeInMillis(eventBanner.checkInTime);
+                //                    calendar.setTimeInMillis(eventBanner.dateTime);
                 //
                 //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 //                    Date schemeDate = format.parse(format.format(calendar.getTime()));

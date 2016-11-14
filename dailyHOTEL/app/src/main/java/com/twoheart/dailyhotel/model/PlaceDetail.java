@@ -16,7 +16,7 @@ public abstract class PlaceDetail
     public int ratingValue;
     public double latitude;
     public double longitude;
-
+    public boolean hasCoupon;
     public boolean myWish; // 위시리스트 클릭 상태
     public int wishCount; // 위시리스트 카운트
 

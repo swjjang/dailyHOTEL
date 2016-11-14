@@ -52,7 +52,13 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         int bonus = 0;
         int counpon = 0;
-        int totalPayment = 0;
+        int pricePayment = 0;
+
+        if (receiptJSONObject.has("coupon_amount") == true && receiptJSONObject.isNull("coupon_amount") == false)
+        {
+            counpon = receiptJSONObject.getInt("coupon_amount");
+            pricePayment = receiptJSONObject.getInt("price");
+        }
 
         // **예약 세부 정보**
         View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
@@ -115,20 +121,46 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             saleLayout.setVisibility(View.VISIBLE);
 
             // 총금액
-            TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            discountTextView.setText(Util.getPriceFormat(this, discount, true));
+            TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+            totalPriceTextView.setText(Util.getPriceFormat(this, discount, true));
 
             // 적립금 사용
-            TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
-            bonusTextView.setText(Util.getPriceFormat(this, bonus, true));
+            View bonusLayout = paymentInfoLayout.findViewById(R.id.bonusLayout);
+
+            if (bonus > 0)
+            {
+                bonusLayout.setVisibility(View.VISIBLE);
+                TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
+                bonusTextView.setText("- " + Util.getPriceFormat(this, bonus, true));
+            } else
+            {
+                bonusLayout.setVisibility(View.GONE);
+            }
 
             // 할인쿠폰 사용
-            TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
-            couponTextView.setText(Util.getPriceFormat(this, counpon, true));
+            View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
+
+            if (counpon > 0)
+            {
+                couponLayout.setVisibility(View.VISIBLE);
+                TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
+                couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
+            } else
+            {
+                couponLayout.setVisibility(View.GONE);
+            }
+
+            if (bonus > 0 || counpon > 0)
+            {
+                saleLayout.setVisibility(View.VISIBLE);
+            } else
+            {
+                saleLayout.setVisibility(View.GONE);
+            }
 
             // 총 입금 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, totalPayment, true));
+            totalPaymentTextView.setText(Util.getPriceFormat(this, pricePayment, true));
         }
 
         // **공급자**

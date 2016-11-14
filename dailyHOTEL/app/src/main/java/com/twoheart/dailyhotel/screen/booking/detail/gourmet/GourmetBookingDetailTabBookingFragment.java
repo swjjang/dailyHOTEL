@@ -248,6 +248,9 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View bonusLayout = view.findViewById(R.id.bonusLayout);
         View couponLayout = view.findViewById(R.id.couponLayout);
+        bonusLayout.setVisibility(View.GONE);
+
+        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
         try
@@ -262,10 +265,17 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         String price = Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false);
 
         priceTextView.setText(price);
-        totalPriceTextView.setText(price);
 
-        bonusLayout.setVisibility(View.GONE);
-        couponLayout.setVisibility(View.GONE);
+        if (bookingDetail.coupon > 0)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+            couponTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.coupon, false));
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+        totalPriceTextView.setText(price);
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);

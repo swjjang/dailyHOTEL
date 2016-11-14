@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="78dp"
+    android:orientation="horizontal"
+    android:paddingBottom="20dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="20dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/couponUseNoticeTextView"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_weight="1"
+        android:background="@drawable/coupon_footer_button_background"
+        android:gravity="center"
+        android:text="@string/coupon_use_notice_text"
+        android:textColor="@color/coupon_use_notice_text"
+        android:textSize="12dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/couponHistoryTextView"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/coupon_footer_button_background"
+        android:gravity="center"
+        android:text="@string/coupon_history_text"
+        android:textColor="@color/coupon_use_notice_text"
+        android:textSize="12dp"/>
+
+</LinearLayout>

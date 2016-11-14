@@ -9,6 +9,7 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -28,8 +29,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 {
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_ITEM = 2;
+    private static final int VIEW_TYPE_FOOTER = 3;
 
-    private static final int HEADER_COUNT = 1;
+    private static final int FOOTER_COUNT = 1;
 
     private List<Coupon> mList;
     private Context mContext;
@@ -38,6 +40,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface OnCouponItemListener
     {
         void startNotice();
+
+        void startCouponHistory();
 
         void showNotice(View view, int position);
 
@@ -67,7 +71,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     {
         if (position > 0)
         {
-            position = position - HEADER_COUNT;
+            position = position - FOOTER_COUNT;
         }
         return mList.get(position);
     }
@@ -75,13 +79,14 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount()
     {
-        return mList == null ? 0 : mList.size() + HEADER_COUNT;
+        return mList == null ? 0 : mList.size() + FOOTER_COUNT;
     }
 
     @Override
     public int getItemViewType(int position)
     {
-        return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+        return (position == getItemCount() - 1) ? VIEW_TYPE_FOOTER : VIEW_TYPE_ITEM;
+//        return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
     }
 
     public void setData(List<Coupon> list)
@@ -110,10 +115,10 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        if (viewType == VIEW_TYPE_HEADER)
+        if (viewType == VIEW_TYPE_FOOTER)
         {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_couponlist_header, parent, false);
-            return new HeaderViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_couponlist_footer, parent, false);
+            return new FooterViewHolder(view);
         } else
         {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_coupon, parent, false);
@@ -126,10 +131,10 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
     {
         int viewType = getItemViewType(position);
-        if (viewType == VIEW_TYPE_HEADER)
+        if (viewType == VIEW_TYPE_FOOTER)
         {
-            // 헤더
-            ((HeaderViewHolder) holder).onBindViewHolder();
+            // 마지막
+            ((FooterViewHolder) holder).onBindViewHolder();
         } else
         {
             // 리스트 아이템
@@ -149,6 +154,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView useIconView;
         TextView downloadIconView;
         TextView noticeTextView;
+        ImageView useStayIconView;
+        ImageView useGourmetIconView;
 
         public ItemViewHolder(View itemView)
         {
@@ -164,6 +171,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             useIconView = (TextView) itemView.findViewById(R.id.useIconView);
             downloadIconView = (TextView) itemView.findViewById(R.id.downloadIconView);
             noticeTextView = (TextView) itemView.findViewById(R.id.noticeTextView);
+            useStayIconView = (ImageView) itemView.findViewById(R.id.useableStayImageView);
+            useGourmetIconView = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
         }
 
         public void onBindViewHolder(final int position)
@@ -260,6 +269,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 noticeTextView.setTextColor(mContext.getResources().getColor(R.color.white_a80));
             }
 
+            useStayIconView.setImageResource(coupon.availableInHotel == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+            useGourmetIconView.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
+
             CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
             SpannableString spannableString = new SpannableString(charSequence);
             spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -307,23 +319,24 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder
+    private class FooterViewHolder extends RecyclerView.ViewHolder
     {
         View rootView;
         DailyTextView noticeView;
+        DailyTextView couponHistoryView;
 
-        public HeaderViewHolder(View itemView)
+        public FooterViewHolder(View itemView)
         {
             super(itemView);
 
             rootView = itemView;
             noticeView = (DailyTextView) itemView.findViewById(R.id.couponUseNoticeTextView);
+            couponHistoryView = (DailyTextView) itemView.findViewById(R.id.couponHistoryTextView);
         }
 
         public void onBindViewHolder()
         {
             SpannableString spannableString = new SpannableString(noticeView.getText());
-            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             noticeView.setText(spannableString);
 
             noticeView.setOnClickListener(new View.OnClickListener()
@@ -332,6 +345,14 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View v)
                 {
                     mListener.startNotice();
+                }
+            });
+            couponHistoryView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mListener.startCouponHistory();
                 }
             });
         }

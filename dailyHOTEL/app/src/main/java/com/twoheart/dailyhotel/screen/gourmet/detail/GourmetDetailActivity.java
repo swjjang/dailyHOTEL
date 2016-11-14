@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -33,6 +34,7 @@ import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
@@ -454,7 +456,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
                 mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount, mPlaceDetail.isDailyChoice);
 
-            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         }
     }
 
@@ -473,7 +476,55 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void downloadCoupon()
     {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_COUPON_DOWNLOAD, mPlaceDetail.name, null);
+
+        if (DailyHotel.isLogin() == false)
+        {
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login), //
+                getString(R.string.dialog_btn_login_for_benefit), getString(R.string.dialog_btn_text_close), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
+
+                        Intent intent = LoginActivity.newInstance(GourmetDetailActivity.this, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                    }
+                }, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                }, true);
+        } else
+        {
+            Intent intent = SelectGourmetCouponDialogActivity.newInstance(this, mPlaceDetail.index, //
+                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.name);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
+        }
     }
 
     private void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
@@ -663,7 +714,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void downloadCoupon()
         {
-
+            GourmetDetailActivity.this.downloadCoupon();
         }
 
         @Override
@@ -897,7 +948,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
             }
 
-            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         }
 
         @Override
@@ -983,6 +1035,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onHasCoupon(boolean hasCoupon)
+        {
+            mPlaceDetail.hasCoupon = hasCoupon;
+
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
+        }
+
         public void onAddWishList(boolean isSuccess, String message)
         {
             if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)

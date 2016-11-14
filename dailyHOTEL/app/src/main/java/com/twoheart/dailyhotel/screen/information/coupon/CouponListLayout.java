@@ -38,6 +38,8 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         void showListItemNotice(Coupon coupon);
 
         void onListItemDownLoadClick(Coupon coupon);
+
+        void onSortingButtonClick(CouponListActivity.CouponSortType sortType);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -53,11 +55,12 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
 
-        View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
-        couponHistoryView.setOnClickListener(this);
-
-        View registerCouponView = view.findViewById(R.id.registerCouponLayout);
-        registerCouponView.setOnClickListener(this);
+        View couponSortingButton = view.findViewById(R.id.couponSortingButton);
+        if (couponSortingButton.getTag() == null)
+        {
+            couponSortingButton.setTag(CouponListActivity.CouponSortType.ALL);
+        }
+        couponSortingButton.setOnClickListener(this);
 
         updateHeaderTextView(0);
 
@@ -75,6 +78,16 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
             public void onClick(View v)
             {
                 mOnEventListener.finish();
+            }
+        });
+
+        View registerCouponView = view.findViewById(R.id.registerCouponView);
+        registerCouponView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).startRegisterCoupon();
             }
         });
     }
@@ -119,12 +132,14 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
     {
         switch (v.getId())
         {
-            case R.id.couponHistoryTextView:
-                ((OnEventListener) mOnEventListener).startCouponHistory();
-                break;
+            case R.id.couponSortingButton:
+                //                ((OnEventListener) mOnEventListener).startCouponHistory();
+                if (v.getTag() == null)
+                {
+                    v.setTag(CouponListActivity.CouponSortType.ALL);
+                }
 
-            case R.id.registerCouponLayout:
-                ((OnEventListener) mOnEventListener).startRegisterCoupon();
+                ((OnEventListener) mOnEventListener).onSortingButtonClick((CouponListActivity.CouponSortType) v.getTag());
                 break;
         }
     }
@@ -164,6 +179,12 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         public void startNotice()
         {
             ((OnEventListener) mOnEventListener).startNotice();
+        }
+
+        @Override
+        public void startCouponHistory()
+        {
+            ((OnEventListener) mOnEventListener).startCouponHistory();
         }
 
         @Override
