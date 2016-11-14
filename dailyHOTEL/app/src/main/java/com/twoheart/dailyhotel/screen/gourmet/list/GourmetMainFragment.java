@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -683,6 +684,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
+            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+            {
+                unLockUI();
+
+                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -1373,6 +1379,66 @@ public class GourmetMainFragment extends PlaceMainFragment
         ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(changedSaleTime);
 
         mPlaceMainNetworkController.requestRegionList();
+
+        return true;
+    }
+
+    private boolean moveDeepLinkCollection(BaseActivity baseActivity)
+    {
+        String title = DailyDeepLink.getInstance().getTitle();
+        String titleImageUrl = DailyDeepLink.getInstance().getTitleImageUrl();
+        String queryType = DailyDeepLink.getInstance().getQueryType();
+        String query = DailyDeepLink.getInstance().getQuery();
+
+
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        Intent intent = CollectionGourmetActivity.newInstance(baseActivity, checkInSaleTime, title, titleImageUrl, queryType, query);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+        mIsDeepLink = true;
 
         return true;
     }

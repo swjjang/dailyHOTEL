@@ -7,15 +7,15 @@ import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -25,17 +25,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class CollectionStayActivity extends CollectionBaseActivity
+public class CollectionGourmetActivity extends CollectionBaseActivity
 {
-    private SaleTime mCheckInSaleTime;
-    private int mNights;
+    private SaleTime mSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int night, String title, String titleImageUrl, String queryType, String query)
+    public static Intent newInstance(Context context, SaleTime saleTime, String title, String titleImageUrl, String queryType, String query)
     {
-        Intent intent = new Intent(context, CollectionStayActivity.class);
+        Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_SALE_TIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHT, night);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
@@ -47,40 +45,38 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void initIntentTime(Intent intent)
     {
-        mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
+        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
     }
 
     @Override
     protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
     {
-        return new StayListAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener, null);
+        return new GourmetListAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener, null);
     }
 
     @Override
     protected void requestPlaceList(String params)
     {
-        String stayParms = String.format("dateCheckIn=%s&stays=%d&details=true&%s", mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mNights, params);
+        String stayParms = String.format("reserveDate=%s&details=true&%s", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), params);
 
-        DailyNetworkAPI.getInstance(this).requestRecentStayList(mNetworkTag, stayParms, mStayListJsonResponseListener);
+        DailyNetworkAPI.getInstance(this).requestRecentGourmetList(mNetworkTag, stayParms, mGourmetListJsonResponseListener);
     }
 
-    @Override
-    protected void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+
+    public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
     {
         if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
         {
             return;
         }
 
-        Stay stay = placeViewItem.getItem();
+        Gourmet gourmet = placeViewItem.getItem();
 
-        Intent intent = StayDetailActivity.newInstance(this, mCheckInSaleTime, stay, count);
+        Intent intent = GourmetDetailActivity.newInstance(this, mSaleTime, gourmet, count);
 
         if (Util.isUsedMutilTransition() == true)
         {
             View simpleDraweeView = view.findViewById(R.id.imageView);
-            View gradeTextView = view.findViewById(R.id.gradeTextView);
             View nameTextView = view.findViewById(R.id.nameTextView);
             View gradientTopView = view.findViewById(R.id.gradientTopView);
             View gradientBottomView = view.findViewById(R.id.gradientView);
@@ -94,19 +90,18 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,//
                 android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                 android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                 android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                 android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
         } else
         {
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }
     }
 
-    private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -117,28 +112,27 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = null;
+                    JSONArray gourmetJSONArray = null;
 
-                    if (dataJSONObject.has("hotelSales") == true)
+                    if (dataJSONObject.has("gourmetSales") == true)
                     {
-                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                     }
 
                     String imageUrl;
 
-                    ArrayList<Place> stayList;
+                    ArrayList<Place> gourmetList;
 
-                    if (hotelJSONArray != null)
+                    if (gourmetJSONArray != null)
                     {
                         imageUrl = dataJSONObject.getString("imgUrl");
-                        int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
                     } else
                     {
-                        stayList = new ArrayList<>();
+                        gourmetList = new ArrayList<>();
                     }
 
-                    onPlaceList(stayList);
+                    onPlaceList(gourmetList);
                 } else
                 {
                     String message = response.getString("msg");
@@ -151,7 +145,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             }
         }
 
-        private ArrayList<Place> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Place> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
         {
             if (jsonArray == null)
             {
@@ -159,29 +153,29 @@ public class CollectionStayActivity extends CollectionBaseActivity
             }
 
             int length = jsonArray.length();
-            ArrayList<Place> stayList = new ArrayList<>(length);
+            ArrayList<Place> gourmetList = new ArrayList<>(length);
             JSONObject jsonObject;
-            Stay stay;
+            Gourmet gourmet;
 
             for (int i = 0; i < length; i++)
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                stay = new Stay();
+                gourmet = new Gourmet();
 
-                if (stay.setStay(jsonObject, imageUrl, nights) == true)
+                if (gourmet.setData(jsonObject, imageUrl) == true)
                 {
-                    stayList.add(stay); // 추가.
+                    gourmetList.add(gourmet);
                 }
             }
 
-            return stayList;
+            return gourmetList;
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            CollectionStayActivity.this.onErrorResponse(volleyError);
+            CollectionGourmetActivity.this.onErrorResponse(volleyError);
         }
     };
 }
