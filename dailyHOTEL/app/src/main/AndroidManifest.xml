@@ -42,6 +42,15 @@
         android:largeHeap="true"
         android:resizeableActivity="true"
         android:theme="@style/AppTheme">
+        <uses-library android:name="com.sec.android.app.multiwindow" android:required="false" />
+        <meta-data android:name="com.samsung.android.sdk.multiwindow.penwindow.enable" android:value="true" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_defaultsize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_defaultsize_h" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_minimumsize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_minimumsize_h" />
+        <meta-data android:name="com.sec.android.multiwindow.STYLE" android:value="fixedRatio"/>
+
         <activity
             android:name=".LauncherActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -54,6 +63,7 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -468,14 +478,14 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.information.recentplace.RecentPlacesTabActivity"
-            android:launchMode="singleTop"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
             android:name=".screen.information.wishlist.WishListTabActivity"
-            android:launchMode="singleTop"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
@@ -541,6 +551,7 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyACc8hv-TecbnEBvl8Z758hBMP1ssqo4gQ"/>
