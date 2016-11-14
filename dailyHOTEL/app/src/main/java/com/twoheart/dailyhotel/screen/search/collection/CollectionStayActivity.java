@@ -15,8 +15,9 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +55,16 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
     {
-        return new StayListAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener, null);
+        return new CollectionStayAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mCheckInSaleTime, mNights, //
+                    AnalyticsManager.ValueType.SEARCH, true, true);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            }
+        });
     }
 
     @Override
@@ -106,6 +116,48 @@ public class CollectionStayActivity extends CollectionBaseActivity
         }
     }
 
+    @Override
+    protected String getCalendarDate()
+    {
+        if (mCheckInSaleTime == null)
+        {
+            return null;
+        }
+
+        SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mNights);
+
+        String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+
+        return String.format("%s - %s, %d박", checkInDate, checkOutDate, mNights);
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int resultCode, Intent data)
+    {
+        if (resultCode == RESULT_OK)
+        {
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+            SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+
+            if (checkInSaleTime == null || checkOutSaleTime == null)
+            {
+                return;
+            }
+
+            lockUI();
+
+            mCheckInSaleTime = checkInSaleTime;
+            mNights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+        }
+    }
+
+    @Override
+    protected String getSectionTitle(int count)
+    {
+        return getString(R.string.label_count_stay, count);
+    }
+
     private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -148,6 +200,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
             } catch (Exception e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
             }
         }
 

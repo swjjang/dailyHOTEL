@@ -15,8 +15,10 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +53,16 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     @Override
     protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
     {
-        return new GourmetListAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener, null);
+        return new CollectionGourmetAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mSaleTime, //
+                    AnalyticsManager.ValueType.SEARCH, true, true);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            }
+        });
     }
 
     @Override
@@ -101,6 +112,39 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         }
     }
 
+    @Override
+    protected String getCalendarDate()
+    {
+        if (mSaleTime == null)
+        {
+            return null;
+        }
+
+        return mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int resultCode, Intent data)
+    {
+        if (resultCode == RESULT_OK)
+        {
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+            if (checkInSaleTime == null)
+            {
+                return;
+            }
+
+            mSaleTime = checkInSaleTime;
+        }
+    }
+
+    @Override
+    protected String getSectionTitle(int count)
+    {
+        return getString(R.string.label_count_gourmet, count);
+    }
+
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -142,6 +186,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             } catch (Exception e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
             }
         }
 

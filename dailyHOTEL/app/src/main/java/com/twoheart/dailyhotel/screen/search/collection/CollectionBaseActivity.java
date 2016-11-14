@@ -6,18 +6,25 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.twoheart.dailyhotel.R.id.view;
 
 public abstract class CollectionBaseActivity extends BaseActivity
 {
@@ -45,6 +52,12 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
 
     protected abstract void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
+
+    protected abstract String getCalendarDate();
+
+    protected abstract void onCalendarActivityResult(int resultCode, Intent data);
+
+    protected abstract String getSectionTitle(int count);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -84,6 +97,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
             return;
         }
 
+        lockUI();
+
         requestPlaceList(mParams);
     }
 
@@ -91,9 +106,29 @@ public abstract class CollectionBaseActivity extends BaseActivity
     {
         initToolbar(title);
 
+        // 백이미지
+        final View backImageView = findViewById(R.id.backImageView);
+        backImageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
+        // 이미지
+        SimpleDraweeView simpleDraweeView = (SimpleDraweeView)findViewById(R.id.titleImageView);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(this));
+        simpleDraweeView.setLayoutParams(layoutParams);
+
+        Util.requestImageResize(this, simpleDraweeView, titleImageUrl);
+
+        // 리스트
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, getResources().getColor(R.color.default_over_scroll_edge));
 
         if (mPlaceListAdapter == null)
         {
@@ -108,7 +143,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
             {
                 int position = linearLayoutManager.findFirstVisibleItemPosition();
 
-                if (position == 0 && linearLayoutManager.findViewByPosition(position).getTop() == 0)
+                if (position == 0 && linearLayoutManager.findViewByPosition(position).getBottom() > backImageView.getBottom())
                 {
                     mDailyToolbarLayout.setToolbarVisibility(false, true);
                 } else
@@ -138,6 +173,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
@@ -152,11 +189,21 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         break;
 
                     case CODE_RESULT_ACTIVITY_REFRESH:
+                        lockUI();
+
                         requestPlaceList(mParams);
                         break;
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
+                onCalendarActivityResult(resultCode, data);
+
+                lockUI();
+
+                requestPlaceList(mParams);
+                break;
         }
     }
 
@@ -168,6 +215,15 @@ public abstract class CollectionBaseActivity extends BaseActivity
         {
             return placeViewItemList;
         }
+
+        // 빈공간
+        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
+
+        // 달력 넣기
+        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_CALENDAR_VIEW, getCalendarDate()));
+
+        // 개수 넣기
+        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
         if (placeIndexs != null && placeIndexs.length > 0)
         {

@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/titleImageView"
+        android:layout_width="match_parent"
+        android:layout_height="202dp"
+        fresco:actualImageScaleType="centerCrop"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:background="@drawable/img_detail_gradient"/>
+
+    <ImageView
+        android:id="@+id/backImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/toolbar_height"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
