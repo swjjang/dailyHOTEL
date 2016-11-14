@@ -26,7 +26,6 @@
     <string name="label_share_kakao">카카오톡으로 보내기</string>
     <string name="label_question">문의</string>
     <string name="label_sort">정렬</string>
-    <string name="label_daily_customer_service">데일리 고객센터 전화</string>
     <string name="label_daily_kakaotalk">데일리 카카오톡 문의</string>
     <string name="label_restaurant_direct_phone">레스토랑 직접 전화 문의</string>
     <string name="label_hotel_direct_phone">호텔 직접 전화 문의</string>
@@ -427,6 +426,7 @@
     <string name="frag_booking_line">당신의 파라다이스가 기다리고 있어요.</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
     <string name="frag_booking_wait_account">입금 대기</string>
+    <string name="frag_booking_wait_refund">무료취소 대기</string>
     <string name="frag_booking_complete_payment">결제 완료</string>
     <string name="frag_booking_use">이용 완료</string>
     <string name="frag_booking_duedate_formet">%d일 남았습니다.</string>
@@ -984,6 +984,8 @@
     <!-- 무료 취소 요청하기 -->
     <string name="label_request_free_refund">무료 취소 요청하기</string>
     <string name="label_contact_refund">환불 문의하기</string>
+    <string name="label_contact_refund_kakao">데일리 카카오톡 환불문의</string>
+    <string name="label_contact_refund_daily">데일리 고객센터 전화 환불문의</string>
     <string name="label_select_reason_for_cancellation">3. 취소 사유 선택 (필수 선택)</string>
     <string name="label_input_refund_account">4. 환불 계좌 정보 입력 (필수 입력)</string>
     <string name="label_select_bank">은행 선택</string>
@@ -1000,6 +1002,10 @@
 
     <string name="message_please_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
     <string name="message_please_refund_notice">고객님께서 현금결제 주문을 취소하실 경우 수령하실 계좌이며,\n인증된 환불계좌 정보는 수집하지 않고 환불처리 후 바로 삭제 합니다.</string>
+
+    <string name="message_please_wait_refund01"><![CDATA[<font color=0x900034>무료취소 요청 완료</font> 되었으며, 1~2일 이내 처리완료 됩니다.]]></string>
+    <string name="message_please_wait_refund02">결제금액 환불은 결제수단에 따라 최대 7일 이상 소요될 수 있습니다.</string>
+
 
     <!-- wishList -->
     <string name="label_wishlist">위시리스트</string>

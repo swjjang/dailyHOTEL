@@ -85,7 +85,7 @@ public class StayAutoRefundActivity extends BaseActivity
         mStayAutoRefundLayout.setPlaceBookingDetail(mHotelBookingDetail);
 
         // 계좌 이체인 경우
-        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
         {
             mStayAutoRefundLayout.setAccountLayoutVisible(true);
 
@@ -502,7 +502,7 @@ public class StayAutoRefundActivity extends BaseActivity
             return false;
         }
 
-        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
         {
             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
             String accountName = mStayAutoRefundLayout.getAccountName();
@@ -545,7 +545,7 @@ public class StayAutoRefundActivity extends BaseActivity
                     @Override
                     public void onClick(View v)
                     {
-                        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true)
+                        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
                         {
                             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
                             String accountName = mStayAutoRefundLayout.getAccountName();
@@ -581,9 +581,24 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
-        public void onRefundResult(int msgCode, String message)
+        public void onRefundResult(int msgCode, String message, boolean readyForRefund)
         {
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+            if (readyForRefund == true)
+            {
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
+            } else
+            {
+                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
+            }
         }
 
         @Override

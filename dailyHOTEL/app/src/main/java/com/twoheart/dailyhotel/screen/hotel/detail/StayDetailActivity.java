@@ -120,12 +120,13 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int staytIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int staytIndex, int roomIndex, boolean isShowCalendar)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, staytIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
@@ -209,6 +210,8 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
+
+            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
             initLayout(null, null, null, false);
 
@@ -1050,6 +1053,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                 {
                     mCheckPrice = true;
                     checkStayRoom(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
+                }
+
+                // 딥링크로 메뉴 오픈 요청
+                if(mIsDeepLink == true && mOpenTicketIndex > 0)
+                {
+                    if (mPlaceDetailLayout != null)
+                    {
+                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                    }
+
+                    mOpenTicketIndex = 0;
                 }
 
                 mIsDeepLink = false;

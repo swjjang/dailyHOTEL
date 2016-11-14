@@ -56,7 +56,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         super.onCreate(savedInstanceState);
 
         mHotelBookingDetail = new HotelBookingDetail();
-        mHotelBookingDetail.reservationIndex = mReservationIndex;
     }
 
     @Override
@@ -69,7 +68,11 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             return;
         }
 
-        viewPager.setTag("HotelBookingDetailTabActivity");
+        if (mHotelBookingDetailTabBookingFragment != null)
+        {
+            mHotelBookingDetailTabBookingFragment.updateRefundPolicyLayout(placeBookingDetail);
+            return;
+        }
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
@@ -89,10 +92,24 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         {
             case CODE_RESULT_ACTIVITY_STAY_AUTOREFUND:
             {
-                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                switch (resultCode)
                 {
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                    finish();
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    {
+                        lockUI();
+
+                        requestCommonDatetime();
+
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        break;
+                    }
+
+                    case RESULT_OK:
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        finish();
+                        break;
+                    }
                 }
                 break;
             }
@@ -328,13 +345,27 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                         mHotelBookingDetail.setData(jsonObject);
 
-                        loadFragments(getViewPager(), mHotelBookingDetail);
-
                         long checkOutDateTime = DailyCalendar.getTimeGMT9(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+
                         if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
                         {
-                            DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
-                                , mHotelBookingDetail.placeIndex, mReservationIndex, mHotelBookingDetail.checkInDate, mPolicyRefundJsonResponseListener);
+                            mHotelBookingDetail.isOverCheckOutDate = false;
+
+                            if(mHotelBookingDetail.readyForRefund == true)
+                            {
+                                // 환불 대기 인 상태에서는 문구가 고정이다.
+                                loadFragments(getViewPager(), mHotelBookingDetail);
+                            } else
+                            {
+                                DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
+                                    , mHotelBookingDetail.placeIndex, mHotelBookingDetail.roomIndex//
+                                    , mHotelBookingDetail.checkInDate, mHotelBookingDetail.transactionType, mPolicyRefundJsonResponseListener);
+                            }
+                        } else
+                        {
+                            mHotelBookingDetail.isOverCheckOutDate = true;
+
+                            loadFragments(getViewPager(), mHotelBookingDetail);
                         }
                         break;
 
@@ -389,9 +420,12 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
                     String comment = dataJSONObject.getString("comment");
+                    String refundPolicy = dataJSONObject.getString("refundPolicy");
 
-                    mHotelBookingDetailTabBookingFragment.setRefundLayoutVisible(true);
-                    mHotelBookingDetailTabBookingFragment.setRefundPolicyText(comment);
+                    mHotelBookingDetail.refundPolicy = refundPolicy;
+                    mHotelBookingDetail.mRefundComment = comment;
+
+                    loadFragments(getViewPager(), mHotelBookingDetail);
                 } else
                 {
                     String message = response.getString("msg");

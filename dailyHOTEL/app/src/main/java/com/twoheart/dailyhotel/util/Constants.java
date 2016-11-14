@@ -179,6 +179,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";
     public static final String NAME_INTENT_EXTRA_DATA_TYPE = "type";
     public static final String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
+    public static final String NAME_INTENT_EXTRA_DATA_TICKETINDEX = "ticketIndex";
     public static final String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
     public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
     public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";

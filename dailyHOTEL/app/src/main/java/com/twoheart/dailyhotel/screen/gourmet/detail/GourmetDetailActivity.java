@@ -113,13 +113,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int ticketIndex, boolean isShowCalendar)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, ticketIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
@@ -201,6 +202,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
+
+            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, 0);
+
             initLayout(null, null, false);
 
             if (isShowCalendar == true)
@@ -320,7 +324,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isOverAPI21() == true)
+        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
         {
             ininTransLayout(placeName, imageUrl, isFromMap);
         } else
@@ -952,6 +956,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 {
                     mCheckPrice = true;
                     checkGourmetTicket(mIsDeepLink, (GourmetDetail) mPlaceDetail, mViewPrice);
+                }
+
+                // 딥링크로 메뉴 오픈 요청
+                if(mIsDeepLink == true && mOpenTicketIndex > 0)
+                {
+                    if (mPlaceDetailLayout != null)
+                    {
+                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                    }
+
+                    mOpenTicketIndex = 0;
                 }
 
                 mIsDeepLink = false;

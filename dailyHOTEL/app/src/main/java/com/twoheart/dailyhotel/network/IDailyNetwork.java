@@ -613,8 +613,10 @@ interface IDailyNetwork
 
     void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
 
-    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, DailyHotelJsonResponseListener listener);
+    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener);
 
     void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener);
+
+    void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
 }

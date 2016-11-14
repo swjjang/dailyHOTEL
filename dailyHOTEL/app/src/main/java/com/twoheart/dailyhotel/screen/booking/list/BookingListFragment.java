@@ -539,7 +539,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             int length = jsonArray.length();
 
-            // 입금대기, 결제완료, 이용완료
+            // 무료취소대기, 입금대기, 결제완료, 이용완료
+            ArrayList<Booking> waitRefundBookingList = new ArrayList<>();
             ArrayList<Booking> waitBookingList = new ArrayList<>();
             ArrayList<Booking> paymentBookingList = new ArrayList<>();
             ArrayList<Booking> usedBookingList = new ArrayList<>();
@@ -550,28 +551,42 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 Booking booking = new Booking(jsonObject);
 
-                switch (booking.payType)
+                if(booking.readyForRefund == true)
                 {
-                    case CODE_PAY_TYPE_CARD_COMPLETE:
-                    case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-                        booking.isUsed = booking.checkoutTime < mCurrentTime;
+                    waitRefundBookingList.add(booking);
+                } else
+                {
+                    switch (booking.payType)
+                    {
+                        case CODE_PAY_TYPE_CARD_COMPLETE:
+                        case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
+                            booking.isUsed = booking.checkoutTime < mCurrentTime;
 
-                        if (booking.isUsed)
-                        {
-                            usedBookingList.add(booking);
-                        } else
-                        {
-                            paymentBookingList.add(booking);
-                        }
-                        break;
+                            if (booking.isUsed)
+                            {
+                                usedBookingList.add(booking);
+                            } else
+                            {
+                                paymentBookingList.add(booking);
+                            }
+                            break;
 
-                    case CODE_PAY_TYPE_ACCOUNT_WAIT:
-                        waitBookingList.add(booking);
-                        break;
+                        case CODE_PAY_TYPE_ACCOUNT_WAIT:
+                            waitBookingList.add(booking);
+                            break;
+                    }
                 }
             }
 
             ArrayList<Booking> bookingArrayList = new ArrayList<>(length + 3);
+
+            // 무료취소대기가 있는 경우
+            if (waitRefundBookingList.size() > 0)
+            {
+                Booking sectionWaitRefund = new Booking(getString(R.string.frag_booking_wait_refund));
+                bookingArrayList.add(sectionWaitRefund);
+                bookingArrayList.addAll(waitRefundBookingList);
+            }
 
             // 입금 대기가 있는 경우.
             if (waitBookingList.size() > 0)
