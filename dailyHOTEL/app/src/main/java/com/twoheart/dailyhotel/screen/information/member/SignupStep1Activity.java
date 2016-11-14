@@ -236,6 +236,9 @@ public class SignupStep1Activity extends BaseActivity
             if (Util.isTextEmpty(recommender) == false)
             {
                 mSignupParams.put("recommender", recommender);
+
+                AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+                    , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.TRY, null);
             }
 
             if (Util.isTextEmpty(birthday) == false)

@@ -210,7 +210,7 @@ public class PaymentWaitActivity extends BaseActivity
         View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
         contactUs02Layout.setVisibility(View.GONE);
 
-        DailyTextView contactUs01TextView = (DailyTextView)contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
         contactUs01TextView.setText(R.string.frag_faqs);
         contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
 
@@ -219,7 +219,7 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -236,7 +236,7 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -250,7 +250,7 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -265,7 +265,7 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if(dialog.isShowing() == true)
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }

@@ -79,6 +79,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         if (stayDetail == null)
         {
             setLineIndicatorVisible(false);
+            setWishListButtonCount(0);
+            setWishListButtonSelected(false);
             return;
         }
 
@@ -157,6 +159,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mPriceOptionLayout.setVisibility(View.GONE);
             mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
+
+        setWishListButtonSelected(stayDetail.myWish);
+        setWishListButtonCount(stayDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }
@@ -241,6 +246,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -248,6 +254,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -257,6 +264,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.GONE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -266,9 +274,22 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
+    }
+
+    @Override
+    public void setSelectProduct(int index)
+    {
+        if(mRoomTypeListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mRoomTypeListAdapter.setSelectIndex(index);
+        mProductTypeRecyclerView.scrollToPosition(position);
     }
 
     @Override

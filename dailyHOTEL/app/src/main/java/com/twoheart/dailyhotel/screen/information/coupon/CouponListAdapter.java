@@ -357,5 +357,4 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
     }
-
 }

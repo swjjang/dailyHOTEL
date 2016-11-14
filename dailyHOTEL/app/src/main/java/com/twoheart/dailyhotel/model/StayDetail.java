@@ -190,6 +190,16 @@ public class StayDetail extends PlaceDetail
             roomInformation.address = address;
             mSaleRoomList.add(roomInformation);
         }
+
+        if (jsonObject.has("myWish") == true)
+        {
+            myWish = jsonObject.getBoolean("myWish");
+        }
+
+        if (jsonObject.has("wishCount") == true)
+        {
+            wishCount = jsonObject.getInt("wishCount");
+        }
     }
 
     public ArrayList<RoomInformation> getSaleRoomList()

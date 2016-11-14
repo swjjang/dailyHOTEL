@@ -179,6 +179,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";
     public static final String NAME_INTENT_EXTRA_DATA_TYPE = "type";
     public static final String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
+    public static final String NAME_INTENT_EXTRA_DATA_TICKETINDEX = "ticketIndex";
     public static final String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
     public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
     public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
@@ -208,6 +209,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_GRADE = "grade";
     public static final String NAME_INTENT_EXTRA_DATA_FROM_MAP = "fromMap";
     public static final String NAME_INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
+    public static final String NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST = "isChangeWishList";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
@@ -255,6 +257,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_FEEDBACK = 49;
     public static final int CODE_REQUEST_ACTIVITY_RECENTPLACE = 50;
     public static final int CODE_REQUEST_ACTIVITY_CONTACT_US = 51;
+    public static final int CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST = 52;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -286,6 +289,7 @@ public interface Constants
     public static final int CODE_RESULT_ACTIVITY_REFRESH = 305;
     public static final int CODE_RESULT_ACTIVITY_STAY_LIST = 306;
     public static final int CODE_RESULT_ACTIVITY_GOURMET_LIST = 307;
+    public static final int CODE_RESULT_ACTIVITY_STAY_AUTOREFUND = 308;
 
     // 예약 리스트에서
     public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;

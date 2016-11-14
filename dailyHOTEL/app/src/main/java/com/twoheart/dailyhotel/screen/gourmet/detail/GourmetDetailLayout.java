@@ -65,6 +65,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         if (gourmetDetail == null)
         {
             setLineIndicatorVisible(false);
+            setWishListButtonSelected(false);
+            setWishListButtonCount(0);
             return;
         }
 
@@ -133,6 +135,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             updateTicketInformationLayout(ticketInformationList);
         }
+
+        setWishListButtonSelected(gourmetDetail.myWish);
+        setWishListButtonCount(gourmetDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }
@@ -214,6 +219,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -221,6 +227,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
@@ -230,6 +237,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishListButtonTextView.setVisibility(View.GONE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -239,9 +247,22 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
+                mWishListButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
+    }
+
+    @Override
+    public void setSelectProduct(int index)
+    {
+        if(mTicketTypeListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mTicketTypeListAdapter.setSelectIndex(index);
+        mProductTypeRecyclerView.scrollToPosition(position);
     }
 
     @Override

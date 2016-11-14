@@ -1,16 +1,20 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -47,6 +51,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private HotelBookingDetail mBookingDetail;
     private int mReservationIndex;
+
+    private View mRefundPolicyLayout, mButtonBottomMarginView;
+    private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
 
     public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
@@ -244,8 +251,12 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         try
         {
-            Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+            // 날짜로 계산한다. 서버에 체크인시간, 체크아웃시간이 잘못 기록되어있는 경우 발생해서 예외 처리 추가
+            String[] checkInDates = bookingDetail.checkInDate.split("T");
+            String[] checkOutDates = bookingDetail.checkOutDate.split("T");
+
+            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
             int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
             nightsTextView.setText(context.getString(R.string.label_nights, nights));
@@ -321,6 +332,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
+        mButtonBottomMarginView = confirmView.findViewById(R.id.buttonBottomMarginView);
+
+
         confirmView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -347,22 +361,153 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             return;
         }
 
-        View refundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+        mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+        TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
 
-        if (bookingDetail.isNRD == true)
+        refundPolicyTextView.setText(bookingDetail.mRefundComment);
+
+        View buttonLayout = mRefundPolicyLayout.findViewById(R.id.buttonLayout);
+        buttonLayout.setVisibility(View.VISIBLE);
+        TextView buttonTextView = (TextView) buttonLayout.findViewById(R.id.buttonTextView);
+
+        mDefaultRefundPolicyLayout = view.findViewById(R.id.defaultRefundPolicyLayout);
+        mWaitRefundPolicyLayout = view.findViewById(R.id.waitRefundPolicyLayout);
+
+        // 이미 이용완료가 된경우
+        if (bookingDetail.isOverCheckOutDate == true)
         {
-            refundPolicyLayout.setVisibility(View.VISIBLE);
-
-            TextView refundPolicyTextView = (TextView) refundPolicyLayout.findViewById(R.id.refundPolicyTextView);
-
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.message_booking_refund_product));
-            spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
-                0, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            refundPolicyTextView.setText(spannableStringBuilder);
+            setRefundLayoutVisible(false);
         } else
         {
-            refundPolicyLayout.setVisibility(View.GONE);
+            setRefundLayoutVisible(true);
+
+            switch (getRefundPolicyStatus(bookingDetail))
+            {
+                case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
+
+                    buttonTextView.setText(R.string.label_request_free_refund);
+                    break;
+                }
+
+                case HotelBookingDetail.STATUS_WAIT_REFUND:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.GONE);
+                    mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
+
+                    TextView waitRefundPolicyTextView = (TextView) mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
+                    waitRefundPolicyTextView.setText(Html.fromHtml(getString(R.string.message_please_wait_refund01)));
+
+                    buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+
+                default:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
+
+                    buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+            }
+
+            buttonLayout.setOnClickListener(this);
+        }
+    }
+
+    public void updateRefundPolicyLayout(PlaceBookingDetail bookingDetail)
+    {
+        mBookingDetail = (HotelBookingDetail)bookingDetail;
+
+        TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+
+        refundPolicyTextView.setText(mBookingDetail.mRefundComment);
+
+        View buttonLayout = mRefundPolicyLayout.findViewById(R.id.buttonLayout);
+        buttonLayout.setVisibility(View.VISIBLE);
+        TextView buttonTextView = (TextView) buttonLayout.findViewById(R.id.buttonTextView);
+
+        // 이미 이용완료가 된경우
+        if (mBookingDetail.isOverCheckOutDate == true)
+        {
+            setRefundLayoutVisible(false);
+        } else
+        {
+            setRefundLayoutVisible(true);
+
+            switch (getRefundPolicyStatus(mBookingDetail))
+            {
+                case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
+
+                    buttonTextView.setText(R.string.label_request_free_refund);
+                    break;
+                }
+
+                case HotelBookingDetail.STATUS_WAIT_REFUND:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.GONE);
+                    mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
+
+                    TextView waitRefundPolicyTextView = (TextView) mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
+                    waitRefundPolicyTextView.setText(Html.fromHtml(getString(R.string.message_please_wait_refund01)));
+
+                    buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+
+                default:
+                {
+                    mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mWaitRefundPolicyLayout.setVisibility(View.GONE);
+
+                    buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+            }
+
+            buttonLayout.setOnClickListener(this);
+        }
+    }
+
+    private String getRefundPolicyStatus(HotelBookingDetail bookingDetail)
+    {
+        // 환불 대기 상태
+        if (bookingDetail.readyForRefund == true)
+        {
+            return HotelBookingDetail.STATUS_WAIT_REFUND;
+        } else
+        {
+            if (Util.isTextEmpty(bookingDetail.refundPolicy) == false)
+            {
+                return bookingDetail.refundPolicy;
+            } else
+            {
+                return HotelBookingDetail.STATUS_SURCHARGE_REFUND;
+            }
+        }
+    }
+
+    public void setRefundLayoutVisible(boolean visible)
+    {
+        if (mRefundPolicyLayout == null)
+        {
+            return;
+        }
+
+        if (visible == true && mRefundPolicyLayout.getVisibility() != View.VISIBLE)
+        {
+            mRefundPolicyLayout.setVisibility(View.VISIBLE);
+            mButtonBottomMarginView.setVisibility(View.GONE);
+        } else if (visible == false && mRefundPolicyLayout.getVisibility() != View.GONE)
+        {
+            mRefundPolicyLayout.setVisibility(View.GONE);
+            mButtonBottomMarginView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -405,7 +550,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 saleTime.setCurrentTime(mBookingDetail.currentDateTime);
                 saleTime.setDailyTime(mBookingDetail.dailyDateTime);
 
-                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, false);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, 0, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                 break;
             }
@@ -429,76 +574,30 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 break;
             }
 
-//            case R.id.callDailyView:
-//            {
-//                BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//                if (Util.isTelephonyEnabled(baseActivity) == true)
-//                {
-//                    try
-//                    {
-//                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-//
-//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-//                    } catch (ActivityNotFoundException e)
-//                    {
-//                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-//                    }
-//                } else
-//                {
-//                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-//                }
-//                break;
-//            }
-//
-//            case R.id.kakaoDailyView:
-//            {
-//                try
-//                {
-//                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-//                } catch (ActivityNotFoundException e)
-//                {
-//                    try
-//                    {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-//                    } catch (ActivityNotFoundException e1)
-//                    {
-//                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-//                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-//                        startActivity(marketLaunch);
-//                    }
-//                }
-//                break;
-//            }
+            case R.id.buttonLayout:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
 
-//            case R.id.callPlaceView:
-//            {
-//                BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//                if (Util.isTelephonyEnabled(baseActivity) == true)
-//                {
-//                    String phone = mBookingDetail.hotelPhone;
-//
-//                    if (Util.isTextEmpty(mBookingDetail.hotelPhone) == true)
-//                    {
-//                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-//                    }
-//
-//                    try
-//                    {
-//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-//                    } catch (ActivityNotFoundException e)
-//                    {
-//                        String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
-//                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-//                    }
-//                } else
-//                {
-//                    String message = getString(R.string.toast_msg_no_hotel_call, mBookingDetail.hotelPhone);
-//                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-//                }
-//                break;
-//            }
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                switch (getRefundPolicyStatus(mBookingDetail))
+                {
+                    case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                    {
+                        Intent intent = StayAutoRefundActivity.newInstance(baseActivity, mBookingDetail);
+                        baseActivity.startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+                        break;
+                    }
+
+                    default:
+                        showCallDialog(baseActivity);
+                        break;
+                }
+                break;
+            }
         }
     }
 
@@ -516,5 +615,130 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         return calendar.getTimeInMillis();
     }
 
+    private void showCallDialog(BaseActivity baseActivity)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
 
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(baseActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
+        View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
+        contactUs01Layout.setVisibility(View.GONE);
+        contactUs02Layout.setVisibility(View.GONE);
+
+        TextView kakaoDailyView = (TextView) dialogView.findViewById(R.id.kakaoDailyView);
+        TextView callDailyView = (TextView) dialogView.findViewById(R.id.callDailyView);
+
+        kakaoDailyView.setText(R.string.label_contact_refund_kakao);
+        callDailyView.setText(R.string.label_contact_refund_daily);
+
+        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startKakao();
+            }
+        });
+
+        callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startDailyCall();
+            }
+        });
+
+        View closeView = dialogView.findViewById(R.id.closeView);
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void startKakao()
+    {
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
+        }
+    }
+
+    private void startDailyCall()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (Util.isTelephonyEnabled(baseActivity) == true)
+        {
+            try
+            {
+                String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            } catch (ActivityNotFoundException e)
+            {
+                DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            }
+        } else
+        {
+            DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+        }
+    }
 }

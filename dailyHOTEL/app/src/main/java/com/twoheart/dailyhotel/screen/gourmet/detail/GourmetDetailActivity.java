@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -38,6 +37,7 @@ import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -115,13 +115,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int ticketIndex, boolean isShowCalendar)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, ticketIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
@@ -203,6 +204,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
+
+            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, 0);
+
             initLayout(null, null, false);
 
             if (isShowCalendar == true)
@@ -322,7 +326,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isOverAPI21() == true)
+        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
         {
             ininTransLayout(placeName, imageUrl, isFromMap);
         } else
@@ -879,6 +883,46 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             startCalendar(mSaleTime, mPlaceDetail.index, true);
         }
+
+        @Override
+        public void setWishList(boolean isAdded, int placeIndex)
+        {
+            if (isAdded == true)
+            {
+                mPlaceDetailNetworkController.requestAddWishList(PlaceType.FNB, placeIndex);
+            } else
+            {
+                mPlaceDetailNetworkController.requestRemoveWishList(PlaceType.FNB, placeIndex);
+            }
+        }
+
+        @Override
+        public void onWishListButtonClick()
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                DailyToast.showToast(GourmetDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+
+                Intent intent = LoginActivity.newInstance(GourmetDetailActivity.this, AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
+            } else
+            {
+                if (isLockUiComponent() == true || isFinishing() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
+                mPlaceDetailLayout.startWishListButtonClick();
+            }
+        }
+
+        @Override
+        public void releaseUiComponent()
+        {
+            GourmetDetailActivity.this.releaseUiComponent();
+        }
     };
 
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
@@ -907,28 +951,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                 mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         }
-
-        //        @Override
-        //        public void onUserInformation(Customer user, String birthday, boolean isDailyUser)
-        //        {
-        //            if (isDailyUser == true)
-        //            {
-        //                mPlaceDetailNetworkController.requestProfile();
-        //            } else
-        //            {
-        //                // 입력된 정보가 부족해.
-        //                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
-        //                {
-        //                    moveToAddSocialUserInformation(user, birthday);
-        //                } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-        //                {
-        //                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-        //                } else
-        //                {
-        //                    processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation);
-        //                }
-        //            }
-        //        }
 
         @Override
         public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
@@ -988,6 +1010,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     checkGourmetTicket(mIsDeepLink, (GourmetDetail) mPlaceDetail, mViewPrice);
                 }
 
+                // 딥링크로 메뉴 오픈 요청
+                if(mIsDeepLink == true && mOpenTicketIndex > 0)
+                {
+                    if (mPlaceDetailLayout != null)
+                    {
+                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                    }
+
+                    mOpenTicketIndex = 0;
+                }
+
                 mIsDeepLink = false;
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
@@ -1002,17 +1035,97 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+<<<<<<< HEAD
         public void onHasCoupon(boolean hasCoupon)
         {
             mPlaceDetail.hasCoupon = hasCoupon;
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
+=======
+        public void onAddWishList(boolean isSuccess, String message)
+        {
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
+            if (isSuccess == true)
+            {
+                mPlaceDetail.myWish = true;
+                mPlaceDetailLayout.setWishListButtonCount(++mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, null);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                releaseUiComponent();
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+
+        @Override
+        public void onRemoveWishList(boolean isSuccess, String message)
+        {
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
+            if (isSuccess == true)
+            {
+                mPlaceDetail.myWish = false;
+                mPlaceDetailLayout.setWishListButtonCount(--mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, null);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                releaseUiComponent();
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+>>>>>>> develop
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onErrorResponse(volleyError);
             finish();
         }
@@ -1020,14 +1133,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onError(Exception e)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
             // 판매 마감시
             if (msgCode == 5)
@@ -1043,7 +1156,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorToastMessage(String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
         }
@@ -1061,7 +1174,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
-                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
                         }
                     });
 
@@ -1091,7 +1204,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                     if (hasPrice == false)
                     {
-                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
                         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
                             , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

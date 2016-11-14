@@ -1033,6 +1033,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
+            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
             SaleTime changedSaleTime = mGourmetCuration.getSaleTime().getClone(0);
 
@@ -1049,7 +1050,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return false;
             }
 
-            Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, isShowCalendar);
+            Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
             mIsDeepLink = true;

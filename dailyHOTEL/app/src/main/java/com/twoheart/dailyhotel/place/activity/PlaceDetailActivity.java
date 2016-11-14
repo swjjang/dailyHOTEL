@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,7 +50,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected Province mProvince;
     protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
+    protected int mOpenTicketIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
+
     private Handler mHandler = new Handler();
+    private int mResultCode;
+    protected Intent mResultIntent;
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -154,11 +159,59 @@ public abstract class PlaceDetailActivity extends BaseActivity
         super.onResume();
     }
 
+    /**
+     * 이전화면이 갱신되어야 하면 Transition 효과를 주지 않도록 한다.
+     *
+     * @param resultCode
+     */
+    public void setResultCode(int resultCode)
+    {
+        mResultCode = resultCode;
+
+        if (mResultIntent == null) {
+            mResultIntent = new Intent();
+        }
+
+        setResult(resultCode, mResultIntent);
+    }
+
+    public boolean isSameCallingActivity(String checkClassName)
+    {
+        ComponentName callingActivity = getCallingActivity();
+        if (callingActivity == null || Util.isTextEmpty(checkClassName) == true)
+        {
+            return false;
+        }
+
+        String callingClassName = callingActivity.getClassName();
+        if (checkClassName.equalsIgnoreCase(callingClassName) == true)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
     @Override
     public void onBackPressed()
     {
         if (mPlaceDetailLayout != null)
         {
+            switch (mPlaceDetailLayout.getBookingStatus())
+            {
+                case StayDetailLayout.STATUS_BOOKING:
+                case StayDetailLayout.STATUS_NONE:
+                    hideProductInformationLayout();
+                    return;
+            }
+
+            if (Util.isUsedMutilTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+            {
+                finish();
+                return;
+            }
+
             if (Util.isOverAPI21() == true)
             {
                 if (mPlaceDetailLayout.isListScrollTop() == true)
@@ -180,14 +233,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     return;
                 }
             }
-
-            switch (mPlaceDetailLayout.getBookingStatus())
-            {
-                case StayDetailLayout.STATUS_BOOKING:
-                case StayDetailLayout.STATUS_NONE:
-                    hideProductInformationLayout();
-                    return;
-            }
         }
 
         super.onBackPressed();
@@ -204,7 +249,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 case CODE_REQUEST_ACTIVITY_BOOKING:
                 {
-                    setResult(resultCode);
+                    setResultCode(resultCode);
 
                     switch (resultCode)
                     {
@@ -246,6 +291,20 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         downloadCoupon();
                     }
                     break;
+                }
+
+                case CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST:
+                {
+                    mDontReloadAtOnResume = false;
+
+                    if (requestCode == RESULT_OK)
+                    {
+                        // 호텔 정보  고메 정보를 다시 가져와야 함으로 위시리스트 버튼 클릭 이벤트는 동작하지 않도록 함!
+                        //                        if (mPlaceDetailLayout != null)
+                        //                        {
+                        //                            mPlaceDetailLayout.startWishListButtonClick();
+                        //                        }
+                    }
                 }
 
                 case CODE_REQUEST_ACTIVITY_IMAGELIST:

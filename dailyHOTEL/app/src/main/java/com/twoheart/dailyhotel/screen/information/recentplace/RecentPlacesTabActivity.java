@@ -1,9 +1,11 @@
 package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -12,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -20,6 +23,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,6 +51,17 @@ public class RecentPlacesTabActivity extends BaseActivity
     private PlaceType mPlaceType;
 
     private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
+
+    public static Intent newInstance(Context context, PlaceType placeType)
+    {
+        Intent intent = new Intent(context, RecentPlacesTabActivity.class);
+
+        if (placeType != null)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        }
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -119,6 +134,9 @@ public class RecentPlacesTabActivity extends BaseActivity
         initToolbar();
         initTabLayout();
 
+        mEmptyView = findViewById(R.id.emptyLayout);
+        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
@@ -156,7 +174,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+//        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
         layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
@@ -164,9 +182,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         mTabLayout.setLayoutParams(layoutParams);
 
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
-
-        mEmptyView = findViewById(R.id.emptyLayout);
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
     }
 
     private void setTabLayout()
@@ -208,11 +223,31 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
 
+        TabLayout.Tab selectedTab = mTabLayout.getTabAt(position);
+
+        Class reflectionClass = ViewPager.class;
+
+        try
+        {
+            Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
+            mCurItem.setAccessible(true);
+            mCurItem.setInt(mViewPager, position);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        if (selectedTab != null)
+        {
+            selectedTab.select();
+        }
+
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
-        mViewPager.setCurrentItem(position);
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+//        mViewPager.setCurrentItem(position);
     }
 
     private boolean isEmptyRecentStayPlace()

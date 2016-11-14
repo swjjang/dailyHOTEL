@@ -607,6 +607,10 @@ public class AnalyticsManager
 
         public static final String MENU_RECENT_VIEW = "Menu_RecentView";
         public static final String MENU_RECENT_VIEW_EMPTY = "Menu_RecentView_Empty";
+
+        public static final String MENU_WISHLIST = "Menu_WishList";
+        public static final String MENU_WISHLIST_EMPTY = "Menu_WishList_Empty";
+        public static final String MENU_WISHLIST_BEFORELOGIN = "Menu_WishList_BeforeLogin";
     }
 
     public static class Action
@@ -760,6 +764,15 @@ public class AnalyticsManager
         public static final String RECENT_VIEW_CLICKED = "RecentViewClicked";
         public static final String RECENT_VIEW_DELETE = "RecentViewDelete";
         public static final String RECENT_VIEW_TAB_CHANGE = "RecentViewTabChange";
+
+        public static final String WISHLIST_CLICKED = "WishListClicked";
+        public static final String WISHLIST_DELETE = "WishListDelete";
+        public static final String WISHLIST_TAB_CHANGE = "WishListTabChange";
+        public static final String WISHLIST_ON = "WishListOn";
+        public static final String WISHLIST_OFF = "WishListOff";
+        public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
+
+        public static final String REFERRAL_CODE = "ReferralCode";
     }
 
     public static class Category
@@ -903,6 +916,10 @@ public class AnalyticsManager
         public static final String MENU_REGISTER_ACCOUNT = "Menu_RegisterAccount";
         public static final String SIGNUP_ON = "Signup_On";
         public static final String SIGNUP_OFF = "Signup_Off";
+
+        public static final String PROFILE_EDITED = "ProfileEdited";
+        public static final String TRY = "Try";
+        public static final String SUCCESS = "Success";
     }
 
     public static class UserType

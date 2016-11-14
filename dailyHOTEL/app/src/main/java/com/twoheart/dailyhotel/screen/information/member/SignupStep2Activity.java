@@ -351,6 +351,13 @@ public class SignupStep2Activity extends BaseActivity
                 userIndex, email, name, phoneNumber, birthday, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
+
+            // 내가 추천인 코드를 넣고 회원 가입을 하는 경우
+            if (Util.isTextEmpty(mRecommender) == false)
+            {
+                AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+                    , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
+            }
         }
 
         @Override

@@ -1135,4 +1135,117 @@ public class DailyNetworkAPI implements IDailyNetwork
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestWishListCount(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes" : "MzgkMTUkMzIkMTgkNDAkNDEkMzMkMjkkNDMkMTQkMjIkMTkkNDUkNTAkMjgkMzIk$NTBFODQwNDgzNTPAWzNFF0IWxQUIL2OEMER4NzBCWCMjMyNIALIkOEVCNDU=$";
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestWishList(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}" : "NiQzMSQ5JDM4JDkxJDQzJDg5JDc1JDQ3JDc1JDEkNTUkNjAkNTUkNDMkMjYk$MJjgzRDYY1IMzVDNTNERDQ3QzYA5RTEzQ0DI0NURYDM0RQRyRkSU4NzUxGWMDQzRMTU0OTYwRkVBRTQyQDTWUzODM3OURGNUYwIQg=F=$";
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestAddWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/add/{itemIdx}" : "MTIkMTI3JDM5JDk3JDExOSQzOSQ3MSQxMDAkMTI3JDc4JDk1JDU3JDEwMCQxMzEkOTMkMTA5JA==$MjgzRDY1MzVDYNTNERDQ3QzY5RTEzQ0I0NURDM0RIQyRkVFRTJEN0I0MjWA5MkRCNDcxMUU1IRDNGMUDZDRUQyOTMxMTUR1RDJdFMRUNYWEQjAA3OURCMTgxMjVFNjYzFOTFGGSNkMzMUDI1$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+        urlParams.put("{itemIdx}", Integer.toString(placeIndex));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "MjEkMzgkNzQkMTE4JDYwJDQyJDQ2JDExMyQxMDEkMzQkMTM1JDExNSQxMzMkOTgkNDAkODgk$ODFCMzNDMDREN0VCNUFDOXEVEMjA3RjAzMWDc4RJMjhGFQkRVBN0M5MTA4M0REMjCNDMjkyMDVEMkEzUQkYxMjcwQOEM2M0Q5MDdGBOEMO2MUU2QTM1RTFWDFMjZENjAM1NTg2NzLAyNVkVD$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+        urlParams.put("{itemIdx}", Integer.toString(placeIndex));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
+        String params;
+
+        if(Util.isTextEmpty(transactionType) == true)
+        {
+            params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn));
+        } else
+        {
+            params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s&transactionType=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn), transactionType);
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
+        , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/refund" : "MTQkNzUkNDMkODUkMzkkNzMkMTQkNjIkMzMkMTYkODIkODkkNzAkMzIkMjkkNDMk$Nzg0NTMxOUNGOUOMFE1RDE2NjRFRTRM1OOThXBOUQ2RNDIhBQ0KEyRjIxMjcwNTMyOTANFQ0ME3RDNBNzFE3MzHRQzNTIC0NjEQ3OA==$";
+
+        Map<String, String> params = new HashMap<>();
+        params.put("hotelIdx", Integer.toString(hotelIdx));
+        params.put("dateCheckIn", dateCheckIn);
+        params.put("transactionType", transactionType);
+        params.put("hotelReservationIdx", Integer.toString(hotelReservationIdx));
+        params.put("reasonRefund", reasonCancel);
+
+        if (Util.isTextEmpty(accountHolder) == false)
+        {
+            params.put("accountHolder", accountHolder);
+        }
+
+        if (Util.isTextEmpty(bankAccount) == false)
+        {
+            params.put("bankAccount", bankAccount);
+        }
+
+        if (Util.isTextEmpty(bankCode) == false)
+        {
+            params.put("bankCode", bankCode);
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestBankList(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/bank" : "NjEkMTIkNzkkNDMkMTgkNjMkMzkkMzgkNDgkMjgkMzMkNjEkNzckNjAkNjEkMjQk$RDlCRUJDNUY0ROUM5MODA1MjDY5REHQzNTAE4RTM2CNWEZGRkUYR4NzQ4MUQxMBRKDY2RDkwQNG0RFNETE2MkU0OTNENFTY3Nzc0Mg==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.Map;
 
@@ -609,4 +610,19 @@ interface IDailyNetwork
     void requestRecentGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
 
     void requestReceiptByEmail(Object tag, String placeType, String reservationIdx, String email, DailyHotelJsonResponseListener listener);
+
+    void requestWishListCount(Object tag, DailyHotelJsonResponseListener listener);
+
+    void requestWishList(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener);
+
+    void requestAddWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
+
+    void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
+
+    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener);
+
+    void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
+        , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener);
+
+    void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
 }

@@ -1132,6 +1132,7 @@ public class StayMainFragment extends PlaceMainFragment
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
+            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
             SaleTime changedSaleTime = mStayCuration.getCheckInSaleTime().getClone(0);
 
@@ -1148,7 +1149,7 @@ public class StayMainFragment extends PlaceMainFragment
                 return false;
             }
 
-            Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, isShowCalendar);
+            Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
             mIsDeepLink = true;

@@ -1,15 +1,11 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,6 +37,7 @@ import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -50,7 +47,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
@@ -124,12 +120,13 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int staytIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int staytIndex, int roomIndex, boolean isShowCalendar)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, staytIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
@@ -213,6 +210,8 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
+
+            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
             initLayout(null, null, null, false);
 
@@ -916,6 +915,46 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             ((StayDetailLayout) mPlaceDetailLayout).setChangedViewPrice(type);
         }
+
+        @Override
+        public void setWishList(boolean isAdded, int placeIndex)
+        {
+            if (isAdded == true)
+            {
+                mPlaceDetailNetworkController.requestAddWishList(PlaceType.HOTEL, placeIndex);
+            } else
+            {
+                mPlaceDetailNetworkController.requestRemoveWishList(PlaceType.HOTEL, placeIndex);
+            }
+        }
+
+        @Override
+        public void onWishListButtonClick()
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                DailyToast.showToast(StayDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+
+                Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
+            } else
+            {
+                if (isLockUiComponent() == true || isFinishing() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
+                mPlaceDetailLayout.startWishListButtonClick();
+            }
+        }
+
+        @Override
+        public void releaseUiComponent()
+        {
+            StayDetailActivity.this.releaseUiComponent();
+        }
     };
 
 
@@ -953,28 +992,6 @@ public class StayDetailActivity extends PlaceDetailActivity
                 finish();
             }
         }
-
-        //        @Override
-        //        public void onUserInformation(Customer user, String birthday, boolean isDailyUser)
-        //        {
-        //            if (isDailyUser == true)
-        //            {
-        //                mPlaceDetailNetworkController.requestProfile();
-        //            } else
-        //            {
-        //                // 입력된 정보가 부족해.
-        //                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
-        //                {
-        //                    moveToAddSocialUserInformation(user, birthday);
-        //                } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-        //                {
-        //                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-        //                } else
-        //                {
-        //                    processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);
-        //                }
-        //            }
-        //        }
 
         @Override
         public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
@@ -1038,6 +1055,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                     checkStayRoom(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
                 }
 
+                // 딥링크로 메뉴 오픈 요청
+                if(mIsDeepLink == true && mOpenTicketIndex > 0)
+                {
+                    if (mPlaceDetailLayout != null)
+                    {
+                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                    }
+
+                    mOpenTicketIndex = 0;
+                }
+
                 mIsDeepLink = false;
 
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);
@@ -1061,9 +1089,91 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onAddWishList(boolean isSuccess, String message)
+        {
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
+            if (isSuccess == true)
+            {
+                mPlaceDetail.myWish = true;
+                mPlaceDetailLayout.setWishListButtonCount(++mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+
+                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    Action.WISHLIST_ON, mPlaceDetail.name, null);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                releaseUiComponent();
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+
+        @Override
+        public void onRemoveWishList(boolean isSuccess, String message)
+        {
+            if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
+            {
+                if (mResultIntent == null)
+                {
+                    mResultIntent = new Intent();
+                    mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
+                }
+
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
+            if (isSuccess == true)
+            {
+                mPlaceDetail.myWish = false;
+                mPlaceDetailLayout.setWishListButtonCount(--mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(false);
+                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+
+                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION,//
+                    Action.WISHLIST_OFF, mPlaceDetail.name, null);
+            } else
+            {
+                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishListButtonSelected(true);
+
+                if (Util.isTextEmpty(message) == true)
+                {
+                    message = "";
+                }
+
+                releaseUiComponent();
+
+                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
+                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+
+        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorResponse(volleyError);
             finish();
         }
@@ -1071,14 +1181,14 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onError(Exception e)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
             // 판매 마감시
             if (msgCode == 5)
@@ -1093,7 +1203,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorToastMessage(String message)
         {
-            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorToastMessage(message);
             finish();
         }
@@ -1111,7 +1221,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
-                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
                         }
                     });
 
@@ -1141,7 +1251,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     if (hasPrice == false)
                     {
-                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
                         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
                             , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

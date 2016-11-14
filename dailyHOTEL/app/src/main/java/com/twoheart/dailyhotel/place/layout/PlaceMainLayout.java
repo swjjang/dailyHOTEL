@@ -420,8 +420,14 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void calculationMenuBarLayoutTranslationY(int dy)
     {
-        int height = (Integer) mBottomOptionLayout.getTag();
+        Object tag = mBottomOptionLayout.getTag();
 
+        if (tag == null || tag instanceof Integer == false)
+        {
+            return;
+        }
+
+        int height = (Integer) tag;
         float translationY = dy + mBottomOptionLayout.getTranslationY();
 
         if (translationY >= height)
@@ -462,7 +468,14 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void animationMenuBarLayout()
     {
-        int height = (Integer) mBottomOptionLayout.getTag();
+        Object tag = mBottomOptionLayout.getTag();
+
+        if (tag == null || tag instanceof Integer == false)
+        {
+            return;
+        }
+
+        int height = (Integer) tag;
         float translationY = mBottomOptionLayout.getTranslationY();
 
         if (translationY == 0 || translationY == height)

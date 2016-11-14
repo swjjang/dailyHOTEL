@@ -161,16 +161,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:background="@color/default_background"/>
-
+        
         <include
             layout="@layout/fragment_booking_tab_booking_03"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </LinearLayout>
 </ScrollView>

@@ -514,9 +514,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                             // 1. 세션이 살아있는지 검사 시작.
                             DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
-
-                            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                                , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
                         }
                     }
                 });
@@ -598,9 +595,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     // 1. 세션이 살아있는지 검사 시작.
                     DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
-
-                    AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
 
                     AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                         , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);

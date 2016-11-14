@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -542,6 +543,15 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        TextView onciergeTimeTextView = (TextView) view.findViewById(R.id.onciergeTimeTextView);
+
+        String[] hour = DailyPreference.getInstance(mContext).getOperationTime().split("\\,");
+
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        onciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
 
         View conciergeLayout = view.findViewById(R.id.conciergeLayout);
         conciergeLayout.setOnClickListener(new View.OnClickListener()
