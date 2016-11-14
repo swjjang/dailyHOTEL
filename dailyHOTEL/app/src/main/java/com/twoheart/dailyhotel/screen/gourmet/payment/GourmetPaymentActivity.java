@@ -1331,21 +1331,41 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         @Override
         public void minusTicketCount()
         {
-            GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+            final GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
-            int count = gourmetPaymentInformation.ticketCount;
+            final int count = gourmetPaymentInformation.ticketCount;
 
             if (count <= 1)
             {
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
             {
-                gourmetPaymentInformation.ticketCount = count - 1;
-                mGourmetPaymentLayout.setTicketCount(gourmetPaymentInformation.ticketCount);
-                mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
+                if(gourmetPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
+                {
+                    showSimpleDialog(null, getString(R.string.message_gourmet_cancel_coupon_by_count), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setCancelCoupon();
 
-                // 결제 가격을 바꾸어야 한다.
-                setPaymentInformation(gourmetPaymentInformation);
+                            gourmetPaymentInformation.ticketCount = count - 1;
+                            mGourmetPaymentLayout.setTicketCount(gourmetPaymentInformation.ticketCount);
+                            mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
+
+                            // 결제 가격을 바꾸어야 한다.
+                            setPaymentInformation(gourmetPaymentInformation);
+                        }
+                    }, null);
+                } else
+                {
+                    gourmetPaymentInformation.ticketCount = count - 1;
+                    mGourmetPaymentLayout.setTicketCount(gourmetPaymentInformation.ticketCount);
+                    mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
+
+                    // 결제 가격을 바꾸어야 한다.
+                    setPaymentInformation(gourmetPaymentInformation);
+                }
             }
         }
 
