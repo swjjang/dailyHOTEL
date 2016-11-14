@@ -2029,8 +2029,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         } else
                         {
                             // 취소 및 환불 규정
-                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag, hotelPaymentInformation.placeIndex,
-                                roomInformation.roomIndex, hotelPaymentInformation.checkInDateFormat, null, mPolicyRefundJsonResponseListener);
+                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag, hotelPaymentInformation.placeIndex, roomInformation.roomIndex, hotelPaymentInformation.checkInDateFormat, null, mPolicyRefundJsonResponseListener);
                         }
                         break;
                     }

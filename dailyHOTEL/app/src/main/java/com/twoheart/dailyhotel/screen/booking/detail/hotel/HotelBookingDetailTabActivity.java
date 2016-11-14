@@ -351,7 +351,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         {
                             mHotelBookingDetail.isOverCheckOutDate = false;
 
-                            if(mHotelBookingDetail.readyForRefund == true)
+                            if (mHotelBookingDetail.readyForRefund == true)
                             {
                                 // 환불 대기 인 상태에서는 문구가 고정이다.
                                 loadFragments(getViewPager(), mHotelBookingDetail);

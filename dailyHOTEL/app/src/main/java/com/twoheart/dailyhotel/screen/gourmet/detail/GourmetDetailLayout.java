@@ -256,7 +256,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     @Override
     public void setSelectProduct(int index)
     {
-        if(mTicketTypeListAdapter == null)
+        if (mTicketTypeListAdapter == null)
         {
             return;
         }

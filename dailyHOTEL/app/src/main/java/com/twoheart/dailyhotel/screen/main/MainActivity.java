@@ -312,6 +312,7 @@ public class MainActivity extends BaseActivity implements Constants
             case CODE_REQUEST_ACTIVITY_SEARCH:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
+            case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
@@ -853,7 +854,26 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
-                if (DailyDeepLink.getInstance().isHotelView() == true)
+                if (DailyDeepLink.getInstance().isCollectionView() == true)
+                {
+                    String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
+
+                    if (Util.isTextEmpty(deepLinkPlaceType) == false)
+                    {
+                        switch (deepLinkPlaceType)
+                        {
+                            case "stay":
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                                placeType = PlaceType.HOTEL;
+                                break;
+
+                            case "gourmet":
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
+                                placeType = PlaceType.FNB;
+                                break;
+                        }
+                    }
+                } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
                     placeType = PlaceType.HOTEL;

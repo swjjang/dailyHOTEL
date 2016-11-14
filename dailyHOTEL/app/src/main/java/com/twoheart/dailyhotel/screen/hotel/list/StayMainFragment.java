@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -780,6 +781,11 @@ public class StayMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
+            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+            {
+                unLockUI();
+
+                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -1559,6 +1565,80 @@ public class StayMainFragment extends PlaceMainFragment
         ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(checkInSaleTime, checkOutSaleTime);
 
         mPlaceMainNetworkController.requestRegionList();
+
+        return true;
+    }
+
+    private boolean moveDeepLinkCollection(BaseActivity baseActivity)
+    {
+        String title = DailyDeepLink.getInstance().getTitle();
+        String titleImageUrl = DailyDeepLink.getInstance().getTitleImageUrl();
+        String queryType = DailyDeepLink.getInstance().getQueryType();
+        String query = DailyDeepLink.getInstance().getQuery();
+
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        int nights = 1;
+
+        try
+        {
+            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        } finally
+        {
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
+        }
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime saleTime = mStayCuration.getCheckInSaleTime().getClone(0);
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        Intent intent = CollectionStayActivity.newInstance(baseActivity, checkInSaleTime, nights, title, titleImageUrl, queryType, query);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+        mIsDeepLink = true;
 
         return true;
     }

@@ -54,18 +54,18 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
 
     public int setSelectIndex(int index)
     {
-        if(mTicketInformationList == null)
+        if (mTicketInformationList == null)
         {
             return 0;
         }
 
         int size = mTicketInformationList.size();
 
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             TicketInformation roomInformation = mTicketInformationList.get(i);
 
-            if(roomInformation.index == index)
+            if (roomInformation.index == index)
             {
                 setSelected(i);
                 notifyDataSetChanged();

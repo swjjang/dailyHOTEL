@@ -55,18 +55,18 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
     public int setSelectIndex(int index)
     {
-        if(mRoomInformationList == null)
+        if (mRoomInformationList == null)
         {
             return 0;
         }
 
         int size = mRoomInformationList.size();
 
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             RoomInformation roomInformation = mRoomInformationList.get(i);
 
-            if(roomInformation.roomIndex == index)
+            if (roomInformation.roomIndex == index)
             {
                 setSelected(i);
                 notifyDataSetChanged();

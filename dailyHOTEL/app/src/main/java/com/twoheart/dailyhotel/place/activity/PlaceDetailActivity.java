@@ -168,7 +168,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         mResultCode = resultCode;
 
-        if (mResultIntent == null) {
+        if (mResultIntent == null)
+        {
             mResultIntent = new Intent();
         }
 
