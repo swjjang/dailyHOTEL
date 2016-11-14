@@ -1,79 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-       xmlns:app="http://schemas.android.com/apk/res-auto">
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <ScrollView
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:fillViewport="true"
+        android:visibility="visible">
 
         <LinearLayout
-            android:id="@+id/textLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="20dp"
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/messageTextView01"
+            <ImageView
                 android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:scaleType="fitEnd"
+                android:minHeight="110dp"
+                app:srcCompat="@drawable/no_wishlist_ic"/>
+
+            <LinearLayout
+                android:id="@+id/textLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/wishlist_list_empty_message01"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wishlist_list_empty_message01"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="18dp"
+                    dailyFont:style="Medium"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/messageTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="14dp"/>
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/buttonView"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/messageTextView02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="14dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:minHeight="60dp"
+                android:gravity="bottom|center_horizontal">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/bottomMessageTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:background="@drawable/shape_wishlist_footer_textview_background"
+                    android:gravity="center"
+                    android:text="@string/wishlist_list_bottom_notice_message"
+                    android:textColor="@color/default_text_cc5c5c5"
+                    android:textSize="12dp"/>
+            </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/textLayout"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            app:srcCompat="@drawable/no_wishlist_ic"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/buttonView"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_below="@+id/textLayout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/shape_button_common_background"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14dp"
-            dailyFont:style="Medium"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"/>
-
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/bottomMessageTextView"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:gravity="center"
-            android:textColor="@color/default_text_cc5c5c5"
-            android:background="@drawable/shape_wishlist_footer_textview_background"
-            android:text="@string/wishlist_list_bottom_notice_message"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:textSize="12dp"/>
-    </RelativeLayout>
+    </ScrollView>
 </merge>
