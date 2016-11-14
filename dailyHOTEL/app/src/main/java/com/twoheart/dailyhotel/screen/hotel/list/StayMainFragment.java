@@ -1576,7 +1576,6 @@ public class StayMainFragment extends PlaceMainFragment
         String queryType = DailyDeepLink.getInstance().getQueryType();
         String query = DailyDeepLink.getInstance().getQuery();
 
-
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
         int nights = 1;

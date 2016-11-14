@@ -1390,7 +1390,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         String queryType = DailyDeepLink.getInstance().getQueryType();
         String query = DailyDeepLink.getInstance().getQuery();
 
-
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
 
