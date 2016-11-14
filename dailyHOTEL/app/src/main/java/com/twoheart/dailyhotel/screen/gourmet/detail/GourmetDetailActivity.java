@@ -1035,13 +1035,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-<<<<<<< HEAD
         public void onHasCoupon(boolean hasCoupon)
         {
             mPlaceDetail.hasCoupon = hasCoupon;
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
-=======
+        }
+
         public void onAddWishList(boolean isSuccess, String message)
         {
             if (isSameCallingActivity(WishListTabActivity.class.getName()) == true)
@@ -1119,7 +1119,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
                     , getResources().getString(R.string.dialog_btn_text_confirm), null);
             }
->>>>>>> develop
         }
 
         @Override
