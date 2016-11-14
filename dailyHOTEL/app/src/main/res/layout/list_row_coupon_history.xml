@@ -81,8 +81,8 @@
             android:ellipsize="end"
             android:gravity="left|center_vertical"
             android:singleLine="true"
-            android:textColor="@color/information_title"
-            android:textSize="12dp"/>
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/expireTextView"
@@ -92,7 +92,7 @@
             android:ellipsize="end"
             android:gravity="left|center_vertical"
             android:maxLines="2"
-            android:textColor="@color/coupon_expire_text"
+            android:textColor="@color/default_text_c929292"
             android:textSize="11dp"
             />
 
