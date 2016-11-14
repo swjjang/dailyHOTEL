@@ -29,6 +29,8 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.search.collection.CollectionGourmetActivity;
+import com.twoheart.dailyhotel.screen.search.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -287,6 +289,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
+            case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
                 setResult(resultCode);
 
@@ -608,6 +611,134 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    private boolean moveDeepLinkCollectionStay(Context context, SaleTime saleTime)
+    {
+        String title = DailyDeepLink.getInstance().getTitle();
+        String titleImageUrl = DailyDeepLink.getInstance().getTitleImageUrl();
+        String queryType = DailyDeepLink.getInstance().getQueryType();
+        String query = DailyDeepLink.getInstance().getQuery();
+
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        int nights = 1;
+
+        try
+        {
+            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        } finally
+        {
+            if (nights <= 0)
+            {
+                nights = 1;
+            }
+        }
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        Intent intent = CollectionStayActivity.newInstance(this, checkInSaleTime, nights, title, titleImageUrl, queryType, query);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+        return true;
+    }
+
+    private boolean moveDeepLinkCollectionGourmet(Context context, SaleTime saleTime)
+    {
+        String title = DailyDeepLink.getInstance().getTitle();
+        String titleImageUrl = DailyDeepLink.getInstance().getTitleImageUrl();
+        String queryType = DailyDeepLink.getInstance().getQueryType();
+        String query = DailyDeepLink.getInstance().getQuery();
+
+
+        String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+
+        DailyDeepLink.getInstance().clear();
+
+        SaleTime checkInSaleTime;
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+
+            if (checkInSaleTime == null)
+            {
+                return false;
+            }
+
+        } else if (datePlus >= 0)
+        {
+            try
+            {
+                checkInSaleTime = saleTime.getClone(datePlus);
+            } catch (Exception e)
+            {
+                return false;
+            }
+        } else
+        {
+            // 날짜 정보가 없는 경우 예외 처리 추가
+            try
+            {
+                checkInSaleTime = saleTime;
+            } catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        if (checkInSaleTime == null)
+        {
+            return false;
+        }
+
+        Intent intent = CollectionGourmetActivity.newInstance(this, checkInSaleTime, title, titleImageUrl, queryType, query);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+        return true;
+    }
+
     private void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -822,6 +953,29 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             if (moveDeepLinkRegisterCoupon(EventWebActivity.this) == true)
                             {
                                 return;
+                            }
+                        } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+                        {
+                            String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
+
+                            if (Util.isTextEmpty(deepLinkPlaceType) == false)
+                            {
+                                switch (deepLinkPlaceType)
+                                {
+                                    case "stay":
+                                        if (moveDeepLinkCollectionStay(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                        {
+                                            return;
+                                        }
+                                        break;
+
+                                    case "gourmet":
+                                        if (moveDeepLinkCollectionGourmet(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+                                        {
+                                            return;
+                                        }
+                                        break;
+                                }
                             }
                         }
                     }

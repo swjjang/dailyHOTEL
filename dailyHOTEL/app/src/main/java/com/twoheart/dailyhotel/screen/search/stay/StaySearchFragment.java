@@ -316,7 +316,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, //
                 AnalyticsManager.ValueType.SEARCH, true, isAnimation);
-            startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
         @Override

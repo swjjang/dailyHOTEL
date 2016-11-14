@@ -1011,7 +1011,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
 
                 // 딥링크로 메뉴 오픈 요청
-                if(mIsDeepLink == true && mOpenTicketIndex > 0)
+                if (mIsDeepLink == true && mOpenTicketIndex > 0)
                 {
                     if (mPlaceDetailLayout != null)
                     {
