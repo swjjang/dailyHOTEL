@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="320dp"
+    android:background="@color/default_background">
+
+    <LinearLayout
+        android:id="@+id/textLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingTop="60dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/messageTextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_collection_gourmet_empty_text"
+            android:textColor="@color/default_text_c323232"
+            android:gravity="center"
+            android:textSize="18dp"
+            dailyFont:style="Medium"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/messageTextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:gravity="center"
+            android:text="@string/message_collection_selected_other_date"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="14dp"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/textLayout"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginBottom="-40dp"
+        app:srcCompat="@drawable/no_event_ic"/>
+</RelativeLayout>

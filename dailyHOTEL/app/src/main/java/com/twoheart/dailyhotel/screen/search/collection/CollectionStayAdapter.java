@@ -72,6 +72,13 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
                 return new HeaderViewHolder(view);
             }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
+
+                return new FooterViewHolder(view);
+            }
         }
 
         return null;

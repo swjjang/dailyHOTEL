@@ -349,7 +349,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                         if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
                         {
-                            mHotelBookingDetail.isOverCheckOutDate = false;
+                            mHotelBookingDetail.isVisibleRefundPolicy = true;
 
                             if (mHotelBookingDetail.readyForRefund == true)
                             {
@@ -363,7 +363,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             }
                         } else
                         {
-                            mHotelBookingDetail.isOverCheckOutDate = true;
+                            mHotelBookingDetail.isVisibleRefundPolicy = false;
 
                             loadFragments(getViewPager(), mHotelBookingDetail);
                         }
@@ -428,10 +428,17 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     loadFragments(getViewPager(), mHotelBookingDetail);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorPopupMessage(msgCode, message);
+                    // 에러가 나면 이용이 지난것으로 해서 하단에 정책을 보여주지 않는다.
+                    mHotelBookingDetail.isVisibleRefundPolicy = false;
 
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    loadFragments(getViewPager(), mHotelBookingDetail);
+
+
+                    // 정책을 보여주지 않고 영수증 보기로 한다.
+//                    String message = response.getString("msg");
+//                    onErrorPopupMessage(msgCode, message);
+//
+//                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 }
             } catch (Exception e)
             {

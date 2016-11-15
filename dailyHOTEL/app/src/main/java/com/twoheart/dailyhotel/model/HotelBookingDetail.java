@@ -28,7 +28,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public boolean readyForRefund; // 환불 대기 상태
 
     public int roomIndex;
-    public boolean isOverCheckOutDate; // 해당 예약이 체크아웃 시간이 지난 경우
+    public boolean isVisibleRefundPolicy; // 하단에 정책을 보여줄지 말지.
     public String mRefundComment; // 환분 불가 내용
     public int reservationIndex;
 
@@ -150,7 +150,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeString(transactionType);
         dest.writeInt(roomIndex);
         dest.writeInt(readyForRefund ? 1 : 0);
-        dest.writeInt(isOverCheckOutDate ? 1 : 0);
+        dest.writeInt(isVisibleRefundPolicy ? 1 : 0);
         dest.writeString(mRefundComment);
         dest.writeInt(reservationIndex);
     }
@@ -172,7 +172,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         transactionType = in.readString();
         roomIndex = in.readInt();
         readyForRefund = in.readInt() == 1;
-        isOverCheckOutDate = in.readInt() == 1;
+        isVisibleRefundPolicy = in.readInt() == 1;
         mRefundComment = in.readString();
         reservationIndex = in.readInt();
     }

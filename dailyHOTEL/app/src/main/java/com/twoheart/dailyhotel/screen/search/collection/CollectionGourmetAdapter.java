@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -72,6 +71,13 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                 view.setLayoutParams(layoutParams);
 
                 return new HeaderViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
+
+                return new FooterViewHolder(view);
             }
         }
 
