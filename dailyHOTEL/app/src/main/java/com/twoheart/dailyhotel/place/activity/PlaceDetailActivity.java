@@ -296,16 +296,22 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 case CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST:
                 {
-                    mDontReloadAtOnResume = false;
-
-                    if (requestCode == RESULT_OK)
+                    if (resultCode == RESULT_OK)
                     {
+                        mDontReloadAtOnResume = false;
+
                         // 호텔 정보  고메 정보를 다시 가져와야 함으로 위시리스트 버튼 클릭 이벤트는 동작하지 않도록 함!
                         //                        if (mPlaceDetailLayout != null)
                         //                        {
                         //                            mPlaceDetailLayout.startWishListButtonClick();
                         //                        }
+
+                    } else
+                    {
+                        mDontReloadAtOnResume = true;
                     }
+
+                    break;
                 }
 
                 case CODE_REQUEST_ACTIVITY_IMAGELIST:

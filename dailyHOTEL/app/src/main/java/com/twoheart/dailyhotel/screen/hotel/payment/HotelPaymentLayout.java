@@ -667,6 +667,16 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         refundPolicyTextView.setText(Html.fromHtml(text));
     }
 
+    public void setRefundPolicyVisible(boolean visible)
+    {
+        if (mRefundPolicyLayout == null)
+        {
+            return;
+        }
+
+        mRefundPolicyLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
     public Guest getGuest()
     {
         // 국내인 경우에는 체크된 경우만 해외인 경우에는 무조건 반환
@@ -685,11 +695,6 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             return null;
         }
     }
-
-    //    public String getMemoEditText()
-    //    {
-    //        return mMemoEditText.getText().toString().trim();
-    //    }
 
     public void requestGuestInformationFocus(Constants.UserInformationType type)
     {
