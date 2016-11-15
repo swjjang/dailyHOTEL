@@ -2406,15 +2406,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     mHotelPaymentLayout.setRefundPolicyText(comment);
 
-                    // 3. 간편결제 credit card 요청
-                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorPopupMessage(msgCode, message);
+                    // 에러가 발생하더라도 결제는 가능하도록 수정
+                    mHotelPaymentLayout.setRefundPolicyVisible(false);
 
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    //                    String message = response.getString("msg");
+                    //                    onErrorPopupMessage(msgCode, message);
+                    //
+                    //                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 }
+
+                // 3. 간편결제 credit card 요청
+                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
+
             } catch (Exception e)
             {
                 onError(e);

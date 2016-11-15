@@ -428,6 +428,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     loadFragments(getViewPager(), mHotelBookingDetail);
                 } else
                 {
+                    // 정책에 따라서 보여주는 방식이 다름.
+
                     // 에러가 나면 이용이 지난것으로 해서 하단에 정책을 보여주지 않는다.
                     mHotelBookingDetail.isVisibleRefundPolicy = false;
 
