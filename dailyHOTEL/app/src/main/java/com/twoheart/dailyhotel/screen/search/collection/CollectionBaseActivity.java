@@ -24,8 +24,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.twoheart.dailyhotel.R.id.view;
-
 public abstract class CollectionBaseActivity extends BaseActivity
 {
     private static final String QUERY_TYPE_INDEX = "index";
@@ -118,7 +116,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         });
 
         // 이미지
-        SimpleDraweeView simpleDraweeView = (SimpleDraweeView)findViewById(R.id.titleImageView);
+        SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.titleImageView);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(this));
         simpleDraweeView.setLayoutParams(layoutParams);
 
@@ -211,45 +209,46 @@ public abstract class CollectionBaseActivity extends BaseActivity
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
-        if (placeList == null || placeList.size() == 0)
-        {
-            return placeViewItemList;
-        }
-
         // 빈공간
         placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
 
         // 달력 넣기
         placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_CALENDAR_VIEW, getCalendarDate()));
 
-        // 개수 넣기
-        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
-
-        if (placeIndexs != null && placeIndexs.length > 0)
+        if (placeList == null || placeList.size() == 0)
         {
-            for (String hotelIndex : placeIndexs)
-            {
-                try
-                {
-                    int index = Integer.parseInt(hotelIndex);
-
-                    for (Place place : placeList)
-                    {
-                        if (index == place.index)
-                        {
-                            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                        }
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-            }
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         } else
         {
-            for (Place place : placeList)
+            // 개수 넣기
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
+
+            if (placeIndexs != null && placeIndexs.length > 0)
             {
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                for (String hotelIndex : placeIndexs)
+                {
+                    try
+                    {
+                        int index = Integer.parseInt(hotelIndex);
+
+                        for (Place place : placeList)
+                        {
+                            if (index == place.index)
+                            {
+                                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                            }
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            } else
+            {
+                for (Place place : placeList)
+                {
+                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                }
             }
         }
 

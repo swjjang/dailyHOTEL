@@ -374,7 +374,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         mWaitRefundPolicyLayout = view.findViewById(R.id.waitRefundPolicyLayout);
 
         // 이미 이용완료가 된경우
-        if (bookingDetail.isOverCheckOutDate == true)
+        if (bookingDetail.isVisibleRefundPolicy == false)
         {
             setRefundLayoutVisible(false);
         } else
@@ -431,7 +431,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         TextView buttonTextView = (TextView) buttonLayout.findViewById(R.id.buttonTextView);
 
         // 이미 이용완료가 된경우
-        if (mBookingDetail.isOverCheckOutDate == true)
+        if (mBookingDetail.isVisibleRefundPolicy == false)
         {
             setRefundLayoutVisible(false);
         } else
