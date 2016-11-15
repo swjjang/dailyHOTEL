@@ -84,7 +84,6 @@
             android:gravity="left|center_vertical"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
-            android:text="@string/coupon_sort_default_text"
             android:textColor="@color/coupon_history_button_text"
             android:textSize="11dp"
             app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"/>

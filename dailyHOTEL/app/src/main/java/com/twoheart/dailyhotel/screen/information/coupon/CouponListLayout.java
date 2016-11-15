@@ -17,12 +17,10 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.twoheart.dailyhotel.R.id.couponSortingButton;
-
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
-public class CouponListLayout extends BaseLayout implements View.OnClickListener
+public class CouponListLayout extends BaseLayout
 {
 
     private DailyTextView mHeaderTextView;
@@ -43,7 +41,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         void onListItemDownLoadClick(Coupon coupon);
 
-        void onSortingButtonClick(CouponSortListAdapter.SortType sortType);
+        void onSortButtonClick(CouponSortListAdapter.SortType sortType);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -65,7 +63,15 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
             mSortTextView.setTag(CouponSortListAdapter.SortType.ALL);
             mSortTextView.setText(CouponSortListAdapter.SortType.ALL.getName());
         }
-        mSortTextView.setOnClickListener(this);
+
+        mSortTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onSortButtonClick((CouponSortListAdapter.SortType) mSortTextView.getTag());
+            }
+        });
 
         updateHeaderTextView(0);
 
@@ -132,22 +138,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         return (list == null || list.size() == 0);
     }
 
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case couponSortingButton:
-                if (v.getTag() == null)
-                {
-                    v.setTag(CouponSortListAdapter.SortType.ALL);
-                }
-
-                ((OnEventListener) mOnEventListener).onSortingButtonClick((CouponSortListAdapter.SortType) v.getTag());
-                break;
-        }
-    }
-
     public void setData(List<Coupon> list)
     {
         if (isEmpty(list) == false)
@@ -172,22 +162,16 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         }
     }
 
-    /**
-     * sortType 설정하는 멧소드
-     *
-     * @param sortType
-     * @return data를 refresh 해야하는지 여부!
-     */
-    public boolean setSortType(CouponSortListAdapter.SortType sortType)
+    public void setSortType(CouponSortListAdapter.SortType sortType)
     {
         if (sortType == null)
         {
-            return true;
+            return;
         }
 
         if (mSortTextView == null)
         {
-            return false;
+            return;
         }
 
         CouponSortListAdapter.SortType oldSortType = null;
@@ -197,15 +181,11 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
             oldSortType = (CouponSortListAdapter.SortType) tag;
         }
 
-        if (sortType.equals(oldSortType) != false)
+        if (sortType.equals(oldSortType) == false)
         {
             mSortTextView.setTag(sortType);
             mSortTextView.setText(sortType.getName());
-
-            return true;
         }
-
-        return false;
     }
 
     public CouponSortListAdapter.SortType getSortType()
