@@ -118,7 +118,17 @@ public abstract class PlaceWishListLayout extends BaseLayout
 
     public int getRealItemCount()
     {
-        return mListAdapter != null ? mListAdapter.getItemCount() - 1 : null;
+        int realCount = 0;
+        if (mListAdapter != null)
+        {
+            realCount = mListAdapter.getItemCount() - 1;
+            if (realCount < 0)
+            {
+                realCount = 0;
+            }
+        }
+
+        return realCount;
     }
 
     public PlaceViewItem getItem(int position)
