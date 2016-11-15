@@ -224,7 +224,7 @@ public class PaymentWaitActivity extends BaseActivity
                     dialog.dismiss();
                 }
 
-                startCall();
+                startFAQ();
             }
         });
 
@@ -255,7 +255,7 @@ public class PaymentWaitActivity extends BaseActivity
                     dialog.dismiss();
                 }
 
-                startFAQ();
+                startCall();
             }
         });
 
