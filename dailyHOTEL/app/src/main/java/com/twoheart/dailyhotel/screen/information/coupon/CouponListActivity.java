@@ -1,11 +1,18 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
@@ -22,6 +29,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +42,9 @@ public class CouponListActivity extends BaseActivity
 {
     private CouponListLayout mCouponListLayout;
     private CouponListNetworkController mCouponListNetworkController;
-
-    public enum CouponSortType {
-        ALL, STAY, GOURMET
-    }
+    private Dialog mDialog;
+    private ArrayList<CouponSortListAdapter.SortType> mSortTypeList;
+    private ArrayList<Coupon> mCouponList;
 
     public static Intent newInstance(Context context)
     {
@@ -57,6 +64,11 @@ public class CouponListActivity extends BaseActivity
 
         DailyPreference.getInstance(this).setNewCoupon(false);
         DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLastestCouponTime());
+
+        mSortTypeList = new ArrayList<>();
+        mSortTypeList.add(CouponSortListAdapter.SortType.ALL);
+        mSortTypeList.add(CouponSortListAdapter.SortType.STAY);
+        mSortTypeList.add(CouponSortListAdapter.SortType.GOURMET);
 
         setContentView(mCouponListLayout.onCreateView(R.layout.activity_coupon_list));
     }
@@ -183,6 +195,126 @@ public class CouponListActivity extends BaseActivity
         }
     }
 
+    private void showSortListDialog(CouponSortListAdapter.SortType sortType, ArrayList<CouponSortListAdapter.SortType> sortList)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        if (mDialog != null)
+        {
+            if (mDialog.isShowing())
+            {
+                mDialog.dismiss();
+            }
+
+            mDialog = null;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_coupon_sorting_dialog_layout, null, false);
+
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
+
+
+        final CouponSortListAdapter sortListAdapter = new CouponSortListAdapter(this, sortList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        sortListAdapter.setSelectedSortType(sortType);
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        TextView negativeTextView = (TextView) buttonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = (TextView) buttonLayout.findViewById(R.id.positiveTextView);
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+                if (mCouponListLayout != null && sortListAdapter != null)
+                {
+                    mCouponListLayout.setSortType(sortListAdapter.getSelectedSortType());
+                    mCouponListLayout.setData(makeSortCouponList(mCouponList, sortListAdapter.getSelectedSortType()));
+                }
+            }
+        });
+
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mDialog = null;
+                unLockUI();
+            }
+        });
+
+        recyclerView.setAdapter(sortListAdapter);
+
+        try
+        {
+            mDialog.setContentView(dialogView);
+            mDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private ArrayList<Coupon> makeSortCouponList(ArrayList<Coupon> originList, CouponSortListAdapter.SortType sortType)
+    {
+        if (originList == null || originList.size() == 0)
+        {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Coupon> sortList = new ArrayList<>();
+        if (sortType == null)
+        {
+            // do nothing!
+        } else if (CouponSortListAdapter.SortType.ALL.equals(sortType) == true)
+        {
+            sortList.addAll(originList);
+        } else
+        {
+            for (Coupon coupon : originList)
+            {
+                if (CouponSortListAdapter.SortType.STAY.equals(sortType) == true && coupon.availableInHotel == true)
+                {
+                    sortList.add(coupon);
+                } else if (CouponSortListAdapter.SortType.GOURMET.equals(sortType) == true && coupon.availableInGourmet == true)
+                {
+                    sortList.add(coupon);
+                }
+            }
+        }
+
+        return sortList;
+    }
+
     // ////////////////////////////////////////////////////////
     // EventListener
     // ////////////////////////////////////////////////////////
@@ -233,10 +365,9 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onSortingButtonClick(CouponSortType sortType)
+        public void onSortButtonClick(CouponSortListAdapter.SortType sortType)
         {
-            // TODO : Sorting buttonClick 시 이벤트 처리
-
+            showSortListDialog(sortType, mSortTypeList);
         }
 
         @Override
@@ -265,7 +396,11 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void onCouponList(List<Coupon> list)
         {
-            mCouponListLayout.setData(list);
+
+            mCouponList = new ArrayList<>();
+            mCouponList.addAll(list);
+
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, mCouponListLayout.getSortType()));
 
             unLockUI();
         }

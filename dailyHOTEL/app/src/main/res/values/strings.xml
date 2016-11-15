@@ -906,6 +906,7 @@
     <string name="coupon_sort_default_text">전체 쿠폰 보기</string>
     <string name="coupon_toolbar_button_text">쿠폰코드등록</string>
 
+    <string name="label_coupon_sorting">할인쿠폰 보기</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
     <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
     <string name="message_select_coupon_empty">사용할 수 있는 할인 쿠폰이 없습니다.</string>

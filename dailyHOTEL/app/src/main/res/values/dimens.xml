@@ -28,4 +28,6 @@
     <dimen name="app_defaultsize_h">1.0dp</dimen>
     <dimen name="app_minimumsize_w">1.0dp</dimen>
     <dimen name="app_minimumsize_h">1.0dp</dimen>
+
+    <dimen name="list_row_coupon_sorting_height">45dp</dimen>
 </resources>

@@ -69,9 +69,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public Coupon getItem(int position)
     {
-        if (position > 0)
+        if (position >= getItemCount() - 1)
         {
-            position = position - FOOTER_COUNT;
+            return null;
         }
         return mList.get(position);
     }
@@ -86,7 +86,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemViewType(int position)
     {
         return (position == getItemCount() - 1) ? VIEW_TYPE_FOOTER : VIEW_TYPE_ITEM;
-//        return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
     }
 
     public void setData(List<Coupon> list)
@@ -178,6 +177,11 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onBindViewHolder(final int position)
         {
             Coupon coupon = getItem(position);
+            if (coupon == null)
+            {
+                ExLog.d("position : " + position + " , coupon is null");
+                return;
+            }
 
             String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
             couponPriceTextView.setText(strAmount);
