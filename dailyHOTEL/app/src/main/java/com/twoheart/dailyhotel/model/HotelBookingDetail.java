@@ -15,6 +15,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public static final String STATUS_SURCHARGE_REFUND = "SURCHARGE_REFUND"; // 부분 환불
     public static final String STATUS_NRD = "NRD";
     public static final String STATUS_WAIT_REFUND = "WAIT_REFUND";
+    public static final String STATUS_NONE = "NONE";
 
     public boolean isOverseas;
     public String checkInDate;

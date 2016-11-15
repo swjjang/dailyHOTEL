@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
+import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.Province;
@@ -2398,23 +2399,29 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch (msgCode)
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    case 100:
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    String comment = dataJSONObject.getString("comment");
+                        String comment = dataJSONObject.getString("comment");
+                        String refundPolicy = dataJSONObject.getString("refundPolicy");
 
-                    mHotelPaymentLayout.setRefundPolicyText(comment);
+                        if (HotelBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                        {
+                            mHotelPaymentLayout.setRefundPolicyVisible(false);
+                        } else
+                        {
+                            mHotelPaymentLayout.setRefundPolicyText(comment);
+                        }
+                        break;
+                    }
 
-                } else
-                {
-                    // 에러가 발생하더라도 결제는 가능하도록 수정
-                    mHotelPaymentLayout.setRefundPolicyVisible(false);
-
-                    //                    String message = response.getString("msg");
-                    //                    onErrorPopupMessage(msgCode, message);
-                    //
-                    //                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    default:
+                        // 에러가 발생하더라도 결제는 가능하도록 수정
+                        mHotelPaymentLayout.setRefundPolicyVisible(false);
+                        break;
                 }
 
                 // 3. 간편결제 credit card 요청

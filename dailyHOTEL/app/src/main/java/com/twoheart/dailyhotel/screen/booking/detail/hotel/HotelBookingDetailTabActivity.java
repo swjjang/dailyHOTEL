@@ -70,7 +70,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         if (mHotelBookingDetailTabBookingFragment != null)
         {
-            mHotelBookingDetailTabBookingFragment.updateRefundPolicyLayout(placeBookingDetail);
+            mHotelBookingDetailTabBookingFragment.updateRefundPolicyLayout((HotelBookingDetail)placeBookingDetail);
             return;
         }
 
@@ -415,32 +415,51 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch(msgCode)
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    case 100:
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    String comment = dataJSONObject.getString("comment");
-                    String refundPolicy = dataJSONObject.getString("refundPolicy");
+                        String comment = dataJSONObject.getString("comment");
+                        String refundPolicy = dataJSONObject.getString("refundPolicy");
+                        boolean refundManual = dataJSONObject.getBoolean("refundManual");
 
-                    mHotelBookingDetail.refundPolicy = refundPolicy;
-                    mHotelBookingDetail.mRefundComment = comment;
+                        // 환불 킬스위치 ON
+                        if(refundManual == true)
+                        {
+                            if(HotelBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
+                            {
+                                mHotelBookingDetail.refundPolicy = refundPolicy;
+                                mHotelBookingDetail.mRefundComment = comment;
+                            } else
+                            {
+                                mHotelBookingDetail.refundPolicy = HotelBookingDetail.STATUS_SURCHARGE_REFUND;
+                                mHotelBookingDetail.mRefundComment = response.getString("msg");
+                            }
 
-                    loadFragments(getViewPager(), mHotelBookingDetail);
-                } else
-                {
-                    // 정책에 따라서 보여주는 방식이 다름.
+                            loadFragments(getViewPager(), mHotelBookingDetail);
+                        } else
+                        {
+                            if(HotelBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                            {
+                                mHotelBookingDetail.isVisibleRefundPolicy = false;
+                            } else
+                            {
+                                mHotelBookingDetail.mRefundComment = comment;
+                            }
 
-                    // 에러가 나면 이용이 지난것으로 해서 하단에 정책을 보여주지 않는다.
-                    mHotelBookingDetail.isVisibleRefundPolicy = false;
+                            mHotelBookingDetail.refundPolicy = refundPolicy;
+                            loadFragments(getViewPager(), mHotelBookingDetail);
+                        }
+                        break;
+                    }
 
-                    loadFragments(getViewPager(), mHotelBookingDetail);
+                    default:
+                        mHotelBookingDetail.isVisibleRefundPolicy = false;
 
-
-                    // 정책을 보여주지 않고 영수증 보기로 한다.
-//                    String message = response.getString("msg");
-//                    onErrorPopupMessage(msgCode, message);
-//
-//                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        loadFragments(getViewPager(), mHotelBookingDetail);
+                        break;
                 }
             } catch (Exception e)
             {
