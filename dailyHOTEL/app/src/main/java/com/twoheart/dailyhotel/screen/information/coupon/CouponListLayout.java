@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -16,6 +17,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.twoheart.dailyhotel.R.id.couponSortingButton;
+
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
@@ -26,6 +29,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
     private RecyclerView mRecyclerView;
     private View mEmptyView;
     private CouponListAdapter mListAdapter;
+    private TextView mSortTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -39,7 +43,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         void onListItemDownLoadClick(Coupon coupon);
 
-        void onSortingButtonClick(CouponListActivity.CouponSortType sortType);
+        void onSortingButtonClick(CouponSortListAdapter.SortType sortType);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -55,12 +59,13 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
 
-        View couponSortingButton = view.findViewById(R.id.couponSortingButton);
-        if (couponSortingButton.getTag() == null)
+        mSortTextView = (TextView) view.findViewById(R.id.couponSortingButton);
+        if (mSortTextView.getTag() == null)
         {
-            couponSortingButton.setTag(CouponListActivity.CouponSortType.ALL);
+            mSortTextView.setTag(CouponSortListAdapter.SortType.ALL);
+            mSortTextView.setText(CouponSortListAdapter.SortType.ALL.getName());
         }
-        couponSortingButton.setOnClickListener(this);
+        mSortTextView.setOnClickListener(this);
 
         updateHeaderTextView(0);
 
@@ -132,14 +137,13 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
     {
         switch (v.getId())
         {
-            case R.id.couponSortingButton:
-                //                ((OnEventListener) mOnEventListener).startCouponHistory();
+            case couponSortingButton:
                 if (v.getTag() == null)
                 {
-                    v.setTag(CouponListActivity.CouponSortType.ALL);
+                    v.setTag(CouponSortListAdapter.SortType.ALL);
                 }
 
-                ((OnEventListener) mOnEventListener).onSortingButtonClick((CouponListActivity.CouponSortType) v.getTag());
+                ((OnEventListener) mOnEventListener).onSortingButtonClick((CouponSortListAdapter.SortType) v.getTag());
                 break;
         }
     }
@@ -166,6 +170,63 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * sortType 설정하는 멧소드
+     *
+     * @param sortType
+     * @return data를 refresh 해야하는지 여부!
+     */
+    public boolean setSortType(CouponSortListAdapter.SortType sortType)
+    {
+        if (sortType == null)
+        {
+            return true;
+        }
+
+        if (mSortTextView == null)
+        {
+            return false;
+        }
+
+        CouponSortListAdapter.SortType oldSortType = null;
+        Object tag = mSortTextView.getTag();
+        if (tag != null && tag instanceof CouponSortListAdapter.SortType)
+        {
+            oldSortType = (CouponSortListAdapter.SortType) tag;
+        }
+
+        if (sortType.equals(oldSortType) != false)
+        {
+            mSortTextView.setTag(sortType);
+            mSortTextView.setText(sortType.getName());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public CouponSortListAdapter.SortType getSortType()
+    {
+        if (mSortTextView == null)
+        {
+            return CouponSortListAdapter.SortType.ALL;
+        }
+
+        Object tag = mSortTextView.getTag();
+        if (tag == null)
+        {
+            return CouponSortListAdapter.SortType.ALL;
+        }
+
+        if (tag instanceof CouponSortListAdapter.SortType)
+        {
+            return (CouponSortListAdapter.SortType) tag;
+        }
+
+        return CouponSortListAdapter.SortType.ALL;
     }
 
     public Coupon getCoupon(String userCouponCode)
