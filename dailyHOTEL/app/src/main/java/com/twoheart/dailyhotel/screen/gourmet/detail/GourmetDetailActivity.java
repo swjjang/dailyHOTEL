@@ -834,19 +834,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void setWishList(boolean isAdded, int placeIndex)
-        {
-            if (isAdded == true)
-            {
-                mPlaceDetailNetworkController.requestAddWishList(PlaceType.FNB, placeIndex);
-            } else
-            {
-                mPlaceDetailNetworkController.requestRemoveWishList(PlaceType.FNB, placeIndex);
-            }
-        }
-
-        @Override
-        public void onWishListButtonClick()
+        public void onWishButtonClick()
         {
             if (DailyHotel.isLogin() == false)
             {
@@ -856,14 +844,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
             } else
             {
-                if (isLockUiComponent() == true || isFinishing() == true)
-                {
-                    return;
-                }
-
-                lockUiComponent();
-
-                mPlaceDetailLayout.startWishListButtonClick();
+                GourmetDetailActivity.this.onWishButtonClick(PlaceType.FNB, mPlaceDetail);
             }
         }
 
@@ -998,17 +979,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             if (isSuccess == true)
             {
                 mPlaceDetail.myWish = true;
-                mPlaceDetailLayout.setWishListButtonCount(++mPlaceDetail.wishCount);
-                mPlaceDetailLayout.setWishListButtonSelected(true);
-                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.ADD);
+                int wishCount = ++mPlaceDetail.wishCount;
+                mPlaceDetailLayout.setWishButtonCount(wishCount);
+                mPlaceDetailLayout.setWishButtonSelected(true);
+                mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.ADD);
 
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//
                     AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, null);
             } else
             {
-                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
-                mPlaceDetailLayout.setWishListButtonSelected(false);
+                mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishButtonSelected(mPlaceDetail.myWish);
 
                 if (Util.isTextEmpty(message) == true)
                 {
@@ -1038,17 +1020,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             if (isSuccess == true)
             {
                 mPlaceDetail.myWish = false;
-                mPlaceDetailLayout.setWishListButtonCount(--mPlaceDetail.wishCount);
-                mPlaceDetailLayout.setWishListButtonSelected(false);
-                mPlaceDetailLayout.setWishListPopup(PlaceDetailLayout.WishListPopupState.DELETE);
+                int wishCount = --mPlaceDetail.wishCount;
+                mPlaceDetailLayout.setWishButtonCount(wishCount);
+                mPlaceDetailLayout.setWishButtonSelected(false);
+                mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.DELETE);
 
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//
                     AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, null);
             } else
             {
-                mPlaceDetailLayout.setWishListButtonCount(mPlaceDetail.wishCount);
-                mPlaceDetailLayout.setWishListButtonSelected(true);
+                mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);
+                mPlaceDetailLayout.setWishButtonSelected(mPlaceDetail.myWish);
 
                 if (Util.isTextEmpty(message) == true)
                 {

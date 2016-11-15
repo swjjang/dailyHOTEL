@@ -66,12 +66,12 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
     public void setTitleText(Stay.Grade grade, String placeName)
     {
-        mTransTotelGradeTextView.setText(grade.getName(mContext));
-        mTransTotelGradeTextView.setBackgroundResource(grade.getColorResId());
-        mTransTotelGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
+        mTransTotalGradeTextView.setText(grade.getName(mContext));
+        mTransTotalGradeTextView.setBackgroundResource(grade.getColorResId());
+        mTransTotalGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
 
-        mTransPlacelNameTextView.setText(placeName);
-        mTransPlacelNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+        mTransPlaceNameTextView.setText(placeName);
+        mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
     }
 
     public void setDetail(SaleTime saleTime, StayDetail stayDetail, int imagePosition)
@@ -79,8 +79,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         if (stayDetail == null)
         {
             setLineIndicatorVisible(false);
-            setWishListButtonCount(0);
-            setWishListButtonSelected(false);
+            setWishButtonSelected(false);
+            setWishButtonCount(0);
             return;
         }
 
@@ -160,8 +160,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
 
-        setWishListButtonSelected(stayDetail.myWish);
-        setWishListButtonCount(stayDetail.wishCount);
+        setWishButtonSelected(stayDetail.myWish);
+        setWishButtonCount(stayDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }
@@ -246,7 +246,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishListButtonTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -254,7 +254,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishListButtonTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -264,7 +264,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishListButtonTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.GONE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -274,7 +274,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
-                mWishListButtonTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }

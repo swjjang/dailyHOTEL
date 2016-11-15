@@ -299,18 +299,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     if (resultCode == RESULT_OK)
                     {
                         mDontReloadAtOnResume = false;
-
-                        // 호텔 정보  고메 정보를 다시 가져와야 함으로 위시리스트 버튼 클릭 이벤트는 동작하지 않도록 함!
-                        //                        if (mPlaceDetailLayout != null)
-                        //                        {
-                        //                            mPlaceDetailLayout.startWishListButtonClick();
-                        //                        }
-
                     } else
                     {
                         mDontReloadAtOnResume = true;
                     }
-
                     break;
                 }
 
@@ -346,6 +338,34 @@ public abstract class PlaceDetailActivity extends BaseActivity
         super.onError();
 
         finish();
+    }
+
+    protected void onWishButtonClick(PlaceType placeType, PlaceDetail placeDetail)
+    {
+        if (isLockUiComponent() == true || isFinishing() == true)
+        {
+            return;
+        }
+
+        if (placeDetail == null)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        boolean isExpectSelected = !placeDetail.myWish;
+        int wishCount = isExpectSelected == true ? placeDetail.wishCount + 1 : placeDetail.wishCount - 1;
+        mPlaceDetailLayout.setWishButtonCount(wishCount);
+        mPlaceDetailLayout.setWishButtonSelected(isExpectSelected);
+
+        if (isExpectSelected == true)
+        {
+            mPlaceDetailNetworkController.requestAddWishList(placeType, placeDetail.index);
+        } else
+        {
+            mPlaceDetailNetworkController.requestRemoveWishList(placeType, placeDetail.index);
+        }
     }
 
     protected void moveToAddSocialUserInformation(Customer user, String birthday)
