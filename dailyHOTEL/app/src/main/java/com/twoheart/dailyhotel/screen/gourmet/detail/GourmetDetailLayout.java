@@ -54,10 +54,10 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void setTitleText(String placeName)
     {
-        mTransTotelGradeTextView.setVisibility(View.INVISIBLE);
+        mTransTotalGradeTextView.setVisibility(View.INVISIBLE);
 
-        mTransPlacelNameTextView.setText(placeName);
-        mTransPlacelNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+        mTransPlaceNameTextView.setText(placeName);
+        mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
     }
 
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
@@ -65,8 +65,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         if (gourmetDetail == null)
         {
             setLineIndicatorVisible(false);
-            setWishListButtonSelected(false);
-            setWishListButtonCount(0);
+            setWishButtonSelected(false);
+            setWishButtonCount(0);
             return;
         }
 
@@ -136,8 +136,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             updateTicketInformationLayout(ticketInformationList);
         }
 
-        setWishListButtonSelected(gourmetDetail.myWish);
-        setWishListButtonCount(gourmetDetail.wishCount);
+        setWishButtonSelected(gourmetDetail.myWish);
+        setWishButtonCount(gourmetDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }
@@ -219,7 +219,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishListButtonTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -227,7 +227,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishListButtonTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
@@ -237,7 +237,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishListButtonTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.GONE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -247,7 +247,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
-                mWishListButtonTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }

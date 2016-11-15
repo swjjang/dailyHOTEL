@@ -85,17 +85,17 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
-    private AnimatorSet mWishListAnmatorSet;
+    private AnimatorSet mWishPopupAnimatorSet;
     private int mStatusBarHeight;
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
-    protected TextView mTransTotelGradeTextView, mTransPlacelNameTextView;
+    protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
     protected View mTransGradientView;
 
-    protected DailyTextView mWishListButtonTextView;
-    protected DailyTextView mWishListPopupTextView;
+    protected DailyTextView mWishButtonTextView;
+    protected DailyTextView mWishPopupTextView;
 
-    public enum WishListPopupState
+    public enum WishPopupState
     {
         ADD,
         DELETE,
@@ -132,9 +132,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void downloadCoupon();
 
-        void setWishList(boolean isAdded, int placeIndex);
-
-        void onWishListButtonClick();
+        void onWishButtonClick();
 
         void releaseUiComponent();
     }
@@ -160,8 +158,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         View transGradientTopView = view.findViewById(R.id.transGradientTopView);
 
         View transTitleLayout = view.findViewById(R.id.transTitleLayout);
-        mTransTotelGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
-        mTransPlacelNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
+        mTransTotalGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
+        mTransPlaceNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
 
         if (Util.isUsedMutilTransition() == true)
         {
@@ -239,21 +237,21 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
 
-        mWishListPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
-        mWishListButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
-        mWishListButtonTextView.setTag(false);
-        mWishListButtonTextView.setOnClickListener(new OnClickListener()
+        mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
+        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
+        mWishButtonTextView.setTag(false);
+        mWishButtonTextView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).onWishListButtonClick();
+                ((OnEventListener) mOnEventListener).onWishButtonClick();
             }
         });
 
         setBookingStatus(STATUS_NONE);
         hideProductInformationLayout();
-        setWishListPopup(WishListPopupState.GONE);
+        setUpdateWishPopup(WishPopupState.GONE);
     }
 
     private PaintDrawable makeShaderFactory()
@@ -764,24 +762,18 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mDailyLineIndicator.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public void setWishListButtonSelected(boolean isSelected)
+    public void setWishButtonSelected(boolean isSelected)
     {
         int imageResId = isSelected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
-        mWishListButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
-        mWishListButtonTextView.setTag(isSelected);
-
-        if (mPlaceDetail != null && mPlaceDetail.myWish != isSelected)
-        {
-            mPlaceDetail.myWish = isSelected;
-        }
+        mWishButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
+        mWishButtonTextView.setTag(isSelected);
     }
 
-    public void setWishListButtonCount(int count)
+    public void setWishButtonCount(int count)
     {
         String buttonText;
         if (count <= 0)
         {
-            count = 0;
             buttonText = mContext.getResources().getString(R.string.label_wishlist);
         } else if (count > 9999)
         {
@@ -790,87 +782,43 @@ public abstract class PlaceDetailLayout extends BaseLayout
         {
             buttonText = Integer.toString(count);
         }
-        mWishListButtonTextView.setText(buttonText);
 
-        if (mPlaceDetail != null && count != mPlaceDetail.wishCount)
-        {
-            mPlaceDetail.wishCount = count;
-        }
+        mWishButtonTextView.setText(buttonText);
     }
 
-    public int getWishListButtonCount()
+    public void setUpdateWishPopup(final WishPopupState state)
     {
-        int count = 0;
-
-        if (mWishListButtonTextView != null)
+        if (WishPopupState.GONE == state)
         {
-            String buttonText = mWishListButtonTextView.getText().toString();
-            try
+            mWishPopupTextView.setVisibility(View.GONE);
+
+            if (mWishPopupAnimatorSet != null)
             {
-                count = Integer.parseInt(buttonText);
-            } catch (Exception e)
-            {
-                count = 0;
-            }
-        }
-
-        return count;
-    }
-
-    public void startWishListButtonClick()
-    {
-        if (mWishListButtonTextView == null)
-        {
-            return;
-        }
-
-        Object tag = mWishListButtonTextView.getTag();
-        if (tag != null && tag instanceof Boolean)
-        {
-            boolean isSelected = (boolean) tag;
-            int wishCount = getWishListButtonCount();
-            wishCount = isSelected == true ? wishCount++ : wishCount--;
-
-            ExLog.d("wishList button click : " + !isSelected);
-            setWishListButtonCount(wishCount);
-            setWishListButtonSelected(!isSelected);
-            ((OnEventListener) mOnEventListener).setWishList(!isSelected, mPlaceDetail.index);
-        }
-    }
-
-    public void setWishListPopup(final WishListPopupState state)
-    {
-        if (WishListPopupState.GONE == state)
-        {
-            mWishListPopupTextView.setVisibility(View.GONE);
-
-            if (mWishListAnmatorSet != null)
-            {
-                mWishListAnmatorSet.cancel();
-                mWishListAnmatorSet.removeAllListeners();
-                mWishListAnmatorSet = null;
+                mWishPopupAnimatorSet.cancel();
+                mWishPopupAnimatorSet.removeAllListeners();
+                mWishPopupAnimatorSet = null;
             }
         } else
         {
-            if (mWishListAnmatorSet != null && mWishListAnmatorSet.isRunning() == true)
+            if (mWishPopupAnimatorSet != null && mWishPopupAnimatorSet.isRunning() == true)
             {
-                ExLog.d("WishList Popup is Already running");
+                ExLog.d("WishPopup is Already running");
                 return;
             }
 
-            if (WishListPopupState.ADD == state)
+            if (WishPopupState.ADD == state)
             {
-                mWishListPopupTextView.setText(R.string.wishlist_detail_add_message);
-                mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
-                mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+                mWishPopupTextView.setText(R.string.wishlist_detail_add_message);
+                mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
+                mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
             } else
             {
-                mWishListPopupTextView.setText(R.string.wishlist_detail_delete_message);
-                mWishListPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
-                mWishListPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+                mWishPopupTextView.setText(R.string.wishlist_detail_delete_message);
+                mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
+                mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
             }
 
-            ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
                 , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
                 , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
                 , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
@@ -879,7 +827,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             objectAnimator1.setDuration(300);
 
 
-            ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
                 , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
                 , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
                 , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
@@ -887,34 +835,34 @@ public abstract class PlaceDetailLayout extends BaseLayout
             objectAnimator2.setDuration(600);
 
 
-            ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishListPopupTextView //
+            ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
                 , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
                 , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
                 , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
             );
             objectAnimator3.setDuration(200);
 
-            mWishListAnmatorSet = new AnimatorSet();
-            mWishListAnmatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
-            mWishListAnmatorSet.addListener(new Animator.AnimatorListener()
+            mWishPopupAnimatorSet = new AnimatorSet();
+            mWishPopupAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+            mWishPopupAnimatorSet.addListener(new Animator.AnimatorListener()
             {
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    mWishListPopupTextView.setVisibility(View.VISIBLE);
+                    mWishPopupTextView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mWishListPopupTextView.setVisibility(View.INVISIBLE);
+                    mWishPopupTextView.setVisibility(View.INVISIBLE);
                     ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
-                    mWishListPopupTextView.setVisibility(View.INVISIBLE);
+                    mWishPopupTextView.setVisibility(View.INVISIBLE);
                     ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
@@ -925,7 +873,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 }
             });
 
-            mWishListAnmatorSet.start();
+            mWishPopupAnimatorSet.start();
         }
     }
 

@@ -152,6 +152,9 @@ public class StayDetail extends PlaceDetail
                     {
                         mBenefitInformation.add(benefitJSONArray.getString(i));
                     }
+                } else
+                {
+                    mBenefitInformation = new ArrayList<>();
                 }
 
                 if (jsonObject.has("benefitWarning") == true && jsonObject.isNull("benefitWarning") == false)

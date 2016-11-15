@@ -603,9 +603,16 @@ public class StayDetailListAdapter extends BaseAdapter
 
             for (int i = 0; i < size; i++)
             {
+                String contentText = contentsList.get(i);
+
+                if (Util.isTextEmpty(contentText) == true)
+                {
+                    continue;
+                }
+
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-                textView.setText(contentsList.get(i));
+                textView.setText(contentText);
 
                 contentsLayout.addView(textLayout);
             }
