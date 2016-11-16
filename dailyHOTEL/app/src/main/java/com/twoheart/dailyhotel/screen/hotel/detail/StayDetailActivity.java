@@ -169,11 +169,22 @@ public class StayDetailActivity extends PlaceDetailActivity
      */
     public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, int listCount)
     {
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        return newInstance(context, saleTime, stay, startSaleTime, null, listCount);
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
@@ -217,7 +228,18 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mStartSaleTime != null && mEndSaleTime != null)
         {
-            mSaleTime = mStartSaleTime.getClone();
+            // 범위 지정인데 이미 날짜가 지난 경우
+            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+            {
+                DailyToast.showToast(this, "이미 이벤트 기간이 지난 숙소입니다.", Toast.LENGTH_SHORT);
+                finish();
+                return;
+            }
+
+            if (mSaleTime == null)
+            {
+                mSaleTime = mStartSaleTime.getClone();
+            }
         } else
         {
             if (mSaleTime == null)

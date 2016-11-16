@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +60,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void initIntentTime(Intent intent)
+    protected boolean initIntentTime(Intent intent)
     {
         if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
         {
@@ -71,8 +73,17 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
             mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
 
+            // 범위 지정인데 이미 날짜가 지난 경우
+            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+            {
+                DailyToast.showToast(this, "이미 이벤트 기간이 지난 레스토랑입니다.", Toast.LENGTH_SHORT);
+                return false;
+            }
+
             mSaleTime = mStartSaleTime.getClone();
         }
+
+        return true;
     }
 
     @Override
@@ -108,7 +119,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         Gourmet gourmet = placeViewItem.getItem();
 
-        Intent intent = GourmetDetailActivity.newInstance(this, mSaleTime, gourmet, count);
+        Intent intent = GourmetDetailActivity.newInstance(this, mSaleTime, gourmet, mStartSaleTime, mEndSaleTime, count);
 
         if (Util.isUsedMutilTransition() == true)
         {

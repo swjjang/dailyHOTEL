@@ -133,7 +133,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     /**
      * 딥링크로 호출
-     *
      */
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
         , int gourmetIndex, int ticketIndex, boolean isShowCalendar)
@@ -164,10 +163,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      */
     public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, int listCount)
     {
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        return newInstance(context, saleTime, gourmet, startSaleTime, null, listCount);
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
@@ -212,7 +222,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (mStartSaleTime != null && mEndSaleTime != null)
         {
-            mSaleTime = mStartSaleTime.getClone();
+            // 범위 지정인데 이미 날짜가 지난 경우
+            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+            {
+                DailyToast.showToast(this, "이미 이벤트 기간이 지난 레스토랑입니다.", Toast.LENGTH_SHORT);
+                finish();
+                return;
+            }
+
+            if (mSaleTime == null)
+            {
+                mSaleTime = mStartSaleTime.getClone();
+            }
         } else
         {
             if (mSaleTime == null)

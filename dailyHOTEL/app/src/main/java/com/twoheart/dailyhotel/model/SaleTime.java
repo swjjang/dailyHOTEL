@@ -132,6 +132,11 @@ public class SaleTime implements Parcelable
      */
     public static SaleTime changeDateSaleTime(SaleTime saleTime, String date)
     {
+        return changeDateSaleTime(saleTime, date, 0);
+    }
+
+    public static SaleTime changeDateSaleTime(SaleTime saleTime, String date, int defaultPreviousOffsetDay)
+    {
         SaleTime changedSaleTime = null;
 
         try
@@ -147,7 +152,7 @@ public class SaleTime implements Parcelable
                 changedSaleTime = saleTime.getClone(dailyDayOfDays);
             } else
             {
-                changedSaleTime = saleTime.getClone(0);
+                changedSaleTime = saleTime.getClone(defaultPreviousOffsetDay);
             }
         } catch (Exception e)
         {

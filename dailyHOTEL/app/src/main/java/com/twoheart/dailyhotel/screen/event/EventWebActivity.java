@@ -356,7 +356,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             } else if (Util.isTextEmpty(startDate, endDate) == false)
             {
                 startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
-                endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+                endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate, -1);
 
                 // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
                 endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
@@ -424,7 +424,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             } else if (Util.isTextEmpty(startDate, endDate) == false)
             {
                 startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
-                endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+                endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate, -1);
 
                 // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
                 endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
@@ -712,7 +712,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         } else if (Util.isTextEmpty(startDate, endDate) == false)
         {
             startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
-            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate, -1);
 
             // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
             endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
@@ -782,7 +782,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         } else if (Util.isTextEmpty(startDate, endDate) == false)
         {
             startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
-            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate, -1);
 
             // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
             endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
