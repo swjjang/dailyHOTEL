@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.twoheart.dailyhotel.widget.DailyTextView
+    android:id="@+id/textView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_coupon_sorting_button_backround"
+    android:drawablePadding="2dp"
+    android:gravity="center"
+    android:paddingLeft="9dp"
+    android:paddingRight="9dp"
+    android:textColor="@color/default_text_c929292"
+    android:textSize="13dp"
+    app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"/>
