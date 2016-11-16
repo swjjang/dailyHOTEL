@@ -1041,7 +1041,11 @@ public class GourmetMainFragment extends PlaceMainFragment
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
             int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
+            String startDate = DailyDeepLink.getInstance().getStartDate();
+            String endDate = DailyDeepLink.getInstance().getEndDate();
+
             SaleTime changedSaleTime = mGourmetCuration.getSaleTime().getClone(0);
+            SaleTime startSaleTime = null, endSaleTime = null;
 
             if (Util.isTextEmpty(date) == false)
             {
@@ -1049,6 +1053,15 @@ public class GourmetMainFragment extends PlaceMainFragment
             } else if (datePlus >= 0)
             {
                 changedSaleTime.setOffsetDailyDay(datePlus);
+            } else if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                startSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, startDate);
+                endSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, endDate);
+
+                // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+                endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+                changedSaleTime = startSaleTime.getClone();
             }
 
             if (changedSaleTime == null)
@@ -1056,8 +1069,15 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return false;
             }
 
-            Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            } else
+            {
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            }
 
             mIsDeepLink = true;
         } catch (Exception e)

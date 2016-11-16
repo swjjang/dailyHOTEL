@@ -49,11 +49,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
      * @param isAnimation
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int nigths, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nigths);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);

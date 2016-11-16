@@ -311,7 +311,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
     }
 
-    private boolean deepLinkHotelDetail(SaleTime saleTime)
+    private boolean deepLinkStayDetail(SaleTime saleTime)
     {
         boolean result = true;
 
@@ -319,11 +319,20 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             // 신규 타입의 화면이동
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            int nights = 1;
 
-            if (nights <= 0)
+            try
             {
-                nights = 1;
+                nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } finally
+            {
+                if (nights <= 0)
+                {
+                    nights = 1;
+                }
             }
 
             String date = DailyDeepLink.getInstance().getDate();
@@ -331,7 +340,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
             int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
+            String startDate = DailyDeepLink.getInstance().getStartDate();
+            String endDate = DailyDeepLink.getInstance().getEndDate();
+
             DailyDeepLink.getInstance().clear();
+
+            SaleTime startSaleTime = null, endSaleTime = null;
 
             if (Util.isTextEmpty(date) == false)
             {
@@ -339,6 +353,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
             } else if (datePlus >= 0)
             {
                 saleTime.setOffsetDailyDay(datePlus);
+            } else if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
+                endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+
+                // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+                endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+                saleTime = startSaleTime.getClone();
             }
 
             if (saleTime == null)
@@ -346,9 +369,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 return false;
             }
 
-            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
-
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            } else
+            {
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
 
             if (isShowCalendar == true)
             {
@@ -380,6 +409,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
             int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
+            String startDate = DailyDeepLink.getInstance().getStartDate();
+            String endDate = DailyDeepLink.getInstance().getEndDate();
+
+            SaleTime startSaleTime = null, endSaleTime = null;
+
             // date가 비어 있는 경우
             if (Util.isTextEmpty(date) == false)
             {
@@ -387,6 +421,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
             } else if (datePlus >= 0)
             {
                 saleTime.setOffsetDailyDay(datePlus);
+            } else if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
+                endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+
+                // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+                endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+                saleTime = startSaleTime.getClone();
             }
 
             if (saleTime == null)
@@ -394,10 +437,19 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 return false;
             }
 
-            Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                saleTime, gourmetIndex, ticketIndex, isShowCalendar);
+            if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
+                    startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            } else
+            {
+                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
+                    saleTime, gourmetIndex, ticketIndex, isShowCalendar);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            }
 
             if (isShowCalendar == true)
             {
@@ -947,7 +999,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                         if (DailyDeepLink.getInstance().isHotelDetailView() == true)
                         {
-                            if (deepLinkHotelDetail(mSaleTime.getClone(0)) == true)
+                            if (deepLinkStayDetail(mSaleTime.getClone(0)) == true)
                             {
                                 return;
                             }

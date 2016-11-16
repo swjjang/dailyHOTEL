@@ -132,6 +132,28 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     /**
+     * 딥링크로 호출
+     *
+     */
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
+        , int gourmetIndex, int ticketIndex, boolean isShowCalendar)
+    {
+        Intent intent = new Intent(context, GourmetDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, ticketIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        return intent;
+    }
+
+    /**
      * 검색 결과에서 호출
      *
      * @param context
@@ -183,7 +205,26 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+        if (mStartSaleTime != null && mEndSaleTime != null)
+        {
+            mSaleTime = mStartSaleTime.getClone();
+        } else
+        {
+            if (mSaleTime == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            mStartSaleTime = mSaleTime.getClone(0);
+            mEndSaleTime = null;
+        }
+
         boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
 
         mPlaceDetail = createPlaceDetail(intent);
@@ -211,7 +252,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                startCalendar(mSaleTime, mPlaceDetail.index, false);
+                startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
             }
         } else
         {
@@ -238,7 +279,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                startCalendar(mSaleTime, mPlaceDetail.index, false);
+                startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
             }
         }
     }
@@ -527,7 +568,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
+    private void startCalendar(SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -544,7 +585,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            saleTime, placeIndex, callByScreen, true, isAnimation);
+            saleTime, startSaleTime, endSaleTime, placeIndex, callByScreen, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -881,7 +922,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendar(mSaleTime, mPlaceDetail.index, true);
+            startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, true);
         }
 
         @Override
