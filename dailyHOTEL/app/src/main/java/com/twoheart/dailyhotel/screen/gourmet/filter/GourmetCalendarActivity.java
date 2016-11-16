@@ -310,6 +310,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 continue;
             }
 
+            dayView.setSelected(false);
+
             Object tag = dayView.getTag();
 
             if (tag != null && tag instanceof Day)
