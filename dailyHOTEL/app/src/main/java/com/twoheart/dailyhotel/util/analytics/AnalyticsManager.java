@@ -539,6 +539,7 @@ public class AnalyticsManager
         public static final String BOOKING_LIST_EMPTY = "Booking_NoBookingHistory";
         public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
         //
+        public static final String BOOKING_DETAIL = "BookingDetail_MyBookingInfo";
         public static final String BOOKING_DETAIL_INFORMATION = "BookingDetail_PlaceInfo";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
         public static final String BOOKING_DETAIL_RECEIPT = "BookingDetail_Receipt";
