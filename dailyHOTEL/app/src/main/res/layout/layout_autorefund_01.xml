@@ -171,6 +171,7 @@
         android:paddingBottom="11dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
+        android:layout_marginBottom="10dp"
         android:paddingTop="11dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
