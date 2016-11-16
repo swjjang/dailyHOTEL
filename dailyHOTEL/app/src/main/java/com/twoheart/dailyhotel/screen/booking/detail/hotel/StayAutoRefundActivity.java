@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -342,7 +343,20 @@ public class StayAutoRefundActivity extends BaseActivity
 
                 if (selectedView != null)
                 {
-                    setCancelReasonResult((Integer) selectedView.getTag(), selectedView.getText().toString(), messageEditText.getText().toString().trim());
+                    String cancelReason = selectedView.getText().toString();
+                    String message = messageEditText.getText().toString().trim();
+
+                    setCancelReasonResult((Integer) selectedView.getTag(), cancelReason, message);
+
+                    if (Util.isTextEmpty(message) == true)
+                    {
+                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.FREE_CANCELLATION, cancelReason, null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.FREE_CANCELLATION, message, null);
+                    }
                 }
             }
         });
@@ -559,6 +573,9 @@ public class StayAutoRefundActivity extends BaseActivity
                             mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
                                 , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
                         }
+
+                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, null);
                     }
                 }, null);
         }

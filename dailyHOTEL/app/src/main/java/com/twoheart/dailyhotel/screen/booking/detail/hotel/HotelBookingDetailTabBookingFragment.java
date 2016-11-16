@@ -549,6 +549,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
                     default:
                         showCallDialog(baseActivity);
+
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.REFUND_INQUIRY_CLICKED, null, null);
                         break;
                 }
                 break;
@@ -570,7 +573,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         return calendar.getTimeInMillis();
     }
 
-    private void showCallDialog(BaseActivity baseActivity)
+    private void showCallDialog(final BaseActivity baseActivity)
     {
         if (isFinishing())
         {
@@ -608,6 +611,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 }
 
                 startKakao();
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.KAKAO, null);
             }
         });
 
@@ -622,6 +628,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 }
 
                 startDailyCall();
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.CALL, null);
             }
         });
 

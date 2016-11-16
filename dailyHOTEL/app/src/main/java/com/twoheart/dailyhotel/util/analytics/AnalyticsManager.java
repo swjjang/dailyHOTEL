@@ -539,7 +539,6 @@ public class AnalyticsManager
         public static final String BOOKING_LIST_EMPTY = "Booking_NoBookingHistory";
         public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
         //
-        public static final String BOOKING_DETAIL = "BookingDetail_MyBookingInfo";
         public static final String BOOKING_DETAIL_INFORMATION = "BookingDetail_PlaceInfo";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
         public static final String BOOKING_DETAIL_RECEIPT = "BookingDetail_Receipt";
@@ -611,6 +610,15 @@ public class AnalyticsManager
         public static final String MENU_WISHLIST = "Menu_WishList";
         public static final String MENU_WISHLIST_EMPTY = "Menu_WishList_Empty";
         public static final String MENU_WISHLIST_BEFORELOGIN = "Menu_WishList_BeforeLogin";
+
+        //
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE = "DailyHotel_BookingInitialise_Cancelable";
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE = "DailyHotel_BookingInitialise_CancellationFee";
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS = "DailyHotel_BookingInitialise_NoRefunds";
+
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE = "BookingDetail_MyBookingInfo_Cancelable";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE = "BookingDetail_MyBookingInfo_CancellationFee";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS = "BookingDetail_MyBookingInfo_NoRefunds";
     }
 
     public static class Action
@@ -768,6 +776,11 @@ public class AnalyticsManager
         public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
 
         public static final String REFERRAL_CODE = "ReferralCode";
+        //
+        public static final String REFUND_INQUIRY_CLICKED = "RefundInquiryClicked";
+        public static final String REFUND_INQUIRY = "RefundInquiry";
+        public static final String FREE_CANCELLATION_CLICKED = "FreeCancellationClicked";
+        public static final String FREE_CANCELLATION = "FreeCancellation";
     }
 
     public static class Category
