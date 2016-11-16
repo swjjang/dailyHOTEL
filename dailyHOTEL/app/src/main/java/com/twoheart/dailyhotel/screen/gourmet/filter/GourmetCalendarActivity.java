@@ -31,11 +31,21 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
     {
         SaleTime startSaleTime = saleTime.getClone(0);
-        SaleTime endSaleTime = saleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
 
-        return newInstance(context, saleTime, startSaleTime, endSaleTime, screen, isSelected, isAnimation);
+        return newInstance(context, saleTime, startSaleTime, null, screen, isSelected, isAnimation);
     }
 
+    /**
+     *
+     * @param context
+     * @param saleTime
+     * @param startSaleTime
+     * @param endSaleTime null인 경우 마지막 날짜로 한다.
+     * @param screen
+     * @param isSelected
+     * @param isAnimation
+     * @return
+     */
     public static Intent newInstance(Context context, SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
@@ -64,10 +74,24 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
         mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
 
-        if (saleTime == null || mStartSaleTime == null || mEndSaleTime == null)
+        if (mEndSaleTime == null)
+        {
+            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
+        }
+
+        if (saleTime == null || mStartSaleTime == null)
         {
             Util.restartApp(this);
             return;
+        }
+
+        // 예외 처리 추가
+        int offsetDailyDay = saleTime.getOffsetDailyDay();
+
+        if (offsetDailyDay < mStartSaleTime.getOffsetDailyDay()//
+            || offsetDailyDay >= mEndSaleTime.getOffsetDailyDay())
+        {
+            saleTime.setOffsetDailyDay(mStartSaleTime.getOffsetDailyDay());
         }
 
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), DAYCOUNT_OF_MAX);

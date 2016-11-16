@@ -59,11 +59,27 @@ public class SaleTime implements Parcelable
         return DailyCalendar.format(getDayOfDaysDate().getTime(), format, TimeZone.getTimeZone("GMT"));
     }
 
+    /**
+     * DailyTime 기준으로 offsetDay가 된다.
+     * @param nextDay
+     * @return
+     */
     public SaleTime getClone(int nextDay)
     {
         SaleTime nextSaleTime = new SaleTime();
 
         nextSaleTime.mDayOfDays = nextDay;
+        nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
+        nextSaleTime.mDailyTime = new Date(mDailyTime.getTime());
+
+        return nextSaleTime;
+    }
+
+    public SaleTime getClone()
+    {
+        SaleTime nextSaleTime = new SaleTime();
+
+        nextSaleTime.mDayOfDays = mDayOfDays;
         nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
         nextSaleTime.mDailyTime = new Date(mDailyTime.getTime());
 
@@ -128,6 +144,9 @@ public class SaleTime implements Parcelable
             if (dailyDayOfDays >= 0)
             {
                 changedSaleTime = saleTime.getClone(dailyDayOfDays);
+            } else
+            {
+                changedSaleTime = saleTime.getClone(0);
             }
         } catch (Exception e)
         {

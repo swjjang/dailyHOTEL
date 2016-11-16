@@ -31,6 +31,20 @@ public class CollectionStayActivity extends CollectionBaseActivity
     private SaleTime mCheckInSaleTime;
     private int mNights;
 
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
+    {
+        Intent intent = new Intent(context, CollectionStayActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
+        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+
+        return intent;
+    }
+
     public static Intent newInstance(Context context, SaleTime saleTime, int night, String title, String titleImageUrl, String queryType, String query)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
@@ -48,8 +62,21 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void initIntentTime(Intent intent)
     {
-        mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
+        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
+        {
+            mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
+            mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
+
+            mStartSaleTime = mCheckInSaleTime.getClone(0);
+            mEndSaleTime = null;
+        } else
+        {
+            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
+            mCheckInSaleTime = mStartSaleTime.getClone();
+            mNights = 1;
+        }
     }
 
     @Override
@@ -60,8 +87,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mCheckInSaleTime, mNights, //
-                    AnalyticsManager.ValueType.SEARCH, true, true);
+                Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mCheckInSaleTime, mNights //
+                    , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
             }
         });

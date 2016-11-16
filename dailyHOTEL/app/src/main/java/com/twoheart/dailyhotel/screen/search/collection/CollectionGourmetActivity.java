@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -30,6 +29,20 @@ import java.util.Map;
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
     private SaleTime mSaleTime;
+
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
+    {
+        Intent intent = new Intent(context, CollectionGourmetActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
+        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+
+        return intent;
+    }
 
     public static Intent newInstance(Context context, SaleTime saleTime, String title, String titleImageUrl, String queryType, String query)
     {
@@ -47,7 +60,19 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     @Override
     protected void initIntentTime(Intent intent)
     {
-        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
+        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
+        {
+            mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
+
+            mStartSaleTime = mSaleTime.getClone(0);
+            mEndSaleTime = null;
+        } else
+        {
+            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
+            mSaleTime = mStartSaleTime.getClone();
+        }
     }
 
     @Override
@@ -58,8 +83,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mSaleTime, //
-                    AnalyticsManager.ValueType.SEARCH, true, true);
+                Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mSaleTime//
+                    , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
             }
         });

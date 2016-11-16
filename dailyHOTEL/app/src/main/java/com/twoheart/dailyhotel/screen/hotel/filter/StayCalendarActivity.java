@@ -34,11 +34,22 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
         SaleTime startSaleTime = saleTime.getClone(0);
-        SaleTime endSaleTime = saleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
 
-        return newInstance(context, saleTime, nights, startSaleTime, endSaleTime, screen, isSelected, isAnimation);
+        return newInstance(context, saleTime, nights, startSaleTime, null, screen, isSelected, isAnimation);
     }
 
+    /**
+     *
+     * @param context
+     * @param saleTime
+     * @param nigths
+     * @param startSaleTime
+     * @param endSaleTime null인 경우 마지막 날짜로 한다.
+     * @param screen
+     * @param isSelected
+     * @param isAnimation
+     * @return
+     */
     public static Intent newInstance(Context context, SaleTime saleTime, int nigths, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
@@ -62,18 +73,42 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         final SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
-        final int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
         mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
         mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
 
-        if (saleTime == null || mStartSaleTime == null || mEndSaleTime == null)
+        if (mEndSaleTime == null)
+        {
+            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
+        } else if(mEndSaleTime.getOffsetDailyDay() > ENABLE_DAYCOUNT_OF_MAX)
+        {
+            mEndSaleTime.setOffsetDailyDay(ENABLE_DAYCOUNT_OF_MAX);
+        }
+
+        if (saleTime == null || mStartSaleTime == null)
         {
             Util.restartApp(this);
             return;
         }
+
+        // startSaleTime, endSaleTime 안에 기간을 요청해야 한다
+        // 만일 그렇지 않으면 강제로 start, end time안으로 변경한다.
+
+        int checkInOffsetDailyDay = saleTime.getOffsetDailyDay();
+        int checkOutOffsetDailyDay = checkInOffsetDailyDay + nights;
+
+        if (checkInOffsetDailyDay < mStartSaleTime.getOffsetDailyDay()//
+            || checkInOffsetDailyDay >= mEndSaleTime.getOffsetDailyDay()//
+            || checkOutOffsetDailyDay >= mEndSaleTime.getOffsetDailyDay())
+        {
+            saleTime.setOffsetDailyDay(mStartSaleTime.getOffsetDailyDay());
+            nights = 1;
+        }
+
+        final SaleTime checkOutSaleTime = saleTime.getClone(saleTime.getOffsetDailyDay() + nights);
 
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
@@ -92,7 +127,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     if (isSelected == true)
                     {
-                        setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+                        setSelectedRangeDay(saleTime, checkOutSaleTime);
                         checkLastDay();
                     }
 
@@ -109,7 +144,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
             if (isSelected == true)
             {
-                setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+                setSelectedRangeDay(saleTime, checkOutSaleTime);
                 checkLastDay();
             }
         }
@@ -205,7 +240,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (mCheckInDayView != null && mCheckOutDayView != null)
                 {
                     // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                    if (mDailyViews[mDailyViews.length - 1] == view)
+                    if (mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1] == view)
                     {
                         DailyToast.showToast(this, getString(R.string.label_message_dont_check_date), Toast.LENGTH_SHORT);
                         releaseUiComponent();
@@ -234,7 +269,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     view.setSelected(true);
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-                    mDailyViews[mDailyViews.length - 1].setEnabled(true);
+                    mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1].setEnabled(true);
                 } else
                 {
                     mCheckOutDayView = view;
@@ -403,12 +438,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        if (mDailyViews[mDailyViews.length - 1] == mCheckOutDayView)
+        if (mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1] == mCheckOutDayView)
         {
             return;
         }
 
-        mDailyViews[mDailyViews.length - 1].setEnabled(false);
+        mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1].setEnabled(false);
     }
 
     private void reset()
