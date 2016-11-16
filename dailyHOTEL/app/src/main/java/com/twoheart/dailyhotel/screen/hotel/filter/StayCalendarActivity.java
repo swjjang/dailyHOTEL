@@ -39,12 +39,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     }
 
     /**
-     *
      * @param context
      * @param saleTime
      * @param nigths
      * @param startSaleTime
-     * @param endSaleTime null인 경우 마지막 날짜로 한다.
+     * @param endSaleTime   null인 경우 마지막 날짜로 한다.
      * @param screen
      * @param isSelected
      * @param isAnimation
@@ -83,7 +82,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         if (mEndSaleTime == null)
         {
             mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
-        } else if(mEndSaleTime.getOffsetDailyDay() > ENABLE_DAYCOUNT_OF_MAX)
+        } else if (mEndSaleTime.getOffsetDailyDay() > ENABLE_DAYCOUNT_OF_MAX)
         {
             mEndSaleTime.setOffsetDailyDay(ENABLE_DAYCOUNT_OF_MAX);
         }

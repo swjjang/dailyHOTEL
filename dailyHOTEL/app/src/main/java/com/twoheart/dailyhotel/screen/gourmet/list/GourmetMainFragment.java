@@ -1415,7 +1415,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 return false;
             }
-        } else if(Util.isTextEmpty(startDate, endDate) == false)
+        } else if (Util.isTextEmpty(startDate, endDate) == false)
         {
             startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
             endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
@@ -1441,7 +1441,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             return false;
         }
 
-        if(Util.isTextEmpty(startDate, endDate) == false)
+        if (Util.isTextEmpty(startDate, endDate) == false)
         {
             Intent intent = CollectionGourmetActivity.newInstance(baseActivity, startSaleTime, endSaleTime, title, titleImageUrl, queryType, query);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
@@ -1450,8 +1450,6 @@ public class GourmetMainFragment extends PlaceMainFragment
             Intent intent = CollectionGourmetActivity.newInstance(baseActivity, checkInSaleTime, title, titleImageUrl, queryType, query);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
         }
-
-
 
         mIsDeepLink = true;
 

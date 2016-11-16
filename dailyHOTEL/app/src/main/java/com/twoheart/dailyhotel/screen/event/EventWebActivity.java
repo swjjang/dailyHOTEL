@@ -622,6 +622,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
         int nights = 1;
 
+        String startDate = DailyDeepLink.getInstance().getStartDate();
+        String endDate = DailyDeepLink.getInstance().getEndDate();
+
         try
         {
             nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
@@ -639,17 +642,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
         DailyDeepLink.getInstance().clear();
 
         SaleTime checkInSaleTime;
+        SaleTime startSaleTime = null, endSaleTime = null;
 
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
             checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
-
-            if (checkInSaleTime == null)
-            {
-                return false;
-            }
-
         } else if (datePlus >= 0)
         {
             try
@@ -659,6 +657,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 return false;
             }
+        } else if (Util.isTextEmpty(startDate, endDate) == false)
+        {
+            startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
+            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+
+            // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+            endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+            checkInSaleTime = startSaleTime.getClone();
         } else
         {
             // 날짜 정보가 없는 경우 예외 처리 추가
@@ -676,8 +683,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return false;
         }
 
-        Intent intent = CollectionStayActivity.newInstance(this, checkInSaleTime, nights, title, titleImageUrl, queryType, query);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        if (Util.isTextEmpty(startDate, endDate) == false)
+        {
+            Intent intent = CollectionStayActivity.newInstance(this, startSaleTime, endSaleTime, title, titleImageUrl, queryType, query);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        } else
+        {
+            Intent intent = CollectionStayActivity.newInstance(this, checkInSaleTime, nights, title, titleImageUrl, queryType, query);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        }
 
         return true;
     }
@@ -689,24 +703,21 @@ public class EventWebActivity extends WebViewActivity implements Constants
         String queryType = DailyDeepLink.getInstance().getQueryType();
         String query = DailyDeepLink.getInstance().getQuery();
 
-
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
+
+        String startDate = DailyDeepLink.getInstance().getStartDate();
+        String endDate = DailyDeepLink.getInstance().getEndDate();
 
         DailyDeepLink.getInstance().clear();
 
         SaleTime checkInSaleTime;
+        SaleTime startSaleTime = null, endSaleTime = null;
 
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
             checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
-
-            if (checkInSaleTime == null)
-            {
-                return false;
-            }
-
         } else if (datePlus >= 0)
         {
             try
@@ -716,6 +727,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 return false;
             }
+        } else if (Util.isTextEmpty(startDate, endDate) == false)
+        {
+            startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
+            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate);
+
+            // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+            endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+            checkInSaleTime = startSaleTime.getClone();
         } else
         {
             // 날짜 정보가 없는 경우 예외 처리 추가
@@ -733,8 +753,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return false;
         }
 
-        Intent intent = CollectionGourmetActivity.newInstance(this, checkInSaleTime, title, titleImageUrl, queryType, query);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        if (Util.isTextEmpty(startDate, endDate) == false)
+        {
+            Intent intent = CollectionGourmetActivity.newInstance(this, startSaleTime, endSaleTime, title, titleImageUrl, queryType, query);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        } else
+        {
+            Intent intent = CollectionGourmetActivity.newInstance(this, checkInSaleTime, title, titleImageUrl, queryType, query);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        }
 
         return true;
     }

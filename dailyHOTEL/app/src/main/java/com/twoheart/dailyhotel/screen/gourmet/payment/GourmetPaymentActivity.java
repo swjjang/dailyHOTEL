@@ -1340,7 +1340,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
             {
-                if(gourmetPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
+                if (gourmetPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
                     showSimpleDialog(null, getString(R.string.message_gourmet_cancel_coupon_by_count), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                     {

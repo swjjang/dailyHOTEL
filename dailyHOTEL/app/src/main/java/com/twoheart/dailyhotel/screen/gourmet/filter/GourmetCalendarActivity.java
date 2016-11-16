@@ -36,11 +36,10 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     }
 
     /**
-     *
      * @param context
      * @param saleTime
      * @param startSaleTime
-     * @param endSaleTime null인 경우 마지막 날짜로 한다.
+     * @param endSaleTime   null인 경우 마지막 날짜로 한다.
      * @param screen
      * @param isSelected
      * @param isAnimation

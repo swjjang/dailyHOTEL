@@ -257,8 +257,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                         showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
                             getString(R.string.dialog_btn_text_confirm), null);
 
-//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-//                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
+                        //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                        //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
                     } else
                     {
                         mLayout.setVisibility(true);
@@ -267,8 +267,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                         mLayout.setData(list, true);
 
-//                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
-//                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
+                        //                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
+                        //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
                     }
                     break;
                 }

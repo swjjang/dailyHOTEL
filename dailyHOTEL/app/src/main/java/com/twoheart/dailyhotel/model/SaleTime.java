@@ -61,6 +61,7 @@ public class SaleTime implements Parcelable
 
     /**
      * DailyTime 기준으로 offsetDay가 된다.
+     *
      * @param nextDay
      * @return
      */

@@ -2415,9 +2415,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         }
 
                         // Analytics
-                        if(Util.isTextEmpty(refundPolicy) == false)
+                        if (Util.isTextEmpty(refundPolicy) == false)
                         {
-                            switch(refundPolicy)
+                            switch (refundPolicy)
                             {
                                 case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
                                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE);
