@@ -59,21 +59,17 @@
             android:layout_height="1px"
             android:background="@color/default_line_ce7e7e7"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/couponSortingButton"
+        <Spinner
+            android:id="@+id/sortSpinner"
             android:layout_width="120dp"
             android:layout_height="28dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
+            android:spinnerMode="dropdown"
+            android:dropDownWidth="120dp"
             android:background="@drawable/shape_coupon_sorting_button_backround"
-            android:drawablePadding="2dp"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="9dp"
-            android:paddingRight="9dp"
-            android:textColor="@color/coupon_history_button_text"
-            android:textSize="11dp"
-            app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"/>
+            />
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/couponTextView"
@@ -82,7 +78,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toLeftOf="@id/couponSortingButton"
+            android:layout_toLeftOf="@id/sortSpinner"
             android:gravity="left|center_vertical"
             android:text="사용가능한 쿠폰이 %1$s장 있습니다"
             android:textColor="@color/tab_text"
