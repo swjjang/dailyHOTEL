@@ -60,8 +60,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         }
 
         initLayout();
-
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL);
     }
 
     private void initLayout()

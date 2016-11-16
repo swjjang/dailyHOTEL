@@ -54,6 +54,13 @@
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
 
+    <View
+        android:id="@+id/cancelReasonEmptyView"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/default_background"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/refundAccountLayout"
         android:layout_width="match_parent"

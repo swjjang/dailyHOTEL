@@ -1070,8 +1070,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
-
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_PAYMENT, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -2415,12 +2413,36 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         {
                             mHotelPaymentLayout.setRefundPolicyText(comment);
                         }
+
+                        // Analytics
+                        if(Util.isTextEmpty(refundPolicy) == false)
+                        {
+                            switch(refundPolicy)
+                            {
+                                case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE);
+                                    break;
+
+                                case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
+                                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE);
+                                    break;
+
+                                default:
+                                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                                    break;
+                            }
+                        } else
+                        {
+                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                        }
                         break;
                     }
 
                     default:
                         // 에러가 발생하더라도 결제는 가능하도록 수정
                         mHotelPaymentLayout.setRefundPolicyVisible(false);
+
+                        AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
                         break;
                 }
 

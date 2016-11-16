@@ -32,7 +32,7 @@ import java.util.TimeZone;
 
 public class StayAutoRefundLayout extends BaseLayout implements Constants, View.OnClickListener
 {
-    private View mRefundAccountLayout, mRequestRefundView;
+    private View mRefundAccountLayout, mRequestRefundView, mCancelReasonEmptyView;
     private TextView mSelectReasonCancelTextView, mBankNameTextView;
     private EditText mAccountNumberEditText, mAccountNameEditText;
 
@@ -66,6 +66,8 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
     private void initAccountLayout(View view)
     {
+        mCancelReasonEmptyView = view.findViewById(R.id.cancelReasonEmptyView);
+
         mRefundAccountLayout = view.findViewById(R.id.refundAccountLayout);
 
         mBankNameTextView = (TextView) view.findViewById(R.id.bankNameTextView);
@@ -284,9 +286,11 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         if (visible == true && mRefundAccountLayout.getVisibility() != View.VISIBLE)
         {
             mRefundAccountLayout.setVisibility(View.VISIBLE);
+            mCancelReasonEmptyView.setVisibility(View.GONE);
         } else if (visible == false && mRefundAccountLayout.getVisibility() != View.GONE)
         {
             mRefundAccountLayout.setVisibility(View.GONE);
+            mCancelReasonEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
