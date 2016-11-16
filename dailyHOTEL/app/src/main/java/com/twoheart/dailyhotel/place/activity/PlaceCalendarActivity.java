@@ -30,11 +30,11 @@ import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
-    public static final String INTENT_EXTRA_DATA_SCREEN = "screen";
-    public static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
-    public static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
-    public static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
-    public static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+    protected static final String INTENT_EXTRA_DATA_SCREEN = "screen";
+    protected static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
+    protected static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
+    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
     private static final int ANIMATION_DEALY = 200;
 

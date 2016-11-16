@@ -138,6 +138,27 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     /**
+     * 딥링크로 호출
+     */
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
+        , int staytIndex, int roomIndex, boolean isShowCalendar)
+    {
+        Intent intent = new Intent(context, StayDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, staytIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        return intent;
+    }
+
+    /**
      * 검색 결과에서 호출
      *
      * @param context
@@ -189,7 +210,26 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+        if (mStartSaleTime != null && mEndSaleTime != null)
+        {
+            mSaleTime = mStartSaleTime.getClone();
+        } else
+        {
+            if (mSaleTime == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            mStartSaleTime = mSaleTime.getClone(0);
+            mEndSaleTime = null;
+        }
+
         boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
 
         mPlaceDetail = createPlaceDetail(intent);
@@ -386,7 +426,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         int stayIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
         int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
