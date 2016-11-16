@@ -30,6 +30,7 @@ public class CouponListLayout extends BaseLayout
     private View mEmptyView;
     private CouponListAdapter mListAdapter;
     private Spinner mSortSpinner;
+    private CouponListActivity.SortType mSortType;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -43,7 +44,7 @@ public class CouponListLayout extends BaseLayout
 
         void onListItemDownLoadClick(Coupon coupon);
 
-        void onUpdateList(CouponSortListAdapter.SortType sortType);
+        void onUpdateList(CouponListActivity.SortType sortType);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -60,25 +61,25 @@ public class CouponListLayout extends BaseLayout
         mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
 
         mSortSpinner = (Spinner) view.findViewById(R.id.sortSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext, R.array.coupon_sort_array, R.layout.list_row_coupon_spinner);
-        adapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        final ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(mContext, R.array.coupon_sort_array, R.layout.list_row_coupon_spinner);
+        sortAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                CouponSortListAdapter.SortType sortType;
+                CouponListActivity.SortType sortType;
                 switch (position)
                 {
                     case 2:
-                        sortType = CouponSortListAdapter.SortType.GOURMET;
+                        sortType = CouponListActivity.SortType.GOURMET;
                         break;
                     case 1:
-                        sortType = CouponSortListAdapter.SortType.STAY;
+                        sortType = CouponListActivity.SortType.STAY;
                         break;
                     case 0:
                     default:
-                        sortType = CouponSortListAdapter.SortType.ALL;
+                        sortType = CouponListActivity.SortType.ALL;
                         break;
                 }
 
@@ -92,7 +93,7 @@ public class CouponListLayout extends BaseLayout
 
             }
         });
-        mSortSpinner.setAdapter(adapter);
+        mSortSpinner.setAdapter(sortAdapter);
 
 
         updateHeaderTextView(0);
@@ -182,51 +183,19 @@ public class CouponListLayout extends BaseLayout
         }
     }
 
-    public void setSortType(CouponSortListAdapter.SortType sortType)
+    public void setSortType(CouponListActivity.SortType sortType)
     {
-        if (sortType == null)
-        {
-            return;
-        }
-
-        //        if (mSortTextView == null)
-        //        {
-        //            return;
-        //        }
-        //
-        //        CouponSortListAdapter.SortType oldSortType = null;
-        //        Object tag = mSortTextView.getTag();
-        //        if (tag != null && tag instanceof CouponSortListAdapter.SortType)
-        //        {
-        //            oldSortType = (CouponSortListAdapter.SortType) tag;
-        //        }
-        //
-        //        if (sortType.equals(oldSortType) == false)
-        //        {
-        //            mSortTextView.setTag(sortType);
-        //            mSortTextView.setText(sortType.getName());
-        //        }
+        mSortType = sortType;
     }
 
-    public CouponSortListAdapter.SortType getSortType()
+    public CouponListActivity.SortType getSortType()
     {
-        //        if (mSortTextView == null)
-        //        {
-        //            return CouponSortListAdapter.SortType.ALL;
-        //        }
-        //
-        //        Object tag = mSortTextView.getTag();
-        //        if (tag == null)
-        //        {
-        //            return CouponSortListAdapter.SortType.ALL;
-        //        }
-        //
-        //        if (tag instanceof CouponSortListAdapter.SortType)
-        //        {
-        //            return (CouponSortListAdapter.SortType) tag;
-        //        }
+        if (mSortType != null)
+        {
+            return mSortType;
+        }
 
-        return CouponSortListAdapter.SortType.ALL;
+        return CouponListActivity.SortType.ALL;
     }
 
     public Coupon getCoupon(String userCouponCode)
