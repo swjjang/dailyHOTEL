@@ -21,7 +21,7 @@ import java.util.Map;
 public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
     private static final int DAYCOUNT_OF_MAX = 30;
-    private static final int ENABLE_DAYCOUNT_OF_MAX = 14;
+    private static final int ENABLE_DAYCOUNT_OF_MAX = 30;
 
     private View mDayView;
     private TextView mConfirmTextView;
