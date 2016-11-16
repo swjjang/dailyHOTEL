@@ -30,8 +30,18 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
     {
+        SaleTime startSaleTime = saleTime.getClone(0);
+        SaleTime endSaleTime = saleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
+
+        return newInstance(context, saleTime, startSaleTime, endSaleTime, screen, isSelected, isAnimation);
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
+    {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -51,13 +61,18 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
-        if (saleTime == null)
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
+        if (saleTime == null || mStartSaleTime == null || mEndSaleTime == null)
         {
             Util.restartApp(this);
             return;
         }
 
-        initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+        final int enabledDaysCount = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+
+        initLayout(R.layout.activity_calendar, saleTime.getClone(0), enabledDaysCount, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
 
         if (isAnimation == true)
@@ -68,7 +83,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(saleTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+                    makeCalendar(saleTime, enabledDaysCount, DAYCOUNT_OF_MAX);
 
                     reset();
 
@@ -84,7 +99,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(saleTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+            makeCalendar(saleTime, enabledDaysCount, DAYCOUNT_OF_MAX);
 
             reset();
 
@@ -288,24 +303,33 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             mDayView = null;
         }
 
-        int length = mDailyViews.length;
-
-        for (int i = 0; i < length; i++)
+        for (View dayView : mDailyViews)
         {
-            if (mDailyViews[i] == null)
+            if (dayView == null)
             {
                 continue;
             }
 
-            if (i < ENABLE_DAYCOUNT_OF_MAX)
+            Object tag = dayView.getTag();
+
+            if (tag != null && tag instanceof Day)
             {
-                mDailyViews[i].setEnabled(true);
+                Day day = (Day) tag;
+
+                int offsetDay = day.dayTime.getOffsetDailyDay();
+
+                if (offsetDay >= mStartSaleTime.getOffsetDailyDay()//
+                    && offsetDay < mEndSaleTime.getOffsetDailyDay())
+                {
+                    dayView.setEnabled(true);
+                } else
+                {
+                    dayView.setEnabled(false);
+                }
             } else
             {
-                mDailyViews[i].setEnabled(false);
+                dayView.setEnabled(false);
             }
-
-            mDailyViews[i].setSelected(false);
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));

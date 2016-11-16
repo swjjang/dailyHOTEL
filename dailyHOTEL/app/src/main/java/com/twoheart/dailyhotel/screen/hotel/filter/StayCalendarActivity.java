@@ -36,12 +36,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         SaleTime startSaleTime = saleTime.getClone(0);
         SaleTime endSaleTime = saleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
 
-        return StayCalendarActivity.newInstance(context, saleTime, nights, startSaleTime, endSaleTime, screen, isSelected, isAnimation);
+        return newInstance(context, saleTime, nights, startSaleTime, endSaleTime, screen, isSelected, isAnimation);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nigths, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
     {
-        Intent intent = new Intent(context, PlaceCalendarActivity.class);
+        Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nigths);
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
@@ -75,7 +75,9 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+        final int enabledDaysCount = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+
+        initLayout(R.layout.activity_calendar, saleTime.getClone(0), enabledDaysCount, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 
         if (isAnimation == true)
@@ -86,7 +88,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+                    makeCalendar(saleTime.getClone(0), enabledDaysCount, DAYCOUNT_OF_MAX);
 
                     reset();
 
@@ -103,7 +105,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+            makeCalendar(saleTime.getClone(0), enabledDaysCount, DAYCOUNT_OF_MAX);
 
             reset();
 
@@ -446,7 +448,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 int offsetDay = day.dayTime.getOffsetDailyDay();
 
                 if (offsetDay >= mStartSaleTime.getOffsetDailyDay()//
-                    && offsetDay <= mEndSaleTime.getOffsetDailyDay())
+                    && offsetDay < mEndSaleTime.getOffsetDailyDay())
                 {
                     dayView.setEnabled(true);
                 } else
