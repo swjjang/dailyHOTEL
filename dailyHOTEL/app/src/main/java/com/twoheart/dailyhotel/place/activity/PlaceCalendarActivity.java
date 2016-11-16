@@ -33,6 +33,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     public static final String INTENT_EXTRA_DATA_SCREEN = "screen";
     public static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
     public static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
+    public static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    public static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
     private static final int ANIMATION_DEALY = 200;
 
@@ -46,6 +48,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private TextView mTitleTextView;
     protected String mCallByScreen;
+
+    protected SaleTime mStartSaleTime, mEndSaleTime;
 
     private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;

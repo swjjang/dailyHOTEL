@@ -33,9 +33,19 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
-        Intent intent = new Intent(context, StayCalendarActivity.class);
+        SaleTime startSaleTime = saleTime.getClone(0);
+        SaleTime endSaleTime = saleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
+
+        return StayCalendarActivity.newInstance(context, saleTime, nights, startSaleTime, endSaleTime, screen, isSelected, isAnimation);
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, int nigths, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
+    {
+        Intent intent = new Intent(context, PlaceCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nigths);
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -56,7 +66,10 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
-        if (saleTime == null)
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
+        if (saleTime == null || mStartSaleTime == null || mEndSaleTime == null)
         {
             Util.restartApp(this);
             return;
@@ -421,9 +434,29 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 continue;
             }
 
+            Object tag = dayView.getTag();
+
             dayView.setActivated(false);
             dayView.setSelected(false);
-            dayView.setEnabled(true);
+
+            if (tag != null && tag instanceof Day)
+            {
+                Day day = (Day) tag;
+
+                int offsetDay = day.dayTime.getOffsetDailyDay();
+
+                if (offsetDay >= mStartSaleTime.getOffsetDailyDay()//
+                    && offsetDay <= mEndSaleTime.getOffsetDailyDay())
+                {
+                    dayView.setEnabled(true);
+                } else
+                {
+                    dayView.setEnabled(false);
+                }
+            } else
+            {
+                dayView.setEnabled(false);
+            }
         }
 
         setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
