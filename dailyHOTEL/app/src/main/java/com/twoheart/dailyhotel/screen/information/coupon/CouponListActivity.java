@@ -365,9 +365,9 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onSortButtonClick(CouponSortListAdapter.SortType sortType)
+        public void onUpdateList(CouponSortListAdapter.SortType sortType)
         {
-            showSortListDialog(sortType, mSortTypeList);
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType));
         }
 
         @Override
