@@ -201,11 +201,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         lockUI();
 
         Guest guest = mHotelPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
 
         if (guest == null)
         {
-            Customer customer = paymentInformation.getCustomer();
-
             guest = new Guest();
             guest.name = customer.getName();
             guest.phone = customer.getPhone();
@@ -242,6 +241,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         //            {
         //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //            }
+
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
 
         DailyNetworkAPI.getInstance(this).requestHotelPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener);
     }
@@ -389,6 +400,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String checkOutDate = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         int nights = hotelPaymentInformation.nights;
         String userName = hotelPaymentInformation.getCustomer() == null ? "" : hotelPaymentInformation.getCustomer().getName();
+        String userIndex = hotelPaymentInformation.getCustomer() == null ? "" : hotelPaymentInformation.getCustomer().getUserIdx();
 
         if (Util.isTextEmpty(userName) == true)
         {
@@ -396,7 +408,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 String message = "Empty UserName :: placeIndex:" + hotelPaymentInformation.placeIndex //
                     + ",roomIndex:" + roomInformation.roomIndex + ",checkIn:" + checkInDate//
-                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
+                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType//
+                    + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
             {
@@ -1953,6 +1966,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                     , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
                     , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationJsonResponseListener);
+
+                if (DEBUG == false)
+                {
+                    if (Util.isTextEmpty(name) == true)
+                    {
+                        Crashlytics.log("HotelPaymentActivity::requestUserInformationForPayment :: name=" //
+                            + name + " , userIndex=" + userIndex + " , user_email=" + email);
+                    }
+                }
             } catch (Exception e)
             {
                 onError(e);
@@ -2415,9 +2437,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         }
 
                         // Analytics
-                        if(Util.isTextEmpty(refundPolicy) == false)
+                        if (Util.isTextEmpty(refundPolicy) == false)
                         {
-                            switch(refundPolicy)
+                            switch (refundPolicy)
                             {
                                 case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
                                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE);

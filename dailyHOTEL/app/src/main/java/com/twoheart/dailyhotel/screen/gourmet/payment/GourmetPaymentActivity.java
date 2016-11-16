@@ -204,11 +204,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         lockUI();
 
         Guest guest = mGourmetPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
 
         if (guest == null)
         {
-            Customer customer = paymentInformation.getCustomer();
-
             guest = new Guest();
             guest.name = customer.getName();
             guest.phone = customer.getPhone();
@@ -244,6 +243,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         //        {
         //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //        }
+
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
 
         DailyNetworkAPI.getInstance(this).requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener);
     }
@@ -378,6 +389,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT"));
 
         String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
+        String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
 
         if (Util.isTextEmpty(userName) == true)
         {
@@ -385,7 +397,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
                     + ",tiketIndex:" + ticketInformation.index + ",checkIn:" + date//
-                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
+                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType
+                    + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
             {
@@ -1340,7 +1353,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
             {
-                if(gourmetPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
+                if (gourmetPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
                     showSimpleDialog(null, getString(R.string.message_gourmet_cancel_coupon_by_count), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                     {
@@ -1635,6 +1648,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag//
                     , gourmetPaymentInformation.getTicketInformation().index//
                     , mGourmetPaymentInformationJsonResponseListener);
+
+                if (DEBUG == false)
+                {
+                    if (Util.isTextEmpty(name) == true)
+                    {
+                        Crashlytics.log("GourmetPaymentActivity::requestUserInformationForPayment :: name="//
+                            + name + " , userIndex=" + userIndex + " , user_email=" + email);
+                    }
+                }
             } catch (Exception e)
             {
                 onError(e);
