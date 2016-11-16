@@ -70,9 +70,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        final int enabledDaysCount = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
-
-        initLayout(R.layout.activity_calendar, saleTime.getClone(0), enabledDaysCount, DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, saleTime.getClone(0), DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
 
         if (isAnimation == true)
@@ -83,7 +81,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(saleTime, enabledDaysCount, DAYCOUNT_OF_MAX);
+                    makeCalendar(saleTime, DAYCOUNT_OF_MAX);
 
                     reset();
 
@@ -99,7 +97,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(saleTime, enabledDaysCount, DAYCOUNT_OF_MAX);
+            makeCalendar(saleTime, DAYCOUNT_OF_MAX);
 
             reset();
 
@@ -111,9 +109,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
-    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, SaleTime dailyTime, int dayCountOfMax)
     {
-        super.initLayout(layoutResID, dailyTime, enableDayCountOfMax, dayCountOfMax);
+        super.initLayout(layoutResID, dailyTime, dayCountOfMax);
 
         mConfirmTextView = (TextView) findViewById(R.id.confirmView);
         mConfirmTextView.setVisibility(View.VISIBLE);
