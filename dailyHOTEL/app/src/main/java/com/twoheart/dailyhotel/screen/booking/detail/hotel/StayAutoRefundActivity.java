@@ -652,10 +652,10 @@ public class StayAutoRefundActivity extends BaseActivity
                 finish();
             } else
             {
-                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public void onDismiss(DialogInterface dialog)
                     {
                         setResult(RESULT_OK);
                         finish();
