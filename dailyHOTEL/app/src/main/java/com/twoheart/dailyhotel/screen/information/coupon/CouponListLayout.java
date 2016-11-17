@@ -94,7 +94,7 @@ public class CouponListLayout extends BaseLayout
                             textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
                         } else
                         {
-                            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+                            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
                             //                            textView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_text_color_c323232_c900034));
                         }
                     }
