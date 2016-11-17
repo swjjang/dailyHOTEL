@@ -239,11 +239,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
         params.put("customer_msg", "");
 
-        //        if (DEBUG == true)
-        //        {
-        //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-        //        }
-
         if (DEBUG == false)
         {
             if (customer == null)
