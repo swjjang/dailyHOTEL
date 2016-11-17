@@ -48,6 +48,7 @@
         android:paddingRight="10dp"
         android:text="@string/message_please_select_a_reason_for_cancellation"
         android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"
         app:drawableCompatRight="@drawable/payment_ic_right"/>
 
     <View
@@ -178,10 +179,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="53dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginTop="10dp">
 
             <ImageView
                 android:layout_width="wrap_content"
