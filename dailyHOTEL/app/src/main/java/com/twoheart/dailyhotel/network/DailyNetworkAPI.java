@@ -1206,6 +1206,19 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
+    public void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund" : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
+
+        String params = String.format("?hotelReservationIdx=%d&transactionType=%s", hotelReservationIdx, transactionType);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
     public void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener)
     {

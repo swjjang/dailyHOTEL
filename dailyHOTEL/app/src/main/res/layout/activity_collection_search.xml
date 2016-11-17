@@ -16,6 +16,11 @@
         android:layout_height="113dp"
         android:background="@drawable/img_detail_gradient"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <ImageView
         android:id="@+id/backImageView"
         android:layout_width="wrap_content"
@@ -24,11 +29,6 @@
         android:paddingRight="15dp"
         android:tint="@color/white"
         app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <include layout="@layout/toolbar_default"/>
 </RelativeLayout>

@@ -29,7 +29,10 @@ import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.security.Key;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StayAutoRefundActivity extends BaseActivity
 {
@@ -574,8 +577,14 @@ public class StayAutoRefundActivity extends BaseActivity
                                 , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
                         }
 
+                        Map<String, String> params = new HashMap<>();
+                        params.put(AnalyticsManager.KeyType.NAME, mHotelBookingDetail.roomName);
+                        params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mHotelBookingDetail.price));
+                        params.put(AnalyticsManager.KeyType.COUNTRY, mHotelBookingDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                        params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, mCancelReasonMessage);
+
                         AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, null);
+                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, params);
                     }
                 }, null);
         }
