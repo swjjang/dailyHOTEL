@@ -44,7 +44,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
     }
 
     /**
-     * 상세화면의 쿠폰리스트
+     * 상세화면의 호텔 쿠폰리스트
      *
      * @param placeIndex
      * @param date

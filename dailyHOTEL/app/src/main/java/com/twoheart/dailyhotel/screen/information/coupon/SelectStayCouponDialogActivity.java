@@ -294,7 +294,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
                 case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
                 {
-                    mLayout.setVisibility(false);
+                    mLayout.setVisibility(true);
                     mLayout.setTitle(R.string.coupon_download_coupon);
                     mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_close);
                     mLayout.setData(list, false);
