@@ -147,7 +147,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected abstract View getTitleLayout();
 
-    public abstract void setBookingStatus(int status);
+    public abstract void setBookingStatus(int status, boolean isAnimation);
 
     public abstract void setSelectProduct(int index);
 
@@ -255,7 +255,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
         });
 
-        setBookingStatus(STATUS_NONE);
+        setBookingStatus(STATUS_NONE, false);
         hideProductInformationLayout();
         setUpdateWishPopup(WishPopupState.GONE);
     }
@@ -440,7 +440,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setProductInformationLayoutEnabled(true);
 
-        setBookingStatus(STATUS_BOOKING);
+        setBookingStatus(STATUS_BOOKING, false);
 
         setSelectProduct(index);
     }
@@ -488,7 +488,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             return;
         }
 
-        setBookingStatus(STATUS_NONE);
+        setBookingStatus(STATUS_NONE, true);
 
         if (Util.isOverAPI12() == true)
         {
@@ -536,7 +536,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
                         setProductInformationLayoutEnabled(true);
 
-                        setBookingStatus(STATUS_BOOKING);
+                        setBookingStatus(STATUS_BOOKING, true);
                     }
                 }
 
@@ -565,7 +565,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
                 setProductInformationLayoutEnabled(true);
 
-                setBookingStatus(STATUS_BOOKING);
+                setBookingStatus(STATUS_BOOKING, true);
             }
         }
 
@@ -585,7 +585,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             return;
         }
 
-        setBookingStatus(STATUS_NONE);
+        setBookingStatus(STATUS_NONE, true);
 
         if (Util.isOverAPI12() == true)
         {
@@ -626,7 +626,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
                         hideProductInformationLayout();
 
-                        setBookingStatus(STATUS_SELECT_PRODUCT);
+                        setBookingStatus(STATUS_SELECT_PRODUCT, true);
                     }
                 }
 
@@ -654,7 +654,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
             hideProductInformationLayout();
 
-            setBookingStatus(STATUS_SELECT_PRODUCT);
+            setBookingStatus(STATUS_SELECT_PRODUCT, true);
         }
     }
 
