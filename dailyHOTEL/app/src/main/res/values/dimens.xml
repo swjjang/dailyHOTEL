@@ -29,5 +29,6 @@
     <dimen name="app_minimumsize_w">1.0dp</dimen>
     <dimen name="app_minimumsize_h">1.0dp</dimen>
 
-    <dimen name="list_row_coupon_sorting_height">45dp</dimen>
+    <dimen name="detail_button_min_left_margin">10dp</dimen>
+    <dimen name="detail_button_max_left_margin">68dp</dimen>
 </resources>
