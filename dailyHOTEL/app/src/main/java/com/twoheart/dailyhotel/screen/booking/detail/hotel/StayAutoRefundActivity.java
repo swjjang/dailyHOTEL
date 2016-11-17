@@ -490,12 +490,19 @@ public class StayAutoRefundActivity extends BaseActivity
     {
         mSelectedCancelReason = position;
 
-        if (Util.isTextEmpty(message) == true)
+        // 기타로 오는 경우
+        if (position == 6)
         {
-            mCancelReasonMessage = reason;
+            if (Util.isTextEmpty(message) == true)
+            {
+                mCancelReasonMessage = reason;
+            } else
+            {
+                mCancelReasonMessage = reason + "-" + message;
+            }
         } else
         {
-            mCancelReasonMessage = reason + "-" + message;
+            mCancelReasonMessage = reason;
         }
 
         mStayAutoRefundLayout.setCancelReasonText(reason);
@@ -537,7 +544,24 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void showSelectCancelDialog()
         {
-            StayAutoRefundActivity.this.showSelectCancelDialog(mSelectedCancelReason, mCancelReasonMessage);
+            String cancelMessage = null;
+
+            // 기타인 경우
+            if (mSelectedCancelReason == 6)
+            {
+                if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                {
+                    if (mCancelReasonMessage.indexOf('-') >= 0)
+                    {
+                        cancelMessage = mCancelReasonMessage.substring(mCancelReasonMessage.indexOf('-') + 1);
+                    }
+                }
+            } else
+            {
+                cancelMessage = mCancelReasonMessage;
+            }
+
+            StayAutoRefundActivity.this.showSelectCancelDialog(mSelectedCancelReason, cancelMessage);
         }
 
         @Override
@@ -580,7 +604,21 @@ public class StayAutoRefundActivity extends BaseActivity
                         params.put(AnalyticsManager.KeyType.NAME, mHotelBookingDetail.roomName);
                         params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mHotelBookingDetail.price));
                         params.put(AnalyticsManager.KeyType.COUNTRY, mHotelBookingDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-                        params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, mCancelReasonMessage);
+
+                        String cancelMessage = null;
+
+                        if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                        {
+                            if (mCancelReasonMessage.indexOf('-') >= 0)
+                            {
+                                cancelMessage = mCancelReasonMessage.substring(mCancelReasonMessage.indexOf('-') + 1);
+                            } else
+                            {
+                                cancelMessage = mCancelReasonMessage;
+                            }
+                        }
+
+                        params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, cancelMessage);
 
                         AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, params);
@@ -614,10 +652,10 @@ public class StayAutoRefundActivity extends BaseActivity
                 finish();
             } else
             {
-                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public void onDismiss(DialogInterface dialog)
                     {
                         setResult(RESULT_OK);
                         finish();

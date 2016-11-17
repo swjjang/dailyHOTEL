@@ -5,6 +5,7 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RadioGroup;
@@ -60,6 +62,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     public static final int STATUS_SOLD_OUT = 3;
 
     private static final int VIEW_COUNT = 4;
+
+    private static final int BOOKING_TEXT_VIEW_DURATION = 150;
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
@@ -94,6 +98,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected DailyTextView mWishButtonTextView;
     protected DailyTextView mWishPopupTextView;
+
+    protected ValueAnimator mBookingTextViewAnimator;
 
     public enum WishPopupState
     {
@@ -875,6 +881,70 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
             mWishPopupAnimatorSet.start();
         }
+    }
+
+    protected void startBookingButtonAnimation(final int start, final int end, int oldState, int newState)
+    {
+        if (oldState == newState) {
+            return;
+        }
+
+        if (mBookingTextViewAnimator != null)
+        {
+            mBookingTextViewAnimator.cancel();
+            mBookingTextViewAnimator.removeAllListeners();
+            mBookingTextViewAnimator = null;
+        }
+
+        mBookingTextViewAnimator = ValueAnimator.ofInt(start, end);
+        mBookingTextViewAnimator.setInterpolator(new LinearInterpolator());
+        mBookingTextViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                int value = (int) valueAnimator.getAnimatedValue();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = value;
+                mBookingTextView.setLayoutParams(params);
+            }
+        });
+
+        mBookingTextViewAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = start;
+                mBookingTextView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = end;
+                mBookingTextView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = end;
+                mBookingTextView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mBookingTextViewAnimator.setDuration(BOOKING_TEXT_VIEW_DURATION);
+        mBookingTextViewAnimator.start();
     }
 
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
