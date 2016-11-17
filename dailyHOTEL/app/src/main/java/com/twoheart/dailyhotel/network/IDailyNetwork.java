@@ -514,7 +514,7 @@ interface IDailyNetwork
      */
     void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
 
-    void requestCouponList(Object tag, int gourmetIdx, int ticketIdx, String date, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, int ticketIdx, int countOfTicket, DailyHotelJsonResponseListener listener);
 
     /**
      * /api/v3/users/coupons/history

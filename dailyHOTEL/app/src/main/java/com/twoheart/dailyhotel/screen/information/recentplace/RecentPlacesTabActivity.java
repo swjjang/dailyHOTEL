@@ -174,7 +174,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
-//        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
         layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
@@ -247,7 +247,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-//        mViewPager.setCurrentItem(position);
+        //        mViewPager.setCurrentItem(position);
     }
 
     private boolean isEmptyRecentStayPlace()

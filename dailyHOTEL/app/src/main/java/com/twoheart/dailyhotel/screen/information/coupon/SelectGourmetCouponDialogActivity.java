@@ -30,6 +30,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATE = "date";
     public static final String INTENT_EXTRA_GOURMET_NAME = "gourmetName";
     public static final String INTENT_EXTRA_TICKET_PRICE = "ticketPrice";
+    public static final String INTENT_EXTRA_TICKET_COUNT = "ticketCount";
 
     private SelectCouponDialogLayout mLayout;
     private SelectGourmetCouponNetworkController mNetworkController;
@@ -39,20 +40,20 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     private int mGourmetIdx;
     private int mTicketIdx;
 
-    private String mTicketPrice;
+    private int mTicketCount;
     private String mDate;
     private String mGourmetName;
     private String mCallByScreen;
 
     public static Intent newInstance(Context context, int gourmetIdx, int ticketIdx, String date, //
-                                     String gourmetName, String ticketPrice)
+                                     String gourmetName, int ticketCount)
     {
         Intent intent = new Intent(context, SelectGourmetCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_GOURMET_IDX, gourmetIdx);
         intent.putExtra(INTENT_EXTRA_TICKET_IDX, ticketIdx);
         intent.putExtra(INTENT_EXTRA_DATE, date);
         intent.putExtra(INTENT_EXTRA_GOURMET_NAME, gourmetName);
-        intent.putExtra(INTENT_EXTRA_TICKET_PRICE, ticketPrice);
+        intent.putExtra(INTENT_EXTRA_TICKET_COUNT, ticketCount);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT);
 
         return intent;
@@ -92,7 +93,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                 mDate = intent.getStringExtra(INTENT_EXTRA_DATE);
                 mTicketIdx = intent.getIntExtra(INTENT_EXTRA_TICKET_IDX, -1);
                 mGourmetName = intent.getStringExtra(INTENT_EXTRA_GOURMET_NAME);
-                mTicketPrice = intent.getStringExtra(INTENT_EXTRA_TICKET_PRICE);
+                mTicketCount = intent.getIntExtra(INTENT_EXTRA_TICKET_COUNT, 0);
                 break;
             }
 
@@ -135,7 +136,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                     return;
                 }
 
-                mNetworkController.requestCouponList(mGourmetIdx, mTicketIdx, mDate);
+                mNetworkController.requestCouponList(mTicketIdx, mTicketCount);
                 break;
             }
 
@@ -257,8 +258,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                         showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
                             getString(R.string.dialog_btn_text_confirm), null);
 
-//                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-//                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
+                        //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                        //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
                     } else
                     {
                         mLayout.setVisibility(true);
@@ -267,8 +268,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                         mLayout.setData(list, true);
 
-//                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
-//                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
+                        //                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
+                        //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
                     }
                     break;
                 }
@@ -304,7 +305,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                         return;
                     }
 
-                    mNetworkController.requestCouponList(mGourmetIdx, mTicketIdx, mDate);
+                    mNetworkController.requestCouponList(mTicketIdx, mTicketCount);
                     break;
                 }
 

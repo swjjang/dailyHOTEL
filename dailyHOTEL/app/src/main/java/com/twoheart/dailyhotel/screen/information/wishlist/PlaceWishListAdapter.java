@@ -84,9 +84,11 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
 
         PlaceViewItem removeItem = mList.remove(position);
 
-        if (mList.size() == 1) {
+        if (mList.size() == 1)
+        {
             PlaceViewItem checkItem = mList.get(0);
-            if (checkItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW) {
+            if (checkItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+            {
                 mList.remove(0);
             }
         }
