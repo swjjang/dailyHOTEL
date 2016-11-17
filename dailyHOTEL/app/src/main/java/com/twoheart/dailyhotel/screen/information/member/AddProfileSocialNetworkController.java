@@ -3,10 +3,12 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -57,6 +59,15 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         }
 
         params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
+        if (Constants.DEBUG == false)
+        {
+            if (Util.isTextEmpty(name) == true)
+            {
+                Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
+                    + name + " , userIndex=" + userIndex + " , user_email=" + email);
+            }
+        }
 
         DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener);
     }

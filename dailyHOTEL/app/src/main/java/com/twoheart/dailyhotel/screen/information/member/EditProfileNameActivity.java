@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -195,6 +196,15 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     Map<String, String> params = new HashMap<>();
                     params.put("user_idx", mUserIndex);
                     params.put("user_name", name);
+
+                    if (DEBUG == false)
+                    {
+                        if (Util.isTextEmpty(name) == true)
+                        {
+                            Crashlytics.log("EditProfileNameActivity :: requestUserUpdateInformationForSocial :: name="//
+                                + name + " , userIndex=" + mUserIndex);
+                        }
+                    }
 
                     DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
                 }

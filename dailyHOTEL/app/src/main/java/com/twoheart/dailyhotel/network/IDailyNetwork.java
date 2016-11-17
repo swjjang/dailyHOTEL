@@ -621,6 +621,8 @@ interface IDailyNetwork
 
     void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener);
 
+    void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, DailyHotelJsonResponseListener listener);
+
     void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener);
 

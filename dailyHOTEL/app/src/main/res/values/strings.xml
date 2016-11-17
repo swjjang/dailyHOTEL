@@ -871,6 +871,7 @@
     <string name="label_search_agree_search_location">동의하고 검색하기</string>
     <string name="label_search_no_address">주소지 없음</string>
     <string name="message_search_agree_termsoflocation">고객님 주변에 위치한 업체 검색을 위해\n위치 정보 이용에 동의해주세요.\n이용약관 상세보기</string>
+    <string name="message_search_tooltip">여기를 눌러 레스토랑도 검색해보세요!</string>
     //
     <string name="label_searchresult_resultcount">결과 %1$d건</string>
     <string name="label_searchresult_over_resultcount">결과 %1$d건 이상</string>
