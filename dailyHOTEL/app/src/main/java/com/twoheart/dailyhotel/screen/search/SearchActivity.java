@@ -120,34 +120,45 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         mTooltipLayout = findViewById(R.id.tooltipLayout);
 
-        if (DailyPreference.getInstance(this).isViewSearchTooltip() == true)
+        switch (placeType)
         {
-            hideAnimationTooltip();
-        } else
-        {
-            DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
-            mTooltipLayout.setVisibility(View.VISIBLE);
-            mTooltipLayout.setOnClickListener(new View.OnClickListener()
+            case HOTEL:
             {
-                @Override
-                public void onClick(View view)
+                if (DailyPreference.getInstance(this).isViewSearchTooltip() == true)
                 {
-                    hideAnimationTooltip();
-                }
-            });
-
-            // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
-            mTooltipLayout.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
+                    mTooltipLayout.setVisibility(View.GONE);
+                } else
                 {
-                    if (mTooltipLayout.getVisibility() != View.GONE)
+                    DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
+                    mTooltipLayout.setVisibility(View.VISIBLE);
+                    mTooltipLayout.setOnClickListener(new View.OnClickListener()
                     {
-                        hideAnimationTooltip();
-                    }
+                        @Override
+                        public void onClick(View view)
+                        {
+                            hideAnimationTooltip();
+                        }
+                    });
+
+                    // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
+                    mTooltipLayout.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            if (mTooltipLayout.getVisibility() != View.GONE)
+                            {
+                                hideAnimationTooltip();
+                            }
+                        }
+                    }, 10000);
                 }
-            }, 10000);
+                break;
+            }
+
+            case FNB:
+                mTooltipLayout.setVisibility(View.GONE);
+                break;
         }
 
         ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
