@@ -48,7 +48,6 @@ public class SelectGourmetCouponNetworkController extends BaseNetworkController
      *
      * @param placeIndex
      * @param date
-     * @param nights
      */
     public void requestCouponList(int placeIndex, String date)
     {
