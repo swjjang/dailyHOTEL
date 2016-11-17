@@ -1,9 +1,13 @@
 package com.twoheart.dailyhotel.screen.search;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
@@ -13,6 +17,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -30,7 +35,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
     private DailyViewPager mViewPager;
-    private View mSearchView;
+    private View mSearchView, mTooltipLayout;
     private PlaceType mPlaceType;
 
     private StaySearchFragment mStaySearchFragment;
@@ -113,6 +118,38 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void initLayout(PlaceType placeType, final String word)
     {
         initToolbar(placeType);
+
+        mTooltipLayout = findViewById(R.id.tooltipLayout);
+
+        if (DailyPreference.getInstance(this).isViewSearchTooltip() == true)
+        {
+            hideAnimationTooltip();
+        } else
+        {
+            DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
+            mTooltipLayout.setVisibility(View.VISIBLE);
+            mTooltipLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    hideAnimationTooltip();
+                }
+            });
+
+            // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
+            mTooltipLayout.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (mTooltipLayout.getVisibility() != View.GONE)
+                    {
+                        hideAnimationTooltip();
+                    }
+                }
+            }, 10000);
+        }
 
         ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
 
@@ -378,6 +415,50 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
         }
+    }
+
+    private void hideAnimationTooltip()
+    {
+        if (mTooltipLayout.getTag() != null)
+        {
+            return;
+        }
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+
+        mTooltipLayout.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                mTooltipLayout.setTag(null);
+                mTooltipLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
     }
 
     private void analyticsSwitchChanged(PlaceType changedPlaceType)
