@@ -86,6 +86,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private Province mProvince;
     private String mArea; // Analytics용 소지역
 
+    // GA용 스크린 정의
+    private String mScreenAnalytics;
+
     public static Intent newInstance(Context context, RoomInformation roomInformation//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
@@ -1023,7 +1026,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsPayment(PlacePaymentInformation paymentInformation)
     {
-        if (paymentInformation == null)
+        if (paymentInformation == null || Util.isTextEmpty(mScreenAnalytics) == true)
         {
             return;
         }
@@ -1078,6 +1081,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
+
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(mScreenAnalytics, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -2437,20 +2442,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             switch (refundPolicy)
                             {
                                 case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE);
+                                    mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE;
                                     break;
 
                                 case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE);
+                                    mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE;
                                     break;
 
                                 default:
-                                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                                    mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
                                     break;
                             }
                         } else
                         {
-                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                            mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
                         }
                         break;
                     }
@@ -2459,7 +2464,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         // 에러가 발생하더라도 결제는 가능하도록 수정
                         mHotelPaymentLayout.setRefundPolicyVisible(false);
 
-                        AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                        mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
                         break;
                 }
 
