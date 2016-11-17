@@ -239,11 +239,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
         params.put("customer_msg", "");
 
-        //        if (DEBUG == true)
-        //        {
-        //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-        //        }
-
         if (DEBUG == false)
         {
             if (customer == null)
@@ -397,8 +392,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
                     + ",tiketIndex:" + ticketInformation.index + ",checkIn:" + date//
-                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType
-                    + ",userIndex:" + userIndex;
+                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
             {
@@ -1239,10 +1233,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String dateTime = gourmetPaymentInformation.dateTime;
 
         String placeName = ticketInformation.placeName;
-        String ticketPrice = Integer.toString(ticketInformation.discountPrice);
+        int ticketCount = gourmetPaymentInformation.ticketCount;
 
         Intent intent = SelectGourmetCouponDialogActivity.newInstance(GourmetPaymentActivity.this, placeIndex, //
-            ticketIndex, dateTime, placeName, ticketPrice);
+            ticketIndex, dateTime, placeName, ticketCount);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //

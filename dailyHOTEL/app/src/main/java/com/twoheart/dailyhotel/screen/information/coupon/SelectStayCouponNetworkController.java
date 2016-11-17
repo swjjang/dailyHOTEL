@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
-public class SelectCouponNetworkController extends BaseNetworkController
+public class SelectStayCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -71,7 +71,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadJsonResponseListener);
     }
 
-    public SelectCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public SelectStayCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }

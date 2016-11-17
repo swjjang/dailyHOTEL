@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Sam Lee on 2016. 5. 20..
- */
 public class SelectGourmetCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
@@ -38,9 +35,9 @@ public class SelectGourmetCouponNetworkController extends BaseNetworkController
     /**
      * 결제화면의 소유자의 전체 쿠폰리스트
      */
-    public void requestCouponList(int placeIdx, int ticketIdx, String date)
+    public void requestCouponList(int ticketIdx, int ticketCount)
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, placeIdx, ticketIdx, date, mCouponListJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, ticketIdx, ticketCount, mCouponListJsonResponseListener);
     }
 
     /**

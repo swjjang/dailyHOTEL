@@ -38,7 +38,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
 
     private SelectCouponDialogLayout mLayout;
-    private SelectCouponNetworkController mNetworkController;
+    private SelectStayCouponNetworkController mNetworkController;
 
     private boolean mIsSetOk = false;
 
@@ -126,7 +126,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         mLayout = new SelectCouponDialogLayout(this, mOnEventListener);
-        mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        mNetworkController = new SelectStayCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mLayout.onCreateView(R.layout.activity_select_coupon_dialog));
     }
@@ -259,7 +259,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     // NetworkController
     // ///////////////////////////////////////////////////
 
-    private SelectCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectCouponNetworkController.OnNetworkControllerListener()
+    private SelectStayCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectStayCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onCouponList(List<Coupon> list)

@@ -237,11 +237,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         params.put("guest_email", guest.email);
         params.put("guest_msg", "");
 
-        //            if (DEBUG == true)
-        //            {
-        //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-        //            }
-
         if (DEBUG == false)
         {
             if (customer == null)
