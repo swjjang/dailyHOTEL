@@ -76,7 +76,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -107,7 +107,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         }
     };
 
-    DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
