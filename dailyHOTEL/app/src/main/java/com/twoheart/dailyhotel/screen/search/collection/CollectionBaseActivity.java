@@ -47,7 +47,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     private String mParams;
     protected SaleTime mStartSaleTime, mEndSaleTime;
 
-    protected abstract boolean initIntentTime(Intent intent);
+    protected abstract void initIntentTime(Intent intent);
 
     protected abstract void requestPlaceList(String params);
 
@@ -75,11 +75,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
             finish();
         }
 
-        if(initIntentTime(intent) == false)
-        {
-            finish();
-            return;
-        }
+        initIntentTime(intent);
 
         String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
         String titleImageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL);

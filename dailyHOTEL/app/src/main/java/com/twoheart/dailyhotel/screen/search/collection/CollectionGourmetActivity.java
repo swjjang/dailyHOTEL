@@ -60,7 +60,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected boolean initIntentTime(Intent intent)
+    protected void initIntentTime(Intent intent)
     {
         if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
         {
@@ -73,17 +73,15 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
             mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
 
-            // 범위 지정인데 이미 날짜가 지난 경우
+            // 범위 지정인데 이미 날짜가 지난 경우, 초기화
             if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
             {
-                DailyToast.showToast(this, "이미 이벤트 기간이 지난 레스토랑입니다.", Toast.LENGTH_SHORT);
-                return false;
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                mEndSaleTime = null;
             }
 
             mSaleTime = mStartSaleTime.getClone();
         }
-
-        return true;
     }
 
     @Override

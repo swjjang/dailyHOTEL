@@ -62,7 +62,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected boolean initIntentTime(Intent intent)
+    protected void initIntentTime(Intent intent)
     {
         if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
         {
@@ -79,15 +79,13 @@ public class CollectionStayActivity extends CollectionBaseActivity
             // 범위 지정인데 이미 날짜가 지난 경우
             if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
             {
-                DailyToast.showToast(this, "이미 이벤트 기간이 지난 숙소입니다.", Toast.LENGTH_SHORT);
-                return false;
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                mEndSaleTime = null;
             }
 
             mCheckInSaleTime = mStartSaleTime.getClone();
             mNights = 1;
         }
-
-        return true;
     }
 
     @Override

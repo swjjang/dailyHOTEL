@@ -225,9 +225,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             // 범위 지정인데 이미 날짜가 지난 경우
             if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
             {
-                DailyToast.showToast(this, "이미 이벤트 기간이 지난 레스토랑입니다.", Toast.LENGTH_SHORT);
-                finish();
-                return;
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                mEndSaleTime = null;
             }
 
             if (mSaleTime == null)
