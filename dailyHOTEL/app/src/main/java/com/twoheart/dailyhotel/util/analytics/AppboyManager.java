@@ -396,6 +396,21 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + " : " + EventName.COUPON_DOWNLOADED + ", " + appboyProperties.forJsonPut().toString());
             }
+        } else if (AnalyticsManager.Category.BOOKING_STATUS.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.FREE_CANCELLATION_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.STAY_BOOKING_CANCELED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_BOOKING_CANCELED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            }
         }
     }
 
@@ -988,6 +1003,8 @@ public class AppboyManager extends BaseAnalyticsManager
 
         public static final String DAILYHOTEL_CLICKED = "dailyhotel_clicked";
         public static final String DAILYGOURMET_CLICKED = "dailygourmet_clicked";
+
+        public static final String STAY_BOOKING_CANCELED = "stay_booking_canceled";
     }
 
     private static final class ValueName
