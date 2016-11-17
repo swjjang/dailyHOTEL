@@ -458,20 +458,20 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             switch (refundPolicy)
                             {
                                 case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE);
+                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE);
                                     break;
 
                                 case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE);
+                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE);
                                     break;
 
                                 default:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                                     break;
                             }
                         } else
                         {
-                            AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                            AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                         }
                         break;
                     }
@@ -481,7 +481,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                         loadFragments(getViewPager(), mHotelBookingDetail);
 
-                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                         break;
                 }
             } catch (Exception e)
