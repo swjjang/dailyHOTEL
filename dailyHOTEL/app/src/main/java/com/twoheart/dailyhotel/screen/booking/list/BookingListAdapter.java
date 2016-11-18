@@ -261,46 +261,52 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 waitAccountTextView.setText(booking.ment);
             } else
             {
-                String text;
-
-                int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(mCurrentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
-                if (dayOfDays < 0 || dayOfDays > 3)
-                {
-                    text = null;
-                } else if (dayOfDays > 0)
-                {
-                    // 하루이상 남음
-                    text = mContext.getString(R.string.frag_booking_duedate_formet, dayOfDays);
-                } else
-                {
-                    // 당일
-                    switch (booking.placeType)
-                    {
-                        case HOTEL:
-                        {
-                            text = mContext.getString(R.string.frag_booking_today_type_stay);
-                            break;
-                        }
-
-                        case FNB:
-                        {
-                            text = mContext.getString(R.string.frag_booking_today_type_gourmet);
-                            break;
-                        }
-
-                        default:
-                            text = null;
-                            break;
-                    }
-                }
-
-                if (Util.isTextEmpty(text) == true)
+                if (booking.readyForRefund == true)
                 {
                     waitAccountTextView.setVisibility(View.GONE);
                 } else
                 {
-                    waitAccountTextView.setVisibility(View.VISIBLE);
-                    waitAccountTextView.setText(text);
+                    String text;
+
+                    int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(mCurrentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                    if (dayOfDays < 0 || dayOfDays > 3)
+                    {
+                        text = null;
+                    } else if (dayOfDays > 0)
+                    {
+                        // 하루이상 남음
+                        text = mContext.getString(R.string.frag_booking_duedate_formet, dayOfDays);
+                    } else
+                    {
+                        // 당일
+                        switch (booking.placeType)
+                        {
+                            case HOTEL:
+                            {
+                                text = mContext.getString(R.string.frag_booking_today_type_stay);
+                                break;
+                            }
+
+                            case FNB:
+                            {
+                                text = mContext.getString(R.string.frag_booking_today_type_gourmet);
+                                break;
+                            }
+
+                            default:
+                                text = null;
+                                break;
+                        }
+                    }
+
+                    if (Util.isTextEmpty(text) == true)
+                    {
+                        waitAccountTextView.setVisibility(View.GONE);
+                    } else
+                    {
+                        waitAccountTextView.setVisibility(View.VISIBLE);
+                        waitAccountTextView.setText(text);
+                    }
                 }
             }
 

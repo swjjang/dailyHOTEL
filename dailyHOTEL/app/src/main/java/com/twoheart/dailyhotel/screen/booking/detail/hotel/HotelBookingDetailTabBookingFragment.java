@@ -164,37 +164,44 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         // 3일전 부터 몇일 남음 필요.
         View remainedDayLayout = view.findViewById(R.id.remainedDayLayout);
         TextView remainedDayTextView = (TextView) view.findViewById(R.id.remainedDayTextView);
-        String remainedDayText;
 
-        try
+        if (bookingDetail.readyForRefund == true)
         {
-            Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
-
-            int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(bookingDetail.currentDateTime)) / SaleTime.MILLISECOND_IN_A_DAY);
-            if (dayOfDays < 0 || dayOfDays > 3)
-            {
-                remainedDayText = null;
-            } else if (dayOfDays > 0)
-            {
-                // 하루이상 남음
-                remainedDayText = context.getString(R.string.frag_booking_duedate_formet, dayOfDays);
-            } else
-            {
-                // 당일
-                remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
-            }
-
-            if (Util.isTextEmpty(remainedDayText) == true)
-            {
-                remainedDayLayout.setVisibility(View.GONE);
-            } else
-            {
-                remainedDayLayout.setVisibility(View.VISIBLE);
-                remainedDayTextView.setText(remainedDayText);
-            }
-        } catch (Exception e)
+            remainedDayLayout.setVisibility(View.GONE);
+        } else
         {
-            ExLog.d(e.toString());
+            try
+            {
+                String remainedDayText;
+
+                Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
+
+                int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(bookingDetail.currentDateTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                if (dayOfDays < 0 || dayOfDays > 3)
+                {
+                    remainedDayText = null;
+                } else if (dayOfDays > 0)
+                {
+                    // 하루이상 남음
+                    remainedDayText = context.getString(R.string.frag_booking_duedate_formet, dayOfDays);
+                } else
+                {
+                    // 당일
+                    remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
+                }
+
+                if (Util.isTextEmpty(remainedDayText) == true)
+                {
+                    remainedDayLayout.setVisibility(View.GONE);
+                } else
+                {
+                    remainedDayLayout.setVisibility(View.VISIBLE);
+                    remainedDayTextView.setText(remainedDayText);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         // 체크인 체크아웃
