@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -218,6 +219,26 @@ public class StayAutoRefundActivity extends BaseActivity
         messageEditText.setText(message);
         messageEditText.setSelection(messageEditText.length());
 
+        messageEditText.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getAction() & MotionEvent.ACTION_MASK)
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                return false;
+            }
+        });
+
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
             @Override
@@ -255,6 +276,8 @@ public class StayAutoRefundActivity extends BaseActivity
                         inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
 
                         setSelected(v);
+
+                        scrollView.fullScroll(View.FOCUS_DOWN);
                         break;
                     }
 
