@@ -181,17 +181,25 @@ public class StayDetail extends PlaceDetail
         }
 
         // Room Sale Info
-        JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
-        int saleRoomLength = saleRoomJSONArray.length();
 
-        mSaleRoomList = new ArrayList<>(saleRoomLength);
-
-        for (int i = 0; i < saleRoomLength; i++)
+        if (jsonObject.has("rooms") == true && jsonObject.isNull("rooms") == false)
         {
-            RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
-            roomInformation.grade = grade;
-            roomInformation.address = address;
-            mSaleRoomList.add(roomInformation);
+            JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
+
+            int saleRoomLength = saleRoomJSONArray.length();
+
+            mSaleRoomList = new ArrayList<>(saleRoomLength);
+
+            for (int i = 0; i < saleRoomLength; i++)
+            {
+                RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
+                roomInformation.grade = grade;
+                roomInformation.address = address;
+                mSaleRoomList.add(roomInformation);
+            }
+        } else
+        {
+            mSaleRoomList = new ArrayList<>();
         }
 
         if (jsonObject.has("myWish") == true)

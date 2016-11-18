@@ -156,14 +156,20 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // Ticket Information
-        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
-        int ticketInformationLength = ticketInformationJSONArray.length();
-
-        mTicketInformationList = new ArrayList<>(ticketInformationLength);
-
-        for (int i = 0; i < ticketInformationLength; i++)
+        if (jsonObject.has("tickets") == true && jsonObject.isNull("tickets") == false)
         {
-            mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
+            JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
+            int ticketInformationLength = ticketInformationJSONArray.length();
+
+            mTicketInformationList = new ArrayList<>(ticketInformationLength);
+
+            for (int i = 0; i < ticketInformationLength; i++)
+            {
+                mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
+            }
+        } else
+        {
+            mTicketInformationList = new ArrayList<>();
         }
 
         if (jsonObject.has("myWish") == true)

@@ -155,7 +155,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 {
                     unLockUI();
 
-                    mListView.performItemClick(null, 1, 0);
+                    int size = bookingArrayList.size();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        Booking booking = bookingArrayList.get(i);
+
+                        if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
+                        {
+                            mListView.performItemClick(null, i, 0);
+                            break;
+                        }
+                    }
+
                     DailyPreference.getInstance(baseActivity).setVirtualAccountReadyFlag(-1);
                 }
             }
