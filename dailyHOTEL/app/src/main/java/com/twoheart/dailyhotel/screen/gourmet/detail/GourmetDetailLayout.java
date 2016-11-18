@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -107,7 +108,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             mBookingTextView.setVisibility(View.GONE);
             mSoldoutTextView.setVisibility(View.VISIBLE);
 
-            setBookingStatus(STATUS_SOLD_OUT);
+            setBookingStatus(STATUS_SOLD_OUT, false);
         } else
         {
             mBookingTextView.setVisibility(View.VISIBLE);
@@ -131,7 +132,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             mSoldoutTextView.setVisibility(View.GONE);
 
-            setBookingStatus(STATUS_SELECT_PRODUCT);
+            setBookingStatus(STATUS_SELECT_PRODUCT, false);
 
             updateTicketInformationLayout(ticketInformationList);
         }
@@ -203,8 +204,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     }
 
     @Override
-    public void setBookingStatus(int status)
+    public void setBookingStatus(int status, boolean isAnimation)
     {
+        int oldStatus = mBookingStatus;
         mBookingStatus = status;
 
         if (mBookingTextView == null || mSoldoutTextView == null)
@@ -229,6 +231,18 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 mSoldoutTextView.setVisibility(View.GONE);
                 mWishButtonTextView.setVisibility(View.VISIBLE);
 
+                final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+                final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+                if (isAnimation == true)
+                {
+                    startBookingButtonAnimation(start, end, oldStatus, status);
+                } else
+                {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                    params.leftMargin = end;
+                    mBookingTextView.setLayoutParams(params);
+                }
+
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
             }
@@ -237,7 +251,19 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
+
+                final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+                final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+                if (isAnimation == true)
+                {
+                    startBookingButtonAnimation(start, end, oldStatus, status);
+                } else
+                {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                    params.leftMargin = end;
+                    mBookingTextView.setLayoutParams(params);
+                }
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;

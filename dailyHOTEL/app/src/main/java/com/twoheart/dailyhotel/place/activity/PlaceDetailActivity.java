@@ -36,11 +36,15 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
+    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
 
     protected SaleTime mSaleTime;
+    protected SaleTime mStartSaleTime, mEndSaleTime;
     protected int mCurrentImage;
     protected boolean mIsDeepLink;
     protected String mDefaultImageUrl;
@@ -142,7 +146,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             if (mPlaceDetailLayout.getBookingStatus() != PlaceDetailLayout.STATUS_SOLD_OUT)
             {
-                mPlaceDetailLayout.setBookingStatus(PlaceDetailLayout.STATUS_SELECT_PRODUCT);
+                mPlaceDetailLayout.setBookingStatus(PlaceDetailLayout.STATUS_SELECT_PRODUCT, false);
             }
         }
 
@@ -388,7 +392,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_contact_us_layout, null, false);
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

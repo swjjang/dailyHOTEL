@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -29,7 +30,9 @@ import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StayAutoRefundActivity extends BaseActivity
 {
@@ -216,6 +219,26 @@ public class StayAutoRefundActivity extends BaseActivity
         messageEditText.setText(message);
         messageEditText.setSelection(messageEditText.length());
 
+        messageEditText.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getAction() & MotionEvent.ACTION_MASK)
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                return false;
+            }
+        });
+
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
             @Override
@@ -253,6 +276,8 @@ public class StayAutoRefundActivity extends BaseActivity
                         inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
 
                         setSelected(v);
+
+                        scrollView.fullScroll(View.FOCUS_DOWN);
                         break;
                     }
 
@@ -488,12 +513,19 @@ public class StayAutoRefundActivity extends BaseActivity
     {
         mSelectedCancelReason = position;
 
-        if (Util.isTextEmpty(message) == true)
+        // 기타로 오는 경우
+        if (position == 6)
         {
-            mCancelReasonMessage = reason;
+            if (Util.isTextEmpty(message) == true)
+            {
+                mCancelReasonMessage = reason;
+            } else
+            {
+                mCancelReasonMessage = reason + "-" + message;
+            }
         } else
         {
-            mCancelReasonMessage = reason + "-" + message;
+            mCancelReasonMessage = reason;
         }
 
         mStayAutoRefundLayout.setCancelReasonText(reason);
@@ -535,7 +567,24 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void showSelectCancelDialog()
         {
-            StayAutoRefundActivity.this.showSelectCancelDialog(mSelectedCancelReason, mCancelReasonMessage);
+            String cancelMessage = null;
+
+            // 기타인 경우
+            if (mSelectedCancelReason == 6)
+            {
+                if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                {
+                    if (mCancelReasonMessage.indexOf('-') >= 0)
+                    {
+                        cancelMessage = mCancelReasonMessage.substring(mCancelReasonMessage.indexOf('-') + 1);
+                    }
+                }
+            } else
+            {
+                cancelMessage = mCancelReasonMessage;
+            }
+
+            StayAutoRefundActivity.this.showSelectCancelDialog(mSelectedCancelReason, cancelMessage);
         }
 
         @Override
@@ -574,8 +623,28 @@ public class StayAutoRefundActivity extends BaseActivity
                                 , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
                         }
 
+                        Map<String, String> params = new HashMap<>();
+                        params.put(AnalyticsManager.KeyType.NAME, mHotelBookingDetail.roomName);
+                        params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mHotelBookingDetail.price));
+                        params.put(AnalyticsManager.KeyType.COUNTRY, mHotelBookingDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+
+                        String cancelMessage = null;
+
+                        if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                        {
+                            if (mCancelReasonMessage.indexOf('-') >= 0)
+                            {
+                                cancelMessage = mCancelReasonMessage.substring(mCancelReasonMessage.indexOf('-') + 1);
+                            } else
+                            {
+                                cancelMessage = mCancelReasonMessage;
+                            }
+                        }
+
+                        params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, cancelMessage);
+
                         AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, null);
+                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, params);
                     }
                 }, null);
         }
@@ -606,10 +675,10 @@ public class StayAutoRefundActivity extends BaseActivity
                 finish();
             } else
             {
-                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public void onDismiss(DialogInterface dialog)
                     {
                         setResult(RESULT_OK);
                         finish();

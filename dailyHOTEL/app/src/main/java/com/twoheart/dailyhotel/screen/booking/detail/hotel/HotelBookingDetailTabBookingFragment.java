@@ -581,7 +581,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_contact_us_layout, null, false);
 
         final Dialog dialog = new Dialog(baseActivity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

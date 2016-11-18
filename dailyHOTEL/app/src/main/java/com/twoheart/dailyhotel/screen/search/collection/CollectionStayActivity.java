@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,20 @@ public class CollectionStayActivity extends CollectionBaseActivity
 {
     private SaleTime mCheckInSaleTime;
     private int mNights;
+
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
+    {
+        Intent intent = new Intent(context, CollectionStayActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
+        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+
+        return intent;
+    }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int night, String title, String titleImageUrl, String queryType, String query)
     {
@@ -48,8 +64,28 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void initIntentTime(Intent intent)
     {
-        mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
+        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
+        {
+            mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
+            mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
+
+            mStartSaleTime = mCheckInSaleTime.getClone(0);
+            mEndSaleTime = null;
+        } else
+        {
+            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
+            // 범위 지정인데 이미 날짜가 지난 경우
+            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+            {
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                mEndSaleTime = null;
+            }
+
+            mCheckInSaleTime = mStartSaleTime.getClone();
+            mNights = 1;
+        }
     }
 
     @Override
@@ -60,8 +96,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mCheckInSaleTime, mNights, //
-                    AnalyticsManager.ValueType.SEARCH, true, true);
+                Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mCheckInSaleTime, mNights //
+                    , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
             }
         });
@@ -85,7 +121,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
         Stay stay = placeViewItem.getItem();
 
-        Intent intent = StayDetailActivity.newInstance(this, mCheckInSaleTime, stay, count);
+        Intent intent = StayDetailActivity.newInstance(this, mCheckInSaleTime, stay, mStartSaleTime, mEndSaleTime, count);
 
         if (Util.isUsedMutilTransition() == true)
         {

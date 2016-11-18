@@ -514,7 +514,7 @@ interface IDailyNetwork
      */
     void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
 
-    void requestCouponList(Object tag, int gourmetIdx, int ticketIdx, String date, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, int ticketIdx, int countOfTicket, DailyHotelJsonResponseListener listener);
 
     /**
      * /api/v3/users/coupons/history
@@ -620,6 +620,8 @@ interface IDailyNetwork
     void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
 
     void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener);
+
+    void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, DailyHotelJsonResponseListener listener);
 
     void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener);

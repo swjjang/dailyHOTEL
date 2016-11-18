@@ -98,7 +98,7 @@
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
     <string name="message_no_more_list">마지막 목록입니다.</string>
     <string name="message_wishlist_tooltip">위시리스트, 확인한 호텔/레스토랑을 확인해보세요!</string>
-
+    <string name="message_end_event">이벤트 기간이 종료되었습니다.</string>
 
     <!-- Transition Name -->
     <string name="transition_place_image">placeImage</string>
@@ -871,6 +871,7 @@
     <string name="label_search_agree_search_location">동의하고 검색하기</string>
     <string name="label_search_no_address">주소지 없음</string>
     <string name="message_search_agree_termsoflocation">고객님 주변에 위치한 업체 검색을 위해\n위치 정보 이용에 동의해주세요.\n이용약관 상세보기</string>
+    <string name="message_search_tooltip">레스토랑 검색은 여기를 눌러주세요!</string>
     //
     <string name="label_searchresult_resultcount">결과 %1$d건</string>
     <string name="label_searchresult_over_resultcount">결과 %1$d건 이상</string>

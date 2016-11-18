@@ -522,12 +522,30 @@ public class StayDetailListAdapter extends BaseAdapter
         if (arrayList != null)
         {
             viewGroup.removeAllViews();
+            boolean hasRefundPolicy = false;
 
             for (DetailInformation information : arrayList)
             {
                 ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
                 makeInformationLayout(layoutInflater, childGroup, information, hasNRD);
+
+                viewGroup.addView(childGroup);
+
+                if (hasNRD == true && mContext.getString(R.string.label_detail_cancellation_refund_policy).equalsIgnoreCase(information.title) == true)
+                {
+                    hasRefundPolicy = true;
+                }
+            }
+
+            // 서버에서 타이틀이 취소및 환불 규정이 없는 경우가 발생하는 경우가 있어서 관련 내용 처리
+            if (hasNRD == true && hasRefundPolicy == false)
+            {
+                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+
+                DetailInformation detailInformation = new DetailInformation(mContext.getString(R.string.label_detail_cancellation_refund_policy), null);
+
+                makeInformationLayout(layoutInflater, childGroup, detailInformation, hasNRD);
 
                 viewGroup.addView(childGroup);
             }
@@ -616,17 +634,17 @@ public class StayDetailListAdapter extends BaseAdapter
 
                 contentsLayout.addView(textLayout);
             }
+        }
 
-            if (isRefundPolicy == true)
-            {
-                View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
-                TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-                textView.setText(R.string.message_stay_detail_nrd);
-                textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-                textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+        if (isRefundPolicy == true)
+        {
+            View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
+            TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+            textView.setText(R.string.message_stay_detail_nrd);
+            textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
 
-                contentsLayout.addView(textLayout);
-            }
+            contentsLayout.addView(textLayout);
         }
     }
 }

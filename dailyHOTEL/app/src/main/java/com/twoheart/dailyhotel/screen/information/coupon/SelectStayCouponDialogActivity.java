@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 
 import com.android.volley.VolleyError;
@@ -39,7 +38,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
 
     private SelectCouponDialogLayout mLayout;
-    private SelectCouponNetworkController mNetworkController;
+    private SelectStayCouponNetworkController mNetworkController;
 
     private boolean mIsSetOk = false;
 
@@ -127,7 +126,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         mLayout = new SelectCouponDialogLayout(this, mOnEventListener);
-        mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        mNetworkController = new SelectStayCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mLayout.onCreateView(R.layout.activity_select_coupon_dialog));
     }
@@ -260,7 +259,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     // NetworkController
     // ///////////////////////////////////////////////////
 
-    private SelectCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectCouponNetworkController.OnNetworkControllerListener()
+    private SelectStayCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectStayCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onCouponList(List<Coupon> list)
@@ -295,7 +294,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
                 case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
                 {
-                    mLayout.setVisibility(false);
+                    mLayout.setVisibility(true);
                     mLayout.setTitle(R.string.coupon_download_coupon);
                     mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_close);
                     mLayout.setData(list, false);

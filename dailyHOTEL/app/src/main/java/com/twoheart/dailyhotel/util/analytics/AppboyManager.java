@@ -325,6 +325,61 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(e.toString());
                 }
+            } else if (AnalyticsManager.Action.WISHLIST_ON.equalsIgnoreCase(action) == true)
+            {
+
+                String eventName;
+                String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+                if (AnalyticsManager.ValueType.STAY.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.STAY_WISHLIST_ADDED;
+                } else if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.GOURMET_WISHLIST_ADDED;
+                } else
+                {
+                    return;
+                }
+
+                params.remove(AnalyticsManager.KeyType.PLACE_TYPE);
+
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(eventName, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
+                }
+            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true
+                || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+            {
+
+                String eventName;
+                String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+                if (AnalyticsManager.ValueType.STAY.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.STAY_WISHLIST_DELETED;
+                } else if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.GOURMET_WISHLIST_DELETED;
+                } else
+                {
+                    return;
+                }
+
+                params.remove(AnalyticsManager.KeyType.PLACE_TYPE);
+
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(eventName, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
+                }
             }
         } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true//
             && AnalyticsManager.Action.BOOKING_CLICKED.equalsIgnoreCase(action) == true)
@@ -395,6 +450,21 @@ public class AppboyManager extends BaseAnalyticsManager
             if (DEBUG == true)
             {
                 ExLog.d(TAG + " : " + EventName.COUPON_DOWNLOADED + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } else if (AnalyticsManager.Category.BOOKING_STATUS.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.FREE_CANCELLATION_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.STAY_BOOKING_CANCELED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_BOOKING_CANCELED + ", " + appboyProperties.forJsonPut().toString());
+                }
             }
         }
     }
@@ -988,6 +1058,13 @@ public class AppboyManager extends BaseAnalyticsManager
 
         public static final String DAILYHOTEL_CLICKED = "dailyhotel_clicked";
         public static final String DAILYGOURMET_CLICKED = "dailygourmet_clicked";
+
+        public static final String STAY_BOOKING_CANCELED = "stay_booking_canceled";
+
+        public static final String STAY_WISHLIST_ADDED = "stay_wishlist_added";
+        public static final String STAY_WISHLIST_DELETED = "stay_wishlist_deleted";
+        public static final String GOURMET_WISHLIST_ADDED = "gourmet_wishlist_added";
+        public static final String GOURMET_WISHLIST_DELETED = "gourmet_wishlist_deleted";
     }
 
     private static final class ValueName

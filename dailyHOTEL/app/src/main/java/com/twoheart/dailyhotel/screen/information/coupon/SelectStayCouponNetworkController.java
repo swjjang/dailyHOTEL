@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
-public class SelectCouponNetworkController extends BaseNetworkController
+public class SelectStayCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -44,7 +44,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
     }
 
     /**
-     * 상세화면의 쿠폰리스트
+     * 상세화면의 호텔 쿠폰리스트
      *
      * @param placeIndex
      * @param date
@@ -71,12 +71,12 @@ public class SelectCouponNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadJsonResponseListener);
     }
 
-    public SelectCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public SelectStayCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
-    DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -107,7 +107,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         }
     };
 
-    DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)

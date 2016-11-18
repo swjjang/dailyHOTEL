@@ -551,7 +551,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 Booking booking = new Booking(jsonObject);
 
-                if(booking.readyForRefund == true)
+                if (booking.readyForRefund == true)
                 {
                     waitRefundBookingList.add(booking);
                 } else

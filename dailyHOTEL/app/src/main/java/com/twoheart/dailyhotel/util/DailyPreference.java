@@ -52,6 +52,7 @@ public class DailyPreference
     //    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28"; // 삭제! - 30 으로 대체 됨
     private static final String KEY_INFORMATION_CS_OPERATION_TIME = "29"; // 운영시간 H,H (앞은 시작 뒤는 끝나는 시간)
     private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
+    private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
 
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
@@ -244,6 +245,7 @@ public class DailyPreference
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
         boolean isShowTooltop = isViewWishListTooltip();
+        boolean isShowSearchToolTip = isViewSearchTooltip();
 
         String stayRecentPlace = getStayRecentPlaces();
         String gourmetRecentPlace = getGourmetRecentPlaces();
@@ -263,6 +265,7 @@ public class DailyPreference
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
         setIsViewWishListTooltip(isShowTooltop);
+        setIsViewSearchTooltip(isShowSearchToolTip);
 
         setStayRecentPlaces(stayRecentPlace);
         setGourmetRecentPlaces(gourmetRecentPlace);
@@ -779,6 +782,16 @@ public class DailyPreference
     public boolean isViewWishListTooltip()
     {
         return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, false);
+    }
+
+    public void setIsViewSearchTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_SEARCH_TOOLTIP, value);
+    }
+
+    public boolean isViewSearchTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
     }
 
     public void setStayCategory(String name, String code)

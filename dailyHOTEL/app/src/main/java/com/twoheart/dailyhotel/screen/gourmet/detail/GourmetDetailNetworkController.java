@@ -36,9 +36,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 
     public void requestHasCoupon(int placeIndex, String date)
     {
-        //        DailyNetworkAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, mHasCouponJsonResponseListener);
-
-        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(true);
+        DailyNetworkAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, mHasCouponJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()

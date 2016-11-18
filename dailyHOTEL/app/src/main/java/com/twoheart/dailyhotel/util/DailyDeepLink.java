@@ -61,6 +61,9 @@ public class DailyDeepLink
     private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
     private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
 
+    private static final String PARAM_V10_START_DATE = "sd"; // 캘린더 시작 날짜
+    private static final String PARAM_V10_END_DATE = "ed"; // 캘린더 끝날짜
+
     private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
     private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
     private static final String VALUE_V4_SORTING_SATISFACTION = "r";
@@ -113,6 +116,7 @@ public class DailyDeepLink
     private static final String V7 = "7";
     private static final String V8 = "8";
     private static final String V9 = "9";
+    private static final String V10 = "10";
 
     private static DailyDeepLink mInstance;
 
@@ -205,6 +209,11 @@ public class DailyDeepLink
                     decodingLinkV9(uri);
                     break;
 
+                case V10:
+                    mVersionCode = 10;
+                    decodingLinkV10(uri);
+                    break;
+
                 default:
                     clear();
                     break;
@@ -227,6 +236,54 @@ public class DailyDeepLink
         mDeepLinkUri = null;
         mParams.clear();
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 9
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    private boolean decodingLinkV10(Uri uri)
+    {
+        if (decodingLinkV9(uri) == false)
+        {
+            return false;
+        }
+
+        putParams(uri, PARAM_V10_START_DATE);
+        putParams(uri, PARAM_V10_END_DATE);
+
+        return true;
+    }
+
+    public String getStartDate()
+    {
+        String value;
+
+        if (mVersionCode >= 10)
+        {
+            value = mParams.get(PARAM_V10_START_DATE);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
+    public String getEndDate()
+    {
+        String value;
+
+        if (mVersionCode >= 10)
+        {
+            value = mParams.get(PARAM_V10_END_DATE);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 9

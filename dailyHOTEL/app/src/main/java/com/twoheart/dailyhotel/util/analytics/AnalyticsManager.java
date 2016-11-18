@@ -946,6 +946,7 @@ public class AnalyticsManager
     public static class KeyType
     {
         public static final String NAME = "name";
+        public static final String VALUE = "value";
         public static final String PRICE = "price";
         public static final String QUANTITY = "quantity";
         public static final String TOTAL_PRICE = "totalPrice";
@@ -1031,6 +1032,7 @@ public class AnalyticsManager
         public static final String SEARCH_COUNT = "search_count";
         public static final String SEARCH_RESULT = "search_result";
         public static final String FILL_DATE_OF_BIRTH = "fill_date_of_birth";
+        public static final String REASON_CANCELLATION = "reason_cancellation";
     }
 
     public static class ValueType

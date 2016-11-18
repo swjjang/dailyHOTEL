@@ -885,11 +885,11 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestCouponList(Object tag, int gourmetIdx, int ticketIdx, String date, DailyHotelJsonResponseListener listener)
+    public void requestCouponList(Object tag, int ticketIdx, int countOfTicket, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/coupons" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/payment/coupons" : "MTAkNDEkNTgkNDckODIkODIkNzMkODMkMSQzJDcxJDY1JDUyJDMxJDM1JDkyJA==$OWDEMzRDNFMTXU4MjM2Q0E5OTYxREU0AMUZIFMEQxNzdCNRkEzOGEUH5NTQzNUE2VNjIMzQzRBMP0QwQCjdFREVGNzPQKMgyNjY0MQ==$";
 
-        String params = String.format("?gourmetIdx=%d&ticketIdx=%d&date=%s", gourmetIdx, ticketIdx, URLEncoder.encode(date));
+        String params = String.format("?saleIdx=%d&countOfTicket=%d", ticketIdx, countOfTicket);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -989,12 +989,12 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHasCoupon(Object tag, int placeIndex, String date, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{gourmetIdx}/coupons/exist" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons/exist" : "NzEkNTUkMTAxJDc4JDExNyQ1MSQxOSQzNyQ0NiQyJDEzMCQxMDgkMzEkMTIwJDc5JDE5JA==$MTMExNTdFQkU1QjUxNUUQB0MzQ3QjkxRVTJEOEQ0TNzAzOUFDCNTg5NTlBBNUJZCODY0RjY0NkM1MTQNSwNzMxUNDI3MDU2MjE1NDcwRERCNDYTCxMkNBQzM3RCDY4OKDU4QjUxVNDQ2MkIz$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{gourmetIdx}", Integer.toString(placeIndex));
+        urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
 
-        String params = String.format("?date=%s", date);
+        String params = String.format("?dateSale=%s", date);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -1021,12 +1021,12 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestCouponList(Object tag, int placeIndex, String date, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{gourmetIdx}/coupons" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons" : "NTkkNTQkMTA0JDkxJDExNCQ4JDEyMiQxNiQxMjUkMTIzJDI0JDExJDEwNCQxMTMkMTMyJDEwMSQ=$MzI0MTk1POUBM3OEUE1NjQ5RTFAwMDJBOTNGNjVDOEVCOUYxNzU3OEQxNzLkwNTEDwMzE1MTVCRTZFMkY3RDAyM0RBM0JCNHTE2ODXRCRPTkyM0WU4QMkU0Q0UFEMjZGPJQCzFA1RTE5Q0Q4$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{gourmetIdx}", Integer.toString(placeIndex));
+        urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
 
-        String params = String.format("?date=%s", date);
+        String params = String.format("?dateSale=%s", date);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -1198,6 +1198,19 @@ public class DailyNetworkAPI implements IDailyNetwork
         {
             params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s&transactionType=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn), transactionType);
         }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund" : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
+
+        String params = String.format("?hotelReservationIdx=%d&transactionType=%s", hotelReservationIdx, transactionType);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);

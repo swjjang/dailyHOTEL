@@ -125,7 +125,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_call_dialog_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_contact_us_layout, null, false);
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -358,8 +358,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             } else
                             {
                                 DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
-                                    , mHotelBookingDetail.placeIndex, mHotelBookingDetail.roomIndex//
-                                    , mHotelBookingDetail.checkInDate, mHotelBookingDetail.transactionType, mPolicyRefundJsonResponseListener);
+                                    , mHotelBookingDetail.reservationIndex, mHotelBookingDetail.transactionType, mPolicyRefundJsonResponseListener);
                             }
                         } else
                         {
@@ -459,20 +458,20 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             switch (refundPolicy)
                             {
                                 case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE);
+                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE);
                                     break;
 
                                 case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE);
+                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE);
                                     break;
 
                                 default:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                                     break;
                             }
                         } else
                         {
-                            AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                            AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                         }
                         break;
                     }
@@ -482,7 +481,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                         loadFragments(getViewPager(), mHotelBookingDetail);
 
-                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS);
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                         break;
                 }
             } catch (Exception e)

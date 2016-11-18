@@ -7,12 +7,14 @@
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/default_background"
         android:fillViewport="true"
         android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/default_background"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -21,8 +23,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:scaleType="fitEnd"
                 android:minHeight="110dp"
+                android:scaleType="fitEnd"
                 app:srcCompat="@drawable/no_wishlist_ic"/>
 
             <LinearLayout
@@ -70,9 +72,9 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="25dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal"
                 android:minHeight="60dp"
-                android:gravity="bottom|center_horizontal">
+                android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/bottomMessageTextView"

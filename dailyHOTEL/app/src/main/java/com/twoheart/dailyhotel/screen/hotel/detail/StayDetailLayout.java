@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -120,7 +121,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mBookingTextView.setVisibility(View.GONE);
             mSoldoutTextView.setVisibility(View.VISIBLE);
 
-            setBookingStatus(STATUS_SOLD_OUT);
+            setBookingStatus(STATUS_SOLD_OUT, false);
         } else
         {
             mBookingTextView.setVisibility(View.VISIBLE);
@@ -144,7 +145,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             mSoldoutTextView.setVisibility(View.GONE);
 
-            setBookingStatus(STATUS_SELECT_PRODUCT);
+            setBookingStatus(STATUS_SELECT_PRODUCT, false);
 
             updateRoomTypeInformationLayout(saleRoomList);
         }
@@ -230,8 +231,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     }
 
     @Override
-    public void setBookingStatus(int status)
+    public void setBookingStatus(int status, boolean isAnimation)
     {
+        int oldStatus = mBookingStatus;
         mBookingStatus = status;
 
         if (mBookingTextView == null || mSoldoutTextView == null)
@@ -256,6 +258,17 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 mSoldoutTextView.setVisibility(View.GONE);
                 mWishButtonTextView.setVisibility(View.VISIBLE);
 
+                final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+                final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+                if (isAnimation == true)
+                {
+                    startBookingButtonAnimation(start, end, oldStatus, status);
+                } else {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                    params.leftMargin = end;
+                    mBookingTextView.setLayoutParams(params);
+                }
+
                 mBookingTextView.setText(R.string.act_hotel_search_room);
                 break;
             }
@@ -264,7 +277,18 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
+
+                final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+                final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+                if (isAnimation == true)
+                {
+                    startBookingButtonAnimation(start, end, oldStatus, status);
+                } else {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                    params.leftMargin = end;
+                    mBookingTextView.setLayoutParams(params);
+                }
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;

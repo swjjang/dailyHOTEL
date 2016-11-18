@@ -29,6 +29,12 @@ public class DetailInformation implements Parcelable
     public String title;
     private List<String> mContentsList;
 
+    public DetailInformation(String title, List<String> contentsList)
+    {
+        this.title = title;
+        mContentsList = contentsList;
+    }
+
     public DetailInformation(Parcel in)
     {
         readFromParcel(in);

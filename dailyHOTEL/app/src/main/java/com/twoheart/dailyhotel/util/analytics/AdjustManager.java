@@ -48,8 +48,11 @@ public class AdjustManager extends BaseAnalyticsManager
 
         AdjustConfig config = new AdjustConfig(context, APPLICATION_TOKEN, ENVIRONMENT);
 
-        // change the log level
-        config.setLogLevel(LogLevel.VERBOSE);
+        if (Constants.DEBUG == true)
+        {
+            // change the log level
+            config.setLogLevel(LogLevel.VERBOSE);
+        }
 
         // set attribution delegate
         config.setOnAttributionChangedListener(new OnAttributionChangedListener()
