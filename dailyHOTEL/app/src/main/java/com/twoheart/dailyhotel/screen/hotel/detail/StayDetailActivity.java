@@ -226,6 +226,8 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
+        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+
         if (mStartSaleTime != null && mEndSaleTime != null)
         {
             // 범위 지정인데 이미 날짜가 지난 경우
@@ -233,6 +235,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
                 mEndSaleTime = null;
+
+                // 이벤트 기간이 종료된 경우 달력을 띄우지 않는다.
+                isShowCalendar = false;
             }
 
             if (mSaleTime == null)
@@ -250,8 +255,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             mStartSaleTime = mSaleTime.getClone(0);
             mEndSaleTime = null;
         }
-
-        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
 
         mPlaceDetail = createPlaceDetail(intent);
 
