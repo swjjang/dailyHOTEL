@@ -3,11 +3,9 @@ package com.twoheart.dailyhotel.place.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -19,7 +17,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -43,7 +40,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -475,51 +471,32 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showCallDialog()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CLICK, null);
-
-        OnClickListener positiveListener = new OnClickListener()
+        showDailyCallDialog(new OnCallDialogListener()
         {
             @Override
-            public void onClick(View v)
+            public void onShowDialog()
             {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(PlacePaymentActivity.this) == true)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(PlacePaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(PlacePaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent( //
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, //
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CLICK, null);
             }
-        };
 
-        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
+            @Override
+            public void onPositiveButtonClick(View v)
+            {
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, //
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CALL, null);
+            }
 
-        showSimpleDialog(getString(R.string.label_call_service), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new OnClickListener()
+            @Override
+            public void onNativeButtonClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL, null);
-                }
-            }, null, new OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL, null);
+            }
+        });
     }
 
     protected void showChangedTimeDialog()

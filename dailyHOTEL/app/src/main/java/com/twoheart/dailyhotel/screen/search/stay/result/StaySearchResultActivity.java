@@ -587,7 +587,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowCallDialog()
         {
-            showCallDialog();
+            showDailyCallDialog(null);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);

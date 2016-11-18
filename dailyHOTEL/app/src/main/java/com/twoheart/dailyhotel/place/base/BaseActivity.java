@@ -2,10 +2,12 @@ package com.twoheart.dailyhotel.place.base;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +45,15 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
 {
+    protected interface OnCallDialogListener
+    {
+        void onShowDialog();
+
+        void onPositiveButtonClick(View v);
+
+        void onNativeButtonClick(View v);
+    }
+
     private Dialog mDialog;
     private LoadingDialog mLockUI;
     private Handler handler;
@@ -902,6 +913,80 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    public void showDailyCallDialog(final OnCallDialogListener listener)
+    {
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                releaseUiComponent();
+
+                if (listener != null)
+                {
+                    listener.onPositiveButtonClick(v);
+                }
+
+                String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
+                String phoneNumber = Util.isTextEmpty(remoteConfigPhoneNumber) == false //
+                    ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
+
+                String noCallMessage = getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
+
+                if (Util.isTelephonyEnabled(BaseActivity.this) == true)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                }
+            }
+        };
+
+        View.OnClickListener nativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (listener != null)
+                {
+                    listener.onNativeButtonClick(v);
+                }
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        };
+
+        String[] hour = DailyPreference.getInstance(BaseActivity.this).getOperationTime().split("\\,");
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        String operatingTimeMessage = DailyPreference.getInstance(BaseActivity.this).getOperationTimeMessage(BaseActivity.this) //
+            + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour);
+
+        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+            , positiveListener, nativeListener, null, dismissListener, true);
+
+        if (listener != null)
+        {
+            listener.onShowDialog();
         }
     }
 

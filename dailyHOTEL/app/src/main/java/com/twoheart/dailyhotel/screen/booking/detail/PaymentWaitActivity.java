@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -420,56 +419,38 @@ public class PaymentWaitActivity extends BaseActivity
             return;
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CLICK, null);
-
-        View.OnClickListener positiveListener = new View.OnClickListener()
+        showDailyCallDialog(new OnCallDialogListener()
         {
             @Override
-            public void onClick(View v)
+            public void onShowDialog()
             {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+                    AnalyticsManager.Label.CLICK, null);
             }
-        };
 
-        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
+            @Override
+            public void onPositiveButtonClick(View v)
+            {
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+                    AnalyticsManager.Label.CALL, null);
+            }
 
-        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
+            @Override
+            public void onNativeButtonClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CANCEL, null);
-                }
-            }, null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+                    AnalyticsManager.Label.CANCEL, null);
+            }
+        });
     }
 
     private void startKakao()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
         try
         {

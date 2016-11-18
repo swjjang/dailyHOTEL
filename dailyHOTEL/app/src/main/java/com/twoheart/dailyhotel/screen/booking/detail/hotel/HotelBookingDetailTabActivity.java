@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -199,7 +198,28 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     dialog.dismiss();
                 }
 
-                startDailyCall();
+                showDailyCallDialog(new OnCallDialogListener()
+                {
+                    @Override
+                    public void onShowDialog()
+                    {
+
+                    }
+
+                    @Override
+                    public void onPositiveButtonClick(View v)
+                    {
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordEvent(//
+                            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, //
+                            AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
+                    }
+
+                    @Override
+                    public void onNativeButtonClick(View v)
+                    {
+
+                    }
+                });
             }
         });
 
@@ -257,35 +277,61 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private void startHotelCall()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
 
-        if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
+        View.OnClickListener positiveListener = new View.OnClickListener()
         {
-            String phone = mHotelBookingDetail.hotelPhone;
+            @Override
+            public void onClick(View v)
+            {
+                releaseUiComponent();
 
-            if (Util.isTextEmpty(mHotelBookingDetail.hotelPhone) == true)
-            {
-                phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
-            }
+                String phoneNumber = mHotelBookingDetail.hotelPhone;
+                String noCallMessage = getString(R.string.toast_msg_no_hotel_call, phoneNumber);
 
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            } catch (ActivityNotFoundException e)
-            {
-                String message = getString(R.string.toast_msg_no_hotel_call, mHotelBookingDetail.hotelPhone);
-                DailyToast.showToast(HotelBookingDetailTabActivity.this, message, Toast.LENGTH_LONG);
+                if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(HotelBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    DailyToast.showToast(HotelBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                }
             }
-        } else
+        };
+
+        View.OnClickListener nativeListener = new View.OnClickListener()
         {
-            String message = getString(R.string.toast_msg_no_hotel_call, mHotelBookingDetail.hotelPhone);
-            DailyToast.showToast(HotelBookingDetailTabActivity.this, message, Toast.LENGTH_LONG);
-        }
+            @Override
+            public void onClick(View v)
+            {
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        };
+
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_direct_call_stay), //
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+            , positiveListener, nativeListener, null, dismissListener, true);
     }
 
     private void startKakao()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
         try
         {
@@ -301,27 +347,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
                 startActivity(marketLaunch);
             }
-        }
-    }
-
-    private void startDailyCall()
-    {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
-
-        if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
-        {
-            try
-            {
-                String phone = DailyPreference.getInstance(HotelBookingDetailTabActivity.this).getRemoteConfigCompanyPhoneNumber();
-
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            } catch (ActivityNotFoundException e)
-            {
-                DailyToast.showToast(HotelBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            }
-        } else
-        {
-            DailyToast.showToast(HotelBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
         }
     }
 
