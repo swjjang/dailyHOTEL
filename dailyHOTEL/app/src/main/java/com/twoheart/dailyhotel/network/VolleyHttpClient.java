@@ -93,7 +93,6 @@ public class VolleyHttpClient implements Constants
 
         public OkHttpStack(Context context)
         {
-            mOkHttpClient = new OkHttpClient();
             SSLContext sslContext;
 
             try
@@ -108,7 +107,7 @@ public class VolleyHttpClient implements Constants
             }
 
             SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslSocketFactory, Platform.get().trustManager(sslSocketFactory)).build();
+            mOkHttpClient = new OkHttpClient.Builder().sslSocketFactory(sslSocketFactory, Platform.get().trustManager(sslSocketFactory)).build();
         }
 
         @Override
@@ -125,15 +124,14 @@ public class VolleyHttpClient implements Constants
             }
 
             String protocol = url.getProtocol();
-            OkHttpClient copy = client.newBuilder().proxy(client.proxy()).build();
 
             if (protocol.equals("http"))
             {
-                return new OkHttpURLConnection(url, copy, null);
+                return new OkHttpURLConnection(url, mOkHttpClient, null);
             }
             if (protocol.equals("https"))
             {
-                return new OkHttpsURLConnection(url, copy, null);
+                return new OkHttpsURLConnection(url, mOkHttpClient, null);
             }
             throw new IllegalArgumentException("Unexpected protocol: " + protocol);
         }
