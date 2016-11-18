@@ -250,8 +250,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mEndSaleTime = null;
         }
 
-
-
         mPlaceDetail = createPlaceDetail(intent);
 
         // 최근 본 업장 저장
