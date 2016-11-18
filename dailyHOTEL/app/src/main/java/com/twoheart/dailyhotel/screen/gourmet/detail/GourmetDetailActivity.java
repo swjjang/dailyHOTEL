@@ -984,9 +984,37 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonSelected(true);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.ADD);
 
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+                params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
+                params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
+                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
+
+                if (mProvince == null)
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
+                } else
+                {
+                    if (mProvince instanceof Area)
+                    {
+                        Area area = (Area) mProvince;
+                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                    } else
+                    {
+                        params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                    }
+
+                    params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                }
+
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//
-                    AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, null);
+                    AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, params);
             } else
             {
                 mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);
@@ -1025,9 +1053,37 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonSelected(false);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.DELETE);
 
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+                params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
+                params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
+                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
+
+                if (mProvince == null)
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
+                } else
+                {
+                    if (mProvince instanceof Area)
+                    {
+                        Area area = (Area) mProvince;
+                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                    } else
+                    {
+                        params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                    }
+
+                    params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                }
+
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//
-                    AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, null);
+                    AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, params);
             } else
             {
                 mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);

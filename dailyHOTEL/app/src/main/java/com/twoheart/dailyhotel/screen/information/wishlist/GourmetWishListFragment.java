@@ -19,6 +19,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -116,6 +118,8 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             int removePosition = -1;
             int size = mListLayout.getList().size();
             String placeName = "";
+            int discountPrice = 0;
+            String category = "";
 
             for (int i = 0; i < size; i++)
             {
@@ -135,6 +139,8 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 {
                     removePosition = i;
                     placeName = place.name;
+                    discountPrice = place.discountPrice;
+                    category = ((Gourmet) place).category;
                     break;
                 }
             }
@@ -145,10 +151,16 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mListLayout.notifyDataSetChanged();
             }
 
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+            params.put(AnalyticsManager.KeyType.NAME, placeName);
+            params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(discountPrice));
+            params.put(AnalyticsManager.KeyType.CATEGORY, category);
+
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.WISHLIST_DELETE, //
-                placeName, null);
+                placeName, params);
         }
 
         @Override
