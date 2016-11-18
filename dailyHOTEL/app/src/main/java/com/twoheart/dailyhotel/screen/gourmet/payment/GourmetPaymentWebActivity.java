@@ -189,6 +189,16 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         builder.add("customer_email", email);
         builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
 
+        switch (gourmetPaymentInformation.discountType)
+        {
+            case BONUS:
+                break;
+
+            case COUPON:
+                builder.add("user_coupon_code", gourmetPaymentInformation.getCoupon().userCouponCode);
+                break;
+        }
+
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
 
