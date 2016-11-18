@@ -1128,11 +1128,20 @@ public class StayMainFragment extends PlaceMainFragment
         {
             // 신규 타입의 화면이동
             int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            int nights = 1;
 
-            if (nights <= 0)
+            try
             {
-                nights = 1;
+                nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } finally
+            {
+                if (nights <= 0)
+                {
+                    nights = 1;
+                }
             }
 
             String date = DailyDeepLink.getInstance().getDate();
@@ -1140,7 +1149,11 @@ public class StayMainFragment extends PlaceMainFragment
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
             int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
 
+            String startDate = DailyDeepLink.getInstance().getStartDate();
+            String endDate = DailyDeepLink.getInstance().getEndDate();
+
             SaleTime changedSaleTime = mStayCuration.getCheckInSaleTime().getClone(0);
+            SaleTime startSaleTime = null, endSaleTime = null;
 
             if (Util.isTextEmpty(date) == false)
             {
@@ -1148,6 +1161,15 @@ public class StayMainFragment extends PlaceMainFragment
             } else if (datePlus >= 0)
             {
                 changedSaleTime.setOffsetDailyDay(datePlus);
+            } else if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                startSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, startDate);
+                endSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, endDate, -1);
+
+                // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+                endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+                changedSaleTime = startSaleTime.getClone();
             }
 
             if (changedSaleTime == null)
@@ -1155,8 +1177,15 @@ public class StayMainFragment extends PlaceMainFragment
                 return false;
             }
 
-            Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            if (Util.isTextEmpty(startDate, endDate) == false)
+            {
+                Intent intent = StayDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            } else
+            {
+                Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
 
             mIsDeepLink = true;
         } catch (Exception e)
@@ -1580,6 +1609,9 @@ public class StayMainFragment extends PlaceMainFragment
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
         int nights = 1;
 
+        String startDate = DailyDeepLink.getInstance().getStartDate();
+        String endDate = DailyDeepLink.getInstance().getEndDate();
+
         try
         {
             nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
@@ -1598,17 +1630,12 @@ public class StayMainFragment extends PlaceMainFragment
 
         SaleTime saleTime = mStayCuration.getCheckInSaleTime().getClone(0);
         SaleTime checkInSaleTime;
+        SaleTime startSaleTime = null, endSaleTime = null;
 
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
             checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
-
-            if (checkInSaleTime == null)
-            {
-                return false;
-            }
-
         } else if (datePlus >= 0)
         {
             try
@@ -1618,6 +1645,15 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 return false;
             }
+        } else if (Util.isTextEmpty(startDate, endDate) == false)
+        {
+            startSaleTime = SaleTime.changeDateSaleTime(saleTime, startDate);
+            endSaleTime = SaleTime.changeDateSaleTime(saleTime, endDate, -1);
+
+            // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
+            endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
+
+            checkInSaleTime = startSaleTime.getClone();
         } else
         {
             // 날짜 정보가 없는 경우 예외 처리 추가
@@ -1635,8 +1671,15 @@ public class StayMainFragment extends PlaceMainFragment
             return false;
         }
 
-        Intent intent = CollectionStayActivity.newInstance(baseActivity, checkInSaleTime, nights, title, titleImageUrl, queryType, query);
-        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        if (Util.isTextEmpty(startDate, endDate) == false)
+        {
+            Intent intent = CollectionStayActivity.newInstance(baseActivity, startSaleTime, endSaleTime, title, titleImageUrl, queryType, query);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        } else
+        {
+            Intent intent = CollectionStayActivity.newInstance(baseActivity, checkInSaleTime, nights, title, titleImageUrl, queryType, query);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+        }
 
         mIsDeepLink = true;
 

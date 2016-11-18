@@ -138,6 +138,27 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     /**
+     * 딥링크로 호출
+     */
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
+        , int staytIndex, int roomIndex, boolean isShowCalendar)
+    {
+        Intent intent = new Intent(context, StayDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, staytIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        return intent;
+    }
+
+    /**
      * 검색 결과에서 호출
      *
      * @param context
@@ -148,11 +169,22 @@ public class StayDetailActivity extends PlaceDetailActivity
      */
     public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, int listCount)
     {
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        return newInstance(context, saleTime, stay, startSaleTime, null, listCount);
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
@@ -189,8 +221,40 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
         boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+
+        if (mStartSaleTime != null && mEndSaleTime != null)
+        {
+            // 범위 지정인데 이미 날짜가 지난 경우
+            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+            {
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                mEndSaleTime = null;
+
+                // 이벤트 기간이 종료된 경우 달력을 띄우지 않는다.
+                isShowCalendar = false;
+            }
+
+            if (mSaleTime == null)
+            {
+                mSaleTime = mStartSaleTime.getClone();
+            }
+        } else
+        {
+            if (mSaleTime == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            mStartSaleTime = mSaleTime.getClone(0);
+            mEndSaleTime = null;
+        }
 
         mPlaceDetail = createPlaceDetail(intent);
 
@@ -217,7 +281,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, false);
+                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
             }
         } else
         {
@@ -245,7 +309,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, true);
+                startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, true);
             }
         }
     }
@@ -386,7 +450,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         int stayIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
         int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
@@ -544,7 +608,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void startCalendar(SaleTime saleTime, int nights, int placeIndex, boolean isAnimation)
+    private void startCalendar(SaleTime saleTime, int nights, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -552,7 +616,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, saleTime, //
-            nights, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
+            nights, startSaleTime, endSaleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -865,7 +929,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mPlaceDetail.index, true);
+            startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, true);
         }
 
         @Override

@@ -30,9 +30,11 @@ import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
-    public static final String INTENT_EXTRA_DATA_SCREEN = "screen";
-    public static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
-    public static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
+    protected static final String INTENT_EXTRA_DATA_SCREEN = "screen";
+    protected static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
+    protected static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
+    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
     private static final int ANIMATION_DEALY = 200;
 
@@ -46,6 +48,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private TextView mTitleTextView;
     protected String mCallByScreen;
+
+    protected SaleTime mStartSaleTime, mEndSaleTime;
 
     private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
@@ -65,7 +69,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
-    protected void initLayout(int layoutResID, final SaleTime dailyTime, final int enableDayCountOfMax, final int dayCountOfMax)
+    protected void initLayout(int layoutResID, final SaleTime dailyTime, final int dayCountOfMax)
     {
         setContentView(layoutResID);
 
@@ -86,7 +90,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDailyViews = new View[dayCountOfMax];
     }
 
-    protected void makeCalendar(SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void makeCalendar(SaleTime dailyTime, int dayCountOfMax)
     {
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -95,7 +99,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         int maxMonth = getMonthInterval(calendar, dayCountOfMax);
         int maxDay = dayCountOfMax;
         int dayCount = 0;
-        int enableDayCount = enableDayCountOfMax;
 
         for (int i = 0; i <= maxMonth; i++)
         {
@@ -103,7 +106,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             View calendarLayout = getMonthCalendarView(this, dailyTime.getClone(dayCount)//
-                , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1, enableDayCount);
+                , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1);
 
             if (i >= 0 && i < maxMonth)
             {
@@ -115,7 +118,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
             dayCount += maxDayOfMonth - day + 1;
             maxDay = dayCountOfMax - dayCount;
-            enableDayCount = enableDayCountOfMax - dayCount;
 
             calendar.add(Calendar.MONTH, 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -133,7 +135,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mTitleTextView.setText(title);
     }
 
-    private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
+    private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth)
     {
         View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
 
@@ -172,7 +174,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        int enableDayCount = enableDayCountMax < 0 ? 0 : enableDayCountMax;
         View dayView;
 
         for (Day dayClass : days)
@@ -182,12 +183,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             if (dayClass != null)
             {
                 mDailyViews[dayClass.dayTime.getOffsetDailyDay()] = dayView;
-
-                // 날짜 앞단에 없는 날짜의 공백을 넣는다.
-                if (enableDayCount-- <= 0)
-                {
-                    dayView.setEnabled(false);
-                }
             }
 
             calendarGridLayout.addView(dayView);

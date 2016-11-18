@@ -36,11 +36,15 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
+    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
 
     protected SaleTime mSaleTime;
+    protected SaleTime mStartSaleTime, mEndSaleTime;
     protected int mCurrentImage;
     protected boolean mIsDeepLink;
     protected String mDefaultImageUrl;

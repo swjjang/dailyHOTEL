@@ -132,6 +132,27 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     /**
+     * 딥링크로 호출
+     */
+    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
+        , int gourmetIndex, int ticketIndex, boolean isShowCalendar)
+    {
+        Intent intent = new Intent(context, GourmetDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, ticketIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        return intent;
+    }
+
+    /**
      * 검색 결과에서 호출
      *
      * @param context
@@ -142,10 +163,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      */
     public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, int listCount)
     {
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        return newInstance(context, saleTime, gourmet, startSaleTime, null, listCount);
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
@@ -183,8 +215,40 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
         boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+
+        if (mStartSaleTime != null && mEndSaleTime != null)
+        {
+            // 범위 지정인데 이미 날짜가 지난 경우
+            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+            {
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                mEndSaleTime = null;
+
+                // 이벤트 기간이 종료된 경우 달력을 띄우지 않는다.
+                isShowCalendar = false;
+            }
+
+            if (mSaleTime == null)
+            {
+                mSaleTime = mStartSaleTime.getClone();
+            }
+        } else
+        {
+            if (mSaleTime == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            mStartSaleTime = mSaleTime.getClone(0);
+            mEndSaleTime = null;
+        }
 
         mPlaceDetail = createPlaceDetail(intent);
 
@@ -211,7 +275,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                startCalendar(mSaleTime, mPlaceDetail.index, false);
+                startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
             }
         } else
         {
@@ -238,7 +302,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (isShowCalendar == true)
             {
-                startCalendar(mSaleTime, mPlaceDetail.index, false);
+                startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
             }
         }
     }
@@ -527,7 +591,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void startCalendar(SaleTime saleTime, int placeIndex, boolean isAnimation)
+    private void startCalendar(SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -544,7 +608,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            saleTime, placeIndex, callByScreen, true, isAnimation);
+            saleTime, startSaleTime, endSaleTime, placeIndex, callByScreen, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -881,7 +945,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendar(mSaleTime, mPlaceDetail.index, true);
+            startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, true);
         }
 
         @Override

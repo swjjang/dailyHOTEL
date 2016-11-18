@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -35,6 +36,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected static final String INTENT_EXTRA_DATA_QUERY = "query";
     protected static final String INTENT_EXTRA_DATA_SALE_TIME = "saleTime";
     protected static final String INTENT_EXTRA_DATA_NIGHT = "night";
+    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
     private DailyToolbarLayout mDailyToolbarLayout;
     private RecyclerView mRecyclerView;
@@ -42,6 +45,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     private String[] mPlaceIndexs;
     private String mQueryType;
     private String mParams;
+    protected SaleTime mStartSaleTime, mEndSaleTime;
 
     protected abstract void initIntentTime(Intent intent);
 
