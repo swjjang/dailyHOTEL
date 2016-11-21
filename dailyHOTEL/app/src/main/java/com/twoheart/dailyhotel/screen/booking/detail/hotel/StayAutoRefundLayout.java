@@ -1,19 +1,15 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -27,7 +23,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 public class StayAutoRefundLayout extends BaseLayout implements Constants, View.OnClickListener

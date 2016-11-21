@@ -263,7 +263,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 if (isAnimation == true)
                 {
                     startBookingButtonAnimation(start, end, oldStatus, status);
-                } else {
+                } else
+                {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
                     params.leftMargin = end;
                     mBookingTextView.setLayoutParams(params);
@@ -284,7 +285,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 if (isAnimation == true)
                 {
                     startBookingButtonAnimation(start, end, oldStatus, status);
-                } else {
+                } else
+                {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
                     params.leftMargin = end;
                     mBookingTextView.setLayoutParams(params);

@@ -885,7 +885,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected void startBookingButtonAnimation(final int start, final int end, int oldState, int newState)
     {
-        if (oldState == newState) {
+        if (oldState == newState)
+        {
             return;
         }
 

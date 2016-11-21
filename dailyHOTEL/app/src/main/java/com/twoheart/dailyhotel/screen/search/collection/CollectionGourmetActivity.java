@@ -2,9 +2,9 @@ package com.twoheart.dailyhotel.screen.search.collection;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,7 +75,17 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             // 범위 지정인데 이미 날짜가 지난 경우, 초기화
             if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
             {
-                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent eventIntent = new Intent();
+                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
+                        startActivity(eventIntent);
+                    }
+                }, null);
+
                 mEndSaleTime = null;
             }
 

@@ -352,8 +352,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
                 }
-            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true
-                || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
             {
 
                 String eventName;
