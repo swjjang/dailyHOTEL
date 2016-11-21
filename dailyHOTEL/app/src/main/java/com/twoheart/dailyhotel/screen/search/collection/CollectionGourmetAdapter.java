@@ -158,7 +158,8 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         if (gourmet.satisfaction > 0)
         {
             holder.satisfactionView.setVisibility(View.VISIBLE);
-            holder.satisfactionView.setText(gourmet.satisfaction + "%");
+            holder.satisfactionView.setText(//
+                mContext.getResources().getString(R.string.label_list_satisfaction, gourmet.satisfaction));
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);

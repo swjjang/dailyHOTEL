@@ -56,7 +56,8 @@
     <string name="label_simple_payment">간편결제</string>
     <string name="label_card_payment">일반 카드결제</string>
     <string name="label_nights">%1$d박</string>
-    <string name="label_satisfaction">%1$d%%만족 (%2$s명 평가)</string>
+    <string name="label_detail_satisfaction">실제 투숙객 %1$d%%가 만족하였습니다. (%2$s명 평가)</string>
+    <string name="label_list_satisfaction">%1$d%% 만족</string>
     <string name="label_sender">보낸사람</string>
     <string name="label_send_mail">문의하기</string>
     <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>

@@ -147,7 +147,8 @@ public class CollectionStayAdapter extends PlaceListAdapter
         if (stay.satisfaction > 0)
         {
             holder.satisfactionView.setVisibility(View.VISIBLE);
-            holder.satisfactionView.setText(stay.satisfaction + "%");
+            holder.satisfactionView.setText(//
+                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);

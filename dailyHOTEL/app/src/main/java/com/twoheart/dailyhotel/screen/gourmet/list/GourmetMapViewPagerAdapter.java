@@ -106,7 +106,8 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         if (gourmet.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(gourmet.satisfaction + "%");
+            satisfactionView.setText(//
+                mContext.getResources().getString(R.string.label_list_satisfaction, gourmet.satisfaction));
         } else
         {
             satisfactionView.setVisibility(View.GONE);

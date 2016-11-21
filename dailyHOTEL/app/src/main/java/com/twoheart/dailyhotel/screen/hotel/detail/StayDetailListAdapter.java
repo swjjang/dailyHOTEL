@@ -238,7 +238,7 @@ public class StayDetailListAdapter extends BaseAdapter
         {
             satisfactionView.setVisibility(View.VISIBLE);
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, //
+            satisfactionView.setText(mContext.getString(R.string.label_detail_satisfaction, //
                 stayDetail.ratingValue, decimalFormat.format(stayDetail.ratingPersons)));
         }
 

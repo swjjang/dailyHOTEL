@@ -95,7 +95,8 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         if (stay.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(stay.satisfaction + "%");
+            satisfactionView.setText(//
+                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
         } else
         {
             satisfactionView.setVisibility(View.GONE);
