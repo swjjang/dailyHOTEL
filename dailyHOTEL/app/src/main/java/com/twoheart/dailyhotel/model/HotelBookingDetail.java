@@ -31,7 +31,6 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public int roomIndex;
     public boolean isVisibleRefundPolicy; // 하단에 정책을 보여줄지 말지.
     public String mRefundComment; // 환분 불가 내용
-    public int reservationIndex;
 
     public HotelBookingDetail()
     {
@@ -153,7 +152,6 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeInt(readyForRefund ? 1 : 0);
         dest.writeInt(isVisibleRefundPolicy ? 1 : 0);
         dest.writeString(mRefundComment);
-        dest.writeInt(reservationIndex);
     }
 
     public void readFromParcel(Parcel in)
@@ -175,7 +173,6 @@ public class HotelBookingDetail extends PlaceBookingDetail
         readyForRefund = in.readInt() == 1;
         isVisibleRefundPolicy = in.readInt() == 1;
         mRefundComment = in.readString();
-        reservationIndex = in.readInt();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
