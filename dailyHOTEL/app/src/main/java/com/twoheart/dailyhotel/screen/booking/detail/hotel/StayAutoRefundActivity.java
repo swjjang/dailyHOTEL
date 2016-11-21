@@ -675,15 +675,22 @@ public class StayAutoRefundActivity extends BaseActivity
                 finish();
             } else
             {
-                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                // 환불에 실패한 경우
+                if (msgCode == 1013)
                 {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                } else
+                {
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                     {
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                });
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    });
+                }
             }
         }
 
