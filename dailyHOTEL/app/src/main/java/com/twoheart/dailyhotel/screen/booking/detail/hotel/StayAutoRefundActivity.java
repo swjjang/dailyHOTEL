@@ -634,7 +634,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         {
                             if (mCancelReasonMessage.indexOf('-') >= 0)
                             {
-                                cancelMessage = mCancelReasonMessage.substring(mCancelReasonMessage.indexOf('-') + 1);
+                                cancelMessage = getString(R.string.label_select_cancel_refund06);
                             } else
                             {
                                 cancelMessage = mCancelReasonMessage;
