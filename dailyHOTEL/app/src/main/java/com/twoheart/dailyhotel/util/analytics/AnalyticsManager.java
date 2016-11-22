@@ -726,6 +726,7 @@ public class AnalyticsManager
         public static final String GOURMET_COUPON_SELECTED = "GourmetCouponSelected";
         public static final String GOURMET_USING_COUPON_CANCEL_CLICKED = "GourmetUsingCouponCancelClicked";
         public static final String GOURMET_COUPON_NOT_FOUND = "GourmetCouponNotFound";
+        public static final String GOURMET_COUPON_DOWNLOADED = "GourmetCouponDownloaded";
         //
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
         //

@@ -293,7 +293,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             lockUI();
 
             Coupon coupon = mLayout.getCoupon(userCouponCode);
-            recordAnalytics(coupon);
+            analyticsDownloadCoupon(coupon);
 
             switch (mCallByScreen)
             {
@@ -348,7 +348,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             finish();
         }
 
-        private void recordAnalytics(Coupon coupon)
+        private void analyticsDownloadCoupon(Coupon coupon)
         {
             try
             {
@@ -375,6 +375,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                     case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
                     {
+                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                            , AnalyticsManager.Action.GOURMET_COUPON_DOWNLOADED, coupon.title, null);
                         break;
                     }
                 }
