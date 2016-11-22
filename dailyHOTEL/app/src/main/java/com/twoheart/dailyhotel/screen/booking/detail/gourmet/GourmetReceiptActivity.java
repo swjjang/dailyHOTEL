@@ -34,7 +34,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     private void makeLayout(JSONObject jsonObject) throws Exception
     {
-        // 영숭증
+        // 영수증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
         String userName = jsonObject.getString("userName");
         String userPhone = jsonObject.getString("userPhone");
