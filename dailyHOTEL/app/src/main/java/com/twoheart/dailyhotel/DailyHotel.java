@@ -220,12 +220,14 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle)
         {
-
+            AnalyticsManager.getInstance(activity).onActivityCreated(activity, bundle);
         }
 
         @Override
         public void onActivityStarted(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityStarted(activity);
+
             if (++mRunningActivity == 1)
             {
                 // 30 분이 지나면 재시작
@@ -245,16 +247,20 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityResumed(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityResumed(activity);
         }
 
         @Override
         public void onActivityPaused(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityPaused(activity);
         }
 
         @Override
         public void onActivityStopped(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityStopped(activity);
+
             if (--mRunningActivity == 0)
             {
                 // go background
@@ -265,11 +271,13 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle bundle)
         {
+            AnalyticsManager.getInstance(activity).onActivitySaveInstanceState(activity, bundle);
         }
 
         @Override
         public void onActivityDestroyed(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityDestroyed(activity);
         }
     }
 }
