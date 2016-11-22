@@ -612,6 +612,8 @@ public class StayAutoRefundActivity extends BaseActivity
                         {
                             return;
                         }
+                        
+                        lockUI();
 
                         if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
                         {
