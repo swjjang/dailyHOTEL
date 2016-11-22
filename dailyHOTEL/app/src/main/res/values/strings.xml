@@ -572,7 +572,6 @@
     <string name="label_necessary_reservation">필수 입력 (예약시 사용)</string>
     <string name="label_option_benefit">선택 입력 (추후 혜택 제공시 사용)</string>
     <string name="label_recommender_code_ex">추천인 코드 (예시:123456789)</string>
-    <string name="label_recommender_code">추천인 코드</string>
     <string name="label_select">선택 입력</string>
     <string name="label_country">국가</string>
     <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
