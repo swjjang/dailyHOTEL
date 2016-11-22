@@ -12,13 +12,10 @@ public class DailyToast extends Toast
 {
     private final static Object mLock = new Object();
     private static DailyToast mToast;
-    private Context mContext;
 
     public DailyToast(Context context)
     {
         super(context);
-
-        mContext = context;
     }
 
     /**
@@ -43,7 +40,7 @@ public class DailyToast extends Toast
             }
 
             mToast = new DailyToast(context);
-            mToast.showToast(context.getString(resId), duration);
+            mToast.showDailyToast(context, context.getString(resId), duration);
         }
     }
 
@@ -69,13 +66,13 @@ public class DailyToast extends Toast
             }
 
             mToast = new DailyToast(context);
-            mToast.showToast(text, duration);
+            mToast.showDailyToast(context, text, duration);
         }
     }
 
-    public void showToast(String text, int duration)
+    private void showDailyToast(Context context, String text, int duration)
     {
-        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.view_toast, null);
         TextView textView = (TextView) view.findViewById(R.id.textView);
         textView.setText(text);
