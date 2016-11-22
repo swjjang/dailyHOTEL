@@ -34,23 +34,21 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     private void makeLayout(JSONObject jsonObject) throws Exception
     {
-        JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
-
         // 영숭증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
-        String userName = receiptJSONObject.getString("userName");
-        String userPhone = receiptJSONObject.getString("userPhone");
-        int ticketCount = receiptJSONObject.getInt("ticketCount");
-        String placeName = receiptJSONObject.getString("restaurantName");
-        String placeAddress = receiptJSONObject.getString("restaurantAddress");
-        String sday = receiptJSONObject.getString("sday");
-        String valueDate = receiptJSONObject.getString("paidAt");
+        String userName = jsonObject.getString("userName");
+        String userPhone = jsonObject.getString("userPhone");
+        int ticketCount = jsonObject.getInt("ticketCount");
+        String placeName = jsonObject.getString("restaurantName");
+        String placeAddress = jsonObject.getString("restaurantAddress");
+        String sday = jsonObject.getString("sday");
+        String valueDate = jsonObject.getString("paidAt");
         //        String currency = receiptJSONObject.getString("currency");
-        int paymentAmount = receiptJSONObject.getInt("paymentAmount");
-        int tax = receiptJSONObject.getInt("tax");
-        int supplyPrice = receiptJSONObject.getInt("supplyPrice");
-        String paymentName = receiptJSONObject.getString("paymentName");
-        int counpon = receiptJSONObject.getInt("couponAmount");
+        int paymentAmount = jsonObject.getInt("paymentAmount");
+        int tax = jsonObject.getInt("tax");
+        int supplyPrice = jsonObject.getInt("supplyPrice");
+        String paymentType = jsonObject.getString("paymentType");
+        int counpon = jsonObject.getInt("couponAmount");
         int bonus = 0;
 
         // **예약 세부 정보**
@@ -89,7 +87,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 지불 방식
         TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-        paymentTypeTextView.setText(paymentName);
+        paymentTypeTextView.setText(paymentType);
 
         // 소계
         TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
@@ -158,11 +156,9 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // **공급자**
 
-        JSONObject providerJSONObject = jsonObject.getJSONObject("provider");
-
         String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
         String fax = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyFax();
-        String memo = providerJSONObject.getString("memo");
+        String receiptNotice = jsonObject.getString("receiptNotice");
         String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyAddress();
         String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyCEO();
         String registrationNo = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
@@ -196,7 +192,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 코멘트
         TextView commentTextView = (TextView) providerInfoLayout.findViewById(R.id.textView49);
-        commentTextView.setText(memo);
+        commentTextView.setText(receiptNotice);
 
         View view = findViewById(R.id.receiptLayout);
         view.setOnClickListener(new View.OnClickListener()
