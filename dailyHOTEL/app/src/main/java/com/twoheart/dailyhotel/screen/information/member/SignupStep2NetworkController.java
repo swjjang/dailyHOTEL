@@ -24,7 +24,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
     {
         void onVerification(String message);
 
-        void onSignUp(int notificationUid, String gcmRegisterId);
+        void onSignUp();
 
         void onLogin(String authorization, String userIndex, String email, String name, String birthday,//
                      String recommender, String userType, String phoneNumber, boolean isBenefit);
@@ -64,54 +64,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("user_type", Constants.DAILY_USER);
 
         DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener);
-    }
-
-    public void requestGoogleCloudMessagingId()
-    {
-        Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
-        {
-            @Override
-            public void onResult(final String registrationId)
-            {
-                if (Util.isTextEmpty(registrationId) == false)
-                {
-                    DailyNetworkAPI.getInstance(mContext).requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError)
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null);
-                        }
-
-                        @Override
-                        public void onResponse(String url, Map<String, String> params, JSONObject response)
-                        {
-                            int uid = -1;
-
-                            try
-                            {
-                                int msg_code = response.getInt("msgCode");
-
-                                if (msg_code == 100 && response.has("data") == true)
-                                {
-                                    JSONObject jsonObject = response.getJSONObject("data");
-
-                                    uid = jsonObject.getInt("uid");
-                                }
-                            } catch (Exception e)
-                            {
-                                ExLog.d(e.toString());
-                            }
-
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(uid, registrationId);
-                        }
-                    });
-                } else
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp(-1, null);
-                }
-            }
-        });
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +183,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                     if (isSignup == true)
                     {
-                        requestGoogleCloudMessagingId();
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp();
                         return;
                     }
                 }

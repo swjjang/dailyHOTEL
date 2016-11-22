@@ -61,6 +61,13 @@ public class StayListFragment extends PlaceListFragment
     @Override
     protected void refreshList(boolean isShowProgress, int page)
     {
+        if (mStayCuration == null)
+        {
+            unLockUI();
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         // 더보기 시 uilock 걸지않음
         if (page <= 1)
         {

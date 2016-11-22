@@ -73,7 +73,6 @@ interface IDailyNetwork
      */
     void requestUserCheckEmail(Object tag, String userEmail, DailyHotelJsonResponseListener listener);
 
-
     /**
      * user/change_pw
      * 비번찾기를 요청한다
@@ -81,24 +80,6 @@ interface IDailyNetwork
      * @return
      */
     void requestUserChangePassword(Object tag, String userEmail, DailyHotelJsonResponseListener listener);
-
-
-    /**
-     * user/notification/register
-     * 푸시 아이디를 등록한다
-     *
-     * @return
-     */
-    void requestUserRegisterNotification(Object tag, String registrationId, DailyHotelJsonResponseListener listener);
-
-    /**
-     * @param tag
-     * @param userIdx
-     * @param changedRegistrationId
-     * @param uid
-     * @param listener
-     */
-    void requestUserUpdateNotification(Object tag, String userIdx, String changedRegistrationId, String uid, DailyHotelJsonResponseListener listener);
 
     /**
      * api/user/information/omission;

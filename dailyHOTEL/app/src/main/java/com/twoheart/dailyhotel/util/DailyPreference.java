@@ -38,8 +38,6 @@ public class DailyPreference
     private static final String KEY_NEW_COUPON = "15"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
     private static final String KEY_NEW_NOTICE = "16"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
 
-    private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
-
     private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
     private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
     private static final String KEY_APP_VERSION = "23";
@@ -523,16 +521,6 @@ public class DailyPreference
     public void setNewNotice(boolean value)
     {
         setValue(mEditor, KEY_NEW_NOTICE, value);
-    }
-
-    public int getNotificationUid()
-    {
-        return getValue(mPreferences, KEY_NOTIFICATION_UID, -1);
-    }
-
-    public void setNotificationUid(int value)
-    {
-        setValue(mEditor, KEY_NOTIFICATION_UID, value);
     }
 
     public String getLastMenu()
@@ -1045,11 +1033,6 @@ public class DailyPreference
         return getValue(mPreferences, KEY_SETTING_GCM_ID, null);
     }
 
-    public void setGCMRegistrationId(String value)
-    {
-        setValue(mEditor, KEY_SETTING_GCM_ID, value);
-    }
-
     public String getLastestEventTime()
     {
         return getValue(mPreferences, KEY_EVENT_LASTEST_EVENT_TIME, null);
@@ -1366,11 +1349,6 @@ public class DailyPreference
         {
             try
             {
-                if (mOldPreferences.contains(KEY_OLD_SETTING_GCM_ID) == true)
-                {
-                    setGCMRegistrationId(getValue(mOldPreferences, KEY_OLD_SETTING_GCM_ID, null));
-                }
-
                 if (mOldPreferences.contains(KEY_OLD_EVENT_LASTEST_EVENT_TIME) == true)
                 {
                     setLastestEventTime(getValue(mOldPreferences, KEY_OLD_EVENT_LASTEST_EVENT_TIME, null));
