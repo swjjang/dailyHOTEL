@@ -30,7 +30,7 @@ import io.fabric.sdk.android.Fabric;
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
     private static volatile DailyHotel mInstance = null;
-    private static volatile Activity mCurrentActivity = null;
+    private static volatile Activity mCurrentActivity;
     public static String VERSION;
     public static String AUTHORIZATION;
     public static String GOOGLE_ANALYTICS_CLIENT_ID;
