@@ -1112,16 +1112,15 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }
 
                 // 딥링크로 메뉴 오픈 요청
-                if (mIsDeepLink == true && mOpenTicketIndex > 0)
+                if (mIsDeepLink == true && mOpenTicketIndex > 0 && ((StayDetail) mPlaceDetail).getSaleRoomList().size() > 0)
                 {
                     if (mPlaceDetailLayout != null)
                     {
                         mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
                     }
-
-                    mOpenTicketIndex = 0;
                 }
 
+                mOpenTicketIndex = 0;
                 mIsDeepLink = false;
 
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);
