@@ -72,7 +72,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 날짜
         TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-        chekcinoutTextView.setText(sday);
+        chekcinoutTextView.setText(sday.replaceAll("-", "/"));
 
         // 수량
         TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
