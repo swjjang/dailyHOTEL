@@ -28,7 +28,7 @@ import io.fabric.sdk.android.Fabric;
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
     private static volatile DailyHotel mInstance = null;
-    private static volatile Activity mCurrentActivity = null;
+    private static volatile Activity mCurrentActivity;
     public static String VERSION;
     public static String AUTHORIZATION;
     public static String GOOGLE_ANALYTICS_CLIENT_ID;
@@ -123,16 +123,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         return mInstance;
     }
 
-    public static void setCurrentActivity(Activity currentActivity)
-    {
-        DailyHotel.mCurrentActivity = currentActivity;
-    }
-
-    public static Activity getCurrentActivity()
-    {
-        return mCurrentActivity;
-    }
-
     public static boolean isLogin()
     {
         return Util.isTextEmpty(AUTHORIZATION) == false;
@@ -201,7 +191,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 @Override
                 public Activity getTopActivity()
                 {
-                    return DailyHotel.getCurrentActivity();
+                    return mCurrentActivity;
                 }
 
                 @Override
@@ -226,6 +216,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityStarted(Activity activity)
         {
+            mCurrentActivity = activity;
+
             if (++mRunningActivity == 1)
             {
                 // 30 분이 지나면 재시작

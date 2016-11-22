@@ -32,7 +32,6 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -105,8 +104,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
-
-        DailyHotel.setCurrentActivity(this);
 
         setContentView(R.layout.activity_login);
 
