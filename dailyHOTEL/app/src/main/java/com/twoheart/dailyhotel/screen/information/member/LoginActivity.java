@@ -106,8 +106,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         super.onCreate(savedInstanceState);
 
-        DailyHotel.setCurrentActivity(this);
-
         setContentView(R.layout.activity_login);
 
         Intent intent = getIntent();

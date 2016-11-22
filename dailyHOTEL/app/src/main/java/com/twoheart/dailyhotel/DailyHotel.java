@@ -129,16 +129,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         return mInstance;
     }
 
-    public static void setCurrentActivity(Activity currentActivity)
-    {
-        DailyHotel.mCurrentActivity = currentActivity;
-    }
-
-    public static Activity getCurrentActivity()
-    {
-        return mCurrentActivity;
-    }
-
     public static boolean isLogin()
     {
         return Util.isTextEmpty(AUTHORIZATION) == false;
@@ -207,7 +197,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 @Override
                 public Activity getTopActivity()
                 {
-                    return DailyHotel.getCurrentActivity();
+                    return mCurrentActivity;
                 }
 
                 @Override
@@ -232,6 +222,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityStarted(Activity activity)
         {
+            mCurrentActivity = activity;
+
             AnalyticsManager.getInstance(activity).onActivityStarted(activity);
 
             if (++mRunningActivity == 1)
