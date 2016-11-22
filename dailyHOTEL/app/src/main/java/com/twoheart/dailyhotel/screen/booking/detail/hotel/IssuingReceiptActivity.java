@@ -255,7 +255,7 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         try
         {
-            // 영숭증
+            // 영수증
             JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
             mReservationIndex = jsonObject.getString("reservation_idx");
