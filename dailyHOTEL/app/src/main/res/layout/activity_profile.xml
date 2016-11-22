@@ -236,7 +236,7 @@
                         android:id="@+id/referralView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_recommender_code"
+                        android:text="@string/label_my_code"
                         android:textColor="@color/search_hint_text"
                         android:textSize="12dp"/>
 

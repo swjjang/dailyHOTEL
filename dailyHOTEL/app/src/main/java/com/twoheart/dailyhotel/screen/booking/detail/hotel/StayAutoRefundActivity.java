@@ -608,6 +608,13 @@ public class StayAutoRefundActivity extends BaseActivity
                     @Override
                     public void onClick(View v)
                     {
+                        if(lockUiComponentAndIsLockUiComponent() == true)
+                        {
+                            return;
+                        }
+                        
+                        lockUI();
+
                         if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
                         {
                             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
@@ -669,6 +676,8 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void onRefundResult(int msgCode, String message, boolean readyForRefund)
         {
+            unLockUI();
+            
             if (readyForRefund == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
