@@ -193,38 +193,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserRegisterNotification(Object tag, String registrationId, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/register" : "MTckMzAkODckNjAkMjMkNzMkMzMkNzIkMCQ1OSQzNSQ4JDg2JDQyJDUyJDg2JA==$CNDc4NjQQxODVEQjBBMOzcyNzSMwM0I0RXkNQYzNUIZwQTFEQUI0MREQzQUJEMzKcyRTVNFNzA5RDZAEMBTM2MMTUO4RkQ0OTM5OMA==$";
-
-        Map<String, String> params = Collections.singletonMap("registrationId", registrationId);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestUserUpdateNotification(Object tag, String userIdx, String changedRegistrationId, String uid, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/update" : "ODckMjEkNzEkMzIkOSQ3OSQzNSQ0OSQyJDg4JDY2JDk4JDQwJDc4JDU3JDExJA==$MTGIzN0FEROGkJEMkVBMjFFMLTIwRTgxM0YTzYMjlTDNDU5NDYwQHTYzRDFg4N0E0MTU2QNkYwNkJDQkLZZFRjBMDMUJDBRUJGMA=DI=$";
-
-        Map<String, String> params = new HashMap<>();
-
-        if (Util.isTextEmpty(userIdx) == false)
-        {
-            params.put("userIdx", userIdx);
-        }
-
-        params.put("changedRegistrationId", changedRegistrationId);
-        params.put("uid", uid);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/information/omission" : "NzUkMTEkMzMkMiQyJDgxJDM3JDY0JDQzJDEzJDMyJDM5JDI4JDYwJDI1JDY1JA==$MDVMQxQzQ3RERMEBOTgzQzRGQFUUyUNzREDQzlDKMYNTg4NDVc4N0U1RTNFMDNk4MNkIzQTIEzMTdCREMzRkE4RTdEBJNDM3MzEyMA==$";

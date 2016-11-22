@@ -124,51 +124,6 @@ public class MainNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestGourmetIsExistRating(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener);
     }
 
-    public void registerNotificationId(final String registrationId, String userIndex)
-    {
-        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-
-            }
-
-            @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
-            {
-                try
-                {
-                    int msgCode = response.getInt("msgCode");
-
-                    if (msgCode == 100 && response.has("data") == true)
-                    {
-                        JSONObject jsonObject = response.getJSONObject("data");
-
-                        int uid = jsonObject.getInt("uid");
-                        DailyPreference.getInstance(mContext).setNotificationUid(uid);
-                        DailyPreference.getInstance(mContext).setGCMRegistrationId(registrationId);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-            }
-        };
-
-        int uid = DailyPreference.getInstance(mContext).getNotificationUid();
-        if (uid < 0)
-        {
-            DailyNetworkAPI.getInstance(mContext).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener);
-        } else
-        {
-            if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(mContext).getGCMRegistrationId()) == false)
-            {
-                DailyNetworkAPI.getInstance(mContext).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener);
-            }
-        }
-    }
-
     public void requestNoticeAgreement()
     {
         DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementJsonResponseListener);
@@ -436,20 +391,6 @@ public class MainNetworkController extends BaseNetworkController
                     AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
 
                     AnalyticsManager.getInstance(mContext).startApplication();
-
-                    Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
-                    {
-                        @Override
-                        public void onResult(String registrationId)
-                        {
-                            if (Util.isTextEmpty(registrationId) == true)
-                            {
-                                return;
-                            }
-
-                            registerNotificationId(registrationId, userIndex);
-                        }
-                    });
 
                     // 누적 적립금 판단.
                     DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);

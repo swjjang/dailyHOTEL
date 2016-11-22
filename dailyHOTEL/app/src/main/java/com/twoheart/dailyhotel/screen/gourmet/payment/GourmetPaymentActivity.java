@@ -1472,33 +1472,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
 
             gourmetPaymentInformation.setGuest(guest);
-
-            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.VBANK && DailyPreference.getInstance(GourmetPaymentActivity.this).getNotificationUid() < 0)
-            {
-                // 가상계좌 결제시 푸쉬를 받지 못하는 경우
-                String title = getString(R.string.dialog_notice2);
-                String positive = getString(R.string.dialog_btn_text_confirm);
-                String msg = getString(R.string.dialog_msg_none_gcmid);
-
-                showSimpleDialog(title, msg, positive, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        processAgreeTermDialog();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        unLockUI();
-                    }
-                });
-            } else
-            {
-                processAgreeTermDialog();
-            }
+            processAgreeTermDialog();
 
             String label = String.format("%s-%s", gourmetPaymentInformation.getTicketInformation().placeName, gourmetPaymentInformation.getTicketInformation().name);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
