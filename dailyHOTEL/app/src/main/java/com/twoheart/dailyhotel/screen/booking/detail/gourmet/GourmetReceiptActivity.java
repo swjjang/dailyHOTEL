@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -36,29 +37,21 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
         // 영숭증
-        mReservationIndex = jsonObject.getString("reservation_idx");
-        String userName = receiptJSONObject.getString("user_name");
-        String userPhone = receiptJSONObject.getString("user_phone");
-        int ticketCount = receiptJSONObject.getInt("ticket_count");
-        String placeName = receiptJSONObject.getString("restaurant_name");
-        String placeAddress = receiptJSONObject.getString("restaurant_address");
+        mReservationIndex = jsonObject.getString("gourmetReservationIdx");
+        String userName = receiptJSONObject.getString("userName");
+        String userPhone = receiptJSONObject.getString("userPhone");
+        int ticketCount = receiptJSONObject.getInt("ticketCount");
+        String placeName = receiptJSONObject.getString("restaurantName");
+        String placeAddress = receiptJSONObject.getString("restaurantAddress");
         String sday = receiptJSONObject.getString("sday");
-        String valueDate = receiptJSONObject.getString("value_date");
+        String valueDate = receiptJSONObject.getString("paidAt");
         //        String currency = receiptJSONObject.getString("currency");
-        int discount = receiptJSONObject.getInt("discount");
-        int vat = receiptJSONObject.getInt("vat");
-        int supoplyValue = receiptJSONObject.getInt("supply_value");
-        String paymentName = receiptJSONObject.getString("payment_name");
-
+        int paymentAmount = receiptJSONObject.getInt("paymentAmount");
+        int tax = receiptJSONObject.getInt("tax");
+        int supplyPrice = receiptJSONObject.getInt("supplyPrice");
+        String paymentName = receiptJSONObject.getString("paymentName");
+        int counpon = receiptJSONObject.getInt("couponAmount");
         int bonus = 0;
-        int counpon = 0;
-        int pricePayment = 0;
-
-        if (receiptJSONObject.has("coupon_amount") == true && receiptJSONObject.isNull("coupon_amount") == false)
-        {
-            counpon = receiptJSONObject.getInt("coupon_amount");
-            pricePayment = receiptJSONObject.getInt("price");
-        }
 
         // **예약 세부 정보**
         View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
@@ -92,7 +85,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 결제일
         TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
-        paymentDayTextView.setText(valueDate);
+        paymentDayTextView.setText(DailyCalendar.convertDateFormatString(valueDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
 
         // 지불 방식
         TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
@@ -100,11 +93,11 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 소계
         TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-        supplyValueTextView.setText(Util.getPriceFormat(this, supoplyValue, true));
+        supplyValueTextView.setText(Util.getPriceFormat(this, supplyPrice, true));
 
         // 세금 및 수수료
         TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-        vatTextView.setText(Util.getPriceFormat(this, vat, true));
+        vatTextView.setText(Util.getPriceFormat(this, tax, true));
 
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
 
@@ -115,14 +108,14 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             // 총 입금 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, discount, true));
+            totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
         } else
         {
             saleLayout.setVisibility(View.VISIBLE);
 
             // 총금액
             TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            totalPriceTextView.setText(Util.getPriceFormat(this, discount, true));
+            totalPriceTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
 
             // 적립금 사용
             View bonusLayout = paymentInfoLayout.findViewById(R.id.bonusLayout);
@@ -160,7 +153,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             // 총 입금 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, pricePayment, true));
+            totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
         }
 
         // **공급자**
@@ -374,9 +367,9 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     makeLayout(response.getJSONObject("data"));
                 } else

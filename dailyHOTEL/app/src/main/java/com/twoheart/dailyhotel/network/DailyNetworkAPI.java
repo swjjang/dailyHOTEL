@@ -381,11 +381,12 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetReceipt(Object tag, int index, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/receipt" : "NDAkMTI1JDEyNCQxMTMkMCQzOCQ2NCQ1OCQ5NyQyMiQ5NyQxOCQxNiQxMDkkMTAwJDg3JA==$UMEEzRDA4N0U3NUZKGRQjJCRFTNFODREMEQ0RDU0OXTI1TODFCREYxQTcyN0UI5REI5NWTJGQzdDNTdCRDU2N0YJyM0QxNUMwN0QER1ROEY1QjcRxOUJBMzI4RTI4DNjZEQURCNDlHFVNkU4$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{reservationIdx}/receipt" : "MSQ5MCQxMTckNjgkNzAkNTIkNzMkNzIkNDIkNDckMjUkNSQxNiQyOCQ3MSQ5MyQ=$NL0Y0BQTM2RkRCRTSRBRURFMzQ1VYQTE5NzBFODc1MjZFQWjUyRSENERTMU3NzNDMUEzMUUVwQ0VPFWIRJDEwRDBGQUEyQQzc1QzI5ROkZFQTgwOEU0QkYwNjhFM0ExMjMKwMzE0NEVBQkVF$";
 
-        String params = String.format("?reservation_rec_idx=%d", index);
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationIdx}", Integer.toString(index));
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
