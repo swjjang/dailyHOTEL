@@ -101,7 +101,8 @@ public class GourmetBookingDetail extends PlaceBookingDetail
             coupon = jsonObject.getInt("couponAmount");
         }
 
-        paymentPrice = jsonObject.getInt("discountTotal");
+        price = jsonObject.getInt("discountTotal");
+        paymentPrice = jsonObject.getInt("paymentAmount");
         paymentDate = jsonObject.getString("paidAt");
 
         if (jsonObject.has("restaurantIdx") == true)
