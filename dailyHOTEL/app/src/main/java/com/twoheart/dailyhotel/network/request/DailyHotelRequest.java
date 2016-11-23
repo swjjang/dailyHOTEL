@@ -136,8 +136,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         } else
         {
             StringBuilder decodeUrl = new StringBuilder(getUrlDecoderEx(url));
-            int urlLength = decodeUrl != null ? decodeUrl.length() : 0;
-
             ArrayList<String> keyArrayList = new ArrayList<>(urlparameters.keySet());
 
             for (String key : keyArrayList)
