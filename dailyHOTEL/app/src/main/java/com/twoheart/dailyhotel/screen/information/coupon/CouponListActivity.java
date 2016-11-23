@@ -35,26 +35,13 @@ public class CouponListActivity extends BaseActivity
 {
     private CouponListLayout mCouponListLayout;
     private CouponListNetworkController mCouponListNetworkController;
-    private ArrayList<SortType> mSortTypeList;
     private ArrayList<Coupon> mCouponList;
 
     public enum SortType
     {
-        ALL("전체 쿠폰 보기"),
-        STAY("호텔 쿠폰 보기"),
-        GOURMET("고메 쿠폰 보기");
-
-        private String mName;
-
-        SortType(String name)
-        {
-            mName = name;
-        }
-
-        public String getName()
-        {
-            return mName;
-        }
+        ALL,
+        STAY,
+        GOURMET;
     }
 
     public static Intent newInstance(Context context)
@@ -75,11 +62,6 @@ public class CouponListActivity extends BaseActivity
 
         DailyPreference.getInstance(this).setNewCoupon(false);
         DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLastestCouponTime());
-
-        mSortTypeList = new ArrayList<>();
-        mSortTypeList.add(SortType.ALL);
-        mSortTypeList.add(SortType.STAY);
-        mSortTypeList.add(SortType.GOURMET);
 
         setContentView(mCouponListLayout.onCreateView(R.layout.activity_coupon_list));
     }
