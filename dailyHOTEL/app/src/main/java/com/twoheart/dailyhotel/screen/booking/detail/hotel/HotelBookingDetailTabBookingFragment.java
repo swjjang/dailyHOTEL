@@ -560,6 +560,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     {
                         Intent intent = StayAutoRefundActivity.newInstance(baseActivity, mBookingDetail);
                         baseActivity.startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, null);
                         break;
                     }
 
