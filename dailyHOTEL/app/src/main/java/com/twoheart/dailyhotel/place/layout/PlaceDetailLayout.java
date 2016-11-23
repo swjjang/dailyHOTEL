@@ -98,6 +98,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected DailyTextView mWishButtonTextView;
     protected DailyTextView mWishPopupTextView;
+    protected View mWishPopupScrollView;
 
     protected ValueAnimator mBookingTextViewAnimator;
 
@@ -243,6 +244,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
 
+        mWishPopupScrollView = view.findViewById(R.id.wishListPopupScrollView);
         mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
         mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
         mWishButtonTextView.setTag(false);
@@ -796,7 +798,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         if (WishPopupState.GONE == state)
         {
-            mWishPopupTextView.setVisibility(View.GONE);
+//            mWishPopupTextView.setVisibility(View.GONE);
+            mWishPopupScrollView.setVisibility(View.GONE);
 
             if (mWishPopupAnimatorSet != null)
             {
@@ -855,20 +858,20 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    mWishPopupTextView.setVisibility(View.VISIBLE);
+                    mWishPopupScrollView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mWishPopupTextView.setVisibility(View.INVISIBLE);
+                    mWishPopupScrollView.setVisibility(View.INVISIBLE);
                     ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
-                    mWishPopupTextView.setVisibility(View.INVISIBLE);
+                    mWishPopupScrollView.setVisibility(View.INVISIBLE);
                     ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
