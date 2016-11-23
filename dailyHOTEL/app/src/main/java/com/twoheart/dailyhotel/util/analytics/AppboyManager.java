@@ -455,7 +455,7 @@ public class AppboyManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.BOOKING_STATUS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.FREE_CANCELLATION_CLICKED.equalsIgnoreCase(action) == true)
+            if (AnalyticsManager.Action.FREE_CANCELLATION.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = getAppboyProperties(params);
 
