@@ -136,6 +136,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         } else
         {
             StringBuilder decodeUrl = new StringBuilder(getUrlDecoderEx(url));
+            int urlLength = decodeUrl != null ? decodeUrl.length() : 0;
 
             ArrayList<String> keyArrayList = new ArrayList<>(urlparameters.keySet());
 
@@ -146,7 +147,14 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
                 if (Util.isTextEmpty(key, value) == false)
                 {
                     int startIndex = decodeUrl.indexOf(key);
-                    decodeUrl.replace(startIndex, startIndex + key.length(), value);
+                    if (startIndex >= 0 && urlLength <= startIndex)
+                    {
+                        decodeUrl.replace(startIndex, startIndex + key.length(), value);
+                    } else
+                    {
+                        throw new StringIndexOutOfBoundsException("getUrlDecoderEx - Failed decoding : " //
+                            + decodeUrl + " , key : " + key + ", value : " + value + " , index : " + startIndex);
+                    }
                 } else
                 {
                     throw new InvalidParameterException("Invalid url parameter : key : " + key + ", value : " + value);
