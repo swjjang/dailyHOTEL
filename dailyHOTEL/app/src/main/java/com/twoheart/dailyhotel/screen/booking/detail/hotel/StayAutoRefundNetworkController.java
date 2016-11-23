@@ -59,17 +59,24 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                List<Bank> bankList = new ArrayList<>(length);
-
-                for (int i = 0; i < length; i++)
+                if(msgCode == 100)
                 {
-                    bankList.add(new Bank(jsonArray.getJSONObject(i)));
-                }
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    int length = jsonArray.length();
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onBankList(bankList);
+                    List<Bank> bankList = new ArrayList<>(length);
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        bankList.add(new Bank(jsonArray.getJSONObject(i)));
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBankList(bankList);
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
