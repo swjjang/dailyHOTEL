@@ -641,7 +641,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, cancelMessage);
 
                         AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION, null, params);
+                            , AnalyticsManager.Action.FREE_CANCELLATION, cancelMessage, params);
                     }
                 }, null);
         }
