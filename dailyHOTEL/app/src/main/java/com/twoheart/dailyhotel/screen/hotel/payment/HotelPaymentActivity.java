@@ -2430,8 +2430,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         break;
                 }
 
-                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(mScreenAnalytics);
-
                 // 3. 간편결제 credit card 요청
                 DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
 
