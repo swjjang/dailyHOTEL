@@ -147,7 +147,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
                 if (Util.isTextEmpty(key, value) == false)
                 {
                     int startIndex = decodeUrl.indexOf(key);
-                    if (startIndex >= 0 && urlLength <= startIndex)
+                    if (startIndex >= 0 && urlLength >= startIndex)
                     {
                         decodeUrl.replace(startIndex, startIndex + key.length(), value);
                     } else
