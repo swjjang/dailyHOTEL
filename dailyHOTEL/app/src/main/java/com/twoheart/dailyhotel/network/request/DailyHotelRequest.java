@@ -146,11 +146,14 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
                 if (Util.isTextEmpty(key, value) == false)
                 {
                     int startIndex = decodeUrl.indexOf(key);
-                    if (startIndex == -1) {
-                        throw new StringIndexOutOfBoundsException("Index error : url : " + decodeUrl //
-                            + " , key : " + key + ", value : " + value + " , index : " + startIndex);
+                    if (startIndex >= 0)
+                    {
+                        decodeUrl.replace(startIndex, startIndex + key.length(), value);
+                    } else
+                    {
+                        throw new StringIndexOutOfBoundsException("getUrlDecoderEx - Failed decoding : " //
+                            + decodeUrl + " , key : " + key + ", value : " + value + " , index : " + startIndex);
                     }
-                    decodeUrl.replace(startIndex, startIndex + key.length(), value);
                 } else
                 {
                     throw new InvalidParameterException("Invalid url parameter : key : " + key + ", value : " + value);
