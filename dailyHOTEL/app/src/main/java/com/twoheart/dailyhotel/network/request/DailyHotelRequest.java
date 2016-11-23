@@ -8,6 +8,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -146,7 +147,17 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
                 if (Util.isTextEmpty(key, value) == false)
                 {
                     int startIndex = decodeUrl.indexOf(key);
-                    decodeUrl.replace(startIndex, startIndex + key.length(), value);
+
+                    if (startIndex >= 0)
+                    {
+                        decodeUrl.replace(startIndex, startIndex + key.length(), value);
+                    } else
+                    {
+                        if (Constants.DEBUG == false)
+                        {
+                            Crashlytics.logException(new Exception("getUrlDecoderEx - Failed decoding : " + decodeUrl + ", key : " + key + ", value : " + value));
+                        }
+                    }
                 } else
                 {
                     throw new InvalidParameterException("Invalid url parameter : key : " + key + ", value : " + value);
