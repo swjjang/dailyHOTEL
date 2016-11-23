@@ -45,6 +45,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     {
         void onEventBannerClick(EventBanner eventBanner);
 
+        // 왜 onActivityCreated 했을까?
+        // http://blog.saltfactory.net/android/implement-layout-using-with-fragment.html
         void onActivityCreated(PlaceListFragment placeListFragment);
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
