@@ -372,16 +372,6 @@ public class StayAutoRefundActivity extends BaseActivity
                     String message = messageEditText.getText().toString().trim();
 
                     setCancelReasonResult((Integer) selectedView.getTag(), cancelReason, message);
-
-                    if (Util.isTextEmpty(message) == true)
-                    {
-                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION, cancelReason, null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION, message, null);
-                    }
                 }
             }
         });
@@ -651,7 +641,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, cancelMessage);
 
                         AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, params);
+                            , AnalyticsManager.Action.FREE_CANCELLATION, null, params);
                     }
                 }, null);
         }
