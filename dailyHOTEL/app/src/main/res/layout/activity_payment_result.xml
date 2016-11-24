@@ -61,10 +61,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="49dp"
-        android:layout_marginBottom="15dp">
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="49dp"
+        android:paddingBottom="15dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
