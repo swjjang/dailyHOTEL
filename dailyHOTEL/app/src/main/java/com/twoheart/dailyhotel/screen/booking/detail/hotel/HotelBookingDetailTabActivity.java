@@ -417,6 +417,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 switch (msgCode)
                 {
                     case 100:
+                    case 1015:
                     {
                         JSONObject dataJSONObject = response.getJSONObject("data");
 
