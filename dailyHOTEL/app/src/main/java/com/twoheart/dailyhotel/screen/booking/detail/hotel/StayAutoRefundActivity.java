@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -141,6 +143,36 @@ public class StayAutoRefundActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        setWeightSelectCancelDialog(newConfig.orientation);
+    }
+
+    private void setWeightSelectCancelDialog(int orientation)
+    {
+        if (mDialog == null)
+        {
+            return;
+        }
+
+        View topView = mDialog.findViewById(R.id.topWeightView);
+        View middleView = mDialog.findViewById(R.id.middleWeightView);
+        View bottomView = mDialog.findViewById(R.id.bottomWeightView);
+        if (Configuration.ORIENTATION_LANDSCAPE == orientation)
+        {
+            topView.setVisibility(View.GONE);
+            bottomView.setVisibility(View.GONE);
+
+
+        } else
+        {
+            topView.setVisibility(View.VISIBLE);
+            bottomView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showSelectCancelDialog(int position, String message)
@@ -389,6 +421,17 @@ public class StayAutoRefundActivity extends BaseActivity
         try
         {
             mDialog.setContentView(dialogView);
+
+            int orientation;
+            int rotation = getWindowManager().getDefaultDisplay().getRotation();
+            if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation)
+            {
+                orientation = Configuration.ORIENTATION_LANDSCAPE;
+            } else
+            {
+                orientation = Configuration.ORIENTATION_PORTRAIT;
+            }
+            setWeightSelectCancelDialog(orientation);
             mDialog.show();
         } catch (Exception e)
         {
@@ -598,11 +641,11 @@ public class StayAutoRefundActivity extends BaseActivity
                     @Override
                     public void onClick(View v)
                     {
-                        if(lockUiComponentAndIsLockUiComponent() == true)
+                        if (lockUiComponentAndIsLockUiComponent() == true)
                         {
                             return;
                         }
-                        
+
                         lockUI();
 
                         if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
@@ -667,7 +710,7 @@ public class StayAutoRefundActivity extends BaseActivity
         public void onRefundResult(int msgCode, String message, boolean readyForRefund)
         {
             unLockUI();
-            
+
             if (readyForRefund == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);

@@ -7,14 +7,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <View
+            android:id="@+id/topWeightView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.22"/>
 
         <RelativeLayout
+            android:id="@+id/middleWeightView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.56"
@@ -182,7 +185,8 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="80dp">
+                        android:layout_height="80dp"
+                        android:layout_marginBottom="15dp">
 
                         <com.twoheart.dailyhotel.widget.DailyEditText
                             android:id="@+id/messageEditText"
@@ -221,6 +225,7 @@
         </RelativeLayout>
 
         <View
+            android:id="@+id/bottomWeightView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.22"/>
