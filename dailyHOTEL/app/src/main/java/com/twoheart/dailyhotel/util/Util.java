@@ -27,9 +27,11 @@ import android.os.Build;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -292,7 +294,16 @@ public class Util implements Constants
             return 0;
         }
 
-        return context.getResources().getDisplayMetrics().widthPixels;
+        try
+        {
+            return context.getResources().getDisplayMetrics().widthPixels;
+        } catch (Exception e)
+        {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
+        }
     }
 
     public static int getLCDHeight(Context context)
@@ -301,8 +312,16 @@ public class Util implements Constants
         {
             return 0;
         }
-
-        return context.getResources().getDisplayMetrics().heightPixels;
+        try
+        {
+            return context.getResources().getDisplayMetrics().heightPixels;
+        } catch (Exception e)
+        {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.heightPixels;
+        }
     }
 
     /**
