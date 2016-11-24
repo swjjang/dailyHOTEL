@@ -1,196 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/popup_bg_white_full"
-              android:orientation="vertical"
-              android:paddingBottom="10dp"
-              android:paddingTop="24dp">
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:gravity="center_horizontal"
-        android:text="@string/label_select_cancel_refund"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="17dp"
-        dailyFont:style="Medium"/>
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_marginLeft="15dp"
-        android:scrollbars="none"
-        android:layout_marginRight="15dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/cancelRefundView01"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_select_cancel_refund01"
-                android:textColor="@drawable/selector_text_color_c323232_c900034"
-                android:textSize="14dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/cancelRefundView02"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_select_cancel_refund02"
-                android:textColor="@drawable/selector_text_color_c323232_c900034"
-                android:textSize="14dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/cancelRefundView03"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_select_cancel_refund03"
-                android:textColor="@drawable/selector_text_color_c323232_c900034"
-                android:textSize="14dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/cancelRefundView04"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_select_cancel_refund04"
-                android:textColor="@drawable/selector_text_color_c323232_c900034"
-                android:textSize="14dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/cancelRefundView05"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_select_cancel_refund05"
-                android:textColor="@drawable/selector_text_color_c323232_c900034"
-                android:textSize="14dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/cancelRefundView06"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_select_cancel_refund06"
-                android:textColor="@drawable/selector_text_color_c323232_c900034"
-                android:textSize="14dp"/>
-
-            <FrameLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.twoheart.dailyhotel.widget.DailyEditText
-                    android:id="@+id/messageEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="@drawable/shape_fillrect_ld0d0d0_bffffff"
-                    android:gravity="top"
-                    android:hint="@string/message_enter_contents"
-                    android:maxLength="300"
-                    android:paddingBottom="25dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/default_text_c323232"
-                    android:textColorHint="@color/default_line_cd0d0d0"
-                    android:textSize="13dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/messageCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginRight="7dp"
-                    android:text="(0/300자)"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"/>
-
-                <View
-                    android:id="@+id/messageClickView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </FrameLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/default_line_ce7e7e7"/>
-
     <LinearLayout
-        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="8dp">
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/negativeTextView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/selector_dialog_button02"
-            android:gravity="center"
-            android:text="@string/dialog_btn_text_cancel"
-            android:textColor="@drawable/selector_dialog_text_color02"
-            android:textSize="14dp"
-            dailyFont:style="Medium"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <View
-            android:layout_width="10dp"
-            android:layout_height="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.22"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/positiveTextView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/selector_dialog_button01"
-            android:gravity="center"
-            android:text="@string/dialog_btn_text_select"
-            android:textColor="@drawable/selector_dialog_text_color01"
-            android:textSize="14dp"
-            dailyFont:style="Medium"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.56"
+            android:background="@drawable/popup_bg_white_full">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_horizontal"
+                android:text="@string/label_select_cancel_refund"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="17dp"
+                dailyFont:style="Medium"/>
+
+            <RelativeLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/default_line_ce7e7e7"/>
+
+                <View
+                    android:id="@+id/verticalLine"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/negativeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/verticalLine"
+                    android:background="@drawable/selector_dialog_button02"
+                    android:gravity="center"
+                    android:text="@string/dialog_btn_text_cancel"
+                    android:textColor="@drawable/selector_dialog_text_color02"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/positiveTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/verticalLine"
+                    android:background="@drawable/selector_dialog_button01"
+                    android:gravity="center"
+                    android:text="@string/dialog_btn_text_select"
+                    android:textColor="@drawable/selector_dialog_text_color01"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+            </RelativeLayout>
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/buttonLayout"
+                android:layout_below="@id/titleTextView"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="16dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="15dp"
+                    android:orientation="vertical">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/cancelRefundView01"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_select_cancel_refund01"
+                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textSize="14dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/cancelRefundView02"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_select_cancel_refund02"
+                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textSize="14dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/cancelRefundView03"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_select_cancel_refund03"
+                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textSize="14dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/cancelRefundView04"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_select_cancel_refund04"
+                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textSize="14dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/cancelRefundView05"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_select_cancel_refund05"
+                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textSize="14dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/cancelRefundView06"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_select_cancel_refund06"
+                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textSize="14dp"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp">
+
+                        <com.twoheart.dailyhotel.widget.DailyEditText
+                            android:id="@+id/messageEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/shape_fillrect_ld0d0d0_bffffff"
+                            android:gravity="top"
+                            android:hint="@string/message_enter_contents"
+                            android:maxLength="300"
+                            android:paddingBottom="25dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/default_text_c323232"
+                            android:textColorHint="@color/default_line_cd0d0d0"
+                            android:textSize="13dp"/>
+
+                        <com.twoheart.dailyhotel.widget.DailyTextView
+                            android:id="@+id/messageCountTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginRight="7dp"
+                            android:text="(0/300자)"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="12dp"/>
+
+                        <View
+                            android:id="@+id/messageClickView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </ScrollView>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.22"/>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
