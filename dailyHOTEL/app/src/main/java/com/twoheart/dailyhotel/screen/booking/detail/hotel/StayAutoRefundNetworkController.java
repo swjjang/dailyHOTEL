@@ -103,6 +103,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
 
                 // msgCode 1013: 환불 요청 중 실패한 것으로 messageFromPg를 사용자에게 노출함.
                 // msgCode 1014: 무료 취소 횟수를 초과한 것으로 msg 내용을 사용자에게 노출함.
+                // msgCode 1015: 환불 수동 스위치 ON일 경우
                 switch (msgCode)
                 {
                     case 1014:
@@ -110,6 +111,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
                         break;
 
                     case 1013:
+                    case 1015:
                     default:
                         if (response.has("data") == true && response.isNull("data") == false)
                         {

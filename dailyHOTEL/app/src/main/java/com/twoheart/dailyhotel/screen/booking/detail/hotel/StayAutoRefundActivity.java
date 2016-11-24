@@ -598,11 +598,11 @@ public class StayAutoRefundActivity extends BaseActivity
                     @Override
                     public void onClick(View v)
                     {
-                        if(lockUiComponentAndIsLockUiComponent() == true)
+                        if (lockUiComponentAndIsLockUiComponent() == true)
                         {
                             return;
                         }
-                        
+
                         lockUI();
 
                         if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
@@ -667,28 +667,42 @@ public class StayAutoRefundActivity extends BaseActivity
         public void onRefundResult(int msgCode, String message, boolean readyForRefund)
         {
             unLockUI();
-            
+
             if (readyForRefund == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } else
             {
-                // 환불에 실패한 경우
-                if (msgCode == 1013)
+                switch (msgCode)
                 {
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                } else
-                {
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
+                    case 1013:
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                        break;
+
+                    case 1015:
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    });
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            }
+                        });
+                        break;
+
+                    default:
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        });
+                        break;
                 }
             }
         }
