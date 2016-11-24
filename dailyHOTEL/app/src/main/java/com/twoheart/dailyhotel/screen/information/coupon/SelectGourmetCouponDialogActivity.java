@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -256,7 +257,14 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                     {
                         mLayout.setVisibility(false);
                         showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
-                            getString(R.string.dialog_btn_text_confirm), null);
+                            getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    finish();
+                                }
+                            });
 
                         //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
                         //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);

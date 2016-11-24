@@ -47,6 +47,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         int paymentAmount = jsonObject.getInt("paymentAmount");
         int tax = jsonObject.getInt("tax");
         int supplyPrice = jsonObject.getInt("supplyPrice");
+        int sellingPrice = jsonObject.getInt("sellingPrice");
         String paymentType = jsonObject.getString("paymentType");
         int counpon = jsonObject.getInt("couponAmount");
         int bonus = 0;
@@ -98,61 +99,49 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         vatTextView.setText(Util.getPriceFormat(this, tax, true));
 
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
+        saleLayout.setVisibility(View.VISIBLE);
 
-        // 추후 쿠폰 지원을 위해서..
-        if (bonus == 0 && counpon == 0)
+        // 총금액
+        TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+        totalPriceTextView.setText(Util.getPriceFormat(this, sellingPrice, true));
+
+        // 적립금 사용
+        View bonusLayout = paymentInfoLayout.findViewById(R.id.bonusLayout);
+
+        if (bonus > 0)
         {
-            saleLayout.setVisibility(View.GONE);
-
-            // 총 입금 금액
-            TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
+            bonusLayout.setVisibility(View.VISIBLE);
+            TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
+            bonusTextView.setText("- " + Util.getPriceFormat(this, bonus, true));
         } else
         {
-            saleLayout.setVisibility(View.VISIBLE);
-
-            // 총금액
-            TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            totalPriceTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
-
-            // 적립금 사용
-            View bonusLayout = paymentInfoLayout.findViewById(R.id.bonusLayout);
-
-            if (bonus > 0)
-            {
-                bonusLayout.setVisibility(View.VISIBLE);
-                TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
-                bonusTextView.setText("- " + Util.getPriceFormat(this, bonus, true));
-            } else
-            {
-                bonusLayout.setVisibility(View.GONE);
-            }
-
-            // 할인쿠폰 사용
-            View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
-
-            if (counpon > 0)
-            {
-                couponLayout.setVisibility(View.VISIBLE);
-                TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
-                couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
-            } else
-            {
-                couponLayout.setVisibility(View.GONE);
-            }
-
-            if (bonus > 0 || counpon > 0)
-            {
-                saleLayout.setVisibility(View.VISIBLE);
-            } else
-            {
-                saleLayout.setVisibility(View.GONE);
-            }
-
-            // 총 입금 금액
-            TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
+            bonusLayout.setVisibility(View.GONE);
         }
+
+        // 할인쿠폰 사용
+        View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
+
+        if (counpon > 0)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+            TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
+            couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+        if (bonus > 0 || counpon > 0)
+        {
+            saleLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            saleLayout.setVisibility(View.GONE);
+        }
+
+        // 총 입금 금액
+        TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+        totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
 
         // **공급자**
 
