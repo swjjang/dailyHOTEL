@@ -41,7 +41,7 @@ public class CouponListActivity extends BaseActivity
     {
         ALL,
         STAY,
-        GOURMET;
+        GOURMET
     }
 
     public static Intent newInstance(Context context)
