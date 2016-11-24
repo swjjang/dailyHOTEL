@@ -193,38 +193,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserRegisterNotification(Object tag, String registrationId, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/register" : "MTckMzAkODckNjAkMjMkNzMkMzMkNzIkMCQ1OSQzNSQ4JDg2JDQyJDUyJDg2JA==$CNDc4NjQQxODVEQjBBMOzcyNzSMwM0I0RXkNQYzNUIZwQTFEQUI0MREQzQUJEMzKcyRTVNFNzA5RDZAEMBTM2MMTUO4RkQ0OTM5OMA==$";
-
-        Map<String, String> params = Collections.singletonMap("registrationId", registrationId);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestUserUpdateNotification(Object tag, String userIdx, String changedRegistrationId, String uid, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/update" : "ODckMjEkNzEkMzIkOSQ3OSQzNSQ0OSQyJDg4JDY2JDk4JDQwJDc4JDU3JDExJA==$MTGIzN0FEROGkJEMkVBMjFFMLTIwRTgxM0YTzYMjlTDNDU5NDYwQHTYzRDFg4N0E0MTU2QNkYwNkJDQkLZZFRjBMDMUJDBRUJGMA=DI=$";
-
-        Map<String, String> params = new HashMap<>();
-
-        if (Util.isTextEmpty(userIdx) == false)
-        {
-            params.put("userIdx", userIdx);
-        }
-
-        params.put("changedRegistrationId", changedRegistrationId);
-        params.put("uid", uid);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/information/omission" : "NzUkMTEkMzMkMiQyJDgxJDM3JDY0JDQzJDEzJDMyJDM5JDI4JDYwJDI1JDY1JA==$MDVMQxQzQ3RERMEBOTgzQzRGQFUUyUNzREDQzlDKMYNTg4NDVc4N0U1RTNFMDNk4MNkIzQTIEzMTdCREMzRkE4RTdEBJNDM3MzEyMA==$";
@@ -413,11 +381,12 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetReceipt(Object tag, int index, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/receipt" : "NDAkMTI1JDEyNCQxMTMkMCQzOCQ2NCQ1OCQ5NyQyMiQ5NyQxOCQxNiQxMDkkMTAwJDg3JA==$UMEEzRDA4N0U3NUZKGRQjJCRFTNFODREMEQ0RDU0OXTI1TODFCREYxQTcyN0UI5REI5NWTJGQzdDNTdCRDU2N0YJyM0QxNUMwN0QER1ROEY1QjcRxOUJBMzI4RTI4DNjZEQURCNDlHFVNkU4$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{reservationIdx}/receipt" : "MSQ5MCQxMTckNjgkNzAkNTIkNzMkNzIkNDIkNDckMjUkNSQxNiQyOCQ3MSQ5MyQ=$NL0Y0BQTM2RkRCRTSRBRURFMzQ1VYQTE5NzBFODc1MjZFQWjUyRSENERTMU3NzNDMUEzMUUVwQ0VPFWIRJDEwRDBGQUEyQQzc1QzI5ROkZFQTgwOEU0QkYwNjhFM0ExMjMKwMzE0NEVBQkVF$";
 
-        String params = String.format("?reservation_rec_idx=%d", index);
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationIdx}", Integer.toString(index));
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }

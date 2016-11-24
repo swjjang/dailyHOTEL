@@ -32,7 +32,6 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -105,8 +104,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
-
-        DailyHotel.setCurrentActivity(this);
 
         setContentView(R.layout.activity_login);
 
@@ -561,69 +558,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    private void registerNotificationId(final String registrationId, String userIndex)
-    {
-        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
-        {
-            @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
-            {
-                try
-                {
-                    int msgCode = response.getInt("msgCode");
-
-                    if (msgCode == 100 && response.has("data") == true)
-                    {
-                        JSONObject jsonObject = response.getJSONObject("data");
-
-                        int uid = jsonObject.getInt("uid");
-                        DailyPreference.getInstance(LoginActivity.this).setNotificationUid(uid);
-                        DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    loginAndFinish();
-                }
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                loginAndFinish();
-            }
-        };
-
-        int uid = DailyPreference.getInstance(LoginActivity.this).getNotificationUid();
-        if (uid < 0)
-        {
-            DailyNetworkAPI.getInstance(this).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener);
-        } else
-        {
-            DailyNetworkAPI.getInstance(this).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener);
-        }
-    }
-
-    private void requestGoogleCloudMessagingId(final String userIndex)
-    {
-        Util.requestGoogleCloudMessaging(this, new Util.OnGoogleCloudMessagingListener()
-        {
-            @Override
-            public void onResult(String registrationId)
-            {
-                if (Util.isTextEmpty(registrationId) == false)
-                {
-                    registerNotificationId(registrationId, userIndex);
-                } else
-                {
-                    loginAndFinish();
-                }
-            }
-        });
-    }
-
     private void loginAndFinish()
     {
         unLockUI();
@@ -1066,7 +1000,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         mCertifyingTermination = true;
                     }
 
-                    requestGoogleCloudMessagingId(userIndex);
+                    loginAndFinish();
                 } else
                 {
                     String msg = response.getString("msg");

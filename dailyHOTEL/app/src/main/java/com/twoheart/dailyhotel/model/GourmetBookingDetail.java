@@ -96,7 +96,13 @@ public class GourmetBookingDetail extends PlaceBookingDetail
             gourmetPhone = phone3;
         }
 
-        paymentPrice = jsonObject.getInt("discountTotal");
+        if (jsonObject.has("couponAmount") == true)
+        {
+            coupon = jsonObject.getInt("couponAmount");
+        }
+
+        price = jsonObject.getInt("discountTotal");
+        paymentPrice = jsonObject.getInt("paymentAmount");
         paymentDate = jsonObject.getString("paidAt");
 
         if (jsonObject.has("restaurantIdx") == true)

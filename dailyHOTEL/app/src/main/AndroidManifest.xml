@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -535,20 +536,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.common.push.PushLockDialogActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:taskAffinity="com.twoheart.dailyhotel.popup"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        </activity>
-        <activity
-            android:name=".screen.common.push.ScreenOnPushDialogActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-        <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
@@ -629,14 +616,6 @@
                 <category android:name="com.twoheart.dailyhotel"/>
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".gcm.GcmIntentService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-            </intent-filter>
-        </service>
 
         <meta-data
             android:name="io.fabric.ApiKey"

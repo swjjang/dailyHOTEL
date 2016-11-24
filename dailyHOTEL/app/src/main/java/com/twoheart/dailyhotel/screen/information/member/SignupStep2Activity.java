@@ -312,19 +312,9 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onSignUp(int notificationUid, String gcmRegisterId)
+        public void onSignUp()
         {
             DailyPreference.getInstance(SignupStep2Activity.this).setVerification(true);
-
-            if (notificationUid > 0)
-            {
-                DailyPreference.getInstance(SignupStep2Activity.this).setNotificationUid(notificationUid);
-            }
-
-            if (Util.isTextEmpty(gcmRegisterId) == false)
-            {
-                DailyPreference.getInstance(SignupStep2Activity.this).setGCMRegistrationId(gcmRegisterId);
-            }
 
             mNetworkController.requestLogin(mEmail, mPassword);
         }

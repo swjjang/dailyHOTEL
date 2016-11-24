@@ -372,16 +372,6 @@ public class StayAutoRefundActivity extends BaseActivity
                     String message = messageEditText.getText().toString().trim();
 
                     setCancelReasonResult((Integer) selectedView.getTag(), cancelReason, message);
-
-                    if (Util.isTextEmpty(message) == true)
-                    {
-                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION, cancelReason, null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION, message, null);
-                    }
                 }
             }
         });
@@ -608,6 +598,13 @@ public class StayAutoRefundActivity extends BaseActivity
                     @Override
                     public void onClick(View v)
                     {
+                        if (lockUiComponentAndIsLockUiComponent() == true)
+                        {
+                            return;
+                        }
+
+                        lockUI();
+
                         if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
                         {
                             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
@@ -634,7 +631,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         {
                             if (mCancelReasonMessage.indexOf('-') >= 0)
                             {
-                                cancelMessage = mCancelReasonMessage.substring(mCancelReasonMessage.indexOf('-') + 1);
+                                cancelMessage = getString(R.string.label_select_cancel_refund06);
                             } else
                             {
                                 cancelMessage = mCancelReasonMessage;
@@ -644,7 +641,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         params.put(AnalyticsManager.KeyType.REASON_CANCELLATION, cancelMessage);
 
                         AnalyticsManager.getInstance(StayAutoRefundActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, params);
+                            , AnalyticsManager.Action.FREE_CANCELLATION, cancelMessage, params);
                     }
                 }, null);
         }
@@ -669,21 +666,44 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void onRefundResult(int msgCode, String message, boolean readyForRefund)
         {
+            unLockUI();
+
             if (readyForRefund == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } else
             {
-                showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                switch (msgCode)
                 {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                });
+                    case 1013:
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                        break;
+
+                    case 1015:
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            }
+                        });
+                        break;
+
+                    default:
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        });
+                        break;
+                }
             }
         }
 

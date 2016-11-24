@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -19,7 +20,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
@@ -234,7 +234,17 @@ public class StayDetailActivity extends PlaceDetailActivity
             // 범위 지정인데 이미 날짜가 지난 경우
             if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
             {
-                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_confirm), null);
+                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent eventIntent = new Intent();
+                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
+                        startActivity(eventIntent);
+                    }
+                }, null);
+
                 mEndSaleTime = null;
 
                 // 이벤트 기간이 종료된 경우 달력을 띄우지 않는다.
@@ -1102,16 +1112,15 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }
 
                 // 딥링크로 메뉴 오픈 요청
-                if (mIsDeepLink == true && mOpenTicketIndex > 0)
+                if (mIsDeepLink == true && mOpenTicketIndex > 0 && ((StayDetail) mPlaceDetail).getSaleRoomList().size() > 0)
                 {
                     if (mPlaceDetailLayout != null)
                     {
                         mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
                     }
-
-                    mOpenTicketIndex = 0;
                 }
 
+                mOpenTicketIndex = 0;
                 mIsDeepLink = false;
 
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);
@@ -1231,7 +1240,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                 params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
                 params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
+                params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
 
                 if (mProvince == null)
                 {

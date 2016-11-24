@@ -6,12 +6,14 @@ import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
+import com.facebook.stetho.Stetho;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
+import com.squareup.leakcanary.LeakCanary;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -28,7 +30,7 @@ import io.fabric.sdk.android.Fabric;
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
     private static volatile DailyHotel mInstance = null;
-    private static volatile Activity mCurrentActivity = null;
+    private static volatile Activity mCurrentActivity;
     public static String VERSION;
     public static String AUTHORIZATION;
     public static String GOOGLE_ANALYTICS_CLIENT_ID;
@@ -68,6 +70,10 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             });
 
             Fabric.with(this, new Crashlytics());
+        } else
+        {
+            Stetho.initializeWithDefaults(this);
+            LeakCanary.install(this);
         }
 
         mInstance = this;
@@ -121,16 +127,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     public static DailyHotel getGlobalApplicationContext()
     {
         return mInstance;
-    }
-
-    public static void setCurrentActivity(Activity currentActivity)
-    {
-        DailyHotel.mCurrentActivity = currentActivity;
-    }
-
-    public static Activity getCurrentActivity()
-    {
-        return mCurrentActivity;
     }
 
     public static boolean isLogin()
@@ -201,7 +197,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 @Override
                 public Activity getTopActivity()
                 {
-                    return DailyHotel.getCurrentActivity();
+                    return mCurrentActivity;
                 }
 
                 @Override
@@ -220,12 +216,16 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle)
         {
-
+            AnalyticsManager.getInstance(activity).onActivityCreated(activity, bundle);
         }
 
         @Override
         public void onActivityStarted(Activity activity)
         {
+            mCurrentActivity = activity;
+
+            AnalyticsManager.getInstance(activity).onActivityStarted(activity);
+
             if (++mRunningActivity == 1)
             {
                 // 30 분이 지나면 재시작
@@ -245,16 +245,20 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityResumed(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityResumed(activity);
         }
 
         @Override
         public void onActivityPaused(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityPaused(activity);
         }
 
         @Override
         public void onActivityStopped(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityStopped(activity);
+
             if (--mRunningActivity == 0)
             {
                 // go background
@@ -265,11 +269,13 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle bundle)
         {
+            AnalyticsManager.getInstance(activity).onActivitySaveInstanceState(activity, bundle);
         }
 
         @Override
         public void onActivityDestroyed(Activity activity)
         {
+            AnalyticsManager.getInstance(activity).onActivityDestroyed(activity);
         }
     }
 }

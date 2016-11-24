@@ -264,9 +264,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             ExLog.d(e.toString());
         }
 
-        String price = Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false);
-
-        priceTextView.setText(price);
+        priceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.price, false));
 
         if (bookingDetail.coupon > 0)
         {
@@ -277,7 +275,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(price);
+        totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false));
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);

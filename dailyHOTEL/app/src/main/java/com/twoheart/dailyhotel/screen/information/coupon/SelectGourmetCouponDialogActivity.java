@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -184,8 +185,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                         //                            AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
                     } else
                     {
-                        //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-                        //                            AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
+                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                            AnalyticsManager.Action.GOURMET_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.GOURMET_USING_COUPON_CANCEL, null);
                     }
                     break;
                 }
@@ -256,7 +257,14 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                     {
                         mLayout.setVisibility(false);
                         showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
-                            getString(R.string.dialog_btn_text_confirm), null);
+                            getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    finish();
+                                }
+                            });
 
                         //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
                         //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
@@ -268,8 +276,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                         mLayout.setData(list, true);
 
-                        //                        AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
-                        //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
+                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
                     }
                     break;
                 }
@@ -293,7 +301,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             lockUI();
 
             Coupon coupon = mLayout.getCoupon(userCouponCode);
-            recordAnalytics(coupon);
+            analyticsDownloadCoupon(coupon);
 
             switch (mCallByScreen)
             {
@@ -348,7 +356,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             finish();
         }
 
-        private void recordAnalytics(Coupon coupon)
+        private void analyticsDownloadCoupon(Coupon coupon)
         {
             try
             {
@@ -375,6 +383,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                     case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
                     {
+                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                            , AnalyticsManager.Action.GOURMET_COUPON_DOWNLOADED, coupon.title, null);
                         break;
                     }
                 }

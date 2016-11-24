@@ -1661,53 +1661,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 releaseUiComponent();
             } else
             {
-                if (hotelPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.VBANK//
-                    && DailyPreference.getInstance(HotelPaymentActivity.this).getNotificationUid() < 0)
+                Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
                 {
-                    // 가상계좌 결제시 푸쉬를 받지 못하는 경우
-                    String title = getString(R.string.dialog_notice2);
-                    String positive = getString(R.string.dialog_btn_text_confirm);
-                    String msg = getString(R.string.dialog_msg_none_gcmid);
+                    lockUI();
 
-                    showSimpleDialog(title, msg, positive, new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                            Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                            if (Stay.Grade.pension == hotelGrade || Stay.Grade.fullvilla == hotelGrade)
-                            {
-                                lockUI();
-
-                                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeJsonResponseListener);
-                            } else
-                            {
-                                processAgreeTermDialog();
-                            }
-
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            unLockUI();
-                        }
-                    });
+                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeJsonResponseListener);
                 } else
                 {
-                    Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                    if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
-                    {
-                        lockUI();
-
-                        DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeJsonResponseListener);
-                    } else
-                    {
-                        processAgreeTermDialog();
-                    }
+                    processAgreeTermDialog();
                 }
             }
         }

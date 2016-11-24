@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -188,13 +189,17 @@ public class AnalyticsManager
         }
     }
 
-    public void onStart(Activity activity)
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // ActivityLifecycleCallbacks
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void onActivityCreated(Activity activity, Bundle bundle)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onStart(activity);
+                analyticsManager.onActivityCreated(activity, bundle);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -202,13 +207,13 @@ public class AnalyticsManager
         }
     }
 
-    public void onStop(Activity activity)
+    public void onActivityStarted(Activity activity)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onStop(activity);
+                analyticsManager.onActivityStarted(activity);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -216,13 +221,13 @@ public class AnalyticsManager
         }
     }
 
-    public void onResume(Activity activity)
+    public void onActivityStopped(Activity activity)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onResume(activity);
+                analyticsManager.onActivityStopped(activity);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -230,13 +235,55 @@ public class AnalyticsManager
         }
     }
 
-    public void onPause(Activity activity)
+    public void onActivityResumed(Activity activity)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onPause(activity);
+                analyticsManager.onActivityResumed(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onActivityPaused(Activity activity)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onActivityPaused(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onActivitySaveInstanceState(activity, bundle);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onActivityDestroyed(Activity activity)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onActivityDestroyed(activity);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -587,6 +634,7 @@ public class AnalyticsManager
         public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
         public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
         public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
+        public static final String DAILY_GOURMET_AVAILABLE_COUPON_LIST = "DailyGourmet_AvailableCouponList";
         public static final String MENU_COUPON_REGISTRATION = "Menu_CouponRegistration";
         //
         public static final String DAILYHOTEL_DEPOSITWAITING = "DailyHotel_DepositWaiting";
@@ -725,6 +773,7 @@ public class AnalyticsManager
         public static final String GOURMET_COUPON_SELECTED = "GourmetCouponSelected";
         public static final String GOURMET_USING_COUPON_CANCEL_CLICKED = "GourmetUsingCouponCancelClicked";
         public static final String GOURMET_COUPON_NOT_FOUND = "GourmetCouponNotFound";
+        public static final String GOURMET_COUPON_DOWNLOADED = "GourmetCouponDownloaded";
         //
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
         //

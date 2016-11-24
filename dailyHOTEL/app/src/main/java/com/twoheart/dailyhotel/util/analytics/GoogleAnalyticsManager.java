@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -143,7 +144,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(2, screen, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(3, screen, null, params);
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
@@ -321,25 +326,45 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
 
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
 
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
     {
+
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityResumed(Activity activity)
     {
+
+    }
+
+    @Override
+    void onActivityPaused(Activity activity)
+    {
+
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+
     }
 
     @Override

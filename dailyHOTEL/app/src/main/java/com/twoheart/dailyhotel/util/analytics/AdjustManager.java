@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAttribution;
@@ -506,27 +507,45 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
 
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
 
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
+    {
+
+    }
+
+    @Override
+    void onActivityResumed(Activity activity)
     {
         Adjust.onResume();
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityPaused(Activity activity)
     {
         Adjust.onPause();
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+
     }
 
     @Override

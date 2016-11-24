@@ -3,12 +3,13 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.appboy.Appboy;
+import com.appboy.AppboyLifecycleCallbackListener;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
-import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -27,11 +28,13 @@ public class AppboyManager extends BaseAnalyticsManager
 
     private Appboy mAppboy;
     private String mUserIndex;
-    private boolean mRefreshData;
+
+    private AppboyLifecycleCallbackListener mAppboyLifecycleCallbackListener;
 
     public AppboyManager(Context context)
     {
         mAppboy = Appboy.getInstance(context);
+        mAppboyLifecycleCallbackListener = new AppboyLifecycleCallbackListener();
     }
 
     @Override
@@ -352,8 +355,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
                 }
-            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true
-                || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
             {
 
                 String eventName;
@@ -453,7 +455,7 @@ public class AppboyManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.BOOKING_STATUS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.FREE_CANCELLATION_CLICKED.equalsIgnoreCase(action) == true)
+            if (AnalyticsManager.Action.FREE_CANCELLATION.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = getAppboyProperties(params);
 
@@ -706,35 +708,45 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
-        if (mAppboy.openSession(activity))
-        {
-            mRefreshData = true;
-        }
+        mAppboyLifecycleCallbackListener.onActivityCreated(activity, bundle);
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
-        mAppboy.closeSession(activity);
+        mAppboyLifecycleCallbackListener.onActivityStarted(activity);
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
     {
-        AppboyInAppMessageManager.getInstance().registerInAppMessageManager(activity);
-        if (mRefreshData)
-        {
-            mAppboy.requestInAppMessageRefresh();
-            mRefreshData = false;
-        }
+        mAppboyLifecycleCallbackListener.onActivityStopped(activity);
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityResumed(Activity activity)
     {
-        AppboyInAppMessageManager.getInstance().unregisterInAppMessageManager(activity);
+        mAppboyLifecycleCallbackListener.onActivityResumed(activity);
+    }
+
+    @Override
+    void onActivityPaused(Activity activity)
+    {
+        mAppboyLifecycleCallbackListener.onActivityPaused(activity);
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+        mAppboyLifecycleCallbackListener.onActivitySaveInstanceState(activity, bundle);
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+        mAppboyLifecycleCallbackListener.onActivityDestroyed(activity);
     }
 
     @Override

@@ -71,20 +71,4 @@ public class LauncherActivity extends Activity
         overridePendingTransition(R.anim.abc_fade_in, R.anim.hold);
         finish();
     }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        AnalyticsManager.getInstance(this).onStart(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        AnalyticsManager.getInstance(this).onStop(this);
-    }
 }

@@ -997,21 +997,6 @@ public class MainActivity extends BaseActivity implements Constants
                     mNetworkController.requestUserInformation();
                 } else
                 {
-                    // GCM 등록
-                    Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
-                    {
-                        @Override
-                        public void onResult(String registrationId)
-                        {
-                            if (Util.isTextEmpty(registrationId) == true)
-                            {
-                                return;
-                            }
-
-                            mNetworkController.registerNotificationId(registrationId, null);
-                        }
-                    });
-
                     // 헤택이 Off 되어있는 경우 On으로 수정
                     boolean isUserBenefitAlarm = DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm();
                     if (isUserBenefitAlarm == false//

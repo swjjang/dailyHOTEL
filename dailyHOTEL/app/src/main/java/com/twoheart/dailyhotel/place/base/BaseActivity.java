@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
@@ -164,30 +163,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             Util.restartApp(this);
             return;
         }
-
-        AnalyticsManager.getInstance(this).onStart(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        AnalyticsManager.getInstance(this).onStop(this);
-    }
-
-    @Override
-    protected void onPause()
-    {
-        try
-        {
-            super.onPause();
-
-            AnalyticsManager.getInstance(this).onPause(this);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
     }
 
     @Override
@@ -199,8 +174,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         super.onResume();
-
-        AnalyticsManager.getInstance(this).onResume(this);
     }
 
     @Override

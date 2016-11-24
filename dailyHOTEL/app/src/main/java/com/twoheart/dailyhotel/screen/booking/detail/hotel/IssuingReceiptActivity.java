@@ -255,7 +255,7 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         try
         {
-            // 영숭증
+            // 영수증
             JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
             mReservationIndex = jsonObject.getString("reservation_idx");
@@ -350,7 +350,7 @@ public class IssuingReceiptActivity extends BaseActivity
             if (counpon > 0)
             {
                 couponLayout.setVisibility(View.VISIBLE);
-                TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
+                TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
                 couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
             } else
             {

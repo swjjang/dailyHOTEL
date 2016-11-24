@@ -71,8 +71,6 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         holder.descriptionTextView.setText(coupon.title);
 
-        holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
-
         holder.lastBottomLine.setVisibility(position == getItemCount() - 1 ? View.VISIBLE : View.GONE);
 
         int resId;
@@ -136,7 +134,6 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         TextView stateTextView;
         ImageView useableStayIcon;
         ImageView useableGourmetIcon;
-        View upperLine;
         View lastBottomLine;
 
         public CouponViewHolder(View itemView)
@@ -150,7 +147,6 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
             useableStayIcon = (ImageView) itemView.findViewById(R.id.useableStayImageView);
             useableGourmetIcon = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
-            upperLine = itemView.findViewById(R.id.upperLineView);
             lastBottomLine = itemView.findViewById(R.id.lastBottomLine);
         }
     }
