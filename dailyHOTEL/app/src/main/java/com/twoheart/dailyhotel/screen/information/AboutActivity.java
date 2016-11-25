@@ -22,7 +22,7 @@ public class AboutActivity extends WebViewActivity
         setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_ABOUT));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()

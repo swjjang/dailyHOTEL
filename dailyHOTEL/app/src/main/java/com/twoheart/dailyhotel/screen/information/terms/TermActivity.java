@@ -21,7 +21,7 @@ public class TermActivity extends WebViewActivity
         setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_TERMS));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()
