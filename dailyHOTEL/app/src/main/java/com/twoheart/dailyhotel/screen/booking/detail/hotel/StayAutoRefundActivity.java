@@ -149,7 +149,28 @@ public class StayAutoRefundActivity extends BaseActivity
     public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        setWeightSelectCancelDialog(newConfig.orientation);
+
+        int orientation;
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation)
+        {
+            orientation = Configuration.ORIENTATION_LANDSCAPE;
+        } else
+        {
+            orientation = Configuration.ORIENTATION_PORTRAIT;
+        }
+
+        if (isInMultiWindowMode() == true) {
+
+        }
+        ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
+        setWeightSelectCancelDialog(orientation);
+    }
+
+    @Override
+    public void onMultiWindowModeChanged(boolean isInMultiWindowMode)
+    {
+        super.onMultiWindowModeChanged(isInMultiWindowMode);
     }
 
     private void setWeightSelectCancelDialog(int orientation)
@@ -158,6 +179,8 @@ public class StayAutoRefundActivity extends BaseActivity
         {
             return;
         }
+
+        ExLog.d("orientation : " + orientation);
 
         View topView = mDialog.findViewById(R.id.topWeightView);
         View middleView = mDialog.findViewById(R.id.middleWeightView);
