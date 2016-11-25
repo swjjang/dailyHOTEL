@@ -139,11 +139,22 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
+        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
         View inputReviewView = view.findViewById(R.id.inputReviewView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
         inputReviewView.setOnClickListener(this);
+
+        if (true)
+        {
+            inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            inputReviewView.setVisibility(View.VISIBLE);
+        } else
+        {
+            inputReviewVerticalLine.setVisibility(View.GONE);
+            inputReviewView.setVisibility(View.GONE);
+        }
     }
 
     private void initGourmetInformationLayout(Context context, View view, GourmetBookingDetail bookingDetail)

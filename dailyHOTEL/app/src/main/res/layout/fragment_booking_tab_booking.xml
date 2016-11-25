@@ -130,6 +130,7 @@
                         app:drawableCompatTop="@drawable/reservation_ic_directions"/>
 
                     <View
+                        android:id="@+id/inputReviewVerticalLine"
                         android:layout_width="1dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
