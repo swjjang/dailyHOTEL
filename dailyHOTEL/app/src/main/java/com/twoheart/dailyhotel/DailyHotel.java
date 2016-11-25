@@ -6,14 +6,12 @@ import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
-import com.facebook.stetho.Stetho;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
-import com.squareup.leakcanary.LeakCanary;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -72,8 +70,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             Fabric.with(this, new Crashlytics());
         } else
         {
-            Stetho.initializeWithDefaults(this);
-            LeakCanary.install(this);
+            //            Stetho.initializeWithDefaults(this);
+            //            LeakCanary.install(this);
         }
 
         mInstance = this;
