@@ -372,7 +372,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         mDailyTextView.setText(jsonObject.getString("name"));
 
-        int coupon = jsonObject.getInt("couponAmount");
+        int coupon = jsonObject.getInt("coupon_amount");
 
         if (coupon > 0)
         {
