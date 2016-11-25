@@ -21,7 +21,7 @@ public class BonusTermActivity extends WebViewActivity
         setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_BONUS_TERMS));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()

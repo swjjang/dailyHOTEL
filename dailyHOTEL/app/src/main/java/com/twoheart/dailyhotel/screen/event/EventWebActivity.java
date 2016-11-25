@@ -164,7 +164,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
             @Override
             public void onClick(View v)
             {
-                finish();
+                if (mWebView.canGoBack() == true)
+                {
+                    mWebView.goBack();
+                } else
+                {
+                    finish();
+                }
             }
         });
     }
@@ -308,6 +314,18 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mWebView.canGoBack() == true)
+        {
+            mWebView.goBack();
+        } else
+        {
+            super.onBackPressed();
         }
     }
 

@@ -36,7 +36,7 @@ public class FAQActivity extends WebViewActivity
         setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_FAQ));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
 
         //        setEnabledProgress(false);
     }

@@ -53,7 +53,7 @@ public class NoticeWebActivity extends WebViewActivity
         }
 
         initToolbar(title);
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     @Override
