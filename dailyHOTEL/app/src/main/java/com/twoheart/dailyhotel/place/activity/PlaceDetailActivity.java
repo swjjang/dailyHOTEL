@@ -72,6 +72,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void downloadCoupon();
 
+    protected abstract void startKakao();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -484,25 +486,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
-    }
-
-    private void startKakao()
-    {
-        try
-        {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        } catch (ActivityNotFoundException e)
-        {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
-        }
     }
 
     private void startDailyCall()
