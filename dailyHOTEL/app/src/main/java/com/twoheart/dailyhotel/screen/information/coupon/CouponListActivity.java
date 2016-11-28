@@ -248,7 +248,6 @@ public class CouponListActivity extends BaseActivity
     // ////////////////////////////////////////////////////////
     private CouponListLayout.OnEventListener mOnEventListener = new CouponListLayout.OnEventListener()
     {
-
         @Override
         public void startCouponHistory()
         {
@@ -293,7 +292,7 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onClickSpinner(int position)
+        public void onItemSelectedSpinner(int position)
         {
             CouponListActivity.SortType sortType;
 

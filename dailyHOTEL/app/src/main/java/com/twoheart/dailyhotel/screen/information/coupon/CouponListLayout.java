@@ -46,7 +46,7 @@ public class CouponListLayout extends BaseLayout
 
         void onListItemDownLoadClick(Coupon coupon);
 
-        void onClickSpinner(int position);
+        void onItemSelectedSpinner(int position);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -78,7 +78,7 @@ public class CouponListLayout extends BaseLayout
 
                 if (mListAdapter != null)
                 {
-                    ((OnEventListener) mOnEventListener).onClickSpinner(position);
+                    ((OnEventListener) mOnEventListener).onItemSelectedSpinner(position);
                 }
             }
 
