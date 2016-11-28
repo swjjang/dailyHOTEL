@@ -53,7 +53,7 @@ public class DailyDeepLink
 
     private static final String PARAM_V7_TITLE = "t"; // 타이틀
     private static final String PARAM_V7_RESERVATION_INDEX = "ri"; // 예약 인덱스
-    private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet
+    private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet, all
     private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
     private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리

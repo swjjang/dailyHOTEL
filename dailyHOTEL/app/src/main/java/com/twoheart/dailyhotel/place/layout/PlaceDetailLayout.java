@@ -798,7 +798,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         if (WishPopupState.GONE == state)
         {
-//            mWishPopupTextView.setVisibility(View.GONE);
+            //            mWishPopupTextView.setVisibility(View.GONE);
             mWishPopupScrollView.setVisibility(View.GONE);
 
             if (mWishPopupAnimatorSet != null)

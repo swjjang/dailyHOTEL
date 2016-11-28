@@ -160,7 +160,8 @@ public class StayAutoRefundActivity extends BaseActivity
             orientation = Configuration.ORIENTATION_PORTRAIT;
         }
 
-        if (isInMultiWindowMode() == true) {
+        if (isInMultiWindowMode() == true)
+        {
 
         }
         ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
