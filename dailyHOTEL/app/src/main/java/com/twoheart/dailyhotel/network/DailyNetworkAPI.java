@@ -1230,4 +1230,19 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestReviewInformation(Object tag, Constants.PlaceType placeType, int reserveIdx, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{reserveIdx}/question" : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+        urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

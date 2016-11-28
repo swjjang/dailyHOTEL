@@ -608,4 +608,6 @@ interface IDailyNetwork
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener);
 
     void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
+
+    void requestReviewInformation(Object tag, Constants.PlaceType placeType, int reserveIdx, DailyHotelJsonResponseListener listener);
 }
