@@ -82,7 +82,7 @@ public class CouponTermActivity extends WebViewActivity
         }
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()

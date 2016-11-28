@@ -21,7 +21,7 @@ public class ProtectYouthTermsActivity extends WebViewActivity
         setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_CHILD_PROTECT_TERMS));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()

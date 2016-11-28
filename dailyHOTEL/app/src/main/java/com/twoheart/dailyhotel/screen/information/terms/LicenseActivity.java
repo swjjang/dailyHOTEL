@@ -20,7 +20,7 @@ public class LicenseActivity extends WebViewActivity
         setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_LICNESE));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()

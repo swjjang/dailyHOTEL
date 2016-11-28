@@ -44,7 +44,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 {
     protected DailyHotelWebChromeClient webChromeClient;
     protected DailyHotelWebViewClient webViewClient;
-    protected WebView webView;
+    protected WebView mWebView;
     private boolean mEnabledPorgoress = true;
 
     @Override
@@ -61,22 +61,22 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     {
         webChromeClient = new DailyHotelWebChromeClient();
         webViewClient = new DailyHotelWebViewClient();
-        webView = (WebView) findViewById(R.id.webView);
+        mWebView = (WebView) findViewById(R.id.webView);
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setVerticalScrollbarOverlay(true);
-        webView.getSettings().setSupportZoom(false);
-        webView.setOnLongClickListener(this);
-        webView.setLongClickable(false);
-        webView.setWebViewClient(webViewClient);
-        webView.setWebChromeClient(webChromeClient);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setVerticalScrollbarOverlay(true);
+        mWebView.getSettings().setSupportZoom(false);
+        mWebView.setOnLongClickListener(this);
+        mWebView.setLongClickable(false);
+        mWebView.setWebViewClient(webViewClient);
+        mWebView.setWebChromeClient(webChromeClient);
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
         headerMap.put("App-Version", DailyHotel.VERSION);
         headerMap.put("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
 
-        webView.loadUrl(url, headerMap);
+        mWebView.loadUrl(url, headerMap);
     }
 
     @Override
