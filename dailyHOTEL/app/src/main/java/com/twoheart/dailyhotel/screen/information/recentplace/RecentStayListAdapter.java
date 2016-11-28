@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.util.Util;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static com.twoheart.dailyhotel.model.Gourmet.Grade.gourmet;
+
 /**
  * Created by android_sam on 2016. 10. 13..
  */
@@ -83,7 +85,8 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         if (stay.satisfaction > 0)
         {
             holder.satisfactionView.setVisibility(View.VISIBLE);
-            holder.satisfactionView.setText(stay.satisfaction + "%");
+            holder.satisfactionView.setText(//
+                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);

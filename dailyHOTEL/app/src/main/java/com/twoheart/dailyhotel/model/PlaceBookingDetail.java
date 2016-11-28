@@ -32,6 +32,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public int paymentPrice;
     public long currentDateTime;
     public long dailyDateTime;
+    public int reservationIndex;
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
@@ -63,6 +64,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeInt(paymentPrice);
         dest.writeLong(currentDateTime);
         dest.writeLong(dailyDateTime);
+        dest.writeInt(reservationIndex);
     }
 
     protected void readFromParcel(Parcel in)
@@ -86,6 +88,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         paymentPrice = in.readInt();
         currentDateTime = in.readLong();
         dailyDateTime = in.readLong();
+        reservationIndex = in.readInt();
     }
 
     public Map<String, List<String>> getSpecification()

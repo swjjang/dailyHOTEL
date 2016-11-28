@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -40,6 +41,7 @@ import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -147,11 +149,11 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-        //        View callView = view.findViewById(R.id.callView);
+        View inputReview = view.findViewById(R.id.inputReviewView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
-        //        callView.setOnClickListener(this);
+        inputReview.setOnClickListener(this);
     }
 
     private void initHotelInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
@@ -572,6 +574,31 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                         AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.REFUND_INQUIRY_CLICKED, null, null);
                         break;
+                }
+                break;
+            }
+
+            case R.id.inputReviewView:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+                try
+                {
+                    long checkInTime = DailyCalendar.getTimeGMT9(mBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
+                    long checkOutTime = DailyCalendar.getTimeGMT9(mBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+
+                    Intent intent = SatisfactionActivity.newInstance(baseActivity, mBookingDetail.placeName,//
+                        mBookingDetail.reservationIndex, checkInTime, checkOutTime);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+                } catch (ParseException e)
+                {
+                    ExLog.d(e.getMessage());
                 }
                 break;
             }

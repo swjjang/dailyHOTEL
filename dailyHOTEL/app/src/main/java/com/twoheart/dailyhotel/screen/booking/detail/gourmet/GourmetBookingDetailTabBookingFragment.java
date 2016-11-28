@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -34,6 +35,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -137,11 +139,22 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-        //        View callView = view.findViewById(R.id.callView);
+        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        View inputReviewView = view.findViewById(R.id.inputReviewView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
-        //        callView.setOnClickListener(this);
+        inputReviewView.setOnClickListener(this);
+
+        if (true)
+        {
+            inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            inputReviewView.setVisibility(View.VISIBLE);
+        } else
+        {
+            inputReviewVerticalLine.setVisibility(View.GONE);
+            inputReviewView.setVisibility(View.GONE);
+        }
     }
 
     private void initGourmetInformationLayout(Context context, View view, GourmetBookingDetail bookingDetail)
@@ -358,6 +371,100 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                     , null);
                 break;
             }
+
+            case R.id.inputReviewView:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+                try
+                {
+                    long reservationTime = DailyCalendar.getTimeGMT9(mBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT);
+
+                    Intent intent = SatisfactionActivity.newInstance(baseActivity, //
+                        mBookingDetail.ticketName, mBookingDetail.reservationIndex, reservationTime);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+                } catch (ParseException e)
+                {
+                    ExLog.d(e.getMessage());
+                }
+                break;
+            }
+            //            case R.id.callDailyView:
+            //            {
+            //                BaseActivity baseActivity = (BaseActivity) getActivity();
+            //
+            //                if (Util.isTelephonyEnabled(baseActivity) == true)
+            //                {
+            //                    try
+            //                    {
+            //                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+            //
+            //                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            //                    } catch (ActivityNotFoundException e)
+            //                    {
+            //                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            //                    }
+            //                } else
+            //                {
+            //                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+            //                }
+            //                break;
+            //            }
+            //
+            //            case R.id.kakaoDailyView:
+            //            {
+            //                try
+            //                {
+            //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+            //                } catch (ActivityNotFoundException e)
+            //                {
+            //                    try
+            //                    {
+            //                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            //                    } catch (ActivityNotFoundException e1)
+            //                    {
+            //                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+            //                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+            //                        startActivity(marketLaunch);
+            //                    }
+            //                }
+            //                break;
+            //            }
+            //
+            //            case R.id.callPlaceView:
+            //            {
+            //                BaseActivity baseActivity = (BaseActivity) getActivity();
+            //
+            //                if (Util.isTelephonyEnabled(baseActivity) == true)
+            //                {
+            //                    String phone = mBookingDetail.gourmetPhone;
+            //
+            //                    if (Util.isTextEmpty(mBookingDetail.gourmetPhone) == true)
+            //                    {
+            //                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
+            //                    }
+            //
+            //                    try
+            //                    {
+            //                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
+            //                    } catch (ActivityNotFoundException e)
+            //                    {
+            //                        String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
+            //                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+            //                    }
+            //                } else
+            //                {
+            //                    String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
+            //                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
+            //                }
+            //                break;
+            //            }
         }
     }
 
