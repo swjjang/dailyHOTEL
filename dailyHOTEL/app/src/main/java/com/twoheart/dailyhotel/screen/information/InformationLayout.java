@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -56,7 +57,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startEditProfile();
 
-        void startCouponList();
+        void startCouponList(CouponListActivity.SortType sortType);
 
         void startBonusList();
 
@@ -505,7 +506,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
 
             case R.id.couponLayout:
-                ((OnEventListener) mOnEventListener).startCouponList();
+                ((OnEventListener) mOnEventListener).startCouponList(CouponListActivity.SortType.ALL);
                 break;
 
             case R.id.bonusLayout:

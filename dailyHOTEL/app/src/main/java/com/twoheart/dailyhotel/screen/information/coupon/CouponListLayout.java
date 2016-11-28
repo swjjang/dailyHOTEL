@@ -32,7 +32,7 @@ public class CouponListLayout extends BaseLayout
     private View mEmptyView;
     private CouponListAdapter mListAdapter;
     private Spinner mSortSpinner;
-    private CouponListActivity.SortType mSortType;
+    private SortArrayAdapter mSortArrayAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -46,7 +46,7 @@ public class CouponListLayout extends BaseLayout
 
         void onListItemDownLoadClick(Coupon coupon);
 
-        void onUpdateList(CouponListActivity.SortType sortType);
+        void onClickSpinner(int position);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -63,70 +63,23 @@ public class CouponListLayout extends BaseLayout
         mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
         mSortSpinner = (Spinner) view.findViewById(R.id.sortSpinner);
 
-        final CharSequence[] strings = mContext.getResources().getTextArray(R.array.coupon_sort_array);
-        final ArrayAdapter<CharSequence> sortAdapter = new ArrayAdapter<CharSequence>(mContext, R.layout.list_row_coupon_spinner, strings)
-        {
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent)
-            {
-                View view = super.getDropDownView(position, convertView, parent);
-                if (view != null)
-                {
-                    TextView textView = (TextView) view.findViewById(R.id.textView);
-                    if (textView != null)
-                    {
-                        int selectedPosition;
-                        CouponListActivity.SortType sortType = getSortType();
-                        if (CouponListActivity.SortType.STAY.equals(sortType))
-                        {
-                            selectedPosition = 1;
-                        } else if (CouponListActivity.SortType.GOURMET.equals(sortType))
-                        {
-                            selectedPosition = 2;
-                        } else
-                        {
-                            selectedPosition = 0;
-                        }
+        CharSequence[] strings = mContext.getResources().getTextArray(R.array.coupon_sort_array);
+        mSortArrayAdapter = new SortArrayAdapter(mContext, R.layout.list_row_coupon_spinner, strings);
 
-                        textView.setSelected(selectedPosition == position ? true : false);
-                        if (selectedPosition == position)
-                        {
-                            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
-                        } else
-                        {
-                            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-                            //                            textView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_text_color_c323232_c900034));
-                        }
-                    }
+        mSortArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        mSortSpinner.setAdapter(mSortArrayAdapter);
 
-                }
-                return view;
-            }
-        };
-
-        sortAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                CouponListActivity.SortType sortType;
-                switch (position)
-                {
-                    case 2:
-                        sortType = CouponListActivity.SortType.GOURMET;
-                        break;
-                    case 1:
-                        sortType = CouponListActivity.SortType.STAY;
-                        break;
-                    case 0:
-                    default:
-                        sortType = CouponListActivity.SortType.ALL;
-                        break;
-                }
+                mSortArrayAdapter.setSelection(position);
 
-                setSortType(sortType);
-                ((OnEventListener) mOnEventListener).onUpdateList(sortType);
+                if (mListAdapter != null)
+                {
+                    ((OnEventListener) mOnEventListener).onClickSpinner(position);
+                }
             }
 
             @Override
@@ -135,7 +88,6 @@ public class CouponListLayout extends BaseLayout
 
             }
         });
-        mSortSpinner.setAdapter(sortAdapter);
 
         updateHeaderTextView(0);
     }
@@ -200,6 +152,37 @@ public class CouponListLayout extends BaseLayout
         return (list == null || list.size() == 0);
     }
 
+    public void setSelectionSpinner(CouponListActivity.SortType sortType)
+    {
+        if (mSortSpinner == null || sortType == null)
+        {
+            return;
+        }
+
+        int position;
+
+        switch (sortType)
+        {
+            case STAY:
+                position = 1;
+                break;
+
+            case GOURMET:
+                position = 2;
+                break;
+
+            default:
+                position = 0;
+                break;
+        }
+
+        AdapterView.OnItemSelectedListener onItemSelectedListener = mSortSpinner.getOnItemSelectedListener();
+        mSortSpinner.setOnItemSelectedListener(null);
+        mSortSpinner.setSelection(position);
+        mSortArrayAdapter.setSelection(position);
+        mSortSpinner.setOnItemSelectedListener(onItemSelectedListener);
+    }
+
     public void setData(List<Coupon> list)
     {
         if (isEmpty(list) == false)
@@ -222,21 +205,6 @@ public class CouponListLayout extends BaseLayout
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
         }
-    }
-
-    public void setSortType(CouponListActivity.SortType sortType)
-    {
-        mSortType = sortType;
-    }
-
-    public CouponListActivity.SortType getSortType()
-    {
-        if (mSortType != null)
-        {
-            return mSortType;
-        }
-
-        return CouponListActivity.SortType.ALL;
     }
 
     public Coupon getCoupon(String userCouponCode)
@@ -272,4 +240,45 @@ public class CouponListLayout extends BaseLayout
             ((OnEventListener) mOnEventListener).onListItemDownLoadClick(coupon);
         }
     };
+
+    private class SortArrayAdapter extends ArrayAdapter<CharSequence>
+    {
+        private int mSelectedPosition;
+
+        public SortArrayAdapter(Context context, int resourceId, CharSequence[] list)
+        {
+            super(context, resourceId, list);
+        }
+
+        public void setSelection(int position)
+        {
+            mSelectedPosition = position;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent)
+        {
+            View view = super.getDropDownView(position, convertView, parent);
+
+            if (view != null)
+            {
+                TextView textView = (TextView) view.findViewById(R.id.textView);
+
+                if (textView != null)
+                {
+                    textView.setSelected(mSelectedPosition == position ? true : false);
+
+                    if (mSelectedPosition == position)
+                    {
+                        textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+                    } else
+                    {
+                        textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                    }
+                }
+
+            }
+            return view;
+        }
+    }
 }

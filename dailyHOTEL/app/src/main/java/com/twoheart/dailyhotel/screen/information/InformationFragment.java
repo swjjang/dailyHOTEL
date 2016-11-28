@@ -94,7 +94,25 @@ public class InformationFragment extends BaseFragment implements Constants
                 startSignUp(DailyDeepLink.getInstance().getRecommenderCode());
             } else if (DailyDeepLink.getInstance().isCouponView() == true)
             {
-                mOnEventListener.startCouponList();
+                CouponListActivity.SortType sortType;
+
+                String placeType = DailyDeepLink.getInstance().getPlaceType();
+
+                if (Util.isTextEmpty(placeType) == true)
+                {
+                    sortType = CouponListActivity.SortType.ALL;
+                } else
+                {
+                    try
+                    {
+                        sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
+                    } catch (Exception e)
+                    {
+                        sortType = CouponListActivity.SortType.ALL;
+                    }
+                }
+
+                mOnEventListener.startCouponList(sortType);
             } else if (DailyDeepLink.getInstance().isEventDetailView() == true)
             {
                 mOnEventListener.startEvent();
@@ -107,7 +125,7 @@ public class InformationFragment extends BaseFragment implements Constants
                 mOnEventListener.startInviteFriend();
             } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
             {
-                mOnEventListener.startCouponList();
+                mOnEventListener.startCouponList(CouponListActivity.SortType.ALL);
                 return;
             } else if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
             {
@@ -322,7 +340,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startCouponList()
+        public void startCouponList(CouponListActivity.SortType sortType)
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -333,7 +351,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            startActivity(new Intent(baseActivity, CouponListActivity.class));
+            Intent intent = CouponListActivity.newInstance(baseActivity, sortType);
+            startActivity(intent);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
                 Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
