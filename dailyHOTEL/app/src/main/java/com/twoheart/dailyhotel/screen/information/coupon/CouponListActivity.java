@@ -36,6 +36,7 @@ public class CouponListActivity extends BaseActivity
     private CouponListLayout mCouponListLayout;
     private CouponListNetworkController mCouponListNetworkController;
     private ArrayList<Coupon> mCouponList;
+    private SortType mSortType;
 
     public enum SortType
     {
@@ -44,9 +45,15 @@ public class CouponListActivity extends BaseActivity
         GOURMET
     }
 
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, SortType sortType)
     {
         Intent intent = new Intent(context, CouponListActivity.class);
+
+        if (sortType != null)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, sortType.name());
+        }
+
         return intent;
     }
 
@@ -60,10 +67,28 @@ public class CouponListActivity extends BaseActivity
         mCouponListLayout = new CouponListLayout(this, mOnEventListener);
         mCouponListNetworkController = new CouponListNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
+        Intent intent = getIntent();
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE) == true)
+        {
+            try
+            {
+                mSortType = SortType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+            } catch (Exception e)
+            {
+                mSortType = SortType.ALL;
+            }
+        } else
+        {
+            mSortType = SortType.ALL;
+        }
+
         DailyPreference.getInstance(this).setNewCoupon(false);
         DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLastestCouponTime());
 
         setContentView(mCouponListLayout.onCreateView(R.layout.activity_coupon_list));
+
+        mCouponListLayout.setSelectionSpinner(mSortType);
     }
 
     @Override
@@ -89,7 +114,6 @@ public class CouponListActivity extends BaseActivity
                 showLoginDialog();
             }
         }
-
     }
 
     @Override
@@ -269,8 +293,25 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onUpdateList(SortType sortType)
+        public void onClickSpinner(int position)
         {
+            CouponListActivity.SortType sortType;
+
+            switch (position)
+            {
+                case 2:
+                    sortType = CouponListActivity.SortType.GOURMET;
+                    break;
+                case 1:
+                    sortType = CouponListActivity.SortType.STAY;
+                    break;
+                case 0:
+                default:
+                    sortType = CouponListActivity.SortType.ALL;
+                    break;
+            }
+
+            mSortType = sortType;
             mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType));
         }
 
@@ -300,11 +341,10 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void onCouponList(List<Coupon> list)
         {
-
             mCouponList = new ArrayList<>();
             mCouponList.addAll(list);
 
-            mCouponListLayout.setData(makeSortCouponList(mCouponList, mCouponListLayout.getSortType()));
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, mSortType));
 
             unLockUI();
         }

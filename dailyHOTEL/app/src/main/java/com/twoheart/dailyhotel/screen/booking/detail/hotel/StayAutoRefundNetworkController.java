@@ -59,7 +59,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if(msgCode == 100)
+                if (msgCode == 100)
                 {
                     JSONArray jsonArray = response.getJSONArray("data");
                     int length = jsonArray.length();

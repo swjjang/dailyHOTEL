@@ -663,9 +663,27 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private boolean moveDeepLinkCouponList(Context context)
     {
+        CouponListActivity.SortType sortType;
+
+        String placeType = DailyDeepLink.getInstance().getPlaceType();
+
+        if (Util.isTextEmpty(placeType) == true)
+        {
+            sortType = CouponListActivity.SortType.ALL;
+        } else
+        {
+            try
+            {
+                sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
+            } catch (Exception e)
+            {
+                sortType = CouponListActivity.SortType.ALL;
+            }
+        }
+
         DailyDeepLink.getInstance().clear();
 
-        Intent intent = CouponListActivity.newInstance(context);
+        Intent intent = CouponListActivity.newInstance(context, sortType);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
 
         return true;
