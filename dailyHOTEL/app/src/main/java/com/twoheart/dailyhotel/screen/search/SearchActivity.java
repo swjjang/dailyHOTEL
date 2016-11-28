@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -286,8 +285,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     {
         // 가운데 스위치
         DailySwitchCompat switchCompat = (DailySwitchCompat) view.findViewById(R.id.placeSwitch);
-        final ImageView hotelSwitchView = (ImageView) view.findViewById(R.id.hotelSwitch);
-        final ImageView gourmetSwitchView = (ImageView) view.findViewById(R.id.gourmetSwitch);
+        final View hotelTextView = view.findViewById(R.id.hotelTextView);
+        final View gourmetTextView = view.findViewById(R.id.gourmetTextView);
 
         switch (placeType)
         {
@@ -369,8 +368,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 float gourmetAlpha = 0.6f * offset / range;
                 float hotelAlpha = 0.6f - gourmetAlpha;
 
-                hotelSwitchView.setAlpha(0.4f + hotelAlpha);
-                gourmetSwitchView.setAlpha(0.4f + gourmetAlpha);
+                hotelTextView.setAlpha(0.4f + hotelAlpha);
+                gourmetTextView.setAlpha(0.4f + gourmetAlpha);
 
                 int pageOffset = (int) ((float) offset * mViewPager.getWidth() / range);
 

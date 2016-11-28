@@ -72,7 +72,16 @@ public class DailyEditText extends AppCompatEditText
             setDeleteDrawable();
         } else
         {
-            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            Context context = getContext();
+            Drawable[] drawables = getCompoundDrawables();
+
+            if (drawables == null)
+            {
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            } else
+            {
+                setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], drawables[DRAWABLE_RIGHT], drawables[DRAWABLE_BOTTOM]);
+            }
         }
     }
 
@@ -85,7 +94,16 @@ public class DailyEditText extends AppCompatEditText
         {
             if (focused == false)
             {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                Context context = getContext();
+                Drawable[] drawables = getCompoundDrawables();
+
+                if (drawables == null)
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], drawables[DRAWABLE_RIGHT], drawables[DRAWABLE_BOTTOM]);
+                }
             } else
             {
                 if (getText().length() > 0)
@@ -143,9 +161,15 @@ public class DailyEditText extends AppCompatEditText
     {
         Drawable[] drawables = getCompoundDrawables();
 
-        if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+        if (drawables == null)
         {
             setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            Context context = getContext();
+
+            Drawable rightDrawable = AppCompatDrawableManager.get().getDrawable(context, R.drawable.search_ic_01_delete);
+            setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], rightDrawable, drawables[DRAWABLE_BOTTOM]);
         }
     }
 
