@@ -176,11 +176,8 @@ public class CouponListLayout extends BaseLayout
                 break;
         }
 
-        AdapterView.OnItemSelectedListener onItemSelectedListener = mSortSpinner.getOnItemSelectedListener();
-        mSortSpinner.setOnItemSelectedListener(null);
-        mSortSpinner.setSelection(position);
         mSortArrayAdapter.setSelection(position);
-        mSortSpinner.setOnItemSelectedListener(onItemSelectedListener);
+        mSortSpinner.setSelection(position);
     }
 
     public void setData(List<Coupon> list)
