@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -753,6 +754,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
                         DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener);
                     }
+
+                    DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestRecentReviewInformation(mNetworkTag, mPlaceType, mRecentReviewJsonResponseListener);
                 } else
                 {
                     finish();
@@ -808,6 +811,47 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     }
 
                     showSatisfactionDetailDialog(false, mReviewCodeList);
+                } else
+                {
+                    finish();
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+
+                finish();
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            finish();
+        }
+    };
+
+    private DailyHotelJsonResponseListener mRecentReviewJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        {
+            unLockUI();
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    Review review = new Review();
+                    review.setData(jsonObject);
+
+//                    showSatisfactionDetailDialog(false, mReviewCodeList);
+                    //                } else if (msgCode == 701) {
+                    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
+
+//                    showSatisfactionDetailDialog(false, mReviewCodeList);
                 } else
                 {
                     finish();

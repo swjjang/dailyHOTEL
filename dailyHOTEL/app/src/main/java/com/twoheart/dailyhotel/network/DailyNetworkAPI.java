@@ -1231,6 +1231,33 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
+    /**
+     * 앱 시작시 요청되는 리뷰 정보 - 최근 작성해야 할 리뷰 정보
+     * @param tag
+     * @param placeType
+     * @param listener
+     */
+    @Override
+    public void requestRecentReviewInformation(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/question" : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    /**
+     * 예약내역 상세 - 리뷰 정보
+     * @param tag
+     * @param placeType
+     * @param reserveIdx
+     * @param listener
+     */
     @Override
     public void requestReviewInformation(Object tag, Constants.PlaceType placeType, int reserveIdx, DailyHotelJsonResponseListener listener)
     {

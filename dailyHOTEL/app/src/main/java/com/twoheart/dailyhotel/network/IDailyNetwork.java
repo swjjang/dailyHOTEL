@@ -609,5 +609,7 @@ interface IDailyNetwork
 
     void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
 
+    void requestRecentReviewInformation(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener);
+
     void requestReviewInformation(Object tag, Constants.PlaceType placeType, int reserveIdx, DailyHotelJsonResponseListener listener);
 }
