@@ -838,7 +838,6 @@ public class AnalyticsManager
         public static final String FREE_CANCELLATION = "FreeCancellation";
 
         public static final String PROFILE_CLICKED = "ProfileClicked";
-        public static final String REGISTRATION_CLICKED = "RegistrationClicked";
     }
 
     public static class Category

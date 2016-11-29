@@ -353,7 +353,7 @@ public class SignupStep2Activity extends BaseActivity
             {
                 // 생일을 입력한 경우 체크
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
-                    AnalyticsManager.Action.PROFILE_CLICKED, birthday, null);
+                    , AnalyticsManager.Action.PROFILE_CLICKED, birthday, null);
             }
         }
 
