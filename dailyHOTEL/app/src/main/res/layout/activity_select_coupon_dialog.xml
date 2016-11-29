@@ -54,80 +54,73 @@
                     android:layout_height="10dp"/>
             </RelativeLayout>
 
+
             <LinearLayout
-                android:id="@+id/buttonLayout"
-                android:layout_width="312dp"
+                android:id="@+id/oneButtonLayout"
+                android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_below="@id/listView"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/oneButtonLayout"
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/confirmTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:visibility="gone">
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/confirmTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:background="@drawable/selector_dialog_button01"
-                        android:gravity="center"
-                        android:text="@string/dialog_btn_text_confirm"
-                        android:textColor="@drawable/selector_dialog_text_color01"
-                        android:textSize="14dp"
-                        dailyFont:style="Medium"/>
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/twoButtonLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:background="@color/default_line_ce7e7e7"/>
-
-                    <View
-                        android:id="@+id/buttonVerticalLine"
-                        android:layout_width="10dp"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/negativeTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toLeftOf="@id/buttonVerticalLine"
-                        android:background="@drawable/selector_dialog_button02"
-                        android:gravity="center"
-                        android:text="@string/dialog_btn_text_cancel"
-                        android:textColor="@drawable/selector_dialog_text_color02"
-                        android:textSize="14dp"
-                        dailyFont:style="Medium"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/positiveTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_toRightOf="@id/buttonVerticalLine"
-                        android:background="@drawable/selector_dialog_button01"
-                        android:gravity="center"
-                        android:text="@string/dialog_btn_text_select"
-                        android:textColor="@drawable/selector_dialog_text_color01"
-                        android:textSize="14dp"
-                        dailyFont:style="Medium"/>
-                </RelativeLayout>
+                    android:layout_height="38dp"
+                    android:background="@drawable/selector_dialog_button01"
+                    android:gravity="center"
+                    android:text="@string/dialog_btn_text_confirm"
+                    android:textColor="@drawable/selector_dialog_text_color01"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/twoButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_ce7e7e7"/>
+
+                <View
+                    android:id="@+id/buttonVerticalLine"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/negativeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toLeftOf="@id/buttonVerticalLine"
+                    android:background="@drawable/selector_dialog_button02"
+                    android:gravity="center"
+                    android:text="@string/dialog_btn_text_cancel"
+                    android:textColor="@drawable/selector_dialog_text_color02"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/positiveTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@id/buttonVerticalLine"
+                    android:background="@drawable/selector_dialog_button01"
+                    android:gravity="center"
+                    android:text="@string/dialog_btn_text_select"
+                    android:textColor="@drawable/selector_dialog_text_color01"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
