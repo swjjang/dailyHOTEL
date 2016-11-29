@@ -836,6 +836,9 @@ public class AnalyticsManager
         public static final String REFUND_INQUIRY = "RefundInquiry";
         public static final String FREE_CANCELLATION_CLICKED = "FreeCancellationClicked";
         public static final String FREE_CANCELLATION = "FreeCancellation";
+
+        public static final String PROFILE_CLICKED = "ProfileClicked";
+        public static final String REGISTRATION_CLICKED = "RegistrationClicked";
     }
 
     public static class Category
@@ -853,6 +856,7 @@ public class AnalyticsManager
         public static final String AUTO_SEARCH = "AutoSearch";
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
         public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
+        public static final String SET_MY_BIRTHDAY = "SetMyBirthday";
     }
 
     public static class Label
