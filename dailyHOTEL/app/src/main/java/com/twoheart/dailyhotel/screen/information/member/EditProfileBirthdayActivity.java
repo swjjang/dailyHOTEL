@@ -569,7 +569,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                     // 생일을 입력한 경우 체크
                     AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
-                        AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
+                        , AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
                 } else
                 {
                     String message = response.getString("msg");
