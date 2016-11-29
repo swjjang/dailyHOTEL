@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class DailyDeepLink
 {
@@ -108,15 +109,8 @@ public class DailyDeepLink
     private static final String WISHLIST_GOURMET_V9 = "wlg"; // 위시리스트 고메
     private static final String COLECTION_VIWE_V9 = "cv"; // 모아보기 화면
 
-
-    private static final String V3 = "3";
-    private static final String V4 = "4";
-    private static final String V5 = "5";
-    private static final String V6 = "6";
-    private static final String V7 = "7";
-    private static final String V8 = "8";
-    private static final String V9 = "9";
-    private static final String V10 = "10";
+    private static final int MINIMUM_VERSION_CODE = 2;
+    private static final int MAXIMUM_VERSION_CODE = 10;
 
     private static DailyDeepLink mInstance;
 
@@ -168,61 +162,7 @@ public class DailyDeepLink
             return;
         }
 
-        String versionCode = uri.getQueryParameter(PARAM_V3_VERSION_CODE);
-
-        if (Util.isTextEmpty(versionCode) == false)
-        {
-            switch (versionCode)
-            {
-                case V3:
-                    mVersionCode = 3;
-                    decodingLinkV3(uri);
-                    break;
-
-                case V4:
-                    mVersionCode = 4;
-                    decodingLinkV4(uri);
-                    break;
-
-                case V5:
-                    mVersionCode = 5;
-                    decodingLinkV5(uri);
-                    break;
-
-                case V6:
-                    mVersionCode = 6;
-                    decodingLinkV6(uri);
-                    break;
-
-                case V7:
-                    mVersionCode = 7;
-                    decodingLinkV7(uri);
-                    break;
-
-                case V8:
-                    mVersionCode = 8;
-                    decodingLinkV8(uri);
-                    break;
-
-                case V9:
-                    mVersionCode = 9;
-                    decodingLinkV9(uri);
-                    break;
-
-                case V10:
-                    mVersionCode = 10;
-                    decodingLinkV10(uri);
-                    break;
-
-                default:
-                    clear();
-                    break;
-            }
-        } else
-        {
-            mVersionCode = 2;
-            decodingLinkV2(uri);
-        }
+        decodingLink(uri);
     }
 
     public String getDeepLink()
@@ -239,21 +179,6 @@ public class DailyDeepLink
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 9
-    ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV10(Uri uri)
-    {
-        if (decodingLinkV9(uri) == false)
-        {
-            return false;
-        }
-
-        putParams(uri, PARAM_V10_START_DATE);
-        putParams(uri, PARAM_V10_END_DATE);
-
-        return true;
-    }
-
     public String getStartDate()
     {
         String value;
@@ -288,22 +213,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 9
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV9(Uri uri)
-    {
-        if (decodingLinkV8(uri) == false)
-        {
-            return false;
-        }
-
-        putParams(uri, PARAM_V9_QUERY);
-        putParams(uri, PARAM_V9_OPEN_TICKEt_INDEX);
-        putParams(uri, PARAM_V9_QUERY_TYPE);
-        putParams(uri, PARAM_V9_TITLE_IMAGE_URL);
-
-        return true;
-    }
-
     public boolean isWishlistHotelView()
     {
         String view = getView();
@@ -413,17 +322,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 8
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV8(Uri uri)
-    {
-        if (decodingLinkV7(uri) == false)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     public boolean isRecentlyWatchHotelView()
     {
         String view = getView();
@@ -505,22 +403,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 7
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV7(Uri uri)
-    {
-        if (decodingLinkV6(uri) == false)
-        {
-            return false;
-        }
-
-        putParams(uri, PARAM_V7_TITLE);
-        putParams(uri, PARAM_V7_RESERVATION_INDEX);
-        putParams(uri, PARAM_V7_PLACE_TYPE);
-        putParams(uri, PARAM_V7_NOTICE_INDEX);
-
-        return true;
-    }
-
     public boolean isRegisterCouponView()
     {
         String view = getView();
@@ -637,22 +519,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 6
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV6(Uri uri)
-    {
-        if (decodingLinkV5(uri) == false)
-        {
-            return false;
-        }
-
-        putParams(uri, PARAM_V6_WORD);
-        putParams(uri, PARAM_V6_LATITUDE);
-        putParams(uri, PARAM_V6_LONGITUDE);
-        putParams(uri, PARAM_V6_RADIUS);
-
-        return true;
-    }
-
     public boolean isHotelSearchView()
     {
         String view = getView();
@@ -782,20 +648,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 5
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV5(Uri uri)
-    {
-        if (decodingLinkV4(uri) == false)
-        {
-            return false;
-        }
-
-        putParams(uri, PARAM_V5_EVENT_NAME);
-        putParams(uri, PARAM_V5_CALENDAR_FLAG);
-
-        return true;
-    }
-
     public boolean isCouponView()
     {
         String view = getView();
@@ -887,21 +739,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 4
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV4(Uri uri)
-    {
-        if (decodingLinkV3(uri) == false)
-        {
-            return false;
-        }
-
-        putParams(uri, PARAM_V4_RECOMMENDER_CODE);
-        putParams(uri, PARAM_V4_DATE_PLUS);
-        putParams(uri, PARAM_V4_SORTING);
-
-        return true;
-    }
-
     public boolean isSingUpView()
     {
         String view = getView();
@@ -982,36 +819,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 3
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private boolean decodingLinkV3(Uri uri)
-    {
-        mParams.clear();
-
-        if (uri == null)
-        {
-            clear();
-            return false;
-        }
-
-        if (putParams(uri, PARAM_V3_VIEW) == false)
-        {
-            // view는 기본요소라서 없으면 안된다
-            clear();
-            return false;
-        }
-
-        putParams(uri, PARAM_V3_DATE);
-        putParams(uri, PARAM_V3_NIGHTS);
-        putParams(uri, PARAM_V3_URL);
-        putParams(uri, PARAM_V3_INDEX);
-        putParams(uri, PARAM_V3_PROVINCE_INDEX);
-        putParams(uri, PARAM_V3_AREA_INDEX);
-        putParams(uri, PARAM_V3_REGION_ISOVERSEA);
-        putParams(uri, PARAM_V3_CATEGORY_CODE);
-
-        return true;
-    }
-
     private String getView()
     {
         String value;
@@ -1341,30 +1148,6 @@ public class DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 2
     ///////////////////////////////////////////////////////////////////////////////////
-
-    private void decodingLinkV2(Uri uri)
-    {
-        mParams.clear();
-
-        if (uri == null)
-        {
-            clear();
-            return;
-        }
-
-        if (putParams(uri, PARAM_V2_VIEW) == false)
-        {
-            // view는 기본요소라서 없으면 안된다
-            clear();
-            return;
-        }
-
-        putParams(uri, PARAM_V2_DATE);
-        putParams(uri, PARAM_V2_NIGHTS);
-        putParams(uri, PARAM_V2_INDEX);
-    }
-
-
     ///////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
 
@@ -1380,5 +1163,75 @@ public class DailyDeepLink
         {
             return false;
         }
+    }
+
+
+    private boolean putVersionCode(int versionCode)
+    {
+        if (versionCode < MINIMUM_VERSION_CODE || versionCode > MAXIMUM_VERSION_CODE)
+        {
+            return false;
+        } else
+        {
+            mVersionCode = versionCode;
+            return true;
+        }
+    }
+
+    private boolean decodingLink(Uri uri)
+    {
+        mParams.clear();
+
+        if (uri == null)
+        {
+            clear();
+            return false;
+        }
+
+        Set<String> keySet = uri.getQueryParameterNames();
+        if (keySet == null || keySet.isEmpty() == true)
+        {
+            clear();
+            return false;
+        }
+
+        int versionCode;
+
+        String versionString = uri.getQueryParameter(PARAM_V3_VERSION_CODE);
+        if (Util.isTextEmpty(versionString) == true)
+        {
+            versionCode = MINIMUM_VERSION_CODE;
+        } else
+        {
+            try
+            {
+                versionCode = Integer.parseInt(versionString);
+            } catch (NumberFormatException e)
+            {
+                versionCode = -1;
+            }
+        }
+
+        if (putVersionCode(versionCode) == false)
+        {
+            // 현재 버전 Deeplink 동작가능범위 초과!
+            clear();
+            return false;
+        }
+
+        String requiredParam = versionCode > MINIMUM_VERSION_CODE ? PARAM_V3_VIEW : PARAM_V2_VIEW;
+        if (keySet.contains(requiredParam) == false)
+        {
+            // view는 기본요소라서 없으면 안된다
+            clear();
+            return false;
+        }
+
+        for (String key : keySet)
+        {
+            putParams(uri, key);
+        }
+
+        return true;
     }
 }
