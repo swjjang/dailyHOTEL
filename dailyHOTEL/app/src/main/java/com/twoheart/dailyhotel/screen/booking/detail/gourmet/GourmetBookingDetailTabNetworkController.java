@@ -32,7 +32,7 @@ public class GourmetBookingDetailTabNetworkController extends BaseNetworkControl
 
     public void requestReviewInformation(int reserveIdx)
     {
-        DailyNetworkAPI.getInstance(mContext).requestReviewInformation(mNetworkTag, Constants.PlaceType.FNB, reserveIdx, mJsonResponseListener);
+//        DailyNetworkAPI.getInstance(mContext).requestReviewInformation(mNetworkTag, Constants.PlaceType.FNB, reserveIdx, mJsonResponseListener);
     }
 
     DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()

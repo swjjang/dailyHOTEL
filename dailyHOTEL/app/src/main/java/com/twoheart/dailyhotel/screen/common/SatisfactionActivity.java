@@ -574,7 +574,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     case HOTEL:
                     {
                         params.put("reserv_idx", String.valueOf(mReservationIndex));
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+//                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
 
                         if (Util.isTextEmpty(ratingName) == true)
                         {
@@ -589,7 +589,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     {
                         params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
-                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+//                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
 
                         if (Util.isTextEmpty(ratingName) == true)
                         {
@@ -643,11 +643,11 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         switch (placeType)
         {
             case HOTEL:
-                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
+//                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
 
             case FNB:
-                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
+//                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
         }
     }
@@ -755,7 +755,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                         DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener);
                     }
 
-                    DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestRecentReviewInformation(mNetworkTag, mPlaceType, mRecentReviewJsonResponseListener);
+//                    DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestRecentReviewInformation(mNetworkTag, mPlaceType, mRecentReviewJsonResponseListener);
                 } else
                 {
                     finish();

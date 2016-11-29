@@ -181,15 +181,6 @@ interface IDailyNetwork
     void requestHotelPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
 
     /**
-     * api/fnb/reservation/session/rating/msg/update
-     * 고메 상세 만족도 결과를 업데이트 한다
-     *
-     * @return
-     */
-    void requestGourmetDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
-
-
-    /**
      * api/fnb/reservation/booking/list
      * 예약 리스트(호텔 고메)를 요청한다
      *
@@ -212,22 +203,6 @@ interface IDailyNetwork
      * @return
      */
     void requestGourmetReceipt(Object tag, int index, DailyHotelJsonResponseListener listener);
-
-    /**
-     * api/fnb/reservation/session/rating/exist
-     * 고메 평가가 존재하는지 문의한다
-     *
-     * @return
-     */
-    void requestGourmetIsExistRating(Object tag, DailyHotelJsonResponseListener listener);
-
-    /**
-     * api/fnb/reservation/session/rating/update
-     * 고메 평가를 업데이트 한다.(만족함 만족안함)
-     *
-     * @return
-     */
-    void requestGourmetRating(Object tag, String result, String index, DailyHotelJsonResponseListener listener);
 
     /**
      * api/fnb/reservation/session/hidden
@@ -310,22 +285,6 @@ interface IDailyNetwork
     void requestDepositWaitDetailInformation(Object tag, String tid, DailyHotelJsonResponseListener listener);
 
     /**
-     * api/reserv/satisfaction_rating/update
-     * 호텔 만족도 간단 평가
-     *
-     * @return
-     */
-    void requestHotelRating(Object tag, String result, String index, DailyHotelJsonResponseListener listener);
-
-    /**
-     * api/reserv/satisfaction_rating/exist
-     * 호텔 만족도 평가 유무
-     *
-     * @return
-     */
-    void requestHotelIsExistRating(Object tag, DailyHotelJsonResponseListener listener);
-
-    /**
      * api/reserv/detail
      * 호텔 예약 화면 상세 내용
      *
@@ -348,15 +307,6 @@ interface IDailyNetwork
      * @return
      */
     void requestHotelReceipt(Object tag, String index, DailyHotelJsonResponseListener listener);
-
-
-    /**
-     * api/reserv/satisfaction_rating/msg/update
-     * 호텔 상세 만족도 평가
-     *
-     * @return
-     */
-    void requestHotelDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
 
     /**
      * api/daily/event/list
@@ -609,7 +559,12 @@ interface IDailyNetwork
 
     void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
 
-    void requestRecentReviewInformation(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener);
+    // 리뷰
+    void requestHotelReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
 
-    void requestReviewInformation(Object tag, Constants.PlaceType placeType, int reserveIdx, DailyHotelJsonResponseListener listener);
+    void requestGourmetReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
+
+    void requestHotelReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
+
+    void requestGourmetReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
 }

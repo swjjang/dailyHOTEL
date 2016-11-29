@@ -121,7 +121,7 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestGourmetIsExistRating()
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetIsExistRating(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener);
     }
 
     public void requestNoticeAgreement()
@@ -342,9 +342,9 @@ public class MainNetworkController extends BaseNetworkController
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0 && response.has("data") == true)
+                if (msgCode == 100 && response.has("data") == true)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -396,7 +396,7 @@ public class MainNetworkController extends BaseNetworkController
                     DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
 
                     // 호텔 평가요청
-                    DailyNetworkAPI.getInstance(mContext).requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener);
+                    DailyNetworkAPI.getInstance(mContext).requestHotelReviewInformation(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener);
                 } else
                 {
                     mOnNetworkControllerListener.onError(null);

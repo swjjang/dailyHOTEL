@@ -345,16 +345,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/msg/update" : "MTI0JDQyJDEyMSQxMDMkNjIkMTA1JDEyJDM4JDYkNzQkOTkkMTckMTEzJDU2JDkxJDAk$VODg1M0IY0RjJBSNzZPERTg3QkUyRUFDQkRENUYwOSTg3OTEgzMzFGNjZDBM0U4RjZCMZzhDMDJBQDTRDNDQ0QkMxNjAT4ODQ5MzhGNHDYyMjEyQ0WDZCCMzYzRUYxRDU3MjAwFRTdCIQjg3$";
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestBookingList(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/list" : "OCQ5OCQ4NCQ3NyQ4NiQxMjkkNzMkMTIxJDcxJDExOCQ5NyQ2MCQ2MyQyNSQzNSQyNSQ=$RjYxMjU1INzFDQ0ZCRTRBMzRFCLMzY0QTQ0ONTQ3QURENDMyQjM0NDczQzczOURYFNGTQ2RTNGRTPQ5XNzNDPNzNDNkQWD4NzA0M0YBzNkRFNODVFRUU4RDQ1Q0IOyRDcZ2QzkwNTlDFN0M2$";
@@ -387,30 +377,6 @@ public class DailyNetworkAPI implements IDailyNetwork
         urlParams.put("{reservationIdx}", Integer.toString(index));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestGourmetIsExistRating(Object tag, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/exist" : "MCQxNyQzMiQ5NiQxNiQzMiQ4JDEyJDIzJDkkODgkMjgkNzUkMTUkMTA0JDY4JA==$HQTFFMEQSA5NzNUM0OEEQ4INkMI5QVTUyNEM1MPzFhERDREMDEzM0ZCOTFGMEVERjc4NLDc0Qzc0NIEVEQ0VBNUFCODMW3QTMyNjU2QUUQ5RADg3OEMwOTA0OTVBMzQzQzBFNEU4QUQ2OTQ4$";
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestGourmetRating(Object tag, String result, String index, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/update" : "NyQ0JDEyMiQ0NyQxMjQkMjUkNjYkMzckMTE5JDExMSQ5OCQxMiQzNyQ3JDc0JDk1JA==$MUNBVNTMMQwM0OI1QkMxNEE0RjAE0MUIzRDI3NRDWg5RDE2NEQ2NHzIzRkY1MDVEQkNFNTCVCMQTYxMzdCQzA1NzFFQ0QyRQkNDNjhCWNTA3MzU2MkM5NLjBCQzZGMXjM0RDMzCLQzgyMTAw$";
-
-        Map<String, String> params = new HashMap<>();
-        params.put("rating", result);
-        params.put("reservation_rec_idx", index);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -565,30 +531,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelRating(Object tag, String result, String index, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/update" : "NDckMzEkNDMkMTA1JDExOSQxMTckNiQ1NyQzNSQ0NiQzNiQxMDUkMTE5JDEwMyQ5JDg0JA==$REE0MDAlBBQTUzMzdCRTU0Q0RFNzlERDcZ2OPDEY0MTc2QjAFc4MURCEMDI2NDTQwMDYxNDM0MDQyNDk5REYDzMkQ5QzU5M0VBQjM4NTkL1RQEY0RUIZDRDY4MPzEzNW0VPFNUVDMkM1REQ3$";
-
-        Map<String, String> params = new HashMap<>();
-        params.put("rating", result);
-        params.put("reserv_idx", index);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestHotelIsExistRating(Object tag, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/exist" : "NTEkNDUkMTI1JDEwNyQxMDYkNzUkODckMTI2JDg2JDEyMiQ1NCQxMjkkNzkkODgkNzMkMTI3JA==$MkVCQ0RFMEYwMzVEMUIzNDVEQ0Y4NDc2QkQzMTMxNEE0QX0ZERTYM1JRTQwMzI5QUI1QzNCOTUg5NDjYNwMzJFRDEXUwVRjYyMDUyRUMzQkJBOTQ3FMTzBEMjAzNjUZO1MzBBEVNjcF1RkNC$";
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestHotelBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/{hotelReservationIdx}" : "MTI3JDExMyQxMTckMCQ4NiQ4JDE1JDU4JDExOSQxMzAkMzUkMTkkNDUkNDEkMTIwJDk3JA==$FMjIxNzUN4MzVDRPUFECOTBDNjg0MjdGQUU0ERDBDFQkRCENEVEREVDQ0ZFRDUWzN0MwRDhDMDFGNDdDRTUxODQzMDQ3OHTdDWMkQ1NDE2REIxNjJDMkJCQTgX3ONJEQyPOEYzNDJE2QkQF4$";
@@ -622,16 +564,6 @@ public class DailyNetworkAPI implements IDailyNetwork
         String params = String.format("?reservation_idx=%s", index);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestHotelDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/msg/update" : "MTE2JDEyMSQxNiQxMDQkNTQkMTAkMTEkNjMkMTAkNSQyMiQ5NiQxNCQ3JDQ0JDk5JA==$RUY3MMEEQ0NjPKPAgyQzJDVMDjExNkEzRjdDNEFFNzY0KMDU2MjlDRkVGQUFDNIEE0RTAT4OEVFNjRCMjIxN0MxNEREMjhFOERDANNTFGRDI1RjEzQzlBBMDRFNDVERkNEEODgxXQzFENUZB$";
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -1231,20 +1163,42 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
+    @Override
+    public void requestHotelReviewInformation(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/question" : "NzQkMTIkNDkkMiQ0OSQ4NyQ2NCQ4OSQzOCQyNSQxNyQ3NiQzMSQzNCQ0OSQxNyQ=$MUZVFMEQ4OUMxSNTUTPwNUIxQzVVDNUJXFRZTVCQjQyFMUNCODXg4RDZTBQMENBMTc0RTcxTMjUyM0Q1KRDFFMDXBGMTU2MEKNNEMg==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestGourmetReviewInformation(Object tag, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/question" : "NDUkMTIkNjUkODckNDAkNzQkNzUkNzckNjckNTYkNDMkMTYkNTQkOTkkODckMTYk$QzgxQkVEQjBGONDdTWEMDI4NENBOEMwNkIyQUIxQUQOwNITlGNBTczMIjBGMSTM1QTdCNDNOUCMTg4ODRHZAFMjRIDQzE3REI3ENQI==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
     /**
-     * 앱 시작시 요청되는 리뷰 정보 - 최근 작성해야 할 리뷰 정보
+     * 예약내역 상세 - 리뷰 정보
      *
      * @param tag
-     * @param placeType
+     * @param reserveIdx
      * @param listener
      */
     @Override
-    public void requestRecentReviewInformation(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener)
+    public void requestHotelReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/question" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{reserveIdx}/question" : "";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+        urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -1256,17 +1210,15 @@ public class DailyNetworkAPI implements IDailyNetwork
      * 예약내역 상세 - 리뷰 정보
      *
      * @param tag
-     * @param placeType
      * @param reserveIdx
      * @param listener
      */
     @Override
-    public void requestReviewInformation(Object tag, Constants.PlaceType placeType, int reserveIdx, DailyHotelJsonResponseListener listener)
+    public void requestGourmetReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{reserveIdx}/question" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{reserveIdx}/question" : "";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
         urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
