@@ -42,7 +42,7 @@
                 android:paddingTop="5dp"/>
 
             <View
-                android:id="@+id/puchMaskLayout"
+                android:id="@+id/punchMaskLayout"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
