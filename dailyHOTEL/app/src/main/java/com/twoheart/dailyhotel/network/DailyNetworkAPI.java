@@ -1233,6 +1233,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     /**
      * 앱 시작시 요청되는 리뷰 정보 - 최근 작성해야 할 리뷰 정보
+     *
      * @param tag
      * @param placeType
      * @param listener
@@ -1253,6 +1254,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     /**
      * 예약내역 상세 - 리뷰 정보
+     *
      * @param tag
      * @param placeType
      * @param reserveIdx

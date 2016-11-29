@@ -1011,6 +1011,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
+            // 오타로 인해서 만들어 놓은 메소드로 추후 시간이 지나면 삭제 하도록 한다.
             internalLink(uri);
         }
 
