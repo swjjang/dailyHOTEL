@@ -563,7 +563,13 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                     setResult(RESULT_OK);
 
-                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday((String) mBirthdayEditText.getTag());
+                    String birthday = (String) mBirthdayEditText.getTag();
+
+                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday(birthday);
+
+                    // 생일을 입력한 경우 체크
+                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
+                        AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
                 } else
                 {
                     String message = response.getString("msg");

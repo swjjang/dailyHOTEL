@@ -368,6 +368,8 @@ public class SignupStep1Activity extends BaseActivity
             {
                 ExLog.d(e.toString());
             }
+
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY);
         }
 
         @Override

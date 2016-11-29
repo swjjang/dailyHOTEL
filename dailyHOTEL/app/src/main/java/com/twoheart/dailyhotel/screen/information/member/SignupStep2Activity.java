@@ -348,6 +348,13 @@ public class SignupStep2Activity extends BaseActivity
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
                     , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
             }
+
+            if (Util.isTextEmpty(birthday) == false)
+            {
+                // 생일을 입력한 경우 체크
+                AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
+                    AnalyticsManager.Action.PROFILE_CLICKED, birthday, null);
+            }
         }
 
         @Override
