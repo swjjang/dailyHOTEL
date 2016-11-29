@@ -29,22 +29,30 @@
             android:textSize="17dp"
             dailyFont:style="Medium"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/coupon_popup_bg">
+            android:background="@drawable/coupon_popup_bg"
+            android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/listView"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@null"
-                android:paddingTop="5dp"/>
+                android:layout_weight="1"
+                android:background="@drawable/coupon_popup_bg">
 
-            <View
-                android:id="@+id/punchMaskLayout"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:paddingTop="5dp"/>
+
+                <View
+                    android:id="@+id/punchMaskLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/buttonLayout"
@@ -74,7 +82,6 @@
                         android:textSize="14dp"
                         dailyFont:style="Medium"/>
                 </LinearLayout>
-
 
                 <RelativeLayout
                     android:id="@+id/twoButtonLayout"
@@ -122,6 +129,6 @@
                         dailyFont:style="Medium"/>
                 </RelativeLayout>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>
