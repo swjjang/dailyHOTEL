@@ -4,11 +4,9 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
@@ -32,7 +30,7 @@ public class StayBookingDetailTabNetworkController extends BaseNetworkController
 
     public void requestReviewInformation(int reserveIdx)
     {
-//        DailyNetworkAPI.getInstance(mContext).requestReviewInformation(mNetworkTag, Constants.PlaceType.HOTEL, reserveIdx, mJsonResponseListener);
+        //        DailyNetworkAPI.getInstance(mContext).requestReviewInformation(mNetworkTag, Constants.PlaceType.HOTEL, reserveIdx, mJsonResponseListener);
     }
 
     DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -47,13 +45,12 @@ public class StayBookingDetailTabNetworkController extends BaseNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-                    Review review = new Review();
-                    review.setData(jsonObject);
+                    Review review = new Review(jsonObject);
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(review);
 
-//                } else if (msgCode == 701) {
-//                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
+                    //                } else if (msgCode == 701) {
+                    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
                 } else
                 {
                     String message = response.getString("msg");

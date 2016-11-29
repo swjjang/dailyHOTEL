@@ -32,9 +32,9 @@ public class DailyJsonObjectRequest extends Request<JSONObject> implements Const
 
     private DailyJsonResponseListener mListener;
 
-    public DailyJsonObjectRequest(Object tag, int method, String url, Map<String, String> urlParameters, JSONObject parameters, DailyJsonResponseListener listener)
+    public DailyJsonObjectRequest(Object tag, int method, String url, Map<String, String> urlparameters, JSONObject parameters, DailyJsonResponseListener listener)
     {
-        this(method, DailyHotelRequest.getUrlDecoderEx(url, urlParameters), listener);
+        this(method, DailyHotelRequest.getUrlDecoderEx(url, urlparameters), listener);
 
         mParameters = parameters;
 

@@ -229,11 +229,11 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         }
 
-        final String placeName = String.format("\'%s\'", mTicketName);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.frag_rating_hotel_text2, placeName));
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), 0, placeName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        ratingHotelName.setText(spannableStringBuilder);
+//        final String placeName = String.format("\'%s\'", mTicketName);
+//        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.frag_rating_hotel_text2, placeName));
+//        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), 0, placeName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        ratingHotelName.setText(spannableStringBuilder);
 
         positiveTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -243,7 +243,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 updateSatifactionRating(mPlaceType, mReservationIndex, RECOMMEND);
 
                 Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.NAME, placeName);
+//                params.put(AnalyticsManager.KeyType.NAME, placeName);
                 params.put(AnalyticsManager.KeyType.SATISFACTION_SURVEY, AnalyticsManager.ValueType.SATISFIED);
 
                 switch (mPlaceType)
@@ -273,7 +273,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RECOMMEND);
 
                 Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.NAME, placeName);
+//                params.put(AnalyticsManager.KeyType.NAME, placeName);
                 params.put(AnalyticsManager.KeyType.SATISFACTION_SURVEY, AnalyticsManager.ValueType.DISSATISFIED);
 
                 switch (mPlaceType)
@@ -574,7 +574,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     case HOTEL:
                     {
                         params.put("reserv_idx", String.valueOf(mReservationIndex));
-//                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+                        //                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
 
                         if (Util.isTextEmpty(ratingName) == true)
                         {
@@ -589,7 +589,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     {
                         params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
-//                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
+                        //                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener);
 
                         if (Util.isTextEmpty(ratingName) == true)
                         {
@@ -643,11 +643,11 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         switch (placeType)
         {
             case HOTEL:
-//                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
+                //                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
 
             case FNB:
-//                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
+                //                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), mReserveReviewJsonResponseListener);
                 break;
         }
     }
@@ -755,7 +755,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                         DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener);
                     }
 
-//                    DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestRecentReviewInformation(mNetworkTag, mPlaceType, mRecentReviewJsonResponseListener);
+                    //                    DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestRecentReviewInformation(mNetworkTag, mPlaceType, mRecentReviewJsonResponseListener);
                 } else
                 {
                     finish();
@@ -844,14 +844,13 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-                    Review review = new Review();
-                    review.setData(jsonObject);
+                    Review review = new Review(jsonObject);
 
-//                    showSatisfactionDetailDialog(false, mReviewCodeList);
+                    //                    showSatisfactionDetailDialog(false, mReviewCodeList);
                     //                } else if (msgCode == 701) {
                     //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
 
-//                    showSatisfactionDetailDialog(false, mReviewCodeList);
+                    //                    showSatisfactionDetailDialog(false, mReviewCodeList);
                 } else
                 {
                     finish();

@@ -110,7 +110,8 @@ public class GourmetBookingDetail extends PlaceBookingDetail
             placeIndex = jsonObject.getInt("restaurantIdx");
         }
 
-        if (jsonObject.has("fnbReservationIdx") == true) {
+        if (jsonObject.has("fnbReservationIdx") == true)
+        {
             reservationIndex = jsonObject.getInt("fnbReservationIdx");
         }
     }

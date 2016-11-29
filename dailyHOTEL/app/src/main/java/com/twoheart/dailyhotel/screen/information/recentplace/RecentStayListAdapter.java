@@ -17,8 +17,6 @@ import com.twoheart.dailyhotel.util.Util;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import static com.twoheart.dailyhotel.model.Gourmet.Grade.gourmet;
-
 /**
  * Created by android_sam on 2016. 10. 13..
  */
