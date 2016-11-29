@@ -70,14 +70,14 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mPositiveTextView.setOnClickListener(this);
         mConfirmTextView.setOnClickListener(this);
 
-        View puchMaskLayout = view.findViewById(R.id.puchMaskLayout);
+        View punchMaskLayout = view.findViewById(R.id.punchMaskLayout);
 
         if (Util.isOverAPI16() == true)
         {
-            puchMaskLayout.setBackground(new BackgroundDrawable(mContext, puchMaskLayout));
+            punchMaskLayout.setBackground(new BackgroundDrawable(mContext, punchMaskLayout));
         } else
         {
-            puchMaskLayout.setBackgroundDrawable(new BackgroundDrawable(mContext, puchMaskLayout));
+            punchMaskLayout.setBackgroundDrawable(new BackgroundDrawable(mContext, punchMaskLayout));
         }
 
 
