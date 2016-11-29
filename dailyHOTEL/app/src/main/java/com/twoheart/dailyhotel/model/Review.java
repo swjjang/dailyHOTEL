@@ -27,11 +27,6 @@ public class Review implements Parcelable
 
     public Review(JSONObject jsonObject) throws JSONException
     {
-        setData(jsonObject);
-    }
-
-    private void setData(JSONObject jsonObject) throws JSONException
-    {
         if (jsonObject == null)
         {
             return;
@@ -75,7 +70,6 @@ public class Review implements Parcelable
                 }
             }
         }
-
     }
 
     public ReviewItem getReviewItem()

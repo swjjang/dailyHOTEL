@@ -26,12 +26,13 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
-import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
+import com.twoheart.dailyhotel.screen.common.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -299,7 +300,7 @@ public class MainActivity extends BaseActivity implements Constants
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-                mNetworkController.requestGourmetIsExistRating();
+                mNetworkController.requestReviewGourmet();
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
@@ -752,16 +753,16 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime)
+        public void onReviewGourmet(Review review)
         {
-            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, ticketName, reservationIndex, checkInTime);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
         }
 
         @Override
-        public void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime)
+        public void onReviewHotel(Review review)
         {
-            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInTime, checkOutTime);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 

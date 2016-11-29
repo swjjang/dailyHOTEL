@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -25,9 +26,9 @@ public class MainNetworkController extends BaseNetworkController
     {
         void updateNewEvent(boolean isNewEvent, boolean isNewCoupon, boolean isNewNotices);
 
-        void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
+        void onReviewGourmet(Review review);
 
-        void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime);
+        void onReviewHotel(Review review);
 
         void onCheckServerResponse(String title, String message);
 
@@ -119,9 +120,9 @@ public class MainNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener);
     }
 
-    protected void requestGourmetIsExistRating()
+    protected void requestReviewGourmet()
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mReviewGourmetJsonResponseListener);
     }
 
     public void requestNoticeAgreement()
@@ -299,24 +300,20 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mGourmetSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mReviewGourmetJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code == 0 && response.has("data") == true)
+                if (msgCode == 1000 && response.has("data") == true)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    Review review = new Review(response.getJSONObject("data"));
 
-                    long checkInTime = jsonObject.getLong("sday");
-                    String ticketName = jsonObject.getString("ticket_name");
-                    int reservationIndex = jsonObject.getInt("reservation_rec_idx");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSatisfactionGourmet(ticketName, reservationIndex, checkInTime);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewGourmet(review);
                 } else
                 {
                     // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
@@ -335,7 +332,7 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mReviewHotelJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -346,19 +343,12 @@ public class MainNetworkController extends BaseNetworkController
 
                 if (msgCode == 100 && response.has("data") == true)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    Review review = new Review(response.getJSONObject("data"));
 
-                    //					String guestName = jsonObject.getString("guest_name");
-                    //					String roomName = jsonObject.getString("room_name");
-                    long checkInDate = jsonObject.getLong("checkin_date");
-                    long checkOutDate = jsonObject.getLong("checkout_date");
-                    String hotelName = jsonObject.getString("hotel_name");
-                    int reservationIndex = jsonObject.getInt("reserv_idx");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSatisfactionHotel(hotelName, reservationIndex, checkInDate, checkOutDate);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewHotel(review);
                 } else
                 {
-                    requestGourmetIsExistRating();
+                    requestReviewGourmet();
                 }
             } catch (Exception e)
             {
@@ -396,7 +386,7 @@ public class MainNetworkController extends BaseNetworkController
                     DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
 
                     // 호텔 평가요청
-                    DailyNetworkAPI.getInstance(mContext).requestHotelReviewInformation(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener);
+                    DailyNetworkAPI.getInstance(mContext).requestHotelReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
                 } else
                 {
                     mOnNetworkControllerListener.onError(null);
