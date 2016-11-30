@@ -2,16 +2,12 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -22,10 +18,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.Map;
 
@@ -345,44 +338,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             placeListFragment.setScrollListTop();
         }
-    }
-
-    protected void showCallDialog()
-    {
-        View.OnClickListener positiveListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                releaseUiComponent();
-
-                if (Util.isTelephonyEnabled(PlaceSearchResultActivity.this) == true)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(PlaceSearchResultActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(PlaceSearchResultActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
-            }
-        };
-
-        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
-
-        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage,//
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, null, null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
     }
 
     protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)

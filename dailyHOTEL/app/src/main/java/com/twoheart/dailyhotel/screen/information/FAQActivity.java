@@ -11,15 +11,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -158,7 +154,7 @@ public class FAQActivity extends WebViewActivity
                     dialog.dismiss();
                 }
 
-                startDailyCall();
+                showDailyCallDialog(null);
             }
         });
 
@@ -210,25 +206,6 @@ public class FAQActivity extends WebViewActivity
                 marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
                 startActivity(marketLaunch);
             }
-        }
-    }
-
-    private void startDailyCall()
-    {
-        if (Util.isTelephonyEnabled(this) == true)
-        {
-            try
-            {
-                String phone = DailyPreference.getInstance(this).getRemoteConfigCompanyPhoneNumber();
-
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            } catch (ActivityNotFoundException e)
-            {
-                DailyToast.showToast(this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            }
-        } else
-        {
-            DailyToast.showToast(this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
         }
     }
 }
