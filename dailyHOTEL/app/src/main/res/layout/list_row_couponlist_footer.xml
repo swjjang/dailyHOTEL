@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="78dp"
     android:orientation="horizontal"
-    android:paddingBottom="20dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="20dp">
+    android:padding="10dp">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/couponUseNoticeTextView"
@@ -26,7 +23,7 @@
         android:id="@+id/couponHistoryTextView"
         android:layout_width="0dp"
         android:layout_height="38dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginLeft="10dp"
         android:layout_weight="1"
         android:background="@drawable/coupon_footer_button_background"
         android:gravity="center"

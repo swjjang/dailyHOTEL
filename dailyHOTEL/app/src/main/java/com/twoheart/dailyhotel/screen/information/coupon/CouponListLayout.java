@@ -29,7 +29,7 @@ public class CouponListLayout extends BaseLayout
 
     private DailyTextView mHeaderTextView;
     private RecyclerView mRecyclerView;
-    private View mEmptyView;
+    private View mEmptyView, mCouponLayout;
     private CouponListAdapter mListAdapter;
     private Spinner mSortSpinner;
     private SortArrayAdapter mSortArrayAdapter;
@@ -60,7 +60,9 @@ public class CouponListLayout extends BaseLayout
         initToolbar(view);
         initListView(view);
 
-        mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
+        mCouponLayout = view.findViewById(R.id.couponLayout);
+
+        mHeaderTextView = (DailyTextView) mCouponLayout.findViewById(R.id.couponTextView);
         mSortSpinner = (Spinner) view.findViewById(R.id.sortSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.coupon_sort_array);
@@ -123,6 +125,27 @@ public class CouponListLayout extends BaseLayout
 
         mEmptyView = view.findViewById(R.id.emptyView);
 
+        View couponUseNoticeTextView = mEmptyView.findViewById(R.id.couponUseNoticeTextView);
+        View couponHistoryTextView = mEmptyView.findViewById(R.id.couponHistoryTextView);
+
+        couponUseNoticeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mCouponItemListener.startNotice();
+            }
+        });
+
+        couponHistoryTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mCouponItemListener.startCouponHistory();
+            }
+        });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
@@ -141,6 +164,15 @@ public class CouponListLayout extends BaseLayout
         if (mHeaderTextView == null)
         {
             return;
+        }
+
+        if (count == 0)
+        {
+            mCouponLayout.setVisibility(View.GONE);
+            return;
+        } else
+        {
+            mCouponLayout.setVisibility(View.VISIBLE);
         }
 
         String text = mContext.getString(R.string.coupon_header_text, count);
