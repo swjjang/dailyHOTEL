@@ -67,20 +67,23 @@ public class DailyEditText extends AppCompatEditText
     {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
 
-        if (mHasDeleteButton == true && isFocused() == true && lengthAfter > 0)
+        if (mHasDeleteButton == true)
         {
-            setDeleteDrawable();
-        } else
-        {
-            Context context = getContext();
-            Drawable[] drawables = getCompoundDrawables();
-
-            if (drawables == null)
+            if (isFocused() == true && lengthAfter > 0)
             {
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                setDeleteDrawable();
             } else
             {
-                setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], drawables[DRAWABLE_RIGHT], drawables[DRAWABLE_BOTTOM]);
+                Context context = getContext();
+                Drawable[] drawables = getCompoundDrawables();
+
+                if (drawables == null)
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], null, drawables[DRAWABLE_BOTTOM]);
+                }
             }
         }
     }
