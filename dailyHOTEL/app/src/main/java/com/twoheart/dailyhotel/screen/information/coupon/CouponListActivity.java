@@ -311,7 +311,7 @@ public class CouponListActivity extends BaseActivity
             }
 
             mSortType = sortType;
-            mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType));
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType), sortType);
         }
 
         @Override
@@ -343,7 +343,7 @@ public class CouponListActivity extends BaseActivity
             mCouponList = new ArrayList<>();
             mCouponList.addAll(list);
 
-            mCouponListLayout.setData(makeSortCouponList(mCouponList, mSortType));
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, mSortType), mSortType);
 
             unLockUI();
         }
