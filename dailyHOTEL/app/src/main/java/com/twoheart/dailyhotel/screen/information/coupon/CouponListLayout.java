@@ -62,6 +62,7 @@ public class CouponListLayout extends BaseLayout
         initListView(view);
 
         mCouponLayout = view.findViewById(R.id.couponLayout);
+        mCouponLayout.setVisibility(View.INVISIBLE);
 
         mHeaderTextView = (DailyTextView) mCouponLayout.findViewById(R.id.couponTextView);
         mSortSpinner = (Spinner) view.findViewById(R.id.sortSpinner);
@@ -91,8 +92,6 @@ public class CouponListLayout extends BaseLayout
 
             }
         });
-
-        updateHeaderTextView(0);
     }
 
     private void initToolbar(View view)
@@ -167,15 +166,6 @@ public class CouponListLayout extends BaseLayout
             return;
         }
 
-        if (count == 0)
-        {
-            mCouponLayout.setVisibility(View.GONE);
-            return;
-        } else
-        {
-            mCouponLayout.setVisibility(View.VISIBLE);
-        }
-
         String text = mContext.getString(R.string.coupon_header_text, count);
         mHeaderTextView.setText(text);
     }
@@ -213,7 +203,7 @@ public class CouponListLayout extends BaseLayout
         mSortSpinner.setSelection(position);
     }
 
-    public void setData(List<Coupon> list)
+    public void setData(List<Coupon> list, CouponListActivity.SortType sortType)
     {
         if (isEmpty(list) == false)
         {
@@ -222,6 +212,17 @@ public class CouponListLayout extends BaseLayout
         {
             list = new ArrayList<>();
             mEmptyView.setVisibility(View.VISIBLE);
+        }
+
+        int couponCount = list.size();
+
+        if (couponCount == 0 && sortType == CouponListActivity.SortType.ALL)
+        {
+            mCouponLayout.setVisibility(View.GONE);
+            return;
+        } else
+        {
+            mCouponLayout.setVisibility(View.VISIBLE);
         }
 
         updateHeaderTextView(list.size());
