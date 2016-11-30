@@ -416,7 +416,7 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-    public static boolean isOverAPI25()
+    public static boolean isOverAPI24()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
@@ -428,7 +428,7 @@ public class Util implements Constants
      */
     public static boolean isUsedMutilTransition()
     {
-        return isOverAPI21() == true && isOverAPI25() == false;
+        return isOverAPI21() == true && isOverAPI24() == false;
     }
 
     public static boolean isTelephonyEnabled(Context context)

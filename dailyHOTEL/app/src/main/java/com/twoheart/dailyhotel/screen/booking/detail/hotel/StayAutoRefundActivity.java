@@ -160,21 +160,31 @@ public class StayAutoRefundActivity extends BaseActivity
             orientation = Configuration.ORIENTATION_PORTRAIT;
         }
 
-        if (isInMultiWindowMode() == true)
-        {
-
-        }
         ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
-        setWeightSelectCancelDialog(orientation);
+        boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
+        setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
     @Override
     public void onMultiWindowModeChanged(boolean isInMultiWindowMode)
     {
         super.onMultiWindowModeChanged(isInMultiWindowMode);
+
+        int orientation;
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation)
+        {
+            orientation = Configuration.ORIENTATION_LANDSCAPE;
+        } else
+        {
+            orientation = Configuration.ORIENTATION_PORTRAIT;
+        }
+
+        ExLog.d("isInMultiWindowMode : " + isInMultiWindowMode + " , rotation orientation : " + orientation);
+        setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
-    private void setWeightSelectCancelDialog(int orientation)
+    private void setWeightSelectCancelDialog(int orientation, boolean isInMultiWindowMode)
     {
         if (mDialog == null)
         {
@@ -184,18 +194,19 @@ public class StayAutoRefundActivity extends BaseActivity
         ExLog.d("orientation : " + orientation);
 
         View topView = mDialog.findViewById(R.id.topWeightView);
-        View middleView = mDialog.findViewById(R.id.middleWeightView);
+        ScrollView scrollView = (ScrollView) mDialog.findViewById(R.id.scrollView);
         View bottomView = mDialog.findViewById(R.id.bottomWeightView);
-        if (Configuration.ORIENTATION_LANDSCAPE == orientation)
+
+        if (isInMultiWindowMode == true || Configuration.ORIENTATION_LANDSCAPE == orientation)
         {
             topView.setVisibility(View.GONE);
             bottomView.setVisibility(View.GONE);
-
-
+            scrollView.setVerticalScrollBarEnabled(true);
         } else
         {
             topView.setVisibility(View.VISIBLE);
             bottomView.setVisibility(View.VISIBLE);
+            scrollView.setVerticalScrollBarEnabled(false);
         }
     }
 
@@ -455,7 +466,9 @@ public class StayAutoRefundActivity extends BaseActivity
             {
                 orientation = Configuration.ORIENTATION_PORTRAIT;
             }
-            setWeightSelectCancelDialog(orientation);
+
+            boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
+            setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
             mDialog.show();
         } catch (Exception e)
         {
