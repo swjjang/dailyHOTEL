@@ -1,10 +1,11 @@
-/* Copyright (c) 2016, Facebook, Inc.
+/**
+ * Copyright (c) 2016-present, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the license found in the LICENSE file in
- * the root directory of this source tree.
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  */
-
 package com.facebook.keyframes.model;
 
 import java.util.List;
@@ -68,12 +69,6 @@ public class KFImage {
     public int key;
 
     public KFImage build() {
-      for (int i = 0; i < features.size(); i++) {
-        features.get(i).postProcess(frameRate);
-      }
-      for (int i = 0; i < animationGroups.size(); i++) {
-        animationGroups.get(i).postProcess(frameRate);
-      }
       return new KFImage(frameRate, frameCount, features, animationGroups, canvasSize, key);
     }
   }
@@ -141,7 +136,7 @@ public class KFImage {
       matrix = matrixMap.get(group.getGroupId());
       matrix.reset();
       if (group.getAnchorPoint() != null) {
-        group.getAnchorPoint().apply(frameProgress, matrix);
+        group.getAnchorPoint().apply(matrix);
       }
       for (int animationIndex = 0, animationsLen = group.getAnimations().size();
            animationIndex < animationsLen;

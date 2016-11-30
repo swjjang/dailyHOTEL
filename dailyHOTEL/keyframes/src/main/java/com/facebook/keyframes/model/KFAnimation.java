@@ -1,8 +1,10 @@
-/* Copyright (c) 2016, Facebook, Inc.
+/**
+ * Copyright (c) 2016-present, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the license found in the LICENSE file in
- * the root directory of this source tree.
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  */
 
 package com.facebook.keyframes.model;
@@ -13,7 +15,6 @@ import java.util.List;
 import com.facebook.keyframes.model.keyframedmodels.KeyFramedAnchorPoint;
 import com.facebook.keyframes.model.keyframedmodels.KeyFramedMatrixAnimation;
 import com.facebook.keyframes.model.keyframedmodels.KeyFramedObject;
-import com.facebook.keyframes.model.keyframedmodels.KeyFramedOpacity;
 import com.facebook.keyframes.model.keyframedmodels.KeyFramedStrokeWidth;
 import com.facebook.keyframes.util.ArgCheckUtil;
 import com.facebook.keyframes.util.ListHelper;
@@ -44,8 +45,7 @@ public class KFAnimation {
     X_POSITION (true),
     Y_POSITION (true),
     ANCHOR_POINT (false),
-    STROKE_WIDTH (false),
-    OPACITY (false);
+    STROKE_WIDTH (false);
 
     /**
      * Whether this animation is matrix based or not.  Currently, the only non-matrix based
@@ -139,8 +139,6 @@ public class KFAnimation {
       mKeyFramedAnimation = KeyFramedStrokeWidth.fromAnimation(this);
     } else if (mPropertyType == PropertyType.ANCHOR_POINT) {
       mKeyFramedAnimation = KeyFramedAnchorPoint.fromAnchorPoint(this);
-    } else if (mPropertyType == PropertyType.OPACITY) {
-      mKeyFramedAnimation = KeyFramedOpacity.fromAnimation(this);
     } else {
       throw new IllegalArgumentException(
           "Unknown property type for animation post processing: " + mPropertyType);
@@ -169,15 +167,5 @@ public class KFAnimation {
 
   public KeyFramedObject getAnimation() {
     return mKeyFramedAnimation;
-  }
-
-  /**
-   * Updates this {@link KFAnimation} object with the frame rate of the entire animation. This
-   * allows the animation to update its {@link KeyFramedObject} with the right frame rate.
-   *
-   * @param frameRate {@code int} that specifies the frame rate of the entire animation
-   */
-  public void setFrameRate(int frameRate) {
-    mKeyFramedAnimation.updateWithFrameRate(frameRate);
   }
 }

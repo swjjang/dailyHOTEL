@@ -66,10 +66,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
-            android:spinnerMode="dropdown"
-            android:dropDownWidth="120dp"
             android:background="@drawable/shape_coupon_sorting_button_backround"
-            />
+            android:dropDownWidth="120dp"
+            android:spinnerMode="dropdown"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/couponTextView"
