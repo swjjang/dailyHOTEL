@@ -25,7 +25,6 @@ import java.util.List;
  */
 public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 {
-
     private static final int RESOURCE_ID = R.layout.list_row_select_coupon;
 
     private Context mContext;

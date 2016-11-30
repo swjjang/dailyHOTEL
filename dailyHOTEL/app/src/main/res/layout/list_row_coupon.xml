@@ -37,7 +37,7 @@
             android:layout_toLeftOf="@id/vericalLine"
             android:gravity="center_vertical"
             android:textColor="@color/black"
-            android:textSize="21dp"
+            android:textSize="16dp"
             dailyFont:style="Bold"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
