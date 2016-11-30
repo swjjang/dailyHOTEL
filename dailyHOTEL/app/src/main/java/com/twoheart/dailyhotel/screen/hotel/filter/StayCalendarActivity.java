@@ -81,10 +81,10 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         if (mEndSaleTime == null)
         {
-            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
+            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX - 1);
         } else if (mEndSaleTime.getOffsetDailyDay() > ENABLE_DAYCOUNT_OF_MAX)
         {
-            mEndSaleTime.setOffsetDailyDay(ENABLE_DAYCOUNT_OF_MAX);
+            mEndSaleTime.setOffsetDailyDay(ENABLE_DAYCOUNT_OF_MAX - 1);
         }
 
         if (saleTime == null || mStartSaleTime == null)
@@ -239,7 +239,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (mCheckInDayView != null && mCheckOutDayView != null)
                 {
                     // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                    if (mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1] == view)
+                    if (mDailyViews[mEndSaleTime.getOffsetDailyDay()] == view)
                     {
                         DailyToast.showToast(this, getString(R.string.label_message_dont_check_date), Toast.LENGTH_SHORT);
                         releaseUiComponent();
@@ -268,7 +268,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     view.setSelected(true);
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-                    mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1].setEnabled(true);
+                    mDailyViews[mEndSaleTime.getOffsetDailyDay()].setEnabled(true);
                 } else
                 {
                     mCheckOutDayView = view;
@@ -437,12 +437,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        if (mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1] == mCheckOutDayView)
+        if (mDailyViews[mEndSaleTime.getOffsetDailyDay()] == mCheckOutDayView)
         {
             return;
         }
 
-        mDailyViews[mEndSaleTime.getOffsetDailyDay() - 1].setEnabled(false);
+        mDailyViews[mEndSaleTime.getOffsetDailyDay()].setEnabled(false);
     }
 
     private void reset()

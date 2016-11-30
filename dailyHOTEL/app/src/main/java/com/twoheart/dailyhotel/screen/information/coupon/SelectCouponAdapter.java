@@ -123,7 +123,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         try
         {
             String expireText = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-            expireText = String.format("(~%s)", expireText);
+            expireText = String.format("~%s", expireText);
             holder.expireTextView.setText(expireText);
             holder.expireTextView.setVisibility(View.VISIBLE);
         } catch (ParseException e)
