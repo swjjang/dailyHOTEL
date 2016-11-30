@@ -96,7 +96,9 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
-                android:scrollbars="none">
+                android:scrollbarStyle="outsideInset"
+                android:fadeScrollbars="false"
+                android:scrollbars="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
