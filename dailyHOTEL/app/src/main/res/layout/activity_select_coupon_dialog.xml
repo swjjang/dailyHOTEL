@@ -61,6 +61,11 @@
                 android:layout_below="@id/listView"
                 android:orientation="vertical">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_ce7e7e7"/>
+
                 <LinearLayout
                     android:id="@+id/oneButtonLayout"
                     android:layout_width="match_parent"
@@ -87,11 +92,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:background="@color/default_line_ce7e7e7"/>
 
                     <View
                         android:id="@+id/buttonVerticalLine"
