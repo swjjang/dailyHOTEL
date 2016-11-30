@@ -18,7 +18,6 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -34,7 +33,6 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -47,8 +45,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import static com.twoheart.dailyhotel.R.id.inputReviewView;
 
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -626,7 +622,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 break;
             }
 
-            case inputReviewView:
+            case R.id.inputReviewView:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
@@ -730,7 +726,12 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     dialog.dismiss();
                 }
 
-                startDailyCall();
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity != null)
+                {
+                    baseActivity.showDailyCallDialog(null);
+                }
 
                 AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                     , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.CALL, null);
@@ -785,27 +786,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
                 startActivity(marketLaunch);
             }
-        }
-    }
-
-    private void startDailyCall()
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (Util.isTelephonyEnabled(baseActivity) == true)
-        {
-            try
-            {
-                String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            } catch (ActivityNotFoundException e)
-            {
-                DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            }
-        } else
-        {
-            DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
         }
     }
 

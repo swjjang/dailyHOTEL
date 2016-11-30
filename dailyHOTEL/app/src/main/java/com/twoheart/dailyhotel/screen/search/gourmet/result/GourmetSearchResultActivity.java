@@ -561,7 +561,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowCallDialog()
         {
-            showCallDialog();
+            showDailyCallDialog(null);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);
