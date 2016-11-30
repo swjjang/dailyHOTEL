@@ -204,7 +204,7 @@
     <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_numeric">숫자만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_register_coupon">할인쿠폰 코드를 정확하게 입력했는지 다시 확인해주세요.</string>
-    <string name="toast_msg_no_call">전화기능을 사용할 수 없는 기기입니다.\n데일리고객센터 전화번호는 1800–9120입니다.</string>
+    <string name="toast_msg_no_call_format">전화기능을 사용할 수 없는 기기입니다.\n데일리고객센터 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_hotel_call">전화기능을 사용할 수 없는 기기입니다.\n호텔 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_gourmet_call">전화기능을 사용할 수 없는 기기입니다.\n레스토랑 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_dont_past_hotelinfo">이전 날짜 정보는 조회 할 수 없습니다.</string>
@@ -257,6 +257,8 @@
 
     <string name="dialog_btn_call">전화연결</string>
     <string name="dialog_msg_call">데일리 고객센터로 전화 연결합니다.</string>
+    <string name="dialog_msg_direct_call_stay">호텔로 직접 전화 연결합니다.</string>
+    <string name="dialog_msg_direct_call_gourmet">레스토랑으로 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
     <string name="dialog_btn_payment_no_reserve">%1$s 이하 상품은 적립금을 사용할 수 없습니다.</string>

@@ -1,19 +1,16 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -27,11 +24,9 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -451,7 +446,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     dialog.dismiss();
                 }
 
-                startDailyCall();
+                showDailyCallDialog(null);
             }
         });
 
@@ -490,25 +485,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
-    }
-
-    private void startDailyCall()
-    {
-        if (Util.isTelephonyEnabled(this) == true)
-        {
-            try
-            {
-                String phone = DailyPreference.getInstance(this).getRemoteConfigCompanyPhoneNumber();
-
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            } catch (ActivityNotFoundException e)
-            {
-                DailyToast.showToast(this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            }
-        } else
-        {
-            DailyToast.showToast(this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

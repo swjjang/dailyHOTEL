@@ -1,21 +1,16 @@
 package com.twoheart.dailyhotel.screen.information;
 
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ContactUsActivity extends BaseActivity implements View.OnClickListener
@@ -84,7 +79,30 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.callLayout:
-                showCallDialog(this);
+                showDailyCallDialog(new OnCallDialogListener()
+                {
+                    @Override
+                    public void onShowDialog()
+                    {
+
+                    }
+
+                    @Override
+                    public void onPositiveButtonClick(View v)
+                    {
+                        AnalyticsManager.getInstance(ContactUsActivity.this).recordEvent(//
+                            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU,//
+                            AnalyticsManager.Label.CALL, null);
+                    }
+
+                    @Override
+                    public void onNativeButtonClick(View v)
+                    {
+                        AnalyticsManager.getInstance(ContactUsActivity.this).recordEvent(//
+                            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU,//
+                            AnalyticsManager.Label.CANCEL, null);
+                    }
+                });
                 break;
 
             case R.id.mailLayout:
@@ -103,53 +121,6 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
         {
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
         }
-    }
-
-    private void showCallDialog(final BaseActivity baseActivity)
-    {
-        View.OnClickListener positiveListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(baseActivity) == true)
-                {
-                    try
-                    {
-                        baseActivity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
-            }
-        };
-
-        String operatingTimeMessage = DailyPreference.getInstance(baseActivity).getOperationTimeMessage(baseActivity);
-
-        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage,//
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CANCEL, null);
-                }
-            }, null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
     }
 
     public void startEmail()
