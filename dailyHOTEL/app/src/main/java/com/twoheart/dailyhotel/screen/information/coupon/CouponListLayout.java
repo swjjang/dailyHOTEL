@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -293,26 +292,19 @@ public class CouponListLayout extends BaseLayout
 
             if (view != null)
             {
-                TextView textView = (TextView) view.findViewById(R.id.textView);
+                TextView textView = (TextView) view;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                textView.setSelected(mSelectedPosition == position ? true : false);
 
-                if (textView != null)
+                if (mSelectedPosition == position)
                 {
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-
-                    FontManager.apply(textView, FontManager.getInstance(mContext).getRegularTypeface());
-
-                    textView.setSelected(mSelectedPosition == position ? true : false);
-
-                    if (mSelectedPosition == position)
-                    {
-                        textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
-                    } else
-                    {
-                        textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-                    }
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+                } else
+                {
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
                 }
-
             }
+
             return view;
         }
     }
