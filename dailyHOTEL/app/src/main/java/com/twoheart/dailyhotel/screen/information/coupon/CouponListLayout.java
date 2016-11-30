@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -295,6 +297,10 @@ public class CouponListLayout extends BaseLayout
 
                 if (textView != null)
                 {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+
+                    FontManager.apply(textView, FontManager.getInstance(mContext).getRegularTypeface());
+
                     textView.setSelected(mSelectedPosition == position ? true : false);
 
                     if (mSelectedPosition == position)
