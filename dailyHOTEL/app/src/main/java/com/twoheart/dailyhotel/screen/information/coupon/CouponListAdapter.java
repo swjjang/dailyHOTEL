@@ -205,13 +205,11 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (dueDate > 7)
             {
                 // 8일 남음 이상
-                dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
+                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
 
             } else
             {
                 // 7일 남음 부터 오늘까지
-                dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
                 dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
             }
 
@@ -232,7 +230,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             {
                 if (isEmptyAmountMinimum == false)
                 {
-                    lastLineText += ", ";
+                    lastLineText += ",\n";
                 }
 
                 lastLineText += CouponUtil.getDateOfStayAvailableString( //
