@@ -901,6 +901,7 @@
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">유효기간만료</string>
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>
+    <string name="coupon_dont_download_coupon">할인쿠폰 다운로드 완료</string>
     <string name="coupon_do_download_coupon">다운로드 하기</string>
     <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 방문시 사용가능</string>
     <string name="coupon_sort_default_text">전체 쿠폰 보기</string>

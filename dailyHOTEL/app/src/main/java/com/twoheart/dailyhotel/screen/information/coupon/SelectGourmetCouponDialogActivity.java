@@ -285,7 +285,19 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                 case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
                 {
                     mLayout.setVisibility(true);
-                    mLayout.setTitle(R.string.coupon_download_coupon);
+
+                    boolean hasDownloadCoupon = false;
+
+                    for (Coupon coupon : list)
+                    {
+                        if (coupon.isDownloaded == false)
+                        {
+                            hasDownloadCoupon = true;
+                            break;
+                        }
+                    }
+
+                    mLayout.setTitle(hasDownloadCoupon == true ? R.string.coupon_download_coupon : R.string.coupon_dont_download_coupon);
                     mLayout.setOneButtonLayout(true, R.string.dialog_btn_text_close);
                     mLayout.setData(list, false);
                     break;
