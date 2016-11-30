@@ -109,8 +109,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textColor="@color/coupon_red_wine_text"
-                android:textSize="12dp"
-                dailyFont:style="Medium"/>
+                android:textSize="11dp"/>
 
             <ImageView
                 android:id="@+id/useableStayImageView"
