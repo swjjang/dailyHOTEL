@@ -1,8 +1,10 @@
-/* Copyright (c) 2016, Facebook, Inc.
+/**
+ * Copyright (c) 2016-present, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the license found in the LICENSE file in
- * the root directory of this source tree.
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  */
 
 package com.facebook.keyframes.model.keyframedmodels;
@@ -11,37 +13,41 @@ import android.graphics.Matrix;
 
 import com.facebook.keyframes.model.HasKeyFrame;
 import com.facebook.keyframes.model.KFAnimation;
-import com.facebook.keyframes.model.KFAnimationFrame;
-
-import java.util.List;
 
 /**
  * A special object that defines the anchor point for the other animations in a group or feature.
+ * Currently, it does not support keyframing.
  */
-public class KeyFramedAnchorPoint extends KeyFramedObject<KFAnimationFrame, Matrix> {
+public class KeyFramedAnchorPoint extends KeyFramedObject<HasKeyFrame, Matrix> {
+
+  public final float anchorX;
+  public final float anchorY;
 
   public static KeyFramedAnchorPoint fromAnchorPoint(KFAnimation animation) {
-    return new KeyFramedAnchorPoint(animation.getAnimationFrames(), animation.getTimingCurves());
+    float[] anchor = animation.getAnimationFrames().get(0).getData();
+    return new KeyFramedAnchorPoint(anchor[0], anchor[1]);
   }
 
-  private KeyFramedAnchorPoint(
-      List<KFAnimationFrame> objects,
-      float[][][] timingCurves) {
-    super(objects, timingCurves);
+  private KeyFramedAnchorPoint(float anchorX, float anchorY) {
+    this.anchorX = anchorX;
+    this.anchorY = anchorY;
+  }
+
+  public void apply(Matrix matrix) {
+    matrix.postTranslate(-anchorX, -anchorY);
+  }
+
+  @Override
+  public void apply(float frameProgress, Matrix modifiable) {
+    throw new NoSuchMethodError("Anchor point currently has no keyframing ability");
   }
 
   @Override
   protected void applyImpl(
-      KFAnimationFrame stateA,
-      KFAnimationFrame stateB,
+      HasKeyFrame stateA,
+      HasKeyFrame stateB,
       float interpolationValue,
-      Matrix matrix) {
-    if (stateB == null) {
-      matrix.postTranslate(-stateA.getData()[0], -stateA.getData()[1]);
-      return;
-    }
-    matrix.postTranslate(
-        -interpolateValue(stateA.getData()[0], stateB.getData()[0], interpolationValue),
-        -interpolateValue(stateA.getData()[1], stateB.getData()[1], interpolationValue));
+      Matrix modifiable) {
+    throw new NoSuchMethodError("Anchor point currently has no keyframing ability");
   }
 }
