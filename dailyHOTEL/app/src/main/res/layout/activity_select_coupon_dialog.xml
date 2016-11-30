@@ -54,20 +54,18 @@
                     android:layout_height="10dp"/>
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_ce7e7e7"/>
 
             <LinearLayout
                 android:id="@+id/oneButtonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_gravity="center"
-                android:orientation="horizontal"
                 android:padding="10dp"
                 android:visibility="gone">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/default_line_ce7e7e7"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/confirmTextView"
@@ -86,11 +84,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:visibility="gone">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/default_line_ce7e7e7"/>
 
                 <View
                     android:id="@+id/buttonVerticalLine"
