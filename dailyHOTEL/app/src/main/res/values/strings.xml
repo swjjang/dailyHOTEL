@@ -902,7 +902,7 @@
     <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
     <string name="coupon_history_text">사용 내역</string>
     <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
-    <string name="coupon_list_empty_message">사용 할 수 있는 할인 쿠폰이 없습니다.</string>
+    <string name="coupon_list_empty_message">사용 가능한 할인쿠폰이 없습니다.</string>
     <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다.</string>
     <string name="coupon_history_header_sub_description">(단, 유효기간이 만료된 쿠폰은 만료 후 1개월 간 정보가 제공됩니다.)</string>
     <string name="coupon_history_use_text">결제시 사용</string>
@@ -917,7 +917,7 @@
     <string name="label_coupon_sorting">할인쿠폰 보기</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
     <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
-    <string name="message_select_coupon_empty">사용 가능한 할인 쿠폰이 없습니다.</string>
+    <string name="message_select_coupon_empty">사용 가능한 할인쿠폰이 없습니다.</string>
     <string name="message_select_coupon_download">다운로드하기</string>
     <string name="message_please_download_coupon">할인쿠폰을 다운로드해주세요.</string>
     <string name="message_downloaded_all_coupon">할인쿠폰을 모두 다운로드했습니다.</string>
