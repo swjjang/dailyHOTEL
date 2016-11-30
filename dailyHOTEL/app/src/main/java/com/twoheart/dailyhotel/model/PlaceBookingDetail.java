@@ -13,6 +13,13 @@ import java.util.Map;
 
 public abstract class PlaceBookingDetail implements Parcelable
 {
+    public class ReviewStatusType
+    {
+        public static final String ADDABLE = "ADDABLE"; // 리뷰가능기간, 리뷰없음
+        public static final String COMPLETE = "COMPLETE"; // 리뷰있음
+        public static final String NONE = "NONE"; // (리뷰불가능기간, 리뷰없음) or (마이그레이션 데이터)
+    }
+
     public int placeIndex;
 
     public String address;
@@ -33,6 +40,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public long currentDateTime;
     public long dailyDateTime;
     public int reservationIndex;
+    public String reviewStatusType;
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
@@ -65,6 +73,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeLong(currentDateTime);
         dest.writeLong(dailyDateTime);
         dest.writeInt(reservationIndex);
+        dest.writeString(reviewStatusType);
     }
 
     protected void readFromParcel(Parcel in)
@@ -89,6 +98,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         currentDateTime = in.readLong();
         dailyDateTime = in.readLong();
         reservationIndex = in.readInt();
+        reviewStatusType = in.readString();
     }
 
     public Map<String, List<String>> getSpecification()

@@ -1164,7 +1164,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelReviewInformation(Object tag, DailyHotelJsonResponseListener listener)
+    public void requestStayReviewInformation(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/question" : "NzQkMTIkNDkkMiQ0OSQ4NyQ2NCQ4OSQzOCQyNSQxNyQ3NiQzMSQzNCQ0OSQxNyQ=$MUZVFMEQ4OUMxSNTUTPwNUIxQzVVDNUJXFRZTVCQjQyFMUNCODXg4RDZTBQMENBMTc0RTcxTMjUyM0Q1KRDFFMDXBGMTU2MEKNNEMg==$";
 
@@ -1193,7 +1193,7 @@ public class DailyNetworkAPI implements IDailyNetwork
      * @param listener
      */
     @Override
-    public void requestHotelReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener)
+    public void requestStayReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{reserveIdx}/question" : "";
 

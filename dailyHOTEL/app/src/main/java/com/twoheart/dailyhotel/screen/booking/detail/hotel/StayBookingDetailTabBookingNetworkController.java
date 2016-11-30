@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -16,21 +17,21 @@ import java.util.Map;
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class StayBookingDetailTabNetworkController extends BaseNetworkController
+public class StayBookingDetailTabBookingNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onReviewInformation(Review review);
     }
 
-    public StayBookingDetailTabNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public StayBookingDetailTabBookingNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
     public void requestReviewInformation(int reserveIdx)
     {
-        //        DailyNetworkAPI.getInstance(mContext).requestReviewInformation(mNetworkTag, Constants.PlaceType.HOTEL, reserveIdx, mJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, reserveIdx, mJsonResponseListener);
     }
 
     DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()

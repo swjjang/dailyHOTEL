@@ -386,7 +386,7 @@ public class MainNetworkController extends BaseNetworkController
                     DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
 
                     // 호텔 평가요청
-                    DailyNetworkAPI.getInstance(mContext).requestHotelReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
+                    DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
                 } else
                 {
                     mOnNetworkControllerListener.onError(null);

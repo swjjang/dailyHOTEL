@@ -130,6 +130,13 @@ public class HotelBookingDetail extends PlaceBookingDetail
         readyForRefund = jsonObject.getBoolean("readyForRefund");
         transactionType = jsonObject.getString("transactionType");
         reservationIndex = jsonObject.getInt("hotelReservationIdx");
+
+        if (jsonObject.has("reviewStatusType") == true)
+        {
+            reviewStatusType = jsonObject.getString("reviewStatusType");
+        } else {
+            reviewStatusType = ReviewStatusType.NONE;
+        }
     }
 
     @Override

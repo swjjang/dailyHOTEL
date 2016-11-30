@@ -20,14 +20,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
+import com.twoheart.dailyhotel.screen.common.ReviewActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -38,13 +40,15 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import static com.twoheart.dailyhotel.R.id.inputReviewView;
 
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -56,6 +60,8 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
+
+    private StayBookingDetailTabBookingNetworkController mNetworkController;
 
     public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
@@ -76,6 +82,8 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
     {
         super.onCreate(savedInstanceState);
 
+        mNetworkController = new StayBookingDetailTabBookingNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
+
         Bundle bundle = getArguments();
 
         if (bundle != null)
@@ -95,7 +103,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             return null;
         }
 
-        View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container, false);
+        View view = inflater.inflate(R.layout.fragment_stay_booking_tab_booking, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
@@ -149,11 +157,51 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-        View inputReview = view.findViewById(R.id.inputReviewView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
-        inputReview.setOnClickListener(this);
+
+        initReviewButtonLayout(view, bookingDetail);
+    }
+
+    private void initReviewButtonLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
+        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        DailyTextView inputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+
+        String reviewStatus = bookingDetail.reviewStatusType;
+        if (Util.isTextEmpty(reviewStatus) == false)
+        {
+            reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
+        }
+
+        inputReviewView.setTag(reviewStatus);
+        inputReviewView.setOnClickListener(this);
+
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            inputReviewView.setVisibility(View.VISIBLE);
+            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+        } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            inputReviewView.setVisibility(View.VISIBLE);
+            inputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
+            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
+        } else
+        {
+            inputReviewVerticalLine.setVisibility(View.GONE);
+            inputReviewView.setVisibility(View.GONE);
+            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+        }
     }
 
     private void initHotelInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
@@ -578,28 +626,37 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                 break;
             }
 
-            case R.id.inputReviewView:
+            case inputReviewView:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }
 
-                lockUI();
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-                try
+                if (v.getTag() == null)
                 {
-                    long checkInTime = DailyCalendar.getTimeGMT9(mBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
-                    long checkOutTime = DailyCalendar.getTimeGMT9(mBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
-
-                    Intent intent = SatisfactionActivity.newInstance(baseActivity, mBookingDetail.placeName,//
-                        mBookingDetail.reservationIndex, checkInTime, checkOutTime);
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
-                } catch (ParseException e)
-                {
-                    ExLog.d(e.getMessage());
+                    return;
                 }
+
+                if ((v.getTag() instanceof String) == false)
+                {
+                    return;
+                }
+
+                String reviewState = (String) v.getTag();
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+
+                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewState) == true)
+                {
+                    DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
+                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewState) == true)
+                {
+                    lockUI();
+
+                    mNetworkController.requestReviewInformation(mReservationIndex);
+                }
+
                 break;
             }
         }
@@ -751,4 +808,40 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
         }
     }
+
+    private StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
+        mNetworkControllerListener = new StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onReviewInformation(Review review)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = ReviewActivity.newInstance(baseActivity, review);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelBookingDetailTabBookingFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            HotelBookingDetailTabBookingFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            HotelBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            HotelBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
+        }
+    };
 }

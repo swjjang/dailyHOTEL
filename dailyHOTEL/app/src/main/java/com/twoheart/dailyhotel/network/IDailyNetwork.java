@@ -560,11 +560,11 @@ interface IDailyNetwork
     void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
 
     // 리뷰
-    void requestHotelReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
+    void requestStayReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
 
     void requestGourmetReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
 
-    void requestHotelReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
+    void requestStayReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
 
     void requestGourmetReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
 }

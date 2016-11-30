@@ -114,6 +114,13 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         {
             reservationIndex = jsonObject.getInt("fnbReservationIdx");
         }
+
+        if (jsonObject.has("reviewStatusType") == true)
+        {
+            reviewStatusType = jsonObject.getString("reviewStatusType");
+        } else {
+            reviewStatusType = ReviewStatusType.NONE;
+        }
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

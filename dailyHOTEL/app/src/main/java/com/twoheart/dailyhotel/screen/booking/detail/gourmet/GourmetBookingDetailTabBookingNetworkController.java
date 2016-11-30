@@ -16,14 +16,14 @@ import java.util.Map;
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class GourmetBookingDetailTabNetworkController extends BaseNetworkController
+public class GourmetBookingDetailTabBookingNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onReviewInformation(Review review);
     }
 
-    public GourmetBookingDetailTabNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public GourmetBookingDetailTabBookingNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }

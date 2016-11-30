@@ -17,15 +17,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
+import com.twoheart.dailyhotel.screen.common.ReviewActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -34,11 +37,14 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import static com.twoheart.dailyhotel.R.id.inputReviewView;
 
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -47,6 +53,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
     private GourmetBookingDetail mBookingDetail;
     private int mReservationIndex;
+
+    private GourmetBookingDetailTabBookingNetworkController mNetworkController;
 
     public static GourmetBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
@@ -67,6 +75,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
     {
         super.onCreate(savedInstanceState);
 
+        mNetworkController = new GourmetBookingDetailTabBookingNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
+
         Bundle bundle = getArguments();
 
         if (bundle != null)
@@ -86,7 +96,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             return null;
         }
 
-        View view = inflater.inflate(R.layout.fragment_courmetbooking_tab_booking, container, false);
+        View view = inflater.inflate(R.layout.fragment_gourmet_booking_tab_booking, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
@@ -139,21 +149,50 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
-        View inputReviewView = view.findViewById(R.id.inputReviewView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
+
+        initReviewButtonLayout(view, bookingDetail);
+    }
+
+    private void initReviewButtonLayout(View view, GourmetBookingDetail bookingDetail)
+    {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
+        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        DailyTextView inputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+
+        String reviewStatus = bookingDetail.reviewStatusType;
+        if (Util.isTextEmpty(reviewStatus) == false)
+        {
+            reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
+        }
+
+        inputReviewView.setTag(reviewStatus);
         inputReviewView.setOnClickListener(this);
 
-        if (true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             inputReviewVerticalLine.setVisibility(View.VISIBLE);
             inputReviewView.setVisibility(View.VISIBLE);
+            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+        } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            inputReviewView.setVisibility(View.VISIBLE);
+            inputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
+            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
         } else
         {
             inputReviewVerticalLine.setVisibility(View.GONE);
             inputReviewView.setVisibility(View.GONE);
+            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
         }
     }
 
@@ -372,99 +411,39 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 break;
             }
 
-            case R.id.inputReviewView:
+            case inputReviewView:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }
 
-                lockUI();
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-                try
+                if (v.getTag() == null)
                 {
-                    long reservationTime = DailyCalendar.getTimeGMT9(mBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT);
-
-                    Intent intent = SatisfactionActivity.newInstance(baseActivity, //
-                        mBookingDetail.ticketName, mBookingDetail.reservationIndex, reservationTime);
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
-                } catch (ParseException e)
-                {
-                    ExLog.d(e.getMessage());
+                    return;
                 }
+
+                if ((v.getTag() instanceof String) == false)
+                {
+                    return;
+                }
+
+                String reviewState = (String) v.getTag();
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+
+                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewState) == true)
+                {
+                    DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
+                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewState) == true)
+                {
+                    lockUI();
+
+                    mNetworkController.requestReviewInformation(mReservationIndex);
+                }
+
                 break;
             }
-            //            case R.id.callDailyView:
-            //            {
-            //                BaseActivity baseActivity = (BaseActivity) getActivity();
-            //
-            //                if (Util.isTelephonyEnabled(baseActivity) == true)
-            //                {
-            //                    try
-            //                    {
-            //                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-            //
-            //                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            //                    } catch (ActivityNotFoundException e)
-            //                    {
-            //                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            //                    }
-            //                } else
-            //                {
-            //                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            //                }
-            //                break;
-            //            }
-            //
-            //            case R.id.kakaoDailyView:
-            //            {
-            //                try
-            //                {
-            //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-            //                } catch (ActivityNotFoundException e)
-            //                {
-            //                    try
-            //                    {
-            //                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            //                    } catch (ActivityNotFoundException e1)
-            //                    {
-            //                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-            //                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-            //                        startActivity(marketLaunch);
-            //                    }
-            //                }
-            //                break;
-            //            }
-            //
-            //            case R.id.callPlaceView:
-            //            {
-            //                BaseActivity baseActivity = (BaseActivity) getActivity();
-            //
-            //                if (Util.isTelephonyEnabled(baseActivity) == true)
-            //                {
-            //                    String phone = mBookingDetail.gourmetPhone;
-            //
-            //                    if (Util.isTextEmpty(mBookingDetail.gourmetPhone) == true)
-            //                    {
-            //                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-            //                    }
-            //
-            //                    try
-            //                    {
-            //                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-            //                    } catch (ActivityNotFoundException e)
-            //                    {
-            //                        String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
-            //                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-            //                    }
-            //                } else
-            //                {
-            //                    String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
-            //                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-            //                }
-            //                break;
-            //            }
         }
     }
 
@@ -481,4 +460,40 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         return calendar.getTimeInMillis();
     }
+
+    private GourmetBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
+        mNetworkControllerListener = new GourmetBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onReviewInformation(Review review)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = ReviewActivity.newInstance(baseActivity, review);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
+        }
+    };
 }
