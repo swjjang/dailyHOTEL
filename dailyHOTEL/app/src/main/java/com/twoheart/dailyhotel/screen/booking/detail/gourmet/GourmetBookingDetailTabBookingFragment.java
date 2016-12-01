@@ -7,6 +7,7 @@
  */
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -44,8 +46,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static com.twoheart.dailyhotel.R.id.inputReviewView;
-
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
@@ -53,6 +53,9 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
     private GourmetBookingDetail mBookingDetail;
     private int mReservationIndex;
+
+    private View mInputReviewVerticalLine;
+    private DailyTextView mInputReviewView;
 
     private GourmetBookingDetailTabBookingNetworkController mNetworkController;
 
@@ -163,36 +166,41 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             return;
         }
 
-        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
-        DailyTextView inputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        mInputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewView.setOnClickListener(this);
 
         String reviewStatus = bookingDetail.reviewStatusType;
+        updateReviewButtonLayout(reviewStatus);
+    }
+
+    private void updateReviewButtonLayout(String reviewStatus)
+    {
         if (Util.isTextEmpty(reviewStatus) == true)
         {
             reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
         }
 
-        inputReviewView.setTag(reviewStatus);
-        inputReviewView.setOnClickListener(this);
+        mInputReviewView.setTag(reviewStatus);
 
         if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
         {
-            inputReviewVerticalLine.setVisibility(View.VISIBLE);
-            inputReviewView.setVisibility(View.VISIBLE);
-            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
-            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
         } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
         {
-            inputReviewVerticalLine.setVisibility(View.VISIBLE);
-            inputReviewView.setVisibility(View.VISIBLE);
-            inputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
-            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
         } else
         {
-            inputReviewVerticalLine.setVisibility(View.GONE);
-            inputReviewView.setVisibility(View.GONE);
-            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
-            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+            mInputReviewVerticalLine.setVisibility(View.GONE);
+            mInputReviewView.setVisibility(View.GONE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
         }
     }
 
@@ -240,7 +248,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         }
 
         // 방문일 방문시간
-        initTimeInformatonLayout(context, view, bookingDetail);
+        initTimeInformationLayout(context, view, bookingDetail);
 
         TextView gourmetNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
         TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
@@ -253,7 +261,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         addressTextView.setText(bookingDetail.address);
     }
 
-    private void initTimeInformatonLayout(Context context, View view, GourmetBookingDetail bookingDetail)
+    private void initTimeInformationLayout(Context context, View view, GourmetBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -411,7 +419,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 break;
             }
 
-            case inputReviewView:
+            case R.id.inputReviewView:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
@@ -447,6 +455,26 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                mBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                updateReviewButtonLayout(mBookingDetail.reviewStatusType);
+            }
+        }
+    }
+
     private long getCompareDate(long timeInMillis)
     {
         Calendar calendar = DailyCalendar.getInstance();
@@ -475,25 +503,60 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            GourmetBookingDetailTabBookingFragment.this.onErrorResponse(volleyError);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
+                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.logException(volleyError);
+            } else
+            {
+                ExLog.e(volleyError != null ? volleyError.getMessage() : "unKnowen volleyError from get Review data");
+            }
         }
 
         @Override
         public void onError(Exception e)
         {
-            GourmetBookingDetailTabBookingFragment.this.onError(e);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
+                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.logException(e);
+            } else
+            {
+                ExLog.e(e != null ? e.getMessage() : "unKnowen Exception from get Review data");
+            }
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            GourmetBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
+                    message, baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            GourmetBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                DailyToast.showToast(getActivity(), message, Toast.LENGTH_LONG);
+            }
         }
     };
 }

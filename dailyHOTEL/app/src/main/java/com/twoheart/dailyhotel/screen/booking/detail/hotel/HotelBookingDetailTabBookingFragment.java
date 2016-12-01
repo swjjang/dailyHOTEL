@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -57,6 +59,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
+
+    private View mInputReviewVerticalLine;
+    private DailyTextView mInputReviewView;
 
     private StayBookingDetailTabBookingNetworkController mNetworkController;
 
@@ -168,36 +173,41 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             return;
         }
 
-        View inputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
-        DailyTextView inputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        mInputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewView.setOnClickListener(this);
 
         String reviewStatus = bookingDetail.reviewStatusType;
+        updateReviewButtonLayout(reviewStatus);
+    }
+
+    private void updateReviewButtonLayout(String reviewStatus)
+    {
         if (Util.isTextEmpty(reviewStatus) == true)
         {
             reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
         }
 
-        inputReviewView.setTag(reviewStatus);
-        inputReviewView.setOnClickListener(this);
+        mInputReviewView.setTag(reviewStatus);
 
         if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
         {
-            inputReviewVerticalLine.setVisibility(View.VISIBLE);
-            inputReviewView.setVisibility(View.VISIBLE);
-            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
-            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
         } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
         {
-            inputReviewVerticalLine.setVisibility(View.VISIBLE);
-            inputReviewView.setVisibility(View.VISIBLE);
-            inputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
-            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
         } else
         {
-            inputReviewVerticalLine.setVisibility(View.GONE);
-            inputReviewView.setVisibility(View.GONE);
-            inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
-            inputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+            mInputReviewVerticalLine.setVisibility(View.GONE);
+            mInputReviewView.setVisibility(View.GONE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
         }
     }
 
@@ -252,7 +262,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
 
         // 체크인 체크아웃
-        initTimeInformatonLayout(context, view, bookingDetail);
+        initTimeInformationLayout(context, view, bookingDetail);
 
         // 예약 장소
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
@@ -264,7 +274,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         addressTextView.setText(bookingDetail.address);
     }
 
-    private void initTimeInformatonLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initTimeInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -659,6 +669,26 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                mBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                updateReviewButtonLayout(mBookingDetail.reviewStatusType);
+            }
+        }
+    }
+
     private long getCompareDate(long timeInMillis)
     {
         Calendar calendar = DailyCalendar.getInstance();
@@ -804,25 +834,60 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            HotelBookingDetailTabBookingFragment.this.onErrorResponse(volleyError);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
+                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.logException(volleyError);
+            } else
+            {
+                ExLog.e(volleyError != null ? volleyError.getMessage() : "unKnowen volleyError from get Review data");
+            }
         }
 
         @Override
         public void onError(Exception e)
         {
-            HotelBookingDetailTabBookingFragment.this.onError(e);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
+                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
+
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.logException(e);
+            } else
+            {
+                ExLog.e(e != null ? e.getMessage() : "unKnowen Exception from get Review data");
+            }
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            HotelBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
+                    message, baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            HotelBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if (baseActivity != null && baseActivity.isFinishing() == false)
+            {
+                DailyToast.showToast(getActivity(), message, Toast.LENGTH_LONG);
+            }
         }
     };
 }

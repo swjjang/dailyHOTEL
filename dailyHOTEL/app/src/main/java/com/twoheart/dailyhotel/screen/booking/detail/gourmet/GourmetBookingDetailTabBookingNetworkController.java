@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -30,7 +31,7 @@ public class GourmetBookingDetailTabBookingNetworkController extends BaseNetwork
 
     public void requestReviewInformation(int reserveIdx)
     {
-        //        DailyNetworkAPI.getInstance(mContext).requestReviewInformation(mNetworkTag, Constants.PlaceType.FNB, reserveIdx, mJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, reserveIdx, mJsonResponseListener);
     }
 
     DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
