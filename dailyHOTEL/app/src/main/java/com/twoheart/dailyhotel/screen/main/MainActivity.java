@@ -1135,10 +1135,7 @@ public class MainActivity extends BaseActivity implements Constants
                 // 요청하면서 CS운영시간도 같이 받아온다.
                 String startHour = DailyCalendar.format(openDateTime, "H", TimeZone.getTimeZone("GMT"));
                 String endtHour = DailyCalendar.format(closeDateTime, "H", TimeZone.getTimeZone("GMT"));
-                String text = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(startHour), Integer.parseInt(endtHour));
 
-                DailyPreference.getInstance(MainActivity.this).setOperationTimeMessage(text);
                 DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format("%s,%s", startHour, endtHour));
             } catch (Exception e)
             {
