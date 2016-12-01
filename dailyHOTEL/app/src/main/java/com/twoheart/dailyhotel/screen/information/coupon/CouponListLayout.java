@@ -235,6 +235,7 @@ public class CouponListLayout extends BaseLayout
         {
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
+            mRecyclerView.scrollToPosition(0);
         }
     }
 
