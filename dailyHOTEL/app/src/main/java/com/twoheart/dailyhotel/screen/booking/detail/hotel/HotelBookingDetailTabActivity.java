@@ -47,7 +47,7 @@ import java.util.Map;
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
     public HotelBookingDetail mHotelBookingDetail;
-    public HotelBookingDetailTabBookingFragment mHotelBookingDetailTabBookingFragment;
+    public StayBookingDetailTabBookingFragment mStayBookingDetailTabBookingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -67,16 +67,16 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             return;
         }
 
-        if (mHotelBookingDetailTabBookingFragment != null)
+        if (mStayBookingDetailTabBookingFragment != null)
         {
-            mHotelBookingDetailTabBookingFragment.updateRefundPolicyLayout((HotelBookingDetail) placeBookingDetail);
+            mStayBookingDetailTabBookingFragment.updateRefundPolicyLayout((HotelBookingDetail) placeBookingDetail);
             return;
         }
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        mHotelBookingDetailTabBookingFragment = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
-        fragmentList.add(mHotelBookingDetailTabBookingFragment);
+        mStayBookingDetailTabBookingFragment = StayBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
+        fragmentList.add(mStayBookingDetailTabBookingFragment);
 
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(fragmentPagerAdapter);

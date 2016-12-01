@@ -49,7 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
+public class StayBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
@@ -65,9 +65,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
     private StayBookingDetailTabBookingNetworkController mNetworkController;
 
-    public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
+    public static StayBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
-        HotelBookingDetailTabBookingFragment newFragment = new HotelBookingDetailTabBookingFragment();
+        StayBookingDetailTabBookingFragment newFragment = new StayBookingDetailTabBookingFragment();
 
         //관련 정보는 BookingTabActivity에서 넘겨받음.
         Bundle arguments = new Bundle();

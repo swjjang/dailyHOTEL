@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  * <p>
- * HotelBookingDetailTabBookingFragment (예약한 호텔의 예약 탭)
+ * GourmetBookingDetailTabBookingFragment (예약한 레스토랑의 예약 탭)
  * <p>
  * 예약한 호텔 탭 중 예약 탭 프래그먼트
  */
