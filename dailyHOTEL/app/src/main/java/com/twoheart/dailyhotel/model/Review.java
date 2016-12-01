@@ -36,7 +36,7 @@ public class Review implements Parcelable
 
         if (jsonObject.has("reviewItem") == true && jsonObject.isNull("reviewItem") == false)
         {
-            mReviewItem = new ReviewItem(jsonObject.getJSONObject("mReviewItem"));
+            mReviewItem = new ReviewItem(jsonObject.getJSONObject("reviewItem"));
         }
 
         if (jsonObject.has("reviewScoreTypes") == true && jsonObject.isNull("reviewScoreTypes") == false)
@@ -55,9 +55,9 @@ public class Review implements Parcelable
             }
         }
 
-        if (jsonObject.has("categoryTypes") == true && jsonObject.isNull("categoryTypes") == false)
+        if (jsonObject.has("useCategoryTypes") == true && jsonObject.isNull("useCategoryTypes") == false)
         {
-            JSONArray categoryTypes = jsonObject.getJSONArray("categoryTypes");
+            JSONArray categoryTypes = jsonObject.getJSONArray("useCategoryTypes");
 
             int categoryLength = categoryTypes.length();
             if (categoryLength > 0)
@@ -66,7 +66,7 @@ public class Review implements Parcelable
 
                 for (int i = 0; i < categoryLength; i++)
                 {
-                    mReviewCategoryTypeList.add(new ReviewCategoryType(categoryTypes.getJSONArray(i)));
+                    mReviewCategoryTypeList.add(new ReviewCategoryType(categoryTypes.getJSONObject(i)));
                 }
             }
         }

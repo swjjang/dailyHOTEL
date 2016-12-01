@@ -172,7 +172,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         DailyTextView inputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
 
         String reviewStatus = bookingDetail.reviewStatusType;
-        if (Util.isTextEmpty(reviewStatus) == false)
+        if (Util.isTextEmpty(reviewStatus) == true)
         {
             reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
         }
@@ -640,14 +640,14 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     return;
                 }
 
-                String reviewState = (String) v.getTag();
+                String reviewStatus = (String) v.getTag();
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
 
-                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewState) == true)
+                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
                 {
                     DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
-                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewState) == true)
+                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
                 {
                     lockUI();
 

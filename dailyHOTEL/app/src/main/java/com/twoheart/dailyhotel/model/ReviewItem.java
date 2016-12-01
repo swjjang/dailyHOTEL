@@ -37,15 +37,14 @@ public class ReviewItem implements Parcelable
         baseImagePath = jsonObject.getString("baseImagePath");
         itemImagePath = jsonObject.getString("itemImagePath");
 
-        String serviceTypeString = jsonObject.getString("serviceTypeString");
-        Constants.PlaceType placeType = null;
+        String serviceType = jsonObject.getString("serviceType");
 
-        if (Util.isTextEmpty(serviceTypeString) == false)
+        if (Util.isTextEmpty(serviceType) == false)
         {
-            if ("HOTEL".equalsIgnoreCase(serviceTypeString) == true)
+            if ("HOTEL".equalsIgnoreCase(serviceType) == true)
             {
                 placeType = Constants.PlaceType.HOTEL;
-            } else if ("GOURMET".equalsIgnoreCase(serviceTypeString) == true)
+            } else if ("GOURMET".equalsIgnoreCase(serviceType) == true)
             {
                 placeType = Constants.PlaceType.FNB;
             } else
@@ -54,7 +53,7 @@ public class ReviewItem implements Parcelable
             }
         } else
         {
-            ExLog.d("serviceTypeString is null");
+            ExLog.d("serviceType is null");
         }
 
         useStartDate = jsonObject.getString("useStartDate");

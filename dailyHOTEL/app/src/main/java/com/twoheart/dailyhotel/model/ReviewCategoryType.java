@@ -1,61 +1,24 @@
 package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.ArrayList;
+import org.json.JSONObject;
 
 /**
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class ReviewCategoryType implements Parcelable
+public class ReviewCategoryType extends ReviewItemType
 {
-    private ArrayList<ReviewItemType> mReviewItemTypeList;
-
     public ReviewCategoryType(Parcel in)
     {
-        readFromParcel(in);
+        super(in);
     }
 
-    public ReviewCategoryType(JSONArray jsonArray) throws JSONException
+    public ReviewCategoryType(JSONObject jsonObject) throws JSONException
     {
-        if (jsonArray == null)
-        {
-            return;
-        }
-
-        int length = jsonArray.length();
-
-        if (length > 0)
-        {
-            mReviewItemTypeList = new ArrayList<>();
-
-            for (int i = 0; i < length; i++)
-            {
-                mReviewItemTypeList.add(new ReviewItemType(jsonArray.getJSONObject(i)));
-            }
-        }
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeList(mReviewItemTypeList);
-    }
-
-    protected void readFromParcel(Parcel in)
-    {
-        mReviewItemTypeList = in.readArrayList(ReviewItemType.class.getClassLoader());
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
+       super(jsonObject);
     }
 
     public static final Creator CREATOR = new Creator()
