@@ -950,7 +950,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String operatingTimeMessage = DailyPreference.getInstance(BaseActivity.this).getOperationTimeMessage(BaseActivity.this) //
+        String operatingTimeMessage = getString(R.string.dialog_msg_call) //
             + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour);
 
         showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
