@@ -118,7 +118,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
     {
         View dateInformationLayout = mRootView.findViewById(R.id.dateInformationLayout);
 
-        initTimeInformatonLayout(mContext, dateInformationLayout, hotelBookingDetail);
+        initTimeInformationLayout(mContext, dateInformationLayout, hotelBookingDetail);
 
         // 예약 장소
         TextView hotelNameTextView = (TextView) mRootView.findViewById(R.id.hotelNameTextView);
@@ -132,7 +132,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         initPaymentInformationLayout(mContext, mRootView, hotelBookingDetail);
     }
 
-    private void initTimeInformatonLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initTimeInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
