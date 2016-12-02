@@ -788,7 +788,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             buttonText = mContext.getResources().getString(R.string.wishlist_count_over_10_thousand);
         } else
         {
-            buttonText = Integer.toString(count);
+            buttonText = mContext.getResources().getString(R.string.wishlist_count_format, count);
         }
 
         mWishButtonTextView.setText(buttonText);
