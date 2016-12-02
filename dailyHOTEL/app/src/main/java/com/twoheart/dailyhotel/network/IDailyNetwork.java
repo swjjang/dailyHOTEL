@@ -1,7 +1,10 @@
 package com.twoheart.dailyhotel.network;
 
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.response.DailyJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -567,4 +570,8 @@ interface IDailyNetwork
     void requestStayReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
 
     void requestGourmetReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
+
+    void requestAddReviewInformation(Object tag, JSONObject jsonObject, DailyJsonResponseListener listener);
+
+    void requestAddReviewDetailInformation(Object tag, JSONObject jsonObject, DailyJsonResponseListener listener);
 }

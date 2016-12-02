@@ -17,9 +17,13 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.request.DailyJsonObjectRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.response.DailyJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.Collections;
@@ -1225,5 +1229,27 @@ public class DailyNetworkAPI implements IDailyNetwork
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestAddReviewInformation(Object tag, JSONObject jsonObject, DailyJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add" : "NiQ0OSQ2MCQ3MCQ1MiQ0MCQ1NiQzJDE5JDQyJDIyJDc1JDc1JDQyJDUkMTYk$M0NXBMMDSY5ODkwNI0E2NBzVACQzczQTVFN0JBNzNGRDGIVO3RTNGRjVBSQ0AQzJRjEyNEZEzNkIyOEVTNCEN0JFQjUyN0I4NzcwQw==$";
+
+        DailyJsonObjectRequest dailyJsonObjectRequest = new DailyJsonObjectRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, jsonObject, listener);
+        dailyJsonObjectRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyJsonObjectRequest);
+    }
+
+    @Override
+    public void requestAddReviewDetailInformation(Object tag, JSONObject jsonObject, DailyJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add/detail" : "NDUkMzgkMTYkMzckOTAkMjQkNjckNjAkNjUkNjkkODkkODIkODYkNSQ3OCQzMCQ=$RjU4ME0IyMUIyMkJGSNTVCMzMF3MzBSCM0UxMTNFEODLQzNUE4MDUFERjI5NTEB3M0ISyMDOCc3NjE4FMkVDMYzg3NMjc5KQjE3NwR==$";
+
+        DailyJsonObjectRequest dailyJsonObjectRequest = new DailyJsonObjectRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, jsonObject, listener);
+        dailyJsonObjectRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyJsonObjectRequest);
     }
 }
