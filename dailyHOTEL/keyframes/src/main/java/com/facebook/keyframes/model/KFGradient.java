@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2016-present, Facebook, Inc.
+/* Copyright (c) 2016, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the license found in the LICENSE file in
+ * the root directory of this source tree.
  */
 
 package com.facebook.keyframes.model;
@@ -38,16 +36,20 @@ public class KFGradient {
   public static final String COLOR_END_JSON_FIELD = "color_end";
   private final KeyFramedGradient mEndGradient;
 
+  public static final String RAMP_ANGLE_JSON_FIELD = "ramp_angle";
+  public float angle;
+
   public static class Builder {
     public KFGradientColor colorStart;
     public KFGradientColor colorEnd;
+    public float angle;
 
     public KFGradient build() {
-      return new KFGradient(colorStart, colorEnd);
+      return new KFGradient(colorStart, colorEnd, angle);
     }
   }
 
-  public KFGradient(KFGradientColor colorStart, KFGradientColor colorEnd) {
+  public KFGradient(KFGradientColor colorStart, KFGradientColor colorEnd, float angle) {
     mStartGradient = KeyFramedGradient.fromGradient(
         ArgCheckUtil.checkArg(
             colorStart,
@@ -60,6 +62,8 @@ public class KFGradient {
             colorEnd != null,
             COLOR_END_JSON_FIELD),
         END);
+
+    this.angle = angle;
   }
 
   public KeyFramedGradient getStartGradient() {

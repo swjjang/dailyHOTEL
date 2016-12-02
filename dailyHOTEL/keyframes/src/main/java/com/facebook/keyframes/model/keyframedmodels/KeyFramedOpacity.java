@@ -10,6 +10,7 @@ package com.facebook.keyframes.model.keyframedmodels;
 import java.util.List;
 
 import com.facebook.keyframes.model.KFAnimation;
+import com.facebook.keyframes.model.KFAnimation.PropertyType;
 import com.facebook.keyframes.model.KFAnimationFrame;
 
 
@@ -20,67 +21,63 @@ import com.facebook.keyframes.model.KFAnimationFrame;
  * float values for stroke width at any given key frame.  This is a post-process object used for
  * KFAnimation.
  */
-public class KeyFramedStrokeWidth
-    extends KeyFramedObject<KFAnimationFrame, KeyFramedStrokeWidth.StrokeWidth> {
+public class KeyFramedOpacity
+    extends KeyFramedObject<KFAnimationFrame, KeyFramedOpacity.Opacity> {
 
   /**
    * A container object so that this class can set values on an object which on a common reference.
    */
-  public static class StrokeWidth {
-    private float mStrokeWidth;
+  public static class Opacity {
+    private float mOpacity = 100;
 
-    public float getStrokeWidth() {
-      return Math.abs(mStrokeWidth);
+    public float getOpacity() {
+      return mOpacity;
     }
 
-    public void setStrokeWidth(float strokeWidth) {
-      mStrokeWidth = strokeWidth;
-    }
-
-    public void adjustScale(float scale) {
-      mStrokeWidth *= scale;
+    public void setOpacity(float opacity) {
+      mOpacity = opacity;
     }
   }
 
   /**
-   * Constructs a KeyFramedStrokeWidth from a {@link KFAnimation}.
+   * Constructs a KeyFramedOpacity from a {@link KFAnimation}.
    */
-  public static KeyFramedStrokeWidth fromAnimation(KFAnimation animation) {
-    if (animation.getPropertyType() != KFAnimation.PropertyType.STROKE_WIDTH) {
+  public static KeyFramedOpacity fromAnimation(KFAnimation animation) {
+    if (animation.getPropertyType() != KFAnimation.PropertyType.OPACITY) {
       throw new IllegalArgumentException(
-          "Cannot create a KeyFramedStrokeWidth object from a non STROKE_WIDTH animation.");
+          "Cannot create a KeyFramedOpacity object from a non OPACITY animation.");
     }
-    return new KeyFramedStrokeWidth(animation.getAnimationFrames(), animation.getTimingCurves());
+    return new KeyFramedOpacity(animation.getAnimationFrames(), animation.getTimingCurves());
   }
 
-  public KeyFramedStrokeWidth(
+  public KeyFramedOpacity(
       List<KFAnimationFrame> objects,
       float[][][] timingCurves) {
     super(objects, timingCurves);
   }
 
-  private KeyFramedStrokeWidth() {
+  private KeyFramedOpacity() {
     super();
   }
 
   /**
-   * Applies the current state, given by interpolationValue, to the StrokeWidth object.
+   * Applies the current state, given by interpolationValue, to the Opacity object.
    * @param stateA Initial state
    * @param stateB End state
    * @param interpolationValue Progress [0..1] between stateA and stateB
-   * @param modifiable The StrokeWidth to apply the values to
+   * @param modifiable The Opacity to apply the values to
    */
   @Override
   protected void applyImpl(
       KFAnimationFrame stateA,
       KFAnimationFrame stateB,
       float interpolationValue,
-      StrokeWidth modifiable) {
+      Opacity modifiable) {
     if (stateB == null) {
-      modifiable.setStrokeWidth(stateA.getData()[0]);
+      modifiable.setOpacity(stateA.getData()[0]);
       return;
     }
-    modifiable.setStrokeWidth(
+    modifiable.setOpacity(
         interpolateValue(stateA.getData()[0], stateB.getData()[0], interpolationValue));
   }
 }

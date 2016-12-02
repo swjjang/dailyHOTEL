@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2016-present, Facebook, Inc.
+/* Copyright (c) 2016, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the license found in the LICENSE file in
+ * the root directory of this source tree.
  */
 
 package com.facebook.keyframes.deserializers;
@@ -78,6 +76,9 @@ public class KFFeatureDeserializer {
           break;
         case KFFeature.CLASS_NAME_JSON_FIELD:
           builder.className = reader.nextString();
+          break;
+        case KFFeature.FEATURE_MASK_JSON_FIELD:
+          builder.featureMask = KFFeatureDeserializer.readObject(reader);
           break;
         default:
           reader.skipValue();

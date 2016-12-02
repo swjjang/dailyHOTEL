@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2016-present, Facebook, Inc.
+/* Copyright (c) 2016, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the license found in the LICENSE file in
+ * the root directory of this source tree.
  */
 
 package com.facebook.keyframes.model.keyframedmodels;
@@ -32,6 +30,8 @@ public class KeyFramedGradient
     START,
     END
   }
+
+  private float mAngle;
 
   /**
    * A simple container that includes a start and end color which can be passed around and modified.
