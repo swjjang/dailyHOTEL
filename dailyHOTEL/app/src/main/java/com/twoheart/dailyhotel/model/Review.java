@@ -19,9 +19,9 @@ import java.util.HashMap;
 public class Review implements Parcelable
 {
     public int reserveIdx = -1;
-    public ReviewItem mReviewItem;
-    public ArrayList<ReviewQuestion> mReviewPickQuestionList;
-    public ArrayList<ReviewQuestion> mReviewScoreQuestionList;
+    private ReviewItem mReviewItem;
+    private ArrayList<ReviewPickQuestion> mReviewPickQuestionList;
+    private ArrayList<ReviewScoreQuestion> mReviewScoreQuestionList;
 
     public boolean isSatisfaction; // 만족여부 - none server data
     public String comment; // review comment - none server data
@@ -83,14 +83,29 @@ public class Review implements Parcelable
         return mReviewItem;
     }
 
-    public ArrayList<ReviewQuestion> getReviewPickQuestionList()
+    public void setReviewItem(ReviewItem mReviewItem)
+    {
+        this.mReviewItem = mReviewItem;
+    }
+
+    public ArrayList<ReviewPickQuestion> getReviewPickQuestionList()
     {
         return mReviewPickQuestionList;
     }
 
-    public ArrayList<ReviewQuestion> getReviewScoreQuestionList()
+    public void setReviewPickQuestionList(ArrayList<ReviewPickQuestion> reviewPickQuestionList)
+    {
+        this.mReviewPickQuestionList = reviewPickQuestionList;
+    }
+
+    public ArrayList<ReviewScoreQuestion> getReviewScoreQuestionList()
     {
         return mReviewScoreQuestionList;
+    }
+
+    public void setReviewScoreQuestionList(ArrayList<ReviewScoreQuestion> reviewScoreQuestionList)
+    {
+        this.mReviewScoreQuestionList = reviewScoreQuestionList;
     }
 
     public void clear()

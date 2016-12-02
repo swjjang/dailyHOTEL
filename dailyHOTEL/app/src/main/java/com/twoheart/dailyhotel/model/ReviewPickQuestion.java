@@ -15,9 +15,9 @@ import java.util.HashMap;
 
 public class ReviewPickQuestion extends ReviewQuestion
 {
-    public ArrayList<ReviewAnswerValue> mAnswerValueList;
+    private ArrayList<ReviewAnswerValue> mAnswerValueList;
 
-    private String selectedValue; // 선택된 리뷰 AnswerValue 값
+    public String selectedValue; // 선택된 리뷰 AnswerValue 값
 
     public ReviewPickQuestion(Parcel in)
     {
@@ -47,6 +47,16 @@ public class ReviewPickQuestion extends ReviewQuestion
                 mAnswerValueList.add(new ReviewAnswerValue(answerValues.getJSONObject(i)));
             }
         }
+    }
+
+    public ArrayList<ReviewAnswerValue> getAnswerValueList()
+    {
+        return mAnswerValueList;
+    }
+
+    public void setAnswerValueList(ArrayList<ReviewAnswerValue> answerValueList)
+    {
+        this.mAnswerValueList = answerValueList;
     }
 
     @Override

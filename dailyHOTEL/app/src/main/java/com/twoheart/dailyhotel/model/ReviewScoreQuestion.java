@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class ReviewScoreQuestion extends ReviewQuestion
 {
-    int selectedScore; // 선택된 스코어 - none server data
+    public int selectedScore; // 선택된 스코어 - none server data
 
     public ReviewScoreQuestion(Parcel in)
     {
