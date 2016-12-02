@@ -211,6 +211,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_FROM_MAP = "fromMap";
     public static final String NAME_INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
     public static final String NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST = "isChangeWishList";
+    public static final String NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT = "reviewComment";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
