@@ -17,8 +17,8 @@ public class Review implements Parcelable
 {
     public int reserveIdx = -1;
     private ReviewItem mReviewItem;
-    private ArrayList<ReviewItemType> mReviewScoreTypeList;
-    private ArrayList<ReviewCategoryType> mReviewCategoryTypeList;
+    private ArrayList<ReviewQuestion> mReviewPickQuestionList;
+    private ArrayList<ReviewQuestion> mReviewScoreQuestionList;
 
     public Review(Parcel in)
     {
@@ -39,34 +39,34 @@ public class Review implements Parcelable
             mReviewItem = new ReviewItem(jsonObject.getJSONObject("reviewItem"));
         }
 
-        if (jsonObject.has("reviewScoreTypes") == true && jsonObject.isNull("reviewScoreTypes") == false)
+        if (jsonObject.has("reviewPickQuestions") == true && jsonObject.isNull("reviewPickQuestions") == false)
         {
-            JSONArray reviewScoreTypeArray = jsonObject.getJSONArray("reviewScoreTypes");
+            JSONArray reviewPickQuestionArray = jsonObject.getJSONArray("reviewPickQuestions");
 
-            int scoreLength = reviewScoreTypeArray.length();
-            if (scoreLength > 0)
+            int pickLength = reviewPickQuestionArray.length();
+            if (pickLength > 0)
             {
-                mReviewScoreTypeList = new ArrayList<>();
+                mReviewPickQuestionList = new ArrayList<>();
 
-                for (int i = 0; i < scoreLength; i++)
+                for (int i = 0; i < pickLength; i++)
                 {
-                    mReviewScoreTypeList.add(new ReviewItemType(reviewScoreTypeArray.getJSONObject(i)));
+                    mReviewPickQuestionList.add(new ReviewQuestion(reviewPickQuestionArray.getJSONObject(i)));
                 }
             }
         }
 
-        if (jsonObject.has("useCategoryTypes") == true && jsonObject.isNull("useCategoryTypes") == false)
+        if (jsonObject.has("reviewScoreQuestions") == true && jsonObject.isNull("reviewScoreQuestions") == false)
         {
-            JSONArray categoryTypes = jsonObject.getJSONArray("useCategoryTypes");
+            JSONArray reviewScoreQuestionArray = jsonObject.getJSONArray("reviewScoreQuestions");
 
-            int categoryLength = categoryTypes.length();
-            if (categoryLength > 0)
+            int scoreLength = reviewScoreQuestionArray.length();
+            if (scoreLength > 0)
             {
-                mReviewCategoryTypeList = new ArrayList<>();
+                mReviewScoreQuestionList = new ArrayList<>();
 
-                for (int i = 0; i < categoryLength; i++)
+                for (int i = 0; i < scoreLength; i++)
                 {
-                    mReviewCategoryTypeList.add(new ReviewCategoryType(categoryTypes.getJSONObject(i)));
+                    mReviewScoreQuestionList.add(new ReviewQuestion(reviewScoreQuestionArray.getJSONObject(i)));
                 }
             }
         }
@@ -77,22 +77,22 @@ public class Review implements Parcelable
         return mReviewItem;
     }
 
-    public ArrayList<ReviewItemType> getReviewScoreTypeList()
+    public ArrayList<ReviewQuestion> getReviewPickQuestionList()
     {
-        return mReviewScoreTypeList;
+        return mReviewPickQuestionList;
     }
 
-    public ArrayList<ReviewCategoryType> getReviewCategoryTypeList()
+    public ArrayList<ReviewQuestion> getReviewScoreQuestionList()
     {
-        return mReviewCategoryTypeList;
+        return mReviewScoreQuestionList;
     }
 
     public void clear()
     {
         reserveIdx = -1;
         mReviewItem = null;
-        mReviewScoreTypeList = null;
-        mReviewCategoryTypeList = null;
+        mReviewPickQuestionList = null;
+        mReviewScoreQuestionList = null;
     }
 
     @Override
@@ -100,16 +100,16 @@ public class Review implements Parcelable
     {
         dest.writeInt(reserveIdx);
         dest.writeParcelable(mReviewItem, flags);
-        dest.writeList(mReviewScoreTypeList);
-        dest.writeList(mReviewCategoryTypeList);
+        dest.writeList(mReviewPickQuestionList);
+        dest.writeList(mReviewScoreQuestionList);
     }
 
     protected void readFromParcel(Parcel in)
     {
         reserveIdx = in.readInt();
         mReviewItem = in.readParcelable(ReviewItem.class.getClassLoader());
-        mReviewScoreTypeList = in.readArrayList(ReviewItemType.class.getClassLoader());
-        mReviewCategoryTypeList = in.readArrayList(ReviewCategoryType.class.getClassLoader());
+        mReviewPickQuestionList = in.readArrayList(ReviewQuestion.class.getClassLoader());
+        mReviewScoreQuestionList = in.readArrayList(ReviewQuestion.class.getClassLoader());
     }
 
     @Override

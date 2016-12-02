@@ -10,18 +10,17 @@ import org.json.JSONObject;
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class ReviewItemType implements Parcelable
+public class ReviewAnswerValue implements Parcelable
 {
     public String code;
-    public String title;
     public String description;
 
-    public ReviewItemType(Parcel in)
+    public ReviewAnswerValue(Parcel in)
     {
         readFromParcel(in);
     }
 
-    public ReviewItemType(JSONObject jsonObject) throws JSONException
+    public ReviewAnswerValue(JSONObject jsonObject) throws JSONException
     {
         if (jsonObject == null)
         {
@@ -29,7 +28,6 @@ public class ReviewItemType implements Parcelable
         }
 
         code = jsonObject.getString("code");
-        //        title = jsonObject.getString("title");
         description = jsonObject.getString("description");
     }
 
@@ -37,14 +35,12 @@ public class ReviewItemType implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(code);
-        dest.writeString(title);
         dest.writeString(description);
     }
 
     protected void readFromParcel(Parcel in)
     {
         code = in.readString();
-        title = in.readString();
         description = in.readString();
     }
 
@@ -56,15 +52,15 @@ public class ReviewItemType implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public ReviewItemType createFromParcel(Parcel in)
+        public ReviewAnswerValue createFromParcel(Parcel in)
         {
-            return new ReviewItemType(in);
+            return new ReviewAnswerValue(in);
         }
 
         @Override
-        public ReviewItemType[] newArray(int size)
+        public ReviewAnswerValue[] newArray(int size)
         {
-            return new ReviewItemType[size];
+            return new ReviewAnswerValue[size];
         }
 
     };
