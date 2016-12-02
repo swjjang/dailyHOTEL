@@ -286,6 +286,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
+            mIsTransitionEnd = true;
 
             mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
@@ -330,8 +331,6 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         if (Util.isUsedMutilTransition() == true)
         {
-            mDontReloadAtOnResume = true;
-
             TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
                 , 17, 18, new LinearInterpolator());
@@ -380,8 +379,23 @@ public class StayDetailActivity extends PlaceDetailActivity
                     mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
 
                     // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
-                    lockUI();
-                    mPlaceDetailNetworkController.requestCommonDatetime();
+                    mIsTransitionEnd = true;
+
+                    if (mInitializeStatus == STATUS_INITIALIZE_DATA)
+                    {
+                        mHandler.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                updateDetailInformationLayout((StayDetail) mPlaceDetail);
+                            }
+                        });
+                    } else
+                    {
+                        // 애니메이션이 끝났으나 아직 데이터가 로드 되지 않은 경우에는 프로그래스 바를 그리도록 한다.
+                        lockUI();
+                    }
                 }
 
                 @Override
@@ -402,6 +416,9 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 }
             });
+        } else
+        {
+            mIsTransitionEnd = true;
         }
     }
 
@@ -637,6 +654,116 @@ public class StayDetailActivity extends PlaceDetailActivity
             Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
                 ((StayDetail) mPlaceDetail).nights, ((StayDetail) mPlaceDetail).categoryCode, mPlaceDetail.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
+        }
+    }
+
+    private void updateDetailInformationLayout(StayDetail stayDetail)
+    {
+        switch (mInitializeStatus)
+        {
+            case STATUS_INITIALIZE_DATA:
+                mInitializeStatus = STATUS_INITIALIZE_LAYOUT;
+                break;
+
+            case STATUS_INITIALIZE_COMPLETE:
+                break;
+
+            default:
+                return;
+        }
+
+        if (mIsDeepLink == true)
+        {
+            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
+            stayDetail.categoryCode = stayDetail.grade.getName(StayDetailActivity.this);
+
+            mDailyToolbarLayout.setToolbarText(stayDetail.name);
+        }
+
+        if (mPlaceDetailLayout != null)
+        {
+            ((StayDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (StayDetail) stayDetail, mCurrentImage);
+        }
+
+        if (mCheckPrice == false)
+        {
+            mCheckPrice = true;
+            checkStayRoom(mIsDeepLink, stayDetail, mViewPrice);
+        }
+
+        // 딥링크로 메뉴 오픈 요청
+        if (mIsDeepLink == true && mOpenTicketIndex > 0 && stayDetail.getSaleRoomList().size() > 0)
+        {
+            if (mPlaceDetailLayout != null)
+            {
+                mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+            }
+        }
+
+        mOpenTicketIndex = 0;
+        mIsDeepLink = false;
+        mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
+    }
+
+    private void checkStayRoom(boolean isDeepLink, StayDetail stayDetail, int listViewPrice)
+    {
+        // 판매 완료 혹은 가격이 변동되었는지 조사한다
+        ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
+
+        if (saleRoomList == null || saleRoomList.size() == 0)
+        {
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
+                });
+
+            if (isDeepLink == true)
+            {
+                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    Action.SOLDOUT_DEEPLINK, stayDetail.name, null);
+            } else
+            {
+                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    Action.SOLDOUT, stayDetail.name, null);
+            }
+        } else
+        {
+            if (isDeepLink == false)
+            {
+                boolean hasPrice = false;
+
+                for (RoomInformation roomInformation : saleRoomList)
+                {
+                    if (listViewPrice == roomInformation.averageDiscount)
+                    {
+                        hasPrice = true;
+                        break;
+                    }
+                }
+
+                if (hasPrice == false)
+                {
+                    setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+
+                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                mOnEventListener.showProductInformationLayout();
+                            }
+                        });
+
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT_CHANGEPRICE, stayDetail.name, null);
+                }
+            }
         }
     }
 
@@ -1112,37 +1239,15 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 mPlaceDetail.setData(dataJSONObject);
 
-                if (mIsDeepLink == true)
+                if (mInitializeStatus == STATUS_INITIALIZE_NONE)
                 {
-                    // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
-                    StayDetail stayDetail = (StayDetail) mPlaceDetail;
-                    stayDetail.categoryCode = stayDetail.grade.getName(StayDetailActivity.this);
-
-                    mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
+                    mInitializeStatus = STATUS_INITIALIZE_DATA;
                 }
 
-                if (mPlaceDetailLayout != null)
+                if (mIsTransitionEnd == true)
                 {
-                    ((StayDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (StayDetail) mPlaceDetail, mCurrentImage);
+                    updateDetailInformationLayout((StayDetail) mPlaceDetail);
                 }
-
-                if (mCheckPrice == false)
-                {
-                    mCheckPrice = true;
-                    checkStayRoom(mIsDeepLink, (StayDetail) mPlaceDetail, mViewPrice);
-                }
-
-                // 딥링크로 메뉴 오픈 요청
-                if (mIsDeepLink == true && mOpenTicketIndex > 0 && ((StayDetail) mPlaceDetail).getSaleRoomList().size() > 0)
-                {
-                    if (mPlaceDetailLayout != null)
-                    {
-                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
-                    }
-                }
-
-                mOpenTicketIndex = 0;
-                mIsDeepLink = false;
 
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);
             } catch (Exception e)
@@ -1340,68 +1445,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorToastMessage(message);
             finish();
-        }
-
-        private void checkStayRoom(boolean isDeepLink, StayDetail stayDetail, int listViewPrice)
-        {
-            // 판매 완료 혹은 가격이 변동되었는지 조사한다
-            ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
-
-            if (saleRoomList == null || saleRoomList.size() == 0)
-            {
-                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-                        }
-                    });
-
-                if (isDeepLink == true)
-                {
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                        Action.SOLDOUT_DEEPLINK, stayDetail.name, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                        Action.SOLDOUT, stayDetail.name, null);
-                }
-            } else
-            {
-                if (isDeepLink == false)
-                {
-                    boolean hasPrice = false;
-
-                    for (RoomInformation roomInformation : saleRoomList)
-                    {
-                        if (listViewPrice == roomInformation.averageDiscount)
-                        {
-                            hasPrice = true;
-                            break;
-                        }
-                    }
-
-                    if (hasPrice == false)
-                    {
-                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-
-                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
-                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                            {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
-                                {
-                                    mOnEventListener.showProductInformationLayout();
-                                }
-                            });
-
-                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                            Action.SOLDOUT_CHANGEPRICE, stayDetail.name, null);
-                    }
-                }
-            }
         }
     };
 }
