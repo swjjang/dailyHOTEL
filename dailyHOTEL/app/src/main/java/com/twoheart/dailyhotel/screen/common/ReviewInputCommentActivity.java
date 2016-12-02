@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -33,5 +35,21 @@ public class ReviewInputCommentActivity extends BaseActivity
         return intent;
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void finish()
+    {
+        setResult(RESULT_OK);
+
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+    }
 }
