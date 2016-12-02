@@ -3,11 +3,14 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.Util;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by android_sam on 2016. 11. 25..
@@ -16,9 +19,12 @@ import java.util.ArrayList;
 public class Review implements Parcelable
 {
     public int reserveIdx = -1;
-    private ReviewItem mReviewItem;
-    private ArrayList<ReviewQuestion> mReviewPickQuestionList;
-    private ArrayList<ReviewQuestion> mReviewScoreQuestionList;
+    public ReviewItem mReviewItem;
+    public ArrayList<ReviewQuestion> mReviewPickQuestionList;
+    public ArrayList<ReviewQuestion> mReviewScoreQuestionList;
+
+    public boolean isSatisfaction; // 만족여부 - none server data
+    public String comment; // review comment - none server data
 
     public Review(Parcel in)
     {
@@ -50,7 +56,7 @@ public class Review implements Parcelable
 
                 for (int i = 0; i < pickLength; i++)
                 {
-                    mReviewPickQuestionList.add(new ReviewQuestion(reviewPickQuestionArray.getJSONObject(i)));
+                    mReviewPickQuestionList.add(new ReviewPickQuestion(reviewPickQuestionArray.getJSONObject(i)));
                 }
             }
         }
@@ -66,7 +72,7 @@ public class Review implements Parcelable
 
                 for (int i = 0; i < scoreLength; i++)
                 {
-                    mReviewScoreQuestionList.add(new ReviewQuestion(reviewScoreQuestionArray.getJSONObject(i)));
+                    mReviewScoreQuestionList.add(new ReviewScoreQuestion(reviewScoreQuestionArray.getJSONObject(i)));
                 }
             }
         }
@@ -93,6 +99,8 @@ public class Review implements Parcelable
         mReviewItem = null;
         mReviewPickQuestionList = null;
         mReviewScoreQuestionList = null;
+        isSatisfaction = false;
+        comment = null;
     }
 
     @Override
@@ -102,14 +110,18 @@ public class Review implements Parcelable
         dest.writeParcelable(mReviewItem, flags);
         dest.writeList(mReviewPickQuestionList);
         dest.writeList(mReviewScoreQuestionList);
+        dest.writeInt(isSatisfaction == true ? 1 : 0);
+        dest.writeString(comment);
     }
 
     protected void readFromParcel(Parcel in)
     {
         reserveIdx = in.readInt();
         mReviewItem = in.readParcelable(ReviewItem.class.getClassLoader());
-        mReviewPickQuestionList = in.readArrayList(ReviewQuestion.class.getClassLoader());
-        mReviewScoreQuestionList = in.readArrayList(ReviewQuestion.class.getClassLoader());
+        mReviewPickQuestionList = in.readArrayList(ReviewPickQuestion.class.getClassLoader());
+        mReviewScoreQuestionList = in.readArrayList(ReviewScoreQuestion.class.getClassLoader());
+        isSatisfaction = in.readInt() == 1 ? true : false;
+        comment = in.readString();
     }
 
     @Override
@@ -132,4 +144,60 @@ public class Review implements Parcelable
         }
 
     };
+
+    private String getGrade()
+    {
+        return isSatisfaction == true ? "GOOD" : "BAD";
+    }
+
+    public JSONObject toCommonJSONObject()
+    {
+        if (mReviewItem == null)
+        {
+            return null;
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("grade", getGrade());
+        map.put("itemIdx", this.mReviewItem.itemIdx);
+        map.put("reserveIdx", this.reserveIdx);
+        map.put("serviceType", this.mReviewItem.getServiceType());
+
+        return new JSONObject(map);
+    }
+
+    public JSONObject toDetailJSONObject()
+    {
+        if (mReviewItem == null || mReviewPickQuestionList == null || mReviewScoreQuestionList == null)
+        {
+            return null;
+        }
+
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("comment", Util.isTextEmpty(comment) == true ? "" : comment);
+        map.put("itemIdx", this.mReviewItem.itemIdx);
+        map.put("reserveIdx", this.reserveIdx);
+        map.put("reviewPicks", getQuestionJSONArray(mReviewPickQuestionList));
+        map.put("reviewScores", getQuestionJSONArray(mReviewScoreQuestionList));
+        map.put("serviceType", this.mReviewItem.getServiceType());
+
+        return new JSONObject(map);
+    }
+
+    private JSONArray getQuestionJSONArray(ArrayList<? extends ReviewQuestion> list)
+    {
+        if (list == null || list.isEmpty() == true)
+        {
+            return null;
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        for (ReviewQuestion question : list)
+        {
+            jsonArray.put(question.toJSONObject());
+        }
+
+        return jsonArray;
+    }
 }
