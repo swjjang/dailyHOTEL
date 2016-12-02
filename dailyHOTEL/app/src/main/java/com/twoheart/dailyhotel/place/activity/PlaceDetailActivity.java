@@ -34,6 +34,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
     protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
+    protected static final int STATUS_INITIALIZE_NONE = 0; // 아무것도 데이터 관련 받은게 없는 상태
+    protected static final int STATUS_INITIALIZE_DATA = 1; // 서버로 부터 데이터만 받은 상태
+    protected static final int STATUS_INITIALIZE_LAYOUT = 2; // 데이터를 받아서 레이아웃을 만든 상태
+    protected static final int STATUS_INITIALIZE_COMPLETE = -1; // 완료
+
+
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
@@ -45,13 +51,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
     protected boolean mDontReloadAtOnResume;
+    protected boolean mIsTransitionEnd;
+    protected int mInitializeStatus;
 
     protected Province mProvince;
     protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
     protected int mOpenTicketIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
 
-    private Handler mHandler = new Handler();
+    protected Handler mHandler = new Handler();
     private int mResultCode;
     protected Intent mResultIntent;
 
@@ -152,8 +160,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mDontReloadAtOnResume = false;
         } else
         {
-            // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
-            lockUI();
+            if (Util.isUsedMutilTransition() == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
+            {
+                lockUI(false);
+            } else
+            {
+                lockUI();
+            }
+
             mPlaceDetailNetworkController.requestCommonDatetime();
         }
 
