@@ -63,7 +63,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private static final int VIEW_COUNT = 4;
 
-    private static final int BOOKING_TEXT_VIEW_DURATION = 150;
+    private static final int BOOKING_TEXT_VIEW_DURATION = 75;
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
