@@ -48,7 +48,7 @@ public class DailyEmoticonImageView extends ImageView
             inputStream = getResources().getAssets().open(fileName);
             KFImage kfImage = KFImageDeserializer.deserialize(inputStream);
 
-
+            setKFImage(kfImage);
         } catch (IOException e)
         {
             ExLog.e(e.toString());

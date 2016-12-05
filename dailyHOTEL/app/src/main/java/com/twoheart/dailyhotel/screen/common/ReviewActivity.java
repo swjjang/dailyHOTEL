@@ -39,12 +39,10 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 {
     private static final String INTENT_EXTRA_DATA_REVIEW = "review";
 
-    private static final String NOT_RATE = "0";
-    private static final String RECOMMEND = "1";
-    private static final String NOT_RECOMMEND = "2";
-
     private Review mReview;
     private Dialog mDialog;
+
+    private DailyEmoticonImageView[] mDailyEmoticonImageView;
 
     public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
     {
@@ -80,6 +78,34 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if(mDailyEmoticonImageView != null)
+        {
+            for(DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.startAnimation();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if(mDailyEmoticonImageView != null)
+        {
+            for(DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy()
     {
         if (mDialog != null && mDialog.isShowing())
@@ -112,8 +138,8 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView periodTextView = (TextView) view.findViewById(R.id.periodTextView);
-        TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
-        TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
+        View goodEmoticonView = view.findViewById(R.id.goodEmoticonView);
+        View badEmoticonView = view.findViewById(R.id.badEmoticonView);
 
         final ReviewItem reviewItem = mReview.getReviewItem();
 
@@ -133,15 +159,15 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                 case HOTEL:
                 {
                     String periodDate = String.format("%s - %s"//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
                     periodTextView.setText(getString(R.string.message_review_date, periodDate));
                     break;
                 }
 
                 case FNB:
                 {
-                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
 
                     periodTextView.setText(getString(R.string.message_review_date, periodDate));
                     break;
@@ -152,17 +178,23 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             ExLog.d(e.toString());
         }
 
+        mDailyEmoticonImageView = null;
+        mDailyEmoticonImageView = new DailyEmoticonImageView[2];
+
         // 이미지
-        DailyEmoticonImageView badEmoticonImageView = (DailyEmoticonImageView)view.findViewById(R.id.badEmoticonImageView);
-        DailyEmoticonImageView goodEmoticonImageView = (DailyEmoticonImageView)view.findViewById(R.id.goodEmoticonImageView);
+        mDailyEmoticonImageView[0] = (DailyEmoticonImageView)view.findViewById(R.id.badEmoticonImageView);
+        mDailyEmoticonImageView[1] = (DailyEmoticonImageView)view.findViewById(R.id.goodEmoticonImageView);
 
-        //        final String placeName = String.format("\'%s\'", mTicketName);
-        //        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.frag_rating_hotel_text2, placeName));
-        //        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), 0, placeName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        //
-        //        ratingHotelName.setText(spannableStringBuilder);
+        mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
 
-        positiveTextView.setOnClickListener(new View.OnClickListener()
+        mDailyEmoticonImageView[0].setScaleX(83);
+        mDailyEmoticonImageView[0].setScaleY(83);
+
+        mDailyEmoticonImageView[0].startAnimation();
+        mDailyEmoticonImageView[1].startAnimation();
+
+        goodEmoticonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -192,7 +224,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             }
         });
 
-        negativeTextView.setOnClickListener(new View.OnClickListener()
+        badEmoticonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
