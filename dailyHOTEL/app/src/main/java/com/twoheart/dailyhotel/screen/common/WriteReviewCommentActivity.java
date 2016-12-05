@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.util.Util;
  * Created by android_sam on 2016. 12. 2..
  */
 
-public class ReviewInputCommentActivity extends BaseActivity
+public class WriteReviewCommentActivity extends BaseActivity
 {
     public static Intent newInstance(Context context, String text) throws IllegalArgumentException
     {
@@ -27,7 +27,7 @@ public class ReviewInputCommentActivity extends BaseActivity
             text = "";
         }
 
-        Intent intent = new Intent(context, ReviewInputCommentActivity.class);
+        Intent intent = new Intent(context, WriteReviewCommentActivity.class);
 
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, text);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -41,6 +41,8 @@ public class ReviewInputCommentActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_write_review_comment);
     }
 
     @Override
