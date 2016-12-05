@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_coupon_sorting_button_backround"
     android:drawablePadding="2dp"
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:paddingLeft="9dp"
     android:paddingRight="9dp"
     android:textColor="@color/default_text_c929292"

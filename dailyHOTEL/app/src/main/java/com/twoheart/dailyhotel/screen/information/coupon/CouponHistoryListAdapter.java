@@ -126,7 +126,6 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder
     {
-
         View rootView;
         TextView priceTextView;
         TextView descriptionTextView;

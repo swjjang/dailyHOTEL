@@ -63,7 +63,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private static final int VIEW_COUNT = 4;
 
-    private static final int BOOKING_TEXT_VIEW_DURATION = 150;
+    private static final int BOOKING_TEXT_VIEW_DURATION = 75;
+    private static final int PRODUCT_VIEW_DURATION = 250;
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
@@ -512,7 +513,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
 
             mObjectAnimator.addListener(new AnimatorListener()
             {
@@ -605,7 +606,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
 
             mObjectAnimator.addListener(new AnimatorListener()
             {
