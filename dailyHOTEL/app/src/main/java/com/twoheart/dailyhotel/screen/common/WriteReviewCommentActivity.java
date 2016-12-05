@@ -15,6 +15,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class WriteReviewCommentActivity extends BaseActivity
 {
+    private WriteReviewCommentLayout mLayout;
+
     public static Intent newInstance(Context context, String text) throws IllegalArgumentException
     {
         if (context == null)
@@ -42,7 +44,9 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_write_review_comment);
+        mLayout = new WriteReviewCommentLayout(this, null);
+
+        setContentView(mLayout.onCreateView(R.layout.activity_write_review_comment));
     }
 
     @Override
