@@ -7,6 +7,7 @@
  */
 package com.twoheart.dailyhotel.screen.common;
 
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +16,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -43,6 +44,8 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     private Dialog mDialog;
 
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
+    private ReviewLayout mReviewLayout;
+
 
     public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
     {
@@ -82,9 +85,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     {
         super.onResume();
 
-        if(mDailyEmoticonImageView != null)
+        if (mDailyEmoticonImageView != null)
         {
-            for(DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
             {
                 dailyEmoticonImageView.startAnimation();
             }
@@ -96,9 +99,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     {
         super.onPause();
 
-        if(mDailyEmoticonImageView != null)
+        if (mDailyEmoticonImageView != null)
         {
-            for(DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
             {
                 dailyEmoticonImageView.stopAnimation();
             }
@@ -125,6 +128,16 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         {
         }
     }
+
+    private void showReviewDetail()
+    {
+        mReviewLayout = new ReviewLayout(this, mOnEventListener);
+
+        setContentView(mReviewLayout.onCreateView(R.layout.activity_review));
+
+
+    }
+
 
     private void showReviewDialog()
     {
@@ -182,24 +195,56 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         mDailyEmoticonImageView = new DailyEmoticonImageView[2];
 
         // 이미지
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView)view.findViewById(R.id.badEmoticonImageView);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView)view.findViewById(R.id.goodEmoticonImageView);
+        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) view.findViewById(R.id.badEmoticonImageView);
+        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) view.findViewById(R.id.goodEmoticonImageView);
 
         mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
         mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
 
-        mDailyEmoticonImageView[0].setScaleX(83);
-        mDailyEmoticonImageView[0].setScaleY(83);
+        mDailyEmoticonImageView[0].setScaleX(0.83f);
+        mDailyEmoticonImageView[0].setScaleY(0.83f);
+
+        mDailyEmoticonImageView[1].setScaleX(0.83f);
+        mDailyEmoticonImageView[1].setScaleY(0.83f);
 
         mDailyEmoticonImageView[0].startAnimation();
         mDailyEmoticonImageView[1].startAnimation();
+
+        // 딤이미지
+        final View badEmoticonDimView = view.findViewById(R.id.badEmoticonDimView);
+        final View goodEmoticonDimView = view.findViewById(R.id.goodEmoticonDimView);
 
         goodEmoticonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+
                 //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, RECOMMEND);
+
+                ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
+                animation.setDuration(200);
+                animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation)
+                    {
+                        float value = (float) animation.getAnimatedValue();
+
+                        mDailyEmoticonImageView[1].setScaleX(value);
+                        mDailyEmoticonImageView[1].setScaleY(value);
+                    }
+                });
+
+                animation.start();
+
+                mDailyEmoticonImageView[0].stopAnimation();
+                badEmoticonDimView.setVisibility(View.VISIBLE);
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
@@ -229,6 +274,30 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             @Override
             public void onClick(View v)
             {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
+                animation.setDuration(200);
+                animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation)
+                    {
+                        float value = (float) animation.getAnimatedValue();
+
+                        mDailyEmoticonImageView[0].setScaleX(value);
+                        mDailyEmoticonImageView[0].setScaleY(value);
+                    }
+                });
+
+                animation.start();
+
+                mDailyEmoticonImageView[1].stopAnimation();
+                goodEmoticonDimView.setVisibility(View.VISIBLE);
+
                 //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, NOT_RECOMMEND);
 
                 Map<String, String> params = new HashMap<>();
@@ -273,6 +342,17 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
                         break;
                 }
+
+                finish();
+            }
+        });
+
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mDailyEmoticonImageView = null;
             }
         });
 
@@ -359,6 +439,33 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         public void onErrorResponse(VolleyError volleyError)
         {
             finish();
+        }
+    };
+
+    private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
+    {
+        @Override
+        public void onReviewScoreTypeClick()
+        {
+
+        }
+
+        @Override
+        public void onReviewPickTypeClick()
+        {
+
+        }
+
+        @Override
+        public void onReviewTextClick()
+        {
+
+        }
+
+        @Override
+        public void finish()
+        {
+
         }
     };
 }

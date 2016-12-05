@@ -82,6 +82,16 @@ public class DailyEmoticonImageView extends ImageView
         }
     }
 
+    public void setDrawableBounds(int left, int top, int right, int bottom)
+    {
+        if(mKeyFramesDrawable == null)
+        {
+            return;
+        }
+
+        mKeyFramesDrawable.setBounds(left, top, right, bottom);
+    }
+
     private void setKFImage(KFImage kfImage)
     {
         clearImage();
