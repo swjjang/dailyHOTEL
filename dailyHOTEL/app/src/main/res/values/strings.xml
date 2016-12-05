@@ -259,7 +259,7 @@
     <string name="dialog_btn_call">전화연결</string>
     <string name="dialog_msg_call">데일리 고객센터로 전화 연결합니다.</string>
     <string name="dialog_msg_direct_call_stay">호텔로 직접 전화 연결합니다.</string>
-    <string name="dialog_msg_direct_call_gourmet">레스토랑으로 전화 연결합니다.</string>
+    <string name="dialog_msg_direct_call_gourmet">레스토랑으로 직접 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
     <string name="dialog_btn_payment_no_reserve">%1$s 이하 상품은 적립금을 사용할 수 없습니다.</string>
@@ -912,7 +912,7 @@
     <string name="coupon_download_coupon">할인쿠폰 다운로드 받기</string>
     <string name="coupon_dont_download_coupon">할인쿠폰 다운로드 완료</string>
     <string name="coupon_do_download_coupon">다운로드 하기</string>
-    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 중 방문시 사용가능</string>
+    <string name="coupon_date_of_stay_available_text">%1$s ~ %2$s 중 방문시 사용 가능</string>
     <string name="coupon_sort_default_text">전체 쿠폰 보기</string>
     <string name="coupon_toolbar_button_text">쿠폰코드등록</string>
 
@@ -1024,7 +1024,6 @@
     <string name="message_please_wait_refund01"><![CDATA[<font color=0x900034>무료취소 요청 완료</font> 되었으며, 1~2일 이내 처리완료 됩니다.]]></string>
     <string name="message_please_wait_refund02">결제금액 환불은 결제수단에 따라 최대 7일 이상 소요될 수 있습니다.</string>
 
-
     <!-- wishList -->
     <string name="label_wishlist">위시리스트</string>
     <string name="wishlist_need_login_message">로그인하여 위시리스트를 확인하세요.</string>
@@ -1039,6 +1038,10 @@
     <string name="wishlist_count_over_10_thousand">만명 이상</string>
     <string name="wishlist_count_format">%1$d명</string>
 
+    <string name="label_write_review_comment_confirm">확인</string>
+    <string name="label_write_review_comment_title">후기</string>
+    <string name="label_write_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님의 선택을 도와주세요!</string>
+    <string name="label_write_review_comment_hint">예시) 침구가 너무 깨끗해서 잘 잤어요.</string>
 
     <!-- Collection -->
     <string name="message_collection_stay_empty_text">선택하신 날짜에\n예약할 수 있는 숙소가 없습니다.</string>

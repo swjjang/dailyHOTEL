@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/backImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/navibar_ic_back_01_black"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:enabled="false"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/label_write_review_comment_confirm"
+            android:textColor="@color/selector_text_color_dc5c5c5_e900034"
+            android:textSize="18dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/confirmTextView"
+            android:layout_toRightOf="@+id/backImageView"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:maxLines="1"
+            android:textColor="@color/actionbar_title"
+            android:textSize="18dp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/textCountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentTop="true"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/textCountView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/ic_review"
+            android:drawablePadding="6dp"
+            android:gravity="center"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"
+            />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/textCountLayout"
+        android:layout_below="@id/toolbar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/bodyTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_write_review_comment_title"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/label_write_review_comment_description"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="17dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/writeReviewEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="14dp"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="@string/label_write_review_comment_hint"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:minHeight="189dp"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/default_text_cd0d0d0"
+                android:textSize="13dp"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
