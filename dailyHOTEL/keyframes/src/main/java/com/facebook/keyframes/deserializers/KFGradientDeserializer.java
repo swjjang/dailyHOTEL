@@ -40,11 +40,12 @@ public class KFGradientDeserializer {
         case KFGradient.COLOR_END_JSON_FIELD:
           builder.colorEnd = KFGradientColorDeserializer.readObject(reader);
           break;
-        case KFGradient.RAMP_ANGLE_JSON_FIELD:
-        {
-          builder.angle = reader.nextInt();
+        case KFGradient.RAMP_POSITION_JSON_FIELD:
+          reader.beginArray();
+          builder.gradientPosition0 = CommonDeserializerHelper.readFloatArray(reader);
+          builder.gradientPosition1 = CommonDeserializerHelper.readFloatArray(reader);
+          reader.endArray();
           break;
-        }
         default:
           reader.skipValue();
       }

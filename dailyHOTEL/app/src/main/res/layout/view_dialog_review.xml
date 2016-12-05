@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/popup_bg_white_full"
+              android:orientation="vertical"
+              android:paddingBottom="50dp"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
+              android:paddingTop="24dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_horizontal"
+        android:text="'서울 신라 호텔' 은 어떠셨어요"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/periodTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="YYYY.MM.YY.(월) - YYYY.MM.YY(화) 이용"
+        android:textColor="@color/default_text_c929292"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/badEmoticonImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/badEmoticonImageView"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:text="별로예요"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="16dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp">
+
+            <ImageView
+                android:id="@+id/goodEmoticonImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/goodEmoticonImageView"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:text="만족해요"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="16dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
