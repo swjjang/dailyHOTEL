@@ -280,6 +280,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
+            mIsTransitionEnd = true;
 
             mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, 0);
 
@@ -323,8 +324,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         if (Util.isUsedMutilTransition() == true)
         {
-            mDontReloadAtOnResume = true;
-
             TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inNameTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
                 , 17, 18, new LinearInterpolator());
@@ -373,8 +372,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
 
                     // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중
-                    lockUI();
-                    mPlaceDetailNetworkController.requestCommonDatetime();
+                    mIsTransitionEnd = true;
+
+                    if (mInitializeStatus == STATUS_INITIALIZE_DATA)
+                    {
+                        mHandler.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                updateDetailInformationLayout((GourmetDetail) mPlaceDetail);
+                            }
+                        });
+                    } else
+                    {
+                        // 애니메이션이 끝났으나 아직 데이터가 로드 되지 않은 경우에는 프로그래스 바를 그리도록 한다.
+                        lockUI();
+                    }
                 }
 
                 @Override
@@ -395,6 +409,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 }
             });
+        } else
+        {
+            mIsTransitionEnd = true;
         }
     }
 
@@ -489,6 +506,26 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, params);
+    }
+
+    @Override
+    protected void startKakao()
+    {
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
+        }
     }
 
     protected void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, TicketInformation ticketInformation)
@@ -603,22 +640,109 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    @Override
-    protected void startKakao()
+    private void updateDetailInformationLayout(GourmetDetail gourmetDetail)
     {
-        try
+        switch (mInitializeStatus)
         {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        } catch (ActivityNotFoundException e)
+            case STATUS_INITIALIZE_DATA:
+                mInitializeStatus = STATUS_INITIALIZE_LAYOUT;
+                break;
+
+            case STATUS_INITIALIZE_COMPLETE:
+                break;
+
+            default:
+                return;
+        }
+
+        if (mIsDeepLink == true)
         {
-            try
+            mDailyToolbarLayout.setToolbarText(gourmetDetail.name);
+        }
+
+        if (mPlaceDetailLayout != null)
+        {
+            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, gourmetDetail, mCurrentImage);
+        }
+
+        if (mCheckPrice == false)
+        {
+            mCheckPrice = true;
+            checkGourmetTicket(mIsDeepLink, gourmetDetail, mViewPrice);
+        }
+
+        // 딥링크로 메뉴 오픈 요청
+        if (mIsDeepLink == true && mOpenTicketIndex > 0 && gourmetDetail.getTicketInformation().size() > 0)
+        {
+            if (mPlaceDetailLayout != null)
             {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
+                mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+            }
+        }
+
+        mOpenTicketIndex = 0;
+        mIsDeepLink = false;
+        mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
+    }
+
+    private void checkGourmetTicket(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice)
+    {
+        // 판매 완료 혹은 가격이 변동되었는지 조사한다
+        ArrayList<TicketInformation> ticketInformationList = gourmetDetail.getTicketInformation();
+
+        if (ticketInformationList == null || ticketInformationList.size() == 0)
+        {
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
+                });
+
+            if (isDeepLink == true)
             {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    AnalyticsManager.Action.SOLDOUT_DEEPLINK, gourmetDetail.name, null);
+            } else
+            {
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    AnalyticsManager.Action.SOLDOUT, gourmetDetail.name, null);
+            }
+        } else
+        {
+            if (isDeepLink == false)
+            {
+                boolean hasPrice = false;
+
+                for (TicketInformation ticketInformation : ticketInformationList)
+                {
+                    if (listViewPrice == ticketInformation.discountPrice)
+                    {
+                        hasPrice = true;
+                        break;
+                    }
+                }
+
+                if (hasPrice == false)
+                {
+                    setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+
+                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                mOnEventListener.showProductInformationLayout();
+                            }
+                        });
+
+                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, gourmetDetail.name, null);
+                }
             }
         }
     }
@@ -1071,33 +1195,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 mPlaceDetail.setData(dataJSONObject);
 
-                if (mIsDeepLink == true)
+                if (mInitializeStatus == STATUS_INITIALIZE_NONE)
                 {
-                    mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
+                    mInitializeStatus = STATUS_INITIALIZE_DATA;
                 }
 
-                if (mPlaceDetailLayout != null)
+                if (mIsTransitionEnd == true)
                 {
-                    ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (GourmetDetail) mPlaceDetail, mCurrentImage);
+                    updateDetailInformationLayout((GourmetDetail) mPlaceDetail);
                 }
-
-                if (mCheckPrice == false)
-                {
-                    mCheckPrice = true;
-                    checkGourmetTicket(mIsDeepLink, (GourmetDetail) mPlaceDetail, mViewPrice);
-                }
-
-                // 딥링크로 메뉴 오픈 요청
-                if (mIsDeepLink == true && mOpenTicketIndex > 0 && ((GourmetDetail) mPlaceDetail).getTicketInformation().size() > 0)
-                {
-                    if (mPlaceDetailLayout != null)
-                    {
-                        mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
-                    }
-                }
-
-                mOpenTicketIndex = 0;
-                mIsDeepLink = false;
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
             } catch (Exception e)
@@ -1292,68 +1398,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
-        }
-
-        private void checkGourmetTicket(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice)
-        {
-            // 판매 완료 혹은 가격이 변동되었는지 조사한다
-            ArrayList<TicketInformation> ticketInformationList = gourmetDetail.getTicketInformation();
-
-            if (ticketInformationList == null || ticketInformationList.size() == 0)
-            {
-                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
-                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-                        }
-                    });
-
-                if (isDeepLink == true)
-                {
-                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                        AnalyticsManager.Action.SOLDOUT_DEEPLINK, gourmetDetail.name, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                        AnalyticsManager.Action.SOLDOUT, gourmetDetail.name, null);
-                }
-            } else
-            {
-                if (isDeepLink == false)
-                {
-                    boolean hasPrice = false;
-
-                    for (TicketInformation ticketInformation : ticketInformationList)
-                    {
-                        if (listViewPrice == ticketInformation.discountPrice)
-                        {
-                            hasPrice = true;
-                            break;
-                        }
-                    }
-
-                    if (hasPrice == false)
-                    {
-                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-
-                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
-                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                            {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
-                                {
-                                    mOnEventListener.showProductInformationLayout();
-                                }
-                            });
-
-                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                            AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, gourmetDetail.name, null);
-                    }
-                }
-            }
         }
     };
 }
