@@ -342,7 +342,7 @@ public class CouponUtil
             String strStart = DailyCalendar.convertDateFormatString(startTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             String strEnd = DailyCalendar.convertDateFormatString(endTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
-            availableDatesString = String.format("%s ~ %s", strStart, strEnd);
+            availableDatesString = String.format("%s - %s", strStart, strEnd);
 
         } catch (Exception e)
         {
