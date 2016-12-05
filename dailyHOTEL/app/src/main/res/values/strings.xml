@@ -557,7 +557,7 @@
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
     <string name="message_stay_check_other_user">예약자와 투숙자가 다를 경우 체크해주세요.</string>
     <string name="message_gourmet_check_other_user">예약자와 방문자가 다를 경우 체크해주세요.</string>
-    <string name="message_gourmet_cancel_coupon_by_count">구매 수량 변경시\n사용하신 할인 쿠폰을\n다시 적용해야합니다.\n수량을 변경할까요?</string>
+    <string name="message_gourmet_cancel_coupon_by_count">구매 수량 변경시\n사용하신 할인 쿠폰을\n다시 적용해야 합니다.\n수량을 변경할까요?</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
