@@ -1,19 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="@color/transparent">
+                android:layout_height="247dp"
+                android:background="@drawable/selector_review_cardlayout"
+                android:orientation="vertical">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@drawable/shape_wishlist_footer_textview_background"
-        android:gravity="center"
-        android:text="@string/wishlist_list_bottom_notice_message"
-        android:textColor="@color/default_text_cc5c5c5"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:text="청결"
+        android:textColor="@color/default_text_c929292"
         android:textSize="12dp"/>
 
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:layout_marginTop="2dp"
+        android:gravity="center_horizontal"
+        android:text="방이 깨끗했나요?"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/emoticonView"
+        android:layout_width="wrap_content"
+        android:layout_height="66dp"
+        android:layout_above="@+id/resultTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="bottom">
+
+        <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+            android:id="@+id/emoticonImageView0"
+            android:layout_width="36dp"
+            android:layout_height="36dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+            android:id="@+id/emoticonImageView1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="14dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+            android:id="@+id/emoticonImageView2"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="14dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+            android:id="@+id/emoticonImageView3"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="14dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+            android:id="@+id/emoticonImageView4"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="14dp"/>
+    </LinearLayout>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/resultTextView"
+        android:layout_width="96dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/selector_review_resultlayout"
+        android:gravity="center"
+        android:text="선택해주세요."
+        android:textColor="@color/white"
+        android:textSize="13dp"/>
 </RelativeLayout>
