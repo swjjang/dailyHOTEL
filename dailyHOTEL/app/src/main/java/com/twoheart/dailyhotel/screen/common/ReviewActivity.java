@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -27,6 +28,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 
 import org.json.JSONObject;
 
@@ -106,11 +108,10 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         mDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         mDialog.setCanceledOnTouchOutside(false);
 
-        View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_rating_hotel, null, false);
+        View view = LayoutInflater.from(this).inflate(R.layout.view_dialog_review, null, false);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        TextView ratingPeriod = (TextView) view.findViewById(R.id.periodTextView);
-        TextView ratingHotelName = (TextView) view.findViewById(R.id.hotelNameTextView);
+        TextView periodTextView = (TextView) view.findViewById(R.id.periodTextView);
         TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
         TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
 
@@ -134,7 +135,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                     String periodDate = String.format("%s - %s"//
                         , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
                         , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
-                    ratingPeriod.setText(getString(R.string.message_review_date, periodDate));
+                    periodTextView.setText(getString(R.string.message_review_date, periodDate));
                     break;
                 }
 
@@ -142,7 +143,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                 {
                     String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
-                    ratingPeriod.setText(getString(R.string.message_review_date, periodDate));
+                    periodTextView.setText(getString(R.string.message_review_date, periodDate));
                     break;
                 }
             }
@@ -150,6 +151,10 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         {
             ExLog.d(e.toString());
         }
+
+        // 이미지
+        DailyEmoticonImageView badEmoticonImageView = (DailyEmoticonImageView)view.findViewById(R.id.badEmoticonImageView);
+        DailyEmoticonImageView goodEmoticonImageView = (DailyEmoticonImageView)view.findViewById(R.id.goodEmoticonImageView);
 
         //        final String placeName = String.format("\'%s\'", mTicketName);
         //        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.frag_rating_hotel_text2, placeName));

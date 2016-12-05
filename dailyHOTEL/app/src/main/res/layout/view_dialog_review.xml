@@ -18,7 +18,6 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
-        android:text="'서울 신라 호텔' 은 어떠셨어요"
         android:textColor="@color/default_text_c323232"
         android:textSize="17dp"
         dailyFont:style="Medium"/>
@@ -28,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="YYYY.MM.YY.(월) - YYYY.MM.YY(화) 이용"
         android:textColor="@color/default_text_c929292"
         android:textSize="13dp"/>
 
@@ -40,23 +38,32 @@
         android:paddingRight="22dp">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="100dp"
+            android:layout_height="130dp">
 
-            <ImageView
+            <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
                 android:id="@+id/badEmoticonImageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/badEmoticonTextView"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/badEmoticonImageView"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:text="별로예요"
+                android:layout_marginTop="9dp"
+                android:text="@string/message_review_bad"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="16dp"/>
+
+            <View
+                android:id="@+id/badEmoticonDimView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_a50"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -64,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="38dp">
 
-            <ImageView
+            <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
                 android:id="@+id/goodEmoticonImageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"/>
@@ -74,10 +81,18 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/goodEmoticonImageView"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="9dp"
                 android:gravity="center_horizontal"
-                android:text="만족해요"
+                android:text="@string/message_review_good"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="16dp"/>
+
+            <View
+                android:id="@+id/goodEmoticonDimView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_a50"
+                android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
