@@ -371,6 +371,13 @@ public class PaymentWaitActivity extends BaseActivity
 
         mDailyTextView.setText(jsonObject.getString("name"));
 
+        String[] dateSlice = jsonObject.getString("date").split("/");
+        String[] timeSlice = jsonObject.getString("time").split(":");
+
+        String date = String.format("%s년 %s월 %s일", dateSlice[0], dateSlice[1], dateSlice[2]);
+
+        mDeadlineTextView.setText(String.format("%s %s시 %s분 까지", date, timeSlice[0], timeSlice[1]));
+
         int coupon = jsonObject.getInt("coupon_amount");
 
         if (coupon > 0)
@@ -382,23 +389,16 @@ public class PaymentWaitActivity extends BaseActivity
             mCouponLayout.setVisibility(View.GONE);
         }
 
+        mPriceTextView.setText(Util.getPriceFormat(this, jsonObject.getInt("price"), false));
+
         int paymetPrice = jsonObject.getInt("amt");
-        mPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
-
-        String[] dateSlice = jsonObject.getString("date").split("/");
-        String[] timeSlice = jsonObject.getString("time").split(":");
-
-        String date = String.format("%s년 %s월 %s일", dateSlice[0], dateSlice[1], dateSlice[2]);
-
-        mDeadlineTextView.setText(String.format("%s %s시 %s분 까지", date, timeSlice[0], timeSlice[1]));
+        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
 
         String msg1 = jsonObject.getString("msg1");
         setGuideText(mGuide1Layout, msg1.split("\\."), false);
 
         String msg2 = getString(R.string.message__wait_payment03);
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
-
-        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
     }
 
     private void startFAQ()
