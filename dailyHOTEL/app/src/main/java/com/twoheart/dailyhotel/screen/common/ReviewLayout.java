@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 public class ReviewLayout extends BaseLayout implements View.OnClickListener, NestedScrollView.OnScrollChangeListener
 {
@@ -35,7 +36,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     private ViewGroup mScrollLayout;
     private SimpleDraweeView mPlaceImaegView;
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
-    private View mSelectedView;
+    private View mSelectedEmoticonView, mSelectedView;
     private TextView mPlaceNameTextView, mPeriodTextView;
     private TextView mToolbarTitle, mToolbarSubTitle;
 
@@ -139,14 +140,17 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         stopAnimation();
 
-        View view = mScrollLayout.getChildAt(position);
+        mSelectedView = mScrollLayout.getChildAt(position);
+
+        mNestedScrollView.smoothScrollTo(0, (int)mSelectedView.getY());
+
         mDailyEmoticonImageView = new DailyEmoticonImageView[5];
 
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) view.findViewById(R.id.emoticonImageView0);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) view.findViewById(R.id.emoticonImageView1);
-        mDailyEmoticonImageView[2] = (DailyEmoticonImageView) view.findViewById(R.id.emoticonImageView2);
-        mDailyEmoticonImageView[3] = (DailyEmoticonImageView) view.findViewById(R.id.emoticonImageView3);
-        mDailyEmoticonImageView[4] = (DailyEmoticonImageView) view.findViewById(R.id.emoticonImageView4);
+        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mSelectedView.findViewById(R.id.emoticonImageView0);
+        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mSelectedView.findViewById(R.id.emoticonImageView1);
+        mDailyEmoticonImageView[2] = (DailyEmoticonImageView) mSelectedView.findViewById(R.id.emoticonImageView2);
+        mDailyEmoticonImageView[3] = (DailyEmoticonImageView) mSelectedView.findViewById(R.id.emoticonImageView3);
+        mDailyEmoticonImageView[4] = (DailyEmoticonImageView) mSelectedView.findViewById(R.id.emoticonImageView4);
 
         for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
         {
@@ -234,15 +238,13 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         emoticonImageView3.setTranslationY(Util.dpToPx(mContext, 15));
         emoticonImageView4.setTranslationY(Util.dpToPx(mContext, 15));
 
-        TextView resultTextView = (TextView) view.findViewById(R.id.resultTextView);
-
         return view;
     }
 
     @Override
     public void onClick(final View v)
     {
-        if (mSelectedView != null && mSelectedView.getId() == v.getId())
+        if (mSelectedEmoticonView != null && mSelectedEmoticonView.getId() == v.getId())
         {
             return;
         }
@@ -250,30 +252,14 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         AnimatorSet animatorSet = new AnimatorSet();
         ValueAnimator scaleDownAnimator = null, scaleUpAnimator = null;
 
-        if (mSelectedView != null)
+        if (mSelectedEmoticonView != null)
         {
-            scaleDownAnimator = getScaleDownAnimator(mSelectedView);
+            scaleDownAnimator = getScaleDownAnimator(mSelectedEmoticonView);
         }
 
-        switch (v.getId())
-        {
-            case R.id.emoticonImageView0:
-                break;
+        checkedReviewEmoticon(v);
 
-            case R.id.emoticonImageView1:
-                break;
-
-            case R.id.emoticonImageView2:
-                break;
-
-            case R.id.emoticonImageView3:
-                break;
-
-            case R.id.emoticonImageView4:
-                break;
-        }
-
-        mSelectedView = v;
+        mSelectedEmoticonView = v;
 
         if (v != null)
         {
@@ -290,6 +276,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.start();
+
+        ((OnEventListener)mOnEventListener).onReviewScoreTypeClick();
     }
 
     @Override
@@ -337,6 +325,48 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         {
             mImageDimView.setAlpha(1.0f);
         }
+    }
+
+    private int getEmptyReviewCard(int position)
+    {
+        if(mScrollLayout.getChildCount() <= position)
+        {
+            return -1;
+        }
+    }
+
+    private void checkedReviewEmoticon(View emoticonView)
+    {
+        mSelectedView.setSelected(true);
+
+        TextView resultTextView = (TextView) mSelectedView.findViewById(R.id.resultTextView);
+        resultTextView.setSelected(true);
+
+        switch (emoticonView.getId())
+        {
+            case R.id.emoticonImageView0:
+                resultTextView.setText(R.string.review_score0);
+                break;
+
+            case R.id.emoticonImageView1:
+                resultTextView.setText(R.string.review_score1);
+                break;
+
+            case R.id.emoticonImageView2:
+                resultTextView.setText(R.string.review_score2);
+                break;
+
+            case R.id.emoticonImageView3:
+                resultTextView.setText(R.string.review_score3);
+                break;
+
+            case R.id.emoticonImageView4:
+                resultTextView.setText(R.string.review_score4);
+                break;
+        }
+
+        DailyTextView titleTextView = (DailyTextView) mSelectedView.findViewById(R.id.titleTextView);
+        titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
     }
 
     private ValueAnimator getScaleDownAnimator(final View view)
