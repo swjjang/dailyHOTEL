@@ -11,14 +11,13 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,16 +25,19 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 
-public class ReviewLayout extends BaseLayout implements View.OnClickListener
+public class ReviewLayout extends BaseLayout implements View.OnClickListener, NestedScrollView.OnScrollChangeListener
 {
-    private ScrollView mScrollView;
+    private View mToolbar;
+    private NestedScrollView mNestedScrollView;
     private ViewGroup mScrollLayout;
     private SimpleDraweeView mPlaceImaegView;
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private View mSelectedView;
+    private TextView mPlaceNameTextView, mPeriodTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -56,8 +58,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener
     {
         initToolbar(view);
 
-        mScrollView = (ScrollView) view.findViewById(R.id.scrollView);
-        mScrollLayout = (ViewGroup) mScrollView.findViewById(R.id.scrollLayout);
+        mNestedScrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
+        mScrollLayout = (ViewGroup) mNestedScrollView.findViewById(R.id.scrollLayout);
 
         int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(mContext));
         mPlaceImaegView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.placeImageView);
@@ -65,12 +67,16 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener
         layoutParams.height = imageHeight;
         mPlaceImaegView.setLayoutParams(layoutParams);
 
+        mPlaceNameTextView = (TextView)view.findViewById(R.id.placeNameTextView);
+        mPeriodTextView = (TextView)view.findViewById(R.id.periodTextView);
 
+        mNestedScrollView.setOnScrollChangeListener(this);
     }
 
     private void initToolbar(View view)
     {
-        View closeView = view.findViewById(R.id.closeView);
+        mToolbar = view.findViewById(R.id.toolbar);
+        View closeView = mToolbar.findViewById(R.id.closeView);
         closeView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -89,6 +95,17 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener
         }
 
         Util.requestImageResize(context, mPlaceImaegView, imageUrl);
+    }
+
+    public void setPlaceInformation(String placeName, String period)
+    {
+        if(mPlaceNameTextView == null || mPeriodTextView == null)
+        {
+            return;
+        }
+
+        mPlaceNameTextView.setText(placeName);
+        mPeriodTextView.setText(period);
     }
 
     public void addScrollLayout(View view)
@@ -161,6 +178,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener
         int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(context, 30);
         int cardHeight = Util.getRatioHeightType4x3(cardWidth);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(cardWidth, cardHeight);
+        layoutParams.bottomMargin = Util.dpToPx(context, 15);
         view.setLayoutParams(layoutParams);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
@@ -256,6 +274,38 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener
 
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.start();
+    }
+
+    @Override
+    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+    {
+        ExLog.d("scrollY : " + scrollY + ", " + mToolbar.getHeight());
+
+        int toobarHeight = mToolbar.getHeight();
+
+        if(toobarHeight >= scrollY)
+        {
+            float vectorValue = (float)scrollY / toobarHeight;
+
+            mPlaceImaegView.setTranslationY(-scrollY * 0.5f);
+
+            int alphaValue = (int)(0x4d * vectorValue);
+
+            mToolbar.setBackgroundColor((alphaValue << 24) & 0xff000000);
+
+            float transValue = Util.dpToPx(mContext, 50) * vectorValue;
+            mPlaceNameTextView.setTranslationY(-transValue);
+            mPeriodTextView.setTranslationY(-transValue);
+        } else
+        {
+            mPlaceImaegView.setTranslationY(-toobarHeight * 0.5f);
+            mToolbar.setBackgroundColor(0x4f000000);
+
+            float transValue = Util.dpToPx(mContext, 50);
+
+            mPlaceNameTextView.setTranslationY(-transValue);
+            mPeriodTextView.setTranslationY(-transValue);
+        }
     }
 
     private ValueAnimator getScaleDownAnimator(final View view)

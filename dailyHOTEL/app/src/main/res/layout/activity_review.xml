@@ -28,8 +28,7 @@
         android:layout_height="@dimen/toolbar_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/transparent">
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/closeView"
@@ -62,13 +61,15 @@
         android:textColor="@color/white"
         android:textSize="12dp"/>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar"
         android:layout_marginLeft="15dp"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
         android:layout_marginRight="15dp">
 
         <LinearLayout
@@ -77,7 +78,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="82dp"/>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
