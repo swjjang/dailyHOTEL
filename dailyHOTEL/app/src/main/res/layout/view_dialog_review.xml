@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/popup_bg_white_full"
+              android:orientation="vertical"
+              android:paddingBottom="50dp"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
+              android:paddingTop="24dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/periodTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/default_text_c929292"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp">
+
+        <RelativeLayout
+            android:id="@+id/badEmoticonView"
+            android:layout_width="100dp"
+            android:layout_height="130dp">
+
+            <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+                android:id="@+id/badEmoticonImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/badEmoticonTextView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="9dp"
+                android:gravity="center_horizontal"
+                android:text="@string/message_review_bad"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="16dp"/>
+
+            <View
+                android:id="@+id/badEmoticonDimView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_a50"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/goodEmoticonView"
+            android:layout_width="100dp"
+            android:layout_height="130dp"
+            android:layout_marginLeft="38dp">
+
+            <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
+                android:id="@+id/goodEmoticonImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="9dp"
+                android:gravity="center_horizontal"
+                android:text="@string/message_review_good"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="16dp"/>
+
+            <View
+                android:id="@+id/goodEmoticonDimView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_a50"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
