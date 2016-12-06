@@ -92,13 +92,24 @@ public class WriteReviewCommentLayout extends BaseLayout
         mEditTextView.setFilters(allowReviewFilter);
         mEditTextView.addTextChangedListener(mEditTextWatcher);
 
+        mScrollView.setScrollY(0);
         mScrollView.setOnScrollChangeListener(mScrollChangedListener);
     }
 
     public void setData(String text)
     {
+        updateEditTextView(text);
         updateCompleteLayout(text);
         updateTextCountLayout(text);
+    }
+
+    private void updateEditTextView(String text) {
+        mEditTextView.setText(text);
+
+        if (Util.isTextEmpty(text) == false)
+        {
+            mEditTextView.setSelection(text.length());
+        }
     }
 
     private void updateCompleteLayout(String text)

@@ -1015,7 +1015,7 @@
     <string name="wishlist_detail_add_message">위시리스트에\n추가했습니다.</string>
     <string name="wishlist_detail_delete_message">위시리스트에서\n삭제했습니다.</string>
     <string name="wishlist_count_over_10_thousand">만명 이상</string>
-    <string name="wishlist_count_format">%1$d자만 입력하시면, 의견을 보내실 수 있어요!</string>
+`    <string name="wishlist_count_format">%1$d명</string>
 
     <!-- Review  -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>

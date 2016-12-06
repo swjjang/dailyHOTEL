@@ -92,7 +92,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
             appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
 
             try
             {
@@ -120,7 +120,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
             appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
 
             try
             {
@@ -287,7 +287,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 AppboyProperties appboyProperties = new AppboyProperties();
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
                 appboyProperties.addProperty(AnalyticsManager.KeyType.SCREEN, params.get(AnalyticsManager.KeyType.SCREEN));
 
                 try
@@ -311,7 +311,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 AppboyProperties appboyProperties = new AppboyProperties();
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
                 appboyProperties.addProperty(AnalyticsManager.KeyType.SCREEN, params.get(AnalyticsManager.KeyType.SCREEN));
 
                 try

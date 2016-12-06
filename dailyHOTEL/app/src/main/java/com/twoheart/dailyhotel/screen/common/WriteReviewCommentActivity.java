@@ -70,8 +70,6 @@ public class WriteReviewCommentActivity extends BaseActivity
     @Override
     public void finish()
     {
-        setResult(RESULT_OK);
-
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
