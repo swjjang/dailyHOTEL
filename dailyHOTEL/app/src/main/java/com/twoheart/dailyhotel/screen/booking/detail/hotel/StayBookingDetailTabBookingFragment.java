@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ReviewActivity;
-import com.twoheart.dailyhotel.screen.common.WriteReviewCommentActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -652,21 +651,11 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                 }
 
                 String reviewStatus = (String) v.getTag();
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-
-                Intent intent = WriteReviewCommentActivity.newInstance(baseActivity, null);
-                baseActivity.startActivity(intent);
-
-//                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
-//                {
-//                    DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
-//                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
-//                {
-//                    lockUI();
-//
-//                    mNetworkController.requestReviewInformation(mReservationIndex);
-//                }
+                if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+                {
+                    lockUI();
+                    mNetworkController.requestReviewInformation(mReservationIndex);
+                }
 
                 break;
             }
