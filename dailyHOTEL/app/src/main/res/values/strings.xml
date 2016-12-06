@@ -1036,12 +1036,15 @@
     <string name="wishlist_detail_add_message">위시리스트에\n추가했습니다.</string>
     <string name="wishlist_detail_delete_message">위시리스트에서\n삭제했습니다.</string>
     <string name="wishlist_count_over_10_thousand">만명 이상</string>
-    <string name="wishlist_count_format">%1$d명</string>
+    <string name="wishlist_count_format">%1$d자만 입력하시면, 의견을 보내실 수 있어요!</string>
 
-    <string name="label_write_review_comment_confirm">확인</string>
+    <string name="label_write_review_comment_complete">완료</string>
     <string name="label_write_review_comment_title">후기</string>
     <string name="label_write_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님의 선택을 도와주세요!</string>
     <string name="label_write_review_comment_hint">예시) 침구가 너무 깨끗해서 잘 잤어요.</string>
+    <string name="label_write_review_comment_count_format">%1$d자만 입력하시면, 의견을 보내실 수 있어요!</string>
+    <string name="label_write_review_comment_dialog_title">후기 작성을 취소하시겠어요?</string>
+    <string name="label_write_review_comment_dialog_message">작성하신 후기가 삭제됩니다.</string>
 
     <!-- Collection -->
     <string name="message_collection_stay_empty_text">선택하신 날짜에\n예약할 수 있는 숙소가 없습니다.</string>

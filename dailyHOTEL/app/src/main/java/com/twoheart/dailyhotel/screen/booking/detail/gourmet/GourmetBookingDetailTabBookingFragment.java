@@ -193,8 +193,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         {
             mInputReviewVerticalLine.setVisibility(View.VISIBLE);
             mInputReviewView.setVisibility(View.VISIBLE);
-            mInputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
-            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
+            mInputReviewView.setDrawableVectorTint(R.color.default_text_cc5c5c5);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_background_c454545_alpha_20));
         } else
         {
             mInputReviewVerticalLine.setVisibility(View.GONE);
@@ -437,16 +437,9 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 }
 
                 String reviewStatus = (String) v.getTag();
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-
-                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
-                {
-                    DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
-                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+                if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
                 {
                     lockUI();
-
                     mNetworkController.requestReviewInformation(mReservationIndex);
                 }
 

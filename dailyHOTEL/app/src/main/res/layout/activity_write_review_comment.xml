@@ -22,7 +22,7 @@
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/confirmTextView"
+            android:id="@+id/completeTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@string/label_write_review_comment_confirm"
+            android:text="@string/label_write_review_comment_complete"
             android:textColor="@color/selector_text_color_dc5c5c5_e900034"
             android:textSize="18dp"/>
 
@@ -39,10 +39,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/confirmTextView"
+            android:layout_toLeftOf="@id/completeTextView"
             android:layout_toRightOf="@+id/backImageView"
+            android:text="@string/label_write_review_comment_title"
             android:ellipsize="end"
-            android:gravity="left|center_vertical"
+            android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/actionbar_title"
             android:textSize="18dp"/>
@@ -128,8 +129,7 @@
                 android:background="@null"
                 android:gravity="top"
                 android:hint="@string/label_write_review_comment_hint"
-                android:imeOptions="actionDone"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:minHeight="189dp"
                 android:textColor="@color/default_text_c323232"
                 android:textColorHint="@color/default_text_cd0d0d0"
