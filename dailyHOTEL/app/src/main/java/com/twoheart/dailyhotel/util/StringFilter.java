@@ -24,6 +24,7 @@ public class StringFilter
     private static final int ALLOW_NUMERIC = 3;
     private static final int ALLOW_SEARCH_FILTER = 4;
     private static final int ALLOW_REGISTER_COUPON_FILTER = 5;
+    private static final int ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS = 6;
 
     private Context mContext;
     // Allows only alphanumeric characters. Filters special and hangul
@@ -75,6 +76,14 @@ public class StringFilter
         }
     };
 
+    public InputFilter allowReviewFilter = new InputFilter()
+    {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
+        {
+            return filteredString(source, start, end, ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS);
+        }
+    };
+
     public StringFilter(Context context)
     {
         mContext = context;
@@ -104,6 +113,10 @@ public class StringFilter
 
             case ALLOW_SEARCH_FILTER:
                 pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55\u002b\u002c\u002d\u002e\u002f\u0040\u0026]+$");
+                break;
+
+            case ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS:
+                pattern = Pattern.compile("^[a-zA-Z0-9\\s\\n`~!@#$%^&*()-=_+\\[\\]{}:;',./<>?\\\\|]*$");
                 break;
 
             case ALLOW_ALPHANUMERIC:
@@ -139,6 +152,9 @@ public class StringFilter
 
                     case ALLOW_REGISTER_COUPON_FILTER:
                         DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_input_error_register_coupon), Toast.LENGTH_SHORT);
+                        break;
+
+                    case ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS:
                         break;
 
                     case ALLOW_ALPHANUMERIC:

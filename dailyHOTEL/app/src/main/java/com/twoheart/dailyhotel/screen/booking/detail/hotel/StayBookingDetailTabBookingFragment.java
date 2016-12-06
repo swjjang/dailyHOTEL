@@ -658,15 +658,15 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                 Intent intent = WriteReviewCommentActivity.newInstance(baseActivity, null);
                 baseActivity.startActivity(intent);
 
-                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
-                {
-                    DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
-                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
-                {
-                    lockUI();
-
-                    mNetworkController.requestReviewInformation(mReservationIndex);
-                }
+//                if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
+//                {
+//                    DailyToast.showToast(baseActivity, R.string.message_booking_already_input_review, Toast.LENGTH_LONG);
+//                } else if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+//                {
+//                    lockUI();
+//
+//                    mNetworkController.requestReviewInformation(mReservationIndex);
+//                }
 
                 break;
             }

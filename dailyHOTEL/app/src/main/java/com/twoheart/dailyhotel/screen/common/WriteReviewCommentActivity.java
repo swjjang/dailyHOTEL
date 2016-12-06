@@ -117,6 +117,7 @@ public class WriteReviewCommentActivity extends BaseActivity
         @Override
         public void finish()
         {
+            setResult(RESULT_CANCELED);
             WriteReviewCommentActivity.this.finish();
         }
     };

@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 
@@ -82,6 +84,12 @@ public class WriteReviewCommentLayout extends BaseLayout
         mCompleteView.setEnabled(false);
         mBottomLayout.setVisibility(View.GONE);
 
+        StringFilter stringFilter = new StringFilter(mContext);
+        InputFilter[] allowReviewFilter = new InputFilter[2];
+        allowReviewFilter[0] = stringFilter.allowReviewFilter;
+        allowReviewFilter[1] = new InputFilter.LengthFilter(2000);
+
+        mEditTextView.setFilters(allowReviewFilter);
         mEditTextView.addTextChangedListener(mEditTextWatcher);
 
         mScrollView.setOnScrollChangeListener(mScrollChangedListener);
