@@ -7,9 +7,11 @@
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:drawablePadding="4dp"
         android:gravity="center_horizontal"
         android:textColor="@color/default_text_c929292"
         android:textSize="12dp"/>
@@ -85,7 +87,7 @@
         android:layout_marginBottom="44dp"
         android:background="@drawable/selector_review_resultlayout"
         android:gravity="center"
-        android:text="@string/review_score_default"
+        android:text="@string/label_review_score_default"
         android:textColor="@color/white"
         android:textSize="13dp"/>
 </RelativeLayout>

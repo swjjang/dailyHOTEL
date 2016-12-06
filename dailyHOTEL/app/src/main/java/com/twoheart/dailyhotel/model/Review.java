@@ -19,6 +19,7 @@ import java.util.HashMap;
 public class Review implements Parcelable
 {
     public int reserveIdx = -1;
+    public boolean requiredCommentReview;
     private ReviewItem mReviewItem;
     private ArrayList<ReviewPickQuestion> mReviewPickQuestionList;
     private ArrayList<ReviewScoreQuestion> mReviewScoreQuestionList;
@@ -39,6 +40,7 @@ public class Review implements Parcelable
         }
 
         reserveIdx = jsonObject.getInt("reserveIdx");
+        requiredCommentReview = jsonObject.getBoolean("requiredCommentReview");
 
         if (jsonObject.has("reviewItem") == true && jsonObject.isNull("reviewItem") == false)
         {
