@@ -7,15 +7,17 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class ReviewItem implements Parcelable
 {
     public int itemIdx;
     public String itemName;
-    public String baseImagePath;
-    public String itemImagePath;
+    public String imageUrl;
     public Constants.PlaceType placeType; // serviceType
     public String useEndDate;
     public String useStartDate;
@@ -34,8 +36,23 @@ public class ReviewItem implements Parcelable
 
         itemIdx = jsonObject.getInt("itemIdx");
         itemName = jsonObject.getString("itemName");
-        baseImagePath = jsonObject.getString("baseImagePath");
-        itemImagePath = jsonObject.getString("itemImagePath");
+        String baseImagePath = jsonObject.getString("baseImagePath");
+        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
+
+        Iterator<String> iterator = imageJSONObject.keys();
+        while (iterator.hasNext())
+        {
+            String key = iterator.next();
+
+            try
+            {
+                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+                break;
+            } catch (JSONException e)
+            {
+            }
+        }
 
         String serviceType = jsonObject.getString("serviceType");
 
@@ -70,8 +87,7 @@ public class ReviewItem implements Parcelable
     {
         dest.writeInt(itemIdx);
         dest.writeString(itemName);
-        dest.writeString(baseImagePath);
-        dest.writeString(itemImagePath);
+        dest.writeString(imageUrl);
         dest.writeString(placeType.name());
         dest.writeString(useEndDate);
         dest.writeString(useStartDate);
@@ -81,8 +97,7 @@ public class ReviewItem implements Parcelable
     {
         itemIdx = in.readInt();
         itemName = in.readString();
-        baseImagePath = in.readString();
-        itemImagePath = in.readString();
+        imageUrl = in.readString();
         placeType = Constants.PlaceType.valueOf(in.readString());
         useEndDate = in.readString();
         useStartDate = in.readString();

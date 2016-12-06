@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="247dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/selector_review_cardlayout"
                 android:orientation="vertical">
 
@@ -26,44 +27,57 @@
         android:textColor="@color/default_text_c323232"
         android:textSize="12dp"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/emoticonView"
         android:layout_width="wrap_content"
         android:layout_height="66dp"
         android:layout_above="@+id/resultTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:gravity="bottom">
+        android:gravity="bottom|center_horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
             android:id="@+id/emoticonImageView0"
-            android:layout_width="36dp"
-            android:layout_height="36dp"/>
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="-8dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
             android:id="@+id/emoticonImageView1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginLeft="14dp"/>
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="-8dp"
+            android:layout_marginRight="-8dp"
+            android:layout_toRightOf="@+id/emoticonImageView0"/>
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
             android:id="@+id/emoticonImageView2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginLeft="14dp"/>
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="-8dp"
+            android:layout_marginRight="-8dp"
+            android:layout_toRightOf="@+id/emoticonImageView1"/>
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
             android:id="@+id/emoticonImageView3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginLeft="14dp"/>
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="-8dp"
+            android:layout_marginRight="-8dp"
+            android:layout_toRightOf="@+id/emoticonImageView2"/>
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
             android:id="@+id/emoticonImageView4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginLeft="14dp"/>
-    </LinearLayout>
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="-8dp"
+            android:layout_toRightOf="@+id/emoticonImageView3"/>
+    </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/resultTextView"

@@ -4,7 +4,8 @@
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/default_background">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/placeImageView"
@@ -38,20 +39,44 @@
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
             app:srcCompat="@drawable/navibar_ic_x_white"/>
-
     </RelativeLayout>
 
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/placeNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="57dp"
+        android:gravity="center_horizontal"
+        android:text="서울 힐튼 호텔"
+        android:textColor="@color/white"
+        android:textSize="14dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/periodTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/placeNameTextView"
+        android:layout_marginTop="2dp"
+        android:gravity="center_horizontal"
+        android:text="YYYY.MM.YY(월) - YYYY.MM.YY(화) 이용"
+        android:textColor="@color/white"
+        android:textSize="12dp"/>
+
     <ScrollView
-        android:id="@+id/informationLayout"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <LinearLayout
+            android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical"
+            android:paddingTop="82dp"/>
     </ScrollView>
 
     <RelativeLayout

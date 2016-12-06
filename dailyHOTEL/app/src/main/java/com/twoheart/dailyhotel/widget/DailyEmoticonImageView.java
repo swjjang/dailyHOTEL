@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.facebook.keyframes.KeyframesDirectionallyScalingDrawable;
 import com.facebook.keyframes.KeyframesDrawable;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
 import com.facebook.keyframes.deserializers.KFImageDeserializer;
@@ -68,28 +69,22 @@ public class DailyEmoticonImageView extends ImageView
 
     public void startAnimation()
     {
-        if (mKeyFramesDrawable != null)
-        {
-            mKeyFramesDrawable.startAnimation();
-        }
-    }
-
-    public void stopAnimation()
-    {
-        if (mKeyFramesDrawable != null)
-        {
-            mKeyFramesDrawable.stopAnimation();
-        }
-    }
-
-    public void setDrawableBounds(int left, int top, int right, int bottom)
-    {
-        if(mKeyFramesDrawable == null)
+        if (mKeyFramesDrawable == null)
         {
             return;
         }
 
-        mKeyFramesDrawable.setBounds(left, top, right, bottom);
+        mKeyFramesDrawable.startAnimation();
+    }
+
+    public void stopAnimation()
+    {
+        if (mKeyFramesDrawable == null)
+        {
+            return;
+        }
+
+        mKeyFramesDrawable.stopAnimation();
     }
 
     private void setKFImage(KFImage kfImage)

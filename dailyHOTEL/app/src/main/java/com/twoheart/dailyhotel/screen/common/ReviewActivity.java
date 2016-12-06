@@ -13,15 +13,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
+import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -33,6 +36,7 @@ import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +50,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private ReviewLayout mReviewLayout;
 
+    private Handler mHandler = new Handler();
 
     public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
     {
@@ -111,12 +116,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     @Override
     protected void onDestroy()
     {
-        if (mDialog != null && mDialog.isShowing())
-        {
-            mDialog.dismiss();
-        }
-
-        mDialog = null;
+        hideReviewDialog();
 
         super.onDestroy();
     }
@@ -135,9 +135,33 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
         setContentView(mReviewLayout.onCreateView(R.layout.activity_review));
 
+        mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().imageUrl);
 
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionList = mReview.getReviewScoreQuestionList();
+
+        if(reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
+        {
+            for(ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
+            {
+                View view = mReviewLayout.getReviewScoreView(this, reviewScoreQuestion);
+
+                mReviewLayout.addScrollLayout(view);
+            }
+        }
+
+        mReviewLayout.setSelectedView(0);
+        mReviewLayout.startAnimation();
     }
 
+    private void hideReviewDialog()
+    {
+        if (mDialog != null && mDialog.isShowing())
+        {
+            mDialog.dismiss();
+        }
+
+        mDialog = null;
+    }
 
     private void showReviewDialog()
     {
@@ -266,6 +290,17 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_SATISFACTION, params);
                         break;
                 }
+
+                mHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        hideReviewDialog();
+
+                        showReviewDetail();
+                    }
+                }, 3000);
             }
         });
 
@@ -320,6 +355,17 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, params);
                         break;
                 }
+
+                mHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        hideReviewDialog();
+
+                        showReviewDetail();
+                    }
+                }, 3000);
             }
         });
 
