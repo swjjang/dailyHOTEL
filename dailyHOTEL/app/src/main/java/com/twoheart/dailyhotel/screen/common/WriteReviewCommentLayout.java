@@ -92,6 +92,7 @@ public class WriteReviewCommentLayout extends BaseLayout
         mEditTextView.setFilters(allowReviewFilter);
         mEditTextView.addTextChangedListener(mEditTextWatcher);
 
+        mScrollView.setScrollY(0);
         mScrollView.setOnScrollChangeListener(mScrollChangedListener);
     }
 
