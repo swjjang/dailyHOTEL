@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -36,6 +38,12 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     {
         // 영수증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
+
+        if (Constants.DEBUG == false && Util.isTextEmpty(mReservationIndex) == true)
+        {
+            Crashlytics.logException(new NullPointerException("GourmetReceiptActivity : mReservationIndex == null"));
+        }
+
         String userName = jsonObject.getString("userName");
         String userPhone = jsonObject.getString("userPhone");
         int ticketCount = jsonObject.getInt("ticketCount");
@@ -201,7 +209,13 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             @Override
             public void onClick(View v)
             {
-                showSendEmailDialog();
+                if (Util.isTextEmpty(mReservationIndex) == true)
+                {
+                    restartExpiredSession();
+                } else
+                {
+                    showSendEmailDialog();
+                }
             }
         });
     }
