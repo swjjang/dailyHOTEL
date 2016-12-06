@@ -155,29 +155,48 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
         setDownLoadLayout(holder, coupon.isDownloaded);
 
-        if (mIsSelectedMode == true && coupon.isDownloaded == true)
+        if (mIsSelectedMode == true)
         {
-            setSelectedLayout(holder, mSelectPosition == position);
-
-            holder.couponLayout.setOnClickListener(new View.OnClickListener()
+            if (coupon.isDownloaded == true)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    Coupon coupon = getItem(position);
-                    if (coupon.isDownloaded == true)
-                    {
-                        mSelectPosition = position;
-                    } else
-                    {
-                        mSelectPosition = -1;
-                        mListener.onDownloadClick(position);
-                    }
+                setSelectedLayout(holder, mSelectPosition == position);
 
-                    notifyDataSetChanged();
-                    mListener.updatePositiveButton();
-                }
-            });
+                holder.couponLayout.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Coupon coupon = getItem(position);
+                        if (coupon.isDownloaded == true)
+                        {
+                            mSelectPosition = position;
+                        } else
+                        {
+                            mSelectPosition = -1;
+                            mListener.onDownloadClick(position);
+                        }
+
+                        notifyDataSetChanged();
+                        mListener.updatePositiveButton();
+                    }
+                });
+            } else
+            {
+                setSelectedLayout(holder, mSelectPosition == position);
+
+                holder.couponLayout.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Coupon coupon = getItem(position);
+                        if (coupon.isDownloaded == false)
+                        {
+                            mListener.onDownloadClick(position);
+                        }
+                    }
+                });
+            }
         } else
         {
             holder.couponLayout.setOnClickListener(new View.OnClickListener()
