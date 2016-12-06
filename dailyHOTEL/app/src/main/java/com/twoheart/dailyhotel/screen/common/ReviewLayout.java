@@ -25,19 +25,19 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 
 public class ReviewLayout extends BaseLayout implements View.OnClickListener, NestedScrollView.OnScrollChangeListener
 {
-    private View mToolbar;
+    private View mToolbar, mImageDimView;
     private NestedScrollView mNestedScrollView;
     private ViewGroup mScrollLayout;
     private SimpleDraweeView mPlaceImaegView;
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private View mSelectedView;
     private TextView mPlaceNameTextView, mPeriodTextView;
+    private TextView mToolbarTitle, mToolbarSubTitle;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -61,14 +61,17 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
         mScrollLayout = (ViewGroup) mNestedScrollView.findViewById(R.id.scrollLayout);
 
+        mImageDimView = view.findViewById(R.id.imageDimView);
+        mImageDimView.setAlpha(0.0f);
+
         int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(mContext));
         mPlaceImaegView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = mPlaceImaegView.getLayoutParams();
         layoutParams.height = imageHeight;
         mPlaceImaegView.setLayoutParams(layoutParams);
 
-        mPlaceNameTextView = (TextView)view.findViewById(R.id.placeNameTextView);
-        mPeriodTextView = (TextView)view.findViewById(R.id.periodTextView);
+        mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
+        mPeriodTextView = (TextView) view.findViewById(R.id.periodTextView);
 
         mNestedScrollView.setOnScrollChangeListener(this);
     }
@@ -76,6 +79,12 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     private void initToolbar(View view)
     {
         mToolbar = view.findViewById(R.id.toolbar);
+        mToolbarTitle = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
+        mToolbarSubTitle = (TextView) mToolbar.findViewById(R.id.toolbarSubTitle);
+
+        mToolbarTitle.setAlpha(0.0f);
+        mToolbarSubTitle.setAlpha(0.0f);
+
         View closeView = mToolbar.findViewById(R.id.closeView);
         closeView.setOnClickListener(new View.OnClickListener()
         {
@@ -99,13 +108,16 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     public void setPlaceInformation(String placeName, String period)
     {
-        if(mPlaceNameTextView == null || mPeriodTextView == null)
+        if (mPlaceNameTextView == null || mPeriodTextView == null)
         {
             return;
         }
 
         mPlaceNameTextView.setText(placeName);
         mPeriodTextView.setText(period);
+
+        mToolbarTitle.setText(placeName);
+        mToolbarSubTitle.setText(period);
     }
 
     public void addScrollLayout(View view)
@@ -183,6 +195,10 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
+
+        titleTextView.setText(reviewScoreQuestion.title);
+        descriptionTextView.setText(reviewScoreQuestion.description);
+
         View emoticonView = view.findViewById(R.id.emoticonView);
 
         DailyEmoticonImageView emoticonImageView0 = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView0);
@@ -279,32 +295,47 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
     {
-        ExLog.d("scrollY : " + scrollY + ", " + mToolbar.getHeight());
+        int toolbarHeight = mToolbar.getHeight();
 
-        int toobarHeight = mToolbar.getHeight();
-
-        if(toobarHeight >= scrollY)
+        if (toolbarHeight >= scrollY)
         {
-            float vectorValue = (float)scrollY / toobarHeight;
+            float vectorValue = (float) scrollY / toolbarHeight;
 
             mPlaceImaegView.setTranslationY(-scrollY * 0.5f);
 
-            int alphaValue = (int)(0x4d * vectorValue);
-
+            int alphaValue = (int) (0x4d * vectorValue);
             mToolbar.setBackgroundColor((alphaValue << 24) & 0xff000000);
 
-            float transValue = Util.dpToPx(mContext, 50) * vectorValue;
-            mPlaceNameTextView.setTranslationY(-transValue);
-            mPeriodTextView.setTranslationY(-transValue);
+            float textAlphaValue = 1 - vectorValue * 2;
+            textAlphaValue = textAlphaValue < 0 ? 0 : textAlphaValue;
+            mPlaceNameTextView.setAlpha(textAlphaValue);
+            mPeriodTextView.setAlpha(textAlphaValue);
+
+            mToolbarTitle.setAlpha(vectorValue);
+            mToolbarSubTitle.setAlpha(vectorValue);
         } else
         {
-            mPlaceImaegView.setTranslationY(-toobarHeight * 0.5f);
+            mPlaceImaegView.setTranslationY(-toolbarHeight * 0.5f);
             mToolbar.setBackgroundColor(0x4f000000);
 
-            float transValue = Util.dpToPx(mContext, 50);
+            mPlaceNameTextView.setAlpha(0.0f);
+            mPeriodTextView.setAlpha(0.0f);
 
-            mPlaceNameTextView.setTranslationY(-transValue);
-            mPeriodTextView.setTranslationY(-transValue);
+            mToolbarTitle.setAlpha(1.0f);
+            mToolbarSubTitle.setAlpha(1.0f);
+        }
+
+        // 배경 없어지는 애니메이션
+        int scrollTopY = mScrollLayout.getPaddingTop() - Util.dpToPx(mContext, 15);
+
+        if(scrollTopY >= scrollY)
+        {
+            float vectorValue = (float) scrollY / scrollTopY;
+
+            mImageDimView.setAlpha(vectorValue);
+        } else
+        {
+            mImageDimView.setAlpha(1.0f);
         }
     }
 

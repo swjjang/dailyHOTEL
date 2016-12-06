@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -27,10 +26,10 @@ import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 
@@ -135,13 +134,33 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
         setContentView(mReviewLayout.onCreateView(R.layout.activity_review));
 
+        ReviewItem reviewItem = mReview.getReviewItem();
+
+        if (reviewItem == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        try
+        {
+            String periodDate = String.format("%s - %s"//
+                , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
+                , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
+
+            mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().imageUrl);
 
         ArrayList<ReviewScoreQuestion> reviewScoreQuestionList = mReview.getReviewScoreQuestionList();
 
-        if(reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
+        if (reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
         {
-            for(ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
+            for (ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
             {
                 View view = mReviewLayout.getReviewScoreView(this, reviewScoreQuestion);
 

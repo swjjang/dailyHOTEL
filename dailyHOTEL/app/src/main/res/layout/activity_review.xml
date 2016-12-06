@@ -30,6 +30,26 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
 
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:alpha="0"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/toolbarSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbarTitle"
+            android:alpha="0"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="10dp"/>
+
         <ImageView
             android:id="@+id/closeView"
             android:layout_width="wrap_content"
@@ -40,13 +60,20 @@
             app:srcCompat="@drawable/navibar_ic_x_white"/>
     </RelativeLayout>
 
+    <View
+        android:id="@+id/imageDimView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:alpha="0"
+        android:background="@color/default_background"/>
+
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/placeNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="57dp"
         android:gravity="center_horizontal"
-        android:text="서울 힐튼 호텔"
         android:textColor="@color/white"
         android:textSize="14dp"/>
 
@@ -57,7 +84,6 @@
         android:layout_below="@+id/placeNameTextView"
         android:layout_marginTop="2dp"
         android:gravity="center_horizontal"
-        android:text="YYYY.MM.YY(월) - YYYY.MM.YY(화) 이용"
         android:textColor="@color/white"
         android:textSize="12dp"/>
 
@@ -68,9 +94,9 @@
         android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:fadingEdge="none"
-        android:overScrollMode="never"
-        android:layout_marginRight="15dp">
+        android:overScrollMode="never">
 
         <LinearLayout
             android:id="@+id/scrollLayout"
