@@ -36,20 +36,20 @@ public class KFGradient {
   public static final String COLOR_END_JSON_FIELD = "color_end";
   private final KeyFramedGradient mEndGradient;
 
-  public static final String RAMP_ANGLE_JSON_FIELD = "ramp_angle";
-  public float angle;
+  public static final String RAMP_POSITION_JSON_FIELD = "ramp_position";
+  public float[] gradientPosition0, gradientPosition1;
 
   public static class Builder {
     public KFGradientColor colorStart;
     public KFGradientColor colorEnd;
-    public float angle;
+    public float[] gradientPosition0, gradientPosition1;
 
     public KFGradient build() {
-      return new KFGradient(colorStart, colorEnd, angle);
+      return new KFGradient(colorStart, colorEnd, gradientPosition0, gradientPosition1);
     }
   }
 
-  public KFGradient(KFGradientColor colorStart, KFGradientColor colorEnd, float angle) {
+  public KFGradient(KFGradientColor colorStart, KFGradientColor colorEnd, float[] pos0, float[] pos1) {
     mStartGradient = KeyFramedGradient.fromGradient(
         ArgCheckUtil.checkArg(
             colorStart,
@@ -63,7 +63,8 @@ public class KFGradient {
             COLOR_END_JSON_FIELD),
         END);
 
-    this.angle = angle;
+    gradientPosition0 = pos0;
+    gradientPosition1 = pos1;
   }
 
   public KeyFramedGradient getStartGradient() {
@@ -72,5 +73,14 @@ public class KFGradient {
 
   public KeyFramedGradient getEndGradient() {
     return mEndGradient;
+  }
+
+  public void updateWithFrameRate(int frameRate) {
+    if (mStartGradient != null) {
+      mStartGradient.updateWithFrameRate(frameRate);
+    }
+    if (mEndGradient != null) {
+      mEndGradient.updateWithFrameRate(frameRate);
+    }
   }
 }

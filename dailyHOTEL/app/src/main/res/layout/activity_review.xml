@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/default_background">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/placeImageView"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:adjustViewBounds="true"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:overlayImage="@drawable/img_detail_gradient"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:layout_alignBottom="@id/placeImageView"
+        android:layout_marginBottom="-5dp"
+        android:background="@drawable/img_bottom_white_gradient"/>
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:alpha="0"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/toolbarSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbarTitle"
+            android:alpha="0"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="10dp"/>
+
+        <ImageView
+            android:id="@+id/closeView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/navibar_ic_x_white"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/imageDimView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:alpha="0"
+        android:background="@color/default_background"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/placeNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="57dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="14dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/periodTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/placeNameTextView"
+        android:layout_marginTop="2dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="12dp"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomLayout"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:fadingEdge="none"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:id="@+id/scrollLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="82dp"/>
+    </android.support.v4.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmView"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_button_default_background"
+            android:gravity="center"
+            android:text="의견 보내기"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
+</RelativeLayout>
