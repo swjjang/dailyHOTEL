@@ -27,9 +27,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="16dp"
         android:layout_toLeftOf="@id/stateTextView"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -72,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:layout_marginTop="4dp"
             android:gravity="left|center_vertical"
             android:singleLine="true"
             android:textColor="@color/default_text_c323232"
@@ -81,13 +82,12 @@
             android:id="@+id/expireTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:gravity="left|center_vertical"
             android:maxLines="2"
             android:textColor="@color/default_text_c929292"
-            android:textSize="11dp"
-            />
+            android:textSize="11dp"/>
 
     </LinearLayout>
 
