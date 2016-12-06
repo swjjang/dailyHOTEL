@@ -201,8 +201,8 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         {
             mInputReviewVerticalLine.setVisibility(View.VISIBLE);
             mInputReviewView.setVisibility(View.VISIBLE);
-            mInputReviewView.setDrawableVectorTint(R.color.default_text_c929292);
-            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c929292));
+            mInputReviewView.setDrawableVectorTint(R.color.default_text_cc5c5c5);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_background_c454545_alpha_20));
         } else
         {
             mInputReviewVerticalLine.setVisibility(View.GONE);
