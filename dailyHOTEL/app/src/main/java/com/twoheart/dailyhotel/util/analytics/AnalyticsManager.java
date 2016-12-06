@@ -1033,7 +1033,7 @@ public class AnalyticsManager
         public static final String OVERSEAS = "overseas";
         public static final String APP_VERSION = "app_version";
         public static final String CARD_ISSUING_COMPANY = "card_issuing_company";
-        public static final String VIEWD_DATE = "viewed_date";
+        public static final String VIEWED_DATE = "viewed_date";
         public static final String CHECK_IN_DATE = "check_in_date";
         public static final String CHECK_OUT_DATE = "check_out_date";
         public static final String LENGTH_OF_STAY = "length_of_stay";
@@ -1085,6 +1085,7 @@ public class AnalyticsManager
         public static final String SEARCH_RESULT = "search_result";
         public static final String FILL_DATE_OF_BIRTH = "fill_date_of_birth";
         public static final String REASON_CANCELLATION = "reason_cancellation";
+        public static final String LIST_TOP5_PLACE_INDEXES = "list_top5_place_indexes";
     }
 
     public static class ValueType

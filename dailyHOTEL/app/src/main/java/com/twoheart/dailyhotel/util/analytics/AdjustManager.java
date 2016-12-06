@@ -285,6 +285,72 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
+        } else if (AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screen) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.WISH_LIST);
+
+            String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+            event.addPartnerParameter(Key.SERVICE, placeType);
+
+            String checkIn = null;
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+            } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+            }
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+            {
+                String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+                event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            }
+
+            String placeIndexes = params.get(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES);
+            event.addPartnerParameter(Key.WISH_LIST_PLACE_INDEXES, placeIndexes);
+
+            String listCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
+            event.addPartnerParameter(Key.NUMBER_OF_WISH_LISTS, listCount);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.RECENT_VIEW);
+
+            String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+            event.addPartnerParameter(Key.SERVICE, placeType);
+
+            String checkIn = null;
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+            } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+            }
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+            {
+                String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+                event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            }
+
+            String placeIndexes = params.get(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES);
+            event.addPartnerParameter(Key.RECENTVIEW_LIST_PLACE_INDEXES, placeIndexes);
+
+            String listCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
+            event.addPartnerParameter(Key.NUMBER_OF_RECENTVIEWS, listCount);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
 
         if (event != null)
@@ -1148,6 +1214,8 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String VIEW_DETAIL = "8atmoj"; // 업장 디테일화면이 노출될 때
         public static final String VIEW_BOOKING_INITIALISE = "4s8i0m"; // 결제화면이 노출될 때
         public static final String SEARCH_RESULT = "szintj"; // 검색어를 입력하여 검색결과 화면이 노출될 때
+        public static final String WISH_LIST = "tnjqjp"; // 위시리스트
+        public static final String RECENT_VIEW = "kmmxda"; // 최근 본 업장
     }
 
     private static final class Key
@@ -1174,6 +1242,10 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
         public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
         public static final String VIEW = "view"; // 리스트 인지 맵인지
+        public static final String WISH_LIST_PLACE_INDEXES = "wish_lists"; // 위시리스트내 담은 업장(최근 5개)
+        public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
+        public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
+        public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
     }
 
     private static final class UserType

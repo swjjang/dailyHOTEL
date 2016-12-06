@@ -34,6 +34,8 @@ public abstract class PlaceWishListLayout extends BaseLayout
         void onListItemRemoveClick(int position);
 
         void onEmptyButtonClick();
+
+        void onRecordAnalyticsList(ArrayList<? extends Place> list);
     }
 
     protected abstract int getEmptyMessageResId();
@@ -109,6 +111,8 @@ public abstract class PlaceWishListLayout extends BaseLayout
             mListAdapter.setData(viewItemList);
             mListAdapter.notifyDataSetChanged();
         }
+
+        ((OnEventListener) mOnEventListener).onRecordAnalyticsList(list);
     }
 
     public ArrayList<PlaceViewItem> getList()

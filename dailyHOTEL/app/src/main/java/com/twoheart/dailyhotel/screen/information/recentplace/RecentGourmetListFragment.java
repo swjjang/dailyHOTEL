@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -21,6 +22,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -224,6 +226,41 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             unLockUI();
             mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
             finish();
+        }
+
+        @Override
+        public void onRecordAnalyticsList(ArrayList<? extends Place> list)
+        {
+            if (list == null || list.isEmpty() == true || mSaleTime == null)
+            {
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            String placeTypeString = AnalyticsManager.ValueType.GOURMET;
+            int size = list.size();
+
+            StringBuilder stringBuilder = new StringBuilder("[");
+            int repeatCount = Math.min(5, size);
+            for (int i = 0; i < repeatCount; i++)
+            {
+                if (i != 0)
+                {
+                    stringBuilder.append(",");
+                }
+                stringBuilder.append(list.get(i).index);
+            }
+
+            stringBuilder.append("]");
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
+            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
+
+            AnalyticsManager.getInstance(baseActivity).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
         }
 
         @Override

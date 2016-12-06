@@ -35,6 +35,8 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         void onListItemDeleteClick(int position);
 
         void onEmptyButtonClick();
+
+        void onRecordAnalyticsList(ArrayList<? extends Place> list);
     }
 
     protected abstract int getEmptyTextResId();
@@ -111,6 +113,8 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
         }
+
+        ((RecentPlacesListLayout.OnEventListener) mOnEventListener).onRecordAnalyticsList(list);
     }
 
     public ArrayList<? extends Place> getList()

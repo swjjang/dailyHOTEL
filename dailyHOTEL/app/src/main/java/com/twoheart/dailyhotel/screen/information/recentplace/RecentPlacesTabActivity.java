@@ -25,7 +25,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -203,20 +202,6 @@ public class RecentPlacesTabActivity extends BaseActivity
             if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
             {
                 AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
-            } else
-            {
-                if (isEmptyRecentStayPlace() == true)
-                {
-                    position = 1;
-                }
-
-                String placeTypeString = position == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.STAY;
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
-                params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
-
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
             }
         }
 

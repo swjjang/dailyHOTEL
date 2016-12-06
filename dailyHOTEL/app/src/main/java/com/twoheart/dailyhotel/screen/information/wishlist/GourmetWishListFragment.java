@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -190,24 +191,6 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
         }
-
-        private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<Gourmet> list)
-        {
-            if (list == null || list.size() == 0)
-            {
-                return null;
-            }
-
-            ArrayList<PlaceViewItem> placeViewItems = new ArrayList<>();
-            for (Gourmet gourmet : list)
-            {
-                placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
-            }
-
-            placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-
-            return placeViewItems;
-        }
     };
 
     private GourmetWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
@@ -285,6 +268,41 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             unLockUI();
             mBaseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
             finish();
+        }
+
+        @Override
+        public void onRecordAnalyticsList(ArrayList<? extends Place> list)
+        {
+            if (list == null || list.isEmpty() == true || mSaleTime == null)
+            {
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            String placeTypeString = AnalyticsManager.ValueType.GOURMET;
+            int size = list.size();
+
+            StringBuilder stringBuilder = new StringBuilder("[");
+            int repeatCount = Math.min(5, size);
+            for (int i = 0; i < repeatCount; i++)
+            {
+                if (i != 0)
+                {
+                    stringBuilder.append(",");
+                }
+                stringBuilder.append(list.get(i).index);
+            }
+
+            stringBuilder.append("]");
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
+            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
+
+            AnalyticsManager.getInstance(baseActivity).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST, params);
         }
 
         @Override
