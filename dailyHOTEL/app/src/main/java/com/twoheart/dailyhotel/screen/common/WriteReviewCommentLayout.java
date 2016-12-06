@@ -98,8 +98,7 @@ public class WriteReviewCommentLayout extends BaseLayout
     public void setData(String text)
     {
         updateCompleteLayout(text);
-        int textCount = Util.isTextEmpty(text) == true ? 0 : text.length();
-        updateTextCountLayout(textCount);
+        updateTextCountLayout(text);
     }
 
     private void updateCompleteLayout(String text)
@@ -117,15 +116,21 @@ public class WriteReviewCommentLayout extends BaseLayout
             public void onClick(View v)
             {
                 String text = mEditTextView == null ? "" : mEditTextView.getText().toString();
-                ((OnEventListener) mOnEventListener).onCompleteClick(text);
                 ExLog.d("complete click : " + text);
+
+                ((OnEventListener) mOnEventListener).onCompleteClick(text);
             }
         } : null);
     }
 
-    private void updateTextCountLayout(int count)
+    private void updateTextCountLayout(String text)
     {
-        int remainder = DEFAULT_TEXT_COUNT - count;
+        if (Util.isTextEmpty(text) == true)
+        {
+            text = "";
+        }
+
+        int remainder = DEFAULT_TEXT_COUNT - text.length();
         if (remainder <= 0)
         {
             mBottomLayout.setVisibility(View.GONE);
@@ -133,8 +138,8 @@ public class WriteReviewCommentLayout extends BaseLayout
         {
             mBottomLayout.setVisibility(View.VISIBLE);
 
-            String text = mContext.getString(R.string.label_write_review_comment_count_format, remainder);
-            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(text);
+            String countString = mContext.getString(R.string.label_write_review_comment_count_format, remainder);
+            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(countString);
 
             int length = Integer.toString(remainder).length();
 
@@ -298,20 +303,19 @@ public class WriteReviewCommentLayout extends BaseLayout
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after)
         {
-
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count)
         {
-
         }
 
         @Override
         public void afterTextChanged(Editable s)
         {
-            updateTextCountLayout((s == null || s.length() == 0) ? 0 : s.length());
-            updateCompleteLayout((s == null || s.length() == 0) ? "" : s.toString());
+            String text = (s == null || s.length() == 0) ? "" : s.toString();
+            updateTextCountLayout(text);
+            updateCompleteLayout(text);
         }
     };
 
