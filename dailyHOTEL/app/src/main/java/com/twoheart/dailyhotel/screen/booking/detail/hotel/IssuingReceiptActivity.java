@@ -17,11 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -94,7 +96,13 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                showSendEmailDialog();
+                if (Util.isTextEmpty(mReservationIndex) == true)
+                {
+                    restartExpiredSession();
+                } else
+                {
+                    showSendEmailDialog();
+                }
             }
         });
     }
@@ -259,6 +267,12 @@ public class IssuingReceiptActivity extends BaseActivity
             JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
             mReservationIndex = jsonObject.getString("reservation_idx");
+
+            if (Constants.DEBUG == false && Util.isTextEmpty(mReservationIndex) == true)
+            {
+                Crashlytics.logException(new NullPointerException("IssuingReceiptActivity : mReservationIndex == null"));
+            }
+
             String userName = receiptJSONObject.getString("user_name");
             String userPhone = receiptJSONObject.getString("user_phone");
             String checkin = receiptJSONObject.getString("checkin");
