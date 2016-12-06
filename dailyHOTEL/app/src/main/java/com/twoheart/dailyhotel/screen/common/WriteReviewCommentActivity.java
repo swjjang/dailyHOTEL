@@ -85,6 +85,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             Intent intent = new Intent();
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, text);
             setResult(RESULT_OK, intent);
+            finish();
         }
 
         @Override
