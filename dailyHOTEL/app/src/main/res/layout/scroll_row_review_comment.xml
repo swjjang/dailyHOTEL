@@ -40,6 +40,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="14dp"
+        android:gravity="top"
         android:hint="@string/message_review_comment_stay_hint"
         android:textColor="@color/default_text_c323232"
         android:textColorHint="@color/default_text_cd0d0d0"

@@ -21,4 +21,6 @@ public abstract class ReviewCardLayout extends RelativeLayout
 
         mContext = context;
     }
+
+    public abstract boolean isChecked();
 }

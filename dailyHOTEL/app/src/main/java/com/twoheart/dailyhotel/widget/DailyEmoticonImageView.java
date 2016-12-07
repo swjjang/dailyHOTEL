@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.facebook.keyframes.KeyframesDirectionallyScalingDrawable;
 import com.facebook.keyframes.KeyframesDrawable;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
 import com.facebook.keyframes.deserializers.KFImageDeserializer;
@@ -91,34 +92,6 @@ public class DailyEmoticonImageView extends ImageView
         mKeyFramesDrawable.stopAnimation();
     }
 
-    public void setEmoticonBounds(int left, int top, int right, int bottom)
-    {
-        if (mKeyFramesDrawable == null)
-        {
-            return;
-        }
-
-        Rect rect = mKeyFramesDrawable.getBounds();
-
-        ExLog.d("rect : " + rect.toString());
-
-        mKeyFramesDrawable.setBounds(left, top, right, bottom);
-
-        rect = mKeyFramesDrawable.getBounds();
-
-        ExLog.d("rect : " + rect.toString());
-    }
-
-    public void invalidateEmoticon()
-    {
-        if (mKeyFramesDrawable == null)
-        {
-            return;
-        }
-
-        invalidateDrawable(mKeyFramesDrawable);
-    }
-
     private void setKFImage(KFImage kfImage)
     {
         clearImage();
@@ -128,7 +101,7 @@ public class DailyEmoticonImageView extends ImageView
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setImageDrawable(mKeyFramesDrawable);
-        setBackgroundColor(getResources().getColor(R.color.white));
+        setBackgroundColor(getResources().getColor(R.color.transparent));
     }
 
     private void clearImage()

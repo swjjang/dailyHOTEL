@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -40,9 +41,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReviewActivity extends BaseActivity implements Constants, View.OnClickListener
+public class ReviewActivity extends BaseActivity
 {
+    private static final int REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT = 100;
     private static final String INTENT_EXTRA_DATA_REVIEW = "review";
+
+    private static final int REQUEST_NEXT_FOCUSE = 1;
 
     private Review mReview;
     private Dialog mDialog;
@@ -50,7 +54,19 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private ReviewLayout mReviewLayout;
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case REQUEST_NEXT_FOCUSE:
+                    mReviewLayout.nextFocusReview((ReviewCardLayout) msg.obj);
+                    break;
+            }
+        }
+    };
 
     public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
     {
@@ -122,10 +138,23 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     }
 
     @Override
-    public void onClick(View v)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        switch (v.getId())
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
         {
+            case REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT:
+                if (resultCode == RESULT_OK)
+                {
+                    if (data != null && data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT) == true)
+                    {
+                        String text = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
+
+                        mReviewLayout.setReviewCommentView(text);
+                    }
+                }
+                break;
         }
     }
 
@@ -260,8 +289,8 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
         mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
 
-        final int DP100 = Util.dpToPx(ReviewActivity.this, 100);
-        final int paddingValue = DP100 * 17 / 200;
+        final int VALUE_DP100 = Util.dpToPx(ReviewActivity.this, 100);
+        final int paddingValue = VALUE_DP100 * 17 / 200;
 
         mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
         mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
@@ -294,16 +323,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
                         float value = (float) animation.getAnimatedValue();
-//
-//                        mDailyEmoticonImageView[1].setScaleX(value);
-//                        mDailyEmoticonImageView[1].setScaleY(value);
-
-                        final int DP100 = Util.dpToPx(ReviewActivity.this, 100);
-                        final int paddingValue = (int)(DP100 * (1.0f - value) / 2);
+                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
                         mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
-
-                        ExLog.d("paddingValue : "+ paddingValue);
                     }
                 });
 
@@ -364,9 +386,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
                         float value = (float) animation.getAnimatedValue();
+                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[0].setScaleX(value);
-                        mDailyEmoticonImageView[0].setScaleY(value);
+                        mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
                     }
                 });
 
@@ -532,25 +554,32 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
     private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
     {
-        @Override
-        public void onReviewScoreTypeClick(View view)
-        {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-        }
-
-        @Override
-        public void onReviewPickTypeClick(View view)
+        private void sendMessageDelayed(ReviewCardLayout reviewCardLayout)
         {
 
         }
 
         @Override
-        public void onReviewCommentClick(View view)
+        public void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore)
         {
+            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
+            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
+            mHandler.sendMessageDelayed(message, 1000);
+        }
 
+        @Override
+        public void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position)
+        {
+            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
+            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
+            mHandler.sendMessageDelayed(message, 1000);
+        }
+
+        @Override
+        public void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment)
+        {
+            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, comment);
+            startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
         }
 
         @Override

@@ -29,13 +29,18 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 {
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private View mSelectedEmoticonView;
-    private int mReviewScore;
-    private OnEmoticonClickListener mOnEmoticonClickListener;
+    private int mReviewScore; // min : 1 ~ max : 5
+    private OnScoreClickListener mOnScoreClickListener;
     private AnimatorSet mAnimatorSet;
 
-    public interface OnEmoticonClickListener
+    public interface OnScoreClickListener
     {
-        void onClick(View reviewScoreCardLayout, int reviewScore);
+        /**
+         *
+         * @param reviewCardLayout
+         * @param reviewScore min : 1 ~ max : 5
+         */
+        void onClick(ReviewCardLayout reviewCardLayout, int reviewScore);
     }
 
     public ReviewScoreCardLayout(Context context, ReviewScoreQuestion reviewScoreQuestion)
@@ -81,20 +86,20 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         mDailyEmoticonImageView[3].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
         mDailyEmoticonImageView[4].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
 
+        final int DP30 = Util.dpToPx(context, 30);
+        final int DP30_DIV2 = DP30 / 2;
+
         for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
         {
-            dailyEmoticonImageView.setScaleX(0.55f);
-            dailyEmoticonImageView.setScaleY(0.55f);
-
-            dailyEmoticonImageView.setTranslationY(Util.dpToPx(mContext, 15));
+            dailyEmoticonImageView.setPadding(DP30_DIV2, DP30, DP30_DIV2, 0);
             dailyEmoticonImageView.setOnClickListener(this);
             dailyEmoticonImageView.startAnimation();
         }
     }
 
-    public void setOnEmoticonClickListener(OnEmoticonClickListener listener)
+    public void setOnScoreClickListener(OnScoreClickListener listener)
     {
-        mOnEmoticonClickListener = listener;
+        mOnScoreClickListener = listener;
     }
 
     public void startEmoticonAnimation()
@@ -168,10 +173,16 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         mAnimatorSet.start();
 
         // 순서가 중요 위의 체크가 끝나야한다.
-        if (mOnEmoticonClickListener != null)
+        if (mOnScoreClickListener != null)
         {
-            mOnEmoticonClickListener.onClick(this, mReviewScore);
+            mOnScoreClickListener.onClick(this, mReviewScore);
         }
+    }
+
+    @Override
+    public boolean isChecked()
+    {
+        return mReviewScore > 0;
     }
 
     private void checkedReviewEmoticon(View emoticonView)
@@ -230,9 +241,13 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     {
         final float VALUE_DP7 = Util.dpToPx(mContext, 7);
         final float VALUE_DP15 = Util.dpToPx(mContext, 15);
+        final int VALUE_DP8 = Util.dpToPx(mContext, 8);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt((int) VALUE_DP7, Util.dpToPx(mContext, -8));
+        ValueAnimator valueAnimator = ValueAnimator.ofInt((int) VALUE_DP7, -VALUE_DP8);
         valueAnimator.setDuration(200);
+
+        final int VALUE_DP30 = Util.dpToPx(mContext, 30);
+        final int VALUE_DP30_DIV2 = VALUE_DP30 / 2;
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -241,18 +256,16 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             {
                 int value = (int) animation.getAnimatedValue();
                 float vectorValue = (VALUE_DP7 - value) / VALUE_DP15;
-                float scaleValue = 1.0f - 0.45f * vectorValue;
 
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.leftMargin = value;
                 layoutParams.rightMargin = value;
-
                 view.setLayoutParams(layoutParams);
-                view.setScaleX(scaleValue);
-                view.setScaleY(scaleValue);
 
-                float transValue = VALUE_DP15 * vectorValue;
-                view.setTranslationY(transValue);
+                int paddingValue1 = (int) (vectorValue * VALUE_DP30_DIV2);
+                int paddingValue2 = (int) (vectorValue * VALUE_DP30);
+
+                view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
             }
         });
 
@@ -267,9 +280,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                view.setScaleX(0.55f);
-                view.setScaleY(0.55f);
-                view.setTranslationY(VALUE_DP15);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.leftMargin = -VALUE_DP8;
+                layoutParams.rightMargin = -VALUE_DP8;
+                view.setLayoutParams(layoutParams);
+                view.setPadding(VALUE_DP30_DIV2, VALUE_DP30, VALUE_DP30_DIV2, 0);
             }
 
             @Override
@@ -292,9 +307,13 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     {
         final float VALUE_DP8 = Util.dpToPx(mContext, 8);
         final float VALUE_DP15 = Util.dpToPx(mContext, 15);
+        final int VALUE_DP7 = Util.dpToPx(mContext, 7);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(Util.dpToPx(mContext, -8), Util.dpToPx(mContext, 7));
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(Util.dpToPx(mContext, -8), VALUE_DP7);
         valueAnimator.setDuration(200);
+
+        final int VALUE_DP30 = Util.dpToPx(mContext, 30);
+        final int VALUE_DP30_DIV2 = VALUE_DP30 / 2;
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -303,20 +322,16 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             {
                 int value = (int) animation.getAnimatedValue();
 
-                float vectorValue = (float) (VALUE_DP8 + value) / VALUE_DP15;
-                float scaleValue = 0.55f + 0.45f * vectorValue;
-
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-
                 layoutParams.leftMargin = value;
                 layoutParams.rightMargin = value;
-
                 view.setLayoutParams(layoutParams);
-                view.setScaleX(scaleValue);
-                view.setScaleY(scaleValue);
 
-                float transValue = VALUE_DP15 * (1.0f - vectorValue);
-                view.setTranslationY(transValue);
+                float vectorValue = (VALUE_DP8 + value) / VALUE_DP15;
+                int paddingValue1 = (int) ((1.0f - vectorValue) * VALUE_DP30_DIV2);
+                int paddingValue2 = (int) ((1.0f - vectorValue) * VALUE_DP30);
+
+                view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
             }
         });
 
@@ -331,9 +346,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                view.setScaleX(1.0f);
-                view.setScaleY(1.0f);
-                view.setTranslationY(0);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.leftMargin = VALUE_DP7;
+                layoutParams.rightMargin = VALUE_DP7;
+                view.setLayoutParams(layoutParams);
+                view.setPadding(0, 0, 0, 0);
             }
 
             @Override

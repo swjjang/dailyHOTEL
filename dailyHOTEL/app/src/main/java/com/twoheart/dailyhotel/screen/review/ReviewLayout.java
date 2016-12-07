@@ -34,11 +34,11 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onReviewScoreTypeClick(View view);
+        void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore);
 
-        void onReviewPickTypeClick(View view);
+        void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position);
 
-        void onReviewCommentClick(View view);
+        void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment);
 
         void onConfirmClick();
     }
@@ -127,19 +127,89 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mScrollLayout.addView(view);
     }
 
+    public boolean nextFocusReview(ReviewCardLayout reviewCardLayout)
+    {
+        int count = mScrollLayout.getChildCount();
+        boolean checkView = false;
+
+        for (int i = 0; i < count; i++)
+        {
+            ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
+
+            if (childReviewCardLayout == reviewCardLayout)
+            {
+                checkView = true;
+                continue;
+            }
+
+            if (checkView == true && childReviewCardLayout.isChecked() == false)
+            {
+                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop());
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void setReviewCommentView(String text)
+    {
+        View view = mScrollLayout.getChildAt(mScrollLayout.getChildCount() - 1);
+
+        if (view instanceof ReviewCommentCardLayout)
+        {
+            ((ReviewCommentCardLayout) view).setReviewCommentView(text);
+        }
+    }
+
     public View getReviewScoreView(Context context, ReviewScoreQuestion reviewScoreQuestion)
     {
-        return new ReviewScoreCardLayout(mContext, reviewScoreQuestion);
+        ReviewScoreCardLayout reviewScoreCardLayout = new ReviewScoreCardLayout(mContext, reviewScoreQuestion);
+        reviewScoreCardLayout.setOnScoreClickListener(new com.twoheart.dailyhotel.screen.review.ReviewScoreCardLayout.OnScoreClickListener()
+        {
+            @Override
+            public void onClick(ReviewCardLayout reviewCardLayout, int reviewScore)
+            {
+                ((OnEventListener) mOnEventListener).onReviewScoreTypeClick(reviewCardLayout, reviewScore);
+            }
+        });
+        return reviewScoreCardLayout;
     }
 
     public View getReviewPickView(Context context, ReviewPickQuestion reviewPickQuestion)
     {
-        return new ReviewPickCardLayout(mContext, reviewPickQuestion);
+        ReviewPickCardLayout reviewPickCardLayout = new ReviewPickCardLayout(mContext, reviewPickQuestion);
+        reviewPickCardLayout.setOnPickClickListener(new ReviewPickCardLayout.OnPickClickListener()
+        {
+            @Override
+            public void onClick(ReviewCardLayout reviewCardLayout, int position)
+            {
+                ((OnEventListener) mOnEventListener).onReviewPickTypeClick(reviewCardLayout, position);
+            }
+        });
+
+        return reviewPickCardLayout;
     }
 
     public View getReviewCommentView(Context context, Constants.PlaceType placeType)
     {
-        return new ReviewCommentCardLayout(mContext, placeType);
+        ReviewCommentCardLayout reviewCommentCardLayout = new ReviewCommentCardLayout(mContext, placeType);
+        reviewCommentCardLayout.setOnCommentClickListener(new ReviewCommentCardLayout.OnCommentClickListener()
+        {
+            @Override
+            public void onClick(ReviewCardLayout reviewCardLayout, String comment)
+            {
+                ((OnEventListener) mOnEventListener).onReviewCommentClick(reviewCardLayout, comment);
+            }
+        });
+
+        return reviewCommentCardLayout;
+    }
+
+    public void setConfirmTextView(String text, boolean enabled)
+    {
+
     }
 
     @Override
@@ -150,7 +220,6 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             case R.id.confirmTextView:
                 ((OnEventListener) mOnEventListener).onConfirmClick();
                 break;
-
         }
     }
 

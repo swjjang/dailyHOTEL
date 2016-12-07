@@ -21,6 +21,16 @@ import com.twoheart.dailyhotel.util.Util;
 public class ReviewCommentCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
     private TextView mCommentTextView;
+    private OnCommentClickListener mOnCommentClickListener;
+
+    public interface OnCommentClickListener
+    {
+        /**
+         * @param reviewCardLayout
+         * @param comment
+         */
+        void onClick(ReviewCardLayout reviewCardLayout, String comment);
+    }
 
     public ReviewCommentCardLayout(Context context, Constants.PlaceType placeType)
     {
@@ -58,6 +68,8 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
                 mCommentTextView.setHint(R.string.message_review_comment_gourmet_hint);
                 break;
         }
+
+        setOnClickListener(this);
     }
 
     public void setReviewCommentView(String text)
@@ -70,8 +82,23 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
         mCommentTextView.setText(text);
     }
 
+    public void setOnCommentClickListener(OnCommentClickListener listener)
+    {
+        mOnCommentClickListener = listener;
+    }
+
     @Override
     public void onClick(View view)
     {
+        if (mOnCommentClickListener != null)
+        {
+            mOnCommentClickListener.onClick(this, mCommentTextView.getText().toString());
+        }
+    }
+
+    @Override
+    public boolean isChecked()
+    {
+        return Util.isTextEmpty(mCommentTextView.getText().toString()) == false;
     }
 }

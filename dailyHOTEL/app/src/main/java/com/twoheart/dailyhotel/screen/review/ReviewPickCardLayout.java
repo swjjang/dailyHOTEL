@@ -7,35 +7,38 @@
  */
 package com.twoheart.dailyhotel.screen.review;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.GridLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewAnswerValue;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
-import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
-import com.twoheart.dailyhotel.place.base.BaseLayout;
-import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.ArrayList;
 
 public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
+    private View mSelectedView;
+    private int mReviewPosition; // min : 1 ~ max : 항목개수
+    private OnPickClickListener mOnPickClickListener;
+    private GridLayout mGridLayout;
+
+    public interface OnPickClickListener
+    {
+        /**
+         * @param reviewCardLayout
+         * @param position         min : 1 ~ max : 항목개수
+         */
+        void onClick(ReviewCardLayout reviewCardLayout, int position);
+    }
 
     public ReviewPickCardLayout(Context context, ReviewPickQuestion reviewPickQuestion)
     {
@@ -64,8 +67,8 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
         titleTextView.setText(reviewPickQuestion.title);
         descriptionTextView.setText(reviewPickQuestion.description);
 
-        android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.gridLayout);
-        gridLayout.removeAllViews();
+        mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.gridLayout);
+        mGridLayout.removeAllViews();
 
         ArrayList<ReviewAnswerValue> reviewAnswerValueList = reviewPickQuestion.getAnswerValueList();
 
@@ -76,6 +79,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             ReviewAnswerValue reviewAnswerValue = reviewAnswerValueList.get(i);
 
             View pickItemView = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_pick_grid_item, null);
+            pickItemView.setId(mGridLayout.getId() + i + 1);
 
             TextView gridItemTitleTextView = (TextView) pickItemView.findViewById(R.id.titleTextView);
             TextView gridItemDescriptionTextView = (TextView) pickItemView.findViewById(R.id.descriptionTextView);
@@ -109,7 +113,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             pickItemView.setLayoutParams(gridLayoutParams);
             pickItemView.setOnClickListener(this);
 
-            gridLayout.addView(pickItemView);
+            mGridLayout.addView(pickItemView);
 
             // 홀수 인 경우 세로 바를 짝수인 경우 하단 바를 넣는다.
             if (i % 2 == 0)
@@ -129,7 +133,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
                 dividerView.setBackgroundResource(R.color.default_line_cf0f0f0);
                 dividerView.setLayoutParams(dividerLayoutParams);
-                gridLayout.addView(dividerView);
+                mGridLayout.addView(dividerView);
             }
 
             // 마지막인 경우 underLine을 보여주지 않는다.
@@ -144,9 +148,46 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
         }
     }
 
+    public void setOnPickClickListener(OnPickClickListener listener)
+    {
+        mOnPickClickListener = listener;
+    }
+
     @Override
     public void onClick(View view)
     {
+        if (mSelectedView != null && mSelectedView.getId() == view.getId())
+        {
+            return;
+        }
 
+        if (mSelectedView != null)
+        {
+            DailyTextView gridItemTitleTextView = (DailyTextView) mSelectedView.findViewById(R.id.titleTextView);
+
+            gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+
+            mSelectedView.setSelected(false);
+        }
+
+        view.setSelected(true);
+        mSelectedView = view;
+
+        DailyTextView gridItemTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
+
+        gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+
+        mReviewPosition = mGridLayout.getId() - view.getId();
+
+        if (mOnPickClickListener != null)
+        {
+            mOnPickClickListener.onClick(this, mReviewPosition);
+        }
+    }
+
+    @Override
+    public boolean isChecked()
+    {
+        return mReviewPosition > 0;
     }
 }
