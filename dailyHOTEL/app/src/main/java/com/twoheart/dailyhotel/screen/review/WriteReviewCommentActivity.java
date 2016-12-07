@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.Util;
 public class WriteReviewCommentActivity extends BaseActivity
 {
     private WriteReviewCommentLayout mLayout;
+    private String mOriginText; // 리뷰 페이지로 부터 전달 받은 메세지 - 처음 진입 인지 수정 상태인지 판단 용도!
 
     public static Intent newInstance(Context context, String text) throws IllegalArgumentException
     {
@@ -49,22 +50,21 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         setContentView(mLayout.onCreateView(R.layout.activity_write_review_comment));
 
-        String text;
         Intent intent = getIntent();
         if (intent != null)
         {
             if (intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT) == true)
             {
-                text = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
+                mOriginText = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
             } else
             {
-                text = "";
+                mOriginText = "";
             }
         } else
         {
-            text = "";
+            mOriginText = "";
         }
-        mLayout.setData(text);
+        mLayout.setData(mOriginText);
     }
 
     @Override
@@ -89,27 +89,58 @@ public class WriteReviewCommentActivity extends BaseActivity
         @Override
         public void onBackClick(String text)
         {
-            if (Util.isTextEmpty(text) == true)
+            if (Util.isTextEmpty(mOriginText) == true)
             {
-                setResult(RESULT_CANCELED);
-                WriteReviewCommentActivity.this.finish();
+                // 최초 입력 일때
+                if (Util.isTextEmpty(text) == true)
+                {
+                    // 입력 데이터가 아무 것도 없을때 그냥 종료!
+                    setResult(RESULT_CANCELED);
+                    WriteReviewCommentActivity.this.finish();
+                } else
+                {
+                    // 입력 데이터 수정되어 팝업 생성!
+                    WriteReviewCommentActivity.this.showSimpleDialog( //
+                        getResources().getString(R.string.label_write_review_comment_delete_dialog_title), //
+                        getResources().getString(R.string.label_write_review_comment_delete_dialog_message), //
+                        getResources().getString(R.string.dialog_btn_text_yes), //
+                        getResources().getString(R.string.dialog_btn_text_no), //
+                        new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setResult(RESULT_CANCELED);
+                                WriteReviewCommentActivity.this.finish();
+                            }
+                        }, null);
+                }
             } else
             {
-
-                WriteReviewCommentActivity.this.showSimpleDialog( //
-                    getResources().getString(R.string.label_write_review_comment_dialog_title), //
-                    getResources().getString(R.string.label_write_review_comment_dialog_message), //
-                    getResources().getString(R.string.dialog_btn_text_confirm), //
-                    getResources().getString(R.string.dialog_btn_text_cancel), //
-                    new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
+                // 기존 입력 텍스트 있을때
+                if (mOriginText.equalsIgnoreCase(text) == true)
+                {
+                    // 기존 입력 값과 같을 경우 바로 종료
+                    setResult(RESULT_CANCELED);
+                    WriteReviewCommentActivity.this.finish();
+                } else
+                {
+                    // 입력 데이터가 수정되어 팝업 생성!
+                    WriteReviewCommentActivity.this.showSimpleDialog( //
+                        getResources().getString(R.string.label_write_review_comment_modify_dialog_title), //
+                        getResources().getString(R.string.label_write_review_comment_modify_dialog_message), //
+                        getResources().getString(R.string.dialog_btn_text_yes), //
+                        getResources().getString(R.string.dialog_btn_text_no), //
+                        new View.OnClickListener()
                         {
-                            setResult(RESULT_CANCELED);
-                            WriteReviewCommentActivity.this.finish();
-                        }
-                    }, null);
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setResult(RESULT_CANCELED);
+                                WriteReviewCommentActivity.this.finish();
+                            }
+                        }, null);
+                }
             }
         }
 
