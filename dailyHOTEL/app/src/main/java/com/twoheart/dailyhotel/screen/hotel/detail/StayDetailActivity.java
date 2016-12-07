@@ -697,6 +697,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                mPlaceDetailLayout.hideWishButton();
             }
         }
 
@@ -988,6 +989,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 mPlaceDetailLayout.showAnimationProductInformationLayout();
+                mPlaceDetailLayout.hideWishButtonAnimation();
             }
 
             if (Util.isOverAPI21() == true)
@@ -1017,6 +1019,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 mPlaceDetailLayout.hideAnimationProductInformationLayout();
+                mPlaceDetailLayout.showWishButtonAnimation();
             }
 
             if (Util.isOverAPI21() == true)

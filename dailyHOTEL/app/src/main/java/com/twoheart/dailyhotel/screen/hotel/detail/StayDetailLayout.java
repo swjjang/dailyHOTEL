@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -112,6 +111,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         setCurrentImage(imagePosition);
 
         hideProductInformationLayout();
+        showWishButton();
 
         // SOLD OUT 판단 조건.
         ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
@@ -121,7 +121,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mBookingTextView.setVisibility(View.GONE);
             mSoldoutTextView.setVisibility(View.VISIBLE);
 
-            setBookingStatus(STATUS_SOLD_OUT, false);
+            setBookingStatus(STATUS_SOLD_OUT);
         } else
         {
             mBookingTextView.setVisibility(View.VISIBLE);
@@ -145,7 +145,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             mSoldoutTextView.setVisibility(View.GONE);
 
-            setBookingStatus(STATUS_SELECT_PRODUCT, false);
+            setBookingStatus(STATUS_SELECT_PRODUCT);
 
             updateRoomTypeInformationLayout(saleRoomList);
         }
@@ -231,9 +231,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     }
 
     @Override
-    public void setBookingStatus(int status, boolean isAnimation)
+    public void setBookingStatus(int status)
     {
-        int oldStatus = mBookingStatus;
         mBookingStatus = status;
 
         if (mBookingTextView == null || mSoldoutTextView == null)
@@ -258,18 +257,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 mSoldoutTextView.setVisibility(View.GONE);
                 mWishButtonTextView.setVisibility(View.VISIBLE);
 
-                final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
-                final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
-                if (isAnimation == true)
-                {
-                    startBookingButtonAnimation(start, end, oldStatus, status);
-                } else
-                {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-                    params.leftMargin = end;
-                    mBookingTextView.setLayoutParams(params);
-                }
-
                 mBookingTextView.setText(R.string.act_hotel_search_room);
                 break;
             }
@@ -279,18 +266,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
                 mWishButtonTextView.setVisibility(View.VISIBLE);
-
-                final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
-                final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
-                if (isAnimation == true)
-                {
-                    startBookingButtonAnimation(start, end, oldStatus, status);
-                } else
-                {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-                    params.leftMargin = end;
-                    mBookingTextView.setLayoutParams(params);
-                }
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -322,6 +297,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     public void hideAnimationProductInformationLayout()
     {
         super.hideAnimationProductInformationLayout();
+        showWishButtonAnimation();
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);

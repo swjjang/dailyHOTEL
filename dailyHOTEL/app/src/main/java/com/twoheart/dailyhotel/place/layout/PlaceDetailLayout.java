@@ -63,7 +63,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private static final int VIEW_COUNT = 4;
 
-    private static final int BOOKING_TEXT_VIEW_DURATION = 75;
+    private static final int BOOKING_TEXT_VIEW_DURATION = 150;
     private static final int PRODUCT_VIEW_DURATION = 250;
 
     protected PlaceDetail mPlaceDetail;
@@ -149,7 +149,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected abstract View getTitleLayout();
 
-    public abstract void setBookingStatus(int status, boolean isAnimation);
+    public abstract void setBookingStatus(int status);
 
     public abstract void setSelectProduct(int index);
 
@@ -258,8 +258,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
         });
 
-        setBookingStatus(STATUS_NONE, false);
+        setBookingStatus(STATUS_NONE);
         hideProductInformationLayout();
+        showWishButton();
         setUpdateWishPopup(WishPopupState.GONE);
     }
 
@@ -443,7 +444,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setProductInformationLayoutEnabled(true);
 
-        setBookingStatus(STATUS_BOOKING, false);
+        setBookingStatus(STATUS_BOOKING);
 
         setSelectProduct(index);
     }
@@ -491,7 +492,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             return;
         }
 
-        setBookingStatus(STATUS_NONE, true);
+        setBookingStatus(STATUS_NONE);
 
         if (Util.isOverAPI12() == true)
         {
@@ -539,7 +540,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
                         setProductInformationLayoutEnabled(true);
 
-                        setBookingStatus(STATUS_BOOKING, true);
+                        setBookingStatus(STATUS_BOOKING);
                     }
                 }
 
@@ -568,7 +569,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
                 setProductInformationLayoutEnabled(true);
 
-                setBookingStatus(STATUS_BOOKING, true);
+                setBookingStatus(STATUS_BOOKING);
             }
         }
 
@@ -588,7 +589,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             return;
         }
 
-        setBookingStatus(STATUS_NONE, true);
+        setBookingStatus(STATUS_NONE);
 
         if (Util.isOverAPI12() == true)
         {
@@ -628,8 +629,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
                         mAnimationState = Constants.ANIMATION_STATE.END;
 
                         hideProductInformationLayout();
+                        showWishButton();
 
-                        setBookingStatus(STATUS_SELECT_PRODUCT, true);
+                        setBookingStatus(STATUS_SELECT_PRODUCT);
                     }
                 }
 
@@ -656,8 +658,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mAnimationState = Constants.ANIMATION_STATE.END;
 
             hideProductInformationLayout();
+            showWishButton();
 
-            setBookingStatus(STATUS_SELECT_PRODUCT, true);
+            setBookingStatus(STATUS_SELECT_PRODUCT);
         }
     }
 
@@ -887,13 +890,56 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
     }
 
-    protected void startBookingButtonAnimation(final int start, final int end, int oldState, int newState)
+    public void showWishButton()
     {
-        if (oldState == newState)
+        if (mBookingTextViewAnimator != null)
         {
-            return;
+            mBookingTextViewAnimator.cancel();
+            mBookingTextViewAnimator.removeAllListeners();
+            mBookingTextViewAnimator = null;
         }
 
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+        params.leftMargin = end;
+        mBookingTextView.setLayoutParams(params);
+    }
+
+    public void hideWishButton()
+    {
+        if (mBookingTextViewAnimator != null)
+        {
+            mBookingTextViewAnimator.cancel();
+            mBookingTextViewAnimator.removeAllListeners();
+            mBookingTextViewAnimator = null;
+        }
+
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+        params.leftMargin = end;
+        mBookingTextView.setLayoutParams(params);
+    }
+
+    public void showWishButtonAnimation()
+    {
+        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+
+        startWishButtonAnimation(start, end);
+    }
+
+    public void hideWishButtonAnimation()
+    {
+        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+
+        startWishButtonAnimation(start, end);
+    }
+
+    private void startWishButtonAnimation(final int start, final int end)
+    {
         if (mBookingTextViewAnimator != null)
         {
             mBookingTextViewAnimator.cancel();
