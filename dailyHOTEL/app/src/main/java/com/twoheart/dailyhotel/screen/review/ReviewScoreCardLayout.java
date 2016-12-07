@@ -11,7 +11,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,39 +19,45 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ReviewAnswerValue;
-import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
-import com.twoheart.dailyhotel.place.base.BaseLayout;
-import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
-import java.util.ArrayList;
-
 public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
-    private View mSelectedEmoticonView, mSelectedView;
+    private View mSelectedEmoticonView;
+    private int mReviewScore;
+    private OnEmoticonClickListener mOnEmoticonClickListener;
+    private AnimatorSet mAnimatorSet;
 
-    public ReviewScoreCardLayout(Context context)
+    public interface OnEmoticonClickListener
     {
-        super(context);
+        void onClick(View reviewScoreCardLayout, int reviewScore);
     }
 
-    private void initLayout(Context context)
+    public ReviewScoreCardLayout(Context context, ReviewScoreQuestion reviewScoreQuestion)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_score, this);
+        super(context);
+
+        initLayout(context, reviewScoreQuestion);
+    }
+
+    private void initLayout(Context context, ReviewScoreQuestion reviewScoreQuestion)
+    {
+        // 카드 레이아웃
+        setBackgroundResource(R.drawable.selector_review_cardlayout);
 
         int cardWidth = Util.getLCDWidth(context) - Util.dpToPx(context, 30);
         int cardHeight = Util.getRatioHeightType4x3(cardWidth);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(cardWidth, cardHeight);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, cardHeight);
         layoutParams.bottomMargin = Util.dpToPx(context, 15);
-        view.setLayoutParams(layoutParams);
+        setLayoutParams(layoutParams);
+
+        View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_score, this);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
@@ -62,50 +67,34 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         View emoticonView = view.findViewById(R.id.emoticonView);
 
-        DailyEmoticonImageView emoticonImageView0 = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView0);
-        DailyEmoticonImageView emoticonImageView1 = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView1);
-        DailyEmoticonImageView emoticonImageView2 = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView2);
-        DailyEmoticonImageView emoticonImageView3 = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView3);
-        DailyEmoticonImageView emoticonImageView4 = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView4);
+        mDailyEmoticonImageView = new DailyEmoticonImageView[5];
 
-        emoticonImageView0.setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        emoticonImageView1.setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        emoticonImageView2.setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        emoticonImageView3.setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        emoticonImageView4.setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView0);
+        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView1);
+        mDailyEmoticonImageView[2] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView2);
+        mDailyEmoticonImageView[3] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView3);
+        mDailyEmoticonImageView[4] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView4);
 
-        emoticonImageView0.setScaleX(0.55f);
-        emoticonImageView0.setScaleY(0.55f);
+        mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[2].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[3].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[4].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
 
-        emoticonImageView1.setScaleX(0.55f);
-        emoticonImageView1.setScaleY(0.55f);
+        for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+        {
+            dailyEmoticonImageView.setScaleX(0.55f);
+            dailyEmoticonImageView.setScaleY(0.55f);
 
-        emoticonImageView2.setScaleX(0.55f);
-        emoticonImageView2.setScaleY(0.55f);
+            dailyEmoticonImageView.setTranslationY(Util.dpToPx(mContext, 15));
+            dailyEmoticonImageView.setOnClickListener(this);
+            dailyEmoticonImageView.startAnimation();
+        }
+    }
 
-        emoticonImageView3.setScaleX(0.55f);
-        emoticonImageView3.setScaleY(0.55f);
-
-        emoticonImageView4.setScaleX(0.55f);
-        emoticonImageView4.setScaleY(0.55f);
-
-        emoticonImageView0.setTranslationY(Util.dpToPx(mContext, 15));
-        emoticonImageView1.setTranslationY(Util.dpToPx(mContext, 15));
-        emoticonImageView2.setTranslationY(Util.dpToPx(mContext, 15));
-        emoticonImageView3.setTranslationY(Util.dpToPx(mContext, 15));
-        emoticonImageView4.setTranslationY(Util.dpToPx(mContext, 15));
-
-        emoticonImageView0.setOnClickListener(this);
-        emoticonImageView1.setOnClickListener(this);
-        emoticonImageView2.setOnClickListener(this);
-        emoticonImageView3.setOnClickListener(this);
-        emoticonImageView4.setOnClickListener(this);
-
-        emoticonImageView0.startAnimation();
-        emoticonImageView1.startAnimation();
-        emoticonImageView2.startAnimation();
-        emoticonImageView3.startAnimation();
-        emoticonImageView4.startAnimation();
+    public void setOnEmoticonClickListener(OnEmoticonClickListener listener)
+    {
+        mOnEmoticonClickListener = listener;
     }
 
     public void startEmoticonAnimation()
@@ -140,16 +129,17 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     @Override
     public void onClick(View view)
     {
-    }
-
-    public void startScoreClickedAnimation(final View view)
-    {
         if (mSelectedEmoticonView != null && mSelectedEmoticonView.getId() == view.getId())
         {
             return;
         }
 
-        AnimatorSet animatorSet = new AnimatorSet();
+        if (mAnimatorSet != null && (mAnimatorSet.isStarted() == true || mAnimatorSet.isRunning()))
+        {
+            return;
+        }
+
+        mAnimatorSet = new AnimatorSet();
         ValueAnimator scaleDownAnimator = null, scaleUpAnimator = null;
 
         if (mSelectedEmoticonView != null)
@@ -168,14 +158,20 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         if (scaleDownAnimator != null && scaleUpAnimator != null)
         {
-            animatorSet.playTogether(scaleDownAnimator, scaleUpAnimator);
+            mAnimatorSet.playTogether(scaleDownAnimator, scaleUpAnimator);
         } else if (scaleUpAnimator != null)
         {
-            animatorSet.playTogether(scaleUpAnimator);
+            mAnimatorSet.playTogether(scaleUpAnimator);
         }
 
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.start();
+        mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        mAnimatorSet.start();
+
+        // 순서가 중요 위의 체크가 끝나야한다.
+        if (mOnEmoticonClickListener != null)
+        {
+            mOnEmoticonClickListener.onClick(this, mReviewScore);
+        }
     }
 
     private void checkedReviewEmoticon(View emoticonView)
@@ -193,35 +189,40 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             }
         }
 
-        mSelectedView.setSelected(true);
+        setSelected(true);
 
-        TextView resultTextView = (TextView) mSelectedView.findViewById(R.id.resultTextView);
+        TextView resultTextView = (TextView) findViewById(R.id.resultTextView);
         resultTextView.setSelected(true);
 
         switch (emoticonView.getId())
         {
             case R.id.emoticonImageView0:
+                mReviewScore = 1;
                 resultTextView.setText(R.string.label_review_score0);
                 break;
 
             case R.id.emoticonImageView1:
+                mReviewScore = 2;
                 resultTextView.setText(R.string.label_review_score1);
                 break;
 
             case R.id.emoticonImageView2:
+                mReviewScore = 3;
                 resultTextView.setText(R.string.label_review_score2);
                 break;
 
             case R.id.emoticonImageView3:
+                mReviewScore = 4;
                 resultTextView.setText(R.string.label_review_score3);
                 break;
 
             case R.id.emoticonImageView4:
+                mReviewScore = 5;
                 resultTextView.setText(R.string.label_review_score4);
                 break;
         }
 
-        DailyTextView titleTextView = (DailyTextView) mSelectedView.findViewById(R.id.titleTextView);
+        DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
         titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
     }
 

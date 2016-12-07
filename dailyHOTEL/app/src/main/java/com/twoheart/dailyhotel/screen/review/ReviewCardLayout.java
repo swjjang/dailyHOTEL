@@ -14,8 +14,6 @@ import android.widget.TextView;
 public abstract class ReviewCardLayout extends RelativeLayout
 {
     protected Context mContext;
-    protected TextView mTitleTextView;
-    protected TextView mDescriptionTextView;
 
     public ReviewCardLayout(Context context)
     {

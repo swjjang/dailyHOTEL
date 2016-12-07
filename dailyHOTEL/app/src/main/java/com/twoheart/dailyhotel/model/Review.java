@@ -117,6 +117,7 @@ public class Review implements Parcelable
         mReviewPickQuestionList = null;
         mReviewScoreQuestionList = null;
         isSatisfaction = false;
+        requiredCommentReview = false;
         comment = null;
     }
 
@@ -128,6 +129,7 @@ public class Review implements Parcelable
         dest.writeList(mReviewPickQuestionList);
         dest.writeList(mReviewScoreQuestionList);
         dest.writeInt(isSatisfaction == true ? 1 : 0);
+        dest.writeInt(requiredCommentReview == true ? 1 : 0);
         dest.writeString(comment);
     }
 
@@ -138,6 +140,7 @@ public class Review implements Parcelable
         mReviewPickQuestionList = in.readArrayList(ReviewPickQuestion.class.getClassLoader());
         mReviewScoreQuestionList = in.readArrayList(ReviewScoreQuestion.class.getClassLoader());
         isSatisfaction = in.readInt() == 1 ? true : false;
+        requiredCommentReview = in.readInt() == 1 ? true : false;
         comment = in.readString();
     }
 

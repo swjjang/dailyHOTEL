@@ -186,9 +186,6 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             View view = mReviewLayout.getReviewCommentView(this, reviewItem.placeType);
             mReviewLayout.addScrollLayout(view);
         }
-
-        mReviewLayout.setSelectedView(0);
-        mReviewLayout.startEmoticonAnimation();
     }
 
     private void hideReviewDialog()
@@ -263,11 +260,11 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
         mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
 
-        mDailyEmoticonImageView[0].setScaleX(0.83f);
-        mDailyEmoticonImageView[0].setScaleY(0.83f);
+        final int DP100 = Util.dpToPx(ReviewActivity.this, 100);
+        final int paddingValue = DP100 * 17 / 200;
 
-        mDailyEmoticonImageView[1].setScaleX(0.83f);
-        mDailyEmoticonImageView[1].setScaleY(0.83f);
+        mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+        mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
 
         mDailyEmoticonImageView[0].startAnimation();
         mDailyEmoticonImageView[1].startAnimation();
@@ -297,9 +294,16 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
                         float value = (float) animation.getAnimatedValue();
+//
+//                        mDailyEmoticonImageView[1].setScaleX(value);
+//                        mDailyEmoticonImageView[1].setScaleY(value);
 
-                        mDailyEmoticonImageView[1].setScaleX(value);
-                        mDailyEmoticonImageView[1].setScaleY(value);
+                        final int DP100 = Util.dpToPx(ReviewActivity.this, 100);
+                        final int paddingValue = (int)(DP100 * (1.0f - value) / 2);
+
+                        mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+
+                        ExLog.d("paddingValue : "+ paddingValue);
                     }
                 });
 
@@ -535,8 +539,6 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             {
                 return;
             }
-
-            mReviewLayout.startScoreClickedAnimation(view);
         }
 
         @Override

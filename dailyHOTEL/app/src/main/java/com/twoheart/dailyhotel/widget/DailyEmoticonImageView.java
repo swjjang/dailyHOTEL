@@ -1,11 +1,11 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.facebook.keyframes.KeyframesDirectionallyScalingDrawable;
 import com.facebook.keyframes.KeyframesDrawable;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
 import com.facebook.keyframes.deserializers.KFImageDeserializer;
@@ -89,6 +89,34 @@ public class DailyEmoticonImageView extends ImageView
 
         mIsStartedAnimation = false;
         mKeyFramesDrawable.stopAnimation();
+    }
+
+    public void setEmoticonBounds(int left, int top, int right, int bottom)
+    {
+        if (mKeyFramesDrawable == null)
+        {
+            return;
+        }
+
+        Rect rect = mKeyFramesDrawable.getBounds();
+
+        ExLog.d("rect : " + rect.toString());
+
+        mKeyFramesDrawable.setBounds(left, top, right, bottom);
+
+        rect = mKeyFramesDrawable.getBounds();
+
+        ExLog.d("rect : " + rect.toString());
+    }
+
+    public void invalidateEmoticon()
+    {
+        if (mKeyFramesDrawable == null)
+        {
+            return;
+        }
+
+        invalidateDrawable(mKeyFramesDrawable);
     }
 
     private void setKFImage(KFImage kfImage)

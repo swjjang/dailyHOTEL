@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="247dp"
-                android:background="@drawable/selector_review_cardlayout"
-                android:orientation="vertical">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="247dp"-->
+    <!--android:background="@drawable/selector_review_cardlayout">-->
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
@@ -90,4 +91,5 @@
         android:text="@string/label_review_score_default"
         android:textColor="@color/white"
         android:textSize="13dp"/>
-</RelativeLayout>
+    <!--</RelativeLayout>-->
+</merge>

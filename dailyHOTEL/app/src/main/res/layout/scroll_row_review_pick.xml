@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:grid="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/selector_review_cardlayout"
-                android:padding="1dp">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:grid="http://schemas.android.com/apk/res-auto">
+
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:grid="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="15dp"-->
+    <!--android:background="@drawable/selector_review_cardlayout"-->
+    <!--android:padding="1dp">-->
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
         android:drawablePadding="4dp"
         android:gravity="center_horizontal"
         android:textColor="@color/default_text_c929292"
@@ -41,4 +44,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/descriptionTextView"
         grid:columnCount="3"/>
-</RelativeLayout>
+    <!--</RelativeLayout>-->
+</merge>
