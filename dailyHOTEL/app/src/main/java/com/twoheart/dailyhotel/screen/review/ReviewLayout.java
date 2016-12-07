@@ -8,6 +8,8 @@
 package com.twoheart.dailyhotel.screen.review;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class ReviewLayout extends BaseLayout implements View.OnClickListener, NestedScrollView.OnScrollChangeListener
 {
+    private static final int REQUEST_START_ANIMATION = 1;
+
     private View mToolbar, mImageDimView;
     private NestedScrollView mNestedScrollView;
     private ViewGroup mScrollLayout;
@@ -31,6 +35,20 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     private TextView mPlaceNameTextView, mPeriodTextView;
     private TextView mToolbarTitle, mToolbarSubTitle;
     private TextView mConfirmTextView;
+
+    private Handler mHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case REQUEST_START_ANIMATION:
+                    animationInVisible();
+                    break;
+            }
+        }
+    };
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -207,6 +225,83 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         return reviewCommentCardLayout;
     }
 
+    public void startAnimation()
+    {
+        if (mScrollLayout == null)
+        {
+            return;
+        }
+
+        mNestedScrollView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                animationInVisible();
+            }
+        });
+    }
+
+    public void stopAnimation()
+    {
+        if (mScrollLayout == null)
+        {
+            return;
+        }
+
+        int count = mScrollLayout.getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            View view = mScrollLayout.getChildAt(i);
+
+            if (view instanceof ReviewScoreCardLayout)
+            {
+                ((ReviewScoreCardLayout) view).stopEmoticonAnimation();
+            }
+        }
+    }
+
+    public void pauseAnimation()
+    {
+        if (mScrollLayout == null)
+        {
+            return;
+        }
+
+        int count = mScrollLayout.getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            View view = mScrollLayout.getChildAt(i);
+
+            if (view instanceof ReviewScoreCardLayout)
+            {
+                ((ReviewScoreCardLayout) view).pauseEmoticonAnimation();
+            }
+        }
+    }
+
+    public void resumeAnimation()
+    {
+        if (mScrollLayout == null)
+        {
+            return;
+        }
+
+        int count = mScrollLayout.getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            View view = mScrollLayout.getChildAt(i);
+
+            if (view instanceof ReviewScoreCardLayout)
+            {
+                ((ReviewScoreCardLayout) view).resumeEmoticonAnimation();
+            }
+        }
+    }
+
     public void setConfirmTextView(String text, boolean enabled)
     {
 
@@ -226,6 +321,9 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
     {
+        mHandler.removeMessages(REQUEST_START_ANIMATION);
+        pauseAnimation();
+
         int toolbarHeight = mToolbar.getHeight();
 
         if (toolbarHeight >= scrollY)
@@ -267,6 +365,40 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         } else
         {
             mImageDimView.setAlpha(1.0f);
+        }
+
+        mHandler.sendEmptyMessageDelayed(REQUEST_START_ANIMATION, 500);
+    }
+
+    /**
+     * 카드가 화면에 보이는 경우에 애니메이션을 시작한다.
+     */
+    private void animationInVisible()
+    {
+        int scrollY = mNestedScrollView.getScrollY();
+        int height = scrollY + mNestedScrollView.getHeight();
+
+        int count = mScrollLayout.getChildCount();
+
+        final int VALUE_DP15 = Util.dpToPx(mContext, 15);
+
+        for (int i = 0; i < count; i++)
+        {
+            View view = mScrollLayout.getChildAt(i);
+
+            if (view instanceof ReviewScoreCardLayout)
+            {
+                if (scrollY < view.getTop() && height > (view.getBottom() - VALUE_DP15))
+                {
+                    if(((ReviewScoreCardLayout) view).isStartedAnimation() == true)
+                    {
+                        ((ReviewScoreCardLayout) view).resumeEmoticonAnimation();
+                    } else
+                    {
+                        ((ReviewScoreCardLayout) view).startEmoticonAnimation();
+                    }
+                }
+            }
         }
     }
 }

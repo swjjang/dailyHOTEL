@@ -28,7 +28,7 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
-    private View mSelectedEmoticonView;
+    private DailyEmoticonImageView mSelectedEmoticonView;
     private int mReviewScore; // min : 1 ~ max : 5
     private OnScoreClickListener mOnScoreClickListener;
     private AnimatorSet mAnimatorSet;
@@ -36,9 +36,8 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     public interface OnScoreClickListener
     {
         /**
-         *
          * @param reviewCardLayout
-         * @param reviewScore min : 1 ~ max : 5
+         * @param reviewScore      min : 1 ~ max : 5
          */
         void onClick(ReviewCardLayout reviewCardLayout, int reviewScore);
     }
@@ -93,13 +92,36 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         {
             dailyEmoticonImageView.setPadding(DP30_DIV2, DP30, DP30_DIV2, 0);
             dailyEmoticonImageView.setOnClickListener(this);
-            dailyEmoticonImageView.startAnimation();
         }
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)
     {
         mOnScoreClickListener = listener;
+    }
+
+    public boolean isStartedAnimation()
+    {
+        if (mDailyEmoticonImageView == null)
+        {
+            return false;
+        }
+
+        if (isChecked() == true)
+        {
+            return mSelectedEmoticonView.isAnimationStart();
+        } else
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                if (dailyEmoticonImageView.isAnimationStart() == true)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void startEmoticonAnimation()
@@ -109,9 +131,15 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             return;
         }
 
-        for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+        if (isChecked() == true)
         {
-            dailyEmoticonImageView.startAnimation();
+            mSelectedEmoticonView.startAnimation();
+        } else
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.startAnimation();
+            }
         }
     }
 
@@ -124,11 +152,40 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
         {
-            dailyEmoticonImageView.setOnClickListener(null);
             dailyEmoticonImageView.stopAnimation();
         }
+    }
 
-        mDailyEmoticonImageView = null;
+    public void pauseEmoticonAnimation()
+    {
+        if (mDailyEmoticonImageView == null)
+        {
+            return;
+        }
+
+        for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+        {
+            dailyEmoticonImageView.pauseAnimation();
+        }
+    }
+
+    public void resumeEmoticonAnimation()
+    {
+        if (mDailyEmoticonImageView == null)
+        {
+            return;
+        }
+
+        if (isChecked() == true)
+        {
+            mSelectedEmoticonView.resumeAnimation();
+        } else
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.resumeAnimation();
+            }
+        }
     }
 
     @Override
@@ -154,7 +211,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         checkedReviewEmoticon(view);
 
-        mSelectedEmoticonView = view;
+        mSelectedEmoticonView = (DailyEmoticonImageView) view;
 
         if (view != null)
         {

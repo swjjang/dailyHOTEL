@@ -110,6 +110,16 @@ public abstract class KeyframesDrawableAnimationCallback {
     mListener.get().onStop();
   }
 
+  public void pause()
+  {
+    cancelCallback();
+  }
+
+  public void resume()
+  {
+    postCallback();
+  }
+
   /**
    * Stops looping the animation, but finishes the current animation.
    */
@@ -185,6 +195,7 @@ public abstract class KeyframesDrawableAnimationCallback {
     private static final int ANIMATION_MIN_STEP_TIME_MS = 25; // 40 fps
 
     private final Handler mHandler;
+    private boolean mIsPause;
 
     private RunnableFaceAnimationCallback(
         FrameListener listener,
@@ -197,6 +208,16 @@ public abstract class KeyframesDrawableAnimationCallback {
     @Override
     public void run() {
       advanceAnimation(SystemClock.uptimeMillis());
+    }
+
+    public void pause()
+    {
+      cancelCallback();
+    }
+
+    public void resume()
+    {
+      postCallback();
     }
 
     @Override

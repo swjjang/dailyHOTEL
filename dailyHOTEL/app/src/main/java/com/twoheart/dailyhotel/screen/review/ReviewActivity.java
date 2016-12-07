@@ -113,6 +113,11 @@ public class ReviewActivity extends BaseActivity
                 dailyEmoticonImageView.startAnimation();
             }
         }
+
+        if(mReviewLayout != null)
+        {
+            mReviewLayout.startAnimation();
+        }
     }
 
     @Override
@@ -126,6 +131,11 @@ public class ReviewActivity extends BaseActivity
             {
                 dailyEmoticonImageView.stopAnimation();
             }
+        }
+
+        if(mReviewLayout != null)
+        {
+            mReviewLayout.stopAnimation();
         }
     }
 
@@ -215,6 +225,8 @@ public class ReviewActivity extends BaseActivity
             View view = mReviewLayout.getReviewCommentView(this, reviewItem.placeType);
             mReviewLayout.addScrollLayout(view);
         }
+
+        mReviewLayout.startAnimation();
     }
 
     private void hideReviewDialog()
@@ -556,23 +568,21 @@ public class ReviewActivity extends BaseActivity
     {
         private void sendMessageDelayed(ReviewCardLayout reviewCardLayout)
         {
-
+            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
+            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
+            mHandler.sendMessageDelayed(message, 1000);
         }
 
         @Override
         public void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore)
         {
-            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
-            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
-            mHandler.sendMessageDelayed(message, 1000);
+            sendMessageDelayed(reviewCardLayout);
         }
 
         @Override
         public void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position)
         {
-            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
-            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
-            mHandler.sendMessageDelayed(message, 1000);
+            sendMessageDelayed(reviewCardLayout);
         }
 
         @Override
