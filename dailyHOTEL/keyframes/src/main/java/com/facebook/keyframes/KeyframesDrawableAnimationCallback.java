@@ -44,6 +44,10 @@ public abstract class KeyframesDrawableAnimationCallback {
   private long mMinimumMillisBetweenProgressUpdates = -1;
   private long mPreviousProgressMillis = 0;
 
+  private boolean mIsPaused;
+  private long mPausedCalibrateMillis;
+  private long mSavedCalibrateMillis;
+
   /**
    * Creates a KeyframesDrawableAnimationCallback appropriate for the API level of the device.
    * @param listener The listener that will receive callbacks on updates to the value
@@ -96,6 +100,8 @@ public abstract class KeyframesDrawableAnimationCallback {
    */
   public void start() {
     mStopAtLoopEnd = false;
+    mPausedCalibrateMillis = 0;
+    mSavedCalibrateMillis = 0;
     cancelCallback();
     postCallback();
   }
@@ -106,17 +112,35 @@ public abstract class KeyframesDrawableAnimationCallback {
   public void stop() {
     cancelCallback();
     mStartTimeMillis = 0;
+    mPausedCalibrateMillis = 0;
+    mSavedCalibrateMillis = 0;
     mCurrentLoopNumber = -1;
     mListener.get().onStop();
   }
 
   public void pause()
   {
+    if(mIsPaused == true)
+    {
+      return;
+    }
+
+    mPausedCalibrateMillis = 0;
+    mSavedCalibrateMillis = 0;
+    mIsPaused = true;
+
     cancelCallback();
   }
 
   public void resume()
   {
+    if(mIsPaused == false)
+    {
+      return;
+    }
+
+    mPausedCalibrateMillis = mPreviousProgressMillis;
+
     postCallback();
   }
 
@@ -127,7 +151,22 @@ public abstract class KeyframesDrawableAnimationCallback {
     mStopAtLoopEnd = true;
   }
 
-  protected void advanceAnimation(final long frameTimeMillis) {
+  protected void advanceAnimation(long frameTimeMillis) {
+    long currentTimeMillis = frameTimeMillis;
+
+    if(mPausedCalibrateMillis != 0)
+    {
+      if(mIsPaused == true)
+      {
+        frameTimeMillis = mPausedCalibrateMillis;
+        mSavedCalibrateMillis = currentTimeMillis;
+        mIsPaused = false;
+      } else
+      {
+        frameTimeMillis = mPausedCalibrateMillis + (frameTimeMillis - mSavedCalibrateMillis);
+      }
+    }
+
     if (mListener.get() == null) {
       cancelCallback();
       mStartTimeMillis = 0;
@@ -148,11 +187,19 @@ public abstract class KeyframesDrawableAnimationCallback {
     long currentProgressMillis = (frameTimeMillis - mStartTimeMillis) % mMillisPerLoop;
 
     boolean shouldUpdateProgress = true;
+
     if (frameTimeMillis - mPreviousProgressMillis < mMinimumMillisBetweenProgressUpdates) {
       shouldUpdateProgress = false;
     } else {
       mPreviousProgressMillis = frameTimeMillis;
+
+      if(mPausedCalibrateMillis != 0)
+      {
+        mPausedCalibrateMillis = mPreviousProgressMillis;
+        mSavedCalibrateMillis = currentTimeMillis;
+      }
     }
+
     if (shouldUpdateProgress) {
       mListener.get().onProgressUpdate((float) currentProgressMillis / mMillisPerLoop * mFrameCount);
     }
@@ -195,7 +242,6 @@ public abstract class KeyframesDrawableAnimationCallback {
     private static final int ANIMATION_MIN_STEP_TIME_MS = 25; // 40 fps
 
     private final Handler mHandler;
-    private boolean mIsPause;
 
     private RunnableFaceAnimationCallback(
         FrameListener listener,
@@ -208,16 +254,6 @@ public abstract class KeyframesDrawableAnimationCallback {
     @Override
     public void run() {
       advanceAnimation(SystemClock.uptimeMillis());
-    }
-
-    public void pause()
-    {
-      cancelCallback();
-    }
-
-    public void resume()
-    {
-      postCallback();
     }
 
     @Override

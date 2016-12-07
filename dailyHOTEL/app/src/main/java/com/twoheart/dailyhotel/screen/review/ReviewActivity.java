@@ -142,6 +142,21 @@ public class ReviewActivity extends BaseActivity
     @Override
     protected void onDestroy()
     {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+        }
+
+        mDailyEmoticonImageView = null;
+
+        if(mReviewLayout != null)
+        {
+            mReviewLayout.stopAnimation();
+        }
+
         hideReviewDialog();
 
         super.onDestroy();
@@ -170,6 +185,16 @@ public class ReviewActivity extends BaseActivity
 
     private void showReviewDetail()
     {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+
+            mDailyEmoticonImageView = null;
+        }
+
         mReviewLayout = new ReviewLayout(this, mOnEventListener);
 
         setContentView(mReviewLayout.onCreateView(R.layout.activity_review));
@@ -588,7 +613,7 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment)
         {
-            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, comment);
+            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().placeType, comment);
             startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
         }
 
