@@ -5,7 +5,7 @@
  * <p>
  * 호텔 만족도 조사를 위한 화면
  */
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.screen.review;
 
 import android.animation.ValueAnimator;
 import android.app.Dialog;

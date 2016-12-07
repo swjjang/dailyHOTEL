@@ -516,13 +516,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.common.ReviewActivity"
+            android:name=".screen.review.ReviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.common.WriteReviewCommentActivity"
+            android:name=".screen.review.WriteReviewCommentActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
