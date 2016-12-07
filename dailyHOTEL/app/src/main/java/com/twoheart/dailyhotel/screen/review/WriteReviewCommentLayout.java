@@ -21,8 +21,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
-
-import static android.R.attr.visible;
+import com.twoheart.dailyhotel.widget.DailyScrollView;
 
 /**
  * Created by android_sam on 2016. 12. 5..
@@ -36,11 +35,13 @@ public class WriteReviewCommentLayout extends BaseLayout
     private DailyEditText mEditTextView;
     private TextView mBottomTextCountView;
     private View mBottomLayout;
-    private ScrollView mScrollView;
+    private DailyScrollView mScrollView;
 
     private boolean mIsShowAnimationStart;
     private boolean mIsHideAnimationStart;
     private AlphaAnimation mAlphaAnimation;
+
+    private int mBodyTitleBottom = 0;
 
     private static final int DEFAULT_TEXT_COUNT = 10;
     private static final int TOOLBAR_TITLE_ANIMATION_DURATION = 200;
@@ -67,7 +68,7 @@ public class WriteReviewCommentLayout extends BaseLayout
         mBottomLayout = view.findViewById(R.id.textCountLayout);
         mBottomTextCountView = (TextView) view.findViewById(R.id.textCountView);
         mEditTextView = (DailyEditText) view.findViewById(R.id.writeReviewEditText);
-        mScrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        mScrollView = (DailyScrollView) view.findViewById(R.id.scrollView);
 
         View backView = view.findViewById(R.id.backImageView);
         backView.setOnClickListener(new View.OnClickListener()
@@ -93,17 +94,21 @@ public class WriteReviewCommentLayout extends BaseLayout
         mEditTextView.addTextChangedListener(mEditTextWatcher);
 
         mScrollView.setScrollY(0);
-        mScrollView.setOnScrollChangeListener(mScrollChangedListener);
+        mScrollView.setOnScrollChangedListener(mScrollChangeListener);
     }
 
-    public void setData(String text)
+    public void setData(Constants.PlaceType placeType, String text)
     {
-        updateEditTextView(text);
+        updateEditTextView(placeType, text);
         updateCompleteLayout(text);
         updateTextCountLayout(text);
     }
 
-    private void updateEditTextView(String text) {
+    private void updateEditTextView(Constants.PlaceType placeType, String text)
+    {
+        mEditTextView.setHint(Constants.PlaceType.FNB.equals(placeType) == true //
+            ? R.string.label_write_review_comment_hint_gourmet : R.string.label_write_review_comment_hint_stay);
+
         mEditTextView.setText(text);
 
         if (Util.isTextEmpty(text) == false)
@@ -330,14 +335,12 @@ public class WriteReviewCommentLayout extends BaseLayout
         }
     };
 
-    private ScrollView.OnScrollChangeListener mScrollChangedListener = new ScrollView.OnScrollChangeListener()
+    private DailyScrollView.OnScrollChangedListener mScrollChangeListener = new DailyScrollView.OnScrollChangedListener()
     {
-        private int mBodyTitleBottom = 0;
-
         @Override
-        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+        public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
         {
-            if (v != null)
+            if (scrollView != null)
             {
                 if (mBodyTitleBottom == 0)
                 {
@@ -348,12 +351,7 @@ public class WriteReviewCommentLayout extends BaseLayout
                     }
                 }
 
-                setToolbarTitleVisibility((mBodyTitleBottom <= scrollY ? true : false), true);
-
-                if (Constants.DEBUG == true)
-                {
-                    ExLog.d("visible : " + visible + " , scrollY : " + scrollY + " , mBodyTitleBottom : " + mBodyTitleBottom);
-                }
+                setToolbarTitleVisibility((mBodyTitleBottom <= t ? true : false), true);
             }
         }
     };
