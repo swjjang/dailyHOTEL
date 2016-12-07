@@ -8,6 +8,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -18,8 +19,9 @@ public class WriteReviewCommentActivity extends BaseActivity
 {
     private WriteReviewCommentLayout mLayout;
     private String mOriginText; // 리뷰 페이지로 부터 전달 받은 메세지 - 처음 진입 인지 수정 상태인지 판단 용도!
+    private PlaceType mPlaceType;
 
-    public static Intent newInstance(Context context, String text) throws IllegalArgumentException
+    public static Intent newInstance(Context context, PlaceType placeType, String text) throws IllegalArgumentException
     {
         if (context == null)
         {
@@ -34,7 +36,7 @@ public class WriteReviewCommentActivity extends BaseActivity
         Intent intent = new Intent(context, WriteReviewCommentActivity.class);
 
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, text);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
 
         return intent;
     }
@@ -46,7 +48,7 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
-        mLayout = new WriteReviewCommentLayout(this, mEventListener);
+        mLayout = new WriteReviewCommentLayout(WriteReviewCommentActivity.this, mEventListener);
 
         setContentView(mLayout.onCreateView(R.layout.activity_write_review_comment));
 
@@ -60,11 +62,24 @@ public class WriteReviewCommentActivity extends BaseActivity
             {
                 mOriginText = "";
             }
+
+            String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
+            if (Util.isTextEmpty(placeTypeName) == false)
+            {
+                try
+                {
+                    mPlaceType = PlaceType.valueOf(placeTypeName);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
+            }
         } else
         {
             mOriginText = "";
         }
-        mLayout.setData(mOriginText);
+
+        mLayout.setData(mPlaceType, mOriginText);
     }
 
     @Override
@@ -83,7 +98,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             Intent intent = new Intent();
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, text);
             setResult(RESULT_OK, intent);
-            finish();
+            WriteReviewCommentActivity.this.finish();
         }
 
         @Override
