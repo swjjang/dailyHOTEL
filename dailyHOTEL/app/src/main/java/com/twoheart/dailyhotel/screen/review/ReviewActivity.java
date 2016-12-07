@@ -5,7 +5,7 @@
  * <p>
  * 호텔 만족도 조사를 위한 화면
  */
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.screen.review;
 
 import android.animation.ValueAnimator;
 import android.app.Dialog;
@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
+import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -168,8 +169,26 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             }
         }
 
+        ArrayList<ReviewPickQuestion> reviewPickQuestionList = mReview.getReviewPickQuestionList();
+
+        if (reviewPickQuestionList != null && reviewPickQuestionList.size() > 0)
+        {
+            for (ReviewPickQuestion reviewPickQuestion : reviewPickQuestionList)
+            {
+                View view = mReviewLayout.getReviewPickView(this, reviewPickQuestion);
+
+                mReviewLayout.addScrollLayout(view);
+            }
+        }
+
+        if (mReview.requiredCommentReview == true)
+        {
+            View view = mReviewLayout.getReviewCommentView(this, reviewItem.placeType);
+            mReviewLayout.addScrollLayout(view);
+        }
+
         mReviewLayout.setSelectedView(0);
-        mReviewLayout.startAnimation();
+        mReviewLayout.startEmoticonAnimation();
     }
 
     private void hideReviewDialog()
@@ -510,19 +529,30 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
     {
         @Override
-        public void onReviewScoreTypeClick()
+        public void onReviewScoreTypeClick(View view)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            mReviewLayout.startScoreClickedAnimation(view);
+        }
+
+        @Override
+        public void onReviewPickTypeClick(View view)
         {
 
         }
 
         @Override
-        public void onReviewPickTypeClick()
+        public void onReviewCommentClick(View view)
         {
 
         }
 
         @Override
-        public void onReviewTextClick()
+        public void onConfirmClick()
         {
 
         }
@@ -530,7 +560,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         @Override
         public void finish()
         {
-
+            ReviewActivity.this.finish();
         }
     };
 }

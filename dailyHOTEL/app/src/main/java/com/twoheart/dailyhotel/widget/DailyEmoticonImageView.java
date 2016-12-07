@@ -20,6 +20,7 @@ public class DailyEmoticonImageView extends ImageView
 {
     private KFImage mKfImage;
     private KeyframesDrawable mKeyFramesDrawable;
+    private boolean mIsStartedAnimation;
 
     public DailyEmoticonImageView(Context context)
     {
@@ -69,12 +70,14 @@ public class DailyEmoticonImageView extends ImageView
 
     public void startAnimation()
     {
-        if (mKeyFramesDrawable == null)
+        if (mKeyFramesDrawable == null || mIsStartedAnimation == true)
         {
             return;
         }
 
         mKeyFramesDrawable.startAnimation();
+
+        mIsStartedAnimation = true;
     }
 
     public void stopAnimation()
@@ -84,6 +87,7 @@ public class DailyEmoticonImageView extends ImageView
             return;
         }
 
+        mIsStartedAnimation = false;
         mKeyFramesDrawable.stopAnimation();
     }
 

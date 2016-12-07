@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.screen.review;
 
 import android.content.Context;
 import android.content.Intent;
