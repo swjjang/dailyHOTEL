@@ -79,11 +79,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         mDailyEmoticonImageView[3] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView3);
         mDailyEmoticonImageView[4] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView4);
 
-        mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[2].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[3].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[4].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-618-01_worst.kf.json");
+        mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-74-02_bad.kf.json");
+        mDailyEmoticonImageView[2].setJSONData("Review_Animation.aep.comp-176-03_soso.kf.json");
+        mDailyEmoticonImageView[3].setJSONData("Review_Animation.aep.comp-200-04_good.kf.json");
+        mDailyEmoticonImageView[4].setJSONData("Review_Animation.aep.comp-230-05_awesome.kf.json");
 
         final int DP30 = Util.dpToPx(context, 30);
         final int DP30_DIV2 = DP30 / 2;
