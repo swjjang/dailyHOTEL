@@ -5,16 +5,12 @@ import android.os.Parcel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 /**
  * Created by android_sam on 2016. 11. 25..
  */
 
 public class ReviewScoreQuestion extends ReviewQuestion
 {
-    public int selectedScore; // 선택된 스코어 - none server data
-
     public ReviewScoreQuestion(Parcel in)
     {
         readFromParcel(in);
@@ -36,15 +32,11 @@ public class ReviewScoreQuestion extends ReviewQuestion
     public void writeToParcel(Parcel dest, int flags)
     {
         super.writeToParcel(dest, flags);
-
-        dest.writeInt(selectedScore);
     }
 
     protected void readFromParcel(Parcel in)
     {
         super.readFromParcel(in);
-
-        selectedScore = in.readInt();
     }
 
     @Override
@@ -68,12 +60,13 @@ public class ReviewScoreQuestion extends ReviewQuestion
 
     };
 
-    public JSONObject toJSONObject()
+    @Override
+    public JSONObject toReviewAnswerJSONObject(int value) throws JSONException
     {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("type", answerCode);
-        map.put("score", selectedScore);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", answerCode);
+        jsonObject.put("score", value);
 
-        return new JSONObject(map);
+        return jsonObject;
     }
 }

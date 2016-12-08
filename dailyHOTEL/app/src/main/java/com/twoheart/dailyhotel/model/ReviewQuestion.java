@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -15,7 +16,7 @@ public abstract class ReviewQuestion implements Parcelable
     public String description;
     public String answerCode;
 
-    public abstract JSONObject toJSONObject();
+    protected abstract JSONObject toReviewAnswerJSONObject(int value) throws JSONException;
 
     @Override
     public void writeToParcel(Parcel dest, int flags)

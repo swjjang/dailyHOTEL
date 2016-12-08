@@ -32,6 +32,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     private int mReviewScore; // min : 1 ~ max : 5
     private OnScoreClickListener mOnScoreClickListener;
     private AnimatorSet mAnimatorSet;
+    private TextView mResultTextView;
 
     public interface OnScoreClickListener
     {
@@ -42,9 +43,9 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         void onClick(ReviewCardLayout reviewCardLayout, int reviewScore);
     }
 
-    public ReviewScoreCardLayout(Context context, ReviewScoreQuestion reviewScoreQuestion)
+    public ReviewScoreCardLayout(Context context, int position, ReviewScoreQuestion reviewScoreQuestion)
     {
-        super(context);
+        super(context, position);
 
         initLayout(context, reviewScoreQuestion);
     }
@@ -52,7 +53,8 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     private void initLayout(Context context, ReviewScoreQuestion reviewScoreQuestion)
     {
         // 카드 레이아웃
-        setBackgroundResource(R.drawable.selector_review_cardlayout);
+        setEnabled(false);
+        setBackgroundResource(R.drawable.selector_review_cardlayout_enabled);
 
         int cardWidth = Util.getLCDWidth(context) - Util.dpToPx(context, 30);
         int cardHeight = Util.getRatioHeightType4x3(cardWidth);
@@ -93,6 +95,16 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             dailyEmoticonImageView.setPadding(DP30_DIV2, DP30, DP30_DIV2, 0);
             dailyEmoticonImageView.setOnClickListener(this);
         }
+
+        mResultTextView = (TextView) view.findViewById(R.id.resultTextView);
+
+        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(Util.dpToPx(mContext, 96), Util.dpToPx(mContext, 24));
+        resultLayoutParams.bottomMargin = cardHeight * 18 / 100;
+        resultLayoutParams.topMargin = cardHeight * 12 / 100;
+        resultLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        mResultTextView.setLayoutParams(resultLayoutParams);
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)
@@ -242,6 +254,12 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         return mReviewScore > 0;
     }
 
+    @Override
+    public Object getReviewValue()
+    {
+        return mReviewScore;
+    }
+
     private void checkedReviewEmoticon(View emoticonView)
     {
         for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
@@ -257,36 +275,35 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             }
         }
 
-        setSelected(true);
+        setEnabled(true);
 
-        TextView resultTextView = (TextView) findViewById(R.id.resultTextView);
-        resultTextView.setSelected(true);
+        mResultTextView.setSelected(true);
 
         switch (emoticonView.getId())
         {
             case R.id.emoticonImageView0:
                 mReviewScore = 1;
-                resultTextView.setText(R.string.label_review_score0);
+                mResultTextView.setText(R.string.label_review_score0);
                 break;
 
             case R.id.emoticonImageView1:
                 mReviewScore = 2;
-                resultTextView.setText(R.string.label_review_score1);
+                mResultTextView.setText(R.string.label_review_score1);
                 break;
 
             case R.id.emoticonImageView2:
                 mReviewScore = 3;
-                resultTextView.setText(R.string.label_review_score2);
+                mResultTextView.setText(R.string.label_review_score2);
                 break;
 
             case R.id.emoticonImageView3:
                 mReviewScore = 4;
-                resultTextView.setText(R.string.label_review_score3);
+                mResultTextView.setText(R.string.label_review_score3);
                 break;
 
             case R.id.emoticonImageView4:
                 mReviewScore = 5;
-                resultTextView.setText(R.string.label_review_score4);
+                mResultTextView.setText(R.string.label_review_score4);
                 break;
         }
 

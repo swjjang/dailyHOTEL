@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -10,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by android_sam on 2016. 11. 25..
@@ -18,15 +18,16 @@ import java.util.HashMap;
 
 public class Review implements Parcelable
 {
+    public static final String GRADE_GOOD = "GOOD";
+    public static final String GRADE_BAD = "BAD";
+    public static final String GRADE_NONE = "NONE";
+
     public int reserveIdx = -1;
     public boolean requiredCommentReview;
     public int reviewAllCount;
     private ReviewItem mReviewItem;
     private ArrayList<ReviewPickQuestion> mReviewPickQuestionList;
     private ArrayList<ReviewScoreQuestion> mReviewScoreQuestionList;
-
-    public boolean isSatisfaction; // 만족여부 - none server data
-    public String comment; // review comment - none server data
 
     public Review(Parcel in)
     {
@@ -104,11 +105,6 @@ public class Review implements Parcelable
         return mReviewScoreQuestionList;
     }
 
-    public int getReviewAllCount()
-    {
-        return reviewAllCount;
-    }
-
     public void clear()
     {
         reserveIdx = -1;
@@ -116,9 +112,7 @@ public class Review implements Parcelable
         mReviewItem = null;
         mReviewPickQuestionList = null;
         mReviewScoreQuestionList = null;
-        isSatisfaction = false;
         requiredCommentReview = false;
-        comment = null;
     }
 
     @Override
@@ -129,9 +123,7 @@ public class Review implements Parcelable
         dest.writeParcelable(mReviewItem, flags);
         dest.writeList(mReviewPickQuestionList);
         dest.writeList(mReviewScoreQuestionList);
-        dest.writeInt(isSatisfaction == true ? 1 : 0);
         dest.writeInt(requiredCommentReview == true ? 1 : 0);
-        dest.writeString(comment);
     }
 
     protected void readFromParcel(Parcel in)
@@ -141,9 +133,7 @@ public class Review implements Parcelable
         mReviewItem = in.readParcelable(ReviewItem.class.getClassLoader());
         mReviewPickQuestionList = in.readArrayList(ReviewPickQuestion.class.getClassLoader());
         mReviewScoreQuestionList = in.readArrayList(ReviewScoreQuestion.class.getClassLoader());
-        isSatisfaction = in.readInt() == 1 ? true : false;
         requiredCommentReview = in.readInt() == 1 ? true : false;
-        comment = in.readString();
     }
 
     @Override
@@ -167,59 +157,71 @@ public class Review implements Parcelable
 
     };
 
-    private String getGrade()
+    public JSONObject toReviewJSONObject(String grade)
     {
-        return isSatisfaction == true ? "GOOD" : "BAD";
-    }
+        ReviewItem reviewItem = getReviewItem();
 
-    public JSONObject toCommonJSONObject()
-    {
-        if (mReviewItem == null)
+        if (reviewItem == null)
         {
             return null;
         }
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("grade", getGrade());
-        map.put("itemIdx", this.mReviewItem.itemIdx);
-        map.put("reserveIdx", this.reserveIdx);
-        map.put("serviceType", this.mReviewItem.getServiceType());
+        JSONObject jsonObject = new JSONObject();
 
-        return new JSONObject(map);
+        try
+        {
+            jsonObject.put("grade", grade);
+            jsonObject.put("itemIdx", reviewItem.itemIdx);
+            jsonObject.put("reserveIdx", reserveIdx);
+            jsonObject.put("serviceType", reviewItem.getPlaceType());
+        } catch (JSONException e)
+        {
+            ExLog.e(e.toString());
+            return null;
+        }
+
+        return jsonObject;
     }
 
-    public JSONObject toDetailJSONObject()
+    public JSONObject toReviewDetailJSONObject(JSONArray scoreJSONArray, JSONArray pickJSONArray, String comment)
     {
-        if (mReviewItem == null || mReviewPickQuestionList == null || mReviewScoreQuestionList == null)
+        if (scoreJSONArray == null || pickJSONArray == null)
         {
             return null;
         }
 
+        ReviewItem reviewItem = getReviewItem();
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("comment", Util.isTextEmpty(comment) == true ? "" : comment);
-        map.put("itemIdx", this.mReviewItem.itemIdx);
-        map.put("reserveIdx", this.reserveIdx);
-        map.put("reviewPicks", getQuestionJSONArray(mReviewPickQuestionList));
-        map.put("reviewScores", getQuestionJSONArray(mReviewScoreQuestionList));
-        map.put("serviceType", this.mReviewItem.getServiceType());
-
-        return new JSONObject(map);
-    }
-
-    private JSONArray getQuestionJSONArray(ArrayList<? extends ReviewQuestion> list)
-    {
-        if (list == null || list.isEmpty() == true)
+        if (reviewItem == null)
         {
             return null;
         }
 
-        JSONArray jsonArray = new JSONArray();
-        for (ReviewQuestion question : list)
+        JSONObject jsonObject = new JSONObject();
+
+        try
         {
-            jsonArray.put(question.toJSONObject());
+            jsonObject.put("comment", Util.isTextEmpty(comment) == true ? "" : comment);
+            jsonObject.put("itemIdx", reviewItem.itemIdx);
+            jsonObject.put("reserveIdx", reserveIdx);
+
+            if (scoreJSONArray != null)
+            {
+                jsonObject.put("reviewPicks", scoreJSONArray);
+            }
+
+            if (pickJSONArray != null)
+            {
+                jsonObject.put("reviewScores", pickJSONArray);
+            }
+
+            jsonObject.put("serviceType", reviewItem.getPlaceType());
+        } catch (JSONException e)
+        {
+            ExLog.e(e.toString());
+            return null;
         }
 
-        return jsonArray;
+        return jsonObject;
     }
 }

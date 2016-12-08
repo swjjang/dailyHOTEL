@@ -9,18 +9,21 @@ package com.twoheart.dailyhotel.screen.review;
 
 import android.content.Context;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public abstract class ReviewCardLayout extends RelativeLayout
 {
     protected Context mContext;
+    protected int position;
 
-    public ReviewCardLayout(Context context)
+    public ReviewCardLayout(Context context, int position)
     {
         super(context);
 
         mContext = context;
+        this.position = position;
     }
 
     public abstract boolean isChecked();
+
+    public abstract Object getReviewValue();
 }

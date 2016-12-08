@@ -134,7 +134,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         if (jsonObject.has("reviewStatusType") == true)
         {
             reviewStatusType = jsonObject.getString("reviewStatusType");
-        } else {
+        } else
+        {
             reviewStatusType = ReviewStatusType.NONE;
         }
     }
