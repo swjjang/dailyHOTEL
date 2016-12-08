@@ -177,7 +177,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
         gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
 
-        mReviewPosition = mGridLayout.getId() - view.getId();
+        mReviewPosition = view.getId() - mGridLayout.getId();
 
         if (mOnPickClickListener != null)
         {

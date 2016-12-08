@@ -1051,6 +1051,12 @@
 
     <string name="message_review_comment_stay_hint">예시) 침구가 너무 깨끗해서 잘 잤어요.</string>
     <string name="message_review_comment_gourmet_hint">예시) 분위기도 좋고 너무 맛있었어요.</string>
+    <string name="message_review_dialog_cancel_review_title">리뷰 입력을 취소하시겠어요?</string>
+    <string name="message_review_dialog_cancel_review_description">리뷰를 입력하시면 다른 고객님들의 선택에\n큰 도움이 됩니다.</string>
+    <string name="message_review_toast_canceled_review">리뷰 입력이 취소되었습니다.\n(만족 여부는 저장됩니다.)</string>
+    <string name="message_review_answer_question">%1$d개의 질문에 대답해주세요!</string>
+    <string name="message_review_remain_n_count">이제 %1$d개 남았어요!</string>
+    <string name="message_review_send_feedback">이제 여기를 눌러 의견을 보내주세요.</string>
 
     <!-- Review Write -->
     <string name="label_write_review_comment_complete">완료</string>

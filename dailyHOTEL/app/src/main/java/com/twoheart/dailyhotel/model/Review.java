@@ -20,6 +20,7 @@ public class Review implements Parcelable
 {
     public int reserveIdx = -1;
     public boolean requiredCommentReview;
+    public int reviewAllCount;
     private ReviewItem mReviewItem;
     private ArrayList<ReviewPickQuestion> mReviewPickQuestionList;
     private ArrayList<ReviewScoreQuestion> mReviewScoreQuestionList;
@@ -39,8 +40,14 @@ public class Review implements Parcelable
             return;
         }
 
+        reviewAllCount = 0;
         reserveIdx = jsonObject.getInt("reserveIdx");
         requiredCommentReview = jsonObject.getBoolean("requiredCommentReview");
+
+        if (requiredCommentReview == true)
+        {
+            reviewAllCount++;
+        }
 
         if (jsonObject.has("reviewItem") == true && jsonObject.isNull("reviewItem") == false)
         {
@@ -54,7 +61,8 @@ public class Review implements Parcelable
             int pickLength = reviewPickQuestionArray.length();
             if (pickLength > 0)
             {
-                mReviewPickQuestionList = new ArrayList<>();
+                reviewAllCount += pickLength;
+                mReviewPickQuestionList = new ArrayList<>(pickLength);
 
                 for (int i = 0; i < pickLength; i++)
                 {
@@ -70,7 +78,8 @@ public class Review implements Parcelable
             int scoreLength = reviewScoreQuestionArray.length();
             if (scoreLength > 0)
             {
-                mReviewScoreQuestionList = new ArrayList<>();
+                reviewAllCount += scoreLength;
+                mReviewScoreQuestionList = new ArrayList<>(scoreLength);
 
                 for (int i = 0; i < scoreLength; i++)
                 {
@@ -85,19 +94,9 @@ public class Review implements Parcelable
         return mReviewItem;
     }
 
-    public void setReviewItem(ReviewItem mReviewItem)
-    {
-        this.mReviewItem = mReviewItem;
-    }
-
     public ArrayList<ReviewPickQuestion> getReviewPickQuestionList()
     {
         return mReviewPickQuestionList;
-    }
-
-    public void setReviewPickQuestionList(ArrayList<ReviewPickQuestion> reviewPickQuestionList)
-    {
-        this.mReviewPickQuestionList = reviewPickQuestionList;
     }
 
     public ArrayList<ReviewScoreQuestion> getReviewScoreQuestionList()
@@ -105,14 +104,15 @@ public class Review implements Parcelable
         return mReviewScoreQuestionList;
     }
 
-    public void setReviewScoreQuestionList(ArrayList<ReviewScoreQuestion> reviewScoreQuestionList)
+    public int getReviewAllCount()
     {
-        this.mReviewScoreQuestionList = reviewScoreQuestionList;
+        return reviewAllCount;
     }
 
     public void clear()
     {
         reserveIdx = -1;
+        reviewAllCount = 0;
         mReviewItem = null;
         mReviewPickQuestionList = null;
         mReviewScoreQuestionList = null;
@@ -125,6 +125,7 @@ public class Review implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(reserveIdx);
+        dest.writeInt(reviewAllCount);
         dest.writeParcelable(mReviewItem, flags);
         dest.writeList(mReviewPickQuestionList);
         dest.writeList(mReviewScoreQuestionList);
@@ -136,6 +137,7 @@ public class Review implements Parcelable
     protected void readFromParcel(Parcel in)
     {
         reserveIdx = in.readInt();
+        reviewAllCount = in.readInt();
         mReviewItem = in.readParcelable(ReviewItem.class.getClassLoader());
         mReviewPickQuestionList = in.readArrayList(ReviewPickQuestion.class.getClassLoader());
         mReviewScoreQuestionList = in.readArrayList(ReviewScoreQuestion.class.getClassLoader());

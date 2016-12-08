@@ -59,6 +59,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment);
 
         void onConfirmClick();
+
+        void onBackPressed();
     }
 
     public ReviewLayout(Context context, OnBaseEventListener listener)
@@ -106,7 +108,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             @Override
             public void onClick(View v)
             {
-                mOnEventListener.finish();
+                ((OnEventListener) mOnEventListener).onBackPressed();
             }
         });
     }
@@ -162,7 +164,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
             if (checkView == true && childReviewCardLayout.isChecked() == false)
             {
-                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop());
+                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - Util.dpToPx(mContext, 154));
 
                 return true;
             }
@@ -302,9 +304,38 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         }
     }
 
+    public int getUncheckedReviewCount()
+    {
+        if(mScrollLayout == null)
+        {
+            return -1;
+        }
+
+        int count = mScrollLayout.getChildCount();
+        int uncheckedReviewCount = 0;
+
+        for (int i = 0; i < count; i++)
+        {
+            ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
+
+            if (childReviewCardLayout.isChecked() == false)
+            {
+                uncheckedReviewCount++;
+            }
+        }
+
+        return uncheckedReviewCount;
+    }
+
     public void setConfirmTextView(String text, boolean enabled)
     {
+        if (mConfirmTextView == null)
+        {
+            return;
+        }
 
+        mConfirmTextView.setText(text);
+        mConfirmTextView.setEnabled(enabled);
     }
 
     @Override
@@ -380,17 +411,15 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         int count = mScrollLayout.getChildCount();
 
-        final int VALUE_DP15 = Util.dpToPx(mContext, 15);
-
         for (int i = 0; i < count; i++)
         {
             View view = mScrollLayout.getChildAt(i);
 
             if (view instanceof ReviewScoreCardLayout)
             {
-                if (scrollY < view.getTop() && height > (view.getBottom() - VALUE_DP15))
+                if (scrollY < view.getTop() && height > view.getBottom())
                 {
-                    if(((ReviewScoreCardLayout) view).isStartedAnimation() == true)
+                    if (((ReviewScoreCardLayout) view).isStartedAnimation() == true)
                     {
                         ((ReviewScoreCardLayout) view).resumeEmoticonAnimation();
                     } else

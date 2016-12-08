@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -34,6 +35,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -114,7 +116,7 @@ public class ReviewActivity extends BaseActivity
             }
         }
 
-        if(mReviewLayout != null)
+        if (mReviewLayout != null)
         {
             mReviewLayout.startAnimation();
         }
@@ -133,7 +135,7 @@ public class ReviewActivity extends BaseActivity
             }
         }
 
-        if(mReviewLayout != null)
+        if (mReviewLayout != null)
         {
             mReviewLayout.stopAnimation();
         }
@@ -152,7 +154,7 @@ public class ReviewActivity extends BaseActivity
 
         mDailyEmoticonImageView = null;
 
-        if(mReviewLayout != null)
+        if (mReviewLayout != null)
         {
             mReviewLayout.stopAnimation();
         }
@@ -163,6 +165,32 @@ public class ReviewActivity extends BaseActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        showSimpleDialog(getString(R.string.message_review_dialog_cancel_review_title)//
+            , getString(R.string.message_review_dialog_cancel_review_description), getString(R.string.dialog_btn_text_yes)//
+            , getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    lockUI(false);
+
+                    DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_LONG);
+
+                    mHandler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            ReviewActivity.super.onBackPressed();
+                        }
+                    }, 2000);
+                }
+            }, null);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -170,14 +198,12 @@ public class ReviewActivity extends BaseActivity
         switch (requestCode)
         {
             case REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT:
-                if (resultCode == RESULT_OK)
+                if (resultCode == RESULT_OK && data != null && data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT) == true)
                 {
-                    if (data != null && data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT) == true)
-                    {
-                        String text = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
+                    String text = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
 
-                        mReviewLayout.setReviewCommentView(text);
-                    }
+                    mReviewLayout.setReviewCommentView(text);
+                    setConfirmTextView();
                 }
                 break;
         }
@@ -251,6 +277,8 @@ public class ReviewActivity extends BaseActivity
             mReviewLayout.addScrollLayout(view);
         }
 
+        setConfirmTextView();
+
         mReviewLayout.startAnimation();
     }
 
@@ -262,6 +290,35 @@ public class ReviewActivity extends BaseActivity
         }
 
         mDialog = null;
+    }
+
+    private void setConfirmTextView()
+    {
+        int uncheckedReviewCount = mReviewLayout.getUncheckedReviewCount();
+        String text;
+        boolean enabled;
+
+        if (uncheckedReviewCount > 0)
+        {
+            if (uncheckedReviewCount == mReview.reviewAllCount)
+            {
+                text = getString(R.string.message_review_answer_question, uncheckedReviewCount);
+            } else
+            {
+                text = getString(R.string.message_review_remain_n_count, uncheckedReviewCount);
+            }
+
+            enabled = false;
+        } else if (uncheckedReviewCount == 0)
+        {
+            text = getString(R.string.message_review_send_feedback);
+            enabled = true;
+        } else
+        {
+            return;
+        }
+
+        mReviewLayout.setConfirmTextView(text, enabled);
     }
 
     private void showReviewDialog()
@@ -601,12 +658,14 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore)
         {
+            setConfirmTextView();
             sendMessageDelayed(reviewCardLayout);
         }
 
         @Override
         public void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position)
         {
+            setConfirmTextView();
             sendMessageDelayed(reviewCardLayout);
         }
 
@@ -620,7 +679,13 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onConfirmClick()
         {
+            finish();
+        }
 
+        @Override
+        public void onBackPressed()
+        {
+            ReviewActivity.this.onBackPressed();
         }
 
         @Override
