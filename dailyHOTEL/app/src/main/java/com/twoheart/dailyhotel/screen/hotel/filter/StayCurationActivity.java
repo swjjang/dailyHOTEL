@@ -371,7 +371,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             resetLayout(mGridLayout);
         }
 
-        requestUpdateResult();
+        requestUpdateResultDelayed();
     }
 
     @Override
