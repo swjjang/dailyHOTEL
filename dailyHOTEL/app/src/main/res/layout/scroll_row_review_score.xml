@@ -3,8 +3,7 @@
 
     <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="247dp"-->
-    <!--android:background="@drawable/selector_review_cardlayout">-->
+    <!--android:layout_height="247dp"-->>-->
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
@@ -33,7 +32,6 @@
         android:layout_height="66dp"
         android:layout_above="@+id/resultTextView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
         android:gravity="bottom|center_horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView

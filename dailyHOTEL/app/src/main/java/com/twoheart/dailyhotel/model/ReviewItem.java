@@ -77,7 +77,7 @@ public class ReviewItem implements Parcelable
         useEndDate = jsonObject.getString("useEndDate");
     }
 
-    public String getServiceType()
+    public String getPlaceType()
     {
         return Constants.PlaceType.FNB.equals(placeType) == true ? "GOURMET" : "HOTEL";
     }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 public class ReviewCommentCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
@@ -32,16 +33,16 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
         void onClick(ReviewCardLayout reviewCardLayout, String comment);
     }
 
-    public ReviewCommentCardLayout(Context context, Constants.PlaceType placeType)
+    public ReviewCommentCardLayout(Context context, int position, Constants.PlaceType placeType)
     {
-        super(context);
+        super(context, position);
 
         initLayout(context, placeType);
     }
 
     private void initLayout(Context context, Constants.PlaceType placeType)
     {
-        setBackgroundResource(R.drawable.selector_review_cardlayout);
+        setBackgroundResource(R.drawable.selector_review_cardlayout_selected);
 
         final int DP1 = Util.dpToPx(context, 1);
         setPadding(DP1, DP1, DP1, DP1);
@@ -79,6 +80,18 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
             return;
         }
 
+        DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            setSelected(false);
+            titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        } else
+        {
+            setSelected(true);
+            titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
+        }
+
         mCommentTextView.setText(text);
     }
 
@@ -100,5 +113,11 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
     public boolean isChecked()
     {
         return Util.isTextEmpty(mCommentTextView.getText().toString()) == false;
+    }
+
+    @Override
+    public Object getReviewValue()
+    {
+        return mCommentTextView.getText().toString();
     }
 }

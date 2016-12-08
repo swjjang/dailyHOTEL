@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by android_sam on 2016. 11. 25..
@@ -16,8 +15,6 @@ import java.util.HashMap;
 public class ReviewPickQuestion extends ReviewQuestion
 {
     private ArrayList<ReviewAnswerValue> mAnswerValueList;
-
-    public String selectedValue; // 선택된 리뷰 AnswerValue 값
 
     public ReviewPickQuestion(Parcel in)
     {
@@ -65,7 +62,6 @@ public class ReviewPickQuestion extends ReviewQuestion
         super.writeToParcel(dest, flags);
 
         dest.writeList(mAnswerValueList);
-        dest.writeString(selectedValue);
     }
 
     protected void readFromParcel(Parcel in)
@@ -73,7 +69,6 @@ public class ReviewPickQuestion extends ReviewQuestion
         super.readFromParcel(in);
 
         mAnswerValueList = in.readArrayList(ReviewAnswerValue.class.getClassLoader());
-        selectedValue = in.readString();
     }
 
     @Override
@@ -97,12 +92,18 @@ public class ReviewPickQuestion extends ReviewQuestion
 
     };
 
-    public JSONObject toJSONObject()
+    @Override
+    public JSONObject toReviewAnswerJSONObject(int value) throws JSONException
     {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("type", answerCode);
-        map.put("value", selectedValue);
+        if (mAnswerValueList == null || mAnswerValueList.size() < value)
+        {
+            return null;
+        }
 
-        return new JSONObject(map);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", answerCode);
+        jsonObject.put("value", mAnswerValueList.get(value).code);
+
+        return jsonObject;
     }
 }

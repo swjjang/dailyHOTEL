@@ -52,11 +52,11 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore);
+        void onReviewScoreTypeClick(int position, int reviewScore);
 
-        void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position);
+        void onReviewPickTypeClick(int position, int selectedType);
 
-        void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment);
+        void onReviewCommentClick(int position, String comment);
 
         void onConfirmClick();
 
@@ -91,6 +91,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mNestedScrollView.setOnScrollChangeListener(this);
 
         mConfirmTextView = (TextView) view.findViewById(R.id.confirmTextView);
+        mConfirmTextView.setOnClickListener(this);
     }
 
     private void initToolbar(View view)
@@ -147,22 +148,27 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mScrollLayout.addView(view);
     }
 
-    public boolean nextFocusReview(ReviewCardLayout reviewCardLayout)
+    public Object getReviewValue(int position)
+    {
+        if (mScrollLayout == null || mScrollLayout.getChildCount() <= position)
+        {
+            return null;
+        }
+
+        ReviewCardLayout reviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(position);
+
+        return reviewCardLayout.getReviewValue();
+    }
+
+    public boolean nextFocusReview(int position)
     {
         int count = mScrollLayout.getChildCount();
-        boolean checkView = false;
 
-        for (int i = 0; i < count; i++)
+        for (int i = position; i < count; i++)
         {
             ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
 
-            if (childReviewCardLayout == reviewCardLayout)
-            {
-                checkView = true;
-                continue;
-            }
-
-            if (checkView == true && childReviewCardLayout.isChecked() == false)
+            if (childReviewCardLayout.isChecked() == false)
             {
                 mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - Util.dpToPx(mContext, 154));
 
@@ -179,56 +185,48 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         if (view instanceof ReviewCommentCardLayout)
         {
-            if (Util.isTextEmpty(text) == true)
-            {
-                view.setSelected(false);
-            } else
-            {
-                view.setSelected(true);
-            }
-
             ((ReviewCommentCardLayout) view).setReviewCommentView(text);
         }
     }
 
-    public View getReviewScoreView(Context context, ReviewScoreQuestion reviewScoreQuestion)
+    public View getReviewScoreView(Context context, int position, ReviewScoreQuestion reviewScoreQuestion)
     {
-        ReviewScoreCardLayout reviewScoreCardLayout = new ReviewScoreCardLayout(mContext, reviewScoreQuestion);
+        ReviewScoreCardLayout reviewScoreCardLayout = new ReviewScoreCardLayout(mContext, position, reviewScoreQuestion);
         reviewScoreCardLayout.setOnScoreClickListener(new com.twoheart.dailyhotel.screen.review.ReviewScoreCardLayout.OnScoreClickListener()
         {
             @Override
             public void onClick(ReviewCardLayout reviewCardLayout, int reviewScore)
             {
-                ((OnEventListener) mOnEventListener).onReviewScoreTypeClick(reviewCardLayout, reviewScore);
+                ((OnEventListener) mOnEventListener).onReviewScoreTypeClick(reviewCardLayout.position, reviewScore);
             }
         });
         return reviewScoreCardLayout;
     }
 
-    public View getReviewPickView(Context context, ReviewPickQuestion reviewPickQuestion)
+    public View getReviewPickView(Context context, int position, ReviewPickQuestion reviewPickQuestion)
     {
-        ReviewPickCardLayout reviewPickCardLayout = new ReviewPickCardLayout(mContext, reviewPickQuestion);
+        ReviewPickCardLayout reviewPickCardLayout = new ReviewPickCardLayout(mContext, position, reviewPickQuestion);
         reviewPickCardLayout.setOnPickClickListener(new ReviewPickCardLayout.OnPickClickListener()
         {
             @Override
-            public void onClick(ReviewCardLayout reviewCardLayout, int position)
+            public void onClick(ReviewCardLayout reviewCardLayout, int selectedType)
             {
-                ((OnEventListener) mOnEventListener).onReviewPickTypeClick(reviewCardLayout, position);
+                ((OnEventListener) mOnEventListener).onReviewPickTypeClick(reviewCardLayout.position, selectedType);
             }
         });
 
         return reviewPickCardLayout;
     }
 
-    public View getReviewCommentView(Context context, Constants.PlaceType placeType)
+    public View getReviewCommentView(Context context, int position, Constants.PlaceType placeType)
     {
-        ReviewCommentCardLayout reviewCommentCardLayout = new ReviewCommentCardLayout(mContext, placeType);
+        ReviewCommentCardLayout reviewCommentCardLayout = new ReviewCommentCardLayout(mContext, position, placeType);
         reviewCommentCardLayout.setOnCommentClickListener(new ReviewCommentCardLayout.OnCommentClickListener()
         {
             @Override
             public void onClick(ReviewCardLayout reviewCardLayout, String comment)
             {
-                ((OnEventListener) mOnEventListener).onReviewCommentClick(reviewCardLayout, comment);
+                ((OnEventListener) mOnEventListener).onReviewCommentClick(reviewCardLayout.position, comment);
             }
         });
 

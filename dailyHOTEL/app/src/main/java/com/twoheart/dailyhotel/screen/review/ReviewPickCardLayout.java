@@ -35,14 +35,14 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
     {
         /**
          * @param reviewCardLayout
-         * @param position         min : 1 ~ max : 항목개수
+         * @param selectedType     min : 1 ~ max : 항목개수
          */
-        void onClick(ReviewCardLayout reviewCardLayout, int position);
+        void onClick(ReviewCardLayout reviewCardLayout, int selectedType);
     }
 
-    public ReviewPickCardLayout(Context context, ReviewPickQuestion reviewPickQuestion)
+    public ReviewPickCardLayout(Context context, int position, ReviewPickQuestion reviewPickQuestion)
     {
-        super(context);
+        super(context, position);
 
         initLayout(context, reviewPickQuestion);
     }
@@ -50,7 +50,8 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
     private void initLayout(Context context, ReviewPickQuestion reviewPickQuestion)
     {
         // 카드 레이아웃
-        setBackgroundResource(R.drawable.selector_review_cardlayout);
+        setEnabled(false);
+        setBackgroundResource(R.drawable.selector_review_cardlayout_enabled);
 
         final int DP1 = Util.dpToPx(context, 1);
         setPadding(DP1, DP1, DP1, DP1);
@@ -156,7 +157,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
     @Override
     public void onClick(View view)
     {
-        if (mSelectedView != null && mSelectedView.getId() == view.getId())
+        if (mSelectedView != null && mSelectedView == view)
         {
             return;
         }
@@ -170,8 +171,12 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             mSelectedView.setSelected(false);
         }
 
+        setEnabled(true);
         view.setSelected(true);
         mSelectedView = view;
+
+        DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
+        titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
 
         DailyTextView gridItemTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
 
@@ -189,5 +194,11 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
     public boolean isChecked()
     {
         return mReviewPosition > 0;
+    }
+
+    @Override
+    public Object getReviewValue()
+    {
+        return mReviewPosition;
     }
 }

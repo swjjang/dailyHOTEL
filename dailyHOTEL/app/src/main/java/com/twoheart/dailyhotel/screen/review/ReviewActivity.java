@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -37,6 +36,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class ReviewActivity extends BaseActivity
 
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private ReviewLayout mReviewLayout;
+    private ReviewNetworkController mReviewNetworkController;
 
     private Handler mHandler = new Handler()
     {
@@ -64,7 +66,8 @@ public class ReviewActivity extends BaseActivity
             switch (msg.what)
             {
                 case REQUEST_NEXT_FOCUSE:
-                    mReviewLayout.nextFocusReview((ReviewCardLayout) msg.obj);
+                    mReviewLayout.nextFocusReview(msg.arg1);
+                    unLockUI();
                     break;
             }
         }
@@ -99,6 +102,7 @@ public class ReviewActivity extends BaseActivity
         }
 
         mReview = intent.getParcelableExtra(INTENT_EXTRA_DATA_REVIEW);
+        mReviewNetworkController = new ReviewNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         showReviewDialog();
     }
@@ -144,15 +148,7 @@ public class ReviewActivity extends BaseActivity
     @Override
     protected void onDestroy()
     {
-        if (mDailyEmoticonImageView != null)
-        {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
-        }
-
-        mDailyEmoticonImageView = null;
+        stopEmoticonAnimation();
 
         if (mReviewLayout != null)
         {
@@ -231,15 +227,7 @@ public class ReviewActivity extends BaseActivity
 
     private void showReviewDetail()
     {
-        if (mDailyEmoticonImageView != null)
-        {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
-
-            mDailyEmoticonImageView = null;
-        }
+        stopEmoticonAnimation();
 
         mReviewLayout = new ReviewLayout(this, mOnEventListener);
 
@@ -267,13 +255,15 @@ public class ReviewActivity extends BaseActivity
 
         mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().imageUrl);
 
+        int position = 0;
+
         ArrayList<ReviewScoreQuestion> reviewScoreQuestionList = mReview.getReviewScoreQuestionList();
 
         if (reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
         {
             for (ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
             {
-                View view = mReviewLayout.getReviewScoreView(this, reviewScoreQuestion);
+                View view = mReviewLayout.getReviewScoreView(this, position++, reviewScoreQuestion);
 
                 mReviewLayout.addScrollLayout(view);
             }
@@ -285,7 +275,7 @@ public class ReviewActivity extends BaseActivity
         {
             for (ReviewPickQuestion reviewPickQuestion : reviewPickQuestionList)
             {
-                View view = mReviewLayout.getReviewPickView(this, reviewPickQuestion);
+                View view = mReviewLayout.getReviewPickView(this, position++, reviewPickQuestion);
 
                 mReviewLayout.addScrollLayout(view);
             }
@@ -293,13 +283,15 @@ public class ReviewActivity extends BaseActivity
 
         if (mReview.requiredCommentReview == true)
         {
-            View view = mReviewLayout.getReviewCommentView(this, reviewItem.placeType);
+            View view = mReviewLayout.getReviewCommentView(this, position++, reviewItem.placeType);
             mReviewLayout.addScrollLayout(view);
         }
 
         setConfirmTextView();
 
         mReviewLayout.startAnimation();
+
+        unLockUI();
     }
 
     private void hideReviewDialog()
@@ -310,6 +302,19 @@ public class ReviewActivity extends BaseActivity
         }
 
         mDialog = null;
+    }
+
+    private void stopEmoticonAnimation()
+    {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+        }
+
+        mDailyEmoticonImageView = null;
     }
 
     private void setConfirmTextView()
@@ -425,13 +430,19 @@ public class ReviewActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
+                lockUI(false);
+
+                JSONObject jsonObject = mReview.toReviewJSONObject(Review.GRADE_GOOD);
+
+                if (jsonObject == null)
                 {
+                    // 에러 문구가 필요할까?
+                    restartExpiredSession();
                     return;
                 }
 
-
-                //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, RECOMMEND);
+                // 임시로 서버로 보내지 않음 만족도 사라짐
+//                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -492,10 +503,19 @@ public class ReviewActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
+                lockUI(false);
+
+                JSONObject jsonObject = mReview.toReviewJSONObject(Review.GRADE_BAD);
+
+                if (jsonObject == null)
                 {
+                    // 에러 문구가 필요할까?
+                    restartExpiredSession();
                     return;
                 }
+
+                // 임시로 서버로 보내지 않음 만족도 사라짐
+//                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -539,17 +559,6 @@ public class ReviewActivity extends BaseActivity
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, params);
                         break;
                 }
-
-                mHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        hideReviewDialog();
-
-                        showReviewDetail();
-                    }
-                }, 1000);
             }
         });
 
@@ -558,7 +567,17 @@ public class ReviewActivity extends BaseActivity
             @Override
             public void onCancel(DialogInterface dialog)
             {
-                //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, NOT_RATE);
+                JSONObject jsonObject = mReview.toReviewJSONObject(Review.GRADE_NONE);
+
+                if (jsonObject == null)
+                {
+                    // 에러 문구가 필요할까?
+                    restartExpiredSession();
+                    return;
+                }
+
+                // 임시로 서버로 보내지 않음 만족도 사라짐
+//                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 switch (reviewItem.placeType)
                 {
@@ -582,7 +601,7 @@ public class ReviewActivity extends BaseActivity
             @Override
             public void onDismiss(DialogInterface dialog)
             {
-                mDailyEmoticonImageView = null;
+                stopEmoticonAnimation();
             }
         });
 
@@ -639,64 +658,45 @@ public class ReviewActivity extends BaseActivity
         //        }
     }
 
-    private DailyHotelJsonResponseListener mRecentReviewJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            unLockUI();
-
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
-                {
-
-                } else
-                {
-                    finish();
-                }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-
-                finish();
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            finish();
-        }
-    };
-
     private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
     {
-        private void sendMessageDelayed(ReviewCardLayout reviewCardLayout)
+        private void sendMessageDelayed(int position)
         {
             mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
-            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
+            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, position, 0);
             mHandler.sendMessageDelayed(message, 1000);
         }
 
         @Override
-        public void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore)
+        public void onReviewScoreTypeClick(int position, int reviewScore)
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI(false);
+
             setConfirmTextView();
-            sendMessageDelayed(reviewCardLayout);
+            sendMessageDelayed(position);
         }
 
         @Override
-        public void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position)
+        public void onReviewPickTypeClick(int position, int selectedType)
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI(false);
+
             setConfirmTextView();
-            sendMessageDelayed(reviewCardLayout);
+            sendMessageDelayed(position);
         }
 
         @Override
-        public void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment)
+        public void onReviewCommentClick(int position, String comment)
         {
             Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().placeType, comment);
             startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
@@ -705,7 +705,97 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onConfirmClick()
         {
-            finish();
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            JSONArray scoreReviewJSONArray = null, pickReviewJSONArray = null;
+            String comment = null;
+            int position = 0;
+
+            // Score
+            ArrayList<ReviewScoreQuestion> reviewScoreQuestionList = mReview.getReviewScoreQuestionList();
+
+            if (reviewScoreQuestionList != null)
+            {
+                scoreReviewJSONArray = new JSONArray();
+
+                for (ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
+                {
+                    try
+                    {
+                        Object value = mReviewLayout.getReviewValue(position++);
+
+                        if (value == null || value instanceof Integer == false)
+                        {
+                            continue;
+                        }
+
+                        JSONObject jsonObject = reviewScoreQuestion.toReviewAnswerJSONObject((int) value);
+
+                        if (jsonObject != null)
+                        {
+                            scoreReviewJSONArray.put(jsonObject);
+                        }
+                    } catch (JSONException e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+            }
+
+            // Pick
+            ArrayList<ReviewPickQuestion> reviewPickQuestionList = mReview.getReviewPickQuestionList();
+
+            if (reviewPickQuestionList != null)
+            {
+                pickReviewJSONArray = new JSONArray();
+
+                for (ReviewPickQuestion reviewPickQuestion : reviewPickQuestionList)
+                {
+                    try
+                    {
+                        Object value = mReviewLayout.getReviewValue(position++);
+
+                        if (value == null || value instanceof Integer == false)
+                        {
+                            continue;
+                        }
+
+                        JSONObject jsonObject = reviewPickQuestion.toReviewAnswerJSONObject((int) value);
+
+                        if (jsonObject != null)
+                        {
+                            pickReviewJSONArray.put(jsonObject);
+                        }
+                    } catch (JSONException e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+            }
+
+            // Comment
+            Object value = mReviewLayout.getReviewValue(position++);
+
+            if (value != null && value instanceof String == true)
+            {
+                comment = (String) value;
+            }
+
+            JSONObject jsonObject = mReview.toReviewDetailJSONObject(scoreReviewJSONArray, pickReviewJSONArray, comment);
+
+            if (jsonObject == null)
+            {
+
+            } else
+            {
+                // 임시로 서버로 전송하지 않음.
+//                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+            }
         }
 
         @Override
@@ -718,6 +808,68 @@ public class ReviewActivity extends BaseActivity
         public void finish()
         {
             ReviewActivity.this.finish();
+        }
+    };
+
+    private ReviewNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ReviewNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onAddReviewInformation(String grade)
+        {
+            unLockUI();
+
+            if (Review.GRADE_NONE.equalsIgnoreCase(grade) == false)
+            {
+                mHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        hideReviewDialog();
+
+                        showReviewDetail();
+                    }
+                }, 1000);
+            }
+        }
+
+        @Override
+        public void onAddReviewDetailInformation()
+        {
+            DailyToast.showToast(ReviewActivity.this, R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
+
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    finish();
+                }
+            }, 1000);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            ReviewActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            ReviewActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            ReviewActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            ReviewActivity.this.onErrorToastMessage(message);
         }
     };
 }

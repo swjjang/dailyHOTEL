@@ -307,10 +307,10 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
             final float textWidth = Util.getTextWidth(mContext, lastLineText, 11d, typeface);
 
-//            ExLog.d("index : " + position + " , viewWidth : " + viewWidth + " , getWidth() : "//
-//                + minPriceTextView.getWidth() + " , getPaddingLeft() : " + minPriceTextView.getPaddingLeft() //
-//                + " , getPaddingRight() : " + minPriceTextView.getPaddingRight() //
-//                + " , textWidth : " + textWidth + " , gap : " + (textWidth - viewWidth));
+            //            ExLog.d("index : " + position + " , viewWidth : " + viewWidth + " , getWidth() : "//
+            //                + minPriceTextView.getWidth() + " , getPaddingLeft() : " + minPriceTextView.getPaddingLeft() //
+            //                + " , getPaddingRight() : " + minPriceTextView.getPaddingRight() //
+            //                + " , textWidth : " + textWidth + " , gap : " + (textWidth - viewWidth));
 
             if (viewWidth <= textWidth)
             {
