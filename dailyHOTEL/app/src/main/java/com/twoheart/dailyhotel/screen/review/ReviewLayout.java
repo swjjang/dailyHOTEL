@@ -179,6 +179,14 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         if (view instanceof ReviewCommentCardLayout)
         {
+            if (Util.isTextEmpty(text) == true)
+            {
+                view.setSelected(false);
+            } else
+            {
+                view.setSelected(true);
+            }
+
             ((ReviewCommentCardLayout) view).setReviewCommentView(text);
         }
     }
@@ -306,7 +314,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     public int getUncheckedReviewCount()
     {
-        if(mScrollLayout == null)
+        if (mScrollLayout == null)
         {
             return -1;
         }

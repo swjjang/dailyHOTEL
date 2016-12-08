@@ -167,6 +167,11 @@ public class ReviewActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
         showSimpleDialog(getString(R.string.message_review_dialog_cancel_review_title)//
             , getString(R.string.message_review_dialog_cancel_review_description), getString(R.string.dialog_btn_text_yes)//
             , getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -183,11 +188,26 @@ public class ReviewActivity extends BaseActivity
                         @Override
                         public void run()
                         {
+                            releaseUiComponent();
                             ReviewActivity.super.onBackPressed();
                         }
                     }, 2000);
                 }
-            }, null);
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    releaseUiComponent();
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    releaseUiComponent();
+                }
+            }, null, true);
     }
 
     @Override
@@ -396,6 +416,10 @@ public class ReviewActivity extends BaseActivity
         final View badEmoticonDimView = view.findViewById(R.id.badEmoticonDimView);
         final View goodEmoticonDimView = view.findViewById(R.id.goodEmoticonDimView);
 
+        // 텍스트
+        final View badEmoticonTextView = view.findViewById(R.id.badEmoticonTextView);
+        final View goodEmoticonTextView = view.findViewById(R.id.goodEmoticonTextView);
+
         goodEmoticonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -427,6 +451,7 @@ public class ReviewActivity extends BaseActivity
 
                 mDailyEmoticonImageView[0].stopAnimation();
                 badEmoticonDimView.setVisibility(View.VISIBLE);
+                goodEmoticonTextView.setSelected(true);
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
@@ -458,7 +483,7 @@ public class ReviewActivity extends BaseActivity
 
                         showReviewDetail();
                     }
-                }, 3000);
+                }, 1000);
             }
         });
 
@@ -490,6 +515,7 @@ public class ReviewActivity extends BaseActivity
 
                 mDailyEmoticonImageView[1].stopAnimation();
                 goodEmoticonDimView.setVisibility(View.VISIBLE);
+                badEmoticonTextView.setSelected(true);
 
                 //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, NOT_RECOMMEND);
 
@@ -523,7 +549,7 @@ public class ReviewActivity extends BaseActivity
 
                         showReviewDetail();
                     }
-                }, 3000);
+                }, 1000);
             }
         });
 
