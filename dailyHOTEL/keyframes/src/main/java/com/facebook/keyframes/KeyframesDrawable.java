@@ -135,7 +135,8 @@ public class KeyframesDrawable extends Drawable
    * size it was when exported to a size to be drawn on the Android canvas.
    */
   @Override
-  public void setBounds(int left, int top, int right, int bottom) {
+  public void setBounds(int left, int top, int right, int bottom)
+  {
     super.setBounds(left, top, right, bottom);
     mSetWidth = right - left;
     mSetHeight = bottom - top;
@@ -143,8 +144,17 @@ public class KeyframesDrawable extends Drawable
     float idealXScale = (float) mSetWidth / mKFImage.getCanvasSize()[0];
     float idealYScale = (float) mSetHeight / mKFImage.getCanvasSize()[1];
 
-    mScale = Math.min(idealXScale, idealYScale);
-    calculateScaleMatrix(1, 1, ScaleDirection.UP);
+    float scale = Math.min(idealXScale, idealYScale);
+
+    if (mScale == scale)
+    {
+      calculateScaleMatrix(1, 1, ScaleDirection.UP, false);
+    } else
+    {
+      mScale = scale;
+      calculateScaleMatrix(1, 1, ScaleDirection.UP, true);
+    }
+
     if (!mHasInitialized) {
       // Call this at least once or else nothing will render. But if this is called this every time
       // setBounds is called then the animation will reset when resizing.
@@ -157,7 +167,7 @@ public class KeyframesDrawable extends Drawable
           float scaleFromCenter,
           float scaleFromEnd,
           ScaleDirection direction) {
-    calculateScaleMatrix(scaleFromCenter, scaleFromEnd, direction);
+    calculateScaleMatrix(scaleFromCenter, scaleFromEnd, direction, false);
   }
 
   /**
@@ -294,6 +304,16 @@ public class KeyframesDrawable extends Drawable
     mKeyframesDrawableAnimationCallback.stop();
   }
 
+  public void pauseAnimation()
+  {
+    mKeyframesDrawableAnimationCallback.pause();
+  }
+
+  public void resumeAnimation()
+  {
+    mKeyframesDrawableAnimationCallback.resume();
+  }
+
   /**
    * Finishes the current playthrough of the animation and stops animating this drawable afterwards.
    */
@@ -345,14 +365,15 @@ public class KeyframesDrawable extends Drawable
   private void calculateScaleMatrix(
           float scaleFromCenter,
           float scaleFromEnd,
-          ScaleDirection scaleDirection) {
-    if (mScaleFromCenter == scaleFromCenter &&
+          ScaleDirection scaleDirection,
+          boolean isForced) {
+    if (isForced == false && mScaleFromCenter == scaleFromCenter &&
             mScaleFromEnd == scaleFromEnd) {
       return;
     }
 
     mScaleMatrix.setScale(mScale, mScale);
-    if (scaleFromCenter == 1 && scaleFromEnd == 1) {
+    if (scaleFromCenter == 1 && scaleFromEnd == 1 && isForced == false) {
       mScaleFromCenter = 1;
       mScaleFromEnd = 1;
       mScaleMatrix.invert(mInverseScaleMatrix);

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/selector_review_cardlayout"
-                android:padding="1dp">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="15dp"-->
+    <!--android:background="@drawable/selector_review_cardlayout"-->
+    <!--android:padding="1dp">-->
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
         android:drawablePadding="4dp"
         android:text="@string/label_review"
         android:textColor="@color/default_text_c929292"
@@ -24,10 +26,10 @@
         android:layout_below="@id/titleTextView"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="2dp"
-        android:text="@string/message_review_comment_description"
         android:gravity="center_horizontal"
+        android:text="@string/message_review_comment_description"
         android:textColor="@color/default_text_c323232"
-        android:textSize="12dp"/>
+        android:textSize="17dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/commentTextView"
@@ -38,6 +40,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="14dp"
+        android:gravity="top"
         android:hint="@string/message_review_comment_stay_hint"
         android:textColor="@color/default_text_c323232"
         android:textColorHint="@color/default_text_cd0d0d0"
@@ -50,4 +53,5 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/default_line_cf0f0f0"/>
-</RelativeLayout>
+    <!--</RelativeLayout>-->
+</merge>

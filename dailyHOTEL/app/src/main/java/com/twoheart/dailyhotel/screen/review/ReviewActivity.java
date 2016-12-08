@@ -14,10 +14,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -33,6 +35,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -40,9 +43,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReviewActivity extends BaseActivity implements Constants, View.OnClickListener
+public class ReviewActivity extends BaseActivity
 {
+    private static final int REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT = 100;
     private static final String INTENT_EXTRA_DATA_REVIEW = "review";
+
+    private static final int REQUEST_NEXT_FOCUSE = 1;
 
     private Review mReview;
     private Dialog mDialog;
@@ -50,7 +56,19 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private ReviewLayout mReviewLayout;
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case REQUEST_NEXT_FOCUSE:
+                    mReviewLayout.nextFocusReview((ReviewCardLayout) msg.obj);
+                    break;
+            }
+        }
+    };
 
     public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
     {
@@ -97,6 +115,11 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                 dailyEmoticonImageView.startAnimation();
             }
         }
+
+        if (mReviewLayout != null)
+        {
+            mReviewLayout.startAnimation();
+        }
     }
 
     @Override
@@ -111,26 +134,113 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                 dailyEmoticonImageView.stopAnimation();
             }
         }
+
+        if (mReviewLayout != null)
+        {
+            mReviewLayout.stopAnimation();
+        }
     }
 
     @Override
     protected void onDestroy()
     {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+        }
+
+        mDailyEmoticonImageView = null;
+
+        if (mReviewLayout != null)
+        {
+            mReviewLayout.stopAnimation();
+        }
+
         hideReviewDialog();
 
         super.onDestroy();
     }
 
     @Override
-    public void onClick(View v)
+    public void onBackPressed()
     {
-        switch (v.getId())
+        if (lockUiComponentAndIsLockUiComponent() == true)
         {
+            return;
+        }
+
+        showSimpleDialog(getString(R.string.message_review_dialog_cancel_review_title)//
+            , getString(R.string.message_review_dialog_cancel_review_description), getString(R.string.dialog_btn_text_yes)//
+            , getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    lockUI(false);
+
+                    DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_LONG);
+
+                    mHandler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            releaseUiComponent();
+                            ReviewActivity.super.onBackPressed();
+                        }
+                    }, 2000);
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    releaseUiComponent();
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    releaseUiComponent();
+                }
+            }, null, true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT:
+                if (resultCode == RESULT_OK && data != null && data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT) == true)
+                {
+                    String text = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
+
+                    mReviewLayout.setReviewCommentView(text);
+                    setConfirmTextView();
+                }
+                break;
         }
     }
 
     private void showReviewDetail()
     {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+
+            mDailyEmoticonImageView = null;
+        }
+
         mReviewLayout = new ReviewLayout(this, mOnEventListener);
 
         setContentView(mReviewLayout.onCreateView(R.layout.activity_review));
@@ -187,8 +297,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
             mReviewLayout.addScrollLayout(view);
         }
 
-        mReviewLayout.setSelectedView(0);
-        mReviewLayout.startEmoticonAnimation();
+        setConfirmTextView();
+
+        mReviewLayout.startAnimation();
     }
 
     private void hideReviewDialog()
@@ -199,6 +310,35 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         }
 
         mDialog = null;
+    }
+
+    private void setConfirmTextView()
+    {
+        int uncheckedReviewCount = mReviewLayout.getUncheckedReviewCount();
+        String text;
+        boolean enabled;
+
+        if (uncheckedReviewCount > 0)
+        {
+            if (uncheckedReviewCount == mReview.reviewAllCount)
+            {
+                text = getString(R.string.message_review_answer_question, uncheckedReviewCount);
+            } else
+            {
+                text = getString(R.string.message_review_remain_n_count, uncheckedReviewCount);
+            }
+
+            enabled = false;
+        } else if (uncheckedReviewCount == 0)
+        {
+            text = getString(R.string.message_review_send_feedback);
+            enabled = true;
+        } else
+        {
+            return;
+        }
+
+        mReviewLayout.setConfirmTextView(text, enabled);
     }
 
     private void showReviewDialog()
@@ -260,14 +400,14 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         mDailyEmoticonImageView[0] = (DailyEmoticonImageView) view.findViewById(R.id.badEmoticonImageView);
         mDailyEmoticonImageView[1] = (DailyEmoticonImageView) view.findViewById(R.id.goodEmoticonImageView);
 
-        mDailyEmoticonImageView[0].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[1].setJSONData("01_worst_1.aep.comp-424-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
 
-        mDailyEmoticonImageView[0].setScaleX(0.83f);
-        mDailyEmoticonImageView[0].setScaleY(0.83f);
+        final int VALUE_DP100 = Util.dpToPx(ReviewActivity.this, 100);
+        final int paddingValue = VALUE_DP100 * 17 / 200;
 
-        mDailyEmoticonImageView[1].setScaleX(0.83f);
-        mDailyEmoticonImageView[1].setScaleY(0.83f);
+        mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+        mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
 
         mDailyEmoticonImageView[0].startAnimation();
         mDailyEmoticonImageView[1].startAnimation();
@@ -275,6 +415,10 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
         // 딤이미지
         final View badEmoticonDimView = view.findViewById(R.id.badEmoticonDimView);
         final View goodEmoticonDimView = view.findViewById(R.id.goodEmoticonDimView);
+
+        // 텍스트
+        final View badEmoticonTextView = view.findViewById(R.id.badEmoticonTextView);
+        final View goodEmoticonTextView = view.findViewById(R.id.goodEmoticonTextView);
 
         goodEmoticonView.setOnClickListener(new View.OnClickListener()
         {
@@ -297,9 +441,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
                         float value = (float) animation.getAnimatedValue();
+                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[1].setScaleX(value);
-                        mDailyEmoticonImageView[1].setScaleY(value);
+                        mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
                     }
                 });
 
@@ -307,6 +451,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
                 mDailyEmoticonImageView[0].stopAnimation();
                 badEmoticonDimView.setVisibility(View.VISIBLE);
+                goodEmoticonTextView.setSelected(true);
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
@@ -338,7 +483,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
                         showReviewDetail();
                     }
-                }, 3000);
+                }, 1000);
             }
         });
 
@@ -360,9 +505,9 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
                         float value = (float) animation.getAnimatedValue();
+                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[0].setScaleX(value);
-                        mDailyEmoticonImageView[0].setScaleY(value);
+                        mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
                     }
                 });
 
@@ -370,6 +515,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
                 mDailyEmoticonImageView[1].stopAnimation();
                 goodEmoticonDimView.setVisibility(View.VISIBLE);
+                badEmoticonTextView.setSelected(true);
 
                 //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, NOT_RECOMMEND);
 
@@ -403,7 +549,7 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
                         showReviewDetail();
                     }
-                }, 3000);
+                }, 1000);
             }
         });
 
@@ -528,33 +674,44 @@ public class ReviewActivity extends BaseActivity implements Constants, View.OnCl
 
     private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
     {
-        @Override
-        public void onReviewScoreTypeClick(View view)
+        private void sendMessageDelayed(ReviewCardLayout reviewCardLayout)
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            mReviewLayout.startScoreClickedAnimation(view);
+            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
+            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, reviewCardLayout);
+            mHandler.sendMessageDelayed(message, 1000);
         }
 
         @Override
-        public void onReviewPickTypeClick(View view)
+        public void onReviewScoreTypeClick(ReviewCardLayout reviewCardLayout, int reviewScore)
         {
-
+            setConfirmTextView();
+            sendMessageDelayed(reviewCardLayout);
         }
 
         @Override
-        public void onReviewCommentClick(View view)
+        public void onReviewPickTypeClick(ReviewCardLayout reviewCardLayout, int position)
         {
+            setConfirmTextView();
+            sendMessageDelayed(reviewCardLayout);
+        }
 
+        @Override
+        public void onReviewCommentClick(ReviewCardLayout reviewCardLayout, String comment)
+        {
+            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().placeType, comment);
+            startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
         }
 
         @Override
         public void onConfirmClick()
         {
+            finish();
+        }
 
+        @Override
+        public void onBackPressed()
+        {
+            ReviewActivity.this.onBackPressed();
         }
 
         @Override

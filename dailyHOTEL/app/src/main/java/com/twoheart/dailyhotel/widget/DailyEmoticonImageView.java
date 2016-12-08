@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.facebook.keyframes.KeyframesDirectionallyScalingDrawable;
 import com.facebook.keyframes.KeyframesDrawable;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
 import com.facebook.keyframes.deserializers.KFImageDeserializer;
@@ -68,6 +67,11 @@ public class DailyEmoticonImageView extends ImageView
         }
     }
 
+    public boolean isAnimationStart()
+    {
+        return mIsStartedAnimation;
+    }
+
     public void startAnimation()
     {
         if (mKeyFramesDrawable == null || mIsStartedAnimation == true)
@@ -82,13 +86,33 @@ public class DailyEmoticonImageView extends ImageView
 
     public void stopAnimation()
     {
-        if (mKeyFramesDrawable == null)
+        if (mKeyFramesDrawable == null || mIsStartedAnimation == false)
         {
             return;
         }
 
         mIsStartedAnimation = false;
         mKeyFramesDrawable.stopAnimation();
+    }
+
+    public void pauseAnimation()
+    {
+        if (mKeyFramesDrawable == null || mIsStartedAnimation == false)
+        {
+            return;
+        }
+
+        mKeyFramesDrawable.pauseAnimation();
+    }
+
+    public void resumeAnimation()
+    {
+        if (mKeyFramesDrawable == null || mIsStartedAnimation == false)
+        {
+            return;
+        }
+
+        mKeyFramesDrawable.resumeAnimation();
     }
 
     private void setKFImage(KFImage kfImage)
@@ -100,7 +124,7 @@ public class DailyEmoticonImageView extends ImageView
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setImageDrawable(mKeyFramesDrawable);
-        setBackgroundColor(getResources().getColor(R.color.white));
+        setBackgroundColor(getResources().getColor(R.color.transparent));
     }
 
     private void clearImage()

@@ -36,12 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:alpha="0"
-            android:singleLine="true"
-            android:maxLines="1"
             android:ellipsize="end"
             android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="13dp"/>
+            android:textSize="13dp"
+            dailyFont:style="Medium"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/toolbarSubTitle"
@@ -76,11 +77,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="57dp"
-        android:gravity="center_horizontal"
-        android:textColor="@color/white"
-        android:maxLines="2"
         android:ellipsize="end"
-        android:textSize="14dp"/>
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/periodTextView"
@@ -132,8 +134,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/selector_button_default_background"
             android:gravity="center"
-            android:text="의견 보내기"
-            android:textColor="@color/white"
+            android:textColor="@drawable/selector_text_color_cc5c5c5_cffffff"
             android:textSize="17dp"
             dailyFont:style="Medium"/>
     </RelativeLayout>
