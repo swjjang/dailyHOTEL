@@ -305,7 +305,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "hotel/region/v2/list" : "MzEkNjckMTEkMjYkMjkkOSQ3MyQ2MCQ4NyQxNyQyNyQ5NCQyMSQxNyQzJDk5JA==$OTAUwRDlCNWDQExQjAEDxMzVI5NEREBMXDcCwNjcA0RDQ4MkM2N0E2QkVBM0NENzYExNjhBQzhDQzDIExRUUzRTUwMDZFGMzRUFZNw==$";
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, listener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -624,7 +624,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         Map<String, String> params = Collections.singletonMap("type", place);
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
