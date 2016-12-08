@@ -41,10 +41,10 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/completeTextView"
             android:layout_toRightOf="@+id/backImageView"
-            android:text="@string/label_write_review_comment_title"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
+            android:text="@string/label_write_review_comment_title"
             android:textColor="@color/actionbar_title"
             android:textSize="18dp"/>
     </RelativeLayout>
@@ -54,8 +54,8 @@
         android:id="@+id/textCountLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/default_background_cfafafb"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_background_cfafafb">
 
         <View
             android:layout_width="match_parent"
@@ -68,11 +68,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:drawableCompatLeft="@drawable/ic_review"
             android:drawablePadding="6dp"
             android:gravity="center"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/ic_review"
             />
     </RelativeLayout>
 
@@ -126,16 +126,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="15dp"
                 android:background="@null"
                 android:gravity="top"
                 android:hint="@string/label_write_review_comment_hint_stay"
                 android:inputType="textMultiLine"
                 android:minHeight="160dp"
+                android:paddingBottom="15dp"
+                android:paddingTop="14dp"
                 android:textColor="@color/default_text_c323232"
                 android:textColorHint="@color/default_text_cd0d0d0"
-                android:textSize="13dp"/>
+                android:textSize="13dp"
+                android:theme="@style/EditTextTheme"/>
         </LinearLayout>
     </com.twoheart.dailyhotel.widget.DailyScrollView>
 </RelativeLayout>
