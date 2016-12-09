@@ -819,8 +819,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         @Override
         public void onReviewInformation(Review review)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = ReviewActivity.newInstance(baseActivity, review);
+            Intent intent = ReviewActivity.newInstance(getContext(), review);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 

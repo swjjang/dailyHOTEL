@@ -488,9 +488,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         @Override
         public void onReviewInformation(Review review)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = ReviewActivity.newInstance(baseActivity, review);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+            Intent intent = ReviewActivity.newInstance(getContext(), review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
         }
 
         @Override

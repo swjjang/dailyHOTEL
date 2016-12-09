@@ -211,12 +211,12 @@ public class Review implements Parcelable
 
             if (scoreJSONArray != null)
             {
-                jsonObject.put("reviewPicks", scoreJSONArray);
+                jsonObject.put("reviewScores", scoreJSONArray);
             }
 
             if (pickJSONArray != null)
             {
-                jsonObject.put("reviewScores", pickJSONArray);
+                jsonObject.put("reviewPicks", pickJSONArray);
             }
 
             jsonObject.put("serviceType", reviewItem.getPlaceType());

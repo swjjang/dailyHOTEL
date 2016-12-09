@@ -787,7 +787,7 @@ public class ReviewActivity extends BaseActivity
                             continue;
                         }
 
-                        JSONObject jsonObject = reviewPickQuestion.toReviewAnswerJSONObject((int) value);
+                        JSONObject jsonObject = reviewPickQuestion.toReviewAnswerJSONObject((int) value - 1);
 
                         if (jsonObject != null)
                         {
