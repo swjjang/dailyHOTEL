@@ -117,6 +117,10 @@ public class GourmetListFragment extends PlaceListFragment
         if (listSize > 0)
         {
             mLoadMorePageIndex = page;
+            mIsLoadMoreFlag = true;
+        } else
+        {
+            mIsLoadMoreFlag = false;
         }
 
         mPlaceCount += listSize;
