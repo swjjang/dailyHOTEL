@@ -303,9 +303,10 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelRegionList(Object tag, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/region/v2/list" : "MzEkNjckMTEkMjYkMjkkOSQ3MyQ2MCQ4NyQxNyQyNyQ5NCQyMSQxNyQzJDk5JA==$OTAUwRDlCNWDQExQjAEDxMzVI5NEREBMXDcCwNjcA0RDQ4MkM2N0E2QkVBM0NENzYExNjhBQzhDQzDIExRUUzRTUwMDZFGMzRUFZNw==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region" : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -622,9 +623,10 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "event/v1/banner" : "MTckMyQzNiQzNiQzNyQyNiQyMiQxNSQ0JDckNiQxOSQxMCQzMiQ1MyQxOCQ=$NkZQXFOMGzNIwQjNCQVTLSUzODTNGWNzUK2BNkEzRkRCRDRUMVFRUQF4NzY=$";
 
-        Map<String, String> params = Collections.singletonMap("type", place);
+        String params = String.format("?type=%s", place);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }

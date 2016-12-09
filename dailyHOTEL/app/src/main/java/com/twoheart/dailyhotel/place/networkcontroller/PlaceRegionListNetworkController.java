@@ -94,7 +94,6 @@ public abstract class PlaceRegionListNetworkController
                         totalArea.name = province.name + " 전체";
                         totalArea.setProvince(province);
                         totalArea.sequence = -1;
-                        totalArea.tag = totalArea.name;
                         totalArea.isOverseas = province.isOverseas;
                         totalArea.setProvinceIndex(province.getProvinceIndex());
 

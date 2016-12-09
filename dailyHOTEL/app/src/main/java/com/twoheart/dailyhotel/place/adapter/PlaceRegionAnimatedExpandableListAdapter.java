@@ -89,7 +89,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
         areaTextView1.setTag(area[0]);
         areaTextView1.setTag(areaTextView1.getId(), groupPosition);
-        areaTextView1.setText(area[0].tag);
+        areaTextView1.setText(area[0].name);
 
         if (area[1] != null)
         {
@@ -97,7 +97,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             areaTextView2.setTag(areaTextView2.getId(), groupPosition);
             areaTextView2.setEnabled(true);
 
-            areaTextView2.setText(area[1].tag);
+            areaTextView2.setText(area[1].name);
         } else
         {
             areaTextView2.setTag(null);
