@@ -1322,6 +1322,25 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                 }
 
+                params.put(AnalyticsManager.KeyType.GRADE, ((StayDetail) mPlaceDetail).grade.name());
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
+                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+
+                String listIndex = mPlaceDetail.entryPosition == -1 //
+                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+
+                params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+
+                int nights = ((StayDetail) mPlaceDetail).nights;
+                SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights);
+
+                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+
                 AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//
                     Action.WISHLIST_ON, mPlaceDetail.name, params);
@@ -1391,6 +1410,25 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                 }
+
+                params.put(AnalyticsManager.KeyType.GRADE, ((StayDetail) mPlaceDetail).grade.name());
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
+                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+
+                String listIndex = mPlaceDetail.entryPosition == -1 //
+                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+
+                params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+
+                int nights = ((StayDetail) mPlaceDetail).nights;
+                SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights);
+
+                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 
                 AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//

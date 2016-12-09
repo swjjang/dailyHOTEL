@@ -1275,6 +1275,22 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                 }
 
+                params.put(AnalyticsManager.KeyType.GRADE, ((GourmetDetail) mPlaceDetail).grade.name());
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
+                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+
+                String listIndex = mPlaceDetail.entryPosition == -1 //
+                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+
+                params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+
+                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
+                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+
+
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//
                     AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, params);
@@ -1343,6 +1359,22 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                     params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                 }
+
+                params.put(AnalyticsManager.KeyType.GRADE, ((GourmetDetail) mPlaceDetail).grade.name());
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
+                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+
+                String listIndex = mPlaceDetail.entryPosition == -1 //
+                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+
+                params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+
+                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
+                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+
 
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION,//

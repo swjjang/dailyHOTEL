@@ -511,6 +511,14 @@ public class AdjustManager extends BaseAnalyticsManager
             || AnalyticsManager.Category.AUTO_SEARCH.equalsIgnoreCase(category) == true)
         {
             event = getSearchEvent(EventToken.SEARCH_RESULT, params);
+        } else if (AnalyticsManager.Action.WISHLIST_ON.equalsIgnoreCase(action) == true)
+        {
+            event = getWishOnOffEvent(EventToken.ADD_TO_WISH_LIST, params);
+
+        } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true //
+            || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+        {
+            event = getWishOnOffEvent(EventToken.DELETE_TO_WISH_LIST, params);
         }
 
         if (event != null)
@@ -1116,6 +1124,89 @@ public class AdjustManager extends BaseAnalyticsManager
         return event;
     }
 
+    private DailyAdjustEvent getWishOnOffEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
+        event.addPartnerParameter(AnalyticsManager.KeyType.GRADE, grade);
+
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+        String rating = params.get(AnalyticsManager.KeyType.RATING); // vendor_satisfaction
+        event.addPartnerParameter(Key.RATING, rating);
+
+        String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        if (Util.isTextEmpty(isShowOriginalPrice) == false)
+        {
+            isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
+        }
+        event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+
+        String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
+        event.addPartnerParameter(Key.LIST_INDEX, listIndex);
+
+        String dailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE); // dailychoice
+        event.addPartnerParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
+
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        dBenefit = getYnType(dBenefit);
+        event.addPartnerParameter(Key.DBENEFIT, dBenefit);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String service = params.get(Key.SERVICE);
+        event.addPartnerParameter(Key.SERVICE, service);
+
+        if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(service) == false)
+        {
+            String lengthOfStay = null;
+            if (params.containsKey(AnalyticsManager.KeyType.QUANTITY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            } else if (params.containsKey(AnalyticsManager.KeyType.LENGTH_OF_STAY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
+            }
+
+            if (Util.isTextEmpty(lengthOfStay) == false)
+            {
+                event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
+            }
+        }
+
+        return event;
+    }
+
     private String getYnType(String ynString)
     {
         if (Util.isTextEmpty(ynString) == true)
@@ -1216,6 +1307,8 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String SEARCH_RESULT = "szintj"; // 검색어를 입력하여 검색결과 화면이 노출될 때
         public static final String WISH_LIST = "tnjqjp"; // 위시리스트
         public static final String RECENT_VIEW = "kmmxda"; // 최근 본 업장
+        public static final String ADD_TO_WISH_LIST = "7z705c"; // 위시리스트에 추가버튼을 누를 때
+        public static final String DELETE_TO_WISH_LIST = "kkeukz"; // 위시리스트에 삭제버튼을 누를 때
     }
 
     private static final class Key
