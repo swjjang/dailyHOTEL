@@ -116,23 +116,45 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             }
         });
 
-        DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
-        contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
-        contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
+        final String phone;
 
-        contactUs02Layout.setOnClickListener(new View.OnClickListener()
+        if(Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
         {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
+            phone = mGourmetBookingDetail.phone1;
+        } else if(Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
+        {
+            phone = mGourmetBookingDetail.phone2;
+        } else if(Util.isTextEmpty(mGourmetBookingDetail.phone3) == false)
+        {
+            phone = mGourmetBookingDetail.phone3;
+        } else
+        {
+            phone = null;
+        }
 
-                startGourmetCall();
-            }
-        });
+        if(phone == null)
+        {
+            contactUs02Layout.setVisibility(View.GONE);
+        } else
+        {
+            DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
+            contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
+            contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
+
+            contactUs02Layout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    startGourmetCall(phone);
+                }
+            });
+        }
 
         View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
         View callDailyView = dialogView.findViewById(R.id.callDailyView);
@@ -238,7 +260,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void startGourmetCall()
+    private void startGourmetCall(final String phoneNumber)
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
@@ -250,7 +272,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             {
                 releaseUiComponent();
 
-                String phoneNumber = mGourmetBookingDetail.gourmetPhone;
                 String noCallMessage = getString(R.string.toast_msg_no_gourmet_call, phoneNumber);
 
                 if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)

@@ -20,7 +20,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public boolean isOverseas;
     public String checkInDate;
     public String checkOutDate;
-    public String hotelPhone;
+
     public Grade grade;
     public String roomName;
     public boolean isNRD;
@@ -80,24 +80,13 @@ public class HotelBookingDetail extends PlaceBookingDetail
         roomIndex = jsonObject.getInt("roomIdx");
 
         // phone1은 프론트
-        String phone1 = jsonObject.getString("hotelPhone1");
+        phone1 = jsonObject.getString("hotelPhone1");
 
         // phone2는 예약실
-        String phone2 = jsonObject.getString("hotelPhone2");
+        phone2 = jsonObject.getString("hotelPhone2");
 
         // phone3은 사용하지 않음
-        String phone3 = jsonObject.getString("hotelPhone3");
-
-        if (Util.isTextEmpty(phone2) == false)
-        {
-            hotelPhone = phone2;
-        } else if (Util.isTextEmpty(phone1) == false)
-        {
-            hotelPhone = phone1;
-        } else if (Util.isTextEmpty(phone3) == false)
-        {
-            hotelPhone = phone3;
-        }
+        phone3 = jsonObject.getString("hotelPhone3");
 
         price = jsonObject.getInt("discountTotal");
 
@@ -149,7 +138,6 @@ public class HotelBookingDetail extends PlaceBookingDetail
         dest.writeString(roomName);
         dest.writeString(checkInDate);
         dest.writeString(checkOutDate);
-        dest.writeString(hotelPhone);
         dest.writeString(grade.name());
         dest.writeInt(bonus);
         dest.writeInt(coupon);
@@ -170,7 +158,6 @@ public class HotelBookingDetail extends PlaceBookingDetail
         roomName = in.readString();
         checkInDate = in.readString();
         checkOutDate = in.readString();
-        hotelPhone = in.readString();
         grade = Grade.valueOf(in.readString());
         bonus = in.readInt();
         coupon = in.readInt();

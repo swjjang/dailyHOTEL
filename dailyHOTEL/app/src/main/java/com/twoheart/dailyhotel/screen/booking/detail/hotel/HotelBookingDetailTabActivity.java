@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
@@ -134,6 +135,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         // 버튼
         View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
         View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
+        View contactUs03Layout = dialogView.findViewById(R.id.contactUs03Layout);
 
         DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
         contactUs01TextView.setText(R.string.frag_faqs);
@@ -153,23 +155,59 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             }
         });
 
-        DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
-        contactUs02TextView.setText(R.string.label_hotel_direct_phone);
-        contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeInMillis(mHotelBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
+        int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
 
-        contactUs02Layout.setOnClickListener(new View.OnClickListener()
+        if(Util.isTextEmpty(mHotelBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
         {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
+            DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
+            contactUs02TextView.setText(R.string.label_hotel_reservation_phone);
+            contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
 
-                startHotelCall();
-            }
-        });
+            contactUs02Layout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    startReservationCall(mHotelBookingDetail.phone2);
+                }
+            });
+        } else
+        {
+            contactUs02Layout.setVisibility(View.GONE);
+        }
+
+        if(Util.isTextEmpty(mHotelBookingDetail.phone1) == false)
+        {
+            contactUs03Layout.setVisibility(View.VISIBLE);
+
+            DailyTextView contactUs03TextView = (DailyTextView) contactUs03Layout.findViewById(R.id.contactUs03TextView);
+            contactUs03TextView.setText(R.string.label_hotel_front_phone);
+            contactUs03TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
+
+            contactUs03Layout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    startFrontCall(mHotelBookingDetail.phone1);
+                }
+            });
+        } else
+        {
+            contactUs03Layout.setVisibility(View.GONE);
+        }
 
         View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
         View callDailyView = dialogView.findViewById(R.id.callDailyView);
@@ -275,7 +313,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void startHotelCall()
+    private void startFrontCall(final String phoneNumber)
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
@@ -287,7 +325,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 releaseUiComponent();
 
-                String phoneNumber = mHotelBookingDetail.hotelPhone;
                 String noCallMessage = getString(R.string.toast_msg_no_hotel_call, phoneNumber);
 
                 if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
@@ -323,7 +360,59 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             }
         };
 
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_direct_call_stay), //
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_front_call_stay), //
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+            , positiveListener, nativeListener, null, dismissListener, true);
+    }
+
+    private void startReservationCall(final String phoneNumber)
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
+
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                releaseUiComponent();
+
+                String noCallMessage = getString(R.string.toast_msg_no_hotel_call, phoneNumber);
+
+                if (Util.isTelephonyEnabled(HotelBookingDetailTabActivity.this) == true)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(HotelBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    DailyToast.showToast(HotelBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                }
+            }
+        };
+
+        View.OnClickListener nativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        };
+
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_reservation_call_stay), //
             getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
             , positiveListener, nativeListener, null, dismissListener, true);
     }

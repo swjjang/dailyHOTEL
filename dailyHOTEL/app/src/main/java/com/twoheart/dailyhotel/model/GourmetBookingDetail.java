@@ -77,24 +77,13 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         reservationTime = jsonObject.getString("arrivalTime");
 
         // phone1은 프론트
-        String phone1 = jsonObject.getString("restaurantPhone1");
+        phone1 = jsonObject.getString("restaurantPhone1");
 
         // phone2는 예약실
-        String phone2 = jsonObject.getString("restaurantPhone2");
+        phone2 = jsonObject.getString("restaurantPhone2");
 
         // phone3은 사용하지 않음
-        String phone3 = jsonObject.getString("restaurantPhone3");
-
-        if (Util.isTextEmpty(phone2) == false)
-        {
-            gourmetPhone = phone2;
-        } else if (Util.isTextEmpty(phone1) == false)
-        {
-            gourmetPhone = phone1;
-        } else if (Util.isTextEmpty(phone3) == false)
-        {
-            gourmetPhone = phone3;
-        }
+        phone3 = jsonObject.getString("restaurantPhone3");
 
         if (jsonObject.has("couponAmount") == true)
         {

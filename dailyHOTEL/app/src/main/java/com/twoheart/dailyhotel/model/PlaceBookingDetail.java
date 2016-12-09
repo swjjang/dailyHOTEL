@@ -30,7 +30,6 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String guestPhone;
     public String guestEmail;
     public String addressSummary;
-    public String gourmetPhone;
     //
     public String paymentDate;
     public int price;
@@ -41,6 +40,10 @@ public abstract class PlaceBookingDetail implements Parcelable
     public long dailyDateTime;
     public int reservationIndex;
     public String reviewStatusType;
+
+    public String phone1;
+    public String phone2;
+    public String phone3;
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
@@ -63,7 +66,9 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeString(guestPhone);
         dest.writeString(guestEmail);
         dest.writeString(addressSummary);
-        dest.writeString(gourmetPhone);
+        dest.writeString(phone1);
+        dest.writeString(phone2);
+        dest.writeString(phone3);
         //
         dest.writeString(paymentDate);
         dest.writeInt(price);
@@ -88,7 +93,9 @@ public abstract class PlaceBookingDetail implements Parcelable
         guestPhone = in.readString();
         guestEmail = in.readString();
         addressSummary = in.readString();
-        gourmetPhone = in.readString();
+        phone1 = in.readString();
+        phone2 = in.readString();
+        phone3 = in.readString();
         //
         paymentDate = in.readString();
         price = in.readInt();

@@ -66,6 +66,29 @@
             android:background="@color/default_line_cf0f0f0"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/contactUs03Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/contactUs03TextView"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+    </LinearLayout>
+
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/kakaoDailyView"
         android:layout_width="match_parent"
