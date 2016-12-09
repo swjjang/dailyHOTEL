@@ -459,7 +459,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -502,7 +502,8 @@ public class ReviewActivity extends BaseActivity
                         break;
                 }
 
-                mOnNetworkControllerListener.onAddReviewInformation(Review.GRADE_GOOD);
+                // 테스트 코드
+                //                mOnNetworkControllerListener.onAddReviewInformation(Review.GRADE_GOOD);
             }
         });
 
@@ -522,7 +523,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -581,7 +582,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
 
@@ -687,7 +688,11 @@ public class ReviewActivity extends BaseActivity
 
             if (mReviewLayout.hasUncheckedReview() == true)
             {
+
                 sendMessageDelayed(position);
+            } else
+            {
+                unLockUI();
             }
         }
 
@@ -706,6 +711,9 @@ public class ReviewActivity extends BaseActivity
             if (mReviewLayout.hasUncheckedReview() == true)
             {
                 sendMessageDelayed(position);
+            } else
+            {
+                unLockUI();
             }
         }
 
@@ -804,11 +812,11 @@ public class ReviewActivity extends BaseActivity
 
             if (jsonObject == null)
             {
-
+                restartExpiredSession();
             } else
             {
                 // 임시로 서버로 전송하지 않음.
-                //                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
             }
         }
 
