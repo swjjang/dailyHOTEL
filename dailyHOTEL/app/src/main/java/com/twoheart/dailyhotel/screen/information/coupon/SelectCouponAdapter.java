@@ -155,48 +155,29 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
         setDownLoadLayout(holder, coupon.isDownloaded);
 
-        if (mIsSelectedMode == true)
+        if (mIsSelectedMode == true && coupon.isDownloaded == true)
         {
-            if (coupon.isDownloaded == true)
+            setSelectedLayout(holder, mSelectPosition == position);
+
+            holder.couponLayout.setOnClickListener(new View.OnClickListener()
             {
-                setSelectedLayout(holder, mSelectPosition == position);
-
-                holder.couponLayout.setOnClickListener(new View.OnClickListener()
+                @Override
+                public void onClick(View v)
                 {
-                    @Override
-                    public void onClick(View v)
+                    Coupon coupon = getItem(position);
+                    if (coupon.isDownloaded == true)
                     {
-                        Coupon coupon = getItem(position);
-                        if (coupon.isDownloaded == true)
-                        {
-                            mSelectPosition = position;
-                        } else
-                        {
-                            mSelectPosition = -1;
-                            mListener.onDownloadClick(position);
-                        }
-
-                        notifyDataSetChanged();
-                        mListener.updatePositiveButton();
-                    }
-                });
-            } else
-            {
-                setSelectedLayout(holder, mSelectPosition == position);
-
-                holder.couponLayout.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                        mSelectPosition = position;
+                    } else
                     {
-                        Coupon coupon = getItem(position);
-                        if (coupon.isDownloaded == false)
-                        {
-                            mListener.onDownloadClick(position);
-                        }
+                        mSelectPosition = -1;
+                        mListener.onDownloadClick(position);
                     }
-                });
-            }
+
+                    notifyDataSetChanged();
+                    mListener.updatePositiveButton();
+                }
+            });
         } else
         {
             holder.couponLayout.setOnClickListener(new View.OnClickListener()
@@ -272,6 +253,9 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
     private void setDownLoadLayout(SelectViewHolder holder, boolean isDownload)
     {
+        holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        holder.couponLayout.setBackgroundResource(0);
+
         if (isDownload == true)
         {
             holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
