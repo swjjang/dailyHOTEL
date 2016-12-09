@@ -2,13 +2,13 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,8 +17,6 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -352,32 +350,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             }
         });
 
-        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
-
-        double width = Util.getLCDWidth(mContext);
-        double height = 2.15f * width / 9;
-
-        ViewGroup.LayoutParams layoutParams = mapImageView.getLayoutParams();
-        layoutParams.height = (int) height;
-
-        mapImageView.setLayoutParams(layoutParams);
-        mapImageView.setTranslationX((int) width / 2 - Util.dpToPx(mContext, 45));
-
-        double ratio = height / width;
-
-        if (width >= 720)
-        {
-            width = 720;
-        }
-
-        height = width * ratio;
-
-        String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
-        String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
-        String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-            , size, iconUrl, mGourmetDetail.latitude, mGourmetDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
-
-        mapImageView.setImageURI(Uri.parse(url));
+        ImageView mapImageView = (ImageView) view.findViewById(R.id.mapImageView);
         mapImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
