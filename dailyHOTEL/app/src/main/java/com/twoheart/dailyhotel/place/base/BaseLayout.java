@@ -41,4 +41,14 @@ public abstract class BaseLayout
 
         return mRootView;
     }
+
+    protected void setVisibility(int visibility)
+    {
+        if(mRootView == null)
+        {
+            return;
+        }
+
+        mRootView.setVisibility(visibility);
+    }
 }

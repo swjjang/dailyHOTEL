@@ -7,6 +7,8 @@
  */
 package com.twoheart.dailyhotel.screen.review;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -61,6 +63,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         void onConfirmClick();
 
         void onBackPressed();
+
+        void onReviewDetailAnimationEnd();
     }
 
     public ReviewLayout(Context context, OnBaseEventListener listener)
@@ -170,7 +174,10 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
             if (childReviewCardLayout.isChecked() == false)
             {
-                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - Util.dpToPx(mContext, 154));
+                int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+                int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+
+                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
                 return true;
             }
@@ -231,6 +238,87 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         });
 
         return reviewCommentCardLayout;
+    }
+
+    public void setVisibility(boolean visibility)
+    {
+        setVisibility(visibility == true ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    protected void showReviewDetailAnimation()
+    {
+        final float y = Util.getLCDHeight(mContext);
+
+        // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+        int height = Util.getLCDHeight(mContext);
+
+        mRootView.setTranslationY(height);
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mRootView, "y", y, y - height);
+        objectAnimator.setDuration(200);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                if (mRootView.getVisibility() != View.VISIBLE)
+                {
+                    mRootView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                ((OnEventListener)mOnEventListener).onReviewDetailAnimationEnd();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
+    }
+
+    protected void hideReviewDetailAnimation()
+    {
+        final float y = mRootView.getTop();
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mRootView, "y", y, mRootView.getBottom());
+        objectAnimator.setDuration(200);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mOnEventListener.finish();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+
+        objectAnimator.start();
     }
 
     public void startAnimation()
@@ -308,6 +396,28 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                 ((ReviewScoreCardLayout) view).resumeEmoticonAnimation();
             }
         }
+    }
+
+    public boolean hasUncheckedReview()
+    {
+        if (mScrollLayout == null)
+        {
+            return false;
+        }
+
+        int count = mScrollLayout.getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
+
+            if (childReviewCardLayout.isChecked() == false)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public int getUncheckedReviewCount()
@@ -404,7 +514,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             mImageDimView.setAlpha(1.0f);
         }
 
-        mHandler.sendEmptyMessageDelayed(REQUEST_START_ANIMATION, 500);
+        mHandler.sendEmptyMessageDelayed(REQUEST_START_ANIMATION, 300);
     }
 
     /**
