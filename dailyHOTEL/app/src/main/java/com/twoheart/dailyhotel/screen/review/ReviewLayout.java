@@ -170,7 +170,10 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
             if (childReviewCardLayout.isChecked() == false)
             {
-                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - Util.dpToPx(mContext, 154));
+                int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+                int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+
+                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
                 return true;
             }

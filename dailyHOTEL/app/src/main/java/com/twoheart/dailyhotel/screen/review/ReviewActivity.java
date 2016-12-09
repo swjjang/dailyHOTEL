@@ -177,7 +177,7 @@ public class ReviewActivity extends BaseActivity
                 {
                     lockUI(false);
 
-                    DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_LONG);
+                    DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review_detail, Toast.LENGTH_SHORT);
 
                     mHandler.postDelayed(new Runnable()
                     {
@@ -187,7 +187,7 @@ public class ReviewActivity extends BaseActivity
                             releaseUiComponent();
                             ReviewActivity.super.onBackPressed();
                         }
-                    }, 2000);
+                    }, 1000);
                 }
             }, new View.OnClickListener()
             {
@@ -241,16 +241,36 @@ public class ReviewActivity extends BaseActivity
             return;
         }
 
-        try
+        switch (reviewItem.placeType)
         {
-            String periodDate = String.format("%s - %s"//
-                , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
-                , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
+            case HOTEL:
+            {
+                try
+                {
+                    String periodDate = String.format("%s - %s"//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
 
-            mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+                break;
+            }
+
+            case FNB:
+            {
+                try
+                {
+                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
+
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } break;
+            }
         }
 
         mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().imageUrl);
@@ -441,7 +461,6 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                // 임시로 서버로 보내지 않음 만족도 사라짐
 //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
@@ -514,7 +533,6 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                // 임시로 서버로 보내지 않음 만족도 사라짐
 //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
@@ -536,8 +554,6 @@ public class ReviewActivity extends BaseActivity
                 mDailyEmoticonImageView[1].stopAnimation();
                 goodEmoticonDimView.setVisibility(View.VISIBLE);
                 badEmoticonTextView.setSelected(true);
-
-                //                updateSatifactionRating(reviewItem.placeType, reviewItem.itemIdx, NOT_RECOMMEND);
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
@@ -576,8 +592,9 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                // 임시로 서버로 보내지 않음 만족도 사라짐
 //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+
+                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
 
                 switch (reviewItem.placeType)
                 {
@@ -664,7 +681,7 @@ public class ReviewActivity extends BaseActivity
         {
             mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
             Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, position, 0);
-            mHandler.sendMessageDelayed(message, 1000);
+            mHandler.sendMessageDelayed(message, 1500);
         }
 
         @Override
@@ -794,7 +811,7 @@ public class ReviewActivity extends BaseActivity
             } else
             {
                 // 임시로 서버로 전송하지 않음.
-//                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
             }
         }
 
@@ -820,6 +837,8 @@ public class ReviewActivity extends BaseActivity
 
             if (Review.GRADE_NONE.equalsIgnoreCase(grade) == false)
             {
+                setResult(RESULT_OK);
+
                 mHandler.postDelayed(new Runnable()
                 {
                     @Override
@@ -836,7 +855,7 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onAddReviewDetailInformation()
         {
-            DailyToast.showToast(ReviewActivity.this, R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
+            DailyToast.showToast(ReviewActivity.this, R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_SHORT);
 
             mHandler.postDelayed(new Runnable()
             {

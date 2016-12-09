@@ -1698,4 +1698,28 @@ public class Util implements Constants
 
         return realProvinceName;
     }
+
+
+    public static String trim(String text)
+    {
+        if (Util.isTextEmpty(text) == true)
+        {
+            return text;
+        }
+
+        int length = text.length();
+        int index = 0;
+
+        while ((index < length) && (text.charAt(index) <= ' '))
+        {
+            index++;
+        }
+        while ((index < length) && (text.charAt(length - 1) <= ' '))
+        {
+            length--;
+        }
+
+        return ((index > 0) || (length < text.length())) ? text.substring(index, length) : text;
+    }
+
 }

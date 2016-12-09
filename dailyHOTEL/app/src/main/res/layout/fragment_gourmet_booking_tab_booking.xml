@@ -76,13 +76,6 @@
                 android:background="@drawable/shape_fillrect_l1a000000_bffffff"
                 android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/default_line_cf0f0f0"/>
-
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/placeNameTextView"
                     android:layout_width="match_parent"
@@ -94,6 +87,13 @@
                     android:textColor="@color/default_text_c323232"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/default_line_cf0f0f0"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
