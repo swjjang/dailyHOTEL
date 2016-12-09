@@ -184,8 +184,7 @@ public class ReviewActivity extends BaseActivity
                         @Override
                         public void run()
                         {
-                            releaseUiComponent();
-                            ReviewActivity.super.onBackPressed();
+                            mReviewLayout.hideReviewDetailAnimation();
                         }
                     }, 1000);
                 }
@@ -269,7 +268,8 @@ public class ReviewActivity extends BaseActivity
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
-                } break;
+                }
+                break;
             }
         }
 
@@ -309,9 +309,7 @@ public class ReviewActivity extends BaseActivity
 
         setConfirmTextView();
 
-        mReviewLayout.startAnimation();
-
-        unLockUI();
+        mReviewLayout.setVisibility(false);
     }
 
     private void hideReviewDialog()
@@ -461,7 +459,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-//                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -504,16 +502,7 @@ public class ReviewActivity extends BaseActivity
                         break;
                 }
 
-                mHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        hideReviewDialog();
-
-                        showReviewDetail();
-                    }
-                }, 1000);
+                mOnNetworkControllerListener.onAddReviewInformation(Review.GRADE_GOOD);
             }
         });
 
@@ -533,7 +522,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-//                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -592,7 +581,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-//                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
 
@@ -695,7 +684,11 @@ public class ReviewActivity extends BaseActivity
             lockUI(false);
 
             setConfirmTextView();
-            sendMessageDelayed(position);
+
+            if (mReviewLayout.hasUncheckedReview() == true)
+            {
+                sendMessageDelayed(position);
+            }
         }
 
         @Override
@@ -709,7 +702,11 @@ public class ReviewActivity extends BaseActivity
             lockUI(false);
 
             setConfirmTextView();
-            sendMessageDelayed(position);
+
+            if (mReviewLayout.hasUncheckedReview() == true)
+            {
+                sendMessageDelayed(position);
+            }
         }
 
         @Override
@@ -811,7 +808,7 @@ public class ReviewActivity extends BaseActivity
             } else
             {
                 // 임시로 서버로 전송하지 않음.
-                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+                //                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
             }
         }
 
@@ -819,6 +816,13 @@ public class ReviewActivity extends BaseActivity
         public void onBackPressed()
         {
             ReviewActivity.this.onBackPressed();
+        }
+
+        @Override
+        public void onReviewDetailAnimationEnd()
+        {
+            unLockUI();
+            mReviewLayout.startAnimation();
         }
 
         @Override
@@ -844,9 +848,11 @@ public class ReviewActivity extends BaseActivity
                     @Override
                     public void run()
                     {
+                        showReviewDetail();
+
                         hideReviewDialog();
 
-                        showReviewDetail();
+                        mReviewLayout.showReviewDetailAnimation();
                     }
                 }, 1000);
             }

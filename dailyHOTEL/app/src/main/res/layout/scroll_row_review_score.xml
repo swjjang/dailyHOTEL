@@ -39,6 +39,7 @@
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginLeft="-8dp"
             android:layout_marginRight="-8dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
@@ -74,6 +75,7 @@
             android:layout_height="66dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="-8dp"
+            android:layout_marginRight="-8dp"
             android:layout_toRightOf="@+id/emoticonImageView3"/>
     </RelativeLayout>
 
