@@ -8,10 +8,6 @@ import org.json.JSONObject;
 
 public class Area extends Province
 {
-    private static final String PROVINCE_INDEXKEY = "provinceIdx";
-
-    public String tag;
-
     private int mProvinceIndex;
     private Province mProvince;
 
@@ -29,8 +25,7 @@ public class Area extends Province
     {
         super(jsonObject, null);
 
-        mProvinceIndex = jsonObject.getInt(PROVINCE_INDEXKEY);
-        tag = jsonObject.getString("tag");
+        mProvinceIndex = jsonObject.getInt("provinceIdx");
     }
 
     public Province getProvince()
@@ -60,7 +55,6 @@ public class Area extends Province
         super.writeToParcel(dest, flags);
 
         dest.writeInt(mProvinceIndex);
-        dest.writeString(tag);
         dest.writeParcelable(mProvince, flags);
     }
 
@@ -69,7 +63,6 @@ public class Area extends Province
         super.readFromParcel(in);
 
         mProvinceIndex = in.readInt();
-        tag = in.readString();
         mProvince = in.readParcelable(Province.class.getClassLoader());
     }
 

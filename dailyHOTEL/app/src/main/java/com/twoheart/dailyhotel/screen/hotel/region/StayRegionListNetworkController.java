@@ -56,10 +56,10 @@ public class StayRegionListNetworkController extends PlaceRegionListNetworkContr
                     List<Province> domesticProvinceList = new ArrayList<>();
                     List<Province> globalProvinceList = new ArrayList<>();
 
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                    JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
                     makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
 
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
                     ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                     List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
