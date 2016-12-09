@@ -183,7 +183,7 @@ public class CouponUtil
 
             if (jsonObject.has(Type.DOWNLOADED_AT))
             {
-                stayTo = jsonObject.getString(Type.DOWNLOADED_AT);
+                downloadedAt = jsonObject.getString(Type.DOWNLOADED_AT);
             }
 
             //            if (jsonObject.has(Type.DISABLE_AT))
