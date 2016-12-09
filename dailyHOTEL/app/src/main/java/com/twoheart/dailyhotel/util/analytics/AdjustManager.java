@@ -391,6 +391,14 @@ public class AdjustManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
                 }
+            } else if (AnalyticsManager.Action.WISHLIST_ON.equalsIgnoreCase(action) == true)
+            {
+                event = getWishOnOffEvent(EventToken.ADD_TO_WISH_LIST, params);
+
+            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+            {
+                event = getWishOnOffEvent(EventToken.DELETE_TO_WISH_LIST, params);
             }
         } else if (AnalyticsManager.Category.INVITE_FRIEND.equalsIgnoreCase(category) == true)
         {
@@ -511,14 +519,6 @@ public class AdjustManager extends BaseAnalyticsManager
             || AnalyticsManager.Category.AUTO_SEARCH.equalsIgnoreCase(category) == true)
         {
             event = getSearchEvent(EventToken.SEARCH_RESULT, params);
-        } else if (AnalyticsManager.Action.WISHLIST_ON.equalsIgnoreCase(action) == true)
-        {
-            event = getWishOnOffEvent(EventToken.ADD_TO_WISH_LIST, params);
-
-        } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true //
-            || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
-        {
-            event = getWishOnOffEvent(EventToken.DELETE_TO_WISH_LIST, params);
         }
 
         if (event != null)
