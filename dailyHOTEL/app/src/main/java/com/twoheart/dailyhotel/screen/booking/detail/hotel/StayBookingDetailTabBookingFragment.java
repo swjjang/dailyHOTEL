@@ -820,7 +820,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         public void onReviewInformation(Review review)
         {
             Intent intent = ReviewActivity.newInstance(getContext(), review);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 
         @Override
