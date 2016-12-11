@@ -5,6 +5,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 
 import org.json.JSONException;
@@ -82,6 +83,11 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
             return Response.success(new JSONObject(parsed), HttpHeaderParser.parseCacheHeaders(response));
         } catch (JSONException je)
         {
+            if (DEBUG == false)
+            {
+                Crashlytics.logException(new JSONException(getUrl()));
+            }
+
             return Response.error(new ParseError(je));
         }
     }
