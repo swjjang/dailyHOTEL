@@ -49,9 +49,6 @@ public class Province implements Parcelable
         if (jsonObject.has("sequence") == true)
         {
             sequence = jsonObject.getInt("sequence");
-        } else if(jsonObject.has("seq") == true)
-        {
-            sequence = jsonObject.getInt("seq");
         } else
         {
             sequence = 0;
