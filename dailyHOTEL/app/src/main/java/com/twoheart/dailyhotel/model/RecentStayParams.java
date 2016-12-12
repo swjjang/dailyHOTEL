@@ -72,7 +72,7 @@ public class RecentStayParams extends StayParams
             stringBuilder.setLength(length - 1);
         }
 
-        ExLog.d(" params : " + stringBuilder.toString());
+//        ExLog.d(" params : " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 

@@ -106,7 +106,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(this));
-        ExLog.d("height : " + imageHeight);
         com.facebook.drawee.view.SimpleDraweeView simpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
         layoutParams.height = imageHeight;
