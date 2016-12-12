@@ -28,14 +28,6 @@ interface IDailyNetwork
     void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
-     * api/common/code/review
-     * 만족도 평가대한 결과를 보낸다.(만족함, 만족안함)
-     *
-     * @return
-     */
-    void requestCommonReview(Object tag, String type, DailyHotelJsonResponseListener listener);
-
-    /**
      * api/common/datetime
      * 서비시간 앱 운영시간 등등의 기본이되는 시간값을 받아온다
      *

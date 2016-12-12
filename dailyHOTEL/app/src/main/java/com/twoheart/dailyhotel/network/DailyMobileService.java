@@ -1,0 +1,273 @@
+package com.twoheart.dailyhotel.network;
+
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+
+import org.json.JSONObject;
+
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
+
+public interface DailyMobileService
+{
+    @GET()
+    Call<JSONObject> requestCheckServer(@Url String url);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/common/version")
+    Call<JSONObject> requestCommonVer();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/common/datetime")
+    Call<JSONObject> requestCommonDateTime();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/users/profile")
+    Call<JSONObject> requestUserProfile();
+
+    @GET("user/session/bonus/all")
+    Call<JSONObject> requestUserBonus();
+
+    @POST("api/v4/users/profile")
+    Call<JSONObject> requestUserInformationUpdate(@FieldMap Map<String, String> params);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/users/profile/benefit")
+    Call<JSONObject> requestUserProfileBenefit();
+
+    @POST("user/check/email_auth")
+    Call<JSONObject> requestUserCheckEmail(@Field("userEmail") String userEmail);
+
+    @POST("user/change_pw")
+    Call<JSONObject> requestUserChangePassword(@Field("userEmail") String userEmail);
+
+    @GET("api/user/information/omission")
+    Call<JSONObject> requestUserInformationEx();
+
+    @GET("api/user/information")
+    Call<JSONObject> requestUserInformationForPayment();
+
+    @POST("api/user/session/update/fb_user")
+    Call<JSONObject> requestUserUpdateInformationForSocial(@FieldMap Map<String, String> params);
+
+    @POST("api/user/session/billing/card/info")
+    Call<JSONObject> requestUserBillingCardList();
+
+    @POST("api/user/session/billing/card/del")
+    Call<JSONObject> requestUserDeleteBillingCard(@Field("billkey") String billkey);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/hotels/sales")
+    Call<JSONObject> requestStayList(@QueryMap Map<String, Object> params);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/hotels/sales")
+    Call<JSONObject> requestStaySearchList(@QueryMap Map<String, String> params);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/hotels/sales/search/auto_complete")
+    Call<JSONObject> requestHotelSearchAutoCompleteList(Object tag, String date, int stays, String text, DailyHotelJsonResponseListener listener);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/hotel/region")
+    Call<JSONObject> requestStayRegionList();
+
+    @GET("api/hotel/v1/payment/detail")
+    Call<JSONObject> requestHotelPaymentInformation(@Query("room_idx") int roomIndex,//
+                                                    @Query("checkin_date") String date,//
+                                                    @Query("nights") int nights);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/hotel/{hotelIdx}")
+    Call<JSONObject> requestHotelDetailInformation(@Path("hotelIdx") int index, @Query("dateCheckIn") String date, @Query("stays") int nights);
+
+    @POST("api/hotel/v1/payment/session/easy")
+    Call<JSONObject> requestHotelPayment(@FieldMap Map<String, String> params);
+
+    @POST("api/fnb/reservation/session/rating/msg/update")
+    Call<JSONObject> requestGourmetDetailRating(@FieldMap Map<String, String> params);
+
+    @GET("api/fnb/reservation/booking/list")
+    Call<JSONObject> requestBookingList();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v2/reservation/fnb/{fnbReservationIdx}")
+    Call<JSONObject> requestGourmetBookingDetailInformation(@Path("fnbReservationIdx") int index);
+
+    @GET("api/v2/reservation/fnb/{reservationIdx}/receipt")
+    Call<JSONObject> requestGourmetReceipt(@Query("reservation_rec_idx") int index);
+
+    @GET("api/fnb/reservation/session/rating/exist")
+    Call<JSONObject> requestGourmetIsExistRating();
+
+    @POST("api/fnb/reservation/session/rating/update")
+    Call<JSONObject> requestGourmetRating(@Field("rating") String result, @Field("reservation_rec_idx") String index);
+
+    @POST("api/fnb/reservation/session/hidden")
+    Call<JSONObject> requestGourmetHiddenBooking(@Field("reservation_rec_idx") int index);
+
+    @GET("api/fnb/reservation/session/vbank/account/info")
+    Call<JSONObject> requestGourmetAccountInformation(@Field("tid") String tid);
+
+    @GET("gourmet/region/v1/list")
+    Call<JSONObject> requestGourmetRegionList();
+
+    @GET("api/v3/gourmet/sales")
+    Call<JSONObject> requestGourmetList(@QueryMap Map<String, String> params);
+
+    @GET("api/v3/gourmet/sales")
+    Call<JSONObject> requestGourmetSearchList(@QueryMap Map<String, String> params);
+
+    @GET("api/v3/gourmet/sales/search/auto_complete")
+    Call<JSONObject> requestGourmetSearchAutoCompleteList(@Query("reserveDate") String date, @Query("term") String text);
+
+    @GET("api/v3/gourmet/{restaurantIdx}")
+    Call<JSONObject> requestGourmetDetailInformation(@Path("restaurantIdx") int index, @Query("dateSale") String date);
+
+    @GET("api/fnb/sale/ticket/payment/info")
+    Call<JSONObject> requestGourmetPaymentInformation(@Query("sale_reco_idx") int index);
+
+    @GET("api/fnb/sale/session/ticket/sell/check")
+    Call<JSONObject> requestGourmetCheckTicket(@Query("sale_reco_idx") int index,//
+                                               @Query("sday") String day,//
+                                               @Query("ticket_count") int count,//
+                                               @Query("arrival_time") String time);
+
+    @POST("api/fnb/payment/session/easy")
+    Call<JSONObject> requestGourmetPayment(@FieldMap Map<String, String> params);
+
+    @GET("api/v2/reservation/account/{tid}")
+    Call<JSONObject> requestDepositWaitDetailInformation(@Path("tid") String tid);
+
+    @POST("api/reserv/satisfaction_rating/update")
+    Call<JSONObject> requestHotelRating(@Field("rating") String result, @Field("reserv_idx") String index);
+
+    @GET("api/reserv/satisfaction_rating/exist")
+    Call<JSONObject> requestHotelIsExistRating();
+
+    @GET("api/v2/reservation/hotel/{hotelReservationIdx}")
+    Call<JSONObject> requestHotelBookingDetailInformation(@Path("hotelReservationIdx") int index);
+
+    @POST("api/reserv/mine/hidden")
+    Call<JSONObject> requestHotelHiddenBooking(@Field("idx") int index);
+
+    @GET("api/reserv/receipt")
+    Call<JSONObject> requestHotelReceipt(@Query("reservation_idx") String index);
+
+    @POST("api/reserv/satisfaction_rating/msg/update")
+    Call<JSONObject> requestHotelDetailRating(@FieldMap Map<String, String> params);
+
+    @GET("api/daily/event/list")
+    Call<JSONObject> requestEventList();
+
+    @GET("api/v1/notice/new")
+    Call<JSONObject> requestEventNCouponNNoticeNewCount(@Query("eventLatestDate") String eventLatestDate,//
+                                                        @Query("couponLatestDate") String couponLatestDate,//
+                                                        @Query("noticesLatestDate") String noticeLatestDate);
+
+    @GET("api/daily/event/page")
+    Call<JSONObject> requestEventPageUrl(@Query("daily_event_idx") int eventIndex, @Query("store_type") String store);
+
+    @GET("api/common/company_info")
+    Call<JSONObject> requestCompanyInformation();
+
+    @POST("event/v1/banner")
+    Call<JSONObject> requestEventBannerList(@Field("type") String place);
+
+    @POST("api/v3/users/myself/phones/verification/start")
+    Call<JSONObject> requestDailyUserVerfication(@Query("phone") String phone, @Query("force_to_proceed") boolean force);
+
+    @POST("api/v3/users/myself/phones/verification/check")
+    Call<JSONObject> requestDailyUserUpdatePhoneNumber(@Field("phone") String phone, @Field("code") String code);
+
+    @POST("api/v3/users/signup/normal/validation")
+    Call<JSONObject> requestSignupValidation(@FieldMap Map<String, String> params);
+
+    @POST("api/v3/users/signup/normal/phones/verification/start")
+    Call<JSONObject> requestDailyUserSignupVerfication(@Field("signup_key") String signupKey,//
+                                                       @Field("phone") String phone,//
+                                                       @Field("force_to_proceed") boolean force);
+
+    @POST("api/v3/users/signup/normal/phones/verification/check")
+    Call<JSONObject> requestDailyUserSignup(@Field("signup_key") String signupKey,//
+                                            @Field("code") String code, @Field("phone") String phone);
+
+    @POST("api/v3/users/signup/facebook")
+    Call<JSONObject> requestFacebookUserSignup(@FieldMap Map<String, String> params);
+
+    @POST("api/v3/users/signup/kakao_talk")
+    Call<JSONObject> requestKakaoUserSignup(@FieldMap Map<String, String> params);
+
+    @POST("api/v3/users/signin/normal")
+    Call<JSONObject> requestDailyUserSignin(@FieldMap Map<String, String> params);
+
+    @POST("api/v3/users/signin/facebook")
+    Call<JSONObject> requestFacebookUserSignin(@FieldMap Map<String, String> params);
+
+    @POST("api/v3/users/signin/kakao_talk")
+    Call<JSONObject> requestKakaoUserSignin(@FieldMap Map<String, String> params);
+
+    @POST("api/v3/users/signin/{type}")
+    Call<JSONObject> requestUserSignin(@Path("type") String type, @FieldMap Map<String, String> params);
+
+    @GET("api/v3/users/coupons")
+    Call<JSONObject> requestCouponList();
+
+    @GET("api/v2/payment/coupons")
+    Call<JSONObject> requestCouponList(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx, //
+                                       @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
+
+    @GET("api/v3/users/coupons/history")
+    Call<JSONObject> requestCouponHistoryList();
+
+    @GET("api/v1/notice/agreement/confirm")
+    Call<JSONObject> requestNoticeAgreement();
+
+    @PUT("api/v1/notice/agreement/result")
+    Call<JSONObject> requestNoticeAgreementResult(@Query("isAgreed") boolean isAgree);
+
+    @GET("api/v1/notice/benefit")
+    Call<JSONObject> requestBenefitMessage();
+
+    @PUT("api/v3/users/coupons/download")
+    Call<JSONObject> requestDownloadCoupon(@Query("userCouponCode") String userCouponCode);
+
+    @PUT("api/v3/users/coupons/download")
+    Call<JSONObject> requestDownloadEventCoupon(@Query("couponCode") String couponCode);
+
+    @GET("api/v3/hotel/{hotelIdx}/coupons/exist")
+    Call<JSONObject> requestHasCoupon(@Path("hotelIdx") int placeIndex, @Query("dateCheckIn") String date,//
+                                      @Query("stays") int nights);
+
+    @GET("api/v3/hotel/{hotelIdx}/coupons")
+    Call<JSONObject> requestCouponList(@Path("hotelIdx") int placeIndex, @Query("dateCheckIn") String date,//
+                                       @Query("stays") int nights);
+
+    @POST("api/v3/users/coupons/keyword")
+    Call<JSONObject> requestRegistKeywordCoupon(@Field("keyword") String keyword);
+
+    @PUT("api/v1/notice/benefit")
+    Call<JSONObject> requestUpdateBenefitAgreement(@Query("isAgreed") boolean isAgree);
+
+    @GET("api/v3/users/tracking")
+    Call<JSONObject> requestUserTracking();
+
+    @GET("api/v3/common/notices")
+    Call<JSONObject> requestNoticeList();
+
+    @GET("api/v3/hotels/sales")
+    Call<JSONObject> requestRecentStayList(@QueryMap Map<String, String> stayParams);
+
+    @GET("api/v3/gourmet/sales")
+    Call<JSONObject> requestRecentGourmetList(@QueryMap Map<String, String> gourmetParams);
+}

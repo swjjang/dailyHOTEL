@@ -108,18 +108,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestCommonReview(Object tag, String type, DailyHotelJsonResponseListener listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/common/code/review" : "MTAkNTgkMjYkNzckMzEkMTkkMTMkMjgkMTMkNTAkMjgkMjUkMTkkNTIkMjkkMTAk$RDIzRDNENkDRI2BBMTU0RNjGNERKTlQDSNBHDI4MLkY0QjM0NUI1Q0LUL2OTM5OTI0RjI4QR0RGQjVFMkYwMEE3NEKE2RDdGRTcwQw==$";
-
-        String params = String.format("?type=%s", type);
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestCommonDateTime(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime" : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
@@ -382,6 +370,7 @@ public class DailyNetworkAPI implements IDailyNetwork
         urlParams.put("{reservationIdx}", Integer.toString(index));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
