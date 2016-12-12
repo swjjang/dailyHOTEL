@@ -155,14 +155,10 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             }
         });
 
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeInMillis(mHotelBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
-        int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
-
-        if(Util.isTextEmpty(mHotelBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
+        if(Util.isTextEmpty(mHotelBookingDetail.phone1) == false)
         {
             DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
-            contactUs02TextView.setText(R.string.label_hotel_reservation_phone);
+            contactUs02TextView.setText(R.string.label_hotel_front_phone);
             contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
 
             contactUs02Layout.setOnClickListener(new View.OnClickListener()
@@ -175,7 +171,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         dialog.dismiss();
                     }
 
-                    startReservationCall(mHotelBookingDetail.phone2);
+                    startFrontCall(mHotelBookingDetail.phone1);
                 }
             });
         } else
@@ -183,12 +179,16 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             contactUs02Layout.setVisibility(View.GONE);
         }
 
-        if(Util.isTextEmpty(mHotelBookingDetail.phone1) == false)
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeInMillis(mHotelBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
+        int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
+
+        if(Util.isTextEmpty(mHotelBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
         {
             contactUs03Layout.setVisibility(View.VISIBLE);
 
             DailyTextView contactUs03TextView = (DailyTextView) contactUs03Layout.findViewById(R.id.contactUs03TextView);
-            contactUs03TextView.setText(R.string.label_hotel_front_phone);
+            contactUs03TextView.setText(R.string.label_hotel_reservation_phone);
             contactUs03TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
 
             contactUs03Layout.setOnClickListener(new View.OnClickListener()
@@ -201,7 +201,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         dialog.dismiss();
                     }
 
-                    startFrontCall(mHotelBookingDetail.phone1);
+                    startReservationCall(mHotelBookingDetail.phone2);
                 }
             });
         } else
