@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.GET;
@@ -107,12 +108,6 @@ public interface DailyMobileService
     @GET("api/v2/reservation/fnb/{reservationIdx}/receipt")
     Call<JSONObject> requestGourmetReceipt(@Query("reservation_rec_idx") int index);
 
-    @GET("api/fnb/reservation/session/rating/exist")
-    Call<JSONObject> requestGourmetIsExistRating();
-
-    @POST("api/fnb/reservation/session/rating/update")
-    Call<JSONObject> requestGourmetRating(@Field("rating") String result, @Field("reservation_rec_idx") String index);
-
     @POST("api/fnb/reservation/session/hidden")
     Call<JSONObject> requestGourmetHiddenBooking(@Field("reservation_rec_idx") int index);
 
@@ -122,9 +117,11 @@ public interface DailyMobileService
     @GET("gourmet/region/v1/list")
     Call<JSONObject> requestGourmetRegionList();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/gourmet/sales")
     Call<JSONObject> requestGourmetList(@QueryMap Map<String, String> params);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/gourmet/sales")
     Call<JSONObject> requestGourmetSearchList(@QueryMap Map<String, String> params);
 
@@ -146,15 +143,11 @@ public interface DailyMobileService
     @POST("api/fnb/payment/session/easy")
     Call<JSONObject> requestGourmetPayment(@FieldMap Map<String, String> params);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/reservation/account/{tid}")
     Call<JSONObject> requestDepositWaitDetailInformation(@Path("tid") String tid);
 
-    @POST("api/reserv/satisfaction_rating/update")
-    Call<JSONObject> requestHotelRating(@Field("rating") String result, @Field("reserv_idx") String index);
-
-    @GET("api/reserv/satisfaction_rating/exist")
-    Call<JSONObject> requestHotelIsExistRating();
-
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/reservation/hotel/{hotelReservationIdx}")
     Call<JSONObject> requestHotelBookingDetailInformation(@Path("hotelReservationIdx") int index);
 
@@ -163,9 +156,6 @@ public interface DailyMobileService
 
     @GET("api/reserv/receipt")
     Call<JSONObject> requestHotelReceipt(@Query("reservation_idx") String index);
-
-    @POST("api/reserv/satisfaction_rating/msg/update")
-    Call<JSONObject> requestHotelDetailRating(@FieldMap Map<String, String> params);
 
     @GET("api/daily/event/list")
     Call<JSONObject> requestEventList();
@@ -181,7 +171,7 @@ public interface DailyMobileService
     @GET("api/common/company_info")
     Call<JSONObject> requestCompanyInformation();
 
-    @POST("event/v1/banner")
+    @GET("event/v1/banner")
     Call<JSONObject> requestEventBannerList(@Field("type") String place);
 
     @POST("api/v3/users/myself/phones/verification/start")
@@ -217,57 +207,146 @@ public interface DailyMobileService
     @POST("api/v3/users/signin/kakao_talk")
     Call<JSONObject> requestKakaoUserSignin(@FieldMap Map<String, String> params);
 
-    @POST("api/v3/users/signin/{type}")
-    Call<JSONObject> requestUserSignin(@Path("type") String type, @FieldMap Map<String, String> params);
-
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/users/coupons")
     Call<JSONObject> requestCouponList();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/payment/coupons")
     Call<JSONObject> requestCouponList(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx, //
                                        @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/gourmet/payment/coupons")
+    Call<JSONObject> requestCouponList(@Query("saleIdx") int saleIdx, @Query("countOfTicket") int countOfTicket);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/users/coupons/history")
     Call<JSONObject> requestCouponHistoryList();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v1/notice/agreement/confirm")
     Call<JSONObject> requestNoticeAgreement();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("api/v1/notice/agreement/result")
     Call<JSONObject> requestNoticeAgreementResult(@Query("isAgreed") boolean isAgree);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v1/notice/benefit")
     Call<JSONObject> requestBenefitMessage();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("api/v3/users/coupons/download")
     Call<JSONObject> requestDownloadCoupon(@Query("userCouponCode") String userCouponCode);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("api/v3/users/coupons/download")
     Call<JSONObject> requestDownloadEventCoupon(@Query("couponCode") String couponCode);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotel/{hotelIdx}/coupons/exist")
     Call<JSONObject> requestHasCoupon(@Path("hotelIdx") int placeIndex, @Query("dateCheckIn") String date,//
                                       @Query("stays") int nights);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/gourmet/{restaurantIdx}/coupons/exist")
+    Call<JSONObject> requestHasCoupon(@Path("restaurantIdx") int placeIndex, @Query("dateSale") String dateSale);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotel/{hotelIdx}/coupons")
     Call<JSONObject> requestCouponList(@Path("hotelIdx") int placeIndex, @Query("dateCheckIn") String date,//
                                        @Query("stays") int nights);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v3/gourmet/{restaurantIdx}/coupons")
+    Call<JSONObject> requestCouponList(@Path("restaurantIdx") int placeIndex, @Query("dateSale") String dateSale);
+
     @POST("api/v3/users/coupons/keyword")
     Call<JSONObject> requestRegistKeywordCoupon(@Field("keyword") String keyword);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("api/v1/notice/benefit")
     Call<JSONObject> requestUpdateBenefitAgreement(@Query("isAgreed") boolean isAgree);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/users/tracking")
     Call<JSONObject> requestUserTracking();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/common/notices")
     Call<JSONObject> requestNoticeList();
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotels/sales")
     Call<JSONObject> requestRecentStayList(@QueryMap Map<String, String> stayParams);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/gourmet/sales")
     Call<JSONObject> requestRecentGourmetList(@QueryMap Map<String, String> gourmetParams);
+
+    @POST("api/v3/users/reservations/{kind}/{reservationIdx}/receipts")
+    Call<JSONObject> requestReceiptByEmail(@Path("kind") String placeType, //
+                                           @Path("reservationIdx") String reservationIdx, //
+                                           @Query("emails") String emails);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v4/wishes")
+    Call<JSONObject> requestWishListCount();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v4/wishes/{type}")
+    Call<JSONObject> requestWishList(@Path("type") String placeType);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("api/v4/wishes/{type}/add/{itemIdx}")
+    Call<JSONObject> requestAddWishList(@Path("type") String placeType, @Path("itemIdx") int placeIndex);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("api/v4/wishes/{type}/remove/{itemIdx}")
+    Call<JSONObject> requestRemoveWishList(@Path("type") String placeType, @Path("itemIdx") int placeIndex);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v2/payment/policy_refund")
+    Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
+                                         @Query("dateCheckIn") String dateCheckIn);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v2/payment/policy_refund")
+    Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
+                                         @Query("dateCheckIn") String dateCheckIn, @Query("transactionType") String transactionType);
+
+    @POST("api/v2/payment/refund")
+    Call<JSONObject> requestRefund(@Field("hotelIdx") int hotelIdx, @Field("dateCheckIn") String dateCheckIn,//
+                                   @Field("transactionType") String transactionType, @Field("hotelReservationIdx") int hotelReservationIdx, //
+                                   @Field("reasonRefund") String reasonRefund, @Field("accountHolder") String accountHolder, //
+                                   @Field("bankAccount") String bankAccount, @Field("bankCode") String bankCode);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v2/payment/bank")
+    Call<JSONObject> requestBankList();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v4/review/hotel/question")
+    Call<JSONObject> requestStayReviewInformation();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v4/review/gourmet/question")
+    Call<JSONObject> requestGourmetReviewInformation();
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v4/review/hotel/{reserveIdx}/question")
+    Call<JSONObject> requestStayReviewInformation(@Path("reserveIdx") int reserveIdx);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("api/v4/review/gourmet/{reserveIdx}/question")
+    Call<JSONObject> requestGourmetReviewInformation(@Path("reserveIdx") int reserveIdx);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("api/v4/review/add")
+    Call<JSONObject> requestAddReviewInformation(@Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("api/v4/review/add/detail")
+    Call<JSONObject> requestAddReviewDetailInformation(@Body JSONObject jsonObject);
 }
