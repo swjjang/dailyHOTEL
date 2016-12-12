@@ -402,22 +402,26 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onRetryDailyUserSignIn()
         {
+            // 회원 가입후에 바로 로그인을 요청하는 경우 실패가발생하는 경우가 있다. 그래서 재시도..
             if (mRetryHandler != null)
             {
+                // 한번 재시도 후에 또 로그인이 안되면 앱을 다시 재시동 시킨다
                 mRetryHandler = null;
-                ExLog.d("mRetryHandler already run");
-            } else
-            {
-                mRetryHandler = new Handler();
-                mRetryHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mNetworkController.requestLogin(mEmail, mPassword);
-                    }
-                }, 500);
+
+                DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_retry_login, Toast.LENGTH_SHORT);
+                Util.restartApp(SignupStep2Activity.this);
+                return;
             }
+
+            mRetryHandler = new Handler();
+            mRetryHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mNetworkController.requestLogin(mEmail, mPassword);
+                }
+            }, 500);
         }
 
         @Override
