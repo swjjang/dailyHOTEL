@@ -632,6 +632,7 @@
     <string name="label_booking_view_map">길찾기</string>
     <string name="label_booking_call">문의하기</string>
     <string name="label_booking_input_review">리뷰 입력</string>
+    <string name="label_booking_completed_input_review">리뷰 완료</string>
     <string name="label_booking_reservation_information">1. 예약 정보</string>
     <string name="label_booking_payment_information">2. 결제 금액 정보</string>
     <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
