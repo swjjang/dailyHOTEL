@@ -81,7 +81,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         Util.setLocale(getApplicationContext(), Locale.KOREAN);
 
         // 버전 정보 얻기
-        VERSION = Util.getAppVersion(getApplicationContext());
+        VERSION = Util.getAppVersionCode(getApplicationContext());
 
         DailyPreference.getInstance(getApplicationContext()).setPreferenceMigration();
 

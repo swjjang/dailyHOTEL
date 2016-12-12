@@ -208,7 +208,7 @@ public class DailyPreference
         boolean isFirst = false;
 
         String firstAppVersion = getFirstAppVersion();
-        String currentAppVersion = Util.getAppVersion(context);
+        String currentAppVersion = Util.getAppVersionCode(context);
 
         if (Util.isTextEmpty(firstAppVersion) || firstAppVersion.equalsIgnoreCase(currentAppVersion))
         {
@@ -1300,7 +1300,7 @@ public class DailyPreference
 
     public String getSkipVersion()
     {
-        return getValue(mPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0");
+        return getValue(mPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "0");
     }
 
     public void setSkipVersion(String value)

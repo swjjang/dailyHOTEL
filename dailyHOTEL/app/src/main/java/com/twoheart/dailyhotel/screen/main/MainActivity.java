@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
-        String currentVersion = Util.getAppVersion(this);
+        String currentVersion = Util.getAppVersionCode(this);
         if (currentVersion.equalsIgnoreCase(version) == false)
         {
             DailyPreference.getInstance(this).setAppVersion(currentVersion);
@@ -484,7 +484,7 @@ public class MainActivity extends BaseActivity implements Constants
             return;
         }
 
-        int appVersion = Integer.parseInt(Util.getAppVersion(MainActivity.this).replace(".", ""));
+        int appVersion = Integer.parseInt(Util.getAppVersionCode(MainActivity.this).replace(".", ""));
         int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
         int forceVersionNumber = Integer.parseInt(forceVersion.replace(".", ""));
         int currentVersionNumber = Integer.parseInt(currentVersion.replace(".", ""));
@@ -926,7 +926,7 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
                     String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
-                    String currentAppVersion = Util.getAppVersion(MainActivity.this);
+                    String currentAppVersion = Util.getAppVersionCode(MainActivity.this);
 
                     if (Util.isTextEmpty(realProvinceName) == true)
                     {
@@ -973,7 +973,7 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
                     String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
-                    String currentAppVersion = Util.getAppVersion(MainActivity.this);
+                    String currentAppVersion = Util.getAppVersionCode(MainActivity.this);
 
                     if (Util.isTextEmpty(realProvinceName) == true)
                     {

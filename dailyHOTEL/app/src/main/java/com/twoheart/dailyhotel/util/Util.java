@@ -454,13 +454,13 @@ public class Util implements Constants
         return false;
     }
 
-    public static String getAppVersion(Context context)
+    public static String getAppVersionCode(Context context)
     {
         String version = null;
         try
         {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            version = packageInfo.versionName;
+            version = Integer.toString(packageInfo.versionCode);
         } catch (NameNotFoundException e)
         {
             ExLog.d(e.toString());
