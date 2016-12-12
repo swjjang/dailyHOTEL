@@ -99,7 +99,12 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         initializeAnalytics(getApplicationContext());
         Util.initializeFresco(getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
-        KakaoSDK.init(new KakaoSDKAdapter());
+
+        if (TESTING == false)
+        {
+            KakaoSDK.init(new KakaoSDKAdapter());
+        }
+
         FontManager.getInstance(getApplicationContext());
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
