@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.network.converter;
+package com.twoheart.dailyhotel.network.factory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

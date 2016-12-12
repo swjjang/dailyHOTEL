@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.network;
 
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
@@ -17,7 +15,7 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCheckServer(Object tag, Object listener);
 
     /**
      * common/ver_dual
@@ -25,7 +23,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCommonVer(Object tag, Object listener);
 
     /**
      * api/common/datetime
@@ -33,14 +31,14 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonDateTime(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCommonDateTime(Object tag, Object listener);
 
     /**
      * 나의 정보를 요청한다
      *
      * @return
      */
-    void requestUserProfile(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserProfile(Object tag, Object listener);
 
     /**
      * user/session/bonus/all
@@ -48,7 +46,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserBonus(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserBonus(Object tag, Object listener);
 
     /**
      * user/update
@@ -56,9 +54,9 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestUserInformationUpdate(Object tag, Map<String, String> params, Object listener);
 
-    void requestUserProfileBenefit(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserProfileBenefit(Object tag, Object listener);
 
     /**
      * user/check/email_auth
@@ -66,7 +64,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserCheckEmail(Object tag, String userEmail, DailyHotelJsonResponseListener listener);
+    void requestUserCheckEmail(Object tag, String userEmail, Object listener);
 
     /**
      * user/change_pw
@@ -74,7 +72,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserChangePassword(Object tag, String userEmail, DailyHotelJsonResponseListener listener);
+    void requestUserChangePassword(Object tag, String userEmail, Object listener);
 
     /**
      * api/user/information/omission;
@@ -82,7 +80,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserInformationEx(Object tag, Object listener);
 
     /**
      * api/user/information
@@ -90,7 +88,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserInformationForPayment(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserInformationForPayment(Object tag, Object listener);
 
 
     /**
@@ -99,7 +97,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserUpdateInformationForSocial(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestUserUpdateInformationForSocial(Object tag, Map<String, String> params, Object listener);
 
 
     /**
@@ -108,7 +106,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserBillingCardList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserBillingCardList(Object tag, Object listener);
 
 
     /**
@@ -117,7 +115,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserDeleteBillingCard(Object tag, String billkey, DailyHotelJsonResponseListener listener);
+    void requestUserDeleteBillingCard(Object tag, String billkey, Object listener);
 
     /**
      * /api/v3/hotels/sales
@@ -125,7 +123,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestStayList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
+    void requestStayList(Object tag, String stayParams, Object listener);
 
     /**
      * /api/v3/hotels/sales
@@ -133,7 +131,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestStaySearchList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
+    void requestStaySearchList(Object tag, String stayParams, Object listener);
 
     /**
      * @param tag
@@ -141,7 +139,7 @@ interface IDailyNetwork
      * @param text
      * @param listener
      */
-    void requestHotelSearchAutoCompleteList(Object tag, String date, int stay, String text, DailyHotelJsonResponseListener listener);
+    void requestHotelSearchAutoCompleteList(Object tag, String date, int stay, String text, Object listener);
 
     /**
      * api/sale/region/all
@@ -149,7 +147,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelRegionList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestHotelRegionList(Object tag, Object listener);
 
     /**
      * api/hotel/v1/payment/detail
@@ -157,7 +155,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelPaymentInformation(Object tag, int roomIndex, String date, int nights, DailyHotelJsonResponseListener listener);
+    void requestHotelPaymentInformation(Object tag, int roomIndex, String date, int nights, Object listener);
 
     /**
      * api/hotel/v1/sale/detail
@@ -165,7 +163,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelDetailInformation(Object tag, int index, String date, int nights, DailyHotelJsonResponseListener listener);
+    void requestHotelDetailInformation(Object tag, int index, String date, int nights, Object listener);
 
     /**
      * api/hotel/v1/payment/session/easy
@@ -173,7 +171,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestHotelPayment(Object tag, Map<String, String> params, Object listener);
 
     /**
      * api/fnb/reservation/booking/list
@@ -181,7 +179,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestBookingList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestBookingList(Object tag, Object listener);
 
     /**
      * api/fnb/reservation/booking/detail
@@ -189,7 +187,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener);
+    void requestGourmetBookingDetailInformation(Object tag, int index, Object listener);
 
     /**
      * api/fnb/reservation/booking/receipt
@@ -197,7 +195,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetReceipt(Object tag, int index, DailyHotelJsonResponseListener listener);
+    void requestGourmetReceipt(Object tag, int index, Object listener);
 
     /**
      * api/fnb/reservation/session/hidden
@@ -205,7 +203,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetHiddenBooking(Object tag, int index, DailyHotelJsonResponseListener listener);
+    void requestGourmetHiddenBooking(Object tag, int index, Object listener);
 
 
     /**
@@ -214,7 +212,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetAccountInformation(Object tag, String tid, DailyHotelJsonResponseListener listener);
+    void requestGourmetAccountInformation(Object tag, String tid, Object listener);
 
 
     /**
@@ -224,7 +222,7 @@ interface IDailyNetwork
      * @return
      */
     //
-    void requestGourmetRegionList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestGourmetRegionList(Object tag, Object listener);
 
     /**
      * api/fnb/sale/list
@@ -232,11 +230,11 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
+    void requestGourmetList(Object tag, String gourmetParams, Object listener);
 
-    void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonResponseListener listener);
+    void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, Object listener);
 
-    void requestGourmetSearchList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
+    void requestGourmetSearchList(Object tag, String gourmetParams, Object listener);
 
     /**
      * api/fnb/sale/restaurant/info
@@ -244,7 +242,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetDetailInformation(Object tag, int index, String day, DailyHotelJsonResponseListener listener);
+    void requestGourmetDetailInformation(Object tag, int index, String day, Object listener);
 
     /**
      * api/fnb/sale/ticket/payment/info
@@ -252,7 +250,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetPaymentInformation(Object tag, int index, DailyHotelJsonResponseListener listener);
+    void requestGourmetPaymentInformation(Object tag, int index, Object listener);
 
 
     /**
@@ -261,7 +259,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetCheckTicket(Object tag, int index, String day, int count, String time, DailyHotelJsonResponseListener listener);
+    void requestGourmetCheckTicket(Object tag, int index, String day, int count, String time, Object listener);
 
     /**
      * api/fnb/payment/session/easy
@@ -269,7 +267,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestGourmetPayment(Object tag, Map<String, String> params, Object listener);
 
     /**
      * reserv/mine/detail
@@ -277,7 +275,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestDepositWaitDetailInformation(Object tag, String tid, DailyHotelJsonResponseListener listener);
+    void requestDepositWaitDetailInformation(Object tag, String tid, Object listener);
 
     /**
      * api/reserv/detail
@@ -285,7 +283,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener);
+    void requestHotelBookingDetailInformation(Object tag, int index, Object listener);
 
     /**
      * api/reserv/mine/hidden
@@ -293,7 +291,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelHiddenBooking(Object tag, int index, DailyHotelJsonResponseListener listener);
+    void requestHotelHiddenBooking(Object tag, int index, Object listener);
 
     /**
      * api/reserv/receipt
@@ -301,7 +299,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelReceipt(Object tag, String index, DailyHotelJsonResponseListener listener);
+    void requestHotelReceipt(Object tag, String index, Object listener);
 
     /**
      * api/daily/event/list
@@ -309,7 +307,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestEventList(Object tag, Object listener);
 
     /**
      * api/daily/event/count
@@ -317,7 +315,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventNCouponNNoticeNewCount(Object tag, String eventLatestDate, String couponLatestDate, String noticeLatestDate, DailyHotelJsonResponseListener listener);
+    void requestEventNCouponNNoticeNewCount(Object tag, String eventLatestDate, String couponLatestDate, String noticeLatestDate, Object listener);
 
     /**
      * api/daily/event/page
@@ -325,14 +323,14 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventPageUrl(Object tag, int eventIndex, String store, DailyHotelJsonResponseListener listener);
+    void requestEventPageUrl(Object tag, int eventIndex, String store, Object listener);
 
     /**
      * 회사 정보 얻어오기
      *
      * @return
      */
-    void requestCompanyInformation(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCompanyInformation(Object tag, Object listener);
 
     /**
      * 호텔 이벤트 배너 리스트를 얻어온다
@@ -341,14 +339,14 @@ interface IDailyNetwork
      * @param place
      * @param listener
      */
-    void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener);
+    void requestEventBannerList(Object tag, String place, Object listener);
 
     /**
      * @param tag
      * @param phone
      * @param listener
      */
-    void requestDailyUserVerfication(Object tag, String phone, boolean force, DailyHotelJsonResponseListener listener);
+    void requestDailyUserVerfication(Object tag, String phone, boolean force, Object listener);
 
     /**
      * @param tag
@@ -356,7 +354,7 @@ interface IDailyNetwork
      * @param code
      * @param listener
      */
-    void requestDailyUserUpdatePhoneNumber(Object tag, String phone, String code, DailyHotelJsonResponseListener listener);
+    void requestDailyUserUpdatePhoneNumber(Object tag, String phone, String code, Object listener);
 
     /**
      * 회원 가입 step1단계 검증
@@ -365,7 +363,7 @@ interface IDailyNetwork
      * @param params
      * @param listener
      */
-    void requestSignupValidation(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestSignupValidation(Object tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
@@ -373,7 +371,7 @@ interface IDailyNetwork
      * @param phone
      * @param listener
      */
-    void requestDailyUserSignupVerfication(Object tag, String signupKey, String phone, boolean force, DailyHotelJsonResponseListener listener);
+    void requestDailyUserSignupVerfication(Object tag, String signupKey, String phone, boolean force, Object listener);
 
     /**
      * @param tag
@@ -381,42 +379,42 @@ interface IDailyNetwork
      * @param code
      * @param listener
      */
-    void requestDailyUserSignup(Object tag, String signupKey, String code, String phone, DailyHotelJsonResponseListener listener);
+    void requestDailyUserSignup(Object tag, String signupKey, String code, String phone, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestFacebookUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestFacebookUserSignup(Object tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestKakaoUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestKakaoUserSignup(Object tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestDailyUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestDailyUserSignin(Object tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestFacebookUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestFacebookUserSignin(Object tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestKakaoUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+    void requestKakaoUserSignin(Object tag, Map<String, String> params, Object listener);
 
     /**
      * /api/v3/users/coupons
@@ -425,7 +423,7 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestCouponList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, Object listener);
 
     /**
      * /api/v3/users/coupons
@@ -438,9 +436,9 @@ interface IDailyNetwork
      * @param checkOut ISO-8601
      * @param listener
      */
-    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, Object listener);
 
-    void requestCouponList(Object tag, int ticketIdx, int countOfTicket, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, int ticketIdx, int countOfTicket, Object listener);
 
     /**
      * /api/v3/users/coupons/history
@@ -449,7 +447,7 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestCouponHistoryList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestCouponHistoryList(Object tag, Object listener);
 
     /**
      * 키워드를 사용한 쿠폰 등록
@@ -458,7 +456,7 @@ interface IDailyNetwork
      * @param keyword
      * @param listener
      */
-    void requestRegistKeywordCoupon(Object tag, String keyword, DailyHotelJsonResponseListener listener);
+    void requestRegistKeywordCoupon(Object tag, String keyword, Object listener);
 
     /**
      * 혜택 알림을 받아야 하는지 알려준다.
@@ -466,7 +464,7 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestNoticeAgreement(Object tag, DailyHotelJsonResponseListener listener);
+    void requestNoticeAgreement(Object tag, Object listener);
 
     /**
      * 혜택 알림을 받아야 하는지 알려준다.
@@ -474,7 +472,7 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestNoticeAgreementResult(Object tag, boolean isAgree, DailyHotelJsonResponseListener listener);
+    void requestNoticeAgreementResult(Object tag, boolean isAgree, Object listener);
 
     /**
      * api/v1/notice/benefit - GET
@@ -482,29 +480,29 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestBenefitMessage(Object tag, DailyHotelJsonResponseListener listener);
+    void requestBenefitMessage(Object tag, Object listener);
 
     /**
      * @param tag
      * @param userCouponCode
      * @param listener
      */
-    void requestDownloadCoupon(Object tag, String userCouponCode, DailyHotelJsonResponseListener listener);
+    void requestDownloadCoupon(Object tag, String userCouponCode, Object listener);
 
-    void requestHasCoupon(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener);
+    void requestHasCoupon(Object tag, int placeIndex, String date, int nights, Object listener);
 
-    void requestHasCoupon(Object tag, int placeIndex, String date, DailyHotelJsonResponseListener listener);
+    void requestHasCoupon(Object tag, int placeIndex, String date, Object listener);
 
-    void requestCouponList(Object tag, int placeIndex, String date, int nights, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, int placeIndex, String date, int nights, Object listener);
 
-    void requestCouponList(Object tag, int placeIndex, String date, DailyHotelJsonResponseListener listener);
+    void requestCouponList(Object tag, int placeIndex, String date, Object listener);
 
     /**
      * @param tag
      * @param couponCode
      * @param listener
      */
-    void requestDownloadEventCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener);
+    void requestDownloadEventCoupon(Object tag, String couponCode, Object listener);
 
     /**
      * api/v1/notice/benefit - PUT
@@ -513,11 +511,11 @@ interface IDailyNetwork
      * @param isAgree  required
      * @param listener
      */
-    void requestUpdateBenefitAgreement(Object tag, boolean isAgree, DailyHotelJsonResponseListener listener);
+    void requestUpdateBenefitAgreement(Object tag, boolean isAgree, Object listener);
 
-    void requestUserTracking(Object tag, DailyHotelJsonResponseListener listener);
+    void requestUserTracking(Object tag, Object listener);
 
-    void requestNoticeList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestNoticeList(Object tag, Object listener);
 
     /**
      * /api/v3/hotels/sales
@@ -525,7 +523,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestRecentStayList(Object tag, String stayParams, DailyHotelJsonResponseListener listener);
+    void requestRecentStayList(Object tag, String stayParams, Object listener);
 
     /**
      * api/fnb/sale/list
@@ -533,37 +531,37 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestRecentGourmetList(Object tag, String gourmetParams, DailyHotelJsonResponseListener listener);
+    void requestRecentGourmetList(Object tag, String gourmetParams, Object listener);
 
-    void requestReceiptByEmail(Object tag, String placeType, String reservationIdx, String email, DailyHotelJsonResponseListener listener);
+    void requestReceiptByEmail(Object tag, String placeType, String reservationIdx, String email, Object listener);
 
-    void requestWishListCount(Object tag, DailyHotelJsonResponseListener listener);
+    void requestWishListCount(Object tag, Object listener);
 
-    void requestWishList(Object tag, Constants.PlaceType placeType, DailyHotelJsonResponseListener listener);
+    void requestWishList(Object tag, Constants.PlaceType placeType, Object listener);
 
-    void requestAddWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
+    void requestAddWishList(Object tag, Constants.PlaceType placeType, int placeIndex, Object listener);
 
-    void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
+    void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, Object listener);
 
-    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener);
+    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, Object listener);
 
-    void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, DailyHotelJsonResponseListener listener);
+    void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, Object listener);
 
     void requestRefund(Object tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
-        , String reasonCancel, String accountHolder, String bankAccount, String bankCode, DailyHotelJsonResponseListener listener);
+        , String reasonCancel, String accountHolder, String bankAccount, String bankCode, Object listener);
 
-    void requestBankList(Object tag, DailyHotelJsonResponseListener listener);
+    void requestBankList(Object tag, Object listener);
 
     // 리뷰
-    void requestStayReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
+    void requestStayReviewInformation(Object tag, Object listener);
 
-    void requestGourmetReviewInformation(Object tag, DailyHotelJsonResponseListener listener);
+    void requestGourmetReviewInformation(Object tag, Object listener);
 
-    void requestStayReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
+    void requestStayReviewInformation(Object tag, int reserveIdx, Object listener);
 
-    void requestGourmetReviewInformation(Object tag, int reserveIdx, DailyHotelJsonResponseListener listener);
+    void requestGourmetReviewInformation(Object tag, int reserveIdx, Object listener);
 
-    void requestAddReviewInformation(Object tag, JSONObject jsonObject, DailyJsonResponseListener listener);
+    void requestAddReviewInformation(Object tag, JSONObject jsonObject, Object listener);
 
-    void requestAddReviewDetailInformation(Object tag, JSONObject jsonObject, DailyJsonResponseListener listener);
+    void requestAddReviewDetailInformation(Object tag, JSONObject jsonObject, Object listener);
 }
