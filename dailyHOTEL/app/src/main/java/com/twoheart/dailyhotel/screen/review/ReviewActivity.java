@@ -815,7 +815,6 @@ public class ReviewActivity extends BaseActivity
                 restartExpiredSession();
             } else
             {
-                // 임시로 서버로 전송하지 않음.
                 mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
             }
         }
@@ -876,7 +875,7 @@ public class ReviewActivity extends BaseActivity
                 @Override
                 public void run()
                 {
-                    finish();
+                    mReviewLayout.hideReviewDetailAnimation();
                 }
             }, 1000);
         }
