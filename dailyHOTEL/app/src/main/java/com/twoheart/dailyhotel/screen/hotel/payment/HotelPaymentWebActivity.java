@@ -300,25 +300,48 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             { // 7.4 ISP 모듈 연동 테스트
                 if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_ISP))
                 {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
-                    view.goBack();
-                    return true;
+                    try
+                    {
+                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
+                        view.goBack();
+                        return true;
+                    } catch (ActivityNotFoundException e)
+                    {
+                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_ISP);
+                        return true;
+                    }
                 }
             } else if (url.startsWith("kftc-bankpay"))
             { // 7.9 이니시스 모듈 연동 테스트
                 if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_KFTC))
                 {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
-                    view.goBack();
-                    return true;
+                    try
+                    {
+                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
+                        view.goBack();
+                        return true;
+                    } catch (ActivityNotFoundException e)
+                    {
+                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_KFTC);
+                        return true;
+                    }
                 }
             } else if (url.startsWith("mpocket.online.ansimclick"))
             {
                 if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
                 {
-                    DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
-                    return true;
+                    try
+                    {
+                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
+                        return true;
+                    } catch (ActivityNotFoundException e)
+                    {
+                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_MPOCKET);
+                        return true;
+                    }
                 }
             } else if (url.startsWith("market") == true)
             {
