@@ -394,7 +394,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     } else
                     {
                         // 애니메이션이 끝났으나 아직 데이터가 로드 되지 않은 경우에는 프로그래스 바를 그리도록 한다.
-                        lockUI();
+                        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_SHOW_PROGRESS, 2000);
                     }
                 }
 
@@ -1259,6 +1259,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 finish();
             } finally
             {
+                mHandler.removeMessages(HANDLE_MESSAGE_SHOW_PROGRESS);
                 unLockUI();
             }
         }

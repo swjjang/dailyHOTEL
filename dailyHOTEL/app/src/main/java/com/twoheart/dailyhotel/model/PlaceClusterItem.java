@@ -20,6 +20,18 @@ public class PlaceClusterItem implements ClusterItem
         return mPosition;
     }
 
+    @Override
+    public String getTitle()
+    {
+        return null;
+    }
+
+    @Override
+    public String getSnippet()
+    {
+        return null;
+    }
+
     public Place getPlace()
     {
         return mPlace;

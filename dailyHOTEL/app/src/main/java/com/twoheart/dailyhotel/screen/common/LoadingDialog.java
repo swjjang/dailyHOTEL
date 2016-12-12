@@ -109,16 +109,28 @@ public class LoadingDialog
 
         mHandler.removeMessages(0);
 
-        if (mDialog != null && mDialog.isShowing() == false)
+        if (mDialog != null)
         {
-            mProgressBar.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
+            if (mDialog.isShowing() == true)
+            {
+                if (isShowProgress == true && mProgressBar.getVisibility() == View.INVISIBLE)
+                {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                } else if (isShowProgress == false && mProgressBar.getVisibility() == View.VISIBLE)
+                {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                }
+            } else
+            {
+                mProgressBar.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
 
-            try
-            {
-                mDialog.show();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
+                try
+                {
+                    mDialog.show();
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         }
     }
