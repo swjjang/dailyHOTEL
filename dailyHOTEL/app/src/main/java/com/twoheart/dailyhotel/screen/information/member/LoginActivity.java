@@ -868,7 +868,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         storeLoginInformation(response);
 
-                        DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
@@ -922,7 +921,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     String userIndex = storeLoginInformation(response);
 
-                    DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                     DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
 
                     // 소셜 신규 가입인 경우

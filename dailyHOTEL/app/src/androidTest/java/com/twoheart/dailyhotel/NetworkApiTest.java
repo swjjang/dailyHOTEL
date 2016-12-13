@@ -91,8 +91,6 @@ public class NetworkApiTest extends ApplicationTest
 
                             DailyPreference.getInstance(application).setAuthorization(String.format("%s %s", tokenType, accessToken));
                             DailyPreference.getInstance(application).setUserInformation(userType, email, name, birthday, recommender);
-
-                            DailyPreference.getInstance(application).setCollapsekey(null);
                             return;
                         }
                     }
