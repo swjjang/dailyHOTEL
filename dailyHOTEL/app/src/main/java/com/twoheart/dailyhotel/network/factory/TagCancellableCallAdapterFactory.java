@@ -2,13 +2,14 @@ package com.twoheart.dailyhotel.network.factory;
 
 import android.support.v4.util.ArrayMap;
 
-import com.twoheart.dailyhotel.network.TAG;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 import okhttp3.Request;
 import retrofit2.Call;
@@ -20,7 +21,7 @@ import retrofit2.Retrofit;
 public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 {
     // References to the last Call made for a given tag
-    private final ArrayMap<String, Call> mQueuedCalls;
+    private final ArrayMap<Call, String> mQueuedCalls;
 
     private TagCancellableCallAdapterFactory()
     {
@@ -32,88 +33,96 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         return new TagCancellableCallAdapterFactory();
     }
 
+    Type getCallResponseType(Type returnType)
+    {
+        if (!(returnType instanceof ParameterizedType))
+        {
+            throw new IllegalArgumentException("Call return type must be parameterized as Call<Foo> or Call<? extends Foo>");
+        }
+        return getParameterUpperBound(0, (ParameterizedType) returnType);
+    }
+
     @Override
     public CallAdapter<?> get(Type returnType, Annotation[] annotations, Retrofit retrofit)
     {
-        final CallAdapter<?> delegate = retrofit.nextCallAdapter(this, returnType, annotations);
-        final Executor callbackExecutor = retrofit.callbackExecutor();
-
-        String value = "";
-        for (Annotation annotation : annotations)
+        if (getRawType(returnType) != Call.class)
         {
-            // Checks if method registers to use cancelation logic
-            // Extracts the relative URI from Retrofit annotations
-            if (annotation instanceof TAG)
-            {
-                value = ((TAG) annotation).value();
-            }
+            return null;
         }
 
-        final String tag = value;
+        final Executor callbackExecutor = retrofit.callbackExecutor();
+        final Type responseType = getCallResponseType(returnType);
 
         return new CallAdapter<Object>()
         {
             @Override
             public Type responseType()
             {
-                return delegate.responseType();
+                return responseType;
             }
 
             @Override
             public <R> Object adapt(Call<R> call)
             {
-                return delegate.adapt(new ExecutorCallbackCall<>(callbackExecutor, call, tag, mQueuedCalls));
+                return new ExecutorCallbackCall<>(callbackExecutor, call, null, mQueuedCalls);
             }
         };
-
-        //        boolean hasTagAnnotation = false;
-        //        String value = "";
-        //        for (Annotation annotation : annotations)
-        //        {
-        //            // Checks if method registers to use cancelation logic
-        //            // Extracts the relative URI from Retrofit annotations
-        //            if (annotation instanceof TAG)
-        //            {
-        //                value = ((TAG) annotation).value();
-        //            }
-        //        }
-        //        final boolean isTagged = hasTagAnnotation;
-        //        final String tag = value;
-        //        // Delegates work to default behavior, this is how the logic
-        //        // gets injected into the rest of the Retrofit data flow
-        //        final CallAdapter<?> delegate = retrofit.nextCallAdapter(this, returnType, annotations);
-        //        // Executor that will execute the cancelations
-        //        final ExecutorService executor = retrofit.callbackExecutor()
-        //        return new CallAdapter<Object>()
-        //        {
-        //            @Override
-        //            public Type responseType()
-        //            {
-        //                return delegate.responseType();
-        //            }
-        //
-        //            @Override
-        //            public <R> Object adapt(Call<R> call)
-        //            {
-        //                // Only @TAG methods will use TaggedCall
-        //                return delegate.adapt(isTagged ? new TaggedCall<>(call, tag, mQueuedCalls, executor) : call);
-        //            }
-        //        };
     }
 
-    static final class ExecutorCallbackCall<T> implements Call<T>
+    public void cancelAll(String tag)
+    {
+        if (Util.isTextEmpty(tag) == true)
+        {
+            return;
+        }
+
+        Call call;
+
+        for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
+        {
+            if (tag.equalsIgnoreCase(entry.getValue()) == true)
+            {
+                call = entry.getKey();
+                call.cancel();
+                mQueuedCalls.remove(call);
+            }
+        }
+    }
+
+    public void cancelAll()
+    {
+        Call call;
+
+        for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
+        {
+            call = entry.getKey();
+            call.cancel();
+            mQueuedCalls.remove(call);
+        }
+
+    }
+
+    public static final class ExecutorCallbackCall<T> implements Call<T>
     {
         private final Executor callbackExecutor;
         private final Call<T> delegate;
-        private final String mTag;
-        private final ArrayMap<String, Call> mQueuedCalls;
+        private String mTag;
+        private final ArrayMap<Call, String> mQueuedCalls;
 
-        ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, ArrayMap<String, Call> queuedCalls)
+        ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, ArrayMap<Call, String> queuedCalls)
         {
             this.callbackExecutor = callbackExecutor;
             this.delegate = delegate;
             mTag = tag;
             mQueuedCalls = queuedCalls;
+
+            addQueue(tag);
+        }
+
+        public void addQueue(String tag)
+        {
+            mTag = tag;
+            mQueuedCalls.put(this, tag);
         }
 
         @Override
@@ -129,17 +138,14 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                 @Override
                 public void onResponse(Call<T> call, final Response<T> response)
                 {
-                    mQueuedCalls.re
+                    mQueuedCalls.remove(ExecutorCallbackCall.this);
+
                     callbackExecutor.execute(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            if (delegate.isCanceled())
-                            {
-                                // Emulate OkHttp's behavior of throwing/delivering an IOException on cancellation.
-                                callback.onFailure(ExecutorCallbackCall.this, new IOException("Canceled"));
-                            } else
+                            if (isCanceled() == false)
                             {
                                 callback.onResponse(ExecutorCallbackCall.this, response);
                             }
@@ -150,12 +156,17 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                 @Override
                 public void onFailure(Call<T> call, final Throwable t)
                 {
+                    mQueuedCalls.remove(ExecutorCallbackCall.this);
+
                     callbackExecutor.execute(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            callback.onFailure(ExecutorCallbackCall.this, t);
+                            if (isCanceled() == false)
+                            {
+                                callback.onFailure(ExecutorCallbackCall.this, t);
+                            }
                         }
                     });
                 }
@@ -190,96 +201,13 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         @Override
         public Call<T> clone()
         {
-            return new ExecutorCallbackCall<>(callbackExecutor, delegate.clone());
+            return new ExecutorCallbackCall<>(callbackExecutor, delegate.clone(), mTag, mQueuedCalls);
         }
 
         @Override
         public Request request()
         {
             return delegate.request();
-        }
-    }
-
-    static final class TaggedCall<T> implements Call<T>
-    {
-        private final Call<T> mDelegate;
-        private final String mTag;
-        private final ArrayMap<String, Call> mQueuedCalls;
-        private final ExecutorService mExecutor;
-
-        TaggedCall(Call<T> delegate, String tag, ArrayMap<String, Call> queuedCalls, ExecutorService executor)
-        {
-            mQueuedCalls = queuedCalls;
-            mTag = tag;
-            mDelegate = delegate;
-            mExecutor = executor;
-        }
-
-        @Override
-        public retrofit2.Response<T> execute() throws IOException
-        {
-            return mDelegate.execute();
-        }
-
-        @Override
-        public void enqueue(Callback<T> callback)
-        {
-            synchronized (mQueuedCalls)
-            {
-                // Cancel enqueued call for the same tag
-                if (mQueuedCalls.containsKey(mTag))
-                {
-                    final Call queuedCall = mQueuedCalls.get(mTag);
-                    if (queuedCall != null)
-                    {
-                        // https://github.com/square/okhttp/issues/1592
-                        // Call.cancel() is triggering StrictMode
-                        mExecutor.execute(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                queuedCall.cancel();
-                            }
-                        });
-                    }
-                    mQueuedCalls.remove(mTag);
-                }
-                // Add call to enqueued calls
-                mQueuedCalls.put(mTag, mDelegate);
-            }
-            mDelegate.enqueue(callback);
-        }
-
-        @Override
-        public boolean isExecuted()
-        {
-            return mDelegate.isExecuted();
-        }
-
-        @Override
-        public void cancel()
-        {
-            mDelegate.cancel();
-        }
-
-        @Override
-        public boolean isCanceled()
-        {
-            return mDelegate.isCanceled();
-        }
-
-        @SuppressWarnings("CloneDoesntCallSuperClone")
-        @Override
-        public Call<T> clone()
-        {
-            return new TaggedCall<>(mDelegate.clone(), mTag, mQueuedCalls, mExecutor);
-        }
-
-        @Override
-        public Request request()
-        {
-            return null;
         }
     }
 }

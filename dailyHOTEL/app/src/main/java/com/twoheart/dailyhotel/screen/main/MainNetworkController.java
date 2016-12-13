@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -19,6 +20,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import org.json.JSONObject;
 
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainNetworkController extends BaseNetworkController
 {
@@ -52,6 +56,21 @@ public class MainNetworkController extends BaseNetworkController
     {
         // 서버 상태 체크
         DailyNetworkAPI.getInstance(mContext).requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener);
+
+        DailyMobileAPI.getInstance(mContext).requestCheckServer(mNetworkTag, new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                ExLog.d(response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                ExLog.d(toString());
+            }
+        });
     }
 
     public void requestUserInformation()
@@ -342,84 +361,84 @@ public class MainNetworkController extends BaseNetworkController
                     // 호텔 평가요청
                     DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
 
-//                    String text = "{\n" +
-//                        "  \"msgCode\": 100,\n" +
-//                        "  \"msg\": \"Request success!\",\n" +
-//                        "  \"data\": {\n" +
-//                        "    \"reserveIdx\": 1283001,\n" +
-//                        "    \"requiredCommentReview\": true,\n" +
-//                        "    \"reviewItem\": {\n" +
-//                        "      \"serviceType\": \"HOTEL\",\n" +
-//                        "      \"itemIdx\": 23173,\n" +
-//                        "      \"itemName\": \"인계동 벅스79 2호점\",\n" +
-//                        "      \"baseImagePath\": \"https://img.dailyhotel.me/resources/images/\",\n" +
-//                        "      \"itemImagePath\": \"{\\\"dh_23173/\\\": [\\\"01.jpg\\\"]}\",\n" +
-//                        "      \"useStartDate\": \"2016-11-23T15:00:00+09:00\",\n" +
-//                        "      \"useEndDate\": \"2016-11-24T13:00:00+09:00\"\n" +
-//                        "    },\n" +
-//                        "    \"reviewScoreQuestions\": [\n" +
-//                        "      {\n" +
-//                        "        \"title\": \"청결\",\n" +
-//                        "        \"description\": \"방이 정말 깨끗했나요?\",\n" +
-//                        "        \"answerCode\": \"H_CLEAN\",\n" +
-//                        "        \"answerValues\": []\n" +
-//                        "      },\n" +
-//                        "      {\n" +
-//                        "        \"title\": \"위치\",\n" +
-//                        "        \"description\": \"접근성이 좋은 위치에 있나요?\",\n" +
-//                        "        \"answerCode\": \"H_LOCATION\",\n" +
-//                        "        \"answerValues\": []\n" +
-//                        "      },\n" +
-//                        "      {\n" +
-//                        "        \"title\": \"서비스\",\n" +
-//                        "        \"description\": \"직원들이 친절하고 세심했나요?\",\n" +
-//                        "        \"answerCode\": \"H_KIND\",\n" +
-//                        "        \"answerValues\": []\n" +
-//                        "      },\n" +
-//                        "      {\n" +
-//                        "        \"title\": \"시설\",\n" +
-//                        "        \"description\": \"전체적으로 시설이 좋았나요?\",\n" +
-//                        "        \"answerCode\": \"H_FACILITY\",\n" +
-//                        "        \"answerValues\": []\n" +
-//                        "      }\n" +
-//                        "    ],\n" +
-//                        "    \"reviewPickQuestions\": [\n" +
-//                        "      {\n" +
-//                        "        \"title\": \"방문 형태\",\n" +
-//                        "        \"description\": \"어떤 여행이었나요?\",\n" +
-//                        "        \"answerCode\": \"H_USE_CATEGORY\",\n" +
-//                        "        \"answerValues\": [\n" +
-//                        "          {\n" +
-//                        "            \"code\": \"H_FAMILY_CHILD\",\n" +
-//                        "            \"description\": \"가족 여행\\n(13세 이하 자녀 동반)\"\n" +
-//                        "          },\n" +
-//                        "          {\n" +
-//                        "            \"code\": \"H_FAMILY\",\n" +
-//                        "            \"description\": \"가족 여행\"\n" +
-//                        "          },\n" +
-//                        "          {\n" +
-//                        "            \"code\": \"H_BUSINESS\",\n" +
-//                        "            \"description\": \"비즈니스\"\n" +
-//                        "          },\n" +
-//                        "          {\n" +
-//                        "            \"code\": \"H_COUPLE\",\n" +
-//                        "            \"description\": \"커플 여행\"\n" +
-//                        "          },\n" +
-//                        "          {\n" +
-//                        "            \"code\": \"H_FRIEND\",\n" +
-//                        "            \"description\": \"친구와의 여행\"\n" +
-//                        "          },\n" +
-//                        "          {\n" +
-//                        "            \"code\": \"H_ALONE\",\n" +
-//                        "            \"description\": \"나홀로 여행\"\n" +
-//                        "          }\n" +
-//                        "        ]\n" +
-//                        "      }\n" +
-//                        "    ]\n" +
-//                        "  }\n" +
-//                        "}";
-//
-//                    mReviewHotelJsonResponseListener.onResponse(null, null, new JSONObject(text));
+                    //                    String text = "{\n" +
+                    //                        "  \"msgCode\": 100,\n" +
+                    //                        "  \"msg\": \"Request success!\",\n" +
+                    //                        "  \"data\": {\n" +
+                    //                        "    \"reserveIdx\": 1283001,\n" +
+                    //                        "    \"requiredCommentReview\": true,\n" +
+                    //                        "    \"reviewItem\": {\n" +
+                    //                        "      \"serviceType\": \"HOTEL\",\n" +
+                    //                        "      \"itemIdx\": 23173,\n" +
+                    //                        "      \"itemName\": \"인계동 벅스79 2호점\",\n" +
+                    //                        "      \"baseImagePath\": \"https://img.dailyhotel.me/resources/images/\",\n" +
+                    //                        "      \"itemImagePath\": \"{\\\"dh_23173/\\\": [\\\"01.jpg\\\"]}\",\n" +
+                    //                        "      \"useStartDate\": \"2016-11-23T15:00:00+09:00\",\n" +
+                    //                        "      \"useEndDate\": \"2016-11-24T13:00:00+09:00\"\n" +
+                    //                        "    },\n" +
+                    //                        "    \"reviewScoreQuestions\": [\n" +
+                    //                        "      {\n" +
+                    //                        "        \"title\": \"청결\",\n" +
+                    //                        "        \"description\": \"방이 정말 깨끗했나요?\",\n" +
+                    //                        "        \"answerCode\": \"H_CLEAN\",\n" +
+                    //                        "        \"answerValues\": []\n" +
+                    //                        "      },\n" +
+                    //                        "      {\n" +
+                    //                        "        \"title\": \"위치\",\n" +
+                    //                        "        \"description\": \"접근성이 좋은 위치에 있나요?\",\n" +
+                    //                        "        \"answerCode\": \"H_LOCATION\",\n" +
+                    //                        "        \"answerValues\": []\n" +
+                    //                        "      },\n" +
+                    //                        "      {\n" +
+                    //                        "        \"title\": \"서비스\",\n" +
+                    //                        "        \"description\": \"직원들이 친절하고 세심했나요?\",\n" +
+                    //                        "        \"answerCode\": \"H_KIND\",\n" +
+                    //                        "        \"answerValues\": []\n" +
+                    //                        "      },\n" +
+                    //                        "      {\n" +
+                    //                        "        \"title\": \"시설\",\n" +
+                    //                        "        \"description\": \"전체적으로 시설이 좋았나요?\",\n" +
+                    //                        "        \"answerCode\": \"H_FACILITY\",\n" +
+                    //                        "        \"answerValues\": []\n" +
+                    //                        "      }\n" +
+                    //                        "    ],\n" +
+                    //                        "    \"reviewPickQuestions\": [\n" +
+                    //                        "      {\n" +
+                    //                        "        \"title\": \"방문 형태\",\n" +
+                    //                        "        \"description\": \"어떤 여행이었나요?\",\n" +
+                    //                        "        \"answerCode\": \"H_USE_CATEGORY\",\n" +
+                    //                        "        \"answerValues\": [\n" +
+                    //                        "          {\n" +
+                    //                        "            \"code\": \"H_FAMILY_CHILD\",\n" +
+                    //                        "            \"description\": \"가족 여행\\n(13세 이하 자녀 동반)\"\n" +
+                    //                        "          },\n" +
+                    //                        "          {\n" +
+                    //                        "            \"code\": \"H_FAMILY\",\n" +
+                    //                        "            \"description\": \"가족 여행\"\n" +
+                    //                        "          },\n" +
+                    //                        "          {\n" +
+                    //                        "            \"code\": \"H_BUSINESS\",\n" +
+                    //                        "            \"description\": \"비즈니스\"\n" +
+                    //                        "          },\n" +
+                    //                        "          {\n" +
+                    //                        "            \"code\": \"H_COUPLE\",\n" +
+                    //                        "            \"description\": \"커플 여행\"\n" +
+                    //                        "          },\n" +
+                    //                        "          {\n" +
+                    //                        "            \"code\": \"H_FRIEND\",\n" +
+                    //                        "            \"description\": \"친구와의 여행\"\n" +
+                    //                        "          },\n" +
+                    //                        "          {\n" +
+                    //                        "            \"code\": \"H_ALONE\",\n" +
+                    //                        "            \"description\": \"나홀로 여행\"\n" +
+                    //                        "          }\n" +
+                    //                        "        ]\n" +
+                    //                        "      }\n" +
+                    //                        "    ]\n" +
+                    //                        "  }\n" +
+                    //                        "}";
+                    //
+                    //                    mReviewHotelJsonResponseListener.onResponse(null, null, new JSONObject(text));
 
                 } else
                 {

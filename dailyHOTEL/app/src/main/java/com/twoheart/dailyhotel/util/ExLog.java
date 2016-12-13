@@ -19,14 +19,14 @@ public class ExLog
     private static final boolean DEBUG = Constants.DEBUG;
 
     /**
-     * TAG
+     * CANCEL_TAG
      */
     private static final String TAG = "DAILYHOTEL";
 
     /**
      * 최종적으로 Debug 정보를 출력 및 DB에 저장<br>
      *
-     * @param tag     TAG
+     * @param tag     CANCEL_TAG
      * @param message 메시지
      * @param method  Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR,
      *                Log.ASSERT
