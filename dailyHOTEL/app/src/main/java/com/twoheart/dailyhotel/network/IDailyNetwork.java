@@ -553,7 +553,7 @@ interface IDailyNetwork
 
     void requestRemoveWishList(Object tag, Constants.PlaceType placeType, int placeIndex, DailyHotelJsonResponseListener listener);
 
-    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener);
+    void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, DailyHotelJsonResponseListener listener);
 
     void requestPolicyRefund(Object tag, int hotelReservationIdx, String transactionType, DailyHotelJsonResponseListener listener);
 
