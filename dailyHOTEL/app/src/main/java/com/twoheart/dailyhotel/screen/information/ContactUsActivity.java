@@ -127,7 +127,7 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
     {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc, DailyHotel.VERSION, Build.VERSION.RELEASE));
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc, DailyHotel.VERSION_CODE, Build.VERSION.RELEASE));
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
