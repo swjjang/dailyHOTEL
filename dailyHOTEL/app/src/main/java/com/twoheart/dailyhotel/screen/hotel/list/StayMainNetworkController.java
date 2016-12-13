@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.manager.PlaceEventBannerManager;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -58,6 +59,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                DailyAssert.assertEquals(100, msgCode);
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
@@ -84,6 +86,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
 
         private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
         {
+
             ArrayList<Province> provinceList = new ArrayList<>();
 
             try

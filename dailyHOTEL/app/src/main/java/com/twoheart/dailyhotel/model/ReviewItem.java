@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -29,13 +30,18 @@ public class ReviewItem implements Parcelable
 
     public ReviewItem(JSONObject jsonObject) throws JSONException
     {
+        DailyAssert.assertNotNull(jsonObject);
         if (jsonObject == null)
         {
             return;
         }
 
         itemIdx = jsonObject.getInt("itemIdx");
+        DailyAssert.assertNotNull(itemIdx);
+
         itemName = jsonObject.getString("itemName");
+        DailyAssert.assertNotNull(itemName);
+
         String baseImagePath = jsonObject.getString("baseImagePath");
         JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
 
@@ -48,13 +54,16 @@ public class ReviewItem implements Parcelable
             {
                 JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
                 imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+                DailyAssert.assertNotNull(imageUrl);
                 break;
             } catch (JSONException e)
             {
+                DailyAssert.fail(e.getMessage());
             }
         }
 
         String serviceType = jsonObject.getString("serviceType");
+        DailyAssert.assertNotNull(serviceType);
 
         if (Util.isTextEmpty(serviceType) == false)
         {
@@ -67,14 +76,19 @@ public class ReviewItem implements Parcelable
             } else
             {
                 ExLog.d("unKnown service type");
+                DailyAssert.fail("unKnown service type");
             }
         } else
         {
             ExLog.d("serviceType is null");
         }
 
+
         useStartDate = jsonObject.getString("useStartDate");
+        DailyAssert.assertNotNull(useStartDate);
+
         useEndDate = jsonObject.getString("useEndDate");
+        DailyAssert.assertNotNull(useEndDate);
     }
 
     public String getPlaceType()

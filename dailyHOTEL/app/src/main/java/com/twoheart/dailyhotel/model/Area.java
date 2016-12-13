@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.DailyAssert;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +28,8 @@ public class Area extends Province
         super(jsonObject, null);
 
         mProvinceIndex = jsonObject.getInt("provinceIdx");
+
+        DailyAssert.assertNotNull(mProvinceIndex);
     }
 
     public Province getProvince()

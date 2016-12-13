@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
@@ -54,6 +55,7 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                DailyAssert.assertEquals(100, msgCode);
 
                 if (msgCode == 100)
                 {
@@ -61,6 +63,9 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
 
                     long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
                     long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                    DailyAssert.assertNotNull(currentDateTime);
+                    DailyAssert.assertNotNull(dailyDateTime);
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onDateTime(currentDateTime, dailyDateTime);
                 } else

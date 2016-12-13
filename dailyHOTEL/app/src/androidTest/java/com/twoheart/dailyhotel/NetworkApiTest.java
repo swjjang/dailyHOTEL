@@ -184,13 +184,13 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.assertNull(volleyError);
+                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
             }
 
             @Override
             public void onError(Exception e)
             {
-                DailyAssert.assertNull(e);
+                DailyAssert.fail(e == null ? "" : e.getMessage());
             }
 
             @Override
@@ -251,25 +251,25 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.assertNull(volleyError);
+                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
             }
 
             @Override
             public void onError(Exception e)
             {
-                DailyAssert.assertNull(e);
+                DailyAssert.fail(e == null ? "" : e.getMessage());
             }
 
             @Override
             public void onErrorPopupMessage(int msgCode, String message)
             {
-                DailyAssert.assertNull("error : msgCode=" + msgCode + ", message=" + message);
+                DailyAssert.fail("error : msgCode=" + msgCode + ", message=" + message);
             }
 
             @Override
             public void onErrorToastMessage(String message)
             {
-                DailyAssert.assertNull("error : " + message);
+                DailyAssert.fail("error : " + message);
             }
         });
 

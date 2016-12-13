@@ -160,6 +160,9 @@ public class MainNetworkController extends BaseNetworkController
                         String title = jsonObject.getString("messageTitle");
                         String message = jsonObject.getString("messageBody");
 
+                        DailyAssert.assertNotNull(title);
+                        DailyAssert.assertNotNull(message);
+
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
                     } else
                     {
@@ -278,6 +281,7 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                DailyAssert.assertEquals(1000, msgCode);
 
                 if (msgCode == 1000 && response.has("data") == true)
                 {
@@ -292,6 +296,7 @@ public class MainNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
+                DailyAssert.fail(e.getMessage());
             }
         }
 
@@ -310,6 +315,7 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+                DailyAssert.assertEquals(100, msgCode);
 
                 if (msgCode == 100 && response.has("data") == true)
                 {
@@ -346,6 +352,7 @@ public class MainNetworkController extends BaseNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
+                    DailyAssert.assertNotNull(jsonObject);
 
                     final String userIndex = jsonObject.getString("userIdx");
                     final String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
@@ -506,10 +513,11 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-
+                DailyAssert.assertEquals(100, msgCode);
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
+                    DailyAssert.assertNotNull(dataJSONObject);
 
                     String message01 = dataJSONObject.getString("description1");
                     String message02 = dataJSONObject.getString("description2");
@@ -517,10 +525,13 @@ public class MainNetworkController extends BaseNetworkController
 
                     String message = message01 + "\n\n" + message02;
 
+                    DailyAssert.assertNotNull(message);
+
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message, isFirstTimeBuyer);
                 }
             } catch (Exception e)
             {
+                DailyAssert.fail(e.getMessage());
             }
         }
 

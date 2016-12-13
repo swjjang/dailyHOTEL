@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.manager;
 
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -60,17 +61,20 @@ public abstract class PlaceEventBannerManager
         try
         {
             int msgCode = jsonObject.getInt("msgCode");
+            DailyAssert.assertEquals(100, msgCode);
 
             if (msgCode == 100)
             {
                 JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+                DailyAssert.assertNotNull(dataJSONObject);
 
                 String baseUrl = dataJSONObject.getString("imgUrl");
+                DailyAssert.assertNotNull(baseUrl);
 
                 JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
 
                 int length = jsonArray.length();
-
+                DailyAssert.assertTrue("has EventBanner", length > 0);
                 if (length > 0)
                 {
                     eventBannerList = new ArrayList<>();

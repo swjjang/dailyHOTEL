@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -36,6 +37,7 @@ public class Review implements Parcelable
 
     public Review(JSONObject jsonObject) throws JSONException
     {
+        DailyAssert.assertNotNull(jsonObject);
         if (jsonObject == null)
         {
             return;
@@ -43,11 +45,16 @@ public class Review implements Parcelable
 
         reviewAllCount = 0;
         reserveIdx = jsonObject.getInt("reserveIdx");
+        DailyAssert.assertNotNull(reserveIdx);
+
         requiredCommentReview = jsonObject.getBoolean("requiredCommentReview");
 
         if (requiredCommentReview == true)
         {
             reviewAllCount++;
+            DailyAssert.assertNotSame(0, reviewAllCount);
+        } else {
+            DailyAssert.assertEquals(0, reviewAllCount);
         }
 
         if (jsonObject.has("reviewItem") == true && jsonObject.isNull("reviewItem") == false)

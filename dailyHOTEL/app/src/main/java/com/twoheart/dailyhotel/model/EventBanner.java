@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -17,11 +18,13 @@ public class EventBanner
     public EventBanner(JSONObject jsonObject, String url) throws Exception
     {
         name = jsonObject.getString("name");
+        DailyAssert.assertNotNull(name);
 
         if (jsonObject.isNull("linkUrl") == false)
         {
             // 웹링크인 경우
             webLink = jsonObject.getString("linkUrl");
+            DailyAssert.assertNotNull(webLink);
         } else
         {
             // 딥링크인 경우
@@ -37,12 +40,16 @@ public class EventBanner
             {
                 throw new NullPointerException();
             }
+            DailyAssert.assertNotNull(index);
 
             checkInTime = jsonObject.getLong("dateCheckIn");
             nights = jsonObject.getInt("nights");
+            DailyAssert.assertNotNull(checkInTime);
+            DailyAssert.assertNotNull(nights);
         }
 
         imageUrl = url + jsonObject.getString("imagePath");
+        DailyAssert.assertNotNull(imageUrl);
     }
 
     public boolean isDeepLink()
