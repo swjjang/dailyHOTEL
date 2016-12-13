@@ -129,7 +129,8 @@ public class StayListFragment extends PlaceListFragment
         {
             mLoadMorePageIndex = page;
             mIsLoadMoreFlag = true;
-        } else {
+        } else
+        {
             mIsLoadMoreFlag = false;
         }
 

@@ -67,7 +67,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void handleMessage(Message msg)
         {
-            switch(msg.what)
+            switch (msg.what)
             {
                 case HANDLE_MESSAGE_SHOW_PROGRESS:
                     lockUI();

@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Util;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 

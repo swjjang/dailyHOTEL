@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -33,8 +35,10 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -161,6 +165,14 @@ public class ReviewActivity extends BaseActivity
         hideReviewDialog();
 
         super.onDestroy();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -390,7 +402,13 @@ public class ReviewActivity extends BaseActivity
         }
 
         // 타이틀
-        titleTextView.setText(getString(R.string.message_review_title, reviewItem.itemName));
+        String title = getString(R.string.message_review_title, reviewItem.itemName);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
+        spannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(this).getRegularTypeface()),//
+            title.lastIndexOf('\'') + 1, title.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        titleTextView.setText(spannableStringBuilder);
 
         try
         {
@@ -443,8 +461,8 @@ public class ReviewActivity extends BaseActivity
         final View goodEmoticonDimView = view.findViewById(R.id.goodEmoticonDimView);
 
         // 텍스트
-        final View badEmoticonTextView = view.findViewById(R.id.badEmoticonTextView);
-        final View goodEmoticonTextView = view.findViewById(R.id.goodEmoticonTextView);
+        final TextView badEmoticonTextView = (TextView) view.findViewById(R.id.badEmoticonTextView);
+        final TextView goodEmoticonTextView = (TextView) view.findViewById(R.id.goodEmoticonTextView);
 
         goodEmoticonView.setOnClickListener(new View.OnClickListener()
         {
@@ -483,6 +501,7 @@ public class ReviewActivity extends BaseActivity
                 mDailyEmoticonImageView[0].stopAnimation();
                 badEmoticonDimView.setVisibility(View.VISIBLE);
                 goodEmoticonTextView.setSelected(true);
+                goodEmoticonTextView.setTypeface(FontManager.getInstance(ReviewActivity.this).getMediumTypeface());
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
@@ -547,6 +566,7 @@ public class ReviewActivity extends BaseActivity
                 mDailyEmoticonImageView[1].stopAnimation();
                 goodEmoticonDimView.setVisibility(View.VISIBLE);
                 badEmoticonTextView.setSelected(true);
+                badEmoticonTextView.setTypeface(FontManager.getInstance(ReviewActivity.this).getMediumTypeface());
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);

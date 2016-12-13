@@ -32,7 +32,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     private int mReviewScore; // min : 1 ~ max : 5
     private OnScoreClickListener mOnScoreClickListener;
     private AnimatorSet mAnimatorSet;
-    private TextView mResultTextView;
+    private DailyTextView mResultTextView;
 
     public interface OnScoreClickListener
     {
@@ -96,7 +96,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             dailyEmoticonImageView.setOnClickListener(this);
         }
 
-        mResultTextView = (TextView) view.findViewById(R.id.resultTextView);
+        mResultTextView = (DailyTextView) view.findViewById(R.id.resultTextView);
 
         RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(Util.dpToPx(mContext, 96), Util.dpToPx(mContext, 24));
         resultLayoutParams.bottomMargin = cardHeight * 18 / 100;

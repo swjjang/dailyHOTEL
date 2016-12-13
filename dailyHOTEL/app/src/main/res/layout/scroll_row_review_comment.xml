@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/titleTextView"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:text="@string/message_review_comment_description"
         android:textColor="@color/default_text_c323232"

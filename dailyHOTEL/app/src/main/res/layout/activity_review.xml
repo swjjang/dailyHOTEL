@@ -57,6 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/toolbarTitle"
+                android:layout_marginTop="1dp"
                 android:alpha="0"
                 android:gravity="center_horizontal"
                 android:textColor="@color/white"
@@ -85,6 +86,8 @@
         android:id="@+id/placeNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="57dp"
         android:ellipsize="end"
         android:gravity="center_horizontal"
@@ -98,7 +101,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/placeNameTextView"
-        android:layout_marginTop="2dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="12dp"/>
@@ -126,7 +131,10 @@
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true">
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <View
             android:layout_width="match_parent"
