@@ -29,7 +29,7 @@
     <string name="label_daily_kakaotalk">데일리 카카오톡 문의</string>
     <string name="label_restaurant_direct_phone">레스토랑 직접 전화 문의</string>
     <string name="label_hotel_reservation_phone">호텔 전화 문의(예약 관련)</string>
-    <string name="label_hotel_front_phone">호텔 전화 문의(호텔 관련)</string>
+    <string name="label_hotel_front_phone">호텔 전화 문의(이용 관련)</string>
     <string name="label_friend">친구</string>
     <string name="label_domestic">국내</string>
     <string name="label_global">해외</string>
