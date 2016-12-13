@@ -33,9 +33,14 @@ import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayAutoRefundActivity extends BaseActivity
 {
@@ -807,7 +812,7 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StayAutoRefundActivity.this.onError(e);
         }
@@ -822,6 +827,12 @@ public class StayAutoRefundActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             StayAutoRefundActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

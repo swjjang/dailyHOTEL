@@ -19,7 +19,12 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StaySearchFragment extends PlaceSearchFragment
 {
@@ -362,7 +367,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             mBaseActivity.onError(e);
@@ -380,6 +385,12 @@ public class StaySearchFragment extends PlaceSearchFragment
         {
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

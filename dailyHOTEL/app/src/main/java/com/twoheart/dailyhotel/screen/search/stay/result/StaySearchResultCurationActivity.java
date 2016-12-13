@@ -20,7 +20,12 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONObject;
+
 import java.net.URLDecoder;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
@@ -242,7 +247,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StaySearchResultCurationActivity.this.onError(e);
         }
@@ -257,6 +262,12 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         public void onErrorToastMessage(String message)
         {
             StaySearchResultCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

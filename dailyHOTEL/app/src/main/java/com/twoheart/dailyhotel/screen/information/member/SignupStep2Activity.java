@@ -25,6 +25,11 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class SignupStep2Activity extends BaseActivity
 {
     public static final int VERIFY_PHONE_NUMBER_COUNT = 4;
@@ -431,7 +436,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             SignupStep2Activity.this.onError(e);
         }
@@ -446,6 +451,12 @@ public class SignupStep2Activity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             SignupStep2Activity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

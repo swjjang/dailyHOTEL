@@ -15,7 +15,7 @@ interface IDailyNetwork
      * @param tag
      * @param listener
      */
-    void requestCheckServer(String tag, Object listener);
+    void requestStatusServer(String tag, Object listener);
 
     /**
      * common/ver_dual
@@ -23,7 +23,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonVer(String tag, Object listener);
+    void requestCommonVersion(String tag, Object listener);
 
     /**
      * api/common/datetime

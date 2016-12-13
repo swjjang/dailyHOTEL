@@ -30,6 +30,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
@@ -41,6 +42,11 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
 {
@@ -108,6 +114,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         } finally
         {
             DailyNetworkAPI.getInstance(this).cancelAll();
+
+            DailyMobileAPI.getInstance(this).cancelAll(this);
         }
     }
 
@@ -317,6 +325,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         // 현재 Activity에 등록된 Request를 취소한다.
         DailyNetworkAPI.getInstance(this).cancelAll(mNetworkTag);
+        DailyMobileAPI.getInstance(this).cancelAll(this, mNetworkTag);
+
         if (mDialog != null && mDialog.isShowing())
         {
             mDialog.dismiss();
@@ -378,7 +388,38 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         onError();
     }
 
-    public void onError(Exception e)
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+    {
+        unLockUI();
+
+        if (response != null && response.code() == 401)
+        {
+            DailyPreference.getInstance(this).clear();
+
+            try
+            {
+                LoginManager.getInstance().logOut();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            try
+            {
+                UserManagement.requestLogout(null);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            restartExpiredSession();
+            return;
+        }
+
+        onError();
+    }
+
+    public void onError(Throwable e)
     {
         releaseUiComponent();
 

@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class ReviewActivity extends BaseActivity
 {
     private static final int REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT = 100;
@@ -887,7 +890,7 @@ public class ReviewActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             ReviewActivity.this.onError(e);
         }
@@ -902,6 +905,12 @@ public class ReviewActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             ReviewActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

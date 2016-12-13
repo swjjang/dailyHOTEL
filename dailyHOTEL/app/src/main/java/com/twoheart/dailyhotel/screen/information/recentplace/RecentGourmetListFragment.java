@@ -21,8 +21,13 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -132,7 +137,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             mBaseActivity.onError(e);
@@ -150,6 +155,12 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         {
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 

@@ -41,10 +41,15 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -776,7 +781,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             mDelayTimeHandler.removeMessages(0);
             unLockUI();
@@ -800,6 +805,12 @@ public class MainActivity extends BaseActivity implements Constants
             unLockUI();
 
             MainActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
 
         @Override

@@ -21,8 +21,13 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetListFragment extends PlaceListFragment
 {
@@ -258,7 +263,7 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             if (DEBUG == false && e != null)
             {
@@ -281,6 +286,12 @@ public class GourmetListFragment extends PlaceListFragment
         {
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("message : " + message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

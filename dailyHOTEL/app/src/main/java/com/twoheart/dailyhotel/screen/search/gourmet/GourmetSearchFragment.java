@@ -19,7 +19,12 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
@@ -335,7 +340,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             mBaseActivity.onError(e);
@@ -353,6 +358,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         {
             unLockUI();
             mBaseActivity.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

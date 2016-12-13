@@ -55,22 +55,9 @@ public class MainNetworkController extends BaseNetworkController
     protected void requestCheckServer()
     {
         // 서버 상태 체크
-        DailyNetworkAPI.getInstance(mContext).requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener);
+        //        DailyNetworkAPI.getInstance(mContext).requestStatusServer(mNetworkTag, mStatusHealthCheckJsonResponseListener);
 
-        DailyMobileAPI.getInstance(mContext).requestCheckServer(mNetworkTag, new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                ExLog.d(response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                ExLog.d(toString());
-            }
-        });
+        DailyMobileAPI.getInstance(mContext).requestStatusServer(mNetworkTag, mStatusCallback);
     }
 
     public void requestUserInformation()
@@ -79,44 +66,81 @@ public class MainNetworkController extends BaseNetworkController
     }
 
     /**
-     * 이벤트가 있는지를 요청한다
+     * 이벤트가 있는지를 요청한다. 실패 하더라도 무시한다.
      */
     protected void requestCommonDatetime()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<JSONObject>()
         {
             @Override
-            public void onErrorResponse(VolleyError volleyError)
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
             {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
             }
 
             @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                try
-                {
-                    int msgCode = response.getInt("msgCode");
-
-                    if (msgCode == 100)
-                    {
-                        JSONObject dataJSONObject = response.getJSONObject("data");
-
-                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
-                    } else
-                    {
-                        String message = response.getString("msg");
-
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
             }
         });
+
+
+//        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
+//        {
+//            @Override
+//            public void onErrorResponse(VolleyError volleyError)
+//            {
+//            }
+//
+//            @Override
+//            public void onResponse(String url, Map<String, String> params, JSONObject response)
+//            {
+//                try
+//                {
+//                    int msgCode = response.getInt("msgCode");
+//
+//                    if (msgCode == 100)
+//                    {
+//                        JSONObject dataJSONObject = response.getJSONObject("data");
+//
+//                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+//                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
+//                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
+//
+//                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
+//                    } else
+//                    {
+//                        String message = response.getString("msg");
+//
+//                    }
+//                } catch (Exception e)
+//                {
+//                    ExLog.d(e.toString());
+//                }
+//            }
+//        });
     }
 
     protected void requestEventNCouponNNoticeNewCount(String lastEventTime, String lastCouponTime, String lastNoticeTime)
@@ -131,7 +155,8 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestVersion()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener);
+        //        DailyNetworkAPI.getInstance(mContext).requestCommonVersion(mNetworkTag, mAppVersionJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestCommonVersion(mNetworkTag, mCommonVersionCallback);
     }
 
     protected void requestReviewGourmet()
@@ -149,94 +174,202 @@ public class MainNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAgree, mNoticeAgreementResultJsonResponseListener);
     }
 
-    private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback<JSONObject> mStatusCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 200)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isSuspend = jsonObject.getBoolean("isSuspend");
+                    int msgCode = responseJSONObject.getInt("msg_code");
 
-                    if (isSuspend == true)
+                    if (msgCode == 200)
                     {
-                        String title = jsonObject.getString("messageTitle");
-                        String message = jsonObject.getString("messageBody");
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
+                        boolean isSuspend = dataJSONObject.getBoolean("isSuspend");
+
+                        if (isSuspend == true)
+                        {
+                            String title = dataJSONObject.getString("messageTitle");
+                            String message = dataJSONObject.getString("messageBody");
+
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
+                        } else
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
+                        }
                     } else
                     {
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
                     }
+                } catch (Exception e)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.d(e.toString());
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
         }
     };
 
-    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                int msgCode = response.getInt("msg_code");
+    //
+    //                if (msgCode == 200)
+    //                {
+    //                    JSONObject jsonObject = response.getJSONObject("data");
+    //
+    //                    boolean isSuspend = jsonObject.getBoolean("isSuspend");
+    //
+    //                    if (isSuspend == true)
+    //                    {
+    //                        String title = jsonObject.getString("messageTitle");
+    //                        String message = jsonObject.getString("messageBody");
+    //
+    //                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
+    //                    } else
+    //                    {
+    //                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
+    //                    }
+    //                }
+    //            } catch (Exception e)
+    //            {
+    //                ExLog.d(e.toString());
+    //            }
+    //        }
+    //
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
+    //        }
+    //    };
+
+    private retrofit2.Callback<JSONObject> mCommonVersionCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    String maxVersionName;
-                    String minVersionName;
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    switch (Constants.RELEASE_STORE)
+                    if (msgCode == 100)
                     {
-                        case T_STORE:
-                            maxVersionName = dataJSONObject.getString("tstoreMax");
-                            minVersionName = dataJSONObject.getString("tstoreMin");
-                            break;
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        case PLAY_STORE:
-                        default:
-                            maxVersionName = dataJSONObject.getString("playMax");
-                            minVersionName = dataJSONObject.getString("playMin");
-                            break;
+                        String maxVersionName;
+                        String minVersionName;
+
+                        switch (Constants.RELEASE_STORE)
+                        {
+                            case T_STORE:
+                                maxVersionName = dataJSONObject.getString("tstoreMax");
+                                minVersionName = dataJSONObject.getString("tstoreMin");
+                                break;
+
+                            case PLAY_STORE:
+                            default:
+                                maxVersionName = dataJSONObject.getString("playMax");
+                                minVersionName = dataJSONObject.getString("playMin");
+                                break;
+                        }
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
-                } else
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+            mOnNetworkControllerListener.onError(t);
         }
     };
+
+    //    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                int msgCode = response.getInt("msgCode");
+    //
+    //                if (msgCode == 100)
+    //                {
+    //                    JSONObject dataJSONObject = response.getJSONObject("data");
+    //
+    //                    String maxVersionName;
+    //                    String minVersionName;
+    //
+    //                    switch (Constants.RELEASE_STORE)
+    //                    {
+    //                        case T_STORE:
+    //                            maxVersionName = dataJSONObject.getString("tstoreMax");
+    //                            minVersionName = dataJSONObject.getString("tstoreMin");
+    //                            break;
+    //
+    //                        case PLAY_STORE:
+    //                        default:
+    //                            maxVersionName = dataJSONObject.getString("playMax");
+    //                            minVersionName = dataJSONObject.getString("playMin");
+    //                            break;
+    //                    }
+    //
+    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
+    //                } else
+    //                {
+    //                    String message = response.getString("msg");
+    //
+    //                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+    //                }
+    //            } catch (Exception e)
+    //            {
+    //                mOnNetworkControllerListener.onError(e);
+    //            }
+    //        }
+    //
+    //        @Override
+    //        public void onErrorResponse(VolleyError volleyError)
+    //        {
+    //            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+    //        }
+    //    };
 
     private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {

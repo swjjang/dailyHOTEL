@@ -22,11 +22,11 @@ import retrofit2.http.Url;
 public interface DailyMobileService
 {
     @GET()
-    Call<JSONObject> requestCheckServer(@Url String url);
+    Call<JSONObject> requestStatusServer(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/common/version")
-    Call<JSONObject> requestCommonVer();
+    Call<JSONObject> requestCommonVersion();
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/common/datetime")

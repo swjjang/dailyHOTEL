@@ -27,7 +27,12 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class AddProfileSocialActivity extends BaseActivity
 {
@@ -483,7 +488,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             AddProfileSocialActivity.this.onError(e);
         }
@@ -498,6 +503,12 @@ public class AddProfileSocialActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             AddProfileSocialActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

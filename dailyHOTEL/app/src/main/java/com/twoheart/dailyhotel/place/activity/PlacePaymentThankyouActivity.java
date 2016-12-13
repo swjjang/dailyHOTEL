@@ -21,7 +21,12 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class PlacePaymentThankyouActivity extends BaseActivity implements OnClickListener
 {
@@ -204,7 +209,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             // do nothing
         }
@@ -219,6 +224,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         public void onErrorToastMessage(String message)
         {
             // do nothing
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

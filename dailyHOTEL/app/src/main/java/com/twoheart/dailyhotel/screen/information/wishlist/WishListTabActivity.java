@@ -23,8 +23,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -433,7 +438,7 @@ public class WishListTabActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             WishListTabActivity.this.onError(e);
         }
@@ -449,6 +454,12 @@ public class WishListTabActivity extends BaseActivity
         {
             WishListTabActivity.this.onErrorToastMessage(message);
             finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

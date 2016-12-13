@@ -60,6 +60,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class StayDetailActivity extends PlaceDetailActivity
 {
     private RoomInformation mSelectedRoomInformation;
@@ -1460,7 +1463,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onError(e);
@@ -1487,6 +1490,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorToastMessage(message);
             finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

@@ -23,8 +23,13 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetRegionListActivity extends PlaceRegionListActivity
 {
@@ -271,7 +276,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             GourmetRegionListActivity.this.onError(e);
@@ -289,6 +294,12 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         {
             unLockUI();
             GourmetRegionListActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

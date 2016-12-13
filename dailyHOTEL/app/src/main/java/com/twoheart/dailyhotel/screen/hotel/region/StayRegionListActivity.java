@@ -28,9 +28,14 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayRegionListActivity extends PlaceRegionListActivity
 {
@@ -519,7 +524,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             StayRegionListActivity.this.onError(e);
@@ -537,6 +542,12 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         {
             unLockUI();
             StayRegionListActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

@@ -47,10 +47,15 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
@@ -640,7 +645,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             mBaseActivity.onError(e);
         }
@@ -655,6 +660,12 @@ public class GourmetMainFragment extends PlaceMainFragment
         public void onErrorToastMessage(String message)
         {
             mBaseActivity.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
 
         private boolean processDeepLinkByDateTime(BaseActivity baseActivity)

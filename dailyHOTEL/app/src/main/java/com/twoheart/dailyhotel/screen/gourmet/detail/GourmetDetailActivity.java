@@ -59,6 +59,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
     private TicketInformation mSelectedTicketInformation;
@@ -1406,7 +1409,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onError(e);
@@ -1434,6 +1437,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

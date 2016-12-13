@@ -46,9 +46,14 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayMainFragment extends PlaceMainFragment
 {
@@ -737,7 +742,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StayMainFragment.this.onError(e);
         }
@@ -752,6 +757,12 @@ public class StayMainFragment extends PlaceMainFragment
         public void onErrorToastMessage(String message)
         {
             StayMainFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
 
         private boolean processDeepLinkByDateTime(BaseActivity baseActivity)

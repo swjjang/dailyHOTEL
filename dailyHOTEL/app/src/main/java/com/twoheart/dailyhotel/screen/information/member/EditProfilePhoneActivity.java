@@ -16,6 +16,11 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class EditProfilePhoneActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
@@ -315,7 +320,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             EditProfilePhoneActivity.this.onError(e);
         }
@@ -330,6 +335,12 @@ public class EditProfilePhoneActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             EditProfilePhoneActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

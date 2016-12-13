@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -37,11 +38,12 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         }
 
         DailyNetworkAPI.getInstance(baseActivity).cancelAll(mNetworkTag);
+        DailyMobileAPI.getInstance(baseActivity).cancelAll(baseActivity, mNetworkTag);
 
         super.onDestroy();
     }
 
-    public void onError(Exception e)
+    public void onError(Throwable e)
     {
         unLockUI();
 

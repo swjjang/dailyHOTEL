@@ -41,6 +41,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class InformationFragment extends BaseFragment implements Constants
 {
     private InformationLayout mInformationLayout;
@@ -892,7 +897,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             InformationFragment.this.onError(e);
         }
@@ -907,6 +912,12 @@ public class InformationFragment extends BaseFragment implements Constants
         public void onErrorToastMessage(String message)
         {
             InformationFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

@@ -16,7 +16,12 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BonusActivity extends BaseActivity
 {
@@ -211,7 +216,7 @@ public class BonusActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             BonusActivity.this.onError(e);
         }
@@ -228,6 +233,12 @@ public class BonusActivity extends BaseActivity
             BonusActivity.this.onErrorToastMessage(message);
 
             finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

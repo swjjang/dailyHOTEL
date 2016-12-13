@@ -29,6 +29,11 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class ProfileActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_EDIT_PROFILE = 1;
@@ -380,7 +385,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             ProfileActivity.this.onError(e);
         }
@@ -395,6 +400,12 @@ public class ProfileActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             ProfileActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

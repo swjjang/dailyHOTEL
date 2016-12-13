@@ -11,8 +11,13 @@ import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchResultListFragment extends GourmetListFragment
 {
@@ -110,7 +115,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             GourmetSearchResultListFragment.this.onError(e);
         }
@@ -125,6 +130,12 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         public void onErrorToastMessage(String message)
         {
             GourmetSearchResultListFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

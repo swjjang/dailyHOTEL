@@ -14,8 +14,13 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 import static com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity.INTENT_EXTRA_DATA_CALL_BY_SCREEN;
 
@@ -231,7 +236,7 @@ public class RegisterCouponActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             RegisterCouponActivity.this.onError(e);
         }
@@ -246,6 +251,12 @@ public class RegisterCouponActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             RegisterCouponActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
 
     };

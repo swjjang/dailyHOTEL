@@ -45,9 +45,14 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -844,7 +849,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
             if (baseActivity != null && baseActivity.isFinishing() == false)
@@ -881,6 +886,12 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
             {
                 DailyToast.showToast(getActivity(), message, Toast.LENGTH_LONG);
             }
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

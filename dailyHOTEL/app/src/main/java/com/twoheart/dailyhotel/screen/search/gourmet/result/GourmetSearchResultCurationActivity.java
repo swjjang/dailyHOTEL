@@ -18,7 +18,12 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONObject;
+
 import java.net.URLDecoder;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
@@ -225,7 +230,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             GourmetSearchResultCurationActivity.this.onError(e);
         }
@@ -240,6 +245,12 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         public void onErrorToastMessage(String message)
         {
             GourmetSearchResultCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }

@@ -23,8 +23,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -359,7 +364,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
 
         @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             RecentPlacesTabActivity.this.onError(e);
         }
@@ -375,6 +380,12 @@ public class RecentPlacesTabActivity extends BaseActivity
         {
             RecentPlacesTabActivity.this.onErrorToastMessage(message);
             finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+
         }
     };
 }
