@@ -3,12 +3,15 @@ package com.twoheart.dailyhotel;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainNetworkController;
 import com.twoheart.dailyhotel.screen.main.MainNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
@@ -32,6 +35,8 @@ public class NetworkApiTest extends ApplicationTest
     protected static final String TAG = NetworkApiTest.class.getSimpleName();
 
     protected SaleTime mSaleTime;
+    protected StayCuration mStayCuration;
+    protected GourmetCuration mGourmetCuration;
 
 
     public NetworkApiTest()
@@ -43,6 +48,9 @@ public class NetworkApiTest extends ApplicationTest
     protected void setUp() throws Exception
     {
         super.setUp();
+
+        mSaleTime = new SaleTime();
+        mStayCuration = new StayCuration();
     }
 
     public void testLoginByDailyUser()
@@ -187,7 +195,11 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
             {
-                mSaleTime = new SaleTime();
+                if (mSaleTime == null)
+                {
+                    mSaleTime = new SaleTime();
+                }
+
                 mSaleTime.setCurrentTime(currentDateTime);
                 //                mSaleTime.setDailyTime(dailyDateTime);
                 mSaleTime.setOffsetDailyDay(0);
@@ -242,7 +254,11 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onDateTime(long currentDateTime, long dailyDateTime)
             {
-                mSaleTime = new SaleTime();
+                if (mSaleTime == null)
+                {
+                    mSaleTime = new SaleTime();
+                }
+
                 mSaleTime.setCurrentTime(currentDateTime);
                 mSaleTime.setDailyTime(dailyDateTime);
                 mSaleTime.setOffsetDailyDay(0);
@@ -251,13 +267,19 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onEventBanner(List<EventBanner> eventBannerList)
             {
-
+                DailyAssert.assertNotNull(eventBannerList);
             }
 
             @Override
             public void onRegionList(List<Province> provinceList, List<Area> areaList)
             {
+                if (provinceList == null || areaList == null)
+                {
+                    return;
+                }
 
+                mStayCuration = new StayCuration();
+                mStayCuration.setProvince(provinceList.get(0));
             }
 
             @Override
@@ -290,5 +312,72 @@ public class NetworkApiTest extends ApplicationTest
         stayMainNetworkController.requestRegionList();
 
         stayMainNetworkController.requestEventBanner();
+    }
+
+    public void testGourmetMainNetworkController()
+    {
+        GourmetMainNetworkController gourmetMainNetworkController = new GourmetMainNetworkController(application, TAG, new GourmetMainNetworkController.OnNetworkControllerListener()
+        {
+            @Override
+            public void onDateTime(long currentDateTime, long dailyDateTime)
+            {
+                if (mSaleTime == null)
+                {
+                    mSaleTime = new SaleTime();
+                }
+
+                mSaleTime.setCurrentTime(currentDateTime);
+                mSaleTime.setDailyTime(dailyDateTime);
+                mSaleTime.setOffsetDailyDay(0);
+            }
+
+            @Override
+            public void onEventBanner(List<EventBanner> eventBannerList)
+            {
+                DailyAssert.assertNotNull(eventBannerList);
+            }
+
+            @Override
+            public void onRegionList(List<Province> provinceList, List<Area> areaList)
+            {
+                if (provinceList == null || areaList == null)
+                {
+                    return;
+                }
+
+                mGourmetCuration = new GourmetCuration();
+                mGourmetCuration.setProvince(provinceList.get(0));
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                DailyAssert.fail(e == null ? "" : e.getMessage());
+            }
+
+            @Override
+            public void onErrorPopupMessage(int msgCode, String message)
+            {
+                DailyAssert.fail("error : msgCode=" + msgCode + ", message=" + message);
+            }
+
+            @Override
+            public void onErrorToastMessage(String message)
+            {
+                DailyAssert.fail("error : " + message);
+            }
+        });
+
+        gourmetMainNetworkController.requestDateTime();
+
+        gourmetMainNetworkController.requestRegionList();
+
+        gourmetMainNetworkController.requestEventBanner();
     }
 }

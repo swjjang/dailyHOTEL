@@ -36,6 +36,8 @@ public class Province implements Parcelable
 
     public Province(JSONObject jsonObject, String url) throws JSONException
     {
+        DailyAssert.assertNotNull(jsonObject);
+
         index = jsonObject.getInt("idx");
         name = jsonObject.getString("name");
 

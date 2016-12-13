@@ -63,6 +63,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
+                    DailyAssert.assertNotNull(dataJSONObject);
 
                     JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
                     ArrayList<Province> provinceList = makeProvinceList(provinceArray);
@@ -86,6 +87,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
 
         private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
         {
+            DailyAssert.assertNotNull(jsonArray);
 
             ArrayList<Province> provinceList = new ArrayList<>();
 
