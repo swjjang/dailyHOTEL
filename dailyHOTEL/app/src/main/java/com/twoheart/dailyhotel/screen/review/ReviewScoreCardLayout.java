@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
@@ -32,7 +33,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     private int mReviewScore; // min : 1 ~ max : 5
     private OnScoreClickListener mOnScoreClickListener;
     private AnimatorSet mAnimatorSet;
-    private TextView mResultTextView;
+    private DailyTextView mResultTextView;
 
     public interface OnScoreClickListener
     {
@@ -96,7 +97,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             dailyEmoticonImageView.setOnClickListener(this);
         }
 
-        mResultTextView = (TextView) view.findViewById(R.id.resultTextView);
+        mResultTextView = (DailyTextView) view.findViewById(R.id.resultTextView);
 
         RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(Util.dpToPx(mContext, 96), Util.dpToPx(mContext, 24));
         resultLayoutParams.bottomMargin = cardHeight * 18 / 100;
@@ -105,6 +106,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
         mResultTextView.setLayoutParams(resultLayoutParams);
+        mResultTextView.setTypeface(FontManager.getInstance(context).getRegularTypeface());
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)
@@ -278,6 +280,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         setEnabled(true);
 
         mResultTextView.setSelected(true);
+        mResultTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
 
         switch (emoticonView.getId())
         {
