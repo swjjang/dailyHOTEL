@@ -30,6 +30,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     private static volatile DailyHotel mInstance = null;
     private static volatile Activity mCurrentActivity;
     public static String VERSION_CODE;
+    public static String VERSION;
     public static String AUTHORIZATION;
     public static String GOOGLE_ANALYTICS_CLIENT_ID;
 
@@ -82,6 +83,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
         // 버전 정보 얻기
         VERSION_CODE = Util.getAppVersionCode(getApplicationContext());
+        VERSION = Util.getAppVersionName(getApplicationContext());
 
         DailyPreference.getInstance(getApplicationContext()).setPreferenceMigration();
 

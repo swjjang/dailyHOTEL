@@ -74,7 +74,8 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
-        headerMap.put("App-Version", DailyHotel.VERSION_CODE);
+        headerMap.put("App-Version", DailyHotel.VERSION);
+        headerMap.put("App-VersionCode", DailyHotel.VERSION_CODE);
         headerMap.put("Authorization", DailyHotel.AUTHORIZATION);
         headerMap.put("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
 

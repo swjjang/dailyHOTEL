@@ -933,7 +933,8 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 Request request = new Request.Builder()//
                     .url(mUrl)//
                     .addHeader("Os-Type", "android")//
-                    .addHeader("App-Version", DailyHotel.VERSION_CODE)//
+                    .addHeader("App-Version", DailyHotel.VERSION)//
+                    .addHeader("App-VersionCode", DailyHotel.VERSION_CODE)//
                     .addHeader("Authorization", DailyHotel.AUTHORIZATION)//
                     .addHeader("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID)//
                     .post(mBuilder.build()).build();
