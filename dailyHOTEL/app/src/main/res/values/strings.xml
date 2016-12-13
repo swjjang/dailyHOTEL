@@ -1047,8 +1047,8 @@
 
     <string name="message_review_title">\'%1$s\' 어떠셨어요?</string>
     <string name="message_review_date">%1$s 이용</string>
-    <string name="message_review_good">만족해요</string>
-    <string name="message_review_bad">별로예요</string>
+    <string name="message_review_good">만족해요.</string>
+    <string name="message_review_bad">별로예요.</string>
 
     <string name="message_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님들의 선택을 도와주세요.</string>
 

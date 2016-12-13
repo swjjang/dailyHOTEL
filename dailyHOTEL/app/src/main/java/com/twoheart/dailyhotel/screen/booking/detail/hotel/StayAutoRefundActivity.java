@@ -173,7 +173,7 @@ public class StayAutoRefundActivity extends BaseActivity
             orientation = Configuration.ORIENTATION_PORTRAIT;
         }
 
-//        ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
+        //        ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
         boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
         setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
@@ -193,7 +193,7 @@ public class StayAutoRefundActivity extends BaseActivity
             orientation = Configuration.ORIENTATION_PORTRAIT;
         }
 
-//        ExLog.d("isInMultiWindowMode : " + isInMultiWindowMode + " , rotation orientation : " + orientation);
+        //        ExLog.d("isInMultiWindowMode : " + isInMultiWindowMode + " , rotation orientation : " + orientation);
         setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
@@ -204,7 +204,7 @@ public class StayAutoRefundActivity extends BaseActivity
             return;
         }
 
-//        ExLog.d("orientation : " + orientation);
+        //        ExLog.d("orientation : " + orientation);
 
         View topView = mDialog.findViewById(R.id.topWeightView);
         ScrollView scrollView = (ScrollView) mDialog.findViewById(R.id.scrollView);

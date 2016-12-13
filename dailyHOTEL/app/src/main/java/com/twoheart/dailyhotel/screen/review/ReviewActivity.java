@@ -161,6 +161,14 @@ public class ReviewActivity extends BaseActivity
     }
 
     @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     public void onBackPressed()
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
