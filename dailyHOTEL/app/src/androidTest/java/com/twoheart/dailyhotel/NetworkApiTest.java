@@ -7,24 +7,31 @@ import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
+import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainNetworkController;
+import com.twoheart.dailyhotel.screen.hotel.list.StayListNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainNetworkController;
 import com.twoheart.dailyhotel.screen.main.MainNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyAssert;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.twoheart.dailyhotel.util.Constants.PAGENATION_LIST_SIZE;
 
 /**
  * Created by android_sam on 2016. 12. 12..
@@ -51,9 +58,11 @@ public class NetworkApiTest extends ApplicationTest
 
         mSaleTime = new SaleTime();
         mStayCuration = new StayCuration();
+
+        ignore_testLoginByDailyUser();
     }
 
-    public void testLoginByDailyUser()
+    public void ignore_testLoginByDailyUser()
     {
         HashMap<String, String> params = new HashMap<>();
         params.put("email", DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_EMAIL));
@@ -140,6 +149,55 @@ public class NetworkApiTest extends ApplicationTest
         });
     }
 
+    public void ignore_testDailyDateTime() {
+        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
+                        DailyAssert.assertNotNull(dataJSONObject);
+
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        DailyAssert.assertNotNull(currentDateTime);
+                        DailyAssert.assertNotNull(dailyDateTime);
+
+                        if (mSaleTime == null)
+                        {
+                            mSaleTime = new SaleTime();
+                        }
+
+                        mSaleTime.setCurrentTime(currentDateTime);
+                        mSaleTime.setDailyTime(dailyDateTime);
+                        mSaleTime.setOffsetDailyDay(0);
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        DailyAssert.fail(message);
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError.getMessage());
+            }
+        });
+    }
+
     public void testMainNetworkController()
     {
         MainNetworkController mainNetworkController = new MainNetworkController(this.application, TAG, new MainNetworkController.OnNetworkControllerListener()
@@ -195,14 +253,14 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
             {
-                if (mSaleTime == null)
-                {
-                    mSaleTime = new SaleTime();
-                }
-
-                mSaleTime.setCurrentTime(currentDateTime);
-                //                mSaleTime.setDailyTime(dailyDateTime);
-                mSaleTime.setOffsetDailyDay(0);
+//                if (mSaleTime == null)
+//                {
+//                    mSaleTime = new SaleTime();
+//                }
+//
+//                mSaleTime.setCurrentTime(currentDateTime);
+//                //                mSaleTime.setDailyTime(dailyDateTime);
+//                mSaleTime.setOffsetDailyDay(0);
             }
 
             @Override
@@ -247,7 +305,7 @@ public class NetworkApiTest extends ApplicationTest
         mainNetworkController.requestReviewGourmet();
     }
 
-    public void testStayNetworkController()
+    public void testStayMainNetworkController()
     {
         StayMainNetworkController stayMainNetworkController = new StayMainNetworkController(application, TAG, new StayMainNetworkController.OnNetworkControllerListener()
         {
@@ -280,6 +338,8 @@ public class NetworkApiTest extends ApplicationTest
 
                 mStayCuration = new StayCuration();
                 mStayCuration.setProvince(provinceList.get(0));
+
+                ignore_testStayListNetworkController();
             }
 
             @Override
@@ -314,9 +374,51 @@ public class NetworkApiTest extends ApplicationTest
         stayMainNetworkController.requestEventBanner();
     }
 
+    public void ignore_testStayListNetworkController()
+    {
+        StayListNetworkController stayListNetworkController//
+            = new StayListNetworkController(application, TAG, new StayListNetworkController.OnNetworkControllerListener()
+        {
+            @Override
+            public void onStayList(ArrayList<Stay> list, int page)
+            {
+                DailyAssert.assertNull(list);
+                DailyAssert.assertNotSame(0, list.size());
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                DailyAssert.fail(e == null ? "" : e.getMessage());
+            }
+
+            @Override
+            public void onErrorPopupMessage(int msgCode, String message)
+            {
+                DailyAssert.fail("error : msgCode=" + msgCode + ", message=" + message);
+            }
+
+            @Override
+            public void onErrorToastMessage(String message)
+            {
+                DailyAssert.fail("error : " + message);
+            }
+        });
+
+        StayParams params = (StayParams) mStayCuration.toPlaceParams(1, PAGENATION_LIST_SIZE, true);
+        stayListNetworkController.requestStayList(params);
+    }
+
     public void testGourmetMainNetworkController()
     {
-        GourmetMainNetworkController gourmetMainNetworkController = new GourmetMainNetworkController(application, TAG, new GourmetMainNetworkController.OnNetworkControllerListener()
+        GourmetMainNetworkController gourmetMainNetworkController//
+            = new GourmetMainNetworkController(application, TAG, new GourmetMainNetworkController.OnNetworkControllerListener()
         {
             @Override
             public void onDateTime(long currentDateTime, long dailyDateTime)
@@ -376,7 +478,7 @@ public class NetworkApiTest extends ApplicationTest
 
         gourmetMainNetworkController.requestDateTime();
 
-        gourmetMainNetworkController.requestRegionList();
+
 
         gourmetMainNetworkController.requestEventBanner();
     }
