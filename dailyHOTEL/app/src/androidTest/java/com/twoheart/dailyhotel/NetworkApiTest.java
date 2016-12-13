@@ -76,16 +76,30 @@ public class NetworkApiTest extends ApplicationTest
                             DailyPreference.getInstance(application).setLastestCouponTime("");
 
                             JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
                             JSONObject tokenJSONObject = jsonObject.getJSONObject("token");
+                            DailyAssert.assertNotNull(tokenJSONObject);
+
                             String accessToken = tokenJSONObject.getString("access_token");
                             String tokenType = tokenJSONObject.getString("token_type");
+                            DailyAssert.assertNotNull(accessToken);
+                            DailyAssert.assertNotNull(tokenType);
 
                             JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
+                            DailyAssert.assertNotNull(userJSONObject);
+
                             String userIndex = userJSONObject.getString("idx");
+                            DailyAssert.assertNotNull(userIndex);
+
                             String email = userJSONObject.getString("email");
                             String name = userJSONObject.getString("name");
+                            DailyAssert.assertNotNull(email);
+                            DailyAssert.assertNotNull(name);
+
                             String recommender = userJSONObject.getString("rndnum");
                             String userType = userJSONObject.getString("userType");
+                            DailyAssert.assertEquals(Constants.DAILY_USER, userType);
                             //        String phoneNumber = userJSONObject.getString("phone");
                             String birthday = userJSONObject.getString("birthday");
 
