@@ -193,8 +193,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         {
             mInputReviewVerticalLine.setVisibility(View.VISIBLE);
             mInputReviewView.setVisibility(View.VISIBLE);
-            mInputReviewView.setDrawableVectorTint(R.color.default_text_cc5c5c5);
-            mInputReviewView.setTextColor(getResources().getColor(R.color.default_background_c454545_alpha_20));
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545_alpha_20);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_cc5c5c5));
             mInputReviewView.setText(R.string.label_booking_completed_input_review);
         } else
         {
