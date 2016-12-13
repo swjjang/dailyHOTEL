@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
@@ -106,7 +105,6 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
         mResultTextView.setLayoutParams(resultLayoutParams);
-        mResultTextView.setTypeface(FontManager.getInstance(context).getRegularTypeface());
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)
@@ -280,7 +278,6 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         setEnabled(true);
 
         mResultTextView.setSelected(true);
-        mResultTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
 
         switch (emoticonView.getId())
         {
