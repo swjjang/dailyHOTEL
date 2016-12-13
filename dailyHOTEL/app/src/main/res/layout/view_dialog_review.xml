@@ -23,7 +23,7 @@
         android:id="@+id/periodTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:textColor="@color/default_text_c929292"
         android:textSize="13dp"/>
@@ -48,17 +48,13 @@
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/badEmoticonTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="84dp"
+                android:layout_height="28dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="9dp"
                 android:background="@drawable/selector_review_dialog_text_background"
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="6dp"
+                android:gravity="center"
                 android:text="@string/message_review_bad"
                 android:textColor="@drawable/selector_review_dialog_text_color"
                 android:textSize="16dp"/>
@@ -84,17 +80,13 @@
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/goodEmoticonTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="84dp"
+                android:layout_height="28dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="9dp"
                 android:background="@drawable/selector_review_dialog_text_background"
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="6dp"
+                android:gravity="center"
                 android:text="@string/message_review_good"
                 android:textColor="@drawable/selector_review_dialog_text_color"
                 android:textSize="16dp"/>
