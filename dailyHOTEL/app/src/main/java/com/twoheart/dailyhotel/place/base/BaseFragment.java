@@ -11,6 +11,11 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public abstract class BaseFragment extends Fragment implements Constants, ErrorListener
 {
     protected String mNetworkTag;
@@ -70,6 +75,20 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         }
 
         baseActivity.onErrorResponse(error);
+    }
+
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.onErrorResponse(call, response);
     }
 
     protected void onErrorPopupMessage(int msgCode, String message)

@@ -185,16 +185,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserInformationEx(String tag, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/user/information/omission" : "NzUkMTEkMzMkMiQyJDgxJDM3JDY0JDQzJDEzJDMyJDM5JDI4JDYwJDI1JDY1JA==$MDVMQxQzQ3RERMEBOTgzQzRGQFUUyUNzREDQzlDKMYNTg4NDVc4N0U1RTNFMDNk4MNkIzQTIEzMTdCREMzRkE4RTdEBJNDM3MzEyMA==$";
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, (DailyHotelJsonResponseListener) listener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestUserInformationForPayment(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/information" : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
@@ -1081,7 +1071,8 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
-    public void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, DailyHotelJsonResponseListener listener)
+    @Override
+    public void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
         String params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s&dateCheckOut=%s", placeIndex//

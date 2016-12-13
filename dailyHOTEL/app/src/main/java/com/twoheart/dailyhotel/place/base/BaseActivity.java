@@ -478,14 +478,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         unLockUI();
 
-        handler.post(new Runnable()
+        if (Util.isTextEmpty(message) == true)
         {
-            @Override
-            public void run()
+            onError();
+        } else
+        {
+            handler.post(new Runnable()
             {
-                DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
-            }
-        });
+                @Override
+                public void run()
+                {
+                    DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
+                }
+            });
+        }
     }
 
     private void recursiveRecycle(View root)

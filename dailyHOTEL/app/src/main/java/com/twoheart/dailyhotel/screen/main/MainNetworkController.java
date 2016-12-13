@@ -62,7 +62,7 @@ public class MainNetworkController extends BaseNetworkController
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
     }
 
     /**
@@ -105,42 +105,6 @@ public class MainNetworkController extends BaseNetworkController
             {
             }
         });
-
-
-//        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
-//        {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError)
-//            {
-//            }
-//
-//            @Override
-//            public void onResponse(String url, Map<String, String> params, JSONObject response)
-//            {
-//                try
-//                {
-//                    int msgCode = response.getInt("msgCode");
-//
-//                    if (msgCode == 100)
-//                    {
-//                        JSONObject dataJSONObject = response.getJSONObject("data");
-//
-//                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-//                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
-//                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
-//
-//                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
-//                    } else
-//                    {
-//                        String message = response.getString("msg");
-//
-//                    }
-//                } catch (Exception e)
-//                {
-//                    ExLog.d(e.toString());
-//                }
-//            }
-//        });
     }
 
     protected void requestEventNCouponNNoticeNewCount(String lastEventTime, String lastCouponTime, String lastNoticeTime)
@@ -224,45 +188,6 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    //    private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msgCode = response.getInt("msg_code");
-    //
-    //                if (msgCode == 200)
-    //                {
-    //                    JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                    boolean isSuspend = jsonObject.getBoolean("isSuspend");
-    //
-    //                    if (isSuspend == true)
-    //                    {
-    //                        String title = jsonObject.getString("messageTitle");
-    //                        String message = jsonObject.getString("messageBody");
-    //
-    //                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
-    //                    } else
-    //                    {
-    //                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
-    //                    }
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                ExLog.d(e.toString());
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onErrorResponse(VolleyError volleyError)
-    //        {
-    //            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
-    //        }
-    //    };
-
     private retrofit2.Callback<JSONObject> mCommonVersionCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
@@ -320,56 +245,6 @@ public class MainNetworkController extends BaseNetworkController
             mOnNetworkControllerListener.onError(t);
         }
     };
-
-    //    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, Map<String, String> params, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msgCode = response.getInt("msgCode");
-    //
-    //                if (msgCode == 100)
-    //                {
-    //                    JSONObject dataJSONObject = response.getJSONObject("data");
-    //
-    //                    String maxVersionName;
-    //                    String minVersionName;
-    //
-    //                    switch (Constants.RELEASE_STORE)
-    //                    {
-    //                        case T_STORE:
-    //                            maxVersionName = dataJSONObject.getString("tstoreMax");
-    //                            minVersionName = dataJSONObject.getString("tstoreMin");
-    //                            break;
-    //
-    //                        case PLAY_STORE:
-    //                        default:
-    //                            maxVersionName = dataJSONObject.getString("playMax");
-    //                            minVersionName = dataJSONObject.getString("playMin");
-    //                            break;
-    //                    }
-    //
-    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
-    //                } else
-    //                {
-    //                    String message = response.getString("msg");
-    //
-    //                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                mOnNetworkControllerListener.onError(e);
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onErrorResponse(VolleyError volleyError)
-    //        {
-    //            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
-    //        }
-    //    };
 
     private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -469,164 +344,94 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    final String userIndex = jsonObject.getString("userIdx");
-                    final String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
-                    AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    AnalyticsManager.getInstance(mContext).startApplication();
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    // 누적 적립금 판단.
-                    DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
+                        final String userIndex = dataJSONObject.getString("userIdx");
+                        final String userType = dataJSONObject.has("userType") == true ? dataJSONObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
 
-                    // 호텔 평가요청
-                    DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
+                        AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
+                        AnalyticsManager.getInstance(mContext).startApplication();
 
-                    //                    String text = "{\n" +
-                    //                        "  \"msgCode\": 100,\n" +
-                    //                        "  \"msg\": \"Request success!\",\n" +
-                    //                        "  \"data\": {\n" +
-                    //                        "    \"reserveIdx\": 1283001,\n" +
-                    //                        "    \"requiredCommentReview\": true,\n" +
-                    //                        "    \"reviewItem\": {\n" +
-                    //                        "      \"serviceType\": \"HOTEL\",\n" +
-                    //                        "      \"itemIdx\": 23173,\n" +
-                    //                        "      \"itemName\": \"인계동 벅스79 2호점\",\n" +
-                    //                        "      \"baseImagePath\": \"https://img.dailyhotel.me/resources/images/\",\n" +
-                    //                        "      \"itemImagePath\": \"{\\\"dh_23173/\\\": [\\\"01.jpg\\\"]}\",\n" +
-                    //                        "      \"useStartDate\": \"2016-11-23T15:00:00+09:00\",\n" +
-                    //                        "      \"useEndDate\": \"2016-11-24T13:00:00+09:00\"\n" +
-                    //                        "    },\n" +
-                    //                        "    \"reviewScoreQuestions\": [\n" +
-                    //                        "      {\n" +
-                    //                        "        \"title\": \"청결\",\n" +
-                    //                        "        \"description\": \"방이 정말 깨끗했나요?\",\n" +
-                    //                        "        \"answerCode\": \"H_CLEAN\",\n" +
-                    //                        "        \"answerValues\": []\n" +
-                    //                        "      },\n" +
-                    //                        "      {\n" +
-                    //                        "        \"title\": \"위치\",\n" +
-                    //                        "        \"description\": \"접근성이 좋은 위치에 있나요?\",\n" +
-                    //                        "        \"answerCode\": \"H_LOCATION\",\n" +
-                    //                        "        \"answerValues\": []\n" +
-                    //                        "      },\n" +
-                    //                        "      {\n" +
-                    //                        "        \"title\": \"서비스\",\n" +
-                    //                        "        \"description\": \"직원들이 친절하고 세심했나요?\",\n" +
-                    //                        "        \"answerCode\": \"H_KIND\",\n" +
-                    //                        "        \"answerValues\": []\n" +
-                    //                        "      },\n" +
-                    //                        "      {\n" +
-                    //                        "        \"title\": \"시설\",\n" +
-                    //                        "        \"description\": \"전체적으로 시설이 좋았나요?\",\n" +
-                    //                        "        \"answerCode\": \"H_FACILITY\",\n" +
-                    //                        "        \"answerValues\": []\n" +
-                    //                        "      }\n" +
-                    //                        "    ],\n" +
-                    //                        "    \"reviewPickQuestions\": [\n" +
-                    //                        "      {\n" +
-                    //                        "        \"title\": \"방문 형태\",\n" +
-                    //                        "        \"description\": \"어떤 여행이었나요?\",\n" +
-                    //                        "        \"answerCode\": \"H_USE_CATEGORY\",\n" +
-                    //                        "        \"answerValues\": [\n" +
-                    //                        "          {\n" +
-                    //                        "            \"code\": \"H_FAMILY_CHILD\",\n" +
-                    //                        "            \"description\": \"가족 여행\\n(13세 이하 자녀 동반)\"\n" +
-                    //                        "          },\n" +
-                    //                        "          {\n" +
-                    //                        "            \"code\": \"H_FAMILY\",\n" +
-                    //                        "            \"description\": \"가족 여행\"\n" +
-                    //                        "          },\n" +
-                    //                        "          {\n" +
-                    //                        "            \"code\": \"H_BUSINESS\",\n" +
-                    //                        "            \"description\": \"비즈니스\"\n" +
-                    //                        "          },\n" +
-                    //                        "          {\n" +
-                    //                        "            \"code\": \"H_COUPLE\",\n" +
-                    //                        "            \"description\": \"커플 여행\"\n" +
-                    //                        "          },\n" +
-                    //                        "          {\n" +
-                    //                        "            \"code\": \"H_FRIEND\",\n" +
-                    //                        "            \"description\": \"친구와의 여행\"\n" +
-                    //                        "          },\n" +
-                    //                        "          {\n" +
-                    //                        "            \"code\": \"H_ALONE\",\n" +
-                    //                        "            \"description\": \"나홀로 여행\"\n" +
-                    //                        "          }\n" +
-                    //                        "        ]\n" +
-                    //                        "      }\n" +
-                    //                        "    ]\n" +
-                    //                        "  }\n" +
-                    //                        "}";
-                    //
-                    //                    mReviewHotelJsonResponseListener.onResponse(null, null, new JSONObject(text));
+                        // 누적 적립금 판단.
+                        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
 
-                } else
+                        // 호텔 평가요청
+                        DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
+                    } else
+                    {
+                        mOnNetworkControllerListener.onError(null);
+                    }
+                } catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onError(null);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 401)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
-            } else
-            {
-                mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
-            }
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileBenefitCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
-                    AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
-                } else
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
+
+                        DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                        AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
+                    } else
+                    {
+                        // 에러가 나도 특별히 해야할일은 없다.
+                    }
+                } catch (Exception e)
                 {
-                    // 에러가 나도 특별히 해야할일은 없다.
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
@@ -690,14 +495,6 @@ public class MainNetworkController extends BaseNetworkController
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
                 }
-                //            } catch (ParseException e)
-                //            {
-                //                if (Constants.DEBUG == false)
-                //                {
-                //                    Crashlytics.log("Url: " + url);
-                //                }
-                //
-                //                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

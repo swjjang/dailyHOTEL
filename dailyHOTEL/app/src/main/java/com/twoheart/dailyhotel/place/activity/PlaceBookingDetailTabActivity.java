@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -21,6 +22,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import org.json.JSONObject;
 
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
@@ -177,40 +181,48 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected void requestCommonDatetime()
     {
-        DailyNetworkAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<JSONObject>()
         {
             @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
             {
-                try
+                if (response != null && response.isSuccessful() && response.body() != null)
                 {
-                    int msgCode = response.getInt("msgCode");
-
-                    if (msgCode == 100)
+                    try
                     {
-                        JSONObject dataJSONObject = response.getJSONObject("data");
+                        JSONObject responseJSONObject = response.body();
 
-                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        int msgCode = responseJSONObject.getInt("msgCode");
 
-                        setCurrentDateTime(currentDateTime, dailyDateTime);
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        requestPlaceBookingDetail(mReservationIndex);
-                    } else
+                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                            setCurrentDateTime(currentDateTime, dailyDateTime);
+
+                            requestPlaceBookingDetail(mReservationIndex);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            PlaceBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+                        }
+                    } catch (Exception e)
                     {
-                        String message = response.getString("msg");
-                        PlaceBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+                        ExLog.d(e.toString());
                     }
-                } catch (Exception e)
+                } else
                 {
-                    ExLog.d(e.toString());
+                    PlaceBookingDetailTabActivity.this.onErrorResponse(call, response);
                 }
             }
 
             @Override
-            public void onErrorResponse(VolleyError volleyError)
+            public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                PlaceBookingDetailTabActivity.this.onErrorResponse(volleyError);
+                PlaceBookingDetailTabActivity.this.onError(t);
             }
         });
     }

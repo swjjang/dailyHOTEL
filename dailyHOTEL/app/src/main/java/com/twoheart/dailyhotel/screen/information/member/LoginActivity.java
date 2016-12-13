@@ -33,6 +33,7 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -58,6 +59,9 @@ import org.json.JSONObject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
@@ -869,7 +873,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+                        DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
                         AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
                         AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
@@ -923,7 +927,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     String userIndex = storeLoginInformation(response);
 
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+                    DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
                     // 소셜 신규 가입인 경우
                     if (mIsSocialSignUp == true)
@@ -969,54 +973,62 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
-                    AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(isAgreedBenefit, null);
-
-                    String userIndex = jsonObject.getString("userIdx");
-                    boolean isVerified = jsonObject.getBoolean("verified");
-                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
-
-                    if (isVerified == true && isPhoneVerified == true)
+                    if (msgCode == 100)
                     {
-                        DailyPreference.getInstance(LoginActivity.this).setVerification(true);
-                    } else if (isVerified == true && isPhoneVerified == false)
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
+
+                        DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
+                        AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(isAgreedBenefit, null);
+
+                        String userIndex = jsonObject.getString("userIdx");
+                        boolean isVerified = jsonObject.getBoolean("verified");
+                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                        if (isVerified == true && isPhoneVerified == true)
+                        {
+                            DailyPreference.getInstance(LoginActivity.this).setVerification(true);
+                        } else if (isVerified == true && isPhoneVerified == false)
+                        {
+                            // 로그인시에 인증이 해지된 경우 알림 팝업을 띄운다.
+                            mCertifyingTermination = true;
+                        }
+
+                        loginAndFinish();
+                    } else
                     {
-                        // 로그인시에 인증이 해지된 경우 알림 팝업을 띄운다.
-                        mCertifyingTermination = true;
+                        String msg = responseJSONObject.getString("msg");
+                        DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_SHORT);
+                        finish();
                     }
-
-                    loginAndFinish();
-                } else
+                } catch (Exception e)
                 {
-                    String msg = response.getString("msg");
-                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_SHORT);
-                    finish();
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.d(e.toString());
+                LoginActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            LoginActivity.this.onErrorResponse(volleyError);
+            LoginActivity.this.onError(t);
         }
     };
 }

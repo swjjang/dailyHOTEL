@@ -75,14 +75,6 @@ interface IDailyNetwork
     void requestUserChangePassword(String tag, String userEmail, Object listener);
 
     /**
-     * api/user/information/omission;
-     * 유저의 정보를 얻어온다. 소셜유저 판단가능
-     *
-     * @return
-     */
-    void requestUserInformationEx(String tag, Object listener);
-
-    /**
      * api/user/information
      * 결제를 위한 유저 정보
      *
@@ -543,7 +535,7 @@ interface IDailyNetwork
 
     void requestRemoveWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener);
 
-    void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, Object listener);
+    void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, Object listener);
 
     void requestPolicyRefund(String tag, int hotelReservationIdx, String transactionType, Object listener);
 

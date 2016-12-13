@@ -52,9 +52,6 @@ public interface DailyMobileService
     @POST("user/change_pw")
     Call<JSONObject> requestUserChangePassword(@Field("userEmail") String userEmail);
 
-    @GET("api/user/information/omission")
-    Call<JSONObject> requestUserInformationEx();
-
     @GET("api/user/information")
     Call<JSONObject> requestUserInformationForPayment();
 

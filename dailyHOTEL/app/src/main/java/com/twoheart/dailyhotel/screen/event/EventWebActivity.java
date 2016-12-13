@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
@@ -51,6 +52,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
@@ -207,43 +211,49 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private void requestCommonDatetime(final String url)
     {
-        DailyNetworkAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<JSONObject>()
         {
             @Override
-            public void onErrorResponse(VolleyError volleyError)
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
             {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                            if (mSaleTime == null)
+                            {
+                                mSaleTime = new SaleTime();
+                            }
+
+                            mSaleTime.setCurrentTime(currentDateTime);
+                            mSaleTime.setDailyTime(dailyDateTime);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
             }
 
             @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                try
-                {
-                    int msgCode = response.getInt("msgCode");
 
-                    if (msgCode == 100)
-                    {
-                        JSONObject dataJSONObject = response.getJSONObject("data");
-
-                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                        if (mSaleTime == null)
-                        {
-                            mSaleTime = new SaleTime();
-                        }
-
-                        mSaleTime.setCurrentTime(currentDateTime);
-                        mSaleTime.setDailyTime(dailyDateTime);
-                    } else
-                    {
-                        String message = response.getString("msg");
-
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
             }
         });
     }

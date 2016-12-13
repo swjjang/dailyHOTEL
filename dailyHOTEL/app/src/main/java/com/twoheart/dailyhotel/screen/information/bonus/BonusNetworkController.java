@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Bonus;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -16,6 +17,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BonusNetworkController extends BaseNetworkController
 {
@@ -35,124 +39,152 @@ public class BonusNetworkController extends BaseNetworkController
 
     public void requestProfileBenefit()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserBonusListResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserBonusListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            //적립금 내역리스트
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                JSONArray jsonArray = response.getJSONArray("history");
-                int length = jsonArray.length();
-
-                List<Bonus> list = new ArrayList<>();
-
-                for (int i = 0; i < length; i++)
+                //적립금 내역리스트
+                try
                 {
-                    JSONObject historyObj = jsonArray.getJSONObject(i);
+                    JSONObject responseJSONObject = response.body();
 
-                    String content = historyObj.getString("content");
-                    String expires = historyObj.getString("expires");
-                    int bonus = historyObj.getInt("bonus");
+                    List<Bonus> list = new ArrayList<>();
 
-                    list.add(new Bonus(content, bonus, expires));
+                    if (responseJSONObject.has("history") == true && responseJSONObject.isNull("history") == false)
+                    {
+                        JSONArray jsonArray = responseJSONObject.getJSONArray("history");
+                        int length = jsonArray.length();
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject historyObj = jsonArray.getJSONObject(i);
+
+                            String content = historyObj.getString("content");
+                            String expires = historyObj.getString("expires");
+                            int bonus = historyObj.getInt("bonus");
+
+                            list.add(new Bonus(content, bonus, expires));
+                        }
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonusHistoryList(list);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonusHistoryList(list);
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        String recommendCode = jsonObject.getString("referralCode");
+                        String name = jsonObject.getString("name");
+                        boolean isExceedBonus = DailyPreference.getInstance(mContext).isUserExceedBonus();
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
+
+                        // 적립금 목록 요청.
+                        DailyMobileAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListCallback);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    String recommendCode = jsonObject.getString("referralCode");
-                    String name = jsonObject.getString("name");
-                    boolean isExceedBonus = DailyPreference.getInstance(mContext).isUserExceedBonus();
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
-
-                    // 적립금 목록 요청.
-                    DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListResponseListener);
-                } else
-                {
-
-                }
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileBenefitCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    int bonus = jsonObject.getInt("bonusAmount");
-                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonus(bonus);
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
-                    DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
-                } else
+                        int bonus = dataJSONObject.getInt("bonusAmount");
+                        boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonus(bonus);
+
+                        DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                        DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    }
+                } catch (Exception e)
                 {
-                    String msg = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }
