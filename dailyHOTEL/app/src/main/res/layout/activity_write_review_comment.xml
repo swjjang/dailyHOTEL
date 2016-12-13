@@ -105,7 +105,7 @@
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/label_write_review_comment_description"
                     android:textColor="@color/default_text_c323232"
