@@ -2,24 +2,20 @@ package com.twoheart.dailyhotel.network.factory;
 
 import android.support.v4.util.ArrayMap;
 
-import com.twoheart.dailyhotel.network.Tag;
+import com.twoheart.dailyhotel.network.TAG;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
-import okhttp3.Response;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.HEAD;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
 
 public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 {
@@ -28,7 +24,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
     private TagCancellableCallAdapterFactory()
     {
-        mQueuedCalls = new ArrayMap<>(2);
+        mQueuedCalls = new ArrayMap<>();
     }
 
     public static TagCancellableCallAdapterFactory create()
@@ -39,42 +35,22 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
     @Override
     public CallAdapter<?> get(Type returnType, Annotation[] annotations, Retrofit retrofit)
     {
-        boolean hasTagAnnotation = false;
+        final CallAdapter<?> delegate = retrofit.nextCallAdapter(this, returnType, annotations);
+        final Executor callbackExecutor = retrofit.callbackExecutor();
+
         String value = "";
         for (Annotation annotation : annotations)
         {
             // Checks if method registers to use cancelation logic
             // Extracts the relative URI from Retrofit annotations
-            if (annotation instanceof Tag)
+            if (annotation instanceof TAG)
             {
-                hasTagAnnotation = true;
-            } else if (annotation instanceof DELETE)
-            {
-                value = ((DELETE) annotation).value();
-            } else if (annotation instanceof GET)
-            {
-                value = ((GET) annotation).value();
-            } else if (annotation instanceof HEAD)
-            {
-                value = ((HEAD) annotation).value();
-            } else if (annotation instanceof PATCH)
-            {
-                value = ((PATCH) annotation).value();
-            } else if (annotation instanceof POST)
-            {
-                value = ((POST) annotation).value();
-            } else if (annotation instanceof PUT)
-            {
-                value = ((PUT) annotation).value();
+                value = ((TAG) annotation).value();
             }
         }
-        final boolean isTagged = hasTagAnnotation;
+
         final String tag = value;
-        // Delegates work to default behavior, this is how the logic
-        // gets injected into the rest of the Retrofit data flow
-        CallAdapter<?> delegate = retrofit.nextCallAdapter(this, returnType, annotations);
-        // Executor that will execute the cancelations
-        final ExecutorService executor = retrofit.client().getDispatcher().getExecutorService();
+
         return new CallAdapter<Object>()
         {
             @Override
@@ -86,10 +62,142 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
             @Override
             public <R> Object adapt(Call<R> call)
             {
-                // Only @Tag methods will use TaggedCall
-                return delegate.adapt(isTagged ? new TaggedCall<>(call, tag, mQueuedCalls, executor) : call);
+                return delegate.adapt(new ExecutorCallbackCall<>(callbackExecutor, call, tag, mQueuedCalls));
             }
         };
+
+        //        boolean hasTagAnnotation = false;
+        //        String value = "";
+        //        for (Annotation annotation : annotations)
+        //        {
+        //            // Checks if method registers to use cancelation logic
+        //            // Extracts the relative URI from Retrofit annotations
+        //            if (annotation instanceof TAG)
+        //            {
+        //                value = ((TAG) annotation).value();
+        //            }
+        //        }
+        //        final boolean isTagged = hasTagAnnotation;
+        //        final String tag = value;
+        //        // Delegates work to default behavior, this is how the logic
+        //        // gets injected into the rest of the Retrofit data flow
+        //        final CallAdapter<?> delegate = retrofit.nextCallAdapter(this, returnType, annotations);
+        //        // Executor that will execute the cancelations
+        //        final ExecutorService executor = retrofit.callbackExecutor()
+        //        return new CallAdapter<Object>()
+        //        {
+        //            @Override
+        //            public Type responseType()
+        //            {
+        //                return delegate.responseType();
+        //            }
+        //
+        //            @Override
+        //            public <R> Object adapt(Call<R> call)
+        //            {
+        //                // Only @TAG methods will use TaggedCall
+        //                return delegate.adapt(isTagged ? new TaggedCall<>(call, tag, mQueuedCalls, executor) : call);
+        //            }
+        //        };
+    }
+
+    static final class ExecutorCallbackCall<T> implements Call<T>
+    {
+        private final Executor callbackExecutor;
+        private final Call<T> delegate;
+        private final String mTag;
+        private final ArrayMap<String, Call> mQueuedCalls;
+
+        ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, ArrayMap<String, Call> queuedCalls)
+        {
+            this.callbackExecutor = callbackExecutor;
+            this.delegate = delegate;
+            mTag = tag;
+            mQueuedCalls = queuedCalls;
+        }
+
+        @Override
+        public void enqueue(final Callback<T> callback)
+        {
+            if (callback == null)
+            {
+                throw new NullPointerException("callback == null");
+            }
+
+            delegate.enqueue(new Callback<T>()
+            {
+                @Override
+                public void onResponse(Call<T> call, final Response<T> response)
+                {
+                    mQueuedCalls.re
+                    callbackExecutor.execute(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            if (delegate.isCanceled())
+                            {
+                                // Emulate OkHttp's behavior of throwing/delivering an IOException on cancellation.
+                                callback.onFailure(ExecutorCallbackCall.this, new IOException("Canceled"));
+                            } else
+                            {
+                                callback.onResponse(ExecutorCallbackCall.this, response);
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<T> call, final Throwable t)
+                {
+                    callbackExecutor.execute(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            callback.onFailure(ExecutorCallbackCall.this, t);
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override
+        public boolean isExecuted()
+        {
+            return delegate.isExecuted();
+        }
+
+        @Override
+        public Response<T> execute() throws IOException
+        {
+            return delegate.execute();
+        }
+
+        @Override
+        public void cancel()
+        {
+            delegate.cancel();
+        }
+
+        @Override
+        public boolean isCanceled()
+        {
+            return delegate.isCanceled();
+        }
+
+        @SuppressWarnings("CloneDoesntCallSuperClone") // Performing deep clone.
+        @Override
+        public Call<T> clone()
+        {
+            return new ExecutorCallbackCall<>(callbackExecutor, delegate.clone());
+        }
+
+        @Override
+        public Request request()
+        {
+            return delegate.request();
+        }
     }
 
     static final class TaggedCall<T> implements Call<T>
@@ -108,7 +216,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         }
 
         @Override
-        public Response<T> execute() throws IOException
+        public retrofit2.Response<T> execute() throws IOException
         {
             return mDelegate.execute();
         }
@@ -144,9 +252,21 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         }
 
         @Override
+        public boolean isExecuted()
+        {
+            return mDelegate.isExecuted();
+        }
+
+        @Override
         public void cancel()
         {
             mDelegate.cancel();
+        }
+
+        @Override
+        public boolean isCanceled()
+        {
+            return mDelegate.isCanceled();
         }
 
         @SuppressWarnings("CloneDoesntCallSuperClone")
@@ -154,6 +274,12 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         public Call<T> clone()
         {
             return new TaggedCall<>(mDelegate.clone(), mTag, mQueuedCalls, mExecutor);
+        }
+
+        @Override
+        public Request request()
+        {
+            return null;
         }
     }
 }

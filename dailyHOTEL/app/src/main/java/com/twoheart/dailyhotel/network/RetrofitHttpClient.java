@@ -160,7 +160,7 @@ public class RetrofitHttpClient implements Constants
             {
                 // Checks if method registers to use cancelation logic
                 // Extracts the relative URI from Retrofit annotations
-                if (annotation instanceof Tag)
+                if (annotation instanceof TAG)
                 {
                     hasTagAnnotation = true;
                 } else if (annotation instanceof DELETE)
@@ -201,7 +201,7 @@ public class RetrofitHttpClient implements Constants
                 @Override
                 public <R> Object adapt(Call<R> call)
                 {
-                    // Only @Tag methods will use TaggedCall
+                    // Only @TAG methods will use TaggedCall
                     return delegate.adapt(isTagged ? new TaggedCall<>(call, tag, mQueuedCalls, executor) : call);
                 }
             };

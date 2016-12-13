@@ -22,7 +22,8 @@ import retrofit2.http.Url;
 public interface DailyMobileService
 {
     @GET()
-    Call<JSONObject> requestCheckServer(@Url String url);
+    @TAG("{tag}")
+    Call<JSONObject> requestCheckServer(@SelfTag("tag") String tag, @Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/common/version")

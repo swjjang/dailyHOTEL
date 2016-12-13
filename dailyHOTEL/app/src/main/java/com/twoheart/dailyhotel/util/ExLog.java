@@ -26,7 +26,7 @@ public class ExLog
     /**
      * 최종적으로 Debug 정보를 출력 및 DB에 저장<br>
      *
-     * @param tag     Tag
+     * @param tag     TAG
      * @param message 메시지
      * @param method  Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR,
      *                Log.ASSERT
