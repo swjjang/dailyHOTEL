@@ -70,7 +70,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"
             android:layout_marginTop="13dp"
-            android:background="@drawable/shape_fillrect_ldcdcdd_bffffff">
+            android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r1">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
