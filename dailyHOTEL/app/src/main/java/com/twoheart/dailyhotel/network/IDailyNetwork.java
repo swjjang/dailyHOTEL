@@ -215,11 +215,9 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetList(String tag, String gourmetParams, Object listener);
+    void requestGourmetList(String tag, Map<String, Object> queryMap, List<String> categoryList, List<String> timeList, List<String> luxuryList, Object listener);
 
     void requestGourmetSearchAutoCompleteList(String tag, String date, String text, Object listener);
-
-    void requestGourmetSearchList(String tag, String gourmetParams, Object listener);
 
     /**
      * api/fnb/sale/restaurant/info

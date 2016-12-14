@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -13,6 +14,9 @@ import com.twoheart.dailyhotel.util.Constants;
 import org.json.JSONObject;
 
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 {
@@ -30,7 +34,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 
     public void requestGourmetDetailInformation(String day, int index)
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetDetailInformation(mNetworkTag, //
+        DailyMobileAPI.getInstance(mContext).requestGourmetDetailInformation(mNetworkTag, //
             index, day, mGourmetDetailJsonResponseListener);
     }
 
@@ -39,80 +43,88 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         DailyNetworkAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, mHasCouponJsonResponseListener);
     }
 
-    private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mGourmetDetailJsonResponseListener = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                JSONObject dataJSONObject = null;
-
-                if (response.has("data") == true && response.isNull("data") == false)
+                try
                 {
-                    dataJSONObject = response.getJSONObject("data");
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                if (msgCode == 100 && dataJSONObject == null)
-                {
-                    msgCode = 4;
-                }
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                // 100	성공
-                // 4	데이터가 없을시
-                // 5	판매 마감시
-                switch (msgCode)
-                {
-                    case 100:
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
-                        break;
+                    JSONObject dataJSONObject = null;
 
-                    case 5:
+                    if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
                     {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
-
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
+                        dataJSONObject = responseJSONObject.getJSONObject("data");
                     }
 
-                    case 4:
-                    default:
+                    if (msgCode == 100 && dataJSONObject == null)
                     {
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-                            mOnNetworkControllerListener.onErrorToastMessage(msg);
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
+                        msgCode = 4;
                     }
-                }
-            } catch (Exception e)
-            {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(url);
-                }
 
-                mOnNetworkControllerListener.onError(e);
+                    // 100	성공
+                    // 4	데이터가 없을시
+                    // 5	판매 마감시
+                    switch (msgCode)
+                    {
+                        case 100:
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
+                            break;
+
+                        case 5:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(dataJSONObject);
+
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+
+                        case 4:
+                        default:
+                        {
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+                                mOnNetworkControllerListener.onErrorToastMessage(msg);
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log(call.request().url().toString());
+                    }
+
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 

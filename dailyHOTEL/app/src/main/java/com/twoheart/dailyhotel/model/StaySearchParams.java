@@ -78,44 +78,6 @@ public class StaySearchParams extends StayParams
     }
 
     @Override
-    public String toParamsString()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        Map<String, Object> map = toParamsMap();
-
-        for (Map.Entry<String, Object> entry : map.entrySet())
-        {
-            stringBuilder.append(entry.getKey()).append('=').append(entry.getValue()).append('&');
-        }
-
-        // 마지막 & 없애기
-        stringBuilder.setLength(stringBuilder.length() - 1);
-
-        List<String> bedTypeList = getBedTypeList();
-
-        if (bedTypeList != null && bedTypeList.size() > 0)
-        {
-            for (String bedType : bedTypeList)
-            {
-                stringBuilder.append("&bedType").append('=').append(bedType);
-            }
-        }
-
-        List<String> luxuryList = getLuxuryList();
-
-        if (luxuryList != null && luxuryList.size() > 0)
-        {
-            for (String luxury : luxuryList)
-            {
-                stringBuilder.append("&luxury").append('=').append(luxury);
-            }
-        }
-
-        return stringBuilder.toString();
-    }
-
-    @Override
     public Map<String, Object> toParamsMap()
     {
         HashMap<String, Object> hashMap = new HashMap<>();

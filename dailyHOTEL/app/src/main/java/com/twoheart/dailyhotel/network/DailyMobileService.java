@@ -115,14 +115,13 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/gourmet/sales")
-    Call<JSONObject> requestGourmetList(@QueryMap Map<String, String> params);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/gourmet/sales")
-    Call<JSONObject> requestGourmetSearchList(@QueryMap Map<String, String> params);
+    Call<JSONObject> requestGourmetList(@QueryMap Map<String, Object> queryMap,//
+                                        @Query("category")List<String> categoryList,//
+                                        @Query("timeFrame")List<String> timeList,//
+                                        @Query("luxury") List<String> luxuryList);
 
     @GET("api/v3/gourmet/sales/search/auto_complete")
-    Call<JSONObject> requestGourmetSearchAutoCompleteList(@Query("reserveDate") String date, @Query("term") String text);
+    Call<JSONObject> requestGourmetSearchAutoCompleteList(@Query("reserveDate") String date, @Query("term") String term);
 
     @GET("api/v3/gourmet/{restaurantIdx}")
     Call<JSONObject> requestGourmetDetailInformation(@Path("restaurantIdx") int index, @Query("dateSale") String date);
@@ -137,7 +136,7 @@ public interface DailyMobileService
                                                @Query("arrival_time") String time);
 
     @POST("api/fnb/payment/session/easy")
-    Call<JSONObject> requestGourmetPayment(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestGourmetPayment(@FieldMap Map<String, String> fieldMap);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/reservation/account/{tid}")

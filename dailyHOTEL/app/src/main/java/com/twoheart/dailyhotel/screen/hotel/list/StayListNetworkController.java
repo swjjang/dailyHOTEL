@@ -104,10 +104,8 @@ public class StayListNetworkController extends BaseNetworkController
 
                         try
                         {
-                            Uri uri = Uri.parse(call.request().url().toString());
-                            String pageString = uri.getQueryParameter("page");
+                            String pageString = call.request().url().queryParameter("page");
                             page = Integer.parseInt(pageString);
-
                         } catch (Exception e)
                         {
                             page = 0;

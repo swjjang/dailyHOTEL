@@ -191,14 +191,14 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             String requestParams = null;
             try
             {
-                Uri requestUrl = Uri.parse(URLDecoder.decode(url));
+                Uri requestUrl = Uri.parse(url);
                 requestParams = requestUrl.getQuery();
             } catch (Exception e)
             {
                 // do nothing!
             }
 
-            String lastParams = ((GourmetSearchParams) mLastParams).toParamsString(false);
+            String lastParams = ((GourmetSearchParams) mLastParams).toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

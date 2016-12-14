@@ -456,9 +456,9 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetList(String tag, String gourmetParams, Object listener)
+    public void requestGourmetList(String tag, Map<String, Object> queryMap, List<String> categoryList, List<String> timeList, List<String> luxuryList, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetRegionList();
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetList(queryMap, categoryList, timeList, luxuryList);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
@@ -480,8 +480,12 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetSearchAutoCompleteList(String tag, String date, String text, Object listener)
+    public void requestGourmetSearchAutoCompleteList(String tag, String date, String term, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetSearchAutoCompleteList(date, term);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales/search/auto_complete" : "MTI0JDE5JDQ3JDY2JDY0JDExMiQyNiQyNiQ3OSQyNiQxMDUkODIkNTckNDAkMTIyJDEk$RDDU0NTk3RTIwNEZBQTEZ4QTlBQNPSjcyRUZCRjBBTN0JGMUFBQ0UM0MUY0IQjhEM0NCMUCIzJODdERUQwNDzFZGM0U5MUE3NTE0NUI0RENGRTTlEMTZDRkJBMMMUUwNDlGMjBCNkExRNjU5$";
         //
         //        String params = String.format("?reserveDate=%s&term=%s", date, URLEncoder.encode(text));
@@ -492,28 +496,12 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetSearchList(String tag, String gourmetParams, Object listener)
-    {
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "MjkkODckNTQkNDckNDkkNjIkMTQkMTAkNjUkOTYkMzkkOTYkNSQ3MSQ1NiQ0JA==$NzI4SQNjJCOUSQwNUYQ1NDg5OUZBQTJEMEkZDRTA0LNjA0RDlGNjZkI4QJkJEREDUxRTLUU1QWzYwMzdBRDJCNTQzMjU4OTdFRgHV=X=$";
-        //
-        //        String params;
-        //
-        //        if (Util.isTextEmpty(gourmetParams) == false)
-        //        {
-        //            params = "?" + gourmetParams;
-        //        } else
-        //        {
-        //            return;
-        //        }
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestGourmetDetailInformation(String tag, int index, String date, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetDetailInformation(index, date);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}" : "MTckNjMkNTQkNyQ2NSQ1MyQyNSQyMiQ0JDk0JDYxJDM1JDgkNjckMzckMTAxJA==$QkJCSMjBPVENkQ3RTU4MTjkyDOTQVyODZBQjSZFBNTMwMDI3MDQ5N0RDMDYGxRFDFg4NZEI4NTDXM2OUNGRUQ0QTY4N0MyNjVEMRgJ==$";
         //
         //        Map<String, String> urlParams = new HashMap<>();
@@ -530,6 +518,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestGourmetPaymentInformation(String tag, int index, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetPaymentInformation(index);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info" : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";
         //
         //        String params = String.format("?sale_reco_idx=%d", index);
@@ -542,6 +534,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestGourmetCheckTicket(String tag, int index, String day, int count, String time, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetCheckTicket(index, day, count, time);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/session/ticket/sell/check" : "MTAyJDUzJDEyMiQ0JDI5JDExNiQ5MSQ2OCQ3OSQxMTIkODEkNjckMTA2JDExNSQxMjYkOTIk$OTAwONUU3MDE1MzkxMUI4NDJEMjRFMOTUxQTIyMUUwOUFDQ0M5NTU5QBjBEMEI4OUMzMOZDY0NjdFQjFYBUNzlEODUxNEDRCEMEMyRDFGRENJGRULI3NXSzhFODQ1NQDzMxRUI1BMzM1MzAy$";
         //
         //        String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", index, day, count, time);
@@ -554,6 +550,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestGourmetPayment(String tag, Map<String, String> params, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetPayment(params);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/payment/session/easy" : "NzgkMzMkMzYkMzAkNjIkNzMkNSQzOSQxMyQ1MyQyNiQyMiQ0NiQzNSQ2OCQ4NiQ=$NjA0NKzIxMDNETRkUwMTNBNMjAzZM0E2NDQNhGNPjcME3NDKk3MkVEQkIP5QzA2NjYxRIjNADRTg4RUU0RATIzTNTc3MzCMwNjg5Qw==$";
         //
         //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
@@ -564,6 +564,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestDepositWaitDetailInformation(String tag, String tid, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestDepositWaitDetailInformation(tid);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/account" : "ODAkNjIkMjgkMTIkMzgkMiQ1OCQ1MiQxMSQ4MCQxMCQ4NyQ5NiQ1OSQ3NSQ2JA==$MEJZEMZkFCQKjCc4BRDM3N0Y0N0Q1RjU3DNEI4OUUzDNzhBMTNGQzY4UNUY3INzWE3MTMzQkLUwQPjFBOTFELREE2MXzFCWQ0VCXMg==$";
         //
         //        String params = String.format("/%s", tid);
