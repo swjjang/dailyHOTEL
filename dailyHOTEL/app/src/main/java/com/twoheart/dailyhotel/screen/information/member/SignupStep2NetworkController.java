@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -291,6 +292,17 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         }
 
                         boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
+
+                        if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
+                        {
+                            if (Constants.DEBUG == true)
+                            {
+                                ExLog.w(dataJSONObject.toString());
+                            } else
+                            {
+                                Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
+                            }
+                        }
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken),//
                             userIndex, email, name, birthday, rndnum, userType, phoneNumber, isAgreedBenefit);

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.main;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -333,6 +334,17 @@ public class MainNetworkController extends BaseNetworkController
                     final String userIndex = jsonObject.getString("userIdx");
                     final String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
                     AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
+
+                    if (Util.isTextEmpty(userIndex) == true)
+                    {
+                        if (Constants.DEBUG == true)
+                        {
+                            ExLog.w(jsonObject.toString());
+                        } else
+                        {
+                            Crashlytics.logException(new RuntimeException("JSON USER Check : " + jsonObject.toString(1)));
+                        }
+                    }
 
                     AnalyticsManager.getInstance(mContext).startApplication();
 
