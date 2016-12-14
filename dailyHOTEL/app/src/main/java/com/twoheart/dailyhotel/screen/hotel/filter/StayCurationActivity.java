@@ -822,7 +822,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StayCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

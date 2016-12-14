@@ -208,14 +208,14 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             String requestParams = null;
             try
             {
-                Uri requestUrl = Uri.parse(URLDecoder.decode(url));
+                Uri requestUrl = Uri.parse(url);
                 requestParams = requestUrl.getQuery();
             } catch (Exception e)
             {
                 // do nothing!
             }
 
-            String lastParams = ((StaySearchParams) mLastParams).toParamsString(false);
+            String lastParams = mLastParams.toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

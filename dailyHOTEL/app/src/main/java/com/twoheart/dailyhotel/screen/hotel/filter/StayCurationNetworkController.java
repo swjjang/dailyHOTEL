@@ -39,7 +39,7 @@ public class StayCurationNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ public class StayCurationNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(null, -1);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 public class DailyMobileAPI implements IDailyNetwork
@@ -255,9 +256,9 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestStayList(String tag, String stayParams, Object listener)
+    public void requestStayList(String tag, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList("?" + stayParams);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(queryMap, bedTypeList, luxuryList);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 

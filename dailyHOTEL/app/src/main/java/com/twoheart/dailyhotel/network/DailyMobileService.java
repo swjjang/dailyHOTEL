@@ -5,6 +5,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -67,8 +68,8 @@ public interface DailyMobileService
     Call<JSONObject> requestUserDeleteBillingCard(@Field("billkey") String billkey);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotels/sales{query}")
-    Call<JSONObject> requestStayList(@Path(value = "query", encoded = false) String query);
+    @GET("api/v3/hotels/sales")
+    Call<JSONObject> requestStayList(@QueryMap Map<String, Object> queryMap, @Query("bedType") List<String> bedTypeList, @Query("luxury") List<String> luxuryList);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotels/sales")

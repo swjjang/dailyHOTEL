@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 interface IDailyNetwork
@@ -115,7 +116,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestStayList(String tag, String stayParams, Object listener);
+    void requestStayList(String tag, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener);
 
     /**
      * /api/v3/hotels/sales

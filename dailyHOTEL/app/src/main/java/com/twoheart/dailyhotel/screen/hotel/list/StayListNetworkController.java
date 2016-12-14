@@ -58,7 +58,7 @@ public class StayListNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
