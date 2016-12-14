@@ -1280,6 +1280,7 @@ public class DailyPreference
             mEditor.remove(KEY_USER_TYPE);
             mEditor.remove(KEY_USER_EMAIL);
             mEditor.remove(KEY_USER_NAME);
+            mEditor.remove(KEY_USER_BIRTHDAY);
             mEditor.remove(KEY_AUTHORIZATION);
 
             DailyHotel.AUTHORIZATION = null;
