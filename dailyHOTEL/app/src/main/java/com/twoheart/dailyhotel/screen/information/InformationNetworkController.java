@@ -54,12 +54,12 @@ public class InformationNetworkController extends BaseNetworkController
 
     public void requestPushBenefitText()
     {
-        DailyNetworkAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, mBenefitMessageJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, mBenefitMessageCallback);
     }
 
     public void requestPushBenefit(boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgree, mUpdateBenefitJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgree, mUpdateBenefitCallback);
     }
 
     /**
@@ -159,81 +159,97 @@ public class InformationNetworkController extends BaseNetworkController
     /**
      * 혜택 알림 - 문구
      */
-    private DailyHotelJsonResponseListener mBenefitMessageJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mBenefitMessageCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject data = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    String message = data.getString("body");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(message);
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        String message = dataJSONObject.getString("body");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(message);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
     /**
      * 혜택 알림 - 설정 상태 업데이트!
      */
-    private DailyHotelJsonResponseListener mUpdateBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUpdateBenefitCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
+                    JSONObject responseJSONObject = response.body();
 
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    String serverDate = dataJSONObject.getString("serverDate");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
+                    if (msgCode == 100)
+                    {
 
-                    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, Util.simpleDateFormatISO8601toFormat(serverDate, "yyyy년 MM월 dd일"));
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일"));
-                } else
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        String serverDate = dataJSONObject.getString("serverDate");
+
+                        boolean isAgreed = Boolean.parseBoolean(call.request().url().queryParameter("isAgreed"));
+
+                        //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, Util.simpleDateFormatISO8601toFormat(serverDate, "yyyy년 MM월 dd일"));
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일"));
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (ParseException e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log("Url: " + call.request().url().toString());
+                    }
+
+                    mOnNetworkControllerListener.onError(e);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (ParseException e)
+            } else
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log("Url: " + url);
-                }
-
-                mOnNetworkControllerListener.onError(e);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

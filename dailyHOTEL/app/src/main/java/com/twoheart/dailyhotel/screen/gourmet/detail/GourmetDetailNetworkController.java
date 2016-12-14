@@ -40,7 +40,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
 
     public void requestHasCoupon(int placeIndex, String date)
     {
-        DailyNetworkAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, mHasCouponJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, mHasCouponCallback);
     }
 
     private retrofit2.Callback mGourmetDetailJsonResponseListener = new retrofit2.Callback<JSONObject>()
@@ -128,34 +128,42 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mHasCouponJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mHasCouponCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    boolean hasCoupon = dataJSONObject.getBoolean("existCoupons");
+                    JSONObject responseJSONObject = response.body();
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(hasCoupon);
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        boolean hasCoupon = dataJSONObject.getBoolean("existCoupons");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(hasCoupon);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
                 }
-            } catch (Exception e)
+            } else
             {
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
         }

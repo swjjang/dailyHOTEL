@@ -83,7 +83,12 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
             if (tag.equalsIgnoreCase(entry.getValue()) == true)
             {
                 call = entry.getKey();
-                call.cancel();
+
+                if (call != null)
+                {
+                    call.cancel();
+                }
+
                 mQueuedCalls.remove(call);
             }
         }
@@ -96,10 +101,14 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
         {
             call = entry.getKey();
-            call.cancel();
+
+            if (call != null)
+            {
+                call.cancel();
+            }
+
             mQueuedCalls.remove(call);
         }
-
     }
 
     public static final class ExecutorCallbackCall<T> implements Call<T>

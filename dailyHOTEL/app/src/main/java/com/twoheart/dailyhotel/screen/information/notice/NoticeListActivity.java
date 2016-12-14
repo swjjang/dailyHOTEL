@@ -9,6 +9,7 @@ import android.widget.ListView;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Notice;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -24,6 +25,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class NoticeListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
@@ -115,7 +119,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance(this).requestNoticeList(mNetworkTag, mNoticeListJsonResponseListener);
+            DailyMobileAPI.getInstance(this).requestNoticeList(mNetworkTag, mNoticeListCallback);
         }
     }
 
@@ -158,71 +162,79 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mNoticeListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mNoticeListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObjectData = response.getJSONObject("data");
-                    JSONArray jsonArray = jsonObjectData.getJSONArray("notices");
+                    JSONObject responseJSONObject = response.body();
 
-                    int length = jsonArray.length();
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    if (length > 0)
+                    if (msgCode == 100)
                     {
-                        ArrayList<Notice> noticeList = new ArrayList<>(length);
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        JSONArray jsonArray = dataJSONObject.getJSONArray("notices");
 
-                        if (mNoticeListAdapter == null)
+                        int length = jsonArray.length();
+
+                        if (length > 0)
                         {
-                            mNoticeListAdapter = new NoticeListAdapter(NoticeListActivity.this, 0, new ArrayList<Notice>());
-                        }
+                            ArrayList<Notice> noticeList = new ArrayList<>(length);
 
-                        mNoticeListAdapter.clear();
+                            if (mNoticeListAdapter == null)
+                            {
+                                mNoticeListAdapter = new NoticeListAdapter(NoticeListActivity.this, 0, new ArrayList<Notice>());
+                            }
 
-                        mListView.setVisibility(View.VISIBLE);
-                        mEmptyView.setVisibility(View.GONE);
+                            mNoticeListAdapter.clear();
 
-                        Notice notice;
+                            mListView.setVisibility(View.VISIBLE);
+                            mEmptyView.setVisibility(View.GONE);
 
-                        for (int i = 0; i < length; i++)
+                            Notice notice;
+
+                            for (int i = 0; i < length; i++)
+                            {
+                                notice = new Notice(jsonArray.getJSONObject(i));
+                                noticeList.add(notice);
+                            }
+
+                            noticeList = Util.chekckNoticeNewList(NoticeListActivity.this, noticeList);
+
+                            mNoticeListAdapter.addAll(noticeList);
+                            mListView.setAdapter(mNoticeListAdapter);
+                        } else
                         {
-                            notice = new Notice(jsonArray.getJSONObject(i));
-                            noticeList.add(notice);
+                            mListView.setVisibility(View.GONE);
+                            mEmptyView.setVisibility(View.VISIBLE);
                         }
-
-                        noticeList = Util.chekckNoticeNewList(NoticeListActivity.this, noticeList);
-
-                        mNoticeListAdapter.addAll(noticeList);
-                        mListView.setAdapter(mNoticeListAdapter);
                     } else
                     {
-                        mListView.setVisibility(View.GONE);
-                        mEmptyView.setVisibility(View.VISIBLE);
+                        String msg = responseJSONObject.getString("msg");
+                        onErrorPopupMessage(msgCode, msg);
                     }
-                } else
+                } catch (Exception e)
                 {
-                    String msg = response.getString("msg");
-                    onErrorPopupMessage(msgCode, msg);
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                NoticeListActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            NoticeListActivity.this.onErrorResponse(volleyError);
+            NoticeListActivity.this.onError(t);
         }
     };
 }

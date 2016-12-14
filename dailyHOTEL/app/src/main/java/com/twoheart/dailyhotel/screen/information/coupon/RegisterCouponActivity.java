@@ -198,7 +198,7 @@ public class RegisterCouponActivity extends BaseActivity
     private RegisterCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new RegisterCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegisterCoupon(String couponCode, final boolean isSuccess, int msgCode, String message)
+        public void onRegisterCoupon(final boolean isSuccess, int msgCode, String message)
         {
             unLockUI();
 
@@ -217,8 +217,7 @@ public class RegisterCouponActivity extends BaseActivity
                 });
 
             Map<String, String> params = new HashMap<>();
-            // 현재 request방식이 post방식으로 변경되어 editText의 스트링을 가져오도록 수정 - 추후 수정 예정
-            couponCode = mRegisterCouponLayout != null ? mRegisterCouponLayout.getInputText() : "";
+            String couponCode = mRegisterCouponLayout != null ? mRegisterCouponLayout.getInputText() : "";
 
             params.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
             params.put(AnalyticsManager.KeyType.STATUS_CODE, Integer.toString(msgCode));

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.CouponHistory;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -15,6 +16,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Sam Lee on 2016. 5. 20..
@@ -29,7 +33,7 @@ public class CouponHistoryNetworkController extends BaseNetworkController
 
     public void requestCouponHistoryList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryCallback);
     }
 
     public CouponHistoryNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -37,37 +41,45 @@ public class CouponHistoryNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    DailyHotelJsonResponseListener mCouponHistoryJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mCouponHistoryCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                ArrayList<CouponHistory> list = new ArrayList<>();
-
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                try
                 {
-                    list = CouponUtil.getCouponHistoryList(response);
+                    JSONObject responseJSONObject = response.body();
 
-                } else
+                    ArrayList<CouponHistory> list = new ArrayList<>();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
+                    {
+                        list = CouponUtil.getCouponHistoryList(responseJSONObject);
+
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponHistoryList(list);
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponHistoryList(list);
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

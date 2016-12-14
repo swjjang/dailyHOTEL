@@ -432,7 +432,7 @@ interface IDailyNetwork
      * @param keyword
      * @param listener
      */
-    void requestRegistKeywordCoupon(String tag, String keyword, Object listener);
+    void requestRegisterKeywordCoupon(String tag, String keyword, Object listener);
 
     /**
      * 혜택 알림을 받아야 하는지 알려준다.
@@ -492,22 +492,6 @@ interface IDailyNetwork
     void requestUserTracking(String tag, Object listener);
 
     void requestNoticeList(String tag, Object listener);
-
-    /**
-     * /api/v3/hotels/sales
-     * RecentStay 리스트를 요청한다
-     *
-     * @return
-     */
-    void requestRecentStayList(String tag, String stayParams, Object listener);
-
-    /**
-     * api/fnb/sale/list
-     * RecentGourmet 리스트 요청
-     *
-     * @return
-     */
-    void requestRecentGourmetList(String tag, String gourmetParams, Object listener);
 
     void requestReceiptByEmail(String tag, String placeType, String reservationIdx, String email, Object listener);
 

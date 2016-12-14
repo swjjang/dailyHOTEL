@@ -42,6 +42,7 @@ public interface DailyMobileService
     @GET("user/session/bonus/all")
     Call<JSONObject> requestUserBonus();
 
+    @FormUrlEncoded
     @POST("api/v4/users/profile")
     Call<JSONObject> requestUserInformationUpdate(@FieldMap Map<String, String> params);
 
@@ -49,21 +50,26 @@ public interface DailyMobileService
     @GET("api/v3/users/profile/benefit")
     Call<JSONObject> requestUserProfileBenefit();
 
+    @FormUrlEncoded
     @POST("user/check/email_auth")
     Call<JSONObject> requestUserCheckEmail(@Field("userEmail") String userEmail);
 
+    @FormUrlEncoded
     @POST("user/change_pw")
     Call<JSONObject> requestUserChangePassword(@Field("userEmail") String userEmail);
 
     @GET("api/user/information")
     Call<JSONObject> requestUserInformationForPayment();
 
+    @FormUrlEncoded
     @POST("api/user/session/update/fb_user")
     Call<JSONObject> requestUserUpdateInformationForSocial(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
     @POST("api/user/session/billing/card/info")
     Call<JSONObject> requestUserBillingCardList();
 
+    @FormUrlEncoded
     @POST("api/user/session/billing/card/del")
     Call<JSONObject> requestUserDeleteBillingCard(@Field("billkey") String billkey);
 
@@ -88,9 +94,11 @@ public interface DailyMobileService
     @GET("api/v3/hotel/{hotelIdx}")
     Call<JSONObject> requestStayDetailInformation(@Path("hotelIdx") int index, @Query("dateCheckIn") String date, @Query("stays") int nights);
 
+    @FormUrlEncoded
     @POST("api/hotel/v1/payment/session/easy")
     Call<JSONObject> requestStayPayment(@FieldMap Map<String, String> fieldMap);
 
+    @FormUrlEncoded
     @POST("api/fnb/reservation/session/rating/msg/update")
     Call<JSONObject> requestGourmetDetailRating(@FieldMap Map<String, String> fieldMap);
 
@@ -104,6 +112,7 @@ public interface DailyMobileService
     @GET("api/v2/reservation/fnb/{reservationIdx}/receipt")
     Call<JSONObject> requestGourmetReceipt(@Query("reservation_rec_idx") int index);
 
+    @FormUrlEncoded
     @POST("api/fnb/reservation/session/hidden")
     Call<JSONObject> requestGourmetHiddenBooking(@Field("reservation_rec_idx") int index);
 
@@ -135,6 +144,7 @@ public interface DailyMobileService
                                                @Query("ticket_count") int count,//
                                                @Query("arrival_time") String time);
 
+    @FormUrlEncoded
     @POST("api/fnb/payment/session/easy")
     Call<JSONObject> requestGourmetPayment(@FieldMap Map<String, String> fieldMap);
 
@@ -146,6 +156,7 @@ public interface DailyMobileService
     @GET("api/v2/reservation/hotel/{hotelReservationIdx}")
     Call<JSONObject> requestStayBookingDetailInformation(@Path("hotelReservationIdx") int index);
 
+    @FormUrlEncoded
     @POST("api/reserv/mine/hidden")
     Call<JSONObject> requestStayHiddenBooking(@Field("idx") int index);
 
@@ -166,38 +177,48 @@ public interface DailyMobileService
     @GET("event/v1/banner")
     Call<JSONObject> requestEventBannerList(@Query("type") String place);
 
+    @FormUrlEncoded
     @POST("api/v3/users/myself/phones/verification/start")
     Call<JSONObject> requestDailyUserVerification(@Field("phone") String phone, @Field("force_to_proceed") boolean force);
 
+    @FormUrlEncoded
     @POST("api/v3/users/myself/phones/verification/check")
     Call<JSONObject> requestDailyUserUpdatePhoneNumber(@Field("phone") String phone, @Field("code") String code);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signup/normal/validation")
     Call<JSONObject> requestSignupValidation(@FieldMap Map<String, String> fieldMap);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signup/normal/phones/verification/start")
     Call<JSONObject> requestDailyUserSignupVerfication(@Field("signup_key") String signupKey,//
                                                        @Field("phone") String phone,//
                                                        @Field("force_to_proceed") boolean force);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signup/normal/phones/verification/check")
     Call<JSONObject> requestDailyUserSignup(@Field("signup_key") String signupKey,//
                                             @Field("code") String code, @Field("phone") String phone);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signup/facebook")
-    Call<JSONObject> requestFacebookUserSignup(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestFacebookUserSignup(@FieldMap Map<String, String> fieldMap);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signup/kakao_talk")
-    Call<JSONObject> requestKakaoUserSignup(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestKakaoUserSignup(@FieldMap Map<String, String> fieldMap);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signin/normal")
-    Call<JSONObject> requestDailyUserSignin(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestDailyUserSignin(@FieldMap Map<String, String> fieldMap);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signin/facebook")
-    Call<JSONObject> requestFacebookUserSignin(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestFacebookUserSignin(@FieldMap Map<String, String> fieldMap);
 
+    @FormUrlEncoded
     @POST("api/v3/users/signin/kakao_talk")
-    Call<JSONObject> requestKakaoUserSignin(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestKakaoUserSignin(@FieldMap Map<String, String> fieldMap);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/users/coupons")
@@ -254,8 +275,9 @@ public interface DailyMobileService
     @GET("api/v3/gourmet/{restaurantIdx}/coupons")
     Call<JSONObject> requestCouponList(@Path("restaurantIdx") int placeIndex, @Query("dateSale") String dateSale);
 
+    @FormUrlEncoded
     @POST("api/v3/users/coupons/keyword")
-    Call<JSONObject> requestRegistKeywordCoupon(@Field("keyword") String keyword);
+    Call<JSONObject> requestRegisterKeywordCoupon(@Field("keyword") String keyword);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("api/v1/notice/benefit")
@@ -277,6 +299,7 @@ public interface DailyMobileService
     @GET("api/v3/gourmet/sales")
     Call<JSONObject> requestRecentGourmetList(@QueryMap Map<String, String> gourmetParams);
 
+    @FormUrlEncoded
     @POST("api/v3/users/reservations/{kind}/{reservationIdx}/receipts")
     Call<JSONObject> requestReceiptByEmail(@Path("kind") String placeType, //
                                            @Path("reservationIdx") String reservationIdx, //

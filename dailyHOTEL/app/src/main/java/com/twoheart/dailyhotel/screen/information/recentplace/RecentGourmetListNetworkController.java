@@ -6,6 +6,7 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -18,6 +19,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -42,67 +46,76 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestRecentGourmetList(mNetworkTag, params.toParamsString(), mRecentListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsMap()
+            , params.getCategoryList(), params.getTimeList(), params.getLuxuryList(), mRecentListCallback);
     }
 
-    private DailyHotelJsonResponseListener mRecentListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mRecentListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        JSONArray gourmetJSONArray = null;
+
+                        if (dataJSONObject.has("gourmetSales") == true)
+                        {
+                            gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
+                        }
+
+                        String imageUrl;
+
+                        ArrayList<Gourmet> gourmetList;
+
+                        if (gourmetJSONArray != null)
+                        {
+                            imageUrl = dataJSONObject.getString("imgUrl");
+                            gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
+                        } else
+                        {
+                            gourmetList = new ArrayList<>();
+                        }
+
+                        ((RecentGourmetListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentGourmetList(gourmetList);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+
+                        if (Constants.DEBUG == false)
+                        {
+                            Crashlytics.log(call.request().url().toString());
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
+                {
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log(call.request().url().toString());
+                    }
+
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray gourmetJSONArray = null;
-
-                    if (dataJSONObject.has("gourmetSales") == true)
-                    {
-                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
-                    }
-
-                    String imageUrl;
-
-                    ArrayList<Gourmet> gourmetList;
-
-                    if (gourmetJSONArray != null)
-                    {
-                        imageUrl = dataJSONObject.getString("imgUrl");
-                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
-                    } else
-                    {
-                        gourmetList = new ArrayList<>();
-                    }
-
-                    ((RecentGourmetListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentGourmetList(gourmetList);
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(url);
-                    }
-
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                }
-            } catch (Exception e)
-            {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(url);
-                }
-
-                mOnNetworkControllerListener.onError(e);
-            }
+            mOnNetworkControllerListener.onError(t);
         }
 
         private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException

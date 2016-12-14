@@ -6,14 +6,12 @@ import android.net.Uri;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -25,7 +23,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class CollectionStayActivity extends CollectionBaseActivity
 {
@@ -117,7 +119,27 @@ public class CollectionStayActivity extends CollectionBaseActivity
     {
         String stayParms = String.format("dateCheckIn=%s&stays=%d&details=true&%s", mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mNights, params);
 
-        DailyNetworkAPI.getInstance(this).requestRecentStayList(mNetworkTag, stayParms, mStayListJsonResponseListener);
+        Uri uri = Uri.parse("http://www.daily.com/stay?" + stayParms);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        List<String> bedTypeList = null;
+        List<String> luxuryList = null;
+
+        for (String parameter : uri.getQueryParameterNames())
+        {
+            if ("bedType".equalsIgnoreCase(parameter) == true)
+            {
+                bedTypeList = uri.getQueryParameters("bedType");
+            } else if ("luxury".equalsIgnoreCase(parameter) == true)
+            {
+                luxuryList = uri.getQueryParameters("luxury");
+            } else
+            {
+                hashMap.put(parameter, uri.getQueryParameter(parameter));
+            }
+        }
+
+        DailyMobileAPI.getInstance(this).requestStayList(mNetworkTag, hashMap, bedTypeList, luxuryList, mStayListJsonResponseListener);
     }
 
     @Override
@@ -203,52 +225,66 @@ public class CollectionStayActivity extends CollectionBaseActivity
         return getString(R.string.label_count_stay, count);
     }
 
-    private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mStayListJsonResponseListener = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = null;
+                    JSONObject responseJSONObject = response.body();
 
-                    if (dataJSONObject.has("hotelSales") == true)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
                     {
-                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
-                    }
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        JSONArray hotelJSONArray = null;
 
-                    String imageUrl;
+                        if (dataJSONObject.has("hotelSales") == true)
+                        {
+                            hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                        }
 
-                    ArrayList<Place> stayList;
+                        String imageUrl;
 
-                    if (hotelJSONArray != null)
-                    {
-                        imageUrl = dataJSONObject.getString("imgUrl");
-                        int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        ArrayList<Place> stayList;
+
+                        if (hotelJSONArray != null)
+                        {
+                            imageUrl = dataJSONObject.getString("imgUrl");
+                            int nights = dataJSONObject.getInt("stays");
+                            stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        } else
+                        {
+                            stayList = new ArrayList<>();
+                        }
+
+                        onPlaceList(stayList);
                     } else
                     {
-                        stayList = new ArrayList<>();
+                        String message = responseJSONObject.getString("msg");
+
+                        onErrorPopupMessage(msgCode, message);
                     }
-
-                    onPlaceList(stayList);
-                } else
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-
-                    onErrorPopupMessage(msgCode, message);
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                CollectionStayActivity.this.onErrorResponse(call, response);
             }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            CollectionStayActivity.this.onError(t);
         }
 
         private ArrayList<Place> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
@@ -276,12 +312,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
             }
 
             return stayList;
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            CollectionStayActivity.this.onErrorResponse(volleyError);
         }
     };
 }

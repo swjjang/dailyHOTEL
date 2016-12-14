@@ -344,7 +344,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginCallback);
     }
 
     private void registerKakaokUser(long id)
@@ -370,7 +370,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.putAll(params);
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginCallback);
     }
 
     @Override
@@ -470,7 +470,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         mStoreParams.putAll(params);
 
-        DailyNetworkAPI.getInstance(this).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginCallback);
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
@@ -763,213 +763,237 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mSocialUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mSocialUserSignupCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isSignup = jsonObject.getBoolean("is_signup");
+                    int msgCode = responseJSONObject.getInt("msg_code");
 
-                    if (isSignup == true)
+                    if (msgCode == 0)
                     {
-                        // 회원가입에 성공하면 이제 로그인 절차
-                        mIsSocialSignUp = true;
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                        DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(false);
-                        DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
-                        DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
-                        DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
-                        AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
+                        boolean isSignup = jsonObject.getBoolean("is_signup");
 
-                        HashMap<String, String> analyticsParams = new HashMap<>();
-
-                        if (mStoreParams.containsKey("email") == true)
+                        if (isSignup == true)
                         {
-                            analyticsParams.put("email", mStoreParams.get("email"));
+                            // 회원가입에 성공하면 이제 로그인 절차
+                            mIsSocialSignUp = true;
+
+                            DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(false);
+                            DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
+                            DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
+                            DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+                            AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
+
+                            HashMap<String, String> analyticsParams = new HashMap<>();
+
+                            if (mStoreParams.containsKey("email") == true)
+                            {
+                                analyticsParams.put("email", mStoreParams.get("email"));
+                            }
+
+                            if (mStoreParams.containsKey("pw") == true)
+                            {
+                                analyticsParams.put("pw", mStoreParams.get("pw"));
+                            }
+
+                            if (mStoreParams.containsKey("social_id") == true)
+                            {
+                                analyticsParams.put("social_id", mStoreParams.get("social_id"));
+                            }
+
+                            mStoreParams.put("new_user", "1");
+
+                            if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+                            {
+                                DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
+                            } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+                            {
+                                DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
+                            }
+
+                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
+                            AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
+                            return;
                         }
-
-                        if (mStoreParams.containsKey("pw") == true)
-                        {
-                            analyticsParams.put("pw", mStoreParams.get("pw"));
-                        }
-
-                        if (mStoreParams.containsKey("social_id") == true)
-                        {
-                            analyticsParams.put("social_id", mStoreParams.get("social_id"));
-                        }
-
-                        mStoreParams.put("new_user", "1");
-
-                        if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
-                        {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginJsonResponseListener);
-                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
-                        } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
-                        {
-                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginJsonResponseListener);
-                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
-                        }
-
-                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
-                        AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
-                        return;
                     }
-                }
 
-                unLockUI();
-                mStoreParams.clear();
-                mIsSocialSignUp = false;
+                    unLockUI();
+                    mStoreParams.clear();
+                    mIsSocialSignUp = false;
 
-                String msg = response.getString("msg");
+                    String msg = responseJSONObject.getString("msg");
 
-                if (Util.isTextEmpty(msg) == true)
+                    if (Util.isTextEmpty(msg) == true)
+                    {
+                        msg = getString(R.string.toast_msg_failed_to_signup);
+                    }
+
+                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+
+                } catch (Exception e)
                 {
-                    msg = getString(R.string.toast_msg_failed_to_signup);
+                    unLockUI();
+                    onError(e);
                 }
-
-                DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
-
-            } catch (Exception e)
+            } else
             {
-                unLockUI();
-                onError(e);
+                LoginActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            LoginActivity.this.onErrorResponse(volleyError);
+            LoginActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailyUserLoginCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                        if (isSignin == true)
+                        {
+                            DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+
+                            storeLoginInformation(responseJSONObject);
+
+                            DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
+                            DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
+
+                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
+                            return;
+                        }
+                    }
+
+                    unLockUI();
+
+                    // 로그인이 실패한 경우
+                    String msg = responseJSONObject.getString("msg");
+
+                    if (Util.isTextEmpty(msg) == true)
+                    {
+                        msg = getString(R.string.toast_msg_failed_to_login);
+                    }
+
+                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+                } catch (Exception e)
+                {
+                    unLockUI();
+                    ExLog.d(e.toString());
+                }
+            } else
+            {
+                LoginActivity.this.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            LoginActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mSocialUserLoginCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    boolean isSignin = dataJSONObject.getBoolean("is_signin");
+
+                    String userType = mStoreParams.get("user_type");
 
                     if (isSignin == true)
                     {
                         DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
 
-                        storeLoginInformation(response);
+                        String userIndex = storeLoginInformation(responseJSONObject);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
-                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
-                        AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
-                        return;
-                    }
-                }
+                        // 소셜 신규 가입인 경우
+                        if (mIsSocialSignUp == true)
+                        {
+                            mStoreParams.put("user_idx", userIndex);
+                            mStoreParams.put("user_type", userType);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
 
-                unLockUI();
-
-                // 로그인이 실패한 경우
-                String msg = response.getString("msg");
-
-                if (Util.isTextEmpty(msg) == true)
-                {
-                    msg = getString(R.string.toast_msg_failed_to_login);
-                }
-
-                DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
-            } catch (Exception e)
-            {
-                unLockUI();
-                ExLog.d(e.toString());
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            LoginActivity.this.onErrorResponse(volleyError);
-        }
-    };
-
-    private DailyHotelJsonResponseListener mSocialUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            try
-            {
-                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
-                int msgCode = response.getInt("msg_code");
-                JSONObject jsonObject = response.getJSONObject("data");
-                boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                String userType = mStoreParams.get("user_type");
-
-                if (isSignin == true)
-                {
-                    DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
-
-                    String userIndex = storeLoginInformation(response);
-
-                    DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                    DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
-
-                    // 소셜 신규 가입인 경우
-                    if (mIsSocialSignUp == true)
-                    {
-                        mStoreParams.put("user_idx", userIndex);
-                        mStoreParams.put("user_type", userType);
+                            if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                            {
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
+                            } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+                            {
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
+                            }
+                        }
                     } else
                     {
-                        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
+                        mIsSocialSignUp = false;
 
-                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                        // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
+                        if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                         {
-                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
-                        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+                            DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
+                        } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                         {
-                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
+                            DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
                         }
                     }
-                } else
+                } catch (Exception e)
                 {
-                    mIsSocialSignUp = false;
-
-                    // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                    if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
-                    {
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener);
-                    } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
-                    {
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener);
-                    }
+                    unLockUI();
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
+            } else
             {
-                unLockUI();
-                ExLog.d(e.toString());
+                LoginActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            LoginActivity.this.onErrorResponse(volleyError);
+            LoginActivity.this.onError(t);
         }
     };
 

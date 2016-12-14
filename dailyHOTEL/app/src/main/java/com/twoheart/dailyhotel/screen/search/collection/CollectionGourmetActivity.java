@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
@@ -25,7 +26,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
@@ -111,9 +117,33 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     @Override
     protected void requestPlaceList(String params)
     {
-        String stayParms = String.format("reserveDate=%s&details=true&%s", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), params);
+        String gourmetParams = String.format("reserveDate=%s&details=true&%s", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), params);
 
-        DailyNetworkAPI.getInstance(this).requestRecentGourmetList(mNetworkTag, stayParms, mGourmetListJsonResponseListener);
+        Uri uri = Uri.parse("http://www.daily.com/gourmet?" + gourmetParams);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        List<String> categoryList = null;
+        List<String> timeList = null;
+        List<String> luxuryList = null;
+
+        for (String parameter : uri.getQueryParameterNames())
+        {
+            if ("category".equalsIgnoreCase(parameter) == true)
+            {
+                categoryList = uri.getQueryParameters("category");
+            } else if ("timeFrame".equalsIgnoreCase(parameter) == true)
+            {
+                timeList = uri.getQueryParameters("timeFrame");
+            } else if ("luxury".equalsIgnoreCase(parameter) == true)
+            {
+                luxuryList = uri.getQueryParameters("luxury");
+            } else
+            {
+                hashMap.put(parameter, uri.getQueryParameter(parameter));
+            }
+        }
+
+        DailyMobileAPI.getInstance(this).requestGourmetList(mNetworkTag, hashMap, categoryList, timeList, luxuryList, mGourmetListCallback);
     }
 
 
@@ -188,51 +218,65 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         return getString(R.string.label_count_gourmet, count);
     }
 
-    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mGourmetListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray gourmetJSONArray = null;
+                    JSONObject responseJSONObject = response.body();
 
-                    if (dataJSONObject.has("gourmetSales") == true)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
                     {
-                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
-                    }
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        JSONArray gourmetJSONArray = null;
 
-                    String imageUrl;
+                        if (dataJSONObject.has("gourmetSales") == true)
+                        {
+                            gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
+                        }
 
-                    ArrayList<Place> gourmetList;
+                        String imageUrl;
 
-                    if (gourmetJSONArray != null)
-                    {
-                        imageUrl = dataJSONObject.getString("imgUrl");
-                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
+                        ArrayList<Place> gourmetList;
+
+                        if (gourmetJSONArray != null)
+                        {
+                            imageUrl = dataJSONObject.getString("imgUrl");
+                            gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
+                        } else
+                        {
+                            gourmetList = new ArrayList<>();
+                        }
+
+                        onPlaceList(gourmetList);
                     } else
                     {
-                        gourmetList = new ArrayList<>();
+                        String message = responseJSONObject.getString("msg");
+
+                        onErrorPopupMessage(msgCode, message);
                     }
-
-                    onPlaceList(gourmetList);
-                } else
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-
-                    onErrorPopupMessage(msgCode, message);
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                CollectionGourmetActivity.this.onErrorResponse(call, response);
             }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            CollectionGourmetActivity.this.onError(t);
         }
 
         private ArrayList<Place> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -260,12 +304,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             }
 
             return gourmetList;
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            CollectionGourmetActivity.this.onErrorResponse(volleyError);
         }
     };
 }

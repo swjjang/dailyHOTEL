@@ -130,12 +130,12 @@ public class MainNetworkController extends BaseNetworkController
 
     public void requestNoticeAgreement()
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementCallback);
     }
 
     public void requestNoticeAgreementResult(boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAgree, mNoticeAgreementResultJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAgree, mNoticeAgreementResultCallback);
     }
 
     private retrofit2.Callback<JSONObject> mStatusCallback = new retrofit2.Callback<JSONObject>()
@@ -444,76 +444,93 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mNoticeAgreementCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    String message01 = dataJSONObject.getString("description1");
-                    String message02 = dataJSONObject.getString("description2");
-                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("isFirstTimeBuyer");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    String message = message01 + "\n\n" + message02;
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message, isFirstTimeBuyer);
+                        String message01 = dataJSONObject.getString("description1");
+                        String message02 = dataJSONObject.getString("description2");
+                        boolean isFirstTimeBuyer = dataJSONObject.getBoolean("isFirstTimeBuyer");
+
+                        String message = message01 + "\n\n" + message02;
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message, isFirstTimeBuyer);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mNoticeAgreementResultCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    String agreeAt = dataJSONObject.getString("agreedAt");
-                    String description1InAgree = dataJSONObject.getString("description1InAgree");
-                    String description2InAgree = dataJSONObject.getString("description2InAgree");
-                    String description1InReject = dataJSONObject.getString("description1InReject");
-                    String description2InReject = dataJSONObject.getString("description2InReject");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    //                    agreeAt = Util.simpleDateFormatISO8601toFormat(agreeAt, "yyyy년 MM월 dd일");
-                    agreeAt = DailyCalendar.convertDateFormatString(agreeAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    String agreeMessage = description1InAgree.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InAgree;
-                    String cancelMessage = description1InReject.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InReject;
+                        String agreeAt = dataJSONObject.getString("agreedAt");
+                        String description1InAgree = dataJSONObject.getString("description1InAgree");
+                        String description2InAgree = dataJSONObject.getString("description2InAgree");
+                        String description1InReject = dataJSONObject.getString("description1InReject");
+                        String description2InReject = dataJSONObject.getString("description2InReject");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
+                        //                    agreeAt = Util.simpleDateFormatISO8601toFormat(agreeAt, "yyyy년 MM월 dd일");
+                        agreeAt = DailyCalendar.convertDateFormatString(agreeAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+
+                        String agreeMessage = description1InAgree.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InAgree;
+                        String cancelMessage = description1InReject.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InReject;
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

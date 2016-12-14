@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -17,6 +18,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Sam Lee on 2016. 5. 20..
@@ -41,19 +45,18 @@ public class CouponListNetworkController extends BaseNetworkController
      */
     public void requestCouponList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, mCouponListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestCouponList(mNetworkTag, mCouponListCallback);
     }
 
     public void requestDownloadCoupon(Coupon coupon)
     {
-
         if (coupon == null)
         {
             ExLog.e("coupon is null");
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadCouponCallback);
     }
 
     public CouponListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -61,71 +64,86 @@ public class CouponListNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mCouponListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                ArrayList<Coupon> list = new ArrayList<>();
-
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                try
                 {
-                    list = CouponUtil.getCouponList(response);
+                    JSONObject responseJSONObject = response.body();
 
-                } else
+                    ArrayList<Coupon> list = new ArrayList<>();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
+                    {
+                        list = CouponUtil.getCouponList(responseJSONObject);
+
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDownloadCouponCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    Uri uri = Uri.parse(url);
-                    String userCouponCode = uri.getQueryParameter("userCouponCode");
+                    JSONObject responseJSONObject = response.body();
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(userCouponCode);
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        String userCouponCode = call.request().url().queryParameter("userCouponCode");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(userCouponCode);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

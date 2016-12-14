@@ -884,8 +884,82 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        DailyNetworkAPI.getInstance(this).requestDownloadEventCoupon(mNetworkTag, couponCode, new DailyHotelJsonResponseListener()
+        DailyMobileAPI.getInstance(this).requestDownloadEventCoupon(mNetworkTag, couponCode, new retrofit2.Callback<JSONObject>()
         {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            if (Util.isTextEmpty(mConfirmText) == true)
+                            {
+                                mConfirmText = getString(R.string.label_eventweb_now_used);
+                            }
+
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            String validFrom = dataJSONObject.getString("validFrom");
+                            String validTo = dataJSONObject.getString("validTo");
+                            String message = getString(R.string.message_eventweb_download_coupon//
+                                , DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
+                                , DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+
+                            recordAnalytics(couponCode, validTo);
+
+                            showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    if (mJavaScriptExtention == null)
+                                    {
+                                        return;
+                                    }
+
+                                    mJavaScriptExtention.internalLink(deepLink);
+                                }
+                            }, null);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            onErrorPopupMessage(msgCode, message, null);
+                        }
+
+                    } catch (ParseException e)
+                    {
+                        if (Constants.DEBUG == false)
+                        {
+                            Crashlytics.log("Url: " + call.request().url().toString());
+                        }
+
+                        onError(e);
+                    } catch (Exception e)
+                    {
+                        onError(e);
+                    } finally
+                    {
+                        unLockUI();
+                    }
+                } else
+                {
+                    EventWebActivity.this.onErrorResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                EventWebActivity.this.onError(t);
+            }
+
             private void recordAnalytics(String couponCode, String validTo)
             {
                 try
@@ -915,72 +989,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 {
                     ExLog.d(e.toString());
                 }
-            }
-
-            @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
-            {
-                try
-                {
-                    int msgCode = response.getInt("msgCode");
-
-                    if (msgCode == 100)
-                    {
-                        if (Util.isTextEmpty(mConfirmText) == true)
-                        {
-                            mConfirmText = getString(R.string.label_eventweb_now_used);
-                        }
-
-                        JSONObject dataJSONObject = response.getJSONObject("data");
-
-                        String validFrom = dataJSONObject.getString("validFrom");
-                        String validTo = dataJSONObject.getString("validTo");
-                        String message = getString(R.string.message_eventweb_download_coupon//
-                            , DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")//
-                            , DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
-
-                        recordAnalytics(couponCode, validTo);
-
-                        showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                if (mJavaScriptExtention == null)
-                                {
-                                    return;
-                                }
-
-                                mJavaScriptExtention.internalLink(deepLink);
-                            }
-                        }, null);
-                    } else
-                    {
-                        String message = response.getString("msg");
-                        onErrorPopupMessage(msgCode, message, null);
-                    }
-
-                } catch (ParseException e)
-                {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log("Url: " + url);
-                    }
-
-                    onError(e);
-                } catch (Exception e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                EventWebActivity.this.onErrorResponse(volleyError);
             }
         });
     }
@@ -1178,43 +1186,57 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         lockUI();
 
-                        DailyNetworkAPI.getInstance(EventWebActivity.this).requestUpdateBenefitAgreement(mNetworkTag, true, new DailyHotelJsonResponseListener()
+                        DailyMobileAPI.getInstance(EventWebActivity.this).requestUpdateBenefitAgreement(mNetworkTag, true, new retrofit2.Callback<JSONObject>()
                         {
                             @Override
-                            public void onResponse(String url, Map<String, String> params, JSONObject response)
+                            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
                             {
-                                unLockUI();
-
-                                try
+                                if (response != null && response.isSuccessful() && response.body() != null)
                                 {
-                                    int msgCode = response.getInt("msgCode");
+                                    unLockUI();
 
-                                    if (msgCode == 100)
+                                    try
                                     {
+                                        JSONObject responseJSONObject = response.body();
 
-                                        JSONObject dataJSONObject = response.getJSONObject("data");
-                                        String serverDate = dataJSONObject.getString("serverDate");
+                                        int msgCode = responseJSONObject.getInt("msgCode");
 
-                                        boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
+                                        if (msgCode == 100)
+                                        {
 
-                                        onBenefitAgreement(isAgreed, DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일"));
-                                    } else
+                                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                                            String serverDate = dataJSONObject.getString("serverDate");
+
+                                            boolean isAgreed = Boolean.parseBoolean(call.request().url().queryParameter("isAgreed"));
+
+                                            onBenefitAgreement(isAgreed, DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일"));
+                                        } else
+                                        {
+                                            String message = responseJSONObject.getString("msg");
+                                            EventWebActivity.this.onErrorPopupMessage(msgCode, message);
+                                        }
+                                    } catch (ParseException e)
                                     {
-                                        String message = response.getString("msg");
-                                        EventWebActivity.this.onErrorPopupMessage(msgCode, message);
+                                        if (Constants.DEBUG == false)
+                                        {
+                                            Crashlytics.log("Url: " + call.request().url().toString());
+                                        }
+
+                                        EventWebActivity.this.onError(e);
+                                    } catch (Exception e)
+                                    {
+                                        EventWebActivity.this.onError(e);
                                     }
-                                } catch (ParseException e)
+                                } else
                                 {
-                                    if (Constants.DEBUG == false)
-                                    {
-                                        Crashlytics.log("Url: " + url);
-                                    }
-
-                                    EventWebActivity.this.onError(e);
-                                } catch (Exception e)
-                                {
-                                    EventWebActivity.this.onError(e);
+                                    EventWebActivity.this.onErrorResponse(call, response);
                                 }
+                            }
+
+                            @Override
+                            public void onFailure(Call<JSONObject> call, Throwable t)
+                            {
+                                EventWebActivity.this.onError(t);
                             }
 
                             public void onBenefitAgreement(final boolean isAgree, String updateDate)
@@ -1234,14 +1256,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                     AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                                         AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
                                 }
-                            }
-
-                            @Override
-                            public void onErrorResponse(final VolleyError volleyError)
-                            {
-                                unLockUI();
-
-                                EventWebActivity.this.onErrorResponse(volleyError);
                             }
                         });
                     }

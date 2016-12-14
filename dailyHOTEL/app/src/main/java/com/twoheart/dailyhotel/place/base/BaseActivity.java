@@ -421,7 +421,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     public void onError(Throwable e)
     {
-        releaseUiComponent();
+        unLockUI();
 
         if (DEBUG == false && e != null)
         {
@@ -441,7 +441,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     protected void onError()
     {
-        releaseUiComponent();
+        unLockUI();
 
         // 혹시나 스레드 상태에서 호출이 될경우를 대비해서
         handler.post(new Runnable()
