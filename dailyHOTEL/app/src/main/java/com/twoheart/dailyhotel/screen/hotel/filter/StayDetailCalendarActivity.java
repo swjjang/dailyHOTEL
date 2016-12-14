@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -19,6 +20,9 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayDetailCalendarActivity extends StayCalendarActivity
 {
@@ -78,9 +82,9 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         int nights = chekcOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
 
         // 호텔 정보를 가져온다.
-        DailyNetworkAPI.getInstance(StayDetailCalendarActivity.this) //
-            .requestHotelDetailInformation(mNetworkTag, mHotelIndex, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
-                nights, mJsonResponseListener);
+        DailyMobileAPI.getInstance(StayDetailCalendarActivity.this) //
+            .requestStayDetailInformation(mNetworkTag, mHotelIndex, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
+                nights, mStayDetailInformationCallback);
     }
 
     private void setSaleRoomResult(int count, String message)
@@ -147,59 +151,67 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mStayDetailInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            showEmptyDialog(null);
-        }
-
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            int saleRoomCount = 0;
-            String message = null;
-
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
+                int saleRoomCount = 0;
+                String message = null;
 
-                JSONObject dataJSONObject = null;
-
-                if (response.has("data") == true && response.isNull("data") == false)
+                try
                 {
-                    dataJSONObject = response.getJSONObject("data");
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                if (msgCode == 100)
-                {
-                    if (dataJSONObject == null)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    JSONObject dataJSONObject = null;
+
+                    if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
                     {
-                        saleRoomCount = 0;
-                    } else
+                        dataJSONObject = responseJSONObject.getJSONObject("data");
+                    }
+
+                    if (msgCode == 100)
                     {
-                        JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("rooms");
-                        if (saleRoomJSONArray == null)
+                        if (dataJSONObject == null)
                         {
                             saleRoomCount = 0;
                         } else
                         {
-                            saleRoomCount = saleRoomJSONArray.length();
+                            JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("rooms");
+                            if (saleRoomJSONArray == null)
+                            {
+                                saleRoomCount = 0;
+                            } else
+                            {
+                                saleRoomCount = saleRoomJSONArray.length();
+                            }
                         }
+                    } else
+                    {
+                        message = responseJSONObject.getString("msg");
                     }
-                } else
+                } catch (Exception e)
                 {
-                    message = response.getString("msg");
+                    saleRoomCount = 0;
+                } finally
+                {
+                    unLockUI();
+                    StayDetailCalendarActivity.this.setSaleRoomResult(saleRoomCount, message);
                 }
-            } catch (Exception e)
+            } else
             {
-                saleRoomCount = 0;
-            } finally
-            {
-                unLockUI();
-                StayDetailCalendarActivity.this.setSaleRoomResult(saleRoomCount, message);
+                StayDetailCalendarActivity.this.onErrorResponse(call, response);
             }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            StayDetailCalendarActivity.this.onError(t);
         }
     };
 }

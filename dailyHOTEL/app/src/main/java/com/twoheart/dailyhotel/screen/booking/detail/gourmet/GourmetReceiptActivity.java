@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -29,6 +30,9 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONObject;
 
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
@@ -237,7 +241,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     protected void requestReceiptDetail(int index)
     {
-        DailyNetworkAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservReceiptJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservReceiptCallback);
     }
 
     private void showSendEmailDialog()
@@ -354,40 +358,48 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservReceiptCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                if (msgCode == 100)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        makeLayout(responseJSONObject.getJSONObject("data"));
+                    } else
+                    {
+                        onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                    }
+                } catch (Exception e)
                 {
-                    makeLayout(response.getJSONObject("data"));
-                } else
+                    onError(e);
+                } finally
                 {
-                    onErrorPopupMessage(msgCode, response.getString("msg"));
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                GourmetReceiptActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            GourmetReceiptActivity.this.onErrorResponse(volleyError);
+            GourmetReceiptActivity.this.onError(t);
         }
     };
 

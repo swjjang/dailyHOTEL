@@ -119,20 +119,12 @@ interface IDailyNetwork
     void requestStayList(String tag, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener);
 
     /**
-     * /api/v3/hotels/sales
-     * StaySearch 리스트를 요청한다
-     *
-     * @return
-     */
-    void requestStaySearchList(String tag, String stayParams, Object listener);
-
-    /**
      * @param tag
      * @param date
      * @param text
      * @param listener
      */
-    void requestHotelSearchAutoCompleteList(String tag, String date, int stay, String text, Object listener);
+    void requestStaySearchAutoCompleteList(String tag, String date, int stay, String text, Object listener);
 
     /**
      * api/sale/region/all
@@ -140,7 +132,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelRegionList(String tag, Object listener);
+    void requestStayRegionList(String tag, Object listener);
 
     /**
      * api/hotel/v1/payment/detail
@@ -148,7 +140,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelPaymentInformation(String tag, int roomIndex, String date, int nights, Object listener);
+    void requestStayPaymentInformation(String tag, int roomIndex, String date, int nights, Object listener);
 
     /**
      * api/hotel/v1/sale/detail
@@ -156,7 +148,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelDetailInformation(String tag, int index, String date, int nights, Object listener);
+    void requestStayDetailInformation(String tag, int index, String date, int nights, Object listener);
 
     /**
      * api/hotel/v1/payment/session/easy
@@ -164,7 +156,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelPayment(String tag, Map<String, String> params, Object listener);
+    void requestStayPayment(String tag, Map<String, String> params, Object listener);
 
     /**
      * api/fnb/reservation/booking/list

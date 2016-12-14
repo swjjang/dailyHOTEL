@@ -72,31 +72,27 @@ public interface DailyMobileService
     Call<JSONObject> requestStayList(@QueryMap Map<String, Object> queryMap, @Query("bedType") List<String> bedTypeList, @Query("luxury") List<String> luxuryList);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotels/sales")
-    Call<JSONObject> requestStaySearchList(@QueryMap Map<String, String> params);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotels/sales/search/auto_complete")
-    Call<JSONObject> requestHotelSearchAutoCompleteList(Object tag, String date, int stays, String text, DailyHotelJsonResponseListener listener);
+    Call<JSONObject> requestStaySearchAutoCompleteList(@Query("dateCheckIn") String date, @Query("stays") int stays, @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotel/region")
     Call<JSONObject> requestStayRegionList();
 
     @GET("api/hotel/v1/payment/detail")
-    Call<JSONObject> requestHotelPaymentInformation(@Query("room_idx") int roomIndex,//
+    Call<JSONObject> requestStayPaymentInformation(@Query("room_idx") int roomIndex,//
                                                     @Query("checkin_date") String date,//
                                                     @Query("nights") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotel/{hotelIdx}")
-    Call<JSONObject> requestHotelDetailInformation(@Path("hotelIdx") int index, @Query("dateCheckIn") String date, @Query("stays") int nights);
+    Call<JSONObject> requestStayDetailInformation(@Path("hotelIdx") int index, @Query("dateCheckIn") String date, @Query("stays") int nights);
 
     @POST("api/hotel/v1/payment/session/easy")
-    Call<JSONObject> requestHotelPayment(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestStayPayment(@FieldMap Map<String, String> fieldMap);
 
     @POST("api/fnb/reservation/session/rating/msg/update")
-    Call<JSONObject> requestGourmetDetailRating(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestGourmetDetailRating(@FieldMap Map<String, String> fieldMap);
 
     @GET("api/fnb/reservation/booking/list")
     Call<JSONObject> requestBookingList();
@@ -112,7 +108,7 @@ public interface DailyMobileService
     Call<JSONObject> requestGourmetHiddenBooking(@Field("reservation_rec_idx") int index);
 
     @GET("api/fnb/reservation/session/vbank/account/info")
-    Call<JSONObject> requestGourmetAccountInformation(@Field("tid") String tid);
+    Call<JSONObject> requestGourmetAccountInformation(@Query("tid") String tid);
 
     @GET("gourmet/region/v1/list")
     Call<JSONObject> requestGourmetRegionList();

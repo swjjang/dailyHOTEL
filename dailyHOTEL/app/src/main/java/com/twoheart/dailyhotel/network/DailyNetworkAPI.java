@@ -252,28 +252,28 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     }
 
+//    @Override
+//    public void requestStaySearchList(String tag, String stayParams, Object listener)
+//    {
+//        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "NzAkMCQ0OSQ2NiQ3OSQyMyQzNCQ5NCQ0MCQ2NiQxNiQ2OCQ3JDYyJDE2JDE4JA==$RN0Q4MjFQwNEY0RUXNPZDMDU0MDZlCQ0VFNDJCPRUNDOWEJBRTMxQzM4HRjkxODREEQjFBMKYjVBXNzRGNTUk3RkMD4OTA4NTI1RA=B=$";
+//
+//        String params;
+//
+//        if (Util.isTextEmpty(stayParams) == false)
+//        {
+//            params = "?" + stayParams;
+//        } else
+//        {
+//            return;
+//        }
+//
+//        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, (DailyHotelJsonResponseListener) listener);
+//        dailyHotelJsonRequest.setIsUsedAccept(true);
+//        mQueue.add(dailyHotelJsonRequest);
+//    }
+
     @Override
-    public void requestStaySearchList(String tag, String stayParams, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "NzAkMCQ0OSQ2NiQ3OSQyMyQzNCQ5NCQ0MCQ2NiQxNiQ2OCQ3JDYyJDE2JDE4JA==$RN0Q4MjFQwNEY0RUXNPZDMDU0MDZlCQ0VFNDJCPRUNDOWEJBRTMxQzM4HRjkxODREEQjFBMKYjVBXNzRGNTUk3RkMD4OTA4NTI1RA=B=$";
-
-        String params;
-
-        if (Util.isTextEmpty(stayParams) == false)
-        {
-            params = "?" + stayParams;
-        } else
-        {
-            return;
-        }
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, (DailyHotelJsonResponseListener) listener);
-        dailyHotelJsonRequest.setIsUsedAccept(true);
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
-    public void requestHotelSearchAutoCompleteList(String tag, String date, int stays, String text, Object listener)
+    public void requestStaySearchAutoCompleteList(String tag, String date, int stays, String text, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/search/auto_complete" : "NzUkMTkkNTEkOTYkMjAkNTMkMjckMTE0JDg2JDEzMSQzMSQ3NCQzMyQxMDQkNTIkNzck$MzlGNTlBM0QwRjQ4NkZVWFNzBDMEERBWOETVFOTY2RUNCQUNBQkNQDNDQPRBQUM5MjU1OEJFOTU0FGNEQ4NkERwQTU0MMTcxOTU2N0RFMGREFFMDEwMjVGMDgK2QjNCQzczMjEzMjCZCMDU2$";
 
@@ -285,7 +285,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelRegionList(String tag, Object listener)
+    public void requestStayRegionList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region" : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
 
@@ -296,7 +296,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelPaymentInformation(String tag, int roomIndex, String date, int nights, Object listener)
+    public void requestStayPaymentInformation(String tag, int roomIndex, String date, int nights, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/detail" : "NzckMjIkMTIkNzkkMjYkODEkNTAkNTEkNjUkMzUkOCQ4MyQzMSQyNSQxNCQ5NCQ=$NTZEMEQ4EQ0EyIRMzY0N0IwQzOMYxZMjICwNTQzQMEI5QTVFOEE3RDEIB1MjRFQzZBNzgxVM0ExQzFGODc0NUER4OKNFThOGMzJBNA==$";
 
@@ -308,7 +308,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelDetailInformation(String tag, int index, String date, int nights, Object listener)
+    public void requestStayDetailInformation(String tag, int index, String date, int nights, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}" : "NjMkNjckODgkNTMkNTckNjMkNCQ2JDM3JDc3JDI4JDQ5JDY2JDI0JDQyJDM2JA==$NjRDWNS0ExQUY4NjNGMzM4QkXRFNDZlDM0Y3KRDIK5RIUUxOUY1RWjNBMUY5MPEI0OMjkG0NPDNIDREPJERXjNCNDcxMTlGMUQ2OQB==$";
 
@@ -324,7 +324,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelPayment(String tag, Map<String, String> params, Object listener)
+    public void requestStayPayment(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/session/easy" : "NjMkMjMkOTAkMTMwJDY3JDUwJDI3JDY2JDUwJDk2JDMkMjckMzAkOTIkNzAkMzQk$RkEL4QkUwQzY3RjA0MUI0M0MJyRKTFXI3OTDQ5N0RGREM4MEU2RjdBAMMTg5MDE4NEI0RTZJAQCQGTlFOTA2REU3N0RBMDYlCRTA1VYRDc2Qjg3RTY4NzE1MjM5RjQ5RkFDQTZDRDE0MzMJz$";
 

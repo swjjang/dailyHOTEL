@@ -256,7 +256,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             }
         }
 
-        DailyNetworkAPI.getInstance(this).requestHotelPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestStayPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
     }
 
     @Override
@@ -265,10 +265,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
 
         // 호텔 디테일 정보 재 요청
-        DailyNetworkAPI.getInstance(this).requestHotelPaymentInformation(mNetworkTag//
+        DailyMobileAPI.getInstance(this).requestStayPaymentInformation(mNetworkTag//
             , roomInformation.roomIndex//
             , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , roomInformation.nights, mHotelPaymentInformationJsonResponseListener);
+            , roomInformation.nights, mHotelPaymentInformationCallback);
     }
 
     @Override
@@ -1927,10 +1927,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     mHotelPaymentLayout.setGuestInformation(guest, isOverseas);
 
                     // 2. 화면 정보 얻기
-                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
                         , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                         , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                        , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationJsonResponseListener);
+                        , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationCallback);
 
                     if (DEBUG == false)
                     {
@@ -1957,288 +1957,312 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mHotelPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mHotelPaymentInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                int msgCode = response.getInt("msgCode");
-
-                // 0	성공
-                // 4	데이터가 없을시
-                // 5	판매 마감시
-                // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
-                // 7    3시부터 9시까지
-                switch (msgCode)
+                try
                 {
-                    case 6:
-                    case 7:
-                        if (mWarningDialogMessage == null && response.has("msg") == true)
-                        {
-                            mWarningDialogMessage = response.getString("msg");
-                        }
-                    case 0:
+                    HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    // 0	성공
+                    // 4	데이터가 없을시
+                    // 5	판매 마감시
+                    // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
+                    // 7    3시부터 9시까지
+                    switch (msgCode)
                     {
-                        JSONObject jsonData = response.getJSONObject("data");
-
-                        long checkInDate = jsonData.getLong("check_in_date");
-                        long checkOutDate = jsonData.getLong("check_out_date");
-                        int discount = jsonData.getInt("discount_total");
-                        boolean isOnSale = jsonData.getBoolean("on_sale");
-                        int availableRooms = jsonData.getInt("available_rooms");
-                        boolean isNRD = false;
-
-                        if (jsonData.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(jsonData.getString("refund_type")) == true)
-                        {
-                            isNRD = true;
-                        }
-
-                        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
-
-                        roomInformation.isNRD = isNRD;
-
-                        // 가격이 변동 되었다.
-                        if (roomInformation.totalDiscount != discount)
-                        {
-                            mIsChangedPrice = true;
-                        }
-
-                        roomInformation.totalDiscount = discount;
-
-                        setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
-
-                        // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
-                        if (isOnSale == false || availableRooms == 0)
-                        {
-                            mWarningDialogMessage = null;
-
-                            if (isFinishing() == true)
+                        case 6:
+                        case 7:
+                            if (mWarningDialogMessage == null && responseJSONObject.has("msg") == true)
                             {
-                                return;
+                                mWarningDialogMessage = responseJSONObject.getString("msg");
+                            }
+                        case 0:
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            long checkInDate = dataJSONObject.getLong("check_in_date");
+                            long checkOutDate = dataJSONObject.getLong("check_out_date");
+                            int discount = dataJSONObject.getInt("discount_total");
+                            boolean isOnSale = dataJSONObject.getBoolean("on_sale");
+                            int availableRooms = dataJSONObject.getInt("available_rooms");
+                            boolean isNRD = false;
+
+                            if (dataJSONObject.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(dataJSONObject.getString("refund_type")) == true)
+                            {
+                                isNRD = true;
                             }
 
-                            showStopOnSaleDialog();
-                        } else
-                        {
-                            // 취소 및 환불 규정
-                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag//
-                                , hotelPaymentInformation.placeIndex, roomInformation.roomIndex//
-                                , hotelPaymentInformation.checkInDateFormat, hotelPaymentInformation.checkOutDateFormat//
-                                , mPolicyRefundJsonResponseListener);
-                        }
-                        break;
-                    }
+                            RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
-                    case 5:
-                    {
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
+                            roomInformation.isNRD = isNRD;
 
-                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                            // 가격이 변동 되었다.
+                            if (roomInformation.totalDiscount != discount)
                             {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
+                                mIsChangedPrice = true;
+                            }
+
+                            roomInformation.totalDiscount = discount;
+
+                            setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
+
+                            // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+                            if (isOnSale == false || availableRooms == 0)
+                            {
+                                mWarningDialogMessage = null;
+
+                                if (isFinishing() == true)
                                 {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
-                                    finish();
+                                    return;
                                 }
-                            });
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
+
+                                showStopOnSaleDialog();
+                            } else
+                            {
+                                // 취소 및 환불 규정
+                                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag//
+                                    , hotelPaymentInformation.placeIndex, roomInformation.roomIndex//
+                                    , hotelPaymentInformation.checkInDateFormat, hotelPaymentInformation.checkOutDateFormat//
+                                    , mPolicyRefundJsonResponseListener);
+                            }
+                            break;
                         }
-                        break;
+
+                        case 5:
+                        {
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                        finish();
+                                    }
+                                });
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+
+                        case 4:
+                        default:
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
                     }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
 
-                    case 4:
-                    default:
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
+                    unLockUI();
+                    onError(e);
 
-                            DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                            finish();
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.e(e.toString());
-
-                unLockUI();
-                onError(e);
-
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
+                HotelPaymentActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            HotelPaymentActivity.this.onErrorResponse(volleyError);
+            HotelPaymentActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mPaymentEasyCreditCardCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            hidePorgressDialog();
-
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                // 해당 화면은 메시지를 넣지 않는다.
-                int msgCode = response.getInt("msgCode");
-                String message = response.getString("msg");
+                hidePorgressDialog();
 
-                Intent intent = new Intent();
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format("%d^%s", msgCode, message));
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                onActivityPaymentResult(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
-            } catch (Exception e)
+                    // 해당 화면은 메시지를 넣지 않는다.
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    Intent intent = new Intent();
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format("%d^%s", msgCode, message));
+
+                    onActivityPaymentResult(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
             {
-                ExLog.e(e.toString());
-
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                HotelPaymentActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            HotelPaymentActivity.this.onErrorResponse(volleyError);
+            HotelPaymentActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mFinalCheckPayJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mFinalCheckPayCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    switch (msgCode)
+                    {
+                        case 6:
+                        case 7:
+                        case 0:
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            //                        long checkInDate = jsonData.getLong("check_in_date");
+                            //                        long checkOutDate = jsonData.getLong("check_out_date");
+                            int discount = dataJSONObject.getInt("discount_total");
+                            boolean isOnSale = dataJSONObject.getBoolean("on_sale");
+                            int availableRooms = dataJSONObject.getInt("available_rooms");
+
+                            HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+
+                            RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+                            // 가격이 변동 되었다.
+                            if (roomInformation.totalDiscount != discount)
+                            {
+                                mIsChangedPrice = true;
+                            }
+
+                            roomInformation.totalDiscount = discount;
+
+                            // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+                            if (isOnSale == false || availableRooms == 0)
+                            {
+                                showStopOnSaleDialog();
+                            } else if (isChangedPrice() == true)
+                            {
+                                mIsChangedPrice = false;
+
+                                // 현재 있는 팝업을 없애도록 한다.
+                                if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+                                {
+                                    mFinalCheckDialog.cancel();
+                                    mFinalCheckDialog = null;
+                                }
+
+                                showChangedPriceDialog();
+                            } else
+                            {
+                                processPayment(hotelPaymentInformation, mCheckInSaleTime);
+                            }
+                            break;
+                        }
+
+                        case 5:
+                        {
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                        finish();
+                                    }
+                                });
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+
+                        case 4:
+                        default:
+                        {
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    onError(e);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                HotelPaymentActivity.this.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                switch (msgCode)
-                {
-                    case 6:
-                    case 7:
-                    case 0:
-                    {
-                        JSONObject jsonData = response.getJSONObject("data");
-
-                        //                        long checkInDate = jsonData.getLong("check_in_date");
-                        //                        long checkOutDate = jsonData.getLong("check_out_date");
-                        int discount = jsonData.getInt("discount_total");
-                        boolean isOnSale = jsonData.getBoolean("on_sale");
-                        int availableRooms = jsonData.getInt("available_rooms");
-
-                        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
-
-                        // 가격이 변동 되었다.
-                        if (roomInformation.totalDiscount != discount)
-                        {
-                            mIsChangedPrice = true;
-                        }
-
-                        roomInformation.totalDiscount = discount;
-
-                        // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
-                        if (isOnSale == false || availableRooms == 0)
-                        {
-                            showStopOnSaleDialog();
-                        } else if (isChangedPrice() == true)
-                        {
-                            mIsChangedPrice = false;
-
-                            // 현재 있는 팝업을 없애도록 한다.
-                            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-                            {
-                                mFinalCheckDialog.cancel();
-                                mFinalCheckDialog = null;
-                            }
-
-                            showChangedPriceDialog();
-                        } else
-                        {
-                            processPayment(hotelPaymentInformation, mCheckInSaleTime);
-                        }
-                        break;
-                    }
-
-                    case 5:
-                    {
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-
-                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
-                            {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
-                                {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
-                                    finish();
-                                }
-                            });
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
-                    }
-
-                    case 4:
-                    default:
-                    {
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-
-                            DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                            finish();
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-
-                onError(e);
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            } finally
-            {
-                unLockUI();
-            }
+            HotelPaymentActivity.this.onError(t);
         }
     };
 
@@ -2292,10 +2316,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     }
 
                     // 2. 마지막 가격 및 기타 이상이 없는지 검사
-                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
                         , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                         , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                        , hotelPaymentInformation.getSaleRoomInformation().nights, mFinalCheckPayJsonResponseListener);
+                        , hotelPaymentInformation.getSaleRoomInformation().nights, mFinalCheckPayCallback);
                 } catch (Exception e)
                 {
                     onError(e);
