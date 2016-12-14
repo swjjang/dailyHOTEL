@@ -103,7 +103,7 @@ public class MainNetworkController extends BaseNetworkController
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
-                    DailyAssert.fail(e.getMessage());
+                    DailyAssert.fail(e);
                 }
             }
         });
@@ -173,7 +173,7 @@ public class MainNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                DailyAssert.fail(e.getMessage());
+                DailyAssert.fail(e);
             }
         }
 
@@ -181,7 +181,7 @@ public class MainNetworkController extends BaseNetworkController
         public void onErrorResponse(VolleyError volleyError)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
-            DailyAssert.fail(volleyError.getMessage());
+            DailyAssert.fail(volleyError);
         }
     };
 
@@ -297,7 +297,7 @@ public class MainNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                DailyAssert.fail(e.getMessage());
+                DailyAssert.fail(e);
             }
         }
 
@@ -543,7 +543,7 @@ public class MainNetworkController extends BaseNetworkController
                 }
             } catch (Exception e)
             {
-                DailyAssert.fail(e.getMessage());
+                DailyAssert.fail(e);
             }
         }
 

@@ -107,6 +107,7 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
+    @Deprecated
     @Override
     public void requestCommonReview(Object tag, String type, DailyHotelJsonResponseListener listener)
     {

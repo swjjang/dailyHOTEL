@@ -40,6 +40,15 @@ public class DailyAssert
         }
     }
 
+    public static void fail(Exception e)
+    {
+        if (Constants.TESTING == true)
+        {
+            String message = (e == null) ? "Empty error" : e.getMessage();
+            Assert.fail(message);
+        }
+    }
+
     public static void fail(String message)
     {
         if (Constants.TESTING == true)

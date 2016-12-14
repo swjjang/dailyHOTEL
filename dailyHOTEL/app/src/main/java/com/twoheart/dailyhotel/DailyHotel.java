@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.GoogleAnalyticsManager;
@@ -102,9 +103,12 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         Util.initializeFresco(getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        if (Constants.TESTING == false)
+        try
         {
             KakaoSDK.init(new KakaoSDKAdapter());
+        } catch (KakaoSDK.AlreadyInitializedException e)
+        {
+            ExLog.d(e.toString());
         }
 
         FontManager.getInstance(getApplicationContext());

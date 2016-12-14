@@ -3,13 +3,10 @@ package com.twoheart.dailyhotel;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayCuration;
-import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -31,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.twoheart.dailyhotel.util.Constants.PAGENATION_LIST_SIZE;
-
 /**
  * Created by android_sam on 2016. 12. 12..
  */
@@ -41,10 +36,8 @@ public class NetworkApiTest extends ApplicationTest
 {
     protected static final String TAG = NetworkApiTest.class.getSimpleName();
 
+    protected String mAuthorization;
     protected SaleTime mSaleTime;
-    protected StayCuration mStayCuration;
-    protected GourmetCuration mGourmetCuration;
-
 
     public NetworkApiTest()
     {
@@ -57,7 +50,7 @@ public class NetworkApiTest extends ApplicationTest
         super.setUp();
 
         mSaleTime = new SaleTime();
-        mStayCuration = new StayCuration();
+        mAuthorization = null;
 
         ignore_testLoginByDailyUser();
         ignore_testDailyDateTime();
@@ -65,6 +58,11 @@ public class NetworkApiTest extends ApplicationTest
 
     public void ignore_testLoginByDailyUser()
     {
+        if (Util.isTextEmpty(mAuthorization) == false)
+        {
+            return;
+        }
+
         HashMap<String, String> params = new HashMap<>();
         params.put("email", DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_EMAIL));
         params.put("pw", DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_PASSWORD));
@@ -84,20 +82,17 @@ public class NetworkApiTest extends ApplicationTest
 
                     if (msgCode == 0)
                     {
-                        JSONObject jsonObject = response.getJSONObject("data");
+                        JSONObject dataJSONObject = response.getJSONObject("data");
+                        DailyAssert.assertNotNull(dataJSONObject);
 
-                        boolean isLogin = jsonObject.getBoolean("is_signin");
+                        boolean isLogin = dataJSONObject.getBoolean("is_signin");
                         DailyAssert.assertTrue(isLogin);
 
+                        JSONObject tokenJSONObject = response.getJSONObject("token");
+                        DailyAssert.assertNotNull(tokenJSONObject);
                         if (isLogin == true)
                         {
                             DailyPreference.getInstance(application).setLastestCouponTime("");
-
-                            JSONObject dataJSONObject = jsonObject.getJSONObject("data");
-                            DailyAssert.assertNotNull(dataJSONObject);
-
-                            JSONObject tokenJSONObject = jsonObject.getJSONObject("token");
-                            DailyAssert.assertNotNull(tokenJSONObject);
 
                             String accessToken = tokenJSONObject.getString("access_token");
                             String tokenType = tokenJSONObject.getString("token_type");
@@ -121,7 +116,9 @@ public class NetworkApiTest extends ApplicationTest
                             //        String phoneNumber = userJSONObject.getString("phone");
                             String birthday = userJSONObject.getString("birthday");
 
-                            DailyPreference.getInstance(application).setAuthorization(String.format("%s %s", tokenType, accessToken));
+                            mAuthorization = String.format("%s %s", tokenType, accessToken);
+
+                            DailyPreference.getInstance(application).setAuthorization(mAuthorization);
                             DailyPreference.getInstance(application).setUserInformation(userType, email, name, birthday, recommender);
                             return;
                         }
@@ -138,19 +135,25 @@ public class NetworkApiTest extends ApplicationTest
                     DailyAssert.fail(msg);
                 } catch (Exception e)
                 {
-                    DailyAssert.fail(e.getMessage());
+                    DailyAssert.fail(e);
                 }
             }
 
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.fail(volleyError.getMessage());
+                DailyAssert.fail(volleyError);
             }
         });
     }
 
-    public void ignore_testDailyDateTime() {
+    public void ignore_testDailyDateTime()
+    {
+        if (mSaleTime != null)
+        {
+            return;
+        }
+
         DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, new DailyHotelJsonResponseListener()
         {
             @Override
@@ -187,14 +190,14 @@ public class NetworkApiTest extends ApplicationTest
                     }
                 } catch (Exception e)
                 {
-                    DailyAssert.fail(e.getMessage());
+                    DailyAssert.fail(e);
                 }
             }
 
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.fail(volleyError.getMessage());
+                DailyAssert.fail(volleyError);
             }
         });
     }
@@ -254,26 +257,19 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
             {
-//                if (mSaleTime == null)
-//                {
-//                    mSaleTime = new SaleTime();
-//                }
-//
-//                mSaleTime.setCurrentTime(currentDateTime);
-//                //                mSaleTime.setDailyTime(dailyDateTime);
-//                mSaleTime.setOffsetDailyDay(0);
+
             }
 
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
+                DailyAssert.fail(volleyError);
             }
 
             @Override
             public void onError(Exception e)
             {
-                DailyAssert.fail(e == null ? "" : e.getMessage());
+                DailyAssert.fail(e);
             }
 
             @Override
@@ -332,27 +328,19 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onRegionList(List<Province> provinceList, List<Area> areaList)
             {
-                if (provinceList == null || areaList == null)
-                {
-                    return;
-                }
 
-                mStayCuration = new StayCuration();
-                mStayCuration.setProvince(provinceList.get(0));
-
-                ignore_testStayListNetworkController();
             }
 
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
+                DailyAssert.fail(volleyError);
             }
 
             @Override
             public void onError(Exception e)
             {
-                DailyAssert.fail(e == null ? "" : e.getMessage());
+                DailyAssert.fail(e);
             }
 
             @Override
@@ -375,7 +363,7 @@ public class NetworkApiTest extends ApplicationTest
         stayMainNetworkController.requestEventBanner();
     }
 
-    public void ignore_testStayListNetworkController()
+    public void testStayListNetworkController()
     {
         StayListNetworkController stayListNetworkController//
             = new StayListNetworkController(application, TAG, new StayListNetworkController.OnNetworkControllerListener()
@@ -390,13 +378,13 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
+                DailyAssert.fail(volleyError);
             }
 
             @Override
             public void onError(Exception e)
             {
-                DailyAssert.fail(e == null ? "" : e.getMessage());
+                DailyAssert.fail(e);
             }
 
             @Override
@@ -412,8 +400,8 @@ public class NetworkApiTest extends ApplicationTest
             }
         });
 
-        StayParams params = (StayParams) mStayCuration.toPlaceParams(1, PAGENATION_LIST_SIZE, true);
-        stayListNetworkController.requestStayList(params);
+//        StayParams params = new StayParams()
+//        stayListNetworkController.requestStayList(params);
     }
 
     public void testGourmetMainNetworkController()
@@ -443,25 +431,19 @@ public class NetworkApiTest extends ApplicationTest
             @Override
             public void onRegionList(List<Province> provinceList, List<Area> areaList)
             {
-                if (provinceList == null || areaList == null)
-                {
-                    return;
-                }
 
-                mGourmetCuration = new GourmetCuration();
-                mGourmetCuration.setProvince(provinceList.get(0));
             }
 
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyAssert.fail(volleyError == null ? "" : volleyError.getMessage());
+                DailyAssert.fail(volleyError);
             }
 
             @Override
             public void onError(Exception e)
             {
-                DailyAssert.fail(e == null ? "" : e.getMessage());
+                DailyAssert.fail(e);
             }
 
             @Override
@@ -478,7 +460,6 @@ public class NetworkApiTest extends ApplicationTest
         });
 
         gourmetMainNetworkController.requestDateTime();
-
 
 
         gourmetMainNetworkController.requestEventBanner();

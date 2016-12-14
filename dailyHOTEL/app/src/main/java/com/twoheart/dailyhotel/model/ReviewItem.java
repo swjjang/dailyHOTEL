@@ -58,7 +58,7 @@ public class ReviewItem implements Parcelable
                 break;
             } catch (JSONException e)
             {
-                DailyAssert.fail(e.getMessage());
+                DailyAssert.fail(e);
             }
         }
 

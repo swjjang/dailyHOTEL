@@ -135,13 +135,13 @@ public class Stay extends Place
                         break;
                     } catch (JSONException e)
                     {
-                        DailyAssert.fail(e.getMessage());
+                        DailyAssert.fail(e);
                     }
                 }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                DailyAssert.fail(e.getMessage());
+                DailyAssert.fail(e);
             }
 
             if (jsonObject.has("benefit") == true) // hotelBenefit ?
@@ -154,7 +154,7 @@ public class Stay extends Place
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
-            DailyAssert.assertNotNull(e.getMessage());
+            DailyAssert.fail(e);
 
             return false;
         }
