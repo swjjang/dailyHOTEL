@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.net.URLEncoder;
@@ -72,7 +71,7 @@ public class RecentStayParams extends StayParams
             stringBuilder.setLength(length - 1);
         }
 
-//        ExLog.d(" params : " + stringBuilder.toString());
+        //        ExLog.d(" params : " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 

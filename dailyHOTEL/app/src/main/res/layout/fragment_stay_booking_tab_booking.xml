@@ -83,6 +83,8 @@
                     android:gravity="center"
                     android:minHeight="46dp"
                     android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="10dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="18dp"
@@ -162,7 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
-        
+
         <include
             layout="@layout/fragment_booking_tab_booking_03"
             android:layout_width="match_parent"

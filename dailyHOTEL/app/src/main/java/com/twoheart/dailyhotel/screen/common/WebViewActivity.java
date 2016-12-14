@@ -74,6 +74,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
         headerMap.put("App-Version", DailyHotel.VERSION);
+        headerMap.put("App-VersionCode", DailyHotel.VERSION_CODE);
         headerMap.put("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
 
         mWebView.loadUrl(url, headerMap);

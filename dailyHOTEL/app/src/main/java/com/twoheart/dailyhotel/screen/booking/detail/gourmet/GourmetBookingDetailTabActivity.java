@@ -118,13 +118,13 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         final String phone;
 
-        if(Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
+        if (Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
         {
             phone = mGourmetBookingDetail.phone1;
-        } else if(Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
+        } else if (Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
         {
             phone = mGourmetBookingDetail.phone2;
-        } else if(Util.isTextEmpty(mGourmetBookingDetail.phone3) == false)
+        } else if (Util.isTextEmpty(mGourmetBookingDetail.phone3) == false)
         {
             phone = mGourmetBookingDetail.phone3;
         } else
@@ -132,7 +132,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             phone = null;
         }
 
-        if(phone == null)
+        if (phone == null)
         {
             contactUs02Layout.setVisibility(View.GONE);
         } else

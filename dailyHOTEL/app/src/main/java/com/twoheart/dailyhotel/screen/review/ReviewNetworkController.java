@@ -45,7 +45,7 @@ public class ReviewNetworkController extends BaseNetworkController
 
                 if (msgCode == 100)
                 {
-                    ((OnNetworkControllerListener)mOnNetworkControllerListener).onAddReviewInformation(params.getString("grade"));
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddReviewInformation(params.getString("grade"));
                 } else
                 {
                     String message = response.getString("msg");
@@ -75,7 +75,7 @@ public class ReviewNetworkController extends BaseNetworkController
 
                 if (msgCode == 100)
                 {
-                    ((OnNetworkControllerListener)mOnNetworkControllerListener).onAddReviewDetailInformation();
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddReviewDetailInformation();
                 } else
                 {
                     String message = response.getString("msg");

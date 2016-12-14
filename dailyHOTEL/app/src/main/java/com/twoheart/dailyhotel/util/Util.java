@@ -469,6 +469,21 @@ public class Util implements Constants
         return version;
     }
 
+    public static String getAppVersionName(Context context)
+    {
+        String version = null;
+        try
+        {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            version = packageInfo.versionName;
+        } catch (NameNotFoundException e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return version;
+    }
+
     public static boolean isGooglePlayServicesAvailable(Context context)
     {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();

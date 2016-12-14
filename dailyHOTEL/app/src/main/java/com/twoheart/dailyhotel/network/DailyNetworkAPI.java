@@ -1093,18 +1093,11 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, DailyHotelJsonResponseListener listener)
+    public void requestPolicyRefund(Object tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
-        String params;
-
-        if (Util.isTextEmpty(transactionType) == true)
-        {
-            params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn));
-        } else
-        {
-            params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s&transactionType=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn), transactionType);
-        }
+        String params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s&dateCheckOut=%s", placeIndex//
+            , ticketIndex, URLEncoder.encode(dateCheckIn), URLEncoder.encode(dateCheckOut));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);

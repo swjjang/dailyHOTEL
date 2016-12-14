@@ -166,6 +166,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     public boolean nextFocusReview(int position)
     {
+        boolean hasNext = false;
+
         int count = mScrollLayout.getChildCount();
 
         for (int i = position; i < count; i++)
@@ -179,11 +181,31 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
                 mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
-                return true;
+                hasNext = true;
+                break;
             }
         }
 
-        return false;
+        if (hasNext == false)
+        {
+            for (int i = 0; i < position; i++)
+            {
+                ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
+
+                if (childReviewCardLayout.isChecked() == false)
+                {
+                    int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+                    int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+
+                    mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+
+                    hasNext = true;
+                    break;
+                }
+            }
+        }
+
+        return hasNext;
     }
 
     public void setReviewCommentView(String text)
@@ -270,7 +292,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                ((OnEventListener)mOnEventListener).onReviewDetailAnimationEnd();
+                ((OnEventListener) mOnEventListener).onReviewDetailAnimationEnd();
             }
 
             @Override
@@ -475,20 +497,39 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         if (toolbarHeight >= scrollY)
         {
-            float vectorValue = (float) scrollY / toolbarHeight;
-
             mPlaceImaegView.setTranslationY(-scrollY * 0.5f);
 
-            int alphaValue = (int) (0x4d * vectorValue);
-            mToolbar.setBackgroundColor((alphaValue << 24) & 0xff000000);
+            final int halfToolbarHeight = toolbarHeight / 2;
 
-            float textAlphaValue = 1 - vectorValue * 2;
-            textAlphaValue = textAlphaValue < 0 ? 0 : textAlphaValue;
-            mPlaceNameTextView.setAlpha(textAlphaValue);
-            mPeriodTextView.setAlpha(textAlphaValue);
+            if (halfToolbarHeight > scrollY)
+            {
+                float vectorValue = (float) scrollY / halfToolbarHeight;
 
-            mToolbarTitle.setAlpha(vectorValue);
-            mToolbarSubTitle.setAlpha(vectorValue);
+                int alphaValue = (int) (0x4d * vectorValue);
+                mToolbar.setBackgroundColor(0x00000000);
+
+                float textAlphaValue = 1 - vectorValue * 2;
+                textAlphaValue = textAlphaValue < 0 ? 0 : textAlphaValue;
+                mPlaceNameTextView.setAlpha(textAlphaValue);
+                mPeriodTextView.setAlpha(textAlphaValue);
+
+                mToolbarTitle.setAlpha(0.0f);
+                mToolbarSubTitle.setAlpha(0.0f);
+            } else
+            {
+                float vectorValue = (float) (scrollY - halfToolbarHeight) / halfToolbarHeight;
+
+                int alphaValue = (int) (0x4d * vectorValue);
+                mToolbar.setBackgroundColor((alphaValue << 24) & 0xff000000);
+
+                float textAlphaValue = 1 - vectorValue * 2;
+                textAlphaValue = textAlphaValue < 0 ? 0 : textAlphaValue;
+                mPlaceNameTextView.setAlpha(0.0f);
+                mPeriodTextView.setAlpha(0.0f);
+
+                mToolbarTitle.setAlpha(vectorValue);
+                mToolbarSubTitle.setAlpha(vectorValue);
+            }
         } else
         {
             mPlaceImaegView.setTranslationY(-toolbarHeight * 0.5f);

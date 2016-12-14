@@ -432,6 +432,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         HashMap<String, String> map = new HashMap<>();
         map.put("Os-Type", "android");
         map.put("App-Version", DailyHotel.VERSION);
+        map.put("App-VersionCode", DailyHotel.VERSION_CODE);
         map.put("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
 
         if (mIsUsedAccept == true)

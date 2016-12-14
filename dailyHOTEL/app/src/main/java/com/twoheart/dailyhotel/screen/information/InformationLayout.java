@@ -151,11 +151,11 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         if (Constants.DEBUG == true)
         {
-            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION);
+            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
             versionTextView.setText(version + "\n" + DailyHotelRequest.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
         } else
         {
-            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
+            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
         }
 
         boolean isLogin = DailyHotel.isLogin();
