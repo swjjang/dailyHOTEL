@@ -60,6 +60,7 @@ public class NetworkApiTest extends ApplicationTest
         mStayCuration = new StayCuration();
 
         ignore_testLoginByDailyUser();
+        ignore_testDailyDateTime();
     }
 
     public void ignore_testLoginByDailyUser()
