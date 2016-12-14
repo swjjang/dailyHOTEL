@@ -1,8 +1,10 @@
-/* Copyright (c) 2016, Facebook, Inc.
+/**
+ * Copyright (c) 2016-present, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the license found in the LICENSE file in
- * the root directory of this source tree.
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  */
 
 package com.facebook.keyframes;
@@ -14,9 +16,9 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.view.Choreographer;
 
-import java.lang.ref.WeakReference;
-
 import com.facebook.keyframes.model.KFImage;
+
+import java.lang.ref.WeakReference;
 
 /**
  * A simple callback that when run, will call back indefinitely with progress updates until
@@ -43,10 +45,6 @@ public abstract class KeyframesDrawableAnimationCallback {
 
   private long mMinimumMillisBetweenProgressUpdates = -1;
   private long mPreviousProgressMillis = 0;
-
-  private boolean mIsPaused;
-  private long mPausedCalibrateMillis;
-  private long mSavedCalibrateMillis;
 
   /**
    * Creates a KeyframesDrawableAnimationCallback appropriate for the API level of the device.
@@ -93,15 +91,15 @@ public abstract class KeyframesDrawableAnimationCallback {
   protected abstract void cancelCallback();
 
   /**
-   * Starts this animation callback.
+   * Starts this animation callback and resets the start time.
    *
-   * !IMPORTANT! This animator will run indefinitely, so it must be cancelled via #stop() when no
-   * longer in use!
+   * !IMPORTANT! This animator will run indefinitely, so it must be cancelled via #stop()
+   * or #pause() when no longer in use!
    */
   public void start() {
     mStopAtLoopEnd = false;
-    mPausedCalibrateMillis = 0;
-    mSavedCalibrateMillis = 0;
+    mStartTimeMillis = 0;
+    mCurrentLoopNumber = -1;
     cancelCallback();
     postCallback();
   }
@@ -112,37 +110,30 @@ public abstract class KeyframesDrawableAnimationCallback {
   public void stop() {
     cancelCallback();
     mStartTimeMillis = 0;
-    mPausedCalibrateMillis = 0;
-    mSavedCalibrateMillis = 0;
     mCurrentLoopNumber = -1;
     mListener.get().onStop();
   }
 
-  public void pause()
-  {
-    if(mIsPaused == true)
-    {
-      return;
-    }
-
-    mPausedCalibrateMillis = 0;
-    mSavedCalibrateMillis = 0;
-    mIsPaused = true;
-
+  /**
+   * Pauses the callbacks animation and saves start time.
+   */
+  public void pause() {
     cancelCallback();
+    mStartTimeMillis *= -1;
   }
 
-  public void resume()
-  {
-    if(mIsPaused == false)
-    {
-      return;
-    }
-
-    mPausedCalibrateMillis = mPreviousProgressMillis;
-
+  /**
+   * Resumes this animation callback.
+   *
+   * !IMPORTANT! This animator will run indefinitely, so it must be cancelled via #stop()
+   * or #pause() when no longer in use!
+   */
+  public void resume() {
+    mStopAtLoopEnd = false;
+    cancelCallback();
     postCallback();
   }
+
 
   /**
    * Stops looping the animation, but finishes the current animation.
@@ -151,22 +142,7 @@ public abstract class KeyframesDrawableAnimationCallback {
     mStopAtLoopEnd = true;
   }
 
-  protected void advanceAnimation(long frameTimeMillis) {
-    long currentTimeMillis = frameTimeMillis;
-
-    if(mPausedCalibrateMillis != 0)
-    {
-      if(mIsPaused == true)
-      {
-        frameTimeMillis = mPausedCalibrateMillis;
-        mSavedCalibrateMillis = currentTimeMillis;
-        mIsPaused = false;
-      } else
-      {
-        frameTimeMillis = mPausedCalibrateMillis + (frameTimeMillis - mSavedCalibrateMillis);
-      }
-    }
-
+  protected void advanceAnimation(final long frameTimeMillis) {
     if (mListener.get() == null) {
       cancelCallback();
       mStartTimeMillis = 0;
@@ -176,7 +152,12 @@ public abstract class KeyframesDrawableAnimationCallback {
     }
     if (mStartTimeMillis == 0) {
       mStartTimeMillis = frameTimeMillis;
+    } else if (mStartTimeMillis < 0) {
+      long pausedTimeMillis = frameTimeMillis - mPreviousProgressMillis;
+      mStartTimeMillis = mStartTimeMillis * -1 + pausedTimeMillis;
+      mPreviousProgressMillis += pausedTimeMillis;
     }
+
     int currentLoopNumber = (int) (frameTimeMillis - mStartTimeMillis) / mMillisPerLoop;
     final boolean loopHasEnded = currentLoopNumber > mCurrentLoopNumber;
     if (mStopAtLoopEnd && loopHasEnded) {
@@ -187,17 +168,10 @@ public abstract class KeyframesDrawableAnimationCallback {
     long currentProgressMillis = (frameTimeMillis - mStartTimeMillis) % mMillisPerLoop;
 
     boolean shouldUpdateProgress = true;
-
     if (frameTimeMillis - mPreviousProgressMillis < mMinimumMillisBetweenProgressUpdates) {
       shouldUpdateProgress = false;
     } else {
       mPreviousProgressMillis = frameTimeMillis;
-
-      if(mPausedCalibrateMillis != 0)
-      {
-        mPausedCalibrateMillis = mPreviousProgressMillis;
-        mSavedCalibrateMillis = currentTimeMillis;
-      }
     }
 
     if (shouldUpdateProgress) {
