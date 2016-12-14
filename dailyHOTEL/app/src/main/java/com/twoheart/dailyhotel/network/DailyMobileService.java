@@ -144,13 +144,13 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/reservation/hotel/{hotelReservationIdx}")
-    Call<JSONObject> requestHotelBookingDetailInformation(@Path("hotelReservationIdx") int index);
+    Call<JSONObject> requestStayBookingDetailInformation(@Path("hotelReservationIdx") int index);
 
     @POST("api/reserv/mine/hidden")
-    Call<JSONObject> requestHotelHiddenBooking(@Field("idx") int index);
+    Call<JSONObject> requestStayHiddenBooking(@Field("idx") int index);
 
     @GET("api/reserv/receipt")
-    Call<JSONObject> requestHotelReceipt(@Query("reservation_idx") String index);
+    Call<JSONObject> requestStayReceipt(@Query("reservation_idx") String index);
 
     @GET("api/daily/event/list")
     Call<JSONObject> requestEventList();
@@ -163,20 +163,17 @@ public interface DailyMobileService
     @GET("api/daily/event/page")
     Call<JSONObject> requestEventPageUrl(@Query("daily_event_idx") int eventIndex, @Query("store_type") String store);
 
-    @GET("api/common/company_info")
-    Call<JSONObject> requestCompanyInformation();
-
     @GET("event/v1/banner")
-    Call<JSONObject> requestEventBannerList(@Field("type") String place);
+    Call<JSONObject> requestEventBannerList(@Query("type") String place);
 
     @POST("api/v3/users/myself/phones/verification/start")
-    Call<JSONObject> requestDailyUserVerfication(@Query("phone") String phone, @Query("force_to_proceed") boolean force);
+    Call<JSONObject> requestDailyUserVerification(@Field("phone") String phone, @Field("force_to_proceed") boolean force);
 
     @POST("api/v3/users/myself/phones/verification/check")
     Call<JSONObject> requestDailyUserUpdatePhoneNumber(@Field("phone") String phone, @Field("code") String code);
 
     @POST("api/v3/users/signup/normal/validation")
-    Call<JSONObject> requestSignupValidation(@FieldMap Map<String, String> params);
+    Call<JSONObject> requestSignupValidation(@FieldMap Map<String, String> fieldMap);
 
     @POST("api/v3/users/signup/normal/phones/verification/start")
     Call<JSONObject> requestDailyUserSignupVerfication(@Field("signup_key") String signupKey,//

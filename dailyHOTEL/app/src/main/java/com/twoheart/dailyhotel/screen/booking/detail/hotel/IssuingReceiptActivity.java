@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -35,6 +36,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import org.json.JSONObject;
 
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class IssuingReceiptActivity extends BaseActivity
 {
@@ -127,7 +131,7 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance(this).requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener);
+            DailyMobileAPI.getInstance(this).requestStayReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptCallback);
         }
     }
 
@@ -469,75 +473,83 @@ public class IssuingReceiptActivity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservReceiptCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (isFinishing() == true)
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                return;
-            }
-
-            //			msg_code : 0
-            //			data :
-            //			- [String] user_name /* 유저 이름 */
-            //			- [String] user_phone /* 유저 번호 */
-            //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
-            //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
-            //			- [int] nights /* 연박 일수 */
-            //			- [int] rooms /* 객실수 */
-            //			- [String] hotel_name /* 호텔 명 */
-            //			- [String] hotel_address /* 호텔 주소 */
-            //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
-            //			- [String] currency /* 화폐 단위 */
-            //			- [int] discount /* 결제 금액 */
-            //			- [int] vat /* 부가세 */
-            //			- [int] supply_value /* 공급가액 */
-            //			- [String] payment_name /* 결제수단 */
-            //			---------------------------------
-
-            try
-            {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                if (isFinishing() == true)
                 {
-                    if (makeLayout(response.getJSONObject("data")) == false)
-                    {
-                        finish();
-                    }
-                } else
+                    return;
+                }
+
+                //			msg_code : 0
+                //			data :
+                //			- [String] user_name /* 유저 이름 */
+                //			- [String] user_phone /* 유저 번호 */
+                //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
+                //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
+                //			- [int] nights /* 연박 일수 */
+                //			- [int] rooms /* 객실수 */
+                //			- [String] hotel_name /* 호텔 명 */
+                //			- [String] hotel_address /* 호텔 주소 */
+                //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
+                //			- [String] currency /* 화폐 단위 */
+                //			- [int] discount /* 결제 금액 */
+                //			- [int] vat /* 부가세 */
+                //			- [int] supply_value /* 공급가액 */
+                //			- [String] payment_name /* 결제수단 */
+                //			---------------------------------
+
+                try
                 {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
+                    JSONObject responseJSONObject = response.body();
 
-                    String msg = response.getString("msg");
+                    int msgCode = responseJSONObject.getInt("msg_code");
 
-                    showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    if (msgCode == 0)
                     {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
+                        if (makeLayout(responseJSONObject.getJSONObject("data")) == false)
                         {
                             finish();
                         }
-                    });
+                    } else
+                    {
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        String msg = responseJSONObject.getString("msg");
+
+                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
+                    }
+                } catch (Exception e)
+                {
+                    IssuingReceiptActivity.this.onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                IssuingReceiptActivity.this.onError(e);
-            } finally
-            {
-                unLockUI();
+                IssuingReceiptActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            IssuingReceiptActivity.this.onErrorResponse(volleyError);
+            IssuingReceiptActivity.this.onError(t);
         }
     };
 

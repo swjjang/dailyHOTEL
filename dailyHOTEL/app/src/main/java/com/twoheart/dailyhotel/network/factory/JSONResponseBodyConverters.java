@@ -1,5 +1,9 @@
 package com.twoheart.dailyhotel.network.factory;
 
+import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +29,12 @@ public class JSONResponseBodyConverters {
             try {
                 return new JSONObject(value.string());
             } catch (JSONException e) {
-                e.printStackTrace();
+                ExLog.e(e.toString());
+
+                if(Constants.DEBUG == false)
+                {
+                    Crashlytics.logException(e);
+                }
             }
             return null;
         }
@@ -38,7 +47,12 @@ public class JSONResponseBodyConverters {
             try {
                 return new JSONArray(value.string());
             } catch (JSONException e) {
-                e.printStackTrace();
+                ExLog.e(e.toString());
+
+                if(Constants.DEBUG == false)
+                {
+                    Crashlytics.logException(e);
+                }
             }
             return null;
         }

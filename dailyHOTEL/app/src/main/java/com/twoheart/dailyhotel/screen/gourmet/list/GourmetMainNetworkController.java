@@ -35,7 +35,7 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
     @Override
     public void requestEventBanner()
     {
-        DailyNetworkAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListCallback);
     }
 
     @Override
@@ -149,20 +149,28 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mEventBannerListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                JSONObject responseJSONObject = response.body();
+
+                List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(responseJSONObject);
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(response);
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
         }
     };
 }

@@ -40,12 +40,12 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestDailyUserVerification(String phoneNumber, boolean force)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailUserVerificationJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserVerification(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailUserVerificationCallback);
     }
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberCallback);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
@@ -61,130 +61,139 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mDailUserVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailUserVerificationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                String message = response.getString("msg");
+                JSONObject responseJSONObject = response.body();
 
-                switch (msgCode)
+                try
                 {
-                    case 100:
-                    {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
-                        break;
-                    }
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
 
-                    default:
+                    if (response.isSuccessful() == true)
+                    {
+                        switch (msgCode)
+                        {
+                            case 100:
+                            {
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
+                                break;
+                            }
+
+                            default:
+                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                                break;
+                        }
+                    } else
+                    {
+                        if (response.code() == 422)
+                        {
+                            switch (msgCode)
+                            {
+                                // 동일한 전화번호로 인증 받은 사용자가 있는 경우
+                                case 2001:
+                                {
+                                    JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
+                                    String phoneNumber = dataJONObject.getString("phone");
+
+                                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
+                                    return;
+                                }
+
+                                // 전화번호가 유효하지 않을 때
+                                case 2003:
+                                {
+                                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                    return;
+                                }
+                            }
+                        }
+
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                        break;
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                int msgCode = jsonObject.getInt("msgCode");
-                String message = jsonObject.getString("msg");
-
-                if (volleyError.networkResponse.statusCode == 422)
-                {
-                    switch (msgCode)
-                    {
-                        // 동일한 전화번호로 인증 받은 사용자가 있는 경우
-                        case 2001:
-                        {
-                            JSONObject dataJONObject = jsonObject.getJSONObject("data");
-                            String phoneNumber = dataJONObject.getString("phone");
-
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
-                            return;
-                        }
-
-                        // 전화번호가 유효하지 않을 때
-                        case 2003:
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
-                            return;
-                        }
-                    }
-                }
-
-                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
-            }
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mDailyserUpdateVerificationPhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailyserUpdateVerificationPhoneNumberCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
+                JSONObject responseJSONObject = response.body();
 
-                if (msgCode == 100)
+                try
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    if(response.isSuccessful() == true)
+                    {
+                        if (msgCode == 100)
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
+                        } else
+                        {
+                            mOnNetworkControllerListener.onErrorPopupMessage(responseJSONObject.getInt("msgCode"), responseJSONObject.getString("msg"));
+                        }
+                    } else
+                    {
+                        if (response.code() == 422)
+                        {
+                            switch (msgCode)
+                            {
+                                // SMS인증키가 잘못된 경우
+                                case 2002:
+                                {
+                                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
+                                    return;
+                                }
+
+                                // 전화번호가 유효하지 않을 때
+                                case 2003:
+                                {
+                                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                    return;
+                                }
+                            }
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                }catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onErrorPopupMessage(response.getInt("msgCode"), response.getString("msg"));
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                int msgCode = jsonObject.getInt("msgCode");
-                String message = jsonObject.getString("msg");
-
-                if (volleyError.networkResponse.statusCode == 422)
-                {
-                    switch (msgCode)
-                    {
-                        // SMS인증키가 잘못된 경우
-                        case 2002:
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
-                            return;
-                        }
-
-                        // 전화번호가 유효하지 않을 때
-                        case 2003:
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
-                            return;
-                        }
-                    }
-                }
-
-                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
-            }
+            mOnNetworkControllerListener.onError(t);
         }
     };
 

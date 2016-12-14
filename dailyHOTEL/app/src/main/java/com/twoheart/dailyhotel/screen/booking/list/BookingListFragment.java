@@ -23,13 +23,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
@@ -428,7 +426,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     switch (booking.placeType)
                     {
                         case HOTEL:
-                            DailyNetworkAPI.getInstance(baseActivity).requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenCallback);
+                            DailyMobileAPI.getInstance(baseActivity).requestStayHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenCallback);
                             break;
 
                         case FNB:

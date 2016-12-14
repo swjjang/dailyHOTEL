@@ -266,7 +266,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelBookingDetailInformation(String tag, int index, Object listener);
+    void requestStayBookingDetailInformation(String tag, int index, Object listener);
 
     /**
      * api/reserv/mine/hidden
@@ -274,7 +274,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelHiddenBooking(String tag, int index, Object listener);
+    void requestStayHiddenBooking(String tag, int index, Object listener);
 
     /**
      * api/reserv/receipt
@@ -282,7 +282,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestHotelReceipt(String tag, String index, Object listener);
+    void requestStayReceipt(String tag, String index, Object listener);
 
     /**
      * api/daily/event/list
@@ -309,13 +309,6 @@ interface IDailyNetwork
     void requestEventPageUrl(String tag, int eventIndex, String store, Object listener);
 
     /**
-     * 회사 정보 얻어오기
-     *
-     * @return
-     */
-    void requestCompanyInformation(String tag, Object listener);
-
-    /**
      * 호텔 이벤트 배너 리스트를 얻어온다
      *
      * @param tag
@@ -329,7 +322,7 @@ interface IDailyNetwork
      * @param phone
      * @param listener
      */
-    void requestDailyUserVerfication(String tag, String phone, boolean force, Object listener);
+    void requestDailyUserVerification(String tag, String phone, boolean force, Object listener);
 
     /**
      * @param tag

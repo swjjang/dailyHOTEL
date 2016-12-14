@@ -114,7 +114,7 @@ public class MainNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNNoticeNewCount(mNetworkTag, lastEventTime, lastCouponTime, lastNoticeTime, mDailyEventCountJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventNCouponNNoticeNewCount(mNetworkTag, lastEventTime, lastCouponTime, lastNoticeTime, mDailyEventCountCallback);
     }
 
     protected void requestVersion()
@@ -246,38 +246,47 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailyEventCountCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    boolean isExistNewEvent = false;
+                    boolean isExistNewCoupon = false;
+                    boolean isExistNewNotices = false;
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        isExistNewEvent = dataJSONObject.getBoolean("isExistNewEvent");
+                        isExistNewCoupon = dataJSONObject.getBoolean("isExistNewCoupon");
+                        isExistNewNotices = dataJSONObject.getBoolean("isExistNewNotices");
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isExistNewEvent, isExistNewCoupon, isExistNewNotices);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            } else
+            {
+
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                boolean isExistNewEvent = false;
-                boolean isExistNewCoupon = false;
-                boolean isExistNewNotices = false;
 
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    isExistNewEvent = dataJSONObject.getBoolean("isExistNewEvent");
-                    isExistNewCoupon = dataJSONObject.getBoolean("isExistNewCoupon");
-                    isExistNewNotices = dataJSONObject.getBoolean("isExistNewNotices");
-                }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isExistNewEvent, isExistNewCoupon, isExistNewNotices);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
         }
     };
 

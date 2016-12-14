@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
@@ -44,6 +45,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -298,7 +302,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     {
         lockUI();
 
-        DailyNetworkAPI.getInstance(this).requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
     }
 
     @Override
@@ -443,74 +447,82 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                switch (msgCode)
+                try
                 {
-                    case 100:
-                        JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                        mHotelBookingDetail.setData(jsonObject);
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                        long checkOutDateTime = DailyCalendar.getTimeGMT9(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+                    switch (msgCode)
+                    {
+                        case 100:
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                        if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
-                        {
-                            mHotelBookingDetail.isVisibleRefundPolicy = true;
+                            mHotelBookingDetail.setData(jsonObject);
 
-                            if (mHotelBookingDetail.readyForRefund == true)
+                            long checkOutDateTime = DailyCalendar.getTimeGMT9(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+
+                            if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
                             {
-                                // 환불 대기 인 상태에서는 문구가 고정이다.
-                                loadFragments(getViewPager(), mHotelBookingDetail);
+                                mHotelBookingDetail.isVisibleRefundPolicy = true;
+
+                                if (mHotelBookingDetail.readyForRefund == true)
+                                {
+                                    // 환불 대기 인 상태에서는 문구가 고정이다.
+                                    loadFragments(getViewPager(), mHotelBookingDetail);
+                                } else
+                                {
+                                    DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
+                                        , mHotelBookingDetail.reservationIndex, mHotelBookingDetail.transactionType, mPolicyRefundJsonResponseListener);
+                                }
                             } else
                             {
-                                DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
-                                    , mHotelBookingDetail.reservationIndex, mHotelBookingDetail.transactionType, mPolicyRefundJsonResponseListener);
+                                mHotelBookingDetail.isVisibleRefundPolicy = false;
+
+                                loadFragments(getViewPager(), mHotelBookingDetail);
                             }
-                        } else
-                        {
-                            mHotelBookingDetail.isVisibleRefundPolicy = false;
+                            break;
 
-                            loadFragments(getViewPager(), mHotelBookingDetail);
-                        }
-                        break;
-
-                    // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
-                    case 501:
-                        onErrorPopupMessage(msgCode, response.getString("msg"), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
+                        // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
+                        case 501:
+                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
                             {
-                                Util.restartApp(HotelBookingDetailTabActivity.this);
-                            }
-                        });
-                        break;
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    Util.restartApp(HotelBookingDetailTabActivity.this);
+                                }
+                            });
+                            break;
 
-                    default:
-                        onErrorPopupMessage(msgCode, response.getString("msg"));
-                        break;
+                        default:
+                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                            break;
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                HotelBookingDetailTabActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            HotelBookingDetailTabActivity.this.onErrorResponse(volleyError);
+            HotelBookingDetailTabActivity.this.onError(t);
         }
     };
 
