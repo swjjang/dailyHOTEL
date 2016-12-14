@@ -85,17 +85,25 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             TextView gridItemTitleTextView = (TextView) pickItemView.findViewById(R.id.titleTextView);
             TextView gridItemDescriptionTextView = (TextView) pickItemView.findViewById(R.id.descriptionTextView);
 
-            String[] titleSplits = reviewAnswerValue.description.split("\\n");
-
-            gridItemTitleTextView.setText(titleSplits[0]);
-
-            if (titleSplits.length == 2)
+            // 빈상자인 경우
+            if (Util.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
             {
-                gridItemDescriptionTextView.setVisibility(View.VISIBLE);
-                gridItemDescriptionTextView.setText(titleSplits[1]);
+                gridItemTitleTextView.setVisibility(View.GONE);
+                gridItemDescriptionTextView.setVisibility(View.GONE);
             } else
             {
-                gridItemDescriptionTextView.setVisibility(View.GONE);
+                String[] titleSplits = reviewAnswerValue.description.split("\\n");
+
+                gridItemTitleTextView.setText(titleSplits[0]);
+
+                if (titleSplits.length == 2)
+                {
+                    gridItemDescriptionTextView.setVisibility(View.VISIBLE);
+                    gridItemDescriptionTextView.setText(titleSplits[1]);
+                } else
+                {
+                    gridItemDescriptionTextView.setVisibility(View.GONE);
+                }
             }
 
             android.support.v7.widget.GridLayout.LayoutParams gridLayoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
@@ -112,7 +120,11 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             gridLayoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
             pickItemView.setLayoutParams(gridLayoutParams);
-            pickItemView.setOnClickListener(this);
+
+            if (Util.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
+            {
+                pickItemView.setOnClickListener(this);
+            }
 
             mGridLayout.addView(pickItemView);
 
