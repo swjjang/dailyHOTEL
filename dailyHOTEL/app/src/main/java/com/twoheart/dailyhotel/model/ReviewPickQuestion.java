@@ -43,6 +43,12 @@ public class ReviewPickQuestion extends ReviewQuestion
             {
                 mAnswerValueList.add(new ReviewAnswerValue(answerValues.getJSONObject(i)));
             }
+
+            // 항상 짝수개로 맞춘다.
+            if (valueLength % 2 == 1)
+            {
+                mAnswerValueList.add(new ReviewAnswerValue((JSONObject) null));
+            }
         }
     }
 
