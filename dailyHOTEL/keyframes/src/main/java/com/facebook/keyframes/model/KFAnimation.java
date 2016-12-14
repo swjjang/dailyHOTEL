@@ -1,8 +1,10 @@
-/* Copyright (c) 2016, Facebook, Inc.
+/**
+ * Copyright (c) 2016-present, Facebook, Inc.
  * All rights reserved.
  *
- * This source code is licensed under the license found in the LICENSE file in
- * the root directory of this source tree.
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  */
 
 package com.facebook.keyframes.model;
@@ -169,15 +171,5 @@ public class KFAnimation {
 
   public KeyFramedObject getAnimation() {
     return mKeyFramedAnimation;
-  }
-
-  /**
-   * Updates this {@link KFAnimation} object with the frame rate of the entire animation. This
-   * allows the animation to update its {@link KeyFramedObject} with the right frame rate.
-   *
-   * @param frameRate {@code int} that specifies the frame rate of the entire animation
-   */
-  public void setFrameRate(int frameRate) {
-    mKeyFramedAnimation.updateWithFrameRate(frameRate);
   }
 }

@@ -21,7 +21,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
@@ -88,25 +87,19 @@ public class StayAutoRefundActivity extends BaseActivity
 
         mHotelBookingDetail = intent.getParcelableExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL);
 
+        if (mHotelBookingDetail == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         initToolbar();
 
         mSelectedCancelReason = -1;
         mStayAutoRefundLayout.setRefundButtonEnabled(false);
 
         // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
-        try
-        {
-            mStayAutoRefundLayout.setPlaceBookingDetail(mHotelBookingDetail);
-        } catch (RuntimeException e)
-        {
-            if (DEBUG == false)
-            {
-                Crashlytics.logException(new RuntimeException(mHotelBookingDetail.guestEmail + ", " + mHotelBookingDetail.reservationIndex));
-            }
-
-            Util.restartApp(this);
-            return;
-        }
+        mStayAutoRefundLayout.setPlaceBookingDetail(mHotelBookingDetail);
 
         // 계좌 이체인 경우
         if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
