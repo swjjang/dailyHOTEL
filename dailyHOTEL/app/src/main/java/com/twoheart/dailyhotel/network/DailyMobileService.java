@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
@@ -10,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -65,8 +67,8 @@ public interface DailyMobileService
     Call<JSONObject> requestUserDeleteBillingCard(@Field("billkey") String billkey);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotels/sales")
-    Call<JSONObject> requestStayList(@QueryMap Map<String, Object> params);
+    @GET("api/v3/hotels/sales{query}")
+    Call<JSONObject> requestStayList(@Path(value = "query", encoded = false) String query);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotels/sales")

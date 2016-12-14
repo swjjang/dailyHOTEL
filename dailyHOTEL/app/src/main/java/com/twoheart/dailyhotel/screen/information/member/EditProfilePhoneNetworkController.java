@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -12,6 +13,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EditProfilePhoneNetworkController extends BaseNetworkController
 {
@@ -50,7 +54,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         params.put("user_idx", userIndex);
         params.put("user_phone", phoneNumber.replaceAll("-", ""));
 
-        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,35 +188,43 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mUserUpdateSocialJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserUpdateSocialJsonResponseListener = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                boolean result = jsonObject.getBoolean("is_success");
-                int msgCode = response.getInt("msg_code");
-
-                if (result == true)
+                try
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
-                } else
+                    JSONObject responseJSONObject = response.body();
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                    boolean result = dataJSONObject.getBoolean("is_success");
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (result == true)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
+                    } else
+                    {
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                    }
+                } catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

@@ -2464,7 +2464,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 }
 
                 // 3. 간편결제 credit card 요청
-                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
+                DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListCallback);
 
             } catch (Exception e)
             {

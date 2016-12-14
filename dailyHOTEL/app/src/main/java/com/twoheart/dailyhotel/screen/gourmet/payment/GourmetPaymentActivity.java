@@ -1716,7 +1716,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     if (gourmetPaymentInformation.ticketTime == 0)
                     {
                         // 방문시간을 선택하지 않은 경우
-                        DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
+                        DailyMobileAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListCallback);
                     } else
                     {
                         requestValidateTicketPayment(gourmetPaymentInformation, mCheckInSaleTime);
@@ -1933,7 +1933,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 if (isOnSale == true && msgCode == 0)
                 {
-                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
+                    DailyMobileAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListCallback);
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"));
