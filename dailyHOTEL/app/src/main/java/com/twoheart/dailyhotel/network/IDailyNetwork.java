@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.network;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 import org.json.JSONObject;
 
 import java.util.List;

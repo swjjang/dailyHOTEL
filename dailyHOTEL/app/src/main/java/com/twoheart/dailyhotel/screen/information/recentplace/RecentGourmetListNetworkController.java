@@ -2,13 +2,10 @@ package com.twoheart.dailyhotel.screen.information.recentplace;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -18,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -46,8 +42,7 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsMap()
-            , params.getCategoryList(), params.getTimeList(), params.getLuxuryList(), mRecentListCallback);
+        DailyMobileAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsMap(), params.getCategoryList(), params.getTimeList(), params.getLuxuryList(), mRecentListCallback);
     }
 
     private retrofit2.Callback mRecentListCallback = new retrofit2.Callback<JSONObject>()

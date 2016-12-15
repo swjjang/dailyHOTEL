@@ -252,25 +252,25 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     }
 
-//    @Override
-//    public void requestStaySearchList(String tag, String stayParams, Object listener)
-//    {
-//        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "NzAkMCQ0OSQ2NiQ3OSQyMyQzNCQ5NCQ0MCQ2NiQxNiQ2OCQ3JDYyJDE2JDE4JA==$RN0Q4MjFQwNEY0RUXNPZDMDU0MDZlCQ0VFNDJCPRUNDOWEJBRTMxQzM4HRjkxODREEQjFBMKYjVBXNzRGNTUk3RkMD4OTA4NTI1RA=B=$";
-//
-//        String params;
-//
-//        if (Util.isTextEmpty(stayParams) == false)
-//        {
-//            params = "?" + stayParams;
-//        } else
-//        {
-//            return;
-//        }
-//
-//        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, (DailyHotelJsonResponseListener) listener);
-//        dailyHotelJsonRequest.setIsUsedAccept(true);
-//        mQueue.add(dailyHotelJsonRequest);
-//    }
+    //    @Override
+    //    public void requestStaySearchList(String tag, String stayParams, Object listener)
+    //    {
+    //        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "NzAkMCQ0OSQ2NiQ3OSQyMyQzNCQ5NCQ0MCQ2NiQxNiQ2OCQ3JDYyJDE2JDE4JA==$RN0Q4MjFQwNEY0RUXNPZDMDU0MDZlCQ0VFNDJCPRUNDOWEJBRTMxQzM4HRjkxODREEQjFBMKYjVBXNzRGNTUk3RkMD4OTA4NTI1RA=B=$";
+    //
+    //        String params;
+    //
+    //        if (Util.isTextEmpty(stayParams) == false)
+    //        {
+    //            params = "?" + stayParams;
+    //        } else
+    //        {
+    //            return;
+    //        }
+    //
+    //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, (DailyHotelJsonResponseListener) listener);
+    //        dailyHotelJsonRequest.setIsUsedAccept(true);
+    //        mQueue.add(dailyHotelJsonRequest);
+    //    }
 
     @Override
     public void requestStaySearchAutoCompleteList(String tag, String date, int stays, String text, Object listener)
@@ -1030,6 +1030,23 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
+    public void requestWishList(String tag, String placeType, Object listener)
+    {
+
+    }
+
+    @Override
+    public void requestAddWishList(String tag, String placeType, int placeIndex, Object listener)
+    {
+
+    }
+
+    @Override
+    public void requestRemoveWishList(String tag, String placeType, int placeIndex, Object listener)
+    {
+
+    }
+
     public void requestWishList(String tag, Constants.PlaceType placeType, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}" : "NiQzMSQ5JDM4JDkxJDQzJDg5JDc1JDQ3JDc1JDEkNTUkNjAkNTUkNDMkMjYk$MJjgzRDYY1IMzVDNTNERDQ3QzYA5RTEzQ0DI0NURYDM0RQRyRkSU4NzUxGWMDQzRMTU0OTYwRkVBRTQyQDTWUzODM3OURGNUYwIQg=F=$";
@@ -1041,7 +1058,6 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
-    @Override
     public void requestAddWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/add/{itemIdx}" : "MTIkMTI3JDM5JDk3JDExOSQzOSQ3MSQxMDAkMTI3JDc4JDk1JDU3JDEwMCQxMzEkOTMkMTA5JA==$MjgzRDY1MzVDYNTNERDQ3QzY5RTEzQ0I0NURDM0RIQyRkVFRTJEN0I0MjWA5MkRCNDcxMUU1IRDNGMUDZDRUQyOTMxMTUR1RDJdFMRUNYWEQjAA3OURCMTgxMjVFNjYzFOTFGGSNkMzMUDI1$";
@@ -1055,7 +1071,6 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
-    @Override
     public void requestRemoveWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "MjEkMzgkNzQkMTE4JDYwJDQyJDQ2JDExMyQxMDEkMzQkMTM1JDExNSQxMzMkOTgkNDAkODgk$ODFCMzNDMDREN0VCNUFDOXEVEMjA3RjAzMWDc4RJMjhGFQkRVBN0M5MTA4M0REMjCNDMjkyMDVEMkEzUQkYxMjcwQOEM2M0Q5MDdGBOEMO2MUU2QTM1RTFWDFMjZENjAM1NTg2NzLAyNVkVD$";

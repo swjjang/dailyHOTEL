@@ -2,12 +2,9 @@ package com.twoheart.dailyhotel.screen.main;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -18,8 +15,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
-
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -125,7 +120,7 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestReviewGourmet()
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mReviewGourmetJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mReviewGourmetCallback);
     }
 
     public void requestNoticeAgreement()
@@ -290,64 +285,80 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mReviewGourmetJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReviewGourmetCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 1000 && response.has("data") == true)
+                try
                 {
-                    Review review = new Review(response.getJSONObject("data"));
+                    JSONObject responseJSONObject = response.body();
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewGourmet(review);
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 1000 && responseJSONObject.has("data") == true)
+                    {
+                        Review review = new Review(responseJSONObject.getJSONObject("data"));
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewGourmet(review);
+                    } else
+                    {
+                        // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
+                        requestNoticeAgreement();
+                    }
+                } catch (Exception e)
                 {
-                    // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
-                    requestNoticeAgreement();
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.d(e.toString());
+
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
 
         }
     };
 
-    private DailyHotelJsonResponseListener mReviewHotelJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReviewStayCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100 && response.has("data") == true)
+                try
                 {
-                    Review review = new Review(response.getJSONObject("data"));
+                    JSONObject responseJSONObject = response.body();
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewHotel(review);
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100 && responseJSONObject.has("data") == true)
+                    {
+                        Review review = new Review(responseJSONObject.getJSONObject("data"));
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewHotel(review);
+                    } else
+                    {
+                        requestReviewGourmet();
+                    }
+                } catch (Exception e)
                 {
-                    requestReviewGourmet();
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.d(e.toString());
+
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
 
         }
@@ -388,10 +399,10 @@ public class MainNetworkController extends BaseNetworkController
                         AnalyticsManager.getInstance(mContext).startApplication();
 
                         // 누적 적립금 판단.
-                        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
+                        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
 
                         // 호텔 평가요청
-                        DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);
+                        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewStayCallback);
                     } else
                     {
                         mOnNetworkControllerListener.onError(null);

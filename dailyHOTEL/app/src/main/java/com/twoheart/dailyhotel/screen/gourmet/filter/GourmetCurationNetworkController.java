@@ -2,18 +2,13 @@ package com.twoheart.dailyhotel.screen.gourmet.filter;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
-
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;

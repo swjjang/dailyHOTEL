@@ -2,10 +2,7 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
@@ -147,7 +144,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                     int msgCode = responseJSONObject.getInt("msgCode");
                     String message = responseJSONObject.getString("msg");
 
-                    if(response.isSuccessful() == true)
+                    if (response.isSuccessful() == true)
                     {
                         if (msgCode == 100)
                         {
@@ -180,7 +177,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
-                }catch (Exception e)
+                } catch (Exception e)
                 {
                     mOnNetworkControllerListener.onError(e);
                 }

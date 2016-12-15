@@ -22,8 +22,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
-import java.net.URLDecoder;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

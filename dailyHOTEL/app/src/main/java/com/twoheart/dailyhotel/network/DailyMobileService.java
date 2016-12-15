@@ -1,8 +1,5 @@
 package com.twoheart.dailyhotel.network;
 
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.Constants;
-
 import org.json.JSONObject;
 
 import java.util.List;
@@ -87,8 +84,8 @@ public interface DailyMobileService
 
     @GET("api/hotel/v1/payment/detail")
     Call<JSONObject> requestStayPaymentInformation(@Query("room_idx") int roomIndex,//
-                                                    @Query("checkin_date") String date,//
-                                                    @Query("nights") int nights);
+                                                   @Query("checkin_date") String date,//
+                                                   @Query("nights") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/hotel/{hotelIdx}")
@@ -125,8 +122,8 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/gourmet/sales")
     Call<JSONObject> requestGourmetList(@QueryMap Map<String, Object> queryMap,//
-                                        @Query("category")List<String> categoryList,//
-                                        @Query("timeFrame")List<String> timeList,//
+                                        @Query("category") List<String> categoryList,//
+                                        @Query("timeFrame") List<String> timeList,//
                                         @Query("luxury") List<String> luxuryList);
 
     @GET("api/v3/gourmet/sales/search/auto_complete")
@@ -329,20 +326,12 @@ public interface DailyMobileService
     Call<JSONObject> requestBankList();
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/review/hotel/question")
-    Call<JSONObject> requestStayReviewInformation();
+    @GET("api/v4/review/{type}/question")
+    Call<JSONObject> requestReviewInformation(@Path("type") String type);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/review/gourmet/question")
-    Call<JSONObject> requestGourmetReviewInformation();
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/review/hotel/{reserveIdx}/question")
-    Call<JSONObject> requestStayReviewInformation(@Path("reserveIdx") int reserveIdx);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/review/gourmet/{reserveIdx}/question")
-    Call<JSONObject> requestGourmetReviewInformation(@Path("reserveIdx") int reserveIdx);
+    @GET("api/v4/review/{type}/{reserveIdx}/question")
+    Call<JSONObject> requestReviewInformation(@Path("type") String type, @Path("reserveIdx") int reserveIdx);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("api/v4/review/add")

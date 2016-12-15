@@ -84,7 +84,7 @@ public class RetrofitHttpClient implements Constants
 
     public void cancelAll(String tag)
     {
-        if(mTagCancellableCallAdapterFactory == null)
+        if (mTagCancellableCallAdapterFactory == null)
         {
             return;
         }
@@ -94,7 +94,7 @@ public class RetrofitHttpClient implements Constants
 
     public void cancelAll()
     {
-        if(mTagCancellableCallAdapterFactory == null)
+        if (mTagCancellableCallAdapterFactory == null)
         {
             return;
         }

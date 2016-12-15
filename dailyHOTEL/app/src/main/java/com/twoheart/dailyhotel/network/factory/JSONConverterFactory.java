@@ -13,34 +13,40 @@ import retrofit2.Retrofit;
 
 /**
  * https://github.com/marcinOz/Retrofit2JSONConverterFactory
- *
+ * <p>
  * Created by MarcinOz on 2016-04-21.
  * Copyright (C) 2016 OKE Poland Sp. z o.o. All rights reserved.
  */
-public class JSONConverterFactory extends Converter.Factory {
-    public static JSONConverterFactory create() {
+public class JSONConverterFactory extends Converter.Factory
+{
+    public static JSONConverterFactory create()
+    {
         return new JSONConverterFactory();
     }
 
-    private JSONConverterFactory() {
+    private JSONConverterFactory()
+    {
     }
 
-    @Override public Converter<?, RequestBody> requestBodyConverter(Type type,
-                                                                    Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
-        if (type == JSONObject.class
-                || type == JSONArray.class) {
+    @Override
+    public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit)
+    {
+        if (type == JSONObject.class || type == JSONArray.class)
+        {
             return JSONRequestBodyConverter.INSTANCE;
         }
         return null;
     }
 
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
-                                                            Retrofit retrofit) {
-        if (type == JSONObject.class) {
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit)
+    {
+        if (type == JSONObject.class)
+        {
             return JSONResponseBodyConverters.JSONObjectResponseBodyConverter.INSTANCE;
         }
-        if (type == JSONArray.class) {
+        if (type == JSONArray.class)
+        {
             return JSONResponseBodyConverters.JSONArrayResponseBodyConverter.INSTANCE;
         }
         return null;

@@ -8,18 +8,22 @@ import retrofit2.Converter;
 
 /**
  * https://github.com/marcinOz/Retrofit2JSONConverterFactory
- *
+ * <p>
  * Created by MarcinOz on 2016-04-21.
  * Copyright (C) 2016 OKE Poland Sp. z o.o. All rights reserved.
  */
-public class JSONRequestBodyConverter<T> implements Converter<T, RequestBody> {
+public class JSONRequestBodyConverter<T> implements Converter<T, RequestBody>
+{
     static final JSONRequestBodyConverter<Object> INSTANCE = new JSONRequestBodyConverter<>();
     private static final MediaType MEDIA_TYPE = MediaType.parse("text/plain; charset=UTF-8");
 
-    private JSONRequestBodyConverter() {
+    private JSONRequestBodyConverter()
+    {
     }
 
-    @Override public RequestBody convert(T value) throws IOException {
+    @Override
+    public RequestBody convert(T value) throws IOException
+    {
         return RequestBody.create(MEDIA_TYPE, String.valueOf(value));
     }
 }

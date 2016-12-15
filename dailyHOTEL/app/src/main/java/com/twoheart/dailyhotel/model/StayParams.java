@@ -3,11 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.util.ArrayMap;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,9 +124,9 @@ public class StayParams extends PlaceParams
 
         List<String> bedTypeList = getBedTypeList();
 
-        if(bedTypeList != null && bedTypeList.size() > 0)
+        if (bedTypeList != null && bedTypeList.size() > 0)
         {
-            for(String bedType : bedTypeList)
+            for (String bedType : bedTypeList)
             {
                 stringBuilder.append("&bedType").append('=').append(bedType);
             }
@@ -137,9 +134,9 @@ public class StayParams extends PlaceParams
 
         List<String> luxuryList = getLuxuryList();
 
-        if(luxuryList != null && luxuryList.size() > 0)
+        if (luxuryList != null && luxuryList.size() > 0)
         {
-            for(String luxury : luxuryList)
+            for (String luxury : luxuryList)
             {
                 stringBuilder.append("&luxury").append('=').append(luxury);
             }
@@ -181,15 +178,15 @@ public class StayParams extends PlaceParams
             hashMap.put("category", category.code);
         }
 
-//        if(mBedTypeList != null && mBedTypeList.size() > 0)
-//        {
-//            hashMap.put("bedType", mBedTypeList);
-//        }
-//
-//        if(mLuxuryList != null && mLuxuryList.size() > 0)
-//        {
-//            hashMap.put("luxury", mLuxuryList);
-//        }
+        //        if(mBedTypeList != null && mBedTypeList.size() > 0)
+        //        {
+        //            hashMap.put("bedType", mBedTypeList);
+        //        }
+        //
+        //        if(mLuxuryList != null && mLuxuryList.size() > 0)
+        //        {
+        //            hashMap.put("luxury", mLuxuryList);
+        //        }
 
         if (page > 0)
         {
@@ -211,7 +208,7 @@ public class StayParams extends PlaceParams
 
         hashMap.put("details", details);
 
-//        ExLog.d("params : " + hashMap.toString());
+        //        ExLog.d("params : " + hashMap.toString());
         return hashMap;
     }
 
