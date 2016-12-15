@@ -52,12 +52,16 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
 
     public void requestAddWishList(Constants.PlaceType placeType, int placeIndex)
     {
-        DailyNetworkAPI.getInstance(mContext).requestAddWishList(mNetworkTag, placeType, placeIndex, mAddWishListJsonResponseListener);
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestAddWishList(mNetworkTag, type, placeIndex, mAddWishListCallback);
     }
 
     public void requestRemoveWishList(Constants.PlaceType placeType, int placeIndex)
     {
-        DailyNetworkAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, placeType, placeIndex, mRemoveWishListJsonResponseListener);
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, type, placeIndex, mRemoveWishListCallback);
     }
 
     private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<JSONObject>()
@@ -162,63 +166,79 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mAddWishListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mAddWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                boolean isSuccess = msgCode == 100 ? true : false;
-
-                String message = null;
-                if (response.has("msg") == true)
+                try
                 {
-                    message = response.getString("msg");
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddWishList(isSuccess, message);
-            } catch (Exception e)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100 ? true : false;
+
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
+                    {
+                        message = responseJSONObject.getString("msg");
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddWishList(isSuccess, message);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mRemoveWishListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mRemoveWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                boolean isSuccess = msgCode == 100 ? true : false;
-
-                String message = null;
-                if (response.has("msg") == true)
+                try
                 {
-                    message = response.getString("msg");
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveWishList(isSuccess, message);
-            } catch (Exception e)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100 ? true : false;
+
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
+                    {
+                        message = responseJSONObject.getString("msg");
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveWishList(isSuccess, message);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

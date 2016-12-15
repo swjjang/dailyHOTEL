@@ -42,7 +42,7 @@ public class WishListTabNetworkController extends BaseNetworkController
 
     public void requestWishListCount()
     {
-        DailyNetworkAPI.getInstance(mContext).requestWishListCount(mNetworkTag, mWishListCountJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestWishListCount(mNetworkTag, mWishListCountCallback);
     }
 
     private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<JSONObject>()
@@ -88,39 +88,47 @@ public class WishListTabNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mWishListCountJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mWishListCountCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    int userIndex = dataJSONObject.getInt("userIdx");
-                    int stayWishCount = dataJSONObject.getInt("wishHotelCount");
-                    int gourmetWishCount = dataJSONObject.getInt("wishGourmetCount");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(stayWishCount, gourmetWishCount);
-                } else
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        int userIndex = dataJSONObject.getInt("userIdx");
+                        int stayWishCount = dataJSONObject.getInt("wishHotelCount");
+                        int gourmetWishCount = dataJSONObject.getInt("wishGourmetCount");
+
+                        ((WishListTabNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishListCount(stayWishCount, gourmetWishCount);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onError(new RuntimeException(message));
+                    }
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onError(new RuntimeException(message));
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

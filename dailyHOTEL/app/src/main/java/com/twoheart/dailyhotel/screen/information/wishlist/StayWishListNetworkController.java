@@ -6,8 +6,7 @@ import android.net.Uri;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -19,6 +18,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -40,82 +42,79 @@ public class StayWishListNetworkController extends BaseNetworkController
 
     public void requestStayWishList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestWishList(mNetworkTag, Constants.PlaceType.HOTEL, mListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "hotel", mWishListCallback);
     }
 
     public void requestRemoveStayWishListItem(int placeIndex)
     {
-        DailyNetworkAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, //
-            Constants.PlaceType.HOTEL, placeIndex, mRemoveWishListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, //
+            "hotel", placeIndex, mRemoveWishListCallback);
     }
 
 
-    private DailyHotelJsonResponseListener mListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = null;
+                    JSONObject responseJSONObject = response.body();
 
-                    if (dataJSONObject.has("hotelSales") == true)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
                     {
-                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
-                    }
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        JSONArray hotelJSONArray = null;
 
-                    //                    int page;
-                    String imageUrl;
+                        if (dataJSONObject.has("hotelSales") == true)
+                        {
+                            hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                        }
 
-                    ArrayList<Stay> stayList;
+                        //                    int page;
+                        String imageUrl;
 
-                    if (hotelJSONArray != null)
-                    {
-                        imageUrl = dataJSONObject.getString("imgUrl");
-                        int nights = dataJSONObject.getInt("stays");
-                        stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        ArrayList<Stay> stayList;
+
+                        if (hotelJSONArray != null)
+                        {
+                            imageUrl = dataJSONObject.getString("imgUrl");
+                            int nights = dataJSONObject.getInt("stays");
+                            stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                        } else
+                        {
+                            stayList = new ArrayList<>();
+                        }
+
+                        ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(stayList);
                     } else
                     {
-                        stayList = new ArrayList<>();
+                        String message = responseJSONObject.getString("msg");
+
+                        if (Constants.DEBUG == false)
+                        {
+                            Crashlytics.log(call.request().url().toString());
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
-
-                    //                    try
-                    //                    {
-                    //                        Uri uri = Uri.parse(url);
-                    //                        String pageString = uri.getQueryParameter("page");
-                    //                        page = Integer.parseInt(pageString);
-                    //
-                    //                    } catch (Exception e)
-                    //                    {
-                    //                        page = 0;
-                    //                    }
-
-                    ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(stayList);
-                } else
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(url);
-                    }
-
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
 
         private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
@@ -146,27 +145,28 @@ public class StayWishListNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mRemoveWishListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mRemoveWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-
-                int msgCode = response.getInt("msgCode");
-                boolean isSuccess = msgCode == 100 ? true : false;
-
-                String message = null;
-                if (response.has("msg") == true)
+                try
                 {
-                    message = response.getString("msg");
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                int placeIndex = -1;
-                if (Util.isTextEmpty(url) == false)
-                {
-                    Uri uri = Uri.parse(url);
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100 ? true : false;
+
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
+                    {
+                        message = responseJSONObject.getString("msg");
+                    }
+
+                    int placeIndex = -1;
+                    Uri uri = Uri.parse(call.request().url().toString());
                     String indexString = uri.getLastPathSegment();
 
                     try
@@ -175,19 +175,22 @@ public class StayWishListNetworkController extends BaseNetworkController
                     } catch (Exception e)
                     {
                     }
-                }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveStayWishListItem(isSuccess, message, placeIndex);
-            } catch (Exception e)
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveStayWishListItem(isSuccess, message, placeIndex);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

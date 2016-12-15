@@ -201,24 +201,12 @@ public interface DailyMobileService
                                             @Field("code") String code, @Field("phone") String phone);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signup/facebook")
-    Call<JSONObject> requestFacebookUserSignup(@FieldMap Map<String, String> fieldMap);
+    @POST("api/v3/users/signup/{type}")
+    Call<JSONObject> requestUserSignup(@Path("type") String type, @FieldMap Map<String, String> fieldMap);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signup/kakao_talk")
-    Call<JSONObject> requestKakaoUserSignup(@FieldMap Map<String, String> fieldMap);
-
-    @FormUrlEncoded
-    @POST("api/v3/users/signin/normal")
-    Call<JSONObject> requestDailyUserSignin(@FieldMap Map<String, String> fieldMap);
-
-    @FormUrlEncoded
-    @POST("api/v3/users/signin/facebook")
-    Call<JSONObject> requestFacebookUserSignin(@FieldMap Map<String, String> fieldMap);
-
-    @FormUrlEncoded
-    @POST("api/v3/users/signin/kakao_talk")
-    Call<JSONObject> requestKakaoUserSignin(@FieldMap Map<String, String> fieldMap);
+    @POST("api/v3/users/signin/{type}")
+    Call<JSONObject> requestUserSignin(@Path("type") String type, @FieldMap Map<String, String> fieldMap);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v3/users/coupons")
@@ -299,7 +287,6 @@ public interface DailyMobileService
     @GET("api/v3/gourmet/sales")
     Call<JSONObject> requestRecentGourmetList(@QueryMap Map<String, String> gourmetParams);
 
-    @FormUrlEncoded
     @POST("api/v3/users/reservations/{kind}/{reservationIdx}/receipts")
     Call<JSONObject> requestReceiptByEmail(@Path("kind") String placeType, //
                                            @Path("reservationIdx") String reservationIdx, //
@@ -324,13 +311,13 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/payment/policy_refund")
     Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
-                                         @Query("dateCheckIn") String dateCheckIn);
+                                         @Query("dateCheckIn") String dateCheckIn, @Query("transactionType") String transactionType);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/payment/policy_refund")
-    Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
-                                         @Query("dateCheckIn") String dateCheckIn, @Query("transactionType") String transactionType);
+    Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("dateCheckIn") String dateCheckIn);
 
+    @FormUrlEncoded
     @POST("api/v2/payment/refund")
     Call<JSONObject> requestRefund(@Field("hotelIdx") int hotelIdx, @Field("dateCheckIn") String dateCheckIn,//
                                    @Field("transactionType") String transactionType, @Field("hotelReservationIdx") int hotelReservationIdx, //

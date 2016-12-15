@@ -479,8 +479,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                                     loadFragments(getViewPager(), mHotelBookingDetail);
                                 } else
                                 {
-                                    DailyNetworkAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
-                                        , mHotelBookingDetail.reservationIndex, mHotelBookingDetail.transactionType, mPolicyRefundJsonResponseListener);
+                                    DailyMobileAPI.getInstance(HotelBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
+                                        , mHotelBookingDetail.reservationIndex, mHotelBookingDetail.transactionType, mPolicyRefundCallback);
                                 }
                             } else
                             {
@@ -526,106 +526,114 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mPolicyRefundJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                switch (msgCode)
+                try
                 {
-                    case 100:
-                    case 1015:
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    switch (msgCode)
                     {
-                        JSONObject dataJSONObject = response.getJSONObject("data");
-
-                        String comment = dataJSONObject.getString("comment");
-                        String refundPolicy = dataJSONObject.getString("refundPolicy");
-                        boolean refundManual = dataJSONObject.getBoolean("refundManual");
-
-                        // 환불 킬스위치 ON
-                        if (refundManual == true)
+                        case 100:
+                        case 1015:
                         {
-                            if (HotelBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            String comment = dataJSONObject.getString("comment");
+                            String refundPolicy = dataJSONObject.getString("refundPolicy");
+                            boolean refundManual = dataJSONObject.getBoolean("refundManual");
+
+                            // 환불 킬스위치 ON
+                            if (refundManual == true)
                             {
+                                if (HotelBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
+                                {
+                                    mHotelBookingDetail.refundPolicy = refundPolicy;
+                                    mHotelBookingDetail.mRefundComment = comment;
+                                } else
+                                {
+                                    mHotelBookingDetail.refundPolicy = HotelBookingDetail.STATUS_SURCHARGE_REFUND;
+                                    mHotelBookingDetail.mRefundComment = responseJSONObject.getString("msg");
+                                }
+
+                                loadFragments(getViewPager(), mHotelBookingDetail);
+                            } else
+                            {
+                                if (HotelBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                                {
+                                    mHotelBookingDetail.isVisibleRefundPolicy = false;
+                                } else
+                                {
+                                    mHotelBookingDetail.mRefundComment = comment;
+                                }
+
                                 mHotelBookingDetail.refundPolicy = refundPolicy;
-                                mHotelBookingDetail.mRefundComment = comment;
-                            } else
-                            {
-                                mHotelBookingDetail.refundPolicy = HotelBookingDetail.STATUS_SURCHARGE_REFUND;
-                                mHotelBookingDetail.mRefundComment = response.getString("msg");
+                                loadFragments(getViewPager(), mHotelBookingDetail);
                             }
 
-                            loadFragments(getViewPager(), mHotelBookingDetail);
-                        } else
-                        {
-                            if (HotelBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                            // Analytics
+                            if (Util.isTextEmpty(refundPolicy) == false)
                             {
-                                mHotelBookingDetail.isVisibleRefundPolicy = false;
+                                switch (refundPolicy)
+                                {
+                                    case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE);
+                                        break;
+
+                                    case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
+                                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE);
+                                        break;
+
+                                    default:
+                                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
+                                        break;
+                                }
                             } else
                             {
-                                mHotelBookingDetail.mRefundComment = comment;
+                                AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                             }
-
-                            mHotelBookingDetail.refundPolicy = refundPolicy;
-                            loadFragments(getViewPager(), mHotelBookingDetail);
+                            break;
                         }
 
-                        // Analytics
-                        if (Util.isTextEmpty(refundPolicy) == false)
-                        {
-                            switch (refundPolicy)
-                            {
-                                case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE);
-                                    break;
+                        default:
+                            mHotelBookingDetail.isVisibleRefundPolicy = false;
 
-                                case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE);
-                                    break;
+                            loadFragments(getViewPager(), mHotelBookingDetail);
 
-                                default:
-                                    AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
-                                    break;
-                            }
-                        } else
-                        {
                             AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
-                        }
-                        break;
+                            break;
                     }
-
-                    default:
-                        mHotelBookingDetail.isVisibleRefundPolicy = false;
-
-                        loadFragments(getViewPager(), mHotelBookingDetail);
-
-                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
-                        break;
+                } catch (Exception e)
+                {
+                    onError(e);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            } finally
-            {
-                unLockUI();
+                HotelBookingDetailTabActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            HotelBookingDetailTabActivity.this.onErrorResponse(volleyError);
+            HotelBookingDetailTabActivity.this.onError(t);
         }
     };
 }

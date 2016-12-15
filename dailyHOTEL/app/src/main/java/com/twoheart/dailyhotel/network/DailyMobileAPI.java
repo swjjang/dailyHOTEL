@@ -784,7 +784,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestFacebookUserSignup(String tag, Map<String, String> params, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestFacebookUserSignup(params);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserSignup("facebook", params);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
@@ -798,7 +798,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestKakaoUserSignup(String tag, Map<String, String> params, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestKakaoUserSignup(params);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserSignup("kakao_talk", params);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
@@ -812,7 +812,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestDailyUserSignin(String tag, Map<String, String> params, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestDailyUserSignin(params);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserSignin("normal", params);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
@@ -826,7 +826,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestFacebookUserSignin(String tag, Map<String, String> params, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestFacebookUserSignin(params);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserSignin("facebook", params);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
@@ -840,7 +840,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestKakaoUserSignin(String tag, Map<String, String> params, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestKakaoUserSignin(params);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserSignin("kakao_talk", params);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
@@ -1161,6 +1161,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestReceiptByEmail(String tag, String placeType, String reservationIdx, String email, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReceiptByEmail(placeType, reservationIdx, email);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/reservations/{kind}/{reservationIdx}/receipts" : "ODQkOTgkMTY5JDckNTYkNjkkNTkkOTUkNjQkMTczJDEyOCQ3NiQ0NCQ0NCQ3OSQxMTEk$OUIxOEUQwMUJFREVGQkMwOENEOEE5MkY5REY2NjE0QTcFC2REU0RDk2MzEVyOZURCMXDQ1Q0UOzRUEPYzOENFMzZGREMwNQUEwQUHFDNkVDQRzIQxRjFBNzJGQUQwQTJCMDg5NOEU2NTc1QzgyRkE1QkFCQ0E0NzQ0ODlBRTYzN0ZGMjhFMYzFMDMDQ=$";
         //
         //        Map<String, String> urlParams = new HashMap<>();
@@ -1176,6 +1180,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestWishListCount(String tag, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestWishListCount();
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes" : "MzgkMTUkMzIkMTgkNDAkNDEkMzMkMjkkNDMkMTQkMjIkMTkkNDUkNTAkMjgkMzIk$NTBFODQwNDgzNTPAWzNFF0IWxQUIL2OEMER4NzBCWCMjMyNIALIkOEVCNDU=$";
         //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
         //        dailyHotelJsonRequest.setIsUsedAccept(true);
@@ -1183,8 +1191,12 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestWishList(String tag, Constants.PlaceType placeType, Object listener)
+    public void requestWishList(String tag, String placeType, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestWishList(placeType);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}" : "NiQzMSQ5JDM4JDkxJDQzJDg5JDc1JDQ3JDc1JDEkNTUkNjAkNTUkNDMkMjYk$MJjgzRDYY1IMzVDNTNERDQ3QzYA5RTEzQ0DI0NURYDM0RQRyRkSU4NzUxGWMDQzRMTU0OTYwRkVBRTQyQDTWUzODM3OURGNUYwIQg=F=$";
         //        Map<String, String> urlParams = new HashMap<>();
         //        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
@@ -1195,8 +1207,12 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestAddWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener)
+    public void requestAddWishList(String tag, String placeType, int placeIndex, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddWishList(placeType, placeIndex);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/add/{itemIdx}" : "MTIkMTI3JDM5JDk3JDExOSQzOSQ3MSQxMDAkMTI3JDc4JDk1JDU3JDEwMCQxMzEkOTMkMTA5JA==$MjgzRDY1MzVDYNTNERDQ3QzY5RTEzQ0I0NURDM0RIQyRkVFRTJEN0I0MjWA5MkRCNDcxMUU1IRDNGMUDZDRUQyOTMxMTUR1RDJdFMRUNYWEQjAA3OURCMTgxMjVFNjYzFOTFGGSNkMzMUDI1$";
         //
         //        Map<String, String> urlParams = new HashMap<>();
@@ -1209,8 +1225,12 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestRemoveWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener)
+    public void requestRemoveWishList(String tag, String placeType, int placeIndex, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRemoveWishList(placeType, placeIndex);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "MjEkMzgkNzQkMTE4JDYwJDQyJDQ2JDExMyQxMDEkMzQkMTM1JDExNSQxMzMkOTgkNDAkODgk$ODFCMzNDMDREN0VCNUFDOXEVEMjA3RjAzMWDc4RJMjhGFQkRVBN0M5MTA4M0REMjCNDMjkyMDVEMkEzUQkYxMjcwQOEM2M0Q5MDdGBOEMO2MUU2QTM1RTFWDFMjZENjAM1NTg2NzLAyNVkVD$";
         //
         //        Map<String, String> urlParams = new HashMap<>();
@@ -1225,6 +1245,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(placeIndex, ticketIndex, dateCheckIn, transactionType);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
         //        String params;
         //
@@ -1245,6 +1269,10 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestPolicyRefund(String tag, int hotelReservationIdx, String transactionType, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(hotelReservationIdx, transactionType);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund" : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
         //
         //        String params = String.format("?hotelReservationIdx=%d&transactionType=%s", hotelReservationIdx, transactionType);
@@ -1259,6 +1287,11 @@ public class DailyMobileAPI implements IDailyNetwork
     public void requestRefund(String tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, Object listener)
     {
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRefund(hotelIdx, dateCheckIn, transactionType//
+            , hotelReservationIdx, reasonCancel, accountHolder, bankAccount, bankCode);
+        executorCallbackCall.addQueue(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+
         //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/refund" : "MTQkNzUkNDMkODUkMzkkNzMkMTQkNjIkMzMkMTYkODIkODkkNzAkMzIkMjkkNDMk$Nzg0NTMxOUNGOUOMFE1RDE2NjRFRTRM1OOThXBOUQ2RNDIhBQ0KEyRjIxMjcwNTMyOTANFQ0ME3RDNBNzFE3MzHRQzNTIC0NjEQ3OA==$";
         //
         //        Map<String, String> params = new HashMap<>();

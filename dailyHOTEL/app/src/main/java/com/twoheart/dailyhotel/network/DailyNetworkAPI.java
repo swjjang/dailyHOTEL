@@ -986,7 +986,6 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
-    @Override
     public void requestRecentGourmetList(String tag, String gourmetParams, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales" : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";

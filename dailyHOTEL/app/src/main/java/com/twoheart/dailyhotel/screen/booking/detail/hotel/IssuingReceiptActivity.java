@@ -219,7 +219,7 @@ public class IssuingReceiptActivity extends BaseActivity
                         dialog.dismiss();
                     }
 
-                    DailyNetworkAPI.getInstance(IssuingReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "stay", mReservationIndex, email, mReceiptByEmilJsonResponseListener);
+                    DailyMobileAPI.getInstance(IssuingReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "stay", mReservationIndex, email, mReceiptByEmailCallback);
                 }
             }
         });
@@ -553,35 +553,43 @@ public class IssuingReceiptActivity extends BaseActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mReceiptByEmilJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                String msg = response.getString("msg");
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null);
-            } catch (Exception e)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                } catch (Exception e)
+                {
+                    IssuingReceiptActivity.this.onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
             {
-                IssuingReceiptActivity.this.onError(e);
-            } finally
-            {
-                unLockUI();
+                IssuingReceiptActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            IssuingReceiptActivity.this.onErrorResponse(volleyError);
+            IssuingReceiptActivity.this.onError(t);
         }
     };
 }

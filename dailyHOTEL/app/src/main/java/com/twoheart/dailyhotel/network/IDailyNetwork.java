@@ -497,11 +497,11 @@ interface IDailyNetwork
 
     void requestWishListCount(String tag, Object listener);
 
-    void requestWishList(String tag, Constants.PlaceType placeType, Object listener);
+    void requestWishList(String tag, String placeType, Object listener);
 
-    void requestAddWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener);
+    void requestAddWishList(String tag, String placeType, int placeIndex, Object listener);
 
-    void requestRemoveWishList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener);
+    void requestRemoveWishList(String tag, String placeType, int placeIndex, Object listener);
 
     void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, Object listener);
 

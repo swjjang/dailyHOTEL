@@ -6,8 +6,7 @@ import android.net.Uri;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -19,6 +18,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -40,73 +42,81 @@ public class GourmetWishListNetworkController extends BaseNetworkController
 
     public void requestGourmetWishList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestWishList(mNetworkTag, Constants.PlaceType.FNB, mListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "gourmet", mWishListCallback);
     }
 
     public void requestRemoveGourmetWishListItem(int placeIndex)
     {
-        DailyNetworkAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, //
-            Constants.PlaceType.FNB, placeIndex, mRemoveWishListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, //
+            "gourmet", placeIndex, mRemoveWishListCallback);
     }
 
-    private DailyHotelJsonResponseListener mListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray gourmetJSONArray = null;
+                    JSONObject responseJSONObject = response.body();
 
-                    if (dataJSONObject.has("gourmetSales") == true)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
                     {
-                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
-                    }
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        JSONArray gourmetJSONArray = null;
 
-                    String imageUrl;
+                        if (dataJSONObject.has("gourmetSales") == true)
+                        {
+                            gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
+                        }
 
-                    ArrayList<Gourmet> gourmetList;
+                        String imageUrl;
 
-                    if (gourmetJSONArray != null)
-                    {
-                        imageUrl = dataJSONObject.getString("imgUrl");
-                        gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
+                        ArrayList<Gourmet> gourmetList;
+
+                        if (gourmetJSONArray != null)
+                        {
+                            imageUrl = dataJSONObject.getString("imgUrl");
+                            gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
+                        } else
+                        {
+                            gourmetList = new ArrayList<>();
+                        }
+
+                        ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetWishList(gourmetList);
                     } else
                     {
-                        gourmetList = new ArrayList<>();
+                        String message = responseJSONObject.getString("msg");
+
+                        if (Constants.DEBUG == false)
+                        {
+                            Crashlytics.log(call.request().url().toString());
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
-
-                    ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetWishList(gourmetList);
-                } else
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-
                     if (Constants.DEBUG == false)
                     {
-                        Crashlytics.log(url);
+                        Crashlytics.log(call.request().url().toString());
                     }
 
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(url);
-                }
-
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
 
         private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -137,26 +147,28 @@ public class GourmetWishListNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mRemoveWishListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mRemoveWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                boolean isSuccess = msgCode == 100 ? true : false;
-
-                String message = null;
-                if (response.has("msg") == true)
+                try
                 {
-                    message = response.getString("msg");
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                int placeIndex = -1;
-                if (Util.isTextEmpty(url) == false)
-                {
-                    Uri uri = Uri.parse(url);
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100 ? true : false;
+
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
+                    {
+                        message = responseJSONObject.getString("msg");
+                    }
+
+                    int placeIndex = -1;
+                    Uri uri = Uri.parse(call.request().url().toString());
                     String indexString = uri.getLastPathSegment();
 
                     try
@@ -165,19 +177,22 @@ public class GourmetWishListNetworkController extends BaseNetworkController
                     } catch (Exception e)
                     {
                     }
-                }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveGourmetWishListItem(isSuccess, message, placeIndex);
-            } catch (Exception e)
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveGourmetWishListItem(isSuccess, message, placeIndex);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }
