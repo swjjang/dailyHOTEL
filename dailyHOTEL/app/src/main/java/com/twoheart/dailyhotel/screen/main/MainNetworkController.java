@@ -296,9 +296,10 @@ public class MainNetworkController extends BaseNetworkController
                 {
                     JSONObject responseJSONObject = response.body();
 
+                    // 리뷰가 존재하지 않는 경우 msgCode : 701
                     int msgCode = responseJSONObject.getInt("msgCode");
 
-                    if (msgCode == 1000 && responseJSONObject.has("data") == true)
+                    if (msgCode == 100 && responseJSONObject.has("data") == true)
                     {
                         Review review = new Review(responseJSONObject.getJSONObject("data"));
 
@@ -336,6 +337,7 @@ public class MainNetworkController extends BaseNetworkController
                 {
                     JSONObject responseJSONObject = response.body();
 
+                    // 리뷰가 존재하지 않는 경우 msgCode : 701
                     int msgCode = responseJSONObject.getInt("msgCode");
 
                     if (msgCode == 100 && responseJSONObject.has("data") == true)
