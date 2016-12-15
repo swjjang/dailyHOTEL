@@ -43,7 +43,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         super.onCreate();
 
         // URL 만들때 사용
-                com.twoheart.dailyhotel.network.request.DailyHotelRequest.getUrlEncoder("dh15@dev");
+        //                com.twoheart.dailyhotel.network.request.DailyHotelRequest.getUrlEncoder("");
 
         if (DEBUG == false)
         {

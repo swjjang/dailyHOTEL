@@ -5,6 +5,7 @@ import com.twoheart.dailyhotel.ApplicationTest;
 import com.twoheart.dailyhotel.Const;
 import com.twoheart.dailyhotel.NetworkApiTest;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -21,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -855,58 +857,155 @@ public class DailyNetworkAPITest extends ApplicationTest
             }
         };
 
-//        Map<String, String> params = new HashMap<>();
-//        params.put("user_idx", userIndex);
-//
-//        if (Util.isTextEmpty(email) == false)
-//        {
-//            params.put("user_email", email);
-//        }
-//
-//        if (Util.isTextEmpty(name) == false)
-//        {
-//            params.put("user_name", name);
-//        }
-//
-//        if (Util.isTextEmpty(phoneNumber) == false)
-//        {
-//            params.put("user_phone", phoneNumber.replaceAll("-", ""));
-//        }
-//
-//        if (Util.isTextEmpty(birthday) == false)
-//        {
-//            params.put("birthday", birthday);
-//        }
-//
-//        if (Util.isTextEmpty(recommender) == false)
-//        {
-//            params.put("recommendation_code", recommender);
-//        }
-//
-//        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
-//
-//        if (Constants.DEBUG == false)
-//        {
-//            if (Util.isTextEmpty(name) == true)
-//            {
-//                Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
-//                    + name + " , userIndex=" + userIndex + " , user_email=" + email);
-//            }
-//        }
+        Map<String, String> params = new HashMap<>();
+        params.put("user_idx", DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_INDEX));
+        params.put("user_email", DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_EMAIL));
+        params.put("user_name", DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_NAME));
+        params.put("birthday", Const.TEST_USER_BIRTHDAY);
 
-//        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, responseListener);
+        // 전화번호 일단 패스
+        String phoneNumber = "";
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            params.put("user_phone", phoneNumber.replaceAll("-", ""));
+        }
+
+        // 추천도 일단 패스
+        String recommender = "";
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            params.put("recommendation_code", recommender);
+        }
+
+        // 베내핏도 패스
+        boolean isBenefit = true;
+        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
+        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, responseListener);
     }
 
 
     public void testRequestUserBillingCardList() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msg_code");
+                    DailyAssert.assertEquals(100, msgCode);
 
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    DailyAssert.assertNotNull(jsonArray);
+
+                    ArrayList<CreditCard> creditCardArrayList = new ArrayList<>();
+
+                    int length = jsonArray.length();
+                    if (length == 0)
+                    {
+                        // do nothing!
+                    } else
+                    {
+                        JSONObject jsonObject;
+                        for (int i = 0; i < length; i++)
+                        {
+                            jsonObject = jsonArray.getJSONObject(i);
+
+                            // 목록에서는 빌링키가 필요없다.
+                            CreditCard creditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"),//
+                                jsonObject.getString("billkey"), //
+                                jsonObject.getString("cardcd"));
+
+                            creditCardArrayList.add(creditCard);
+
+                            DailyAssert.assertFalse("카드 이름", Util.isTextEmpty(creditCard.name));
+                            DailyAssert.assertFalse("카드 번호", Util.isTextEmpty(creditCard.number));
+                            DailyAssert.assertFalse("카드 키", Util.isTextEmpty(creditCard.billingkey));
+                            DailyAssert.assertFalse("카드 사명", Util.isTextEmpty(creditCard.cardcd));
+
+                            String cardcds = CreditCard.getCardCDName(mContext, creditCard.cardcd);
+                            DailyAssert.assertFalse("카드사명 찾기 실패", Util.isTextEmpty(cardcds));
+                        }
+                    }
+
+                    if (creditCardArrayList.size() > 0)
+                    {
+                        String checkNum = DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_SKIP_DELETE_CREDITCARD_NUMBER);
+                        if (Util.isTextEmpty(checkNum) == false)
+                        {
+                            for (int i = creditCardArrayList.size() - 1; i >= 0; i--)
+                            {
+                                CreditCard creditCard = creditCardArrayList.get(i);
+                                if (checkNum.equalsIgnoreCase(creditCard.number) == false)
+                                {
+                                    ignore_testRequestUserDeleteBillingCard(creditCard.billingkey);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserBillingCardList(mNetworkTag, responseListener);
     }
 
-
-    public void testRequestUserDeleteBillingCard() throws Exception
+    // 위 리스트 테스트 와 병행하여 처리 함
+    public void ignore_testRequestUserDeleteBillingCard(String billingKey) throws Exception
     {
+        if (Util.isTextEmpty(billingKey) == true)
+        {
+            DailyAssert.fail("billingKey is null");
+            return;
+        }
 
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msg_code");
+                    DailyAssert.assertEquals(100, msgCode);
+
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    DailyAssert.assertNotNull(jsonObject);
+
+                    boolean result = false;
+                    if (jsonObject != null)
+                    {
+                        result = jsonObject.getInt("isSuccess") == 1;
+                    }
+
+                    DailyAssert.assertTrue("result", result);
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserDeleteBillingCard(mNetworkTag, billingKey, responseListener);
     }
 
 
