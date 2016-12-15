@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.network;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.ApplicationTest;
 import com.twoheart.dailyhotel.Const;
-import com.twoheart.dailyhotel.NetworkApiTest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -33,7 +32,7 @@ import java.util.regex.Pattern;
  */
 public class DailyNetworkAPITest extends ApplicationTest
 {
-    private static final String mNetworkTag = NetworkApiTest.class.getSimpleName();
+    private static final String mNetworkTag = DailyNetworkAPITest.class.getSimpleName();
 
     private SaleTime mSaleTime;
 
