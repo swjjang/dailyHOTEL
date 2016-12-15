@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ public class ReviewActivity extends BaseActivity
 
     private Review mReview;
     private Dialog mDialog;
+    private String mReviewGrade;
 
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private ReviewLayout mReviewLayout;
@@ -180,6 +182,25 @@ public class ReviewActivity extends BaseActivity
             return;
         }
 
+        try
+        {
+            switch (mReview.getReviewItem().placeType)
+            {
+                case HOTEL:
+                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                        , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+                    break;
+
+                case FNB:
+                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                        , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+                    break;
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         showSimpleDialog(getString(R.string.message_review_dialog_cancel_review_title)//
             , getString(R.string.message_review_dialog_cancel_review_description), getString(R.string.dialog_btn_text_yes)//
             , getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -199,6 +220,25 @@ public class ReviewActivity extends BaseActivity
                             mReviewLayout.hideReviewDetailAnimation();
                         }
                     }, 1000);
+
+                    try
+                    {
+                        switch (mReview.getReviewItem().placeType)
+                        {
+                            case HOTEL:
+                                AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.YES, null);
+                                break;
+
+                            case FNB:
+                                AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.YES, null);
+                                break;
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }, new View.OnClickListener()
             {
@@ -206,6 +246,25 @@ public class ReviewActivity extends BaseActivity
                 public void onClick(View v)
                 {
                     releaseUiComponent();
+
+                    try
+                    {
+                        switch (mReview.getReviewItem().placeType)
+                        {
+                            case HOTEL:
+                                AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.NO, null);
+                                break;
+
+                            case FNB:
+                                AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.NO, null);
+                                break;
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }, new DialogInterface.OnCancelListener()
             {
@@ -322,6 +381,18 @@ public class ReviewActivity extends BaseActivity
         setConfirmTextView();
 
         mReviewLayout.setVisibility(false);
+
+        // Analytics
+        switch (reviewItem.placeType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_REVIEWDETAIL);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_REVIEWDETAIL);
+                break;
+        }
     }
 
     private void hideReviewDialog()
@@ -632,6 +703,18 @@ public class ReviewActivity extends BaseActivity
             }
         });
 
+        // Analytics
+        switch (reviewItem.placeType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SATISFACTIONEVALUATION);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SATISFACTIONEVALUATION);
+                break;
+        }
+
         try
         {
             mDialog.setContentView(view);
@@ -740,6 +823,25 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onReviewCommentClick(int position, String comment)
         {
+            try
+            {
+                switch (mReview.getReviewItem().placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
+                        break;
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
             Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().placeType, comment);
             startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
         }
@@ -837,6 +939,25 @@ public class ReviewActivity extends BaseActivity
             {
                 mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
             }
+
+            try
+            {
+                switch (mReview.getReviewItem().placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
+                        break;
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         @Override
@@ -865,6 +986,8 @@ public class ReviewActivity extends BaseActivity
         public void onAddReviewInformation(String grade)
         {
             unLockUI();
+
+            mReviewGrade = grade;
 
             if (Review.GRADE_NONE.equalsIgnoreCase(grade) == false)
             {
