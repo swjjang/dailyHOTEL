@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.review;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
  * Created by android_sam on 2016. 12. 2..
@@ -83,6 +85,160 @@ public class WriteReviewCommentActivity extends BaseActivity
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        // Analytics
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_REVIEWWRITE);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_REVIEWWRITE);
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        String reviewText = mLayout.getReviewText();
+
+        if (Util.isTextEmpty(mOriginText) == true)
+        {
+            // 최초 입력 일때
+            if (Util.isTextEmpty(reviewText) == true)
+            {
+                // 입력 데이터가 아무 것도 없을때 그냥 종료!
+                setResult(RESULT_CANCELED);
+                WriteReviewCommentActivity.this.finish();
+            } else
+            {
+                // 입력 데이터 수정되어 팝업 생성!
+                WriteReviewCommentActivity.this.showSimpleDialog( //
+                    getResources().getString(R.string.label_write_review_comment_delete_dialog_title), //
+                    getResources().getString(R.string.label_write_review_comment_delete_dialog_message), //
+                    getResources().getString(R.string.dialog_btn_text_yes), //
+                    getResources().getString(R.string.dialog_btn_text_no), //
+                    new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setResult(RESULT_CANCELED);
+                            WriteReviewCommentActivity.this.finish();
+
+                            try
+                            {
+                                switch (mPlaceType)
+                                {
+                                    case HOTEL:
+                                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                        break;
+
+                                    case FNB:
+                                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                        break;
+                                }
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
+                        }
+                    }, null, null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            releaseUiComponent();
+                        }
+                    }, true);
+            }
+        } else
+        {
+            // 기존 입력 텍스트 있을때
+            if (mOriginText.equalsIgnoreCase(reviewText) == true)
+            {
+                // 기존 입력 값과 같을 경우 바로 종료
+                setResult(RESULT_CANCELED);
+                WriteReviewCommentActivity.this.finish();
+            } else
+            {
+                // 입력 데이터가 수정되어 팝업 생성!
+                WriteReviewCommentActivity.this.showSimpleDialog( //
+                    getResources().getString(R.string.label_write_review_comment_modify_dialog_title), //
+                    getResources().getString(R.string.label_write_review_comment_modify_dialog_message), //
+                    getResources().getString(R.string.dialog_btn_text_yes), //
+                    getResources().getString(R.string.dialog_btn_text_no), //
+                    new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setResult(RESULT_CANCELED);
+                            WriteReviewCommentActivity.this.finish();
+
+                            try
+                            {
+                                switch (mPlaceType)
+                                {
+                                    case HOTEL:
+                                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                        break;
+
+                                    case FNB:
+                                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                        break;
+                                }
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
+                        }
+                    }, null, null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            releaseUiComponent();
+                        }
+                    }, true);
+            }
+        }
+
+        try
+        {
+            switch (mPlaceType)
+            {
+                case HOTEL:
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                        , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, null);
+                    break;
+
+                case FNB:
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                        , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, null);
+                    break;
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -95,6 +251,24 @@ public class WriteReviewCommentActivity extends BaseActivity
         @Override
         public void onCompleteClick(String text)
         {
+            try
+            {
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, null);
+                        break;
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
 
             Intent intent = new Intent();
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, Util.trim(text));
@@ -103,61 +277,9 @@ public class WriteReviewCommentActivity extends BaseActivity
         }
 
         @Override
-        public void onBackClick(String text)
+        public void onBackPressed()
         {
-            if (Util.isTextEmpty(mOriginText) == true)
-            {
-                // 최초 입력 일때
-                if (Util.isTextEmpty(text) == true)
-                {
-                    // 입력 데이터가 아무 것도 없을때 그냥 종료!
-                    setResult(RESULT_CANCELED);
-                    WriteReviewCommentActivity.this.finish();
-                } else
-                {
-                    // 입력 데이터 수정되어 팝업 생성!
-                    WriteReviewCommentActivity.this.showSimpleDialog( //
-                        getResources().getString(R.string.label_write_review_comment_delete_dialog_title), //
-                        getResources().getString(R.string.label_write_review_comment_delete_dialog_message), //
-                        getResources().getString(R.string.dialog_btn_text_yes), //
-                        getResources().getString(R.string.dialog_btn_text_no), //
-                        new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                setResult(RESULT_CANCELED);
-                                WriteReviewCommentActivity.this.finish();
-                            }
-                        }, null);
-                }
-            } else
-            {
-                // 기존 입력 텍스트 있을때
-                if (mOriginText.equalsIgnoreCase(text) == true)
-                {
-                    // 기존 입력 값과 같을 경우 바로 종료
-                    setResult(RESULT_CANCELED);
-                    WriteReviewCommentActivity.this.finish();
-                } else
-                {
-                    // 입력 데이터가 수정되어 팝업 생성!
-                    WriteReviewCommentActivity.this.showSimpleDialog( //
-                        getResources().getString(R.string.label_write_review_comment_modify_dialog_title), //
-                        getResources().getString(R.string.label_write_review_comment_modify_dialog_message), //
-                        getResources().getString(R.string.dialog_btn_text_yes), //
-                        getResources().getString(R.string.dialog_btn_text_no), //
-                        new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                setResult(RESULT_CANCELED);
-                                WriteReviewCommentActivity.this.finish();
-                            }
-                        }, null);
-                }
-            }
+            WriteReviewCommentActivity.this.onBackPressed();
         }
 
         @Override
