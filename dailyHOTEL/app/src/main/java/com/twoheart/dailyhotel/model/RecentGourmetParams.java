@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Util;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
