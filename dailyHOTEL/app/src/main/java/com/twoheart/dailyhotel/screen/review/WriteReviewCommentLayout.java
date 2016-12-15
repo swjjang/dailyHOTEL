@@ -51,7 +51,7 @@ public class WriteReviewCommentLayout extends BaseLayout
     {
         void onCompleteClick(String text);
 
-        void onBackClick(String text);
+        void onBackPressed();
     }
 
     public WriteReviewCommentLayout(Context context, OnBaseEventListener listener)
@@ -76,7 +76,7 @@ public class WriteReviewCommentLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).onBackClick(mEditTextView.getText().toString());
+                ((OnEventListener) mOnEventListener).onBackPressed();
             }
         });
 
@@ -102,6 +102,16 @@ public class WriteReviewCommentLayout extends BaseLayout
         updateEditTextView(placeType, text);
         updateCompleteLayout(text);
         updateTextCountLayout(text);
+    }
+
+    public String getReviewText()
+    {
+        if (mEditTextView == null)
+        {
+            return null;
+        }
+
+        return mEditTextView.getText().toString();
     }
 
     private void updateEditTextView(Constants.PlaceType placeType, String text)

@@ -668,6 +668,16 @@ public class AnalyticsManager
         public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE = "BookingDetail_MyBookingInfo_Cancelable";
         public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE = "BookingDetail_MyBookingInfo_CancellationFee";
         public static final String BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS = "BookingDetail_MyBookingInfo_NoRefunds";
+
+        // Review
+        public static final String DAILYHOTEL_SATISFACTIONEVALUATION = "DailyHotel_SatisfactionEvaluation";
+        public static final String DAILYHOTEL_REVIEWDETAIL = "DailyHotel_ReviewDetail";
+        public static final String DAILYHOTEL_REVIEWWRITE = "DailyHotel_ReviewWrite";
+        public static final String DAILYHOTEL_REVIEWEDIT = "DailyHotel_ReviewEdit";
+        public static final String DAILYGOURMET_SATISFACTIONEVALUATION = "DailyGourmet_SatisfactionEvaluation";
+        public static final String DAILYGOURMET_REVIEWDETAIL = "DailyGourmet_ReviewDetail";
+        public static final String DAILYGOURMET_REVIEWWRITE = "DailyGourmet_ReviewWrite";
+        public static final String DAILYGOURMET_REVIEWEDIT = "DailyGourmet_ReviewEdit";
     }
 
     public static class Action
@@ -838,6 +848,11 @@ public class AnalyticsManager
         public static final String FREE_CANCELLATION = "FreeCancellation";
 
         public static final String PROFILE_CLICKED = "ProfileClicked";
+
+        // Review
+        public static final String REVIEW_DETAIL = "ReviewDetail";
+        public static final String REVIEW_POPUP = "ReviewPopup";
+        public static final String REVIEW_WRITE = "ReviewWrite";
     }
 
     public static class Category
@@ -856,6 +871,10 @@ public class AnalyticsManager
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
         public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
         public static final String SET_MY_BIRTHDAY = "SetMyBirthday";
+
+        // Review
+        public static final String HOTEL_SATISFACTIONEVALUATION = "HotelSatisfactionEvaluation";
+        public static final String GOURMET_SATISFACTIONEVALUATION = "GourmetSatisfactionEvaluation";
     }
 
     public static class Label
@@ -986,6 +1005,14 @@ public class AnalyticsManager
         public static final String PROFILE_EDITED = "ProfileEdited";
         public static final String TRY = "Try";
         public static final String SUCCESS = "Success";
+
+        public static final String REVIEW_WRITE_CLICKED = "ReviewWriteClicked";
+        public static final String SUBMIT = "Submit";
+        public static final String YES = "Yes";
+        public static final String NO = "No";
+        public static final String BACK = "Back";
+        public static final String CONFIRM = "Confirm";
+        public static final String ERROR = "error";
     }
 
     public static class UserType
