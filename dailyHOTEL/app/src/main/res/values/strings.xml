@@ -1050,7 +1050,7 @@
     <string name="message_review_good">만족해요.</string>
     <string name="message_review_bad">별로예요.</string>
 
-    <string name="message_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님들의 선택을 도와주세요.</string>
+    <string name="message_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님들의 선택을 도와주세요!</string>
 
     <string name="message_review_comment_stay_hint">예시) 침구가 너무 깨끗해서 잘 잤어요.</string>
     <string name="message_review_comment_gourmet_hint">예시) 분위기도 좋고 너무 맛있었어요.</string>
@@ -1065,7 +1065,7 @@
     <!-- Review Write -->
     <string name="label_write_review_comment_complete">완료</string>
     <string name="label_write_review_comment_title">후기</string>
-    <string name="label_write_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님의 선택을 도와주세요!</string>
+    <string name="label_write_review_comment_description">이용 후기를 솔직하게 작성하여\n다른 고객님들의 선택을 도와주세요!</string>
     <string name="label_write_review_comment_hint_stay">예시) 침구가 너무 깨끗해서 잘 잤어요.</string>
     <string name="label_write_review_comment_hint_gourmet">예시) 분위기도 좋고 너무 맛있었어요.</string>
     <string name="label_write_review_comment_count_format">%1$d자만 입력하시면, 의견을 보내실 수 있어요!</string>
