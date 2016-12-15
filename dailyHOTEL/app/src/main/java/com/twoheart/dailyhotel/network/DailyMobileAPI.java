@@ -15,8 +15,8 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -26,18 +26,6 @@ import java.util.Map;
 
 public class DailyMobileAPI implements IDailyNetwork
 {
-    public static final String URL_DAILYHOTEL_SERVER = Constants.URL_DAILYHOTEL_SERVER_DEFAULT;
-
-    // DailyHOTEL Reservation Controller WebAPI URL
-    // api/hotel/v1/payment/session/common
-    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/session/common" : "ODUkNDMkOCQxMDgkNDYkMjckNjEkOTYkMzEkNDckNTIkMTMkODUkOTEkNzkkMzUk$MkNCQ0MyQQjYzMN0U3OTlEQkREMjPU5MHThYDMEE1NjM2QzgKM2SRkZI1MkI3OTNGNJEExQzBEMkIzMzYBEQkY4SOTU2QJjk3NKjhFQTCM4MEQwRjg1RjFBOTDQ3MEZCNTJBOTAwRjI0ODZC$";
-
-    // api/fnb/payment/session/common
-    public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON = Constants.UNENCRYPTED_URL ? "api/fnb/payment/session/common" : "MjEkNzgkMjUkMzgkNzgkMTkkNDYkNjAkMyQ1MyQzMCQ1MSQxMSQ3OSQ5NyQ5OSQ=$OEER1OEYxMjElEMzhFNTZHCOVEIwMNzJVCQjU4MTI4ZNkY2NDVIxTMjZNDNUJCMTlEGRDczNzNCREM1SOEQ0MDFUBNNkFDRjUE2DMA==$";
-
-    // Register Credit Card URL
-    public static final String URL_REGISTER_CREDIT_CARD = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "NTYkNjckNjkkMzQkOTMkNjQkMTI3JDgxJDkzJDExMCQxMTQkODgkMTIwJDgkNDQkNjUk$RjQ4MjE3LNTFBODVCQzVEQTExQTc2QTMwRDNMxRDYxOUOQyRTdCMjU4MkFGMOEZEOBDJBFNUNFYBMzM2RUY1DREU1NzGZGQUNOFMAjdBQkRDMUUyNDPY1MVjU0NWDhCNkFFQUM2OREY2QkU5$";
-
     private static DailyMobileAPI mInstance;
     private DailyMobileService mDailyMobileService;
 
@@ -76,7 +64,7 @@ public class DailyMobileAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "http://status.dailyhotel.kr/status/health/check" : "MzUkMTI2JDM2JDIkNjEkNzEkOTMkOTAkMTA5JDYwJDU4JDkxJDEwOCQzOSQxMTkkNTMk$MTTc5NDRENTlBQUUxMzNDRDFEMDY5NTZGNTQHFzVNEFGNEY4RDlBOVEE4Q0VWDRWUBNDNEI2NkUTzN0MyMEYzRTg2MTVCJQRkJBGQTgzMkM5MTEBGQkJEwOEOIxOTlENjIwNzE1REZFQZTIx$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(DailyHotelRequest.getUrlDecoderEx(URL));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }

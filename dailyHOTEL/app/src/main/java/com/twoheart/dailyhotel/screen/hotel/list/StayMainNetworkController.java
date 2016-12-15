@@ -2,13 +2,10 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.manager.PlaceEventBannerManager;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
@@ -20,7 +17,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -34,7 +30,7 @@ public class StayMainNetworkController extends PlaceMainNetworkController
 
     public void requestEventBanner()
     {
-        DailyNetworkAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListCallback);
     }
 
     public void requestRegionList()
@@ -146,20 +142,28 @@ public class StayMainNetworkController extends PlaceMainNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mEventBannerListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                JSONObject responseJSONObject = response.body();
+
+                List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(responseJSONObject);
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(response);
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
         }
     };
 }

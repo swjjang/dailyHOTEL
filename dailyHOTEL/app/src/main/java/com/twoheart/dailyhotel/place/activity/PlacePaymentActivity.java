@@ -26,13 +26,13 @@ import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -660,7 +660,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         {
                             JSONObject jsonObject = null;
 
-                            String selectedSimpleCard = DailyHotelRequest.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
+                            String selectedSimpleCard = Crypto.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
 
                             if (Util.isTextEmpty(selectedSimpleCard) == true)
                             {

@@ -6,8 +6,8 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.factory.JSONConverterFactory;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +69,7 @@ public class RetrofitHttpClient implements Constants
 
         mTagCancellableCallAdapterFactory = TagCancellableCallAdapterFactory.create();
 
-        mRetrofit = new Retrofit.Builder().baseUrl(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
+        mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
             .client(mOkHttpClient)//
             .addConverterFactory(JSONConverterFactory.create())//
             .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
@@ -111,7 +111,7 @@ public class RetrofitHttpClient implements Constants
 
             try
             {
-                trusted.load(in, DailyHotelRequest.getUrlDecoderEx(KEY).toCharArray());
+                trusted.load(in, Crypto.getUrlDecoderEx(KEY).toCharArray());
             } finally
             {
                 in.close();

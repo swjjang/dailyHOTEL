@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.Window;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
@@ -29,7 +29,7 @@ public class FAQActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_faq);
-        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_FAQ));
+        setWebView(Crypto.getUrlDecoderEx(URL_WEB_FAQ));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

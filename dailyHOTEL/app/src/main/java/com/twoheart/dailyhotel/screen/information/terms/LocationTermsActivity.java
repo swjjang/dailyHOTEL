@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
@@ -18,7 +18,7 @@ public class LocationTermsActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_LOCATION_TERMS));
+        setWebView(Crypto.getUrlDecoderEx(URL_WEB_LOCATION_TERMS));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

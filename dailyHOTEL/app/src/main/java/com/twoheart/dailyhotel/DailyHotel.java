@@ -13,7 +13,6 @@ import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.RetrofitHttpClient;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -43,7 +42,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         super.onCreate();
 
         // URL 만들때 사용
-        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.getUrlEncoder("");
+        //        com.twoheart.dailyhotel.util.Crypto.getUrlEncoder("");
 
         if (DEBUG == false)
         {
@@ -122,8 +121,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     private void initializeNetwork(Context context)
     {
-        VolleyHttpClient.getInstance(context).newRequestQueue(context);
-
         RetrofitHttpClient.getInstance(context);
     }
 

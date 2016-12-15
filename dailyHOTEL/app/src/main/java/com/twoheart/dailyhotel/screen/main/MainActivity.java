@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
@@ -277,7 +276,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (mIsInitialization == true)
         {
-            if (VolleyHttpClient.isAvailableNetwork(this) == false)
+            if (Util.isAvailableNetwork(this) == false)
             {
                 mDelayTimeHandler.removeMessages(0);
 
@@ -624,7 +623,7 @@ public class MainActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View view)
             {
-                if (VolleyHttpClient.isAvailableNetwork(MainActivity.this) == true)
+                if (Util.isAvailableNetwork(MainActivity.this) == true)
                 {
                     lockUI();
                     mNetworkController.requestCheckServer();

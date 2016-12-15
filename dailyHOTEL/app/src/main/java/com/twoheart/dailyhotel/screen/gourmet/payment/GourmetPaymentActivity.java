@@ -35,7 +35,6 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.information.coupon.SelectGourmetCouponDialogActivity;
@@ -43,6 +42,7 @@ import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActiv
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -283,7 +283,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
             creditCard != null && Util.isTextEmpty(creditCard.billingkey) == false)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(creditCard.billingkey));
+            DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(creditCard.billingkey));
         }
 
         mOnEventListener.changedPaymentType(paymentType);
@@ -355,7 +355,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
+                DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(mSelectedCreditCard.billingkey));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

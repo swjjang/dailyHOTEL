@@ -21,10 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -93,7 +93,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         }
 
         // network 연결이 안되있으면
-        if (VolleyHttpClient.isAvailableNetwork(baseActivity) == false)
+        if (Util.isAvailableNetwork(baseActivity) == false)
         {
             DailyToast.showToast(baseActivity, getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), Toast.LENGTH_SHORT);
         } else

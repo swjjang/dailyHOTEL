@@ -6,9 +6,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,25 +26,25 @@ import okhttp3.internal.huc.OkHttpURLConnection;
 import okhttp3.internal.huc.OkHttpsURLConnection;
 import okhttp3.internal.platform.Platform;
 
-public class VolleyHttpClient implements Constants
+public class VolleyHttpClient_Legacy implements Constants
 {
     private static final String KEY = Constants.UNENCRYPTED_URL ? "androidDAILYHOTEL_MIIEowIBAA" : "NjYkNzMkNTgkNTEkMTAkMzQkNzEkMzgkMjIkNzIkNTYkNTckMzMkNzMkNjQkNDYk$REUyREY5RTTMzOTQwNzBEQUTI4Q0MyQjIB1NLzY1IOERGRMjlDODQ5OUMPRQxMzQ5KQjUZFNjdEENTCBZg1NzE5MRTlCRkQ1NEYwOQ==$";
 
-    private static VolleyHttpClient mInstance;
+    private static VolleyHttpClient_Legacy mInstance;
     private RequestQueue mRequestQueue;
     private OkHttpStack mOkHttpStack;
 
-    public synchronized static VolleyHttpClient getInstance(Context context)
+    public synchronized static VolleyHttpClient_Legacy getInstance(Context context)
     {
         if (mInstance == null)
         {
-            mInstance = new VolleyHttpClient(context);
+            mInstance = new VolleyHttpClient_Legacy(context);
         }
 
         return mInstance;
     }
 
-    private VolleyHttpClient(Context context)
+    private VolleyHttpClient_Legacy(Context context)
     {
         mOkHttpStack = new OkHttpStack(context);
     }
@@ -145,7 +145,7 @@ public class VolleyHttpClient implements Constants
 
                 try
                 {
-                    trusted.load(in, DailyHotelRequest.getUrlDecoderEx(KEY).toCharArray());
+                    trusted.load(in, Crypto.getUrlDecoderEx(KEY).toCharArray());
                 } finally
                 {
                     in.close();

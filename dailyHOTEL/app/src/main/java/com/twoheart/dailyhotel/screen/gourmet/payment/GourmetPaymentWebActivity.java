@@ -28,11 +28,10 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -199,8 +198,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 break;
         }
 
-        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER)//
-            + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
+        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
+            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
 
         WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
         webViewPostAsyncTask.execute(url);
@@ -580,7 +579,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
             mWebView.loadUrl("about:blank");
 
-            if (VolleyHttpClient.isAvailableNetwork(GourmetPaymentWebActivity.this) == true)
+            if (Util.isAvailableNetwork(GourmetPaymentWebActivity.this) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
             } else

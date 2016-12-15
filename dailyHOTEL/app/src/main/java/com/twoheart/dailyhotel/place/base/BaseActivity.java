@@ -31,8 +31,6 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
@@ -113,8 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             finish();
         } finally
         {
-            DailyNetworkAPI.getInstance(this).cancelAll();
-
             DailyMobileAPI.getInstance(this).cancelAll(this);
         }
     }
@@ -324,7 +320,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 현재 Activity에 등록된 Request를 취소한다.
-        DailyNetworkAPI.getInstance(this).cancelAll(mNetworkTag);
         DailyMobileAPI.getInstance(this).cancelAll(this, mNetworkTag);
 
         if (mDialog != null && mDialog.isShowing())
@@ -353,11 +348,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     public void onErrorResponse(VolleyError error)
     {
         unLockUI();
-
-        if (error.getCause() instanceof java.net.ConnectException)
-        {
-            VolleyHttpClient.getInstance(this).getRequestQueue().getCache().clear();
-        }
 
         if (error.networkResponse != null && error.networkResponse.statusCode == 401)
         {

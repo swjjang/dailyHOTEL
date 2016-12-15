@@ -8,7 +8,6 @@ import android.view.View;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
@@ -42,7 +41,6 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
             return;
         }
 
-        DailyNetworkAPI.getInstance(baseActivity).cancelAll(mNetworkTag);
         DailyMobileAPI.getInstance(baseActivity).cancelAll(baseActivity, mNetworkTag);
 
         super.onDestroy();

@@ -159,7 +159,7 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
             } else
             {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
             }
         }
 
