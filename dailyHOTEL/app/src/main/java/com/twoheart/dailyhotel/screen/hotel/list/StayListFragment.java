@@ -270,12 +270,6 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             if (DEBUG == false && e != null)
@@ -304,7 +298,7 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StayListFragment.this.onErrorResponse(call, response);
         }
     };
 }

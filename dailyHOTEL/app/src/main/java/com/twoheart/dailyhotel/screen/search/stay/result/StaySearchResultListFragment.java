@@ -134,12 +134,6 @@ public class StaySearchResultListFragment extends StayListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StaySearchResultListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             StaySearchResultListFragment.this.onError(e);
@@ -160,7 +154,7 @@ public class StaySearchResultListFragment extends StayListFragment
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StaySearchResultListFragment.this.onErrorResponse(call, response);
         }
     };
 }

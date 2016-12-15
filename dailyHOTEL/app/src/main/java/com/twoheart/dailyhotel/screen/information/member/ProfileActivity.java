@@ -379,12 +379,6 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            ProfileActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             ProfileActivity.this.onError(e);
@@ -405,7 +399,7 @@ public class ProfileActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            ProfileActivity.this.onErrorResponse(call, response);
         }
     };
 }

@@ -229,12 +229,6 @@ public class RegisterCouponActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            RegisterCouponActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             RegisterCouponActivity.this.onError(e);
@@ -255,8 +249,7 @@ public class RegisterCouponActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            RegisterCouponActivity.this.onErrorResponse(call, response);
         }
-
     };
 }

@@ -668,13 +668,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            StaySearchResultActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
@@ -698,7 +691,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            StaySearchResultActivity.this.onErrorResponse(call, response);
         }
     };
 

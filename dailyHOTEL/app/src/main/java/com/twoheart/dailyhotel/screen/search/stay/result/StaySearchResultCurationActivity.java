@@ -239,12 +239,6 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StaySearchResultCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             StaySearchResultCurationActivity.this.onError(e);
@@ -265,7 +259,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StaySearchResultCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

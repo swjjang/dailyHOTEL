@@ -222,12 +222,6 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetSearchResultCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             GourmetSearchResultCurationActivity.this.onError(e);
@@ -248,7 +242,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            GourmetSearchResultCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

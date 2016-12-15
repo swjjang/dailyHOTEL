@@ -431,13 +431,6 @@ public class WishListTabActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            WishListTabActivity.this.onErrorResponse(volleyError);
-            finish();
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             WishListTabActivity.this.onError(e);
@@ -459,7 +452,8 @@ public class WishListTabActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            WishListTabActivity.this.onErrorResponse(call, response);
+            finish();
         }
     };
 }

@@ -891,12 +891,6 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            InformationFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             InformationFragment.this.onError(e);
@@ -917,7 +911,7 @@ public class InformationFragment extends BaseFragment implements Constants
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            InformationFragment.this.onErrorResponse(call, response);
         }
     };
 }

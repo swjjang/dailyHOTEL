@@ -210,12 +210,6 @@ public class BonusActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            BonusActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             BonusActivity.this.onError(e);
@@ -231,14 +225,14 @@ public class BonusActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             BonusActivity.this.onErrorToastMessage(message);
-
             finish();
         }
 
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            BonusActivity.this.onErrorResponse(call, response);
+            finish();
         }
     };
 }

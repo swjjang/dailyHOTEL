@@ -771,15 +771,6 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mDelayTimeHandler.removeMessages(0);
-            unLockUI();
-
-            MainActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             mDelayTimeHandler.removeMessages(0);
@@ -809,7 +800,10 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
 
+            MainActivity.this.onErrorResponse(call, response);
         }
 
         @Override

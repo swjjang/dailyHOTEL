@@ -639,33 +639,27 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
-            mBaseActivity.onError(e);
+            GourmetMainFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            GourmetMainFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            mBaseActivity.onErrorToastMessage(message);
+            GourmetMainFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            GourmetMainFragment.this.onErrorResponse(call, response);
         }
 
         private boolean processDeepLinkByDateTime(BaseActivity baseActivity)

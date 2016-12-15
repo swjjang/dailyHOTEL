@@ -269,13 +269,6 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            GourmetRegionListActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
@@ -299,7 +292,8 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            GourmetRegionListActivity.this.onErrorResponse(call, response);
         }
     };
 }

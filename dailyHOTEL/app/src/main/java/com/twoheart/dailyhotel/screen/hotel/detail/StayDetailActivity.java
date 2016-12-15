@@ -1455,14 +1455,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onErrorResponse(volleyError);
-            finish();
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
@@ -1495,7 +1487,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            StayDetailActivity.this.onErrorResponse(call, response);
+            finish();
         }
     };
 }

@@ -314,12 +314,6 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            EditProfilePhoneActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             EditProfilePhoneActivity.this.onError(e);
@@ -340,7 +334,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            EditProfilePhoneActivity.this.onErrorResponse(call, response);
         }
     };
 }

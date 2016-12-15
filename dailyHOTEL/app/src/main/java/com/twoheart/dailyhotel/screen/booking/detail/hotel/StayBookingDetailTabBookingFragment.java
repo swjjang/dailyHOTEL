@@ -830,68 +830,27 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
-                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
-            }
-
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(volleyError);
-            } else
-            {
-                ExLog.e(volleyError != null ? volleyError.getMessage() : "unKnowen volleyError from get Review data");
-            }
-        }
-
-        @Override
         public void onError(Throwable e)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
-                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
-            }
-
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(e);
-            } else
-            {
-                ExLog.e(e != null ? e.getMessage() : "unKnowen Exception from get Review data");
-            }
+            StayBookingDetailTabBookingFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
-                    message, baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
-            }
+            StayBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                DailyToast.showToast(getActivity(), message, Toast.LENGTH_LONG);
-            }
+            StayBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StayBookingDetailTabBookingFragment.this.onErrorResponse(call, response);
         }
     };
 }

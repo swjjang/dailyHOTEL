@@ -109,12 +109,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetSearchResultListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             GourmetSearchResultListFragment.this.onError(e);
@@ -135,7 +129,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            GourmetSearchResultListFragment.this.onErrorResponse(call, response);
         }
     };
 }

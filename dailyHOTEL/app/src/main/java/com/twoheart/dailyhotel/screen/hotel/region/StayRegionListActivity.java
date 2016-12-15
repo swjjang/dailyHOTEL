@@ -517,13 +517,6 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            StayRegionListActivity.this.onError(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
@@ -547,7 +540,8 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            StayRegionListActivity.this.onErrorResponse(call, response);
         }
     };
 }

@@ -640,13 +640,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            GourmetSearchResultActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
@@ -670,7 +663,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            GourmetSearchResultActivity.this.onErrorResponse(call, response);
         }
     };
 

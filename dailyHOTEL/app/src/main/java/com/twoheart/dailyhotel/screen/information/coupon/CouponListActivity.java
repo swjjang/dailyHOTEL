@@ -354,12 +354,6 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            CouponListActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             CouponListActivity.this.onError(e);
@@ -380,7 +374,7 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            CouponListActivity.this.onErrorResponse(call, response);
         }
 
         private void recordAnalytics(Coupon coupon)

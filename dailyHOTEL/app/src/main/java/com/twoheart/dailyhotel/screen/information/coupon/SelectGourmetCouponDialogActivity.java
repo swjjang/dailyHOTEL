@@ -349,12 +349,6 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            SelectGourmetCouponDialogActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             SelectGourmetCouponDialogActivity.this.onError(e);
@@ -376,7 +370,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            SelectGourmetCouponDialogActivity.this.onErrorResponse(call, response);
         }
 
         private void analyticsDownloadCoupon(Coupon coupon)

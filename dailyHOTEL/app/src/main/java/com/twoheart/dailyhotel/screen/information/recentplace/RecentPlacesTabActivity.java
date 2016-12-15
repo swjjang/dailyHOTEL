@@ -357,13 +357,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            RecentPlacesTabActivity.this.onErrorResponse(volleyError);
-            finish();
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             RecentPlacesTabActivity.this.onError(e);
@@ -385,7 +378,8 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            RecentPlacesTabActivity.this.onErrorResponse(call, response);
+            finish();
         }
     };
 }

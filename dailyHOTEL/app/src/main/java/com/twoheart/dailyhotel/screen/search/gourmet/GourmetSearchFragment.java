@@ -333,37 +333,30 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
-            mBaseActivity.onError(e);
+            GourmetSearchFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            GourmetSearchFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            mBaseActivity.onErrorToastMessage(message);
+            GourmetSearchFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            GourmetSearchFragment.this.onErrorResponse(call, response);
         }
     };
 }

@@ -1027,12 +1027,6 @@ public class ReviewActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            ReviewActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             ReviewActivity.this.onError(e);
@@ -1053,7 +1047,7 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            ReviewActivity.this.onErrorResponse(call, response);
         }
     };
 }

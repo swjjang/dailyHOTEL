@@ -97,12 +97,6 @@ public class CouponHistoryActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            CouponHistoryActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             CouponHistoryActivity.this.onError(e);
@@ -123,7 +117,7 @@ public class CouponHistoryActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            CouponHistoryActivity.this.onErrorResponse(call, response);
         }
     };
 

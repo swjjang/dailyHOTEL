@@ -257,12 +257,6 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             if (DEBUG == false && e != null)
@@ -270,8 +264,7 @@ public class GourmetListFragment extends PlaceListFragment
                 Crashlytics.logException(e);
             }
 
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onError(e);
+            GourmetListFragment.this.onError(e);
         }
 
         @Override
@@ -291,7 +284,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            GourmetListFragment.this.onErrorResponse(call, response);
         }
     };
 }

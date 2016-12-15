@@ -482,12 +482,6 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            AddProfileSocialActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             AddProfileSocialActivity.this.onError(e);
@@ -508,7 +502,7 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            AddProfileSocialActivity.this.onErrorResponse(call, response);
         }
     };
 }

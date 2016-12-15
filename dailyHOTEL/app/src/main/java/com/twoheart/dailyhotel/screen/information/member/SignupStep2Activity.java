@@ -430,12 +430,6 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            SignupStep2Activity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             SignupStep2Activity.this.onError(e);
@@ -456,7 +450,7 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            SignupStep2Activity.this.onErrorResponse(call, response);
         }
     };
 }

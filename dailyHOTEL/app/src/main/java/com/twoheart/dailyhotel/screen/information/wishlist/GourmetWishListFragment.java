@@ -170,37 +170,31 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
-            mBaseActivity.onError(e);
+            GourmetWishListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            GourmetWishListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            mBaseActivity.onErrorToastMessage(message);
+            GourmetWishListFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            GourmetWishListFragment.this.onErrorResponse(call, response);
         }
     };
 

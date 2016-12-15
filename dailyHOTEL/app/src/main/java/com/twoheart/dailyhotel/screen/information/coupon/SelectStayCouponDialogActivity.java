@@ -367,12 +367,6 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            SelectStayCouponDialogActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             SelectStayCouponDialogActivity.this.onError(e);
@@ -394,7 +388,8 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            SelectStayCouponDialogActivity.this.onErrorResponse(call, response);
+            finish();
         }
 
         private void recordAnalytics(Coupon coupon)

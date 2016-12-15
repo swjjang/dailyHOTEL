@@ -736,12 +736,6 @@ public class StayMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayMainFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             StayMainFragment.this.onError(e);
@@ -762,7 +756,7 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StayMainFragment.this.onErrorResponse(call, response);
         }
 
         private boolean processDeepLinkByDateTime(BaseActivity baseActivity)

@@ -9,8 +9,6 @@ import retrofit2.Response;
 
 public interface OnBaseNetworkControllerListener
 {
-    void onErrorResponse(VolleyError volleyError);
-
     void onError(Throwable e);
 
     void onErrorPopupMessage(int msgCode, String message);

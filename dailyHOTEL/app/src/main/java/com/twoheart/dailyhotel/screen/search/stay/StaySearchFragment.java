@@ -360,37 +360,31 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
-            mBaseActivity.onError(e);
+            StaySearchFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            StaySearchFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            mBaseActivity.onErrorToastMessage(message);
+            StaySearchFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            StaySearchFragment.this.onErrorResponse(call, response);
         }
     };
 }

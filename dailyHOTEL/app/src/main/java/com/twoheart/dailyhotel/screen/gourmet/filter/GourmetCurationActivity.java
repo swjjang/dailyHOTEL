@@ -910,12 +910,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             GourmetCurationActivity.this.onError(e);
@@ -936,7 +930,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            GourmetCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

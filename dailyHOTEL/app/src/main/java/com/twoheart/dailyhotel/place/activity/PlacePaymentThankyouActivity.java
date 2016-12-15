@@ -203,12 +203,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            // do nothing
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             // do nothing
@@ -229,7 +223,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            // do nothing
         }
     };
 }

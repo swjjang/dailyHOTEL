@@ -201,13 +201,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            EventListActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             unLockUI();
@@ -231,7 +224,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            unLockUI();
+            EventListActivity.this.onErrorResponse(call, response);
         }
     };
 }

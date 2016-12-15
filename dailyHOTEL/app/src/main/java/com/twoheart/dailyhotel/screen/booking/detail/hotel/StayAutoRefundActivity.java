@@ -799,12 +799,6 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayAutoRefundActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
         public void onError(Throwable e)
         {
             StayAutoRefundActivity.this.onError(e);
@@ -825,7 +819,7 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-
+            StayAutoRefundActivity.this.onErrorResponse(call, response);
         }
     };
 }
