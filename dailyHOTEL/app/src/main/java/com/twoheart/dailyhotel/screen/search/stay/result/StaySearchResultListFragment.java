@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;

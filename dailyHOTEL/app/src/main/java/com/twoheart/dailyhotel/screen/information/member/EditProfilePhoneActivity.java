@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;

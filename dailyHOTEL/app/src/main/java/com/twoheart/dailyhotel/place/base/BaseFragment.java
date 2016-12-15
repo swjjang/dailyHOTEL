@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -15,7 +13,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public abstract class BaseFragment extends Fragment implements Constants, ErrorListener
+public abstract class BaseFragment extends Fragment implements Constants
 {
     protected String mNetworkTag;
 
@@ -58,21 +56,6 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         }
 
         baseActivity.onError(e);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error)
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.onErrorResponse(error);
     }
 
     public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)

@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;

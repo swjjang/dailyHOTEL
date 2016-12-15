@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -169,9 +168,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
     }
 
     @Override
-    public void onErrorResponse(VolleyError error)
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
     {
-        super.onErrorResponse(error);
+        super.onErrorResponse(call, response);
 
         hidePorgressDialog();
     }

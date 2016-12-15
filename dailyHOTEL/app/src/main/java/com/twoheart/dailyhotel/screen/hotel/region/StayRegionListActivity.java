@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;

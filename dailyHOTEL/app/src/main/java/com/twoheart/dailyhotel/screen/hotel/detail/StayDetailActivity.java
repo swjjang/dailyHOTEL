@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;

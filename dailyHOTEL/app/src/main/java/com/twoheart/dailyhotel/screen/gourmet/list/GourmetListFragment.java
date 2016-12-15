@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;

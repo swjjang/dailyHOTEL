@@ -24,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
@@ -46,7 +44,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
+public abstract class BaseActivity extends AppCompatActivity implements Constants
 {
     protected interface OnCallDialogListener
     {
@@ -342,40 +340,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         //        }
 
         super.onDestroy();
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error)
-    {
-        unLockUI();
-
-        if (error.networkResponse != null && error.networkResponse.statusCode == 401)
-        {
-            DailyPreference.getInstance(this).clear();
-
-            try
-            {
-                LoginManager.getInstance().logOut();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            try
-            {
-                UserManagement.requestLogout(null);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            restartExpiredSession();
-            return;
-        }
-
-        ExLog.e(error.toString());
-
-        onError();
     }
 
     public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)

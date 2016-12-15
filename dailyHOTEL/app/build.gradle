@@ -92,7 +92,6 @@ dependencies {
     compile project(':keyframes')
     compile files('libs/com.skp.Tmap_1.0.44.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
-    compile 'com.android.volley:volley:1.0.19@aar'
     compile 'com.google.android.gms:play-services-base:10.0.1'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'

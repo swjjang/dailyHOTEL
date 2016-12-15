@@ -20,7 +20,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;

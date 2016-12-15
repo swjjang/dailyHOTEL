@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.place.base;
 
-import com.android.volley.VolleyError;
-
 import org.json.JSONObject;
 
 import retrofit2.Call;

@@ -14,8 +14,6 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
@@ -39,7 +37,7 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
     public static final String URL_REGISTER_CREDIT_CARD = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "NTYkNjckNjkkMzQkOTMkNjQkMTI3JDgxJDkzJDExMCQxMTQkODgkMTIwJDgkNDQkNjUk$RjQ4MjE3LNTFBODVCQzVEQTExQTc2QTMwRDNMxRDYxOUOQyRTdCMjU4MkFGMOEZEOBDJBFNUNFYBMzM2RUY1DREU1NzGZGQUNOFMAjdBQkRDMUUyNDPY1MVjU0NWDhCNkFFQUM2OREY2QkU5$";
 
     private static DailyNetworkAPI_Legacy mInstance;
-    private RequestQueue mQueue;
+//    private RequestQueue mQueue;
 
     public static synchronized DailyNetworkAPI_Legacy getInstance(Context context)
     {
@@ -53,31 +51,31 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
 
     private DailyNetworkAPI_Legacy(Context context)
     {
-        mQueue = VolleyHttpClient_Legacy.getInstance(context).getRequestQueue();
+//        mQueue = VolleyHttpClient_Legacy.getInstance(context).getRequestQueue();
     }
 
     public void cancelAll()
     {
-        mQueue.cancelAll(new RequestQueue.RequestFilter()
-        {
-            @Override
-            public boolean apply(Request<?> request)
-            {
-                return true;
-            }
-        });
+//        mQueue.cancelAll(new RequestQueue.RequestFilter()
+//        {
+//            @Override
+//            public boolean apply(Request<?> request)
+//            {
+//                return true;
+//            }
+//        });
     }
 
     public void cancelAll(final Object tag)
     {
-        mQueue.cancelAll(new RequestQueue.RequestFilter()
-        {
-            @Override
-            public boolean apply(Request<?> request)
-            {
-                return request != null && tag != null && tag.equals(request.getTag()) == true;
-            }
-        });
+//        mQueue.cancelAll(new RequestQueue.RequestFilter()
+//        {
+//            @Override
+//            public boolean apply(Request<?> request)
+//            {
+//                return request != null && tag != null && tag.equals(request.getTag()) == true;
+//            }
+//        });
     }
 
     @Override
