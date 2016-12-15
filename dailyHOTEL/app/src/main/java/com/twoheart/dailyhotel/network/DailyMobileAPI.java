@@ -1230,9 +1230,9 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String transactionType, Object listener)
+    public void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(placeIndex, ticketIndex, dateCheckIn, transactionType);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(placeIndex, ticketIndex, dateCheckIn, dateCheckOut);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 

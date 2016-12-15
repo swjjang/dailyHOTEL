@@ -62,7 +62,6 @@ public interface DailyMobileService
     @POST("api/user/session/update/fb_user")
     Call<JSONObject> requestUserUpdateInformationForSocial(@FieldMap Map<String, String> params);
 
-    @FormUrlEncoded
     @POST("api/user/session/billing/card/info")
     Call<JSONObject> requestUserBillingCardList();
 
@@ -107,7 +106,7 @@ public interface DailyMobileService
     Call<JSONObject> requestGourmetBookingDetailInformation(@Path("fnbReservationIdx") int index);
 
     @GET("api/v2/reservation/fnb/{reservationIdx}/receipt")
-    Call<JSONObject> requestGourmetReceipt(@Query("reservation_rec_idx") int index);
+    Call<JSONObject> requestGourmetReceipt(@Path("reservationIdx") int index);
 
     @FormUrlEncoded
     @POST("api/fnb/reservation/session/hidden")
@@ -308,7 +307,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/payment/policy_refund")
     Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
-                                         @Query("dateCheckIn") String dateCheckIn, @Query("transactionType") String transactionType);
+                                         @Query("dateCheckIn") String dateCheckIn, @Query("dateCheckOut") String dateCheckOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("api/v2/payment/policy_refund")
