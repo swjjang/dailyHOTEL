@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.main;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -372,12 +372,23 @@ public class MainNetworkController extends BaseNetworkController
 
                         final String userIndex = dataJSONObject.getString("userIdx");
                         final String userType = dataJSONObject.has("userType") == true ? dataJSONObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
-
                         AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
+
+                        if (Util.isTextEmpty(userIndex) == true)
+                        {
+                            if (Constants.DEBUG == true)
+                            {
+                                ExLog.w(dataJSONObject.toString());
+                            } else
+                            {
+                                Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
+                            }
+                        }
+
                         AnalyticsManager.getInstance(mContext).startApplication();
 
                         // 누적 적립금 판단.
-                        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
+                        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
 
                         // 호텔 평가요청
                         DailyNetworkAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewHotelJsonResponseListener);

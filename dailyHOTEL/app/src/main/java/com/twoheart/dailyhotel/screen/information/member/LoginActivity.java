@@ -19,6 +19,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -494,8 +495,18 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
         DailyPreference.getInstance(this).setUserInformation(userType, email, name, birthday, recommender);
 
-        AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);
+        if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
+        {
+            if (Constants.DEBUG == true)
+            {
+                ExLog.w(jsonObject.toString());
+            } else
+            {
+                Crashlytics.logException(new RuntimeException("JSON USER Check : " + jsonObject.toString(1)));
+            }
+        }
 
+        AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);
         return userIndex;
     }
 

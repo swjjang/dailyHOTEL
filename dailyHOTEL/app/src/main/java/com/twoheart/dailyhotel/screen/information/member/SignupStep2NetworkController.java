@@ -2,15 +2,13 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -258,9 +256,8 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 try
                 {
                     int msgCode = responseJSONObject.getInt("msg_code");
-                    String message = responseJSONObject.getString("msg");
 
-                    if(response.isSuccessful() == true)
+                    if (response.isSuccessful() == true)
                     {
                         if (msgCode == 0)
                         {
@@ -290,6 +287,17 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                                 boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
 
+                                if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
+                                {
+                                    if (Constants.DEBUG == true)
+                                    {
+                                        ExLog.w(dataJSONObject.toString());
+                                    } else
+                                    {
+                                        Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
+                                    }
+                                }
+
                                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken),//
                                     userIndex, email, name, birthday, rndnum, userType, phoneNumber, isAgreedBenefit);
                                 return;
@@ -297,14 +305,14 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         }
 
                         // 로그인이 실패한 경우
-                        String msg = responseJSONObject.getString("msg");
+                        String message = responseJSONObject.getString("msg");
 
-                        if (Util.isTextEmpty(msg) == true)
+                        if (Util.isTextEmpty(message) == true)
                         {
-                            msg = mContext.getString(R.string.toast_msg_failed_to_login);
+                            message = mContext.getString(R.string.toast_msg_failed_to_login);
                         }
 
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     } else
                     {
                         if (response.code() == 422)
@@ -315,7 +323,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                             mOnNetworkControllerListener.onErrorResponse(call, response);
                         }
                     }
-                }catch (Exception e)
+                } catch (Exception e)
                 {
                     mOnNetworkControllerListener.onError(e);
                 }
