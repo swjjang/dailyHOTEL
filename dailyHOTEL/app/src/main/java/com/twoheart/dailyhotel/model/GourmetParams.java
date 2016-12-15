@@ -8,13 +8,16 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GourmetParams extends PlaceParams
 {
     protected String date;
-    protected String category;
-    protected String time;
-    protected String luxury;
+
+    protected List<String> mTimeList;
+    protected List<String> mCategoryList;
+    protected List<String> mLuxuryList;
 
     public GourmetParams(PlaceCuration placeCuration)
     {
@@ -61,9 +64,9 @@ public class GourmetParams extends PlaceParams
 
         if (gourmetCurationOption != null)
         {
-            category = toParamStringByCategory(gourmetCurationOption.getFilterMap());
-            time = toParamStringByTime(gourmetCurationOption.flagTimeFilter);
-            luxury = toParamStingByAmenities(gourmetCurationOption.flagAmenitiesFilters);
+            mCategoryList = toParamListByCategory(gourmetCurationOption.getFilterMap());
+            mTimeList = toParamListByTime(gourmetCurationOption.flagTimeFilter);
+            mLuxuryList = toParamListByAmenities(gourmetCurationOption.flagAmenitiesFilters);
         }
 
         mSort = gourmetCurationOption.getSortType();
@@ -104,185 +107,210 @@ public class GourmetParams extends PlaceParams
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(getParamString("reserveDate", date)).append("&");
+        Map<String, Object> map = toParamsMap();
+
+        for (Map.Entry<String, Object> entry : map.entrySet())
+        {
+            stringBuilder.append(entry.getKey()).append('=').append(entry.getValue()).append('&');
+        }
+
+        // 마지막 & 없애기
+        stringBuilder.setLength(stringBuilder.length() - 1);
+
+        List<String> categoryList = getCategoryList();
+
+        if (categoryList != null && categoryList.size() > 0)
+        {
+            for (String category : categoryList)
+            {
+                stringBuilder.append("&category").append('=').append(category);
+            }
+        }
+
+        List<String> timeList = getTimeList();
+
+        if (timeList != null && timeList.size() > 0)
+        {
+            for (String time : timeList)
+            {
+                stringBuilder.append("&timeFrame").append('=').append(time);
+            }
+        }
+
+        List<String> luxuryList = getLuxuryList();
+
+        if (luxuryList != null && luxuryList.size() > 0)
+        {
+            for (String luxury : luxuryList)
+            {
+                stringBuilder.append("&luxury").append('=').append(luxury);
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public List<String> getCategoryList()
+    {
+        return mCategoryList;
+    }
+
+    public List<String> getTimeList()
+    {
+        return mTimeList;
+    }
+
+    public List<String> getLuxuryList()
+    {
+        return mLuxuryList;
+    }
+
+    public Map<String, Object> toParamsMap()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+
+        hashMap.put("reserveDate", date);
 
         if (provinceIdx != 0)
         {
-            stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
+            hashMap.put("provinceIdx", provinceIdx);
         }
 
         if (areaIdx != 0)
         {
-            stringBuilder.append(getParamString("areaIdx", areaIdx)).append("&");
+            hashMap.put("areaIdx", areaIdx);
         }
 
         if (persons != 0)
         {
-            stringBuilder.append(getParamString("persons", persons)).append("&");
-        }
-
-        if (Util.isTextEmpty(category) == false)
-        {
-            stringBuilder.append(category).append("&");
-        }
-
-        if (Util.isTextEmpty(time) == false)
-        {
-            stringBuilder.append(time).append("&");
-        }
-
-        if (Util.isTextEmpty(luxury) == false)
-        {
-            stringBuilder.append(luxury).append("&");
+            hashMap.put("persons", persons);
         }
 
         if (page > 0)
         {
-            stringBuilder.append(getParamString("page", page)).append("&");
-            stringBuilder.append(getParamString("limit", limit)).append("&");
+            hashMap.put("page", page);
+            hashMap.put("limit", limit);
         }
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            stringBuilder.append(getParamString("sortProperty", sortProperty)).append("&");
-            stringBuilder.append(getParamString("sortDirection", sortDirection)).append("&");
+            if (Util.isTextEmpty(sortProperty) == false)
+            {
+                hashMap.put("sortProperty", sortProperty);
+            }
+
+            if (Util.isTextEmpty(sortDirection) == false)
+            {
+                hashMap.put("sortDirection", sortDirection);
+            }
 
             if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
             {
-                stringBuilder.append(getParamString("latitude", latitude)).append("&");
-                stringBuilder.append(getParamString("longitude", longitude)).append("&");
+                hashMap.put("latitude", latitude);
+                hashMap.put("longitude", longitude);
             }
         }
 
-        stringBuilder.append(getParamString("details", details)).append("&");
+        hashMap.put("details", details);
 
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        //        ExLog.d(" params : " + sb.toString());
-        return stringBuilder.toString();
+        return hashMap;
     }
 
-    protected String toParamStringByCategory(HashMap<String, Integer> map)
+    protected List<String> toParamListByCategory(HashMap<String, Integer> map)
     {
         if (map == null || map.size() == 0)
         {
             return null;
         }
 
-        String prefix = "category=";
-        StringBuilder stringBuilder = new StringBuilder();
-
+        ArrayList<String> arrayList = new ArrayList();
         ArrayList<Integer> categoryCodeList = new ArrayList<>(map.values());
 
         for (int categoryCode : categoryCodeList)
         {
-            stringBuilder.append(prefix).append(categoryCode).append("&");
+            arrayList.add(Integer.toString(categoryCode));
         }
 
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        return stringBuilder.toString();
+        return arrayList;
     }
 
-    protected String toParamStringByTime(int flagTimeFilter)
+    protected List<String> toParamListByTime(int flagTimeFilter)
     {
         if (flagTimeFilter == GourmetFilter.Time.FLAG_NONE)
         {
             return null;
         }
 
-        String prefix = "timeFrame=";
-        StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<String> arrayList = new ArrayList();
 
         if ((flagTimeFilter & GourmetFilter.Time.FLAG_06_11) == GourmetFilter.Time.FLAG_06_11)
         {
-            stringBuilder.append(prefix).append("06_11").append("&");
+            arrayList.add("06_11");
         }
 
         if ((flagTimeFilter & GourmetFilter.Time.FLAG_11_15) == GourmetFilter.Time.FLAG_11_15)
         {
-            stringBuilder.append(prefix).append("11_15").append("&");
+            arrayList.add("11_15");
         }
 
         if ((flagTimeFilter & GourmetFilter.Time.FLAG_15_17) == GourmetFilter.Time.FLAG_15_17)
         {
-            stringBuilder.append(prefix).append("15_17").append("&");
+            arrayList.add("15_17");
         }
 
         if ((flagTimeFilter & GourmetFilter.Time.FLAG_17_21) == GourmetFilter.Time.FLAG_17_21)
         {
-            stringBuilder.append(prefix).append("17_21").append("&");
+            arrayList.add("17_21");
         }
 
         if ((flagTimeFilter & GourmetFilter.Time.FLAG_21_06) == GourmetFilter.Time.FLAG_21_06)
         {
-            stringBuilder.append(prefix).append("21_06").append("&");
+            arrayList.add("21_06");
         }
 
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        return stringBuilder.toString();
+        return arrayList;
     }
 
-    protected String toParamStingByAmenities(int flagAmenitiesFilters)
+    protected List<String> toParamListByAmenities(int flagAmenitiesFilters)
     {
         if (flagAmenitiesFilters == GourmetFilter.Amenities.FLAG_NONE)
         {
             return null;
         }
 
-        String prefix = "luxury=";
-        StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<String> arrayList = new ArrayList();
 
         if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
         {
-            stringBuilder.append(prefix).append("Parking").append("&");
+            arrayList.add("Parking");
         }
 
         if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_VALET) == GourmetFilter.Amenities.FLAG_VALET)
         {
-            stringBuilder.append(prefix).append("Valet").append("&");
+            arrayList.add("Valet");
         }
 
         if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
         {
-            stringBuilder.append(prefix).append("BabySeat").append("&");
+            arrayList.add("BabySeat");
         }
 
         if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
         {
-            stringBuilder.append(prefix).append("PrivateRoom").append("&");
+            arrayList.add("PrivateRoom");
         }
 
         if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
         {
-            stringBuilder.append(prefix).append("GroupBooking").append("&");
+            arrayList.add("GroupBooking");
         }
 
         if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
         {
-            stringBuilder.append(prefix).append("Corkage").append("&");
+            arrayList.add("Corkage");
         }
 
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        return stringBuilder.toString();
+        return arrayList;
     }
 
     @Override
@@ -323,9 +351,9 @@ public class GourmetParams extends PlaceParams
         super.clear();
 
         date = null;
-        category = null;
-        time = null;
-        luxury = null;
+        mCategoryList = null;
+        mTimeList = null;
+        mLuxuryList = null;
     }
 
     protected void readFromParcel(Parcel in)
@@ -333,9 +361,9 @@ public class GourmetParams extends PlaceParams
         super.readFromParcel(in);
 
         date = in.readString();
-        category = in.readString();
-        time = in.readString();
-        luxury = in.readString();
+        mCategoryList = in.readArrayList(String.class.getClassLoader());
+        mTimeList = in.readArrayList(String.class.getClassLoader());
+        mLuxuryList = in.readArrayList(String.class.getClassLoader());
     }
 
     @Override
@@ -344,9 +372,9 @@ public class GourmetParams extends PlaceParams
         super.writeToParcel(dest, flags);
 
         dest.writeString(date);
-        dest.writeString(category);
-        dest.writeString(time);
-        dest.writeString(luxury);
+        dest.writeList(mCategoryList);
+        dest.writeList(mTimeList);
+        dest.writeList(mLuxuryList);
     }
 
     @Override

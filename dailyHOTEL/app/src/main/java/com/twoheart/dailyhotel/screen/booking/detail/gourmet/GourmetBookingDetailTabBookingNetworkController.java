@@ -2,16 +2,15 @@ package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 25..
@@ -31,42 +30,50 @@ public class GourmetBookingDetailTabBookingNetworkController extends BaseNetwork
 
     public void requestReviewInformation(int reserveIdx)
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, reserveIdx, mJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, reserveIdx, mGourmetReviewInformationCallback);
     }
 
-    DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mGourmetReviewInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
-                    Review review = new Review(jsonObject);
+                    JSONObject responseJSONObject = response.body();
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(review);
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    //                } else if (msgCode == 701) {
-                    //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
-                } else
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        Review review = new Review(dataJSONObject);
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(review);
+
+                        //                } else if (msgCode == 701) {
+                        //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

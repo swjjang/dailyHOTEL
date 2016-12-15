@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -47,10 +46,15 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
@@ -634,27 +638,27 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onError(Throwable e)
         {
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
-        {
-            mBaseActivity.onError(e);
+            GourmetMainFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            GourmetMainFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            mBaseActivity.onErrorToastMessage(message);
+            GourmetMainFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            GourmetMainFragment.this.onErrorResponse(call, response);
         }
 
         private boolean processDeepLinkByDateTime(BaseActivity baseActivity)

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -20,7 +19,10 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.net.URLDecoder;
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
@@ -203,14 +205,14 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             String requestParams = null;
             try
             {
-                Uri requestUrl = Uri.parse(URLDecoder.decode(url));
+                Uri requestUrl = Uri.parse(url);
                 requestParams = requestUrl.getQuery();
             } catch (Exception e)
             {
                 // do nothing!
             }
 
-            String lastParams = ((StaySearchParams) mLastParams).toParamsString(false);
+            String lastParams = mLastParams.toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!
@@ -236,13 +238,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StaySearchResultCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StaySearchResultCurationActivity.this.onError(e);
         }
@@ -257,6 +253,12 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         public void onErrorToastMessage(String message)
         {
             StaySearchResultCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            StaySearchResultCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

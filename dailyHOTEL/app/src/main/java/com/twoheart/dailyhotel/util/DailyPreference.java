@@ -6,7 +6,6 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 
 /**
  */
@@ -593,10 +592,10 @@ public class DailyPreference
     {
         try
         {
-            return DailyHotelRequest.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+            return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
         } catch (Exception e)
         {
-            String authorization = DailyHotelRequest.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+            String authorization = Crypto.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
 
             setValue(mEditor, KEY_AUTHORIZATION, authorization);
 
@@ -608,7 +607,7 @@ public class DailyPreference
     {
         DailyHotel.AUTHORIZATION = value;
 
-        setValue(mEditor, KEY_AUTHORIZATION, DailyHotelRequest.urlEncrypt(value));
+        setValue(mEditor, KEY_AUTHORIZATION, Crypto.urlEncrypt(value));
     }
 
     public boolean isVerification()

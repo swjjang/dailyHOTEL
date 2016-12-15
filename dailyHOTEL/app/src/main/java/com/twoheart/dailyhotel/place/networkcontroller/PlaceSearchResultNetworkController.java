@@ -4,13 +4,11 @@ import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -18,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -55,30 +52,62 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
         final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
             , Double.toString(latitude)//
             , Double.toString(longitude)//
-            , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+            , Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-        new SearchAddressAsyncTask(url, mLocationToAddressListener).execute();
+        new SearchAddressAsyncTask(url).execute();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
+    private class SearchAddressAsyncTask extends AsyncTask<Void, Void, JSONObject>
     {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        private String mUrl;
+        private retrofit2.Callback mCallback;
+
+        public SearchAddressAsyncTask(String url)
         {
-            if (response == null)
-            {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
-                return;
-            }
+            mUrl = url;
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params)
+        {
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder()//
+                .url(mUrl).build();
+
+            JSONObject jsonObject = null;
 
             try
             {
-                JSONArray jsonArray = response.getJSONArray("results");
-                JSONObject searchJSONObject = getSearchTypes(jsonArray, "country");
+                Response response = okHttpClient.newCall(request).execute();
+
+                if (response.isSuccessful() == true)
+                {
+                    String data = response.body().string();
+
+                    if (Util.isTextEmpty(data) == false)
+                    {
+                        jsonObject = new JSONObject(data);
+                    }
+                }
+            } catch (Exception e)
+            {
+                jsonObject = null;
+            }
+
+            return jsonObject;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject)
+        {
+            try
+            {
+                JSONArray dataJSONOArray = jsonObject.getJSONArray("results");
+                JSONObject searchJSONObject = getSearchTypes(dataJSONOArray, "country");
 
                 if (searchJSONObject == null)
                 {
@@ -88,7 +117,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
                     String shortName = searchJSONObject.getString("short_name");
                     String searchKeyword = "KR".equalsIgnoreCase(shortName) ? "sublocality_level_2" : "administrative_area_level_1";
 
-                    String address = getSearchTypes(jsonArray, searchKeyword, "long_name");
+                    String address = getSearchTypes(dataJSONOArray, searchKeyword, "long_name");
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
                 }
             } catch (Exception e)
@@ -220,63 +249,6 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
             }
 
             return false;
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-    };
-
-    private class SearchAddressAsyncTask extends AsyncTask<Void, Void, JSONObject>
-    {
-        private String mUrl;
-        private DailyHotelJsonResponseListener mListener;
-
-        public SearchAddressAsyncTask(String url, DailyHotelJsonResponseListener listener)
-        {
-            mUrl = url;
-            mListener = listener;
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params)
-        {
-            OkHttpClient okHttpClient = new OkHttpClient();
-            Request request = new Request.Builder()//
-                .url(mUrl).build();
-
-            JSONObject jsonObject = null;
-
-            try
-            {
-                Response response = okHttpClient.newCall(request).execute();
-
-                if (response.isSuccessful() == true)
-                {
-                    String data = response.body().string();
-
-                    if (Util.isTextEmpty(data) == false)
-                    {
-                        jsonObject = new JSONObject(data);
-                    }
-                }
-            } catch (Exception e)
-            {
-                jsonObject = null;
-            }
-
-            return jsonObject;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject)
-        {
-            if (mListener != null)
-            {
-                mListener.onResponse(mUrl, null, jsonObject);
-            }
         }
     }
 }

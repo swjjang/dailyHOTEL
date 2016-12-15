@@ -14,11 +14,10 @@ import android.webkit.WebViewClient;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -70,7 +69,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             }
         }); // 롱클릭 에러 방지.
 
-        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_REGISTER_CREDIT_CARD);
+        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER) + Crypto.getUrlDecoderEx(IDailyNetwork.URL_REGISTER_CREDIT_CARD);
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
@@ -181,7 +180,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             view.loadUrl("about:blank");
 
-            if (VolleyHttpClient.isAvailableNetwork(RegisterCreditCardActivity.this) == true)
+            if (Util.isAvailableNetwork(RegisterCreditCardActivity.this) == true)
             {
                 if (errorCode == 401)
                 {

@@ -24,11 +24,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -44,7 +42,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class PaymentWaitActivity extends BaseActivity
 {
@@ -177,13 +177,13 @@ public class PaymentWaitActivity extends BaseActivity
         {
             case HOTEL:
             {
-                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationJsonResponseListener);
+                DailyMobileAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationCallback);
                 break;
             }
 
             case FNB:
             {
-                DailyNetworkAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener);
+                DailyMobileAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationCallback);
                 break;
             }
         }
@@ -476,79 +476,95 @@ public class PaymentWaitActivity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mHotelReservationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    setHotelReservationData(dataJSONObject);
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        setHotelReservationData(dataJSONObject);
+                    } else
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("msg", responseJSONObject.getString("msg"));
+                        setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                        finish();
+                    }
+                } catch (Exception e)
                 {
-                    Intent intent = new Intent();
-                    intent.putExtra("msg", response.getString("msg"));
-                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    ExLog.e(e.toString());
                     finish();
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.e(e.toString());
-                finish();
-            } finally
-            {
-                unLockUI();
+                PaymentWaitActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            PaymentWaitActivity.this.onErrorResponse(volleyError);
+            PaymentWaitActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mFnBReservationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    setGourmetReservationData(jsonObject);
-                } else
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        setGourmetReservationData(jsonObject);
+                    } else
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("msg", responseJSONObject.getString("msg"));
+                        setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                        finish();
+                    }
+                } catch (Exception e)
                 {
-                    Intent intent = new Intent();
-                    intent.putExtra("msg", response.getString("msg"));
-                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    onError(e);
                     finish();
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-                finish();
-            } finally
-            {
-                unLockUI();
+                PaymentWaitActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            PaymentWaitActivity.this.onErrorResponse(volleyError);
+            PaymentWaitActivity.this.onError(t);
         }
     };
 }

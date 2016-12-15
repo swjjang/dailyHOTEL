@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -23,8 +22,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -426,14 +430,7 @@ public class WishListTabActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            WishListTabActivity.this.onErrorResponse(volleyError);
-            finish();
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             WishListTabActivity.this.onError(e);
         }
@@ -448,6 +445,13 @@ public class WishListTabActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             WishListTabActivity.this.onErrorToastMessage(message);
+            finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            WishListTabActivity.this.onErrorResponse(call, response);
             finish();
         }
     };

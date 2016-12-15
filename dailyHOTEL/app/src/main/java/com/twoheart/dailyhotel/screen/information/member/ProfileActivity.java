@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -28,6 +27,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ProfileActivity extends BaseActivity
 {
@@ -374,13 +378,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            ProfileActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             ProfileActivity.this.onError(e);
         }
@@ -395,6 +393,12 @@ public class ProfileActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             ProfileActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            ProfileActivity.this.onErrorResponse(call, response);
         }
     };
 }

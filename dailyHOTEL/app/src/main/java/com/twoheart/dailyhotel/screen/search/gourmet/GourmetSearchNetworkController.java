@@ -2,11 +2,9 @@ package com.twoheart.dailyhotel.screen.search.gourmet;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
@@ -16,10 +14,11 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchNetworkController extends PlaceSearchNetworkController
 {
@@ -35,52 +34,60 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteListener);
+        DailyMobileAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteCallback);
     }
 
-    private DailyHotelJsonResponseListener mGourmetSearchAutoCompleteListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mGourmetSearchAutoCompleteCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            int startIndex = url.lastIndexOf('=');
-
-            List<Keyword> keywordList = null;
-
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
+                String keyword = call.request().url().queryParameter("term");
 
-                if (msgCode == 100)
+                List<Keyword> keywordList = null;
+
+                try
                 {
-                    JSONArray jsonArray = response.getJSONArray("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    int length = jsonArray.length();
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    keywordList = new ArrayList<>(length);
-
-                    for (int i = 0; i < length; i++)
+                    if (msgCode == 100)
                     {
-                        try
+                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+
+                        int length = dataJSONArray.length();
+
+                        keywordList = new ArrayList<>(length);
+
+                        for (int i = 0; i < length; i++)
                         {
-                            keywordList.add(new Keyword(jsonArray.getJSONObject(i), PlaceSearchLayout.GOURMET_ICON));
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
+                            try
+                            {
+                                keywordList.add(new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.GOURMET_ICON));
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
                         }
                     }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
 
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(URLDecoder.decode(url.substring(startIndex + 1)), keywordList);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(keyword, keywordList);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
         }

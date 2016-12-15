@@ -7,7 +7,8 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 7. 28..
@@ -55,8 +56,9 @@ public class StaySearchParams extends StayParams
         if (stayCurationOption != null)
         {
             persons = stayCurationOption.person;
-            bedType = toParamStringByBedTypes(stayCurationOption.flagBedTypeFilters);
-            luxury = toParamStingByAmenities(stayCurationOption.flagAmenitiesFilters);
+
+            mBedTypeList = toParamListByBedTypes(stayCurationOption.flagBedTypeFilters);
+            mLuxuryList = toParamListByAmenities(stayCurationOption.flagAmenitiesFilters);
         }
 
         mSort = stayCurationOption.getSortType();
@@ -74,73 +76,74 @@ public class StaySearchParams extends StayParams
     }
 
     @Override
-    public String toParamsString()
+    public Map<String, Object> toParamsMap()
     {
-        return toParamsString(true);
-    }
+        HashMap<String, Object> hashMap = new HashMap<>();
 
-    public String toParamsString(boolean isTermEncode)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append(getParamString("dateCheckIn", dateCheckIn)).append("&");
-        stringBuilder.append(getParamString("stays", stays)).append("&");
+        hashMap.put("dateCheckIn", dateCheckIn);
+        hashMap.put("stays", stays);
 
         if (provinceIdx != 0)
         {
-            stringBuilder.append(getParamString("provinceIdx", provinceIdx)).append("&");
+            hashMap.put("provinceIdx", provinceIdx);
         }
 
         if (areaIdx != 0)
         {
-            stringBuilder.append(getParamString("areaIdx", areaIdx)).append("&");
+            hashMap.put("areaIdx", areaIdx);
         }
 
         if (persons != 0)
         {
-            stringBuilder.append(getParamString("persons", persons)).append("&");
+            hashMap.put("persons", persons);
         }
 
-        String categoryString = getCategoryString();
-        if (Util.isTextEmpty(categoryString) == false)
+        if (category != null && Category.ALL.code.equalsIgnoreCase(category.code) == false)
         {
-            stringBuilder.append(categoryString).append("&");
+            hashMap.put("category", category.code);
         }
 
-        if (Util.isTextEmpty(bedType) == false)
-        {
-            stringBuilder.append(bedType).append("&");
-        }
-
-        if (Util.isTextEmpty(luxury) == false)
-        {
-            stringBuilder.append(luxury).append("&");
-        }
+        //        if(mBedTypeList != null && mBedTypeList.size() > 0)
+        //        {
+        //            hashMap.put("bedType", mBedTypeList);
+        //        }
+        //
+        //        if(mLuxuryList != null && mLuxuryList.size() > 0)
+        //        {
+        //            hashMap.put("luxury", mLuxuryList);
+        //        }
 
         if (page > 0)
         {
-            stringBuilder.append(getParamString("page", page)).append("&");
-            stringBuilder.append(getParamString("limit", limit)).append("&");
+            hashMap.put("page", page);
+            hashMap.put("limit", limit);
         }
 
         if (Util.isTextEmpty(term) == false)
         {
-            stringBuilder.append(getParamString("term", isTermEncode == true ? URLEncoder.encode(term) : term)).append("&");
+            hashMap.put("term", term);
         }
 
         boolean isNeedLocation = false;
 
         if (radius != 0d)
         {
-            stringBuilder.append(getParamString("radius", radius)).append("&");
+            hashMap.put("radius", radius);
 
             isNeedLocation = true;
         }
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            stringBuilder.append(getParamString("sortProperty", sortProperty)).append("&");
-            stringBuilder.append(getParamString("sortDirection", sortDirection)).append("&");
+            if (Util.isTextEmpty(sortProperty) == false)
+            {
+                hashMap.put("sortProperty", sortProperty);
+            }
+
+            if (Util.isTextEmpty(sortDirection) == false)
+            {
+                hashMap.put("sortDirection", sortDirection);
+            }
 
             if (Constants.SortType.DISTANCE == mSort)
             {
@@ -150,20 +153,14 @@ public class StaySearchParams extends StayParams
 
         if (hasLocation() == true && isNeedLocation == true)
         {
-            stringBuilder.append(getParamString("latitude", latitude)).append("&");
-            stringBuilder.append(getParamString("longitude", longitude)).append("&");
+            hashMap.put("latitude", latitude);
+            hashMap.put("longitude", longitude);
         }
 
-        stringBuilder.append(getParamString("details", details)).append("&");
+        hashMap.put("details", details);
 
-        int length = stringBuilder.length();
-        if (length > 0)
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        //        ExLog.d(" params : " + sb.toString());
-        return stringBuilder.toString();
+        //        ExLog.d("params : " + hashMap.toString());
+        return hashMap;
     }
 
     @Override

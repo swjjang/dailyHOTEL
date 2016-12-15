@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
@@ -16,7 +15,12 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BonusActivity extends BaseActivity
 {
@@ -205,13 +209,7 @@ public class BonusActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            BonusActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             BonusActivity.this.onError(e);
         }
@@ -226,7 +224,13 @@ public class BonusActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             BonusActivity.this.onErrorToastMessage(message);
+            finish();
+        }
 
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            BonusActivity.this.onErrorResponse(call, response);
             finish();
         }
     };

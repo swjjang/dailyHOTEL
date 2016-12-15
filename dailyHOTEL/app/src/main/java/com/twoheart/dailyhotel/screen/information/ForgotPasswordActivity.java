@@ -11,10 +11,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -26,7 +24,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
@@ -119,7 +118,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
 
         lockUI();
-        DailyNetworkAPI.getInstance(this).requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailCallback);
     }
 
     @Override
@@ -162,101 +161,117 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserChangePwCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                String result = response.getString("isSuccess");
-
-                if ("true".equalsIgnoreCase(result) == true)
+                try
                 {
-                    mEmailEditText.setText(null);
+                    JSONObject responseJSONObject = response.body();
 
-                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                    String result = responseJSONObject.getString("isSuccess");
+
+                    if ("true".equalsIgnoreCase(result) == true)
                     {
-                        @Override
-                        public void onClick(View v)
+                        mEmailEditText.setText(null);
+
+                        showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                         {
-                            finish();
-                        }
-                    }, new DialogInterface.OnCancelListener()
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
+                    } else
                     {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
-                } else
+                        String message = responseJSONObject.getString("msg");
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                    }
+                } catch (JSONException e)
                 {
-                    String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (JSONException e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                ForgotPasswordActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            ForgotPasswordActivity.this.onErrorResponse(volleyError);
+            ForgotPasswordActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserCheckEmailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                String result = response.getString("isSuccess");
-
-                if ("true".equalsIgnoreCase(result) == true)
+                try
                 {
-                    if (Util.isTextEmpty(mEmail) == true)
+                    JSONObject responseJSONObject = response.body();
+
+                    String result = responseJSONObject.getString("isSuccess");
+
+                    if ("true".equalsIgnoreCase(result) == true)
                     {
-                        DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+                        if (Util.isTextEmpty(mEmail) == true)
+                        {
+                            DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            DailyMobileAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwCallback);
+                        }
                     } else
                     {
-                        DailyNetworkAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener);
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        String message = responseJSONObject.getString("msg");
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
                     }
-                } else
+                } catch (JSONException e)
                 {
+                    onError(e);
                     unLockUI();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
                 }
-            } catch (JSONException e)
+            } else
             {
-                onError(e);
-                unLockUI();
+                ForgotPasswordActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            ForgotPasswordActivity.this.onErrorResponse(volleyError);
+            ForgotPasswordActivity.this.onError(t);
         }
     };
 }

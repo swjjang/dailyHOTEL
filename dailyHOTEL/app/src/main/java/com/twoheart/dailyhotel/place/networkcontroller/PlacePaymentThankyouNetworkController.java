@@ -2,15 +2,14 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class PlacePaymentThankyouNetworkController extends BaseNetworkController
 {
@@ -26,39 +25,46 @@ public class PlacePaymentThankyouNetworkController extends BaseNetworkController
 
     public void requestUserTracking()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserTracking(mNetworkTag, mJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserTracking(mNetworkTag, mUserTrackingCallback);
     }
 
-    private DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserTrackingCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                JSONObject data = response.getJSONObject("data");
-                JSONObject tracking = data.getJSONObject("tracking");
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                // 서버시간은 사용안함
-                //                String serverDate = data.getString("serverDate");
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    JSONObject tracking = dataJSONObject.getJSONObject("tracking");
 
-                int gourmetPaymentCompletedCount = tracking.getInt("countOfGourmetPaymentCompleted");
+                    // 서버시간은 사용안함
+                    //                String serverDate = data.getString("serverDate");
 
-                int hotelPaymentCompletedCount = tracking.getInt("countOfHotelPaymentCompleted");
+                    int gourmetPaymentCompletedCount = tracking.getInt("countOfGourmetPaymentCompleted");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserTracking(//
-                    hotelPaymentCompletedCount, gourmetPaymentCompletedCount);
-            } catch (Exception e)
+                    int hotelPaymentCompletedCount = tracking.getInt("countOfHotelPaymentCompleted");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserTracking(//
+                        hotelPaymentCompletedCount, gourmetPaymentCompletedCount);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
-
 }

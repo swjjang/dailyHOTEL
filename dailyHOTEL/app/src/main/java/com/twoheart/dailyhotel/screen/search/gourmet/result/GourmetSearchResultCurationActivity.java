@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -18,7 +17,10 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.net.URLDecoder;
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
@@ -186,14 +188,14 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
             String requestParams = null;
             try
             {
-                Uri requestUrl = Uri.parse(URLDecoder.decode(url));
+                Uri requestUrl = Uri.parse(url);
                 requestParams = requestUrl.getQuery();
             } catch (Exception e)
             {
                 // do nothing!
             }
 
-            String lastParams = ((GourmetSearchParams) mLastParams).toParamsString(false);
+            String lastParams = ((GourmetSearchParams) mLastParams).toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!
@@ -219,13 +221,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetSearchResultCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             GourmetSearchResultCurationActivity.this.onError(e);
         }
@@ -240,6 +236,12 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         public void onErrorToastMessage(String message)
         {
             GourmetSearchResultCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            GourmetSearchResultCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

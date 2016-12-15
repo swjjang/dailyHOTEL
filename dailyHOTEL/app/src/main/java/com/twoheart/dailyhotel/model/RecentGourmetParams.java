@@ -5,7 +5,8 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Util;
 
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 10. 25..
@@ -43,34 +44,34 @@ public class RecentGourmetParams extends GourmetParams
     @Override
     public String toParamsString()
     {
-        return toParamsString(true);
-    }
-
-    public String toParamsString(boolean isTargetIndicesEncode)
-    {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(getParamString("reserveDate", date)).append("&");
+        Map<String, Object> map = toParamsMap();
 
-        //        if (page > 0)
-        //        {
-        //            stringBuilder.append(getParamString("page", page)).append("&");
-        //            stringBuilder.append(getParamString("limit", limit)).append("&");
-        //        }
-        //
+        for (Map.Entry<String, Object> entry : map.entrySet())
+        {
+            stringBuilder.append(entry.getKey()).append('=').append(entry.getValue()).append('&');
+        }
+
+        // 마지막 & 없애기
+        stringBuilder.setLength(stringBuilder.length() - 1);
+
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public Map<String, Object> toParamsMap()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+
+        hashMap.put("reserveDate", date);
+
         if (Util.isTextEmpty(targetIndices) == false)
         {
-            stringBuilder.append(getParamString("targetIndices", isTargetIndicesEncode == true ? URLEncoder.encode(targetIndices) : targetIndices)).append("&");
+            hashMap.put("targetIndices", targetIndices);
         }
 
-        int length = stringBuilder.length();
-        if (stringBuilder.charAt(length - 1) == '&')
-        {
-            stringBuilder.setLength(length - 1);
-        }
-
-        //        ExLog.d(" params : " + stringBuilder.toString());
-        return stringBuilder.toString();
+        return hashMap;
     }
 
     @Override

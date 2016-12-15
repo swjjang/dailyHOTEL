@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -30,12 +29,17 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -905,13 +909,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             GourmetCurationActivity.this.onError(e);
         }
@@ -926,6 +924,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         public void onErrorToastMessage(String message)
         {
             GourmetCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            GourmetCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

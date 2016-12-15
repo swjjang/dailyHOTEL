@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -12,8 +11,13 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StaySearchResultListFragment extends StayListFragment
 {
@@ -129,13 +133,7 @@ public class StaySearchResultListFragment extends StayListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StaySearchResultListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StaySearchResultListFragment.this.onError(e);
         }
@@ -150,6 +148,12 @@ public class StaySearchResultListFragment extends StayListFragment
         public void onErrorToastMessage(String message)
         {
             StaySearchResultListFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            StaySearchResultListFragment.this.onErrorResponse(call, response);
         }
     };
 }

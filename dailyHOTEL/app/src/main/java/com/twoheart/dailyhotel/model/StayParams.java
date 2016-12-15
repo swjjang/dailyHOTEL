@@ -7,6 +7,11 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by android_sam on 2016. 6. 30..
  */
@@ -15,8 +20,9 @@ public class StayParams extends PlaceParams
     protected String dateCheckIn;
     protected int stays;
     protected Category category;
-    protected String bedType;
-    protected String luxury;
+
+    protected List<String> mBedTypeList;
+    protected List<String> mLuxuryList;
 
     public StayParams(PlaceCuration placeCuration)
     {
@@ -68,8 +74,9 @@ public class StayParams extends PlaceParams
         if (stayCurationOption != null)
         {
             persons = stayCurationOption.person;
-            bedType = toParamStringByBedTypes(stayCurationOption.flagBedTypeFilters);
-            luxury = toParamStingByAmenities(stayCurationOption.flagAmenitiesFilters);
+
+            mBedTypeList = toParamListByBedTypes(stayCurationOption.flagBedTypeFilters);
+            mLuxuryList = toParamListByAmenities(stayCurationOption.flagAmenitiesFilters);
         }
 
         mSort = stayCurationOption.getSortType();
@@ -104,185 +111,202 @@ public class StayParams extends PlaceParams
     @Override
     public String toParamsString()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
-        sb.append(getParamString("dateCheckIn", dateCheckIn)).append("&");
-        sb.append(getParamString("stays", stays)).append("&");
-        sb.append(getParamString("provinceIdx", provinceIdx)).append("&");
+        Map<String, Object> map = toParamsMap();
+
+        for (Map.Entry<String, Object> entry : map.entrySet())
+        {
+            stringBuilder.append(entry.getKey()).append('=').append(entry.getValue()).append('&');
+        }
+
+        // 마지막 & 없애기
+        stringBuilder.setLength(stringBuilder.length() - 1);
+
+        List<String> bedTypeList = getBedTypeList();
+
+        if (bedTypeList != null && bedTypeList.size() > 0)
+        {
+            for (String bedType : bedTypeList)
+            {
+                stringBuilder.append("&bedType").append('=').append(bedType);
+            }
+        }
+
+        List<String> luxuryList = getLuxuryList();
+
+        if (luxuryList != null && luxuryList.size() > 0)
+        {
+            for (String luxury : luxuryList)
+            {
+                stringBuilder.append("&luxury").append('=').append(luxury);
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public List<String> getBedTypeList()
+    {
+        return mBedTypeList;
+    }
+
+    public List<String> getLuxuryList()
+    {
+        return mLuxuryList;
+    }
+
+    public Map<String, Object> toParamsMap()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+
+        hashMap.put("dateCheckIn", dateCheckIn);
+        hashMap.put("stays", stays);
+        hashMap.put("provinceIdx", provinceIdx);
 
         if (areaIdx != 0)
         {
-            sb.append(getParamString("areaIdx", areaIdx)).append("&");
+            hashMap.put("areaIdx", areaIdx);
         }
 
         if (persons != 0)
         {
-            sb.append(getParamString("persons", persons)).append("&");
+            hashMap.put("persons", persons);
         }
 
-        String categoryString = getCategoryString();
-        if (Util.isTextEmpty(categoryString) == false)
+        if (category != null && Category.ALL.code.equalsIgnoreCase(category.code) == false)
         {
-            sb.append(categoryString).append("&");
+            hashMap.put("category", category.code);
         }
 
-        if (Util.isTextEmpty(bedType) == false)
-        {
-            sb.append(bedType).append("&");
-        }
-
-        if (Util.isTextEmpty(luxury) == false)
-        {
-            sb.append(luxury).append("&");
-        }
+        //        if(mBedTypeList != null && mBedTypeList.size() > 0)
+        //        {
+        //            hashMap.put("bedType", mBedTypeList);
+        //        }
+        //
+        //        if(mLuxuryList != null && mLuxuryList.size() > 0)
+        //        {
+        //            hashMap.put("luxury", mLuxuryList);
+        //        }
 
         if (page > 0)
         {
-            sb.append(getParamString("page", page)).append("&");
-            sb.append(getParamString("limit", limit)).append("&");
+            hashMap.put("page", page);
+            hashMap.put("limit", limit);
         }
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            sb.append(getParamString("sortProperty", sortProperty)).append("&");
-            sb.append(getParamString("sortDirection", sortDirection)).append("&");
+            if (Util.isTextEmpty(sortProperty) == false)
+            {
+                hashMap.put("sortProperty", sortProperty);
+            }
+
+            if (Util.isTextEmpty(sortDirection) == false)
+            {
+                hashMap.put("sortDirection", sortDirection);
+            }
 
             if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
             {
-                sb.append(getParamString("latitude", latitude)).append("&");
-                sb.append(getParamString("longitude", longitude)).append("&");
+                hashMap.put("latitude", latitude);
+                hashMap.put("longitude", longitude);
             }
         }
 
-        sb.append(getParamString("details", details)).append("&");
+        hashMap.put("details", details);
 
-        int length = sb.length();
-        if (length > 0)
-        {
-            sb.setLength(length - 1);
-        }
-
-        //        ExLog.d(" params : " + sb.toString());
-        return sb.toString();
+        //        ExLog.d("params : " + hashMap.toString());
+        return hashMap;
     }
 
-    protected String toParamStringByBedTypes(int flagBedTypeFilters)
+    protected List<String> toParamListByBedTypes(int flagBedTypeFilters)
     {
         if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
             return null;
         }
 
-        String prefix = "bedType=";
-        StringBuilder sb = new StringBuilder();
+        ArrayList<String> arrayList = new ArrayList();
 
         if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
         {
-            sb.append(prefix).append("Double").append("&");
+            arrayList.add("Double");
         }
 
         if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
         {
-            sb.append(prefix).append("Twin").append("&");
+            arrayList.add("Twin");
         }
 
         if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
         {
-            sb.append(prefix).append("Ondol").append("&");
+            arrayList.add("Ondol");
         }
 
-        int length = sb.length();
-        if (length > 0)
-        {
-            sb.setLength(length - 1);
-        }
-
-        return sb.toString();
+        return arrayList;
     }
 
-    protected String toParamStingByAmenities(int flagAmenitiesFilters)
+    protected List<String> toParamListByAmenities(int flagAmenitiesFilters)
     {
         if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return null;
         }
 
-        String prefix = "luxury=";
-        StringBuilder sb = new StringBuilder();
+        ArrayList<String> arrayList = new ArrayList();
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
         {
-            sb.append(prefix).append("Wifi").append("&");
+            arrayList.add("Wifi");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
         {
-            sb.append(prefix).append("Breakfast").append("&");
+            arrayList.add("Breakfast");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING)
         {
-            sb.append(prefix).append("Cooking").append("&");
+            arrayList.add("Cooking");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH)
         {
-            sb.append(prefix).append("Bath").append("&");
+            arrayList.add("Bath");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
         {
-            sb.append(prefix).append("Parking").append("&");
+            arrayList.add("Parking");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
         {
-            sb.append(prefix).append("Pool").append("&");
+            arrayList.add("Pool");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
         {
-            sb.append(prefix).append("Fitness").append("&");
+            arrayList.add("Fitness");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NOPARKING)
         {
-            sb.append(prefix).append("NoParking").append("&");
+            arrayList.add("NoParking");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
         {
-            sb.append(prefix).append("Pet").append("&");
+            arrayList.add("Pet");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ)
         {
-            sb.append(prefix).append("SharedBbq").append("&");
+            arrayList.add("SharedBbq");
         }
 
-        int length = sb.length();
-        if (length > 0)
-        {
-            sb.setLength(length - 1);
-        }
-
-        return sb.toString();
-    }
-
-    protected String getCategoryString()
-    {
-        if (category == null)
-        {
-            return "";
-        }
-
-        if (Category.ALL.code.equalsIgnoreCase(category.code))
-        {
-            // 전체일경우 안보내면 전체임
-            return "";
-        }
-
-        return getParamString("category", category.code);
+        return arrayList;
     }
 
     public void setSortType(Constants.SortType sortType)
@@ -324,8 +348,8 @@ public class StayParams extends PlaceParams
         dateCheckIn = null;
         stays = 1;
         category = Category.ALL;
-        bedType = null;
-        luxury = null;
+        mBedTypeList = null;
+        mLuxuryList = null;
     }
 
     protected void readFromParcel(Parcel in)
@@ -335,8 +359,8 @@ public class StayParams extends PlaceParams
         dateCheckIn = in.readString();
         stays = in.readInt();
         category = in.readParcelable(Category.class.getClassLoader());
-        bedType = in.readString();
-        luxury = in.readString();
+        mBedTypeList = in.readArrayList(String.class.getClassLoader());
+        mLuxuryList = in.readArrayList(String.class.getClassLoader());
     }
 
     @Override
@@ -347,8 +371,8 @@ public class StayParams extends PlaceParams
         dest.writeString(dateCheckIn);
         dest.writeInt(stays);
         dest.writeParcelable(category, flags);
-        dest.writeString(bedType);
-        dest.writeString(luxury);
+        dest.writeList(mBedTypeList);
+        dest.writeList(mLuxuryList);
     }
 
     @Override

@@ -2,16 +2,15 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.StayParams;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 7. 1..
@@ -35,42 +34,50 @@ public class StayCurationNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsString(), mStayListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private DailyHotelJsonResponseListener mStayListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mStayListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(null, -1);
-        }
-
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            int hotelSaleCount;
-
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
+                int hotelSaleCount;
+
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    hotelSaleCount = dataJSONObject.getInt("hotelSalesCount");
-                } else
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        hotelSaleCount = dataJSONObject.getInt("hotelSalesCount");
+                    } else
+                    {
+                        hotelSaleCount = 0;
+                    }
+                } catch (Exception e)
                 {
                     hotelSaleCount = 0;
                 }
-            } catch (Exception e)
-            {
-                hotelSaleCount = 0;
-            }
 
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(url, hotelSaleCount);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayCount(call.request().url().toString(), hotelSaleCount);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

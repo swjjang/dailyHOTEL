@@ -24,14 +24,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
@@ -42,7 +39,12 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public abstract class BaseActivity extends AppCompatActivity implements Constants
 {
     protected interface OnCallDialogListener
     {
@@ -107,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             finish();
         } finally
         {
-            DailyNetworkAPI.getInstance(this).cancelAll();
+            DailyMobileAPI.getInstance(this).cancelAll(this);
         }
     }
 
@@ -316,7 +318,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 현재 Activity에 등록된 Request를 취소한다.
-        DailyNetworkAPI.getInstance(this).cancelAll(mNetworkTag);
+        DailyMobileAPI.getInstance(this).cancelAll(this, mNetworkTag);
+
         if (mDialog != null && mDialog.isShowing())
         {
             mDialog.dismiss();
@@ -339,17 +342,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onDestroy();
     }
 
-    @Override
-    public void onErrorResponse(VolleyError error)
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
     {
         unLockUI();
 
-        if (error.getCause() instanceof java.net.ConnectException)
-        {
-            VolleyHttpClient.getInstance(this).getRequestQueue().getCache().clear();
-        }
-
-        if (error.networkResponse != null && error.networkResponse.statusCode == 401)
+        if (response != null && response.code() == 401)
         {
             DailyPreference.getInstance(this).clear();
 
@@ -373,14 +370,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        ExLog.e(error.toString());
-
         onError();
     }
 
-    public void onError(Exception e)
+    public void onError(Throwable e)
     {
-        releaseUiComponent();
+        unLockUI();
 
         if (DEBUG == false && e != null)
         {
@@ -400,7 +395,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     protected void onError()
     {
-        releaseUiComponent();
+        unLockUI();
 
         // 혹시나 스레드 상태에서 호출이 될경우를 대비해서
         handler.post(new Runnable()
@@ -437,14 +432,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         unLockUI();
 
-        handler.post(new Runnable()
+        if (Util.isTextEmpty(message) == true)
         {
-            @Override
-            public void run()
+            onError();
+        } else
+        {
+            handler.post(new Runnable()
             {
-                DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
-            }
-        });
+                @Override
+                public void run()
+                {
+                    DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
+                }
+            });
+        }
     }
 
     private void recursiveRecycle(View root)
