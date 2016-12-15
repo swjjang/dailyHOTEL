@@ -266,7 +266,7 @@
     <string name="dialog_btn_call">전화연결</string>
     <string name="dialog_msg_call">데일리 고객센터로 전화 연결합니다.</string>
     <string name="dialog_msg_reservation_call_stay">호텔 예약실로 전화 연결합니다.</string>
-    <string name="dialog_msg_front_call_stay">호텔 프런트로 전화 연결합니다.</string>
+    <string name="dialog_msg_front_call_stay">호텔 프론트로 전화 연결합니다.</string>
     <string name="dialog_msg_direct_call_gourmet">레스토랑으로 직접 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
