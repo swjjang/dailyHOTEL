@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -17,11 +16,16 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 5. 26..
@@ -362,13 +366,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            SelectStayCouponDialogActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             SelectStayCouponDialogActivity.this.onError(e);
         }
@@ -383,6 +381,13 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             SelectStayCouponDialogActivity.this.onErrorToastMessage(message);
+            finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            SelectStayCouponDialogActivity.this.onErrorResponse(call, response);
             finish();
         }
 

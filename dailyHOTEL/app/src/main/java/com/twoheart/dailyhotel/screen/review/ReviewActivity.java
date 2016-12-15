@@ -23,7 +23,6 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
@@ -48,6 +47,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ReviewActivity extends BaseActivity
 {
@@ -1024,13 +1026,7 @@ public class ReviewActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            ReviewActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             ReviewActivity.this.onError(e);
         }
@@ -1045,6 +1041,12 @@ public class ReviewActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             ReviewActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            ReviewActivity.this.onErrorResponse(call, response);
         }
     };
 }

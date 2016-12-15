@@ -2,11 +2,9 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -17,6 +15,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class SignupStep2NetworkController extends BaseNetworkController
 {
@@ -47,12 +48,12 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
     public void requestVerfication(String signupKey, String phoneNumber, boolean force)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, mVerificationJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, mVerificationCallback);
     }
 
     public void requestSingUp(String signupKey, String code, String phoneNumber)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignup(mNetworkTag, signupKey, code, phoneNumber, mDailyUserSignupJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignup(mNetworkTag, signupKey, code, phoneNumber, mDailyUserSignupCallback);
     }
 
     public void requestLogin(String email, String password)
@@ -63,266 +64,320 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
 
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mVerificationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                switch (msgCode)
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    case 100:
+                    JSONObject responseJSONObject = response.body();
+
+                    try
                     {
-                        //                        JSONObject dataJONObject = response.getJSONObject("data");
-                        //                        String phone = dataJONObject.getString("phone");
-                        String message = response.getString("msg");
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
-                        break;
-                    }
-
-                    // 회원 가입 중 세션이 만료되었습니다
-                    case 2000:
-                    {
-                        //                        JSONObject dataJONObject = response.getJSONObject("data");
-                        String message = response.getString("msg");
-
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                        break;
-                    }
-
-                    default:
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
-                        break;
-                }
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                int msgCode = jsonObject.getInt("msgCode");
-                String message = jsonObject.getString("msg");
-
-                switch (volleyError.networkResponse.statusCode)
-                {
-                    case 422:
-                    {
                         switch (msgCode)
                         {
-                            // 동일한 전화번호로 인증 받은 사용자가
-                            case 2001:
+                            case 100:
                             {
-                                JSONObject dataJONObject = jsonObject.getJSONObject("data");
-                                String phoneNumber = dataJONObject.getString("phone");
-
-                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
-                                return;
+                                //                        JSONObject dataJONObject = response.getJSONObject("data");
+                                //                        String phone = dataJONObject.getString("phone");
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
+                                break;
                             }
 
-                            // 전화번호가 유효하지 않을 때
-                            case 2003:
+                            // 회원 가입 중 세션이 만료되었습니다
+                            case 2000:
                             {
-                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
-                                return;
+                                //                        JSONObject dataJONObject = response.getJSONObject("data");
+                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                                break;
                             }
-                        }
-                        break;
-                    }
 
-                    case 400:
-                    {
-                        switch (msgCode)
-                        {
-                            case 2004:
-                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                            default:
+                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
                                 break;
                         }
-                        break;
-                    }
-                }
-
-                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mDailyUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignup = jsonObject.getBoolean("is_signup");
-
-                    if (isSignup == true)
+                    } catch (Exception e)
                     {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp();
-                        return;
+                        mOnNetworkControllerListener.onError(e);
                     }
-                }
-
-                String msg = response.getString("msg");
-
-                if (Util.isTextEmpty(msg) == true)
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
                 {
-                    msg = mContext.getString(R.string.toast_msg_failed_to_signup);
-                }
-
-                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                int msgCode = jsonObject.getInt("msgCode");
-                String message = jsonObject.getString("msg");
-
-                if (volleyError.networkResponse.statusCode == 422)
-                {
-                    switch (msgCode)
+                    try
                     {
-                        // SMS인증키가 잘못된 경우
-                        case 2002:
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
+                        switch (response.code())
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
-                            return;
+                            case 422:
+                            {
+                                switch (msgCode)
+                                {
+                                    // 동일한 전화번호로 인증 받은 사용자가
+                                    case 2001:
+                                    {
+                                        JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
+                                        String phoneNumber = dataJONObject.getString("phone");
+
+                                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
+                                        return;
+                                    }
+
+                                    // 전화번호가 유효하지 않을 때
+                                    case 2003:
+                                    {
+                                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                        return;
+                                    }
+                                }
+                                break;
+                            }
+
+                            case 400:
+                            {
+                                switch (msgCode)
+                                {
+                                    case 2004:
+                                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                        break;
+                                }
+                                break;
+                            }
                         }
 
-                        // 전화번호가 유효하지 않을 때
-                        case 2003:
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
-                            return;
-                        }
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                }
-
-                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            if (volleyError != null && volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 422)
-            {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();
-
-                if (Constants.DEBUG == false)
+                } else
                 {
-                    Crashlytics.logException(volleyError);
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
                 }
             } else
             {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
+            mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mDailyUserSignupCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isSignin = dataJSONObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
+                    try
                     {
-                        JSONObject tokenJSONObject = response.getJSONObject("token");
-                        String accessToken = tokenJSONObject.getString("access_token");
-                        String tokenType = tokenJSONObject.getString("token_type");
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
 
-                        JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
-                        String userIndex = userJSONObject.getString("idx");
-                        String email = userJSONObject.getString("email");
-                        String name = userJSONObject.getString("name");
-                        String rndnum = userJSONObject.getString("rndnum");
-                        String userType = userJSONObject.getString("userType");
-                        String phoneNumber = userJSONObject.getString("phone");
-                        String birthday = null;
-
-                        if (userJSONObject.has("birthday") == true && userJSONObject.isNull("birthday") == false)
+                        if (msgCode == 0)
                         {
-                            birthday = userJSONObject.getString("birthday");
-                        }
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
+                            boolean isSignup = dataJSONObject.getBoolean("is_signup");
 
-                        if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
-                        {
-                            if (Constants.DEBUG == true)
+                            if (isSignup == true)
                             {
-                                ExLog.w(dataJSONObject.toString());
-                            } else
-                            {
-                                Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onSignUp();
+                                return;
                             }
                         }
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken),//
-                            userIndex, email, name, birthday, rndnum, userType, phoneNumber, isAgreedBenefit);
-                        return;
+                        if (Util.isTextEmpty(message) == true)
+                        {
+                            message = mContext.getString(R.string.toast_msg_failed_to_signup);
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                }
-
-                // 로그인이 실패한 경우
-                String msg = response.getString("msg");
-
-                if (Util.isTextEmpty(msg) == true)
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
                 {
-                    msg = mContext.getString(R.string.toast_msg_failed_to_login);
-                }
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
 
-                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
-            } catch (Exception e)
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
+                        if (response.code() == 422)
+                        {
+                            switch (msgCode)
+                            {
+                                // SMS인증키가 잘못된 경우
+                                case 2002:
+                                {
+                                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
+                                    return;
+                                }
+
+                                // 전화번호가 유효하지 않을 때
+                                case 2003:
+                                {
+                                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                    return;
+                                }
+                            }
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else
+                {
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mDailyUserLoginCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null)
+            {
+                if (response.isSuccessful() == true && response.body() != null)
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    try
+                    {
+                        int msgCode = responseJSONObject.getInt("msg_code");
+
+                        if (msgCode == 0)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            boolean isSignin = dataJSONObject.getBoolean("is_signin");
+
+                            if (isSignin == true)
+                            {
+                                JSONObject tokenJSONObject = responseJSONObject.getJSONObject("token");
+                                String accessToken = tokenJSONObject.getString("access_token");
+                                String tokenType = tokenJSONObject.getString("token_type");
+
+                                JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
+                                String userIndex = userJSONObject.getString("idx");
+                                String email = userJSONObject.getString("email");
+                                String name = userJSONObject.getString("name");
+                                String rndnum = userJSONObject.getString("rndnum");
+                                String userType = userJSONObject.getString("userType");
+                                String phoneNumber = userJSONObject.getString("phone");
+                                String birthday = null;
+
+                                if (userJSONObject.has("birthday") == true && userJSONObject.isNull("birthday") == false)
+                                {
+                                    birthday = userJSONObject.getString("birthday");
+                                }
+
+                                boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
+
+                                if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
+                                {
+                                    if (Constants.DEBUG == true)
+                                    {
+                                        ExLog.w(dataJSONObject.toString());
+                                    } else
+                                    {
+                                        Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
+                                    }
+                                }
+
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken),//
+                                    userIndex, email, name, birthday, rndnum, userType, phoneNumber, isAgreedBenefit);
+                                return;
+                            }
+                        }
+
+                        // 로그인이 실패한 경우
+                        String message = responseJSONObject.getString("msg");
+
+                        if (Util.isTextEmpty(message) == true)
+                        {
+                            message = mContext.getString(R.string.toast_msg_failed_to_login);
+                        }
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+
+                        if (response.code() == 422)
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();
+                        } else
+                        {
+                            mOnNetworkControllerListener.onErrorResponse(call, response);
+                        }
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else
+                {
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

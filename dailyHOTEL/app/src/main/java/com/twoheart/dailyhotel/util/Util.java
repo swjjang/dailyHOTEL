@@ -53,7 +53,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -1010,7 +1009,7 @@ public class Util implements Constants
         try
         {
             final String packageName = "com.locnall.KimGiSa";
-            String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", URLEncoder.encode(name, "UTF-8"), longitude, latitude, DailyHotelRequest.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
+            String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", URLEncoder.encode(name, "UTF-8"), longitude, latitude, Crypto.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
@@ -1079,7 +1078,7 @@ public class Util implements Constants
 
             if (DailyHotel.isSuccessTMapAuth() == false)
             {
-                tmapTapi.setSKPMapAuthentication(DailyHotelRequest.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
+                tmapTapi.setSKPMapAuthentication(Crypto.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
                 tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
                 {
                     @Override
@@ -1737,4 +1736,26 @@ public class Util implements Constants
         return ((index > 0) || (length < text.length())) ? text.substring(index, length) : text;
     }
 
+    public static boolean isAvailableNetwork(Context context)
+    {
+        boolean result = false;
+
+        AvailableNetwork availableNetwork = AvailableNetwork.getInstance();
+
+        switch (availableNetwork.getNetType(context))
+        {
+            case AvailableNetwork.NET_TYPE_WIFI:
+                // WIFI 연결상태
+                result = true;
+                break;
+            case AvailableNetwork.NET_TYPE_3G:
+                // 3G 혹은 LTE연결 상태
+                result = true;
+                break;
+            case AvailableNetwork.NET_TYPE_NONE:
+                result = false;
+                break;
+        }
+        return result;
+    }
 }

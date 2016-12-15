@@ -22,12 +22,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
@@ -41,7 +39,9 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -245,7 +245,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     {
         lockUI();
 
-        DailyNetworkAPI.getInstance(this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
     }
 
     @Override
@@ -338,54 +338,62 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                switch (msgCode)
+                try
                 {
-                    case 100:
-                        JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                        mGourmetBookingDetail.setData(jsonObject);
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                        loadFragments(getViewPager(), mGourmetBookingDetail);
-                        break;
+                    switch (msgCode)
+                    {
+                        case 100:
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
-                    case 501:
-                        onErrorPopupMessage(msgCode, response.getString("msg"), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
+                            mGourmetBookingDetail.setData(dataJSONObject);
+
+                            loadFragments(getViewPager(), mGourmetBookingDetail);
+                            break;
+
+                        // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
+                        case 501:
+                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
                             {
-                                Util.restartApp(GourmetBookingDetailTabActivity.this);
-                            }
-                        });
-                        break;
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    Util.restartApp(GourmetBookingDetailTabActivity.this);
+                                }
+                            });
+                            break;
 
-                    default:
-                        onErrorPopupMessage(msgCode, response.getString("msg"));
-                        break;
+                        default:
+                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                            break;
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                GourmetBookingDetailTabActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            GourmetBookingDetailTabActivity.this.onErrorResponse(volleyError);
+            GourmetBookingDetailTabActivity.this.onError(t);
         }
     };
 }

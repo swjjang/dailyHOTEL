@@ -18,11 +18,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -41,6 +39,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EditProfileBirthdayActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
@@ -205,14 +206,14 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileBirthdayActivity.this).getUserType()) == true)
                 {
                     Map<String, String> params = Collections.singletonMap("birthday", birthday);
-                    DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener);
+                    DailyMobileAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateCallback);
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
                     params.put("user_idx", mUserIndex);
                     params.put("birthday", birthday);
 
-                    DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener);
+                    DailyMobileAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateCallback);
                 }
                 break;
             }
@@ -473,135 +474,151 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailyUserUpdateCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
                     {
-                        @Override
-                        public void onClick(View v)
+                        showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                         {
-                            finish();
-                        }
-                    }, new DialogInterface.OnCancelListener()
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
+
+                        setResult(RESULT_OK);
+
+                        String birthday = (String) mBirthdayEditText.getTag();
+
+                        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday(birthday);
+
+                        // 생일을 입력한 경우 체크
+                        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
+                            , AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
+                    } else
                     {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
-
-                    setResult(RESULT_OK);
-
-                    String birthday = (String) mBirthdayEditText.getTag();
-
-                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday(birthday);
-
-                    // 생일을 입력한 경우 체크
-                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
-                        , AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
-                } else
+                        onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), null);
+                    }
+                } catch (Exception e)
                 {
-                    onErrorPopupMessage(msgCode, response.getString("msg"), null);
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                EditProfileBirthdayActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            EditProfileBirthdayActivity.this.onErrorResponse(volleyError);
+            EditProfileBirthdayActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mSocialUserUpdateCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                    boolean result = dataJSONObject.getBoolean("is_success");
+
+                    // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (result == true)
+                    {
+                        showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
+
+                        setResult(RESULT_OK);
+
+                        String birthday = (String) mBirthdayEditText.getTag();
+
+                        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday(birthday);
+
+                        // 생일을 입력한 경우 체크
+                        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
+                            , AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mBirthdayEditText.setText(null);
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                mBirthdayEditText.setText(null);
+                            }
+                        });
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                EditProfileBirthdayActivity.this.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                boolean result = jsonObject.getBoolean("is_success");
-
-                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
-                int msgCode = response.getInt("msg_code");
-
-                if (result == true)
-                {
-                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_birthday), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            finish();
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
-
-                    setResult(RESULT_OK);
-
-                    String birthday = (String) mBirthdayEditText.getTag();
-
-                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday(birthday);
-
-                    // 생일을 입력한 경우 체크
-                    AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
-                        , AnalyticsManager.Action.REGISTRATION_CLICKED, birthday, null);
-                } else
-                {
-                    String message = response.getString("msg");
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            mBirthdayEditText.setText(null);
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            mBirthdayEditText.setText(null);
-                        }
-                    });
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
+            EditProfileBirthdayActivity.this.onError(t);
         }
     };
 }

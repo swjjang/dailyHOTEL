@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
@@ -19,7 +18,12 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
@@ -328,31 +332,30 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onError(Throwable e)
         {
             unLockUI();
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
-        {
-            unLockUI();
-            mBaseActivity.onError(e);
+            GourmetSearchFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            GourmetSearchFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            mBaseActivity.onErrorToastMessage(message);
+            GourmetSearchFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            GourmetSearchFragment.this.onErrorResponse(call, response);
         }
     };
 }

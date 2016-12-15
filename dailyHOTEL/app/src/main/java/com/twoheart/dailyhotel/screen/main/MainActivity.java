@@ -21,13 +21,11 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
@@ -41,10 +39,15 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -272,7 +275,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (mIsInitialization == true)
         {
-            if (VolleyHttpClient.isAvailableNetwork(this) == false)
+            if (Util.isAvailableNetwork(this) == false)
             {
                 mDelayTimeHandler.removeMessages(0);
 
@@ -619,7 +622,7 @@ public class MainActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View view)
             {
-                if (VolleyHttpClient.isAvailableNetwork(MainActivity.this) == true)
+                if (Util.isAvailableNetwork(MainActivity.this) == true)
                 {
                     lockUI();
                     mNetworkController.requestCheckServer();
@@ -767,16 +770,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mDelayTimeHandler.removeMessages(0);
-            unLockUI();
-
-            MainActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             mDelayTimeHandler.removeMessages(0);
             unLockUI();
@@ -800,6 +794,15 @@ public class MainActivity extends BaseActivity implements Constants
             unLockUI();
 
             MainActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
+            MainActivity.this.onErrorResponse(call, response);
         }
 
         @Override

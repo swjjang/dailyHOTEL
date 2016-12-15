@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -23,8 +22,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -352,14 +356,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            RecentPlacesTabActivity.this.onErrorResponse(volleyError);
-            finish();
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             RecentPlacesTabActivity.this.onError(e);
         }
@@ -374,6 +371,13 @@ public class RecentPlacesTabActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             RecentPlacesTabActivity.this.onErrorToastMessage(message);
+            finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            RecentPlacesTabActivity.this.onErrorResponse(call, response);
             finish();
         }
     };

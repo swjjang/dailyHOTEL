@@ -19,22 +19,19 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -42,12 +39,16 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -150,7 +151,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         String size = String.format("%dx%d", (int) width, (int) height);
         String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
         String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-            , size, iconUrl, bookingDetail.latitude, bookingDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+            , size, iconUrl, bookingDetail.latitude, bookingDetail.longitude, Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         mapImageView.setImageURI(Uri.parse(url));
 
@@ -825,62 +826,27 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onError(Throwable e)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
-                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
-            }
-
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(volleyError);
-            } else
-            {
-                ExLog.e(volleyError != null ? volleyError.getMessage() : "unKnowen volleyError from get Review data");
-            }
-        }
-
-        @Override
-        public void onError(Exception e)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
-                    "문구 필요", baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
-            }
-
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(e);
-            } else
-            {
-                ExLog.e(e != null ? e.getMessage() : "unKnowen Exception from get Review data");
-            }
+            StayBookingDetailTabBookingFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                baseActivity.showSimpleDialog(baseActivity.getResources().getString(R.string.dialog_notice2), //
-                    message, baseActivity.getResources().getString(R.string.dialog_btn_text_confirm), null);
-            }
+            StayBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            if (baseActivity != null && baseActivity.isFinishing() == false)
-            {
-                DailyToast.showToast(getActivity(), message, Toast.LENGTH_LONG);
-            }
+            StayBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            StayBookingDetailTabBookingFragment.this.onErrorResponse(call, response);
         }
     };
 }

@@ -2,12 +2,10 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.manager.PlaceEventBannerManager;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
@@ -19,7 +17,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetMainNetworkController extends PlaceMainNetworkController
 {
@@ -31,49 +31,63 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
     @Override
     public void requestEventBanner()
     {
-        DailyNetworkAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListCallback);
     }
 
     @Override
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestGourmetRegionList(mNetworkTag, mRegionListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mRegionListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                    ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegionList(provinceList, areaList);
-                } else
+                        JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                        ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+
+                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                        ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegionList(provinceList, areaList);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
         }
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
@@ -129,28 +143,30 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
 
             return provinceList;
         }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
     };
 
-    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mEventBannerListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                JSONObject responseJSONObject = response.body();
+
+                List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(responseJSONObject);
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            List<EventBanner> eventBannerList = PlaceEventBannerManager.makeEventBannerList(response);
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(eventBannerList);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventBanner(null);
         }
     };
 }

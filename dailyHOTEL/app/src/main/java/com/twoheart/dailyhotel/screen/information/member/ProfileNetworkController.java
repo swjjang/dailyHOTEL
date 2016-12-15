@@ -3,10 +3,8 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 import android.util.Base64;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -15,7 +13,9 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ProfileNetworkController extends BaseNetworkController
 {
@@ -34,128 +34,146 @@ public class ProfileNetworkController extends BaseNetworkController
 
     public void requestUserProfile()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserInProfileJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserInProfileCallback);
     }
 
     public void requestUserProfileBenfit()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserInProfileBenefitJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserInProfileBenefitCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserInProfileJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserInProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    String email = jsonObject.getString("email");
-                    String name = jsonObject.getString("name");
-                    String phone = jsonObject.getString("phone");
-                    String userIndex = jsonObject.getString("userIdx");
-                    boolean isVerified = jsonObject.getBoolean("verified");
-                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
-                    String birthday = null;
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    if (jsonObject.has("birthday") == true)
+                    if (msgCode == 100)
                     {
-                        birthday = jsonObject.getString("birthday");
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        String email = jsonObject.getString("email");
+                        String name = jsonObject.getString("name");
+                        String phone = jsonObject.getString("phone");
+                        String userIndex = jsonObject.getString("userIdx");
+                        boolean isVerified = jsonObject.getBoolean("verified");
+                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+                        String birthday = null;
+
+                        if (jsonObject.has("birthday") == true)
+                        {
+                            birthday = jsonObject.getString("birthday");
+                        }
+
+                        String referralCode = jsonObject.getString("referralCode");
+
+                        String verifiedDate = null;
+
+                        if (isVerified == true && isPhoneVerified == true)
+                        {
+                            //                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
+                            //                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
+                            try
+                            {
+                                verifiedDate = DailyCalendar.convertDateFormatString(jsonObject.getString("phoneVerifiedAt"), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                            } catch (NullPointerException e)
+                            {
+                                verifiedDate = null;
+                            }
+                        } else if (isVerified == false && isPhoneVerified == true)
+                        {
+                            verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";
+
+                            if (Constants.DEBUG == false)
+                            {
+                                Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
+                                    + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
+                                    + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
+                            }
+                        }
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
+                            , email, name, phone, birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    }
+                } catch (ParseException e)
+                {
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log("Url: " + call.request().url());
                     }
 
-                    String referralCode = jsonObject.getString("referralCode");
-
-                    String verifiedDate = null;
-
-                    if (isVerified == true && isPhoneVerified == true)
-                    {
-                        //                        verifiedDate = Util.simpleDateFormatISO8601toFormat( //
-                        //                            jsonObject.getString("phoneVerifiedAt"), "yyyy.MM.dd");
-                        try
-                        {
-                            verifiedDate = DailyCalendar.convertDateFormatString(jsonObject.getString("phoneVerifiedAt"), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-                        } catch (NullPointerException e)
-                        {
-                            verifiedDate = null;
-                        }
-                    } else if (isVerified == false && isPhoneVerified == true)
-                    {
-                        verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";
-
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
-                                + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
-                                + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
-                        }
-                    }
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
-                        , email, name, phone, birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
-                } else
+                    mOnNetworkControllerListener.onError(e);
+                } catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onError(null);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (ParseException e)
+            } else
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log("Url: " + url);
-                }
-
-                mOnNetworkControllerListener.onError(e);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserInProfileBenefitCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfileBenefit(isExceedBonus);
-                } else
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfileBenefit(isExceedBonus);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    }
+                } catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onError(null);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

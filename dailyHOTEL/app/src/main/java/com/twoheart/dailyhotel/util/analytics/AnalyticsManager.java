@@ -171,7 +171,7 @@ public class AnalyticsManager
         //            }
         //        } catch (Exception e)
         //        {
-        //            ExLog.d(TAG + e.toString());
+        //            ExLog.d(CANCEL_TAG + e.toString());
         //        }
     }
 

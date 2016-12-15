@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -19,9 +18,14 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -165,31 +169,31 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onError(Throwable e)
         {
             unLockUI();
-            mBaseActivity.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
-        {
-            unLockUI();
-            mBaseActivity.onError(e);
+            StayWishListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            mBaseActivity.onErrorPopupMessage(msgCode, message);
+            StayWishListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             unLockUI();
-            mBaseActivity.onErrorToastMessage(message);
+            StayWishListFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            unLockUI();
+            StayWishListFragment.this.onErrorResponse(call, response);
         }
     };
 

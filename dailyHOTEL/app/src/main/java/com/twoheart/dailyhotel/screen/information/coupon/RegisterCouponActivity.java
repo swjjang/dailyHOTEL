@@ -7,15 +7,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 import static com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity.INTENT_EXTRA_DATA_CALL_BY_SCREEN;
 
@@ -193,7 +197,7 @@ public class RegisterCouponActivity extends BaseActivity
     private RegisterCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new RegisterCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegisterCoupon(String couponCode, final boolean isSuccess, int msgCode, String message)
+        public void onRegisterCoupon(final boolean isSuccess, int msgCode, String message)
         {
             unLockUI();
 
@@ -212,8 +216,7 @@ public class RegisterCouponActivity extends BaseActivity
                 });
 
             Map<String, String> params = new HashMap<>();
-            // 현재 request방식이 post방식으로 변경되어 editText의 스트링을 가져오도록 수정 - 추후 수정 예정
-            couponCode = mRegisterCouponLayout != null ? mRegisterCouponLayout.getInputText() : "";
+            String couponCode = mRegisterCouponLayout != null ? mRegisterCouponLayout.getInputText() : "";
 
             params.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
             params.put(AnalyticsManager.KeyType.STATUS_CODE, Integer.toString(msgCode));
@@ -225,13 +228,7 @@ public class RegisterCouponActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            RegisterCouponActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             RegisterCouponActivity.this.onError(e);
         }
@@ -248,5 +245,10 @@ public class RegisterCouponActivity extends BaseActivity
             RegisterCouponActivity.this.onErrorToastMessage(message);
         }
 
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            RegisterCouponActivity.this.onErrorResponse(call, response);
+        }
     };
 }

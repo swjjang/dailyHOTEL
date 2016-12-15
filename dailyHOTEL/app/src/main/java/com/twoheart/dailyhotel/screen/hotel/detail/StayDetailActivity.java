@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -59,6 +58,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayDetailActivity extends PlaceDetailActivity
 {
@@ -1452,15 +1454,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onErrorResponse(volleyError);
-            finish();
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onError(e);
@@ -1486,6 +1480,14 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             StayDetailActivity.this.onErrorToastMessage(message);
+            finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            StayDetailActivity.this.onErrorResponse(call, response);
             finish();
         }
     };

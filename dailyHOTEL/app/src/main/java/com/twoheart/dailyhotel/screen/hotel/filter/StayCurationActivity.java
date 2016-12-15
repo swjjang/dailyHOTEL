@@ -13,7 +13,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -31,8 +30,13 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -791,13 +795,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StayCurationActivity.this.onError(e);
         }
@@ -812,6 +810,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         public void onErrorToastMessage(String message)
         {
             StayCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            StayCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

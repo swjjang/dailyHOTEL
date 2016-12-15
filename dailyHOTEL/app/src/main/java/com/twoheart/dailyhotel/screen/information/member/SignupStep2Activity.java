@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -24,6 +23,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class SignupStep2Activity extends BaseActivity
 {
@@ -425,13 +429,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            SignupStep2Activity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             SignupStep2Activity.this.onError(e);
         }
@@ -446,6 +444,12 @@ public class SignupStep2Activity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             SignupStep2Activity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            SignupStep2Activity.this.onErrorResponse(call, response);
         }
     };
 }

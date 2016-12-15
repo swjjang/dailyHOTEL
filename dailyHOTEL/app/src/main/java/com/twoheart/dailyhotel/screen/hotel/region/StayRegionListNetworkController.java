@@ -1,11 +1,9 @@
 package com.twoheart.dailyhotel.screen.hotel.region;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 
@@ -14,7 +12,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayRegionListNetworkController extends PlaceRegionListNetworkController
 {
@@ -35,54 +35,62 @@ public class StayRegionListNetworkController extends PlaceRegionListNetworkContr
 
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance(mBaseActivity).requestHotelRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListJsonResponseListener);
+        DailyMobileAPI.getInstance(mBaseActivity).requestStayRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListCallback);
     }
 
-    private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mHotelRegionListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    String imageUrl = dataJSONObject.getString("imgUrl");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    List<Province> domesticProvinceList = new ArrayList<>();
-                    List<Province> globalProvinceList = new ArrayList<>();
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
-                    makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
+                        String imageUrl = dataJSONObject.getString("imgUrl");
 
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
-                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+                        List<Province> domesticProvinceList = new ArrayList<>();
+                        List<Province> globalProvinceList = new ArrayList<>();
 
-                    List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
-                    List<RegionViewItem> globalRegionViewList = new ArrayList<>();
+                        JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
+                        makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
 
-                    makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
+                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
+                        ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                    mOnNetworkControllerListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
-                } else
+                        List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
+                        List<RegionViewItem> globalRegionViewList = new ArrayList<>();
+
+                        makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
+
+                        mOnNetworkControllerListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
                 {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

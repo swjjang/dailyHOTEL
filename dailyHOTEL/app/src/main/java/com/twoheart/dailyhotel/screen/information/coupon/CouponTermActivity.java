@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -68,16 +68,16 @@ public class CouponTermActivity extends WebViewActivity
 
         if (Util.isTextEmpty(mCouponIdx) == true)
         {
-            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
+            setWebView(Crypto.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
         {
             // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
-            if (DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+            if (Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
             {
-                setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+                setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
             } else
             {
-                setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_DEV) + mCouponIdx);
+                setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_DEV) + mCouponIdx);
             }
         }
 
