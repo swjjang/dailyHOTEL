@@ -116,7 +116,7 @@ public class StringFilter
                 break;
 
             case ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS:
-                pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\\n`~!@#$%^&*()-=_+\\[\\]{}:;',./<>?\\\\|]+$");
+                pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55\\s\\n`~!@#$%^&*()-=_+\\[\\]{}:;',./<>?\\\\|]+$");
                 break;
 
             case ALLOW_ALPHANUMERIC:
