@@ -10,6 +10,7 @@ import com.appboy.AppboyLifecycleCallbackListener;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -182,60 +183,6 @@ public class AppboyManager extends BaseAnalyticsManager
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 satisfactionCustomEvent(label);
-            } else if (AnalyticsManager.Action.HOTEL_SATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                mAppboy.logCustomEvent(EventName.STAY_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
-            } else if (AnalyticsManager.Action.GOURMET_SATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                mAppboy.logCustomEvent(EventName.GOURMET_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
-            } else if (AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                if (Util.isTextEmpty(label) == true)
-                {
-                    label = AnalyticsManager.ValueType.EMPTY;
-                }
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
-                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
-
-                mAppboy.logCustomEvent(EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + " : " + EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
-                }
-            } else if (AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                if (Util.isTextEmpty(label) == true)
-                {
-                    label = AnalyticsManager.ValueType.EMPTY;
-                }
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
-                appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
-
-                mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + " : " + EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
-                }
             } else if (AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
                 curationCustomEvent(EventName.STAY_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
@@ -466,6 +413,42 @@ public class AppboyManager extends BaseAnalyticsManager
                 if (DEBUG == true)
                 {
                     ExLog.d(TAG + " : " + EventName.STAY_BOOKING_CANCELED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            }
+        } else if (AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.REVIEW_DETAIL.equalsIgnoreCase(action) == true//
+                && AnalyticsManager.Label.SUBMIT.equalsIgnoreCase(label) == true)
+            {
+                String grade = params.get("grade");
+
+                AppboyProperties appboyProperties = new AppboyProperties();
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (Review.GRADE_GOOD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.STAY_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                } else if (Review.GRADE_BAD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                }
+            }
+        } else if (AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.REVIEW_DETAIL.equalsIgnoreCase(action) == true//
+                && AnalyticsManager.Label.SUBMIT.equalsIgnoreCase(label) == true)
+            {
+                String grade = params.get("grade");
+
+                AppboyProperties appboyProperties = new AppboyProperties();
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (Review.GRADE_GOOD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.GOURMET_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                } else if (Review.GRADE_BAD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
                 }
             }
         }
