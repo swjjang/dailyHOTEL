@@ -113,15 +113,15 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
     public static final class ExecutorCallbackCall<T> implements Call<T>
     {
-        private final Executor callbackExecutor;
-        private final Call<T> delegate;
+        private final Executor mCallbackExecutor;
+        private final Call<T> mDelegate;
         private String mTag;
         private final ArrayMap<Call, String> mQueuedCalls;
 
         ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, ArrayMap<Call, String> queuedCalls)
         {
-            this.callbackExecutor = callbackExecutor;
-            this.delegate = delegate;
+            mCallbackExecutor = callbackExecutor;
+            mDelegate = delegate;
             mTag = tag;
             mQueuedCalls = queuedCalls;
 
@@ -142,14 +142,14 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                 throw new NullPointerException("callback == null");
             }
 
-            delegate.enqueue(new Callback<T>()
+            mDelegate.enqueue(new Callback<T>()
             {
                 @Override
                 public void onResponse(Call<T> call, final Response<T> response)
                 {
                     mQueuedCalls.remove(ExecutorCallbackCall.this);
 
-                    callbackExecutor.execute(new Runnable()
+                    mCallbackExecutor.execute(new Runnable()
                     {
                         @Override
                         public void run()
@@ -167,7 +167,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                 {
                     mQueuedCalls.remove(ExecutorCallbackCall.this);
 
-                    callbackExecutor.execute(new Runnable()
+                    mCallbackExecutor.execute(new Runnable()
                     {
                         @Override
                         public void run()
@@ -185,38 +185,38 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         @Override
         public boolean isExecuted()
         {
-            return delegate.isExecuted();
+            return mDelegate.isExecuted();
         }
 
         @Override
         public Response<T> execute() throws IOException
         {
-            return delegate.execute();
+            return mDelegate.execute();
         }
 
         @Override
         public void cancel()
         {
-            delegate.cancel();
+            mDelegate.cancel();
         }
 
         @Override
         public boolean isCanceled()
         {
-            return delegate.isCanceled();
+            return mDelegate.isCanceled();
         }
 
         @SuppressWarnings("CloneDoesntCallSuperClone") // Performing deep clone.
         @Override
         public Call<T> clone()
         {
-            return new ExecutorCallbackCall<>(callbackExecutor, delegate.clone(), mTag, mQueuedCalls);
+            return new ExecutorCallbackCall<>(mCallbackExecutor, mDelegate.clone(), mTag, mQueuedCalls);
         }
 
         @Override
         public Request request()
         {
-            return delegate.request();
+            return mDelegate.request();
         }
     }
 }
