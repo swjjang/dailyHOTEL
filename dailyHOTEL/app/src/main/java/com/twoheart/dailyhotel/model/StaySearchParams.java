@@ -135,8 +135,15 @@ public class StaySearchParams extends StayParams
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            hashMap.put("sortProperty", sortProperty);
-            hashMap.put("sortDirection", sortDirection);
+            if (Util.isTextEmpty(sortProperty) == false)
+            {
+                hashMap.put("sortProperty", sortProperty);
+            }
+
+            if (Util.isTextEmpty(sortDirection) == false)
+            {
+                hashMap.put("sortDirection", sortDirection);
+            }
 
             if (Constants.SortType.DISTANCE == mSort)
             {

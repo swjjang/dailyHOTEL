@@ -76,17 +76,17 @@ public class SignupStep2NetworkController extends BaseNetworkController
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (response != null && response.body() != null)
+            if (response != null)
             {
-                JSONObject responseJSONObject = response.body();
-
-                try
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    String message = responseJSONObject.getString("msg");
+                    JSONObject responseJSONObject = response.body();
 
-                    if (response.isSuccessful() == true)
+                    try
                     {
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         switch (msgCode)
                         {
                             case 100:
@@ -109,8 +109,19 @@ public class SignupStep2NetworkController extends BaseNetworkController
                                 mOnNetworkControllerListener.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
                                 break;
                         }
-                    } else
+                    } catch (Exception e)
                     {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         switch (response.code())
                         {
                             case 422:
@@ -150,10 +161,13 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         }
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                } catch (Exception e)
+                } else
                 {
-                    mOnNetworkControllerListener.onError(e);
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
                 }
             } else
             {
@@ -173,17 +187,17 @@ public class SignupStep2NetworkController extends BaseNetworkController
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (response != null && response.body() != null)
+            if (response != null)
             {
-                JSONObject responseJSONObject = response.body();
-
-                try
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    String message = responseJSONObject.getString("msg");
+                    JSONObject responseJSONObject = response.body();
 
-                    if (response.isSuccessful() == true)
+                    try
                     {
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         if (msgCode == 0)
                         {
                             JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
@@ -203,8 +217,19 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         }
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                    } else
+                    } catch (Exception e)
                     {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         if (response.code() == 422)
                         {
                             switch (msgCode)
@@ -226,10 +251,13 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         }
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                } catch (Exception e)
+                } else
                 {
-                    mOnNetworkControllerListener.onError(e);
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
                 }
             } else
             {
@@ -249,16 +277,16 @@ public class SignupStep2NetworkController extends BaseNetworkController
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (response != null && response.body() != null)
+            if (response != null)
             {
-                JSONObject responseJSONObject = response.body();
-
-                try
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    int msgCode = responseJSONObject.getInt("msg_code");
+                    JSONObject responseJSONObject = response.body();
 
-                    if (response.isSuccessful() == true)
+                    try
                     {
+                        int msgCode = responseJSONObject.getInt("msg_code");
+
                         if (msgCode == 0)
                         {
                             JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
@@ -313,8 +341,18 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         }
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                    } else
+                    } catch (Exception e)
                     {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+
                         if (response.code() == 422)
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();
@@ -322,10 +360,13 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         {
                             mOnNetworkControllerListener.onErrorResponse(call, response);
                         }
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                } catch (Exception e)
+                } else
                 {
-                    mOnNetworkControllerListener.onError(e);
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
                 }
             } else
             {

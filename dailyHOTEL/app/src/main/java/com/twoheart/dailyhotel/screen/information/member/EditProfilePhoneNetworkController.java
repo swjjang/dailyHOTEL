@@ -63,17 +63,17 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (response != null && response.body() != null)
+            if (response != null)
             {
-                JSONObject responseJSONObject = response.body();
-
-                try
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    String message = responseJSONObject.getString("msg");
+                    JSONObject responseJSONObject = response.body();
 
-                    if (response.isSuccessful() == true)
+                    try
                     {
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         switch (msgCode)
                         {
                             case 100:
@@ -86,8 +86,19 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                                 mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                                 break;
                         }
-                    } else
+                    } catch (Exception e)
                     {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         if (response.code() == 422)
                         {
                             switch (msgCode)
@@ -109,13 +120,16 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                                     return;
                                 }
                             }
-                        }
 
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        }
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                } catch (Exception e)
+                } else
                 {
-                    mOnNetworkControllerListener.onError(e);
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
                 }
             } else
             {
@@ -135,17 +149,17 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (response != null && response.body() != null)
+            if (response != null)
             {
-                JSONObject responseJSONObject = response.body();
-
-                try
+                if (response.isSuccessful() == true && response.body() != null)
                 {
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    String message = responseJSONObject.getString("msg");
+                    JSONObject responseJSONObject = response.body();
 
-                    if (response.isSuccessful() == true)
+                    try
                     {
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         if (msgCode == 100)
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
@@ -153,8 +167,19 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                         {
                             mOnNetworkControllerListener.onErrorPopupMessage(responseJSONObject.getInt("msgCode"), responseJSONObject.getString("msg"));
                         }
-                    } else
+                    } catch (Exception e)
                     {
+                        mOnNetworkControllerListener.onError(e);
+                    }
+                } else if (response.isSuccessful() == false && response.errorBody() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
                         if (response.code() == 422)
                         {
                             switch (msgCode)
@@ -176,10 +201,13 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                         }
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    } catch (Exception e)
+                    {
+                        mOnNetworkControllerListener.onError(e);
                     }
-                } catch (Exception e)
+                } else
                 {
-                    mOnNetworkControllerListener.onError(e);
+                    mOnNetworkControllerListener.onErrorResponse(call, response);
                 }
             } else
             {
