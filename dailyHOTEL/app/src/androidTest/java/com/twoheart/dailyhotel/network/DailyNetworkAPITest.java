@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.facebook.GraphRequest.TAG;
-
 /**
  * Created by android_sam on 2016. 12. 14..
  */
@@ -411,7 +409,7 @@ public class DailyNetworkAPITest extends ApplicationTest
             }
         };
 
-        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, responseListener);
+        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, responseListener);
     }
 
 
@@ -776,6 +774,16 @@ public class DailyNetworkAPITest extends ApplicationTest
 
                         int bonus = jsonObject.getInt("user_bonus");
                         DailyAssert.assertTrue("bonus is minus", bonus > 0);
+
+                        String name = jsonObject.getString("user_name");
+                        String phone = jsonObject.getString("user_phone");
+                        String email = jsonObject.getString("user_email");
+                        String userIndex = jsonObject.getString("user_idx");
+
+                        DailyAssert.assertEquals(mUser.getName(), name);
+                        DailyAssert.assertEquals(mUser.getPhone(), phone);
+                        DailyAssert.assertEquals(mUser.getEmail(), email);
+                        DailyAssert.assertEquals(mUser.getUserIdx(), userIndex);
                     } else
                     {
                         DailyAssert.fail(msgCode + " : " + response.getString("msg"));
@@ -799,7 +807,94 @@ public class DailyNetworkAPITest extends ApplicationTest
 
     public void testRequestUserUpdateInformationForSocial() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msg_code");
+                    DailyAssert.assertEquals(100, msgCode);
 
+                    if (msgCode == 100)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+                        DailyAssert.assertNotNull(jsonObject);
+
+                        boolean result = jsonObject.getBoolean("is_success");
+                        DailyAssert.assertTrue("is_success", result);
+
+                        String serverDate = jsonObject.getString("serverDate");
+                        DailyAssert.assertNotNull(serverDate);
+                        DailyAssert.assertTrue(Pattern.matches(DailyCalendar.ISO_8601_FORMAT, serverDate));
+
+                        if (result == true)
+                        {
+                            // do nothing!
+                        } else
+                        {
+                            String message = response.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        DailyAssert.fail(message);
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+//        Map<String, String> params = new HashMap<>();
+//        params.put("user_idx", userIndex);
+//
+//        if (Util.isTextEmpty(email) == false)
+//        {
+//            params.put("user_email", email);
+//        }
+//
+//        if (Util.isTextEmpty(name) == false)
+//        {
+//            params.put("user_name", name);
+//        }
+//
+//        if (Util.isTextEmpty(phoneNumber) == false)
+//        {
+//            params.put("user_phone", phoneNumber.replaceAll("-", ""));
+//        }
+//
+//        if (Util.isTextEmpty(birthday) == false)
+//        {
+//            params.put("birthday", birthday);
+//        }
+//
+//        if (Util.isTextEmpty(recommender) == false)
+//        {
+//            params.put("recommendation_code", recommender);
+//        }
+//
+//        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+//
+//        if (Constants.DEBUG == false)
+//        {
+//            if (Util.isTextEmpty(name) == true)
+//            {
+//                Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
+//                    + name + " , userIndex=" + userIndex + " , user_email=" + email);
+//            }
+//        }
+
+//        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, responseListener);
     }
 
 
