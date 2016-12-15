@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.DailyAssert;
-
 public class Category implements Parcelable
 {
     public static final Category ALL = new Category("전체", "all");
@@ -16,9 +14,6 @@ public class Category implements Parcelable
     {
         this.name = name;
         this.code = code;
-
-        DailyAssert.assertNotNull(name);
-        DailyAssert.assertNotNull(code);
     }
 
     public Category(Parcel in)

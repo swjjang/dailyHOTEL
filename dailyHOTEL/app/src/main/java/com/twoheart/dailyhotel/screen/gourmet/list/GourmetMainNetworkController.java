@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.manager.PlaceEventBannerManager;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -53,11 +52,9 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    DailyAssert.assertNotNull(dataJSONObject);
 
                     JSONArray provinceArray = dataJSONObject.getJSONArray("province");
                     ArrayList<Province> provinceList = makeProvinceList(provinceArray);
@@ -80,7 +77,6 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
         {
-            DailyAssert.assertNotNull(jsonArray);
             ArrayList<Area> areaList = new ArrayList<>();
 
             int length = jsonArray.length();
@@ -105,7 +101,6 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
 
         private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
         {
-            DailyAssert.assertNotNull(jsonArray);
             ArrayList<Province> provinceList = new ArrayList<>();
 
             try

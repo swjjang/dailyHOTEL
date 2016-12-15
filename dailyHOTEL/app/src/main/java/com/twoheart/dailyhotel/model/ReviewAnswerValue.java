@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.DailyAssert;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,17 +22,14 @@ public class ReviewAnswerValue implements Parcelable
 
     public ReviewAnswerValue(JSONObject jsonObject) throws JSONException
     {
-        DailyAssert.assertNotNull(jsonObject);
         if (jsonObject == null)
         {
             return;
         }
 
         code = jsonObject.getString("code");
-        DailyAssert.assertNotNull(code);
 
         description = jsonObject.getString("description");
-        DailyAssert.assertNotNull(description);
     }
 
     @Override

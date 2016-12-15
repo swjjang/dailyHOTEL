@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyAssert;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,17 +75,14 @@ public class StayListNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    DailyAssert.assertNotNull(dataJSONObject);
                     JSONArray hotelJSONArray = null;
 
                     if (dataJSONObject.has("hotelSales") == true)
                     {
                         hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
-                        DailyAssert.assertNotNull(hotelJSONArray);
                     }
 
                     int page;
@@ -140,9 +136,6 @@ public class StayListNetworkController extends BaseNetworkController
             {
                 return new ArrayList<>();
             }
-
-            DailyAssert.assertNotNull(imageUrl);
-            DailyAssert.assertNotNull(nights);
 
             int length = jsonArray.length();
             ArrayList<Stay> stayList = new ArrayList<>(length);

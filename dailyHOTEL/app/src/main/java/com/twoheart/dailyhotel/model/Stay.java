@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -77,22 +76,15 @@ public class Stay extends Place
             discountPrice = jsonObject.getInt("discount"); // discountAvg ????
             addressSummary = jsonObject.getString("addrSummary");
 
-            DailyAssert.assertNotNull(name);
-            DailyAssert.assertNotNull(price);
-            DailyAssert.assertNotNull(discountPrice);
-            DailyAssert.assertNotNull(addressSummary);
-
             try
             {
                 mGrade = Grade.valueOf(jsonObject.getString("grade"));
-                DailyAssert.assertNotNull(mGrade);
             } catch (Exception e)
             {
                 mGrade = Grade.etc;
             }
 
             index = jsonObject.getInt("hotelIdx");
-            DailyAssert.assertNotNull(index);
 
             if (jsonObject.has("isSoldOut") == true)
             {
@@ -108,15 +100,6 @@ public class Stay extends Place
             sday = jsonObject.getString("sday");
             distance = jsonObject.getDouble("distance");
 
-            DailyAssert.assertNotNull(districtName);
-            DailyAssert.assertNotNull(categoryCode);
-            DailyAssert.assertNotNull(latitude);
-            DailyAssert.assertNotNull(longitude);
-            DailyAssert.assertNotNull(isDailyChoice);
-            DailyAssert.assertNotNull(satisfaction);
-            DailyAssert.assertNotNull(sday);
-            DailyAssert.assertNotNull(distance);
-
             try
             {
                 JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
@@ -130,18 +113,14 @@ public class Stay extends Place
                     {
                         JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
                         this.imageUrl = imageUrl + key + pathJSONArray.getString(0);
-
-                        DailyAssert.assertNotNull(pathJSONArray.getString(0));
                         break;
                     } catch (JSONException e)
                     {
-                        DailyAssert.fail(e);
                     }
                 }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                DailyAssert.fail(e);
             }
 
             if (jsonObject.has("benefit") == true) // hotelBenefit ?
@@ -154,8 +133,6 @@ public class Stay extends Place
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
-            DailyAssert.fail(e);
-
             return false;
         }
 

@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.twoheart.dailyhotel.util.DailyAssert;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,20 +23,14 @@ public class ReviewPickQuestion extends ReviewQuestion
 
     public ReviewPickQuestion(JSONObject jsonObject) throws JSONException
     {
-        DailyAssert.assertNotNull(jsonObject);
         if (jsonObject == null)
         {
             return;
         }
 
         title = jsonObject.getString("title");
-        DailyAssert.assertNotNull(title);
-
         description = jsonObject.getString("description");
-        DailyAssert.assertNotNull(description);
-
         answerCode = jsonObject.getString("answerCode");
-        DailyAssert.assertNotNull(answerCode);
 
         JSONArray answerValues = jsonObject.getJSONArray("answerValues");
         if (answerValues != null)

@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -79,31 +78,22 @@ public class MainNetworkController extends BaseNetworkController
                 try
                 {
                     int msgCode = response.getInt("msgCode");
-                    DailyAssert.assertEquals(100, msgCode);
-
                     if (msgCode == 100)
                     {
                         JSONObject dataJSONObject = response.getJSONObject("data");
-                        DailyAssert.assertNotNull(dataJSONObject);
 
                         long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
                         long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
                         long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
 
-                        DailyAssert.assertNotNull(currentDateTime);
-                        DailyAssert.assertNotNull(openDateTime);
-                        DailyAssert.assertNotNull(closeDateTime);
-
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
                     } else
                     {
                         String message = response.getString("msg");
-                        DailyAssert.fail(message);
                     }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
-                    DailyAssert.fail(e);
                 }
             }
         });
@@ -147,12 +137,9 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msg_code");
-                DailyAssert.assertEquals(200, msgCode);
-
                 if (msgCode == 200)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-                    DailyAssert.assertNotNull(jsonObject);
 
                     boolean isSuspend = jsonObject.getBoolean("isSuspend");
 
@@ -160,9 +147,6 @@ public class MainNetworkController extends BaseNetworkController
                     {
                         String title = jsonObject.getString("messageTitle");
                         String message = jsonObject.getString("messageBody");
-
-                        DailyAssert.assertNotNull(title);
-                        DailyAssert.assertNotNull(message);
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
                     } else
@@ -173,7 +157,6 @@ public class MainNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                DailyAssert.fail(e);
             }
         }
 
@@ -181,7 +164,6 @@ public class MainNetworkController extends BaseNetworkController
         public void onErrorResponse(VolleyError volleyError)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
-            DailyAssert.fail(volleyError);
         }
     };
 
@@ -193,8 +175,6 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
-
                 if (msgCode != 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
@@ -215,9 +195,6 @@ public class MainNetworkController extends BaseNetworkController
                             minVersionName = dataJSONObject.getString("playMin");
                             break;
                     }
-
-                    DailyAssert.assertNotNull(minVersionName);
-                    DailyAssert.assertNotNull(maxVersionName);
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersionName, minVersionName);
                 } else
@@ -282,8 +259,6 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(1000, msgCode);
-
                 if (msgCode == 1000 && response.has("data") == true)
                 {
                     Review review = new Review(response.getJSONObject("data"));
@@ -297,7 +272,6 @@ public class MainNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                DailyAssert.fail(e);
             }
         }
 
@@ -316,8 +290,6 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
-
                 if (msgCode == 100 && response.has("data") == true)
                 {
                     Review review = new Review(response.getJSONObject("data"));
@@ -348,12 +320,9 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
-
                 if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-                    DailyAssert.assertNotNull(jsonObject);
 
                     final String userIndex = jsonObject.getString("userIdx");
                     final String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
@@ -488,12 +457,9 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
-
                 if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-                    DailyAssert.assertNotNull(jsonObject);
 
                     boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
 
@@ -502,7 +468,6 @@ public class MainNetworkController extends BaseNetworkController
                 } else
                 {
                     // 에러가 나도 특별히 해야할일은 없다.
-                    DailyAssert.fail();
                 }
             } catch (Exception e)
             {
@@ -525,11 +490,9 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-                DailyAssert.assertEquals(100, msgCode);
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    DailyAssert.assertNotNull(dataJSONObject);
 
                     String message01 = dataJSONObject.getString("description1");
                     String message02 = dataJSONObject.getString("description2");
@@ -537,13 +500,10 @@ public class MainNetworkController extends BaseNetworkController
 
                     String message = message01 + "\n\n" + message02;
 
-                    DailyAssert.assertNotNull(message);
-
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message, isFirstTimeBuyer);
                 }
             } catch (Exception e)
             {
-                DailyAssert.fail(e);
             }
         }
 

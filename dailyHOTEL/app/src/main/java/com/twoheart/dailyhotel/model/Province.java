@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.DailyAssert;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -36,13 +35,8 @@ public class Province implements Parcelable
 
     public Province(JSONObject jsonObject, String url) throws JSONException
     {
-        DailyAssert.assertNotNull(jsonObject);
-
         index = jsonObject.getInt("idx");
         name = jsonObject.getString("name");
-
-        DailyAssert.assertNotNull(index);
-        DailyAssert.assertNotNull(name);
 
         if (jsonObject.has("nameEng") == true)
         {
@@ -92,9 +86,6 @@ public class Province implements Parcelable
                 {
                     String code = iterator.next();
                     String name = categoryJSONObject.getString(code);
-
-                    DailyAssert.assertNotNull(code);
-                    DailyAssert.assertNotNull(name);
 
                     mCategoryList.add(new Category(name, code));
                 }
