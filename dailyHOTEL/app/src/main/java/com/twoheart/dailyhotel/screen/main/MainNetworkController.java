@@ -263,7 +263,7 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 1000 && response.has("data") == true)
+                if (msgCode == 100 && response.has("data") == true)
                 {
                     Review review = new Review(response.getJSONObject("data"));
 
@@ -293,6 +293,7 @@ public class MainNetworkController extends BaseNetworkController
         {
             try
             {
+                // 리뷰가 존재하지 않는 경우 msgCode : 701
                 int msgCode = response.getInt("msgCode");
 
                 if (msgCode == 100 && response.has("data") == true)
