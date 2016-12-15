@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +61,7 @@ public class ReviewActivity extends BaseActivity
 
     private Review mReview;
     private Dialog mDialog;
+    private String mReviewGrade;
 
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private ReviewLayout mReviewLayout;
@@ -947,12 +949,12 @@ public class ReviewActivity extends BaseActivity
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, null);
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
                         break;
 
                     case FNB:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, null);
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
                         break;
                 }
             } catch (Exception e)
@@ -987,6 +989,8 @@ public class ReviewActivity extends BaseActivity
         public void onAddReviewInformation(String grade)
         {
             unLockUI();
+
+            mReviewGrade = grade;
 
             if (Review.GRADE_NONE.equalsIgnoreCase(grade) == false)
             {

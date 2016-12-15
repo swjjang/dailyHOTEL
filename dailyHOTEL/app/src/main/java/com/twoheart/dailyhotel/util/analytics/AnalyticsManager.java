@@ -1012,7 +1012,9 @@ public class AnalyticsManager
         public static final String NO = "No";
         public static final String BACK = "Back";
         public static final String CONFIRM = "Confirm";
-        public static final String ERROR = "error";
+
+        public static final String DIRECTCALL_FRONT = "DirectCall_Front";
+        public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";
     }
 
     public static class UserType
