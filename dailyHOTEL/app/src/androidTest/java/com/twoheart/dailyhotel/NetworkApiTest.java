@@ -154,7 +154,7 @@ public class NetworkApiTest extends ApplicationTest
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, new DailyHotelJsonResponseListener()
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -199,7 +199,9 @@ public class NetworkApiTest extends ApplicationTest
             {
                 DailyAssert.fail(volleyError);
             }
-        });
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, responseListener);
     }
 
     public void testMainNetworkController()

@@ -17,10 +17,14 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.facebook.GraphRequest.TAG;
 
@@ -59,7 +63,7 @@ public class DailyNetworkAPITest extends ApplicationTest
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
 
-        DailyNetworkAPI.getInstance(application).requestDailyUserSignin(TAG, params, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance(application).requestDailyUserSignin(mNetworkTag, params, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -86,24 +90,29 @@ public class DailyNetworkAPITest extends ApplicationTest
 
                             String accessToken = tokenJSONObject.getString("access_token");
                             String tokenType = tokenJSONObject.getString("token_type");
+                            mAuthorization = String.format("%s %s", tokenType, accessToken);
+
                             DailyAssert.assertNotNull(accessToken);
                             DailyAssert.assertNotNull(tokenType);
 
                             JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
                             DailyAssert.assertNotNull(userJSONObject);
 
-                            String userIndex = userJSONObject.getString("idx");
-                            DailyAssert.assertNotNull(userIndex);
-
                             mUser = new User();
+                            mUser.setUserIdx(userJSONObject.getString("idx"));
                             mUser.setEmail(userJSONObject.getString("email"));
                             mUser.setName(userJSONObject.getString("name"));
                             mUser.setRecommender(userJSONObject.getString("rndnum"));
                             mUser.setType(userJSONObject.getString("userType"));
                             mUser.setPhone(userJSONObject.getString("phone"));
-                            mUser.setBirthDay(userJSONObject.getString("birthday"));
 
-                            mAuthorization = String.format("%s %s", tokenType, accessToken);
+                            String birthday = null;
+                            if (userJSONObject.has("birthday") == true && userJSONObject.isNull("birthday") == false)
+                            {
+                                birthday = userJSONObject.getString("birthday");
+                            }
+                            mUser.setBirthDay(birthday);
+
 
                             DailyAssert.assertNotNull(mUser.getUserIdx());
                             DailyAssert.assertNotNull(mUser.getName());
@@ -142,7 +151,7 @@ public class DailyNetworkAPITest extends ApplicationTest
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, new DailyHotelJsonResponseListener()
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -187,7 +196,9 @@ public class DailyNetworkAPITest extends ApplicationTest
             {
                 DailyAssert.fail(volleyError);
             }
-        });
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, responseListener);
     }
 
     public void testRequestCheckServer() throws Exception
@@ -299,7 +310,7 @@ public class DailyNetworkAPITest extends ApplicationTest
     @Deprecated
     public void testRequestCommonReview() throws Exception
     {
-        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        DailyHotelJsonResponseListener stayResponseListener = new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, Map<String, String> params, JSONObject response)
@@ -321,13 +332,86 @@ public class DailyNetworkAPITest extends ApplicationTest
             }
         };
 
-        DailyNetworkAPI.getInstance(mContext).requestCommonReview(mNetworkTag, "hotel" , responseListener);
-    }
+        DailyNetworkAPI.getInstance(mContext).requestCommonReview(mNetworkTag, "hotel", stayResponseListener);
 
+        DailyHotelJsonResponseListener gourmetResponseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+        DailyNetworkAPI.getInstance(mContext).requestCommonReview(mNetworkTag, "gourmet", gourmetResponseListener);
+    }
 
     public void testRequestCommonDateTime() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
 
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = response.getJSONObject("data");
+                        DailyAssert.assertNotNull(dataJSONObject);
+
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        DailyAssert.assertNotNull(currentDateTime);
+                        DailyAssert.assertNotNull(dailyDateTime);
+                        DailyAssert.assertNotNull(openDateTime);
+                        DailyAssert.assertNotNull(closeDateTime);
+
+                        if (mSaleTime == null)
+                        {
+                            mSaleTime = new SaleTime();
+                        }
+
+                        mSaleTime.setCurrentTime(currentDateTime);
+                        mSaleTime.setDailyTime(dailyDateTime);
+                        mSaleTime.setOffsetDailyDay(0);
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        DailyAssert.fail(message);
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(TAG, responseListener);
     }
 
 
@@ -348,12 +432,36 @@ public class DailyNetworkAPITest extends ApplicationTest
                         JSONObject jsonObject = response.getJSONObject("data");
                         DailyAssert.assertNotNull(jsonObject);
 
-                        final String userIndex = jsonObject.getString("userIdx");
-                        final String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
+                        String userIndex = jsonObject.getString("userIdx");
+                        String userType = jsonObject.has("userType") == true ? jsonObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
+
+                        String userEmail = jsonObject.getString("email");
+                        String userName = jsonObject.getString("name");
+                        String userPhone = jsonObject.getString("phone");
+
+                        String referralCode = jsonObject.getString("referralCode"); // 자신의 추천 번호
 
                         DailyAssert.assertNotNull(userIndex);
                         DailyAssert.assertNotSame(AnalyticsManager.ValueType.EMPTY, userType);
+                        DailyAssert.assertTrue(Constants.DAILY_USER.equalsIgnoreCase(userType) //
+                            || Constants.KAKAO_USER.equalsIgnoreCase(userType) //
+                            || Constants.FACEBOOK_USER.equalsIgnoreCase(userType));
 
+                        DailyAssert.assertTrue(Pattern.matches(Const.REGEX_EMAIL_FORMAT, userEmail));
+                        DailyAssert.assertNotNull(userName);
+                        DailyAssert.assertNotNull(userPhone);
+                        DailyAssert.assertNotNull(referralCode);
+
+                        DailyAssert.assertTrue(jsonObject.has("agreedBenefit")); // 값 존재 유무만 필요!
+
+                        boolean isVerified = jsonObject.getBoolean("verified");
+                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                        // 인증 후 인증이 해지된 경우
+                        if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(mContext).isVerification() == true)
+                        {
+                            DailyAssert.fail("인증 만료");
+                        }
                     } else
                     {
                         DailyAssert.fail();
@@ -383,43 +491,309 @@ public class DailyNetworkAPITest extends ApplicationTest
 
     public void testRequestUserBonus() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                //적립금 내역리스트
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
 
+                    if (msgCode == 100)
+                    {
+                        JSONArray jsonArray = response.getJSONArray("history");
+
+                        // DailyAssert.assertNotNull(jsonArray); // 적립금이 있을수도 없을수도 있음
+
+                        int length = jsonArray.length();
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject historyObj = jsonArray.getJSONObject(i);
+                            DailyAssert.assertNotNull(historyObj);
+
+                            String content = historyObj.getString("content");
+                            String expires = historyObj.getString("expires");
+                            int bonus = historyObj.getInt("bonus");
+
+                            DailyAssert.assertNotNull(content);
+                            DailyAssert.assertNotNull(expires);
+                            DailyAssert.assertNotNull(bonus);
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, responseListener);
     }
 
 
     public void testRequestUserInformationUpdate() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
 
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+        Map<String, String> params = new HashMap<>();
+        params.put("birthday", Const.TEST_USER_BIRTHDAY);
+        params.put("user_name", Const.TEST_USER_NAME);
+        params.put("pw", Const.TEST_MODIFY_PASSWORD);
+        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, responseListener);
+
+        // password 원복
+        Map<String, String> params2 = Collections.singletonMap("pw", Const.TEST_PASSWORD);
+        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params2, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        });
     }
 
 
     public void testRequestUserProfileBenefit() throws Exception
     {
+        DailyHotelJsonResponseListener mUserProfileBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
 
+                    if (msgCode == 100)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+                        DailyAssert.assertNotNull(jsonObject);
+
+
+                        DailyAssert.assertTrue(jsonObject.has("bonusAmount"));
+                        DailyAssert.assertTrue(jsonObject.has("couponTotalCount"));
+                        DailyAssert.assertTrue(jsonObject.has("exceedLimitedBonus"));
+
+                        int bonus = jsonObject.getInt("bonusAmount");
+                        int couponTotalCount = jsonObject.getInt("couponTotalCount");
+                        boolean isExceedBonus = jsonObject.getBoolean("exceedLimitedBonus");
+                        DailyAssert.assertTrue("bonus : " + bonus + " , couponTotalCount : "//
+                            + couponTotalCount + ", isExceedBonus : " + isExceedBonus, true);
+                    } else
+                    {
+                        String msg = response.getString("msg");
+                        DailyAssert.fail(msg);
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitJsonResponseListener);
     }
 
 
     public void testRequestUserCheckEmail() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    String result = response.getString("isSuccess");
+                    DailyAssert.assertEquals("isSuccess", "true", result);
 
+                    if ("true".equalsIgnoreCase(result) == true)
+                    {
+                        // do nothing!
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        DailyAssert.fail(message);
+                    }
+                } catch (JSONException e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Const.TEST_CHECK_EMAIL_ADDRESS, responseListener);
     }
 
 
     public void testRequestUserChangePassword() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    String result = response.getString("isSuccess");
+                    DailyAssert.assertEquals("isSuccess", "true", result);
 
+                    if ("true".equalsIgnoreCase(result) == true)
+                    {
+                        // do nothing!
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        DailyAssert.fail(message);
+                    }
+                } catch (JSONException e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserChangePassword(mNetworkTag, //
+            DailyHotelJsonRequest.getUrlDecoderEx(Const.TEST_EMAIL), responseListener);
     }
 
-
+    @Deprecated
     public void testRequestUserInformationEx() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+                    DailyAssert.assertEquals(100, msgCode);
 
+                    if (msgCode == 100)
+                    {
+                        // do nothing!
+                    } else
+                    {
+                        String msg = response.getString("msg");
+                        DailyAssert.fail(msg);
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserInformationEx(mNetworkTag, responseListener);
     }
 
 
     public void testRequestUserInformationForPayment() throws Exception
     {
+        DailyHotelJsonResponseListener responseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msg_code");
+                    DailyAssert.assertEquals(0, msgCode);
 
+                    if (msgCode == 0)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+                        DailyAssert.assertNotNull(jsonObject);
+
+                        int bonus = jsonObject.getInt("user_bonus");
+                        DailyAssert.assertTrue("bonus is minus", bonus > 0);
+                    } else
+                    {
+                        DailyAssert.fail(msgCode + " : " + response.getString("msg"));
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                DailyAssert.fail(volleyError);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(mContext).requestUserInformationForPayment(mNetworkTag, responseListener);
     }
 
 

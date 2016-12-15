@@ -197,6 +197,7 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
+    @Deprecated
     @Override
     public void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener)
     {
