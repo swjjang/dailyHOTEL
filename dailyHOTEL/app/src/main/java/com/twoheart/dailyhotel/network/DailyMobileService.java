@@ -310,8 +310,8 @@ public interface DailyMobileService
                                          @Query("dateCheckIn") String dateCheckIn, @Query("dateCheckOut") String dateCheckOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/payment/policy_refund")
-    Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("dateCheckIn") String dateCheckIn);
+    @GET("api/v2/reservation/hotel/policy_refund")
+    Call<JSONObject> requestPolicyRefund(@Query("hotelReservationIdx") int hotelReservationIdx, @Query("transactionType") String transactionType);
 
     @FormUrlEncoded
     @POST("api/v2/payment/refund")
