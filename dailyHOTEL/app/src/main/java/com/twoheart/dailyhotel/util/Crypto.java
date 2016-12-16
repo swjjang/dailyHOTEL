@@ -135,19 +135,19 @@ public class Crypto
         return encodeUrl.toString();
     }
 
-    public static String getUrlDecoderEx(String url, Map<String, String> urlparameters)
+    public static String getUrlDecoderEx(String url, Map<String, String> urlParameters)
     {
-        if (urlparameters == null || urlparameters.size() == 0)
+        if (urlParameters == null || urlParameters.size() == 0)
         {
             return getUrlDecoderEx(url);
         } else
         {
             StringBuilder decodeUrl = new StringBuilder(getUrlDecoderEx(url));
-            ArrayList<String> keyArrayList = new ArrayList<>(urlparameters.keySet());
+            ArrayList<String> keyArrayList = new ArrayList<>(urlParameters.keySet());
 
             for (String key : keyArrayList)
             {
-                String value = urlparameters.get(key);
+                String value = urlParameters.get(key);
 
                 if (Util.isTextEmpty(key, value) == false)
                 {

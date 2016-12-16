@@ -389,21 +389,21 @@ public interface IDailyNetwork
      * @param params
      * @param listener
      */
-    void requestDailyUserSignin(String tag, Map<String, String> params, Object listener);
+    void requestDailyUserLogin(String tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestFacebookUserSignin(String tag, Map<String, String> params, Object listener);
+    void requestFacebookUserLogin(String tag, Map<String, String> params, Object listener);
 
     /**
      * @param tag
      * @param params
      * @param listener
      */
-    void requestKakaoUserSignin(String tag, Map<String, String> params, Object listener);
+    void requestKakaoUserLogin(String tag, Map<String, String> params, Object listener);
 
     /**
      * /api/v3/users/coupons

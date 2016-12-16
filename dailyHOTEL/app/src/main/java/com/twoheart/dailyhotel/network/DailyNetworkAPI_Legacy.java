@@ -690,7 +690,7 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
     }
 
     @Override
-    public void requestDailyUserSignin(String tag, Map<String, String> params, Object listener)
+    public void requestDailyUserLogin(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/normal" : "MCQ3NSQyJDgxJDg1JDYkNzckMjIkNTkkODAkNzkkNzkkNzkkODUkNTIkMzgk$GMI0Q2DOEZDQTM2QzBBQTlNDM0JCQTk4MzgwOEMYyQUREOUFCMzEzSOTcxMEET0Q0RFMDdFMDQ1NTk4ODRAAYTJClEMjXU4QCjIwNw==$";
 
@@ -700,7 +700,7 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
     }
 
     @Override
-    public void requestFacebookUserSignin(String tag, Map<String, String> params, Object listener)
+    public void requestFacebookUserLogin(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/facebook" : "NDQkNzckMjgkMzIkNjIkNTIkNTkkNDckNzkkNzckNTMkNzMkNTckODckNDkkMzAk$MTk3OTE5MkU4MDE5NjQyNTY1RUQ3TRLjVVBRkNDNkM0NDdCLAMTTFBQKRzhTENzZNEM0UEwNEQyNVjAzOTHAzSODNJFNMzRFNDg4MQ==$";
 
@@ -710,7 +710,7 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
     }
 
     @Override
-    public void requestKakaoUserSignin(String tag, Map<String, String> params, Object listener)
+    public void requestKakaoUserLogin(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/kakao_talk" : "MzkkMjUkNDkkODAkNjQkNjckNTIkNTkkNzQkMiQ3NCQ0MyQzNyQyNCQzNiQyJA==$NkTCNGODU5RkI4Q0RCNzA1ODVYFMOTE4N0JEMC0MJ3NjBECGQkI2QTIMyRGTcxMDZZERDU2OJUYF0Q0WMKyN0E2NDcxNRzU5RTM4MQ==$";
 
