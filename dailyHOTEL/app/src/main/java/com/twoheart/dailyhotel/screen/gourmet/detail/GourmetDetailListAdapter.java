@@ -253,7 +253,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             satisfactionView.setVisibility(View.VISIBLE);
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            satisfactionView.setText(mContext.getString(R.string.label_detail_satisfaction, //
+            satisfactionView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
                 gourmetDetail.ratingValue, decimalFormat.format(gourmetDetail.ratingPersons)));
         }
 
