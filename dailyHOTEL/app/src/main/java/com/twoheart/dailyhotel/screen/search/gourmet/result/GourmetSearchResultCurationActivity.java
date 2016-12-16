@@ -195,7 +195,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
                 // do nothing!
             }
 
-            String lastParams = ((GourmetSearchParams) mLastParams).toParamsString();
+            String lastParams = mLastParams.toParamsString();
             if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!

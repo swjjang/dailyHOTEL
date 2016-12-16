@@ -684,7 +684,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((StayDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, (StayDetail) stayDetail, mCurrentImage);
+            ((StayDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, stayDetail, mCurrentImage);
         }
 
         if (mCheckPrice == false)

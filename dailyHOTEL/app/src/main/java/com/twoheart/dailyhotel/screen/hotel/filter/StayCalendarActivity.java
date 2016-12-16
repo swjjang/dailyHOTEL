@@ -41,7 +41,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     /**
      * @param context
      * @param saleTime
-     * @param nigths
+     * @param nights
      * @param startSaleTime
      * @param endSaleTime   null인 경우 마지막 날짜로 한다.
      * @param screen

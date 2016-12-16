@@ -267,8 +267,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
             return;
         }
 
-        int listSize = list == null ? 0 : list.size();
-
         ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, mPlaceIndexs);
 
         mPlaceListAdapter.setAll(placeViewItems);

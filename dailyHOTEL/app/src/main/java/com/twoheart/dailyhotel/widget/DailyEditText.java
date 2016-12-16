@@ -74,7 +74,6 @@ public class DailyEditText extends AppCompatEditText
                 setDeleteDrawable();
             } else
             {
-                Context context = getContext();
                 Drawable[] drawables = getCompoundDrawables();
 
                 if (drawables == null)
@@ -97,7 +96,6 @@ public class DailyEditText extends AppCompatEditText
         {
             if (focused == false)
             {
-                Context context = getContext();
                 Drawable[] drawables = getCompoundDrawables();
 
                 if (drawables == null)
