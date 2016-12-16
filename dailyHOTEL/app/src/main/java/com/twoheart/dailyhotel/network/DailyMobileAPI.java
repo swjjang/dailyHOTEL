@@ -417,7 +417,7 @@ public class DailyMobileAPI implements IDailyNetwork
     public void requestDepositWaitDetailInformation(String tag, String tid, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/account/{tid}"//
-            : "";
+            : "MTE5JDg1JDk2JDEzJDIyJDgkMzgkMTUkMTE1JDExMSQ2MiQ2JDE3JDEzMSQxMjYkMTQwJA==$MEQ3Q0OU5XRDlFOFKJUI5RkE0MOjI2MzdDMzFGOEIS0QTlGOUExQjREM0JCNkVGRVDVFNDVBRTZGNTFGNkRGNkZBRTFBMVDhEODdFRTVSCQkI3RjcxKRDQ3DRTQ3QTDBBNEYFJ1RkMwQKjA4$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{tid}", tid);
@@ -565,8 +565,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestFacebookUserSignup(String tag, Map<String, String> params, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/facebook"
-            : "ODAkNDQkNTckNDgkNTAkODUkMjQkMTIkNDMkMTUkNDckNyQzOSQ1OCQyMCQ1MSQ=$NTAyNUFCDRDEwQRDCc2MWzE1MjQzUNzZDMTI0MTkKwQjFCNHzBRSDIM0MPzZKMjA5RDU1EQTYyMUI0Q0Y3MUVFRDNCOUNERNODIzNQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/facebook" : "ODAkNDQkNTckNDgkNTAkODUkMjQkMTIkNDMkMTUkNDckNyQzOSQ1OCQyMCQ1MSQ=$NTAyNUFCDRDEwQRDCc2MWzE1MjQzUNzZDMTI0MTkKwQjFCNHzBRSDIM0MPzZKMjA5RDU1EQTYyMUI0Q0Y3MUVFRDNCOUNERNODIzNQ==$";
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserSignup(Crypto.getUrlDecoderEx(URL), params);
         executorCallbackCall.addQueue(tag);
@@ -609,8 +608,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestKakaoUserLogin(String tag, Map<String, String> params, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/kakao_talk"
-            : "MzkkMjUkNDkkODAkNjQkNjckNTIkNTkkNzQkMiQ3NCQ0MyQzNyQyNCQzNiQyJA==$NkTCNGODU5RkI4Q0RCNzA1ODVYFMOTE4N0JEMC0MJ3NjBECGQkI2QTIMyRGTcxMDZZERDU2OJUYF0Q0WMKyN0E2NDcxNRzU5RTM4MQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/kakao_talk" : "MzkkMjUkNDkkODAkNjQkNjckNTIkNTkkNzQkMiQ3NCQ0MyQzNyQyNCQzNiQyJA==$NkTCNGODU5RkI4Q0RCNzA1ODVYFMOTE4N0JEMC0MJ3NjBECGQkI2QTIMyRGTcxMDZZERDU2OJUYF0Q0WMKyN0E2NDcxNRzU5RTM4MQ==$";
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserLogin(Crypto.getUrlDecoderEx(URL), params);
         executorCallbackCall.addQueue(tag);
@@ -837,8 +835,7 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestReceiptByEmail(String tag, String placeType, String reservationIdx, String email, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/reservations/{kind}/{reservationIdx}/receipts"
-            : "ODQkOTgkMTY5JDckNTYkNjkkNTkkOTUkNjQkMTczJDEyOCQ3NiQ0NCQ0NCQ3OSQxMTEk$OUIxOEUQwMUJFREVGQkMwOENEOEE5MkY5REY2NjE0QTcFC2REU0RDk2MzEVyOZURCMXDQ1Q0UOzRUEPYzOENFMzZGREMwNQUEwQUHFDNkVDQRzIQxRjFBNzJGQUQwQTJCMDg5NOEU2NTc1QzgyRkE1QkFCQ0E0NzQ0ODlBRTYzN0ZGMjhFMYzFMDMDQ=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/reservations/{kind}/{reservationIdx}/receipts" : "ODQkOTgkMTY5JDckNTYkNjkkNTkkOTUkNjQkMTczJDEyOCQ3NiQ0NCQ0NCQ3OSQxMTEk$OUIxOEUQwMUJFREVGQkMwOENEOEE5MkY5REY2NjE0QTcFC2REU0RDk2MzEVyOZURCMXDQ1Q0UOzRUEPYzOENFMzZGREMwNQUEwQUHFDNkVDQRzIQxRjFBNzJGQUQwQTJCMDg5NOEU2NTc1QzgyRkE1QkFCQ0E0NzQ0ODlBRTYzN0ZGMjhFMYzFMDMDQ=$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{kind}", placeType);
@@ -895,147 +892,80 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "MjEkMzgkNzQkMTE4JDYwJDQyJDQ2JDExMyQxMDEkMzQkMTM1JDExNSQxMzMkOTgkNDAkODgk$ODFCMzNDMDREN0VCNUFDOXEVEMjA3RjAzMWDc4RJMjhGFQkRVBN0M5MTA4M0REMjCNDMjkyMDVEMkEzUQkYxMjcwQOEM2M0Q5MDdGBOEMO2MUU2QTM1RTFWDFMjZENjAM1NTg2NzLAyNVkVD$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
+        urlParams.put("{type}", placeType);
         urlParams.put("{itemIdx}", Integer.toString(placeIndex));
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRemoveWishList(placeType, placeIndex);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRemoveWishList(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "MjEkMzgkNzQkMTE4JDYwJDQyJDQ2JDExMyQxMDEkMzQkMTM1JDExNSQxMzMkOTgkNDAkODgk$ODFCMzNDMDREN0VCNUFDOXEVEMjA3RjAzMWDc4RJMjhGFQkRVBN0M5MTA4M0REMjCNDMjkyMDVEMkEzUQkYxMjcwQOEM2M0Q5MDdGBOEMO2MUU2QTM1RTFWDFMjZENjAM1NTg2NzLAyNVkVD$";
-        //
-        //        Map<String, String> urlParams = new HashMap<>();
-        //        urlParams.put("{type}", Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel");
-        //        urlParams.put("{itemIdx}", Integer.toString(placeIndex));
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(placeIndex, ticketIndex, dateCheckIn, dateCheckOut);
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund"//
+            : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(Crypto.getUrlDecoderEx(URL), placeIndex, ticketIndex, dateCheckIn, dateCheckOut);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund" : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
-        //        String params;
-        //
-        //        if (Util.isTextEmpty(transactionType) == true)
-        //        {
-        //            params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn));
-        //        } else
-        //        {
-        //            params = String.format("?hotelIdx=%d&roomIdx=%d&dateCheckIn=%s&transactionType=%s", placeIndex, ticketIndex, URLEncoder.encode(dateCheckIn), transactionType);
-        //        }
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestPolicyRefund(String tag, int hotelReservationIdx, String transactionType, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(hotelReservationIdx, transactionType);
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund"//
+            : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPolicyRefund(Crypto.getUrlDecoderEx(URL), hotelReservationIdx, transactionType);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund" : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
-        //
-        //        String params = String.format("?hotelReservationIdx=%d&transactionType=%s", hotelReservationIdx, transactionType);
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, params, listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestRefund(String tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRefund(hotelIdx, dateCheckIn, transactionType//
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/refund"//
+            : "MTQkNzUkNDMkODUkMzkkNzMkMTQkNjIkMzMkMTYkODIkODkkNzAkMzIkMjkkNDMk$Nzg0NTMxOUNGOUOMFE1RDE2NjRFRTRM1OOThXBOUQ2RNDIhBQ0KEyRjIxMjcwNTMyOTANFQ0ME3RDNBNzFE3MzHRQzNTIC0NjEQ3OA==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRefund(Crypto.getUrlDecoderEx(URL), hotelIdx, dateCheckIn, transactionType//
             , hotelReservationIdx, reasonCancel, accountHolder, bankAccount, bankCode);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/refund" : "MTQkNzUkNDMkODUkMzkkNzMkMTQkNjIkMzMkMTYkODIkODkkNzAkMzIkMjkkNDMk$Nzg0NTMxOUNGOUOMFE1RDE2NjRFRTRM1OOThXBOUQ2RNDIhBQ0KEyRjIxMjcwNTMyOTANFQ0ME3RDNBNzFE3MzHRQzNTIC0NjEQ3OA==$";
-        //
-        //        Map<String, String> params = new HashMap<>();
-        //        params.put("hotelIdx", Integer.toString(hotelIdx));
-        //        params.put("dateCheckIn", dateCheckIn);
-        //        params.put("transactionType", transactionType);
-        //        params.put("hotelReservationIdx", Integer.toString(hotelReservationIdx));
-        //        params.put("reasonRefund", reasonCancel);
-        //
-        //        if (Util.isTextEmpty(accountHolder) == false)
-        //        {
-        //            params.put("accountHolder", accountHolder);
-        //        }
-        //
-        //        if (Util.isTextEmpty(bankAccount) == false)
-        //        {
-        //            params.put("bankAccount", bankAccount);
-        //        }
-        //
-        //        if (Util.isTextEmpty(bankCode) == false)
-        //        {
-        //            params.put("bankCode", bankCode);
-        //        }
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestBankList(String tag, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestBankList();
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/bank"//
+            : "NjEkMTIkNzkkNDMkMTgkNjMkMzkkMzgkNDgkMjgkMzMkNjEkNzckNjAkNjEkMjQk$RDlCRUJDNUY0ROUM5MODA1MjDY5REHQzNTAE4RTM2CNWEZGRkUYR4NzQ4MUQxMBRKDY2RDkwQNG0RFNETE2MkU0OTNENFTY3Nzc0Mg==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestBankList(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/bank" : "NjEkMTIkNzkkNDMkMTgkNjMkMzkkMzgkNDgkMjgkMzMkNjEkNzckNjAkNjEkMjQk$RDlCRUJDNUY0ROUM5MODA1MjDY5REHQzNTAE4RTM2CNWEZGRkUYR4NzQ4MUQxMBRKDY2RDkwQNG0RFNETE2MkU0OTNENFTY3Nzc0Mg==$";
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestStayReviewInformation(String tag, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation("hotel");
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/question"//
+            : "NzQkMTIkNDkkMiQ0OSQ4NyQ2NCQ4OSQzOCQyNSQxNyQ3NiQzMSQzNCQ0OSQxNyQ=$MUZVFMEQ4OUMxSNTUTPwNUIxQzVVDNUJXFRZTVCQjQyFMUNCODXg4RDZTBQMENBMTc0RTcxTMjUyM0Q1KRDFFMDXBGMTU2MEKNNEMg==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/question" : "NzQkMTIkNDkkMiQ0OSQ4NyQ2NCQ4OSQzOCQyNSQxNyQ3NiQzMSQzNCQ0OSQxNyQ=$MUZVFMEQ4OUMxSNTUTPwNUIxQzVVDNUJXFRZTVCQjQyFMUNCODXg4RDZTBQMENBMTc0RTcxTMjUyM0Q1KRDFFMDXBGMTU2MEKNNEMg==$";
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestGourmetReviewInformation(String tag, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation("gourmet");
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/question"//
+            : "NDUkMTIkNjUkODckNDAkNzQkNzUkNzckNjckNTYkNDMkMTYkNTQkOTkkODckMTYk$QzgxQkVEQjBGONDdTWEMDI4NENBOEMwNkIyQUIxQUQOwNITlGNBTczMIjBGMSTM1QTdCNDNOUCMTg4ODRHZAFMjRIDQzE3REI3ENQI==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/question" : "NDUkMTIkNjUkODckNDAkNzQkNzUkNzckNjckNTYkNDMkMTYkNTQkOTkkODckMTYk$QzgxQkVEQjBGONDdTWEMDI4NENBOEMwNkIyQUIxQUQOwNITlGNBTczMIjBGMSTM1QTdCNDNOUCMTg4ODRHZAFMjRIDQzE3REI3ENQI==$";
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     /**
@@ -1048,19 +978,15 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestStayReviewInformation(String tag, int reserveIdx, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation("hotel", reserveIdx);
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{reserveIdx}/question"//
+            : "MTE4JDExNiQ5NCQ3OSQ5NiQ3NiQ5MyQ3NCQyMSQ2OCQxMDkkODgkNzgkMzkkNzgkMTMyJA==$NzcwQkMxNEVBQTZFODNGNPDJCQkExRkZFNDVERDHhCNzA5MDlDRTZDRUE4NzUwQzI1QTBWGRTJEREZQIEzXNTQOyN0VCFRjhDNUYQ2Q0XUM1MUFDQY0E2MzE1N0NFNjJBSRjNFNFMzhGMjYw$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{reserveIdx}/question" : "MTE4JDExNiQ5NCQ3OSQ5NiQ3NiQ5MyQ3NCQyMSQ2OCQxMDkkODgkNzgkMzkkNzgkMTMyJA==$NzcwQkMxNEVBQTZFODNGNPDJCQkExRkZFNDVERDHhCNzA5MDlDRTZDRUE4NzUwQzI1QTBWGRTJEREZQIEzXNTQOyN0VCFRjhDNUYQ2Q0XUM1MUFDQY0E2MzE1N0NFNjJBSRjNFNFMzhGMjYw$";
-        //
-        //        Map<String, String> urlParams = new HashMap<>();
-        //        urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     /**
@@ -1073,48 +999,36 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestGourmetReviewInformation(String tag, int reserveIdx, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation("gourmet", reserveIdx);
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{reserveIdx}/question"//
+            : "ODckMTEyJDEwOCQ3NCQ5NCQxMzEkMTE5JDg1JDIxJDMzJDEyOSQyMCQxMTQkMTIzJDUyJDc3JA==$MDVEQjk0RDhFNEU2NjI2HMJEI5RjlGRUNFVQ0JGNzI5QkNERjRCMITlBMUJEQzE1QUJDNzQ1NUQxMUTRQ1MjFEQUFBROTcI0NkU4TMEVDNzdDQjE0MzQWCyRTgQ1NJkLQ2QzZDGMTUyQ0QRG$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{reserveIdx}/question" : "ODckMTEyJDEwOCQ3NCQ5NCQxMzEkMTE5JDg1JDIxJDMzJDEyOSQyMCQxMTQkMTIzJDUyJDc3JA==$MDVEQjk0RDhFNEU2NjI2HMJEI5RjlGRUNFVQ0JGNzI5QkNERjRCMITlBMUJEQzE1QUJDNzQ1NUQxMUTRQ1MjFEQUFBROTcI0NkU4TMEVDNzdDQjE0MzQWCyRTgQ1NJkLQ2QzZDGMTUyQ0QRG$";
-        //
-        //        Map<String, String> urlParams = new HashMap<>();
-        //        urlParams.put("{reserveIdx}", Integer.toString(reserveIdx));
-        //
-        //        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL, urlParams, "", listener);
-        //        dailyHotelJsonRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
     public void requestAddReviewInformation(String tag, JSONObject jsonObject, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewInformation(jsonObject);
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add"//
+            : "NiQ0OSQ2MCQ3MCQ1MiQ0MCQ1NiQzJDE5JDQyJDIyJDc1JDc1JDQyJDUkMTYk$M0NXBMMDSY5ODkwNI0E2NBzVACQzczQTVFN0JBNzNGRDGIVO3RTNGRjVBSQ0AQzJRjEyNEZEzNkIyOEVTNCEN0JFQjUyN0I4NzcwQw==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewInformation(Crypto.getUrlDecoderEx(URL), jsonObject);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add" : "NiQ0OSQ2MCQ3MCQ1MiQ0MCQ1NiQzJDE5JDQyJDIyJDc1JDc1JDQyJDUkMTYk$M0NXBMMDSY5ODkwNI0E2NBzVACQzczQTVFN0JBNzNGRDGIVO3RTNGRjVBSQ0AQzJRjEyNEZEzNkIyOEVTNCEN0JFQjUyN0I4NzcwQw==$";
-        //
-        //        DailyJsonObjectRequest dailyJsonObjectRequest = new DailyJsonObjectRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, jsonObject, listener);
-        //        dailyJsonObjectRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyJsonObjectRequest);
     }
 
     @Override
     public void requestAddReviewDetailInformation(String tag, JSONObject jsonObject, Object listener)
     {
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewDetailInformation(jsonObject);
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add/detail"//
+            : "NDUkMzgkMTYkMzckOTAkMjQkNjckNjAkNjUkNjkkODkkODIkODYkNSQ3OCQzMCQ=$RjU4ME0IyMUIyMkJGSNTVCMzMF3MzBSCM0UxMTNFEODLQzNUE4MDUFERjI5NTEB3M0ISyMDOCc3NjE4FMkVDMYzg3NMjc5KQjE3NwR==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewDetailInformation(Crypto.getUrlDecoderEx(URL), jsonObject);
         executorCallbackCall.addQueue(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add/detail" : "NDUkMzgkMTYkMzckOTAkMjQkNjckNjAkNjUkNjkkODkkODIkODYkNSQ3OCQzMCQ=$RjU4ME0IyMUIyMkJGSNTVCMzMF3MzBSCM0UxMTNFEODLQzNUE4MDUFERjI5NTEB3M0ISyMDOCc3NjE4FMkVDMYzg3NMjc5KQjE3NwR==$";
-        //
-        //        DailyJsonObjectRequest dailyJsonObjectRequest = new DailyJsonObjectRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, jsonObject, listener);
-        //        dailyJsonObjectRequest.setIsUsedAccept(true);
-        //
-        //        mQueue.add(dailyJsonObjectRequest);
     }
 }
