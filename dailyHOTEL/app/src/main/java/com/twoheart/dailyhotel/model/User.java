@@ -12,6 +12,7 @@ public class User extends Customer
     private String mType;
     private String mBirthDay;
     private String mRecommender;
+    private String mPassword;
 
     public User()
     {
@@ -32,6 +33,7 @@ public class User extends Customer
         dest.writeString(mType);
         dest.writeString(mBirthDay);
         dest.writeString(mRecommender);
+        dest.writeString(mPassword);
     }
 
     private void readFromParcel(Parcel in)
@@ -39,6 +41,7 @@ public class User extends Customer
         mType = in.readString();
         mBirthDay = in.readString();
         mRecommender = in.readString();
+        mPassword = in.readString();
     }
 
     public String getType()
@@ -69,6 +72,16 @@ public class User extends Customer
     public void setRecommender(String recommender)
     {
         this.mRecommender = recommender;
+    }
+
+    public String getPassword()
+    {
+        return mPassword;
+    }
+
+    public void setPassword(String password)
+    {
+        this.mPassword = password;
     }
 
     @Override

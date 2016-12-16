@@ -10,7 +10,6 @@ public interface Constants
     public static final boolean DEBUG = BuildConfig.DEBUG;
     public static final boolean UNENCRYPTED_URL = false;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
-    public static final boolean TESTING = BuildConfig.DEBUG && false;
 
     // 스토어 선택.
     public enum Stores
