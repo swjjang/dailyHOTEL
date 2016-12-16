@@ -149,7 +149,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
         String size = String.format("%dx%d", (int) width, (int) height);
         String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
-        String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
+        String url = String.format("https://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
             , size, iconUrl, bookingDetail.latitude, bookingDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         mapImageView.setImageURI(Uri.parse(url));
