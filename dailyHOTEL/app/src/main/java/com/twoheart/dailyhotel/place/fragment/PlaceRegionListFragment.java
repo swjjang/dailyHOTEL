@@ -416,8 +416,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             //
             if (mAdapter.getChildrenCount(groupPosition) == 0)
             {
-                mAdapter.notifyDataSetChanged();
-
                 if (mOnPlaceRegionListFragment != null)
                 {
                     mOnPlaceRegionListFragment.onRegionClick(mAdapter.getGroup(groupPosition));

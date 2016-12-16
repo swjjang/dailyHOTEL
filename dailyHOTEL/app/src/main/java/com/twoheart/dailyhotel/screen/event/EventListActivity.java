@@ -178,9 +178,10 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
             if (mEventListAdapter == null)
             {
                 mEventListAdapter = new EventListAdapter(EventListActivity.this, 0, new ArrayList<Event>());
+            } else
+            {
+                mEventListAdapter.clear();
             }
-
-            mEventListAdapter.clear();
 
             if (eventList == null)
             {
