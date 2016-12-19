@@ -310,6 +310,7 @@ public class MainActivity extends BaseActivity implements Constants
                 mNetworkController.requestNoticeAgreement();
                 break;
 
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
